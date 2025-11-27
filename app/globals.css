@@ -159,3 +159,18 @@ html[data-theme='light'], html[data-theme='light'] body {
   opacity: 0.35 !important;
   text-shadow: 0 0 40px rgba(212, 168, 83, 0.5);
 }
+
+@keyframes scroll-wheel {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.animate-scroll-wheel {
+  animation: scroll-wheel 1.5s ease-in-out infinite;
+}

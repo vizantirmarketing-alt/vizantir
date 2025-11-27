@@ -89,7 +89,7 @@ const Marquee = () => {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 30s linear infinite;
+          animation: marquee 60s linear infinite;
         }
       `}</style>
     </section>

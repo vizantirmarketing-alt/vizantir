@@ -102,7 +102,7 @@ const Strategy = () => {
     const height = canvas.height;
     const centerX = width / 2;
     const centerY = height / 2;
-    const radius = 140;
+    const radius = Math.min(width, height) / 2 - 10;
 
     const primaryColor = isNightMode ? "124, 58, 237" : "255, 198, 76";
     const secondaryColor = isNightMode ? "6, 182, 212" : "255, 184, 77";
@@ -224,9 +224,9 @@ const Strategy = () => {
   }, [isNightMode]);
 
   const stats = [
-    { value: "+347%", label: "Traffic", top: "5%", right: "5%" },
-    { value: "12.5x", label: "ROAS", top: "40%", right: "-5%" },
-    { value: "$2.4M", label: "Revenue", top: "75%", right: "10%" },
+    { value: "+347%", label: "Traffic" },
+    { value: "12.5x", label: "ROAS" },
+    { value: "$2.4M", label: "Revenue" },
   ];
 
   return (
@@ -244,6 +244,7 @@ const Strategy = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left Content */}
           <div className="max-w-xl">
             <h3
               className="text-lg md:text-xl font-medium mb-3"
@@ -290,12 +291,14 @@ const Strategy = () => {
             </Button>
           </div>
 
-          <div className="relative h-[500px] hidden lg:flex items-center justify-center">
+          {/* Right - Globe (now visible on all screens) */}
+          <div className="relative flex items-center justify-center h-[350px] md:h-[500px]">
+            {/* Glow background */}
             <div
               className="absolute rounded-full"
               style={{
-                width: "340px",
-                height: "340px",
+                width: "240px",
+                height: "240px",
                 background: isNightMode
                   ? "radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%)"
                   : "radial-gradient(circle, rgba(255, 198, 76, 0.3) 0%, transparent 70%)",
@@ -303,10 +306,11 @@ const Strategy = () => {
               }}
             />
 
+            {/* Pulse rings */}
             {[1, 2, 3].map((ring) => (
               <div
                 key={ring}
-                className="absolute rounded-full"
+                className="absolute rounded-full hidden md:block"
                 style={{
                   width: `${300 + ring * 50}px`,
                   height: `${300 + ring * 50}px`,
@@ -316,11 +320,12 @@ const Strategy = () => {
               />
             ))}
 
+            {/* Globe canvas - responsive size */}
             <canvas
               ref={globeCanvasRef}
-              width={300}
-              height={300}
-              className="relative z-10 rounded-full"
+              width={250}
+              height={250}
+              className="relative z-10 rounded-full w-[200px] h-[200px] md:w-[300px] md:h-[300px]"
               style={{
                 boxShadow: isNightMode
                   ? "0 0 60px rgba(124, 58, 237, 0.5), 0 0 120px rgba(6, 182, 212, 0.3)"
@@ -328,38 +333,69 @@ const Strategy = () => {
               }}
             />
 
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="absolute px-5 py-4 rounded-xl backdrop-blur-md"
-                style={{
-                  top: stat.top,
-                  right: stat.right,
-                  background: isNightMode ? "rgba(124, 58, 237, 0.15)" : "rgba(255, 255, 255, 0.85)",
-                  border: isNightMode ? "1px solid rgba(124, 58, 237, 0.4)" : "1px solid rgba(255, 198, 76, 0.5)",
-                  boxShadow: isNightMode ? "0 10px 40px rgba(124, 58, 237, 0.3)" : "0 10px 40px rgba(0, 0, 0, 0.1)",
-                  animation: `floatCard ${3 + index * 0.5}s ease-in-out infinite`,
-                  animationDelay: `${index * 0.3}s`,
-                }}
-              >
+            {/* Stats cards - stack on mobile, absolute on desktop */}
+            <div className="absolute right-0 top-0 bottom-0 hidden lg:flex flex-col justify-center gap-6">
+              {stats.map((stat, index) => (
                 <div
-                  className="text-2xl font-bold"
+                  key={index}
+                  className="px-5 py-4 rounded-xl backdrop-blur-md"
                   style={{
-                    color: isNightMode ? "#A78BFA" : "#1A1A1A",
-                    textShadow: isNightMode ? "0 0 20px rgba(167, 139, 250, 0.5)" : "none",
+                    background: isNightMode ? "rgba(124, 58, 237, 0.15)" : "rgba(255, 255, 255, 0.85)",
+                    border: isNightMode ? "1px solid rgba(124, 58, 237, 0.4)" : "1px solid rgba(255, 198, 76, 0.5)",
+                    boxShadow: isNightMode ? "0 10px 40px rgba(124, 58, 237, 0.3)" : "0 10px 40px rgba(0, 0, 0, 0.1)",
+                    animation: `floatCard ${3 + index * 0.5}s ease-in-out infinite`,
+                    animationDelay: `${index * 0.3}s`,
                   }}
                 >
-                  {stat.value}
+                  <div
+                    className="text-2xl font-bold"
+                    style={{
+                      color: isNightMode ? "#A78BFA" : "#1A1A1A",
+                      textShadow: isNightMode ? "0 0 20px rgba(167, 139, 250, 0.5)" : "none",
+                    }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div
+                    className="text-xs uppercase tracking-wider"
+                    style={{ color: isNightMode ? "rgba(255,255,255,0.6)" : "#6B6B6B" }}
+                  >
+                    {stat.label}
+                  </div>
                 </div>
-                <div
-                  className="text-xs uppercase tracking-wider"
-                  style={{ color: isNightMode ? "rgba(255,255,255,0.6)" : "#6B6B6B" }}
-                >
-                  {stat.label}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+        </div>
+
+        {/* Mobile stats - show below globe on mobile */}
+        <div className="flex justify-center gap-4 mt-8 lg:hidden">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className="px-4 py-3 rounded-xl backdrop-blur-md text-center"
+              style={{
+                background: isNightMode ? "rgba(124, 58, 237, 0.15)" : "rgba(255, 255, 255, 0.85)",
+                border: isNightMode ? "1px solid rgba(124, 58, 237, 0.4)" : "1px solid rgba(255, 198, 76, 0.5)",
+                boxShadow: isNightMode ? "0 10px 40px rgba(124, 58, 237, 0.3)" : "0 10px 40px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <div
+                className="text-xl font-bold"
+                style={{
+                  color: isNightMode ? "#A78BFA" : "#1A1A1A",
+                }}
+              >
+                {stat.value}
+              </div>
+              <div
+                className="text-xs uppercase tracking-wider"
+                style={{ color: isNightMode ? "rgba(255,255,255,0.6)" : "#6B6B6B" }}
+              >
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -382,4 +418,3 @@ const Strategy = () => {
 };
 
 export default Strategy;
-

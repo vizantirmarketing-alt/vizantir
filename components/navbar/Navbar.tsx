@@ -94,12 +94,13 @@ const Navbar = () => {
                 <Link
                   key={link.path}
                   href={link.path}
-                  className={`relative text-sm font-medium transition-all duration-300 hover:text-primary ${
-                    pathname === link.path ? "text-primary" : ""
-                  }`}
+                  className="relative text-sm font-medium transition-all duration-300 hover:opacity-80"
                   style={{
-                    color: pathname !== link.path ? (isNightMode ? "#F7F7F7" : "#1A1A1A") : undefined,
-                    textShadow: isNightMode && pathname !== link.path ? "0 0 8px rgba(255, 255, 255, 0.3)" : "none",
+                    color: pathname === link.path 
+                      ? '#FFC64C'  // Active link = gold
+                      : isNightMode 
+                        ? '#F8F8F8'  // Inactive in dark mode = white
+                        : '#1A1A1A',  // Inactive in light mode = black
                   }}
                 >
                   {link.name}
@@ -190,11 +191,15 @@ const Navbar = () => {
                 <Link
                   key={link.path}
                   href={link.path}
-                  className="block py-2 px-4 text-sm font-medium transition-colors hover:text-primary"
+                  className="block py-2 px-4 text-sm font-medium transition-colors hover:opacity-80"
                   style={{
-                    color: pathname === link.path ? undefined : (isNightMode ? '#F7F7F7' : '#1A1A1A'),
+                    color: pathname === link.path 
+                      ? '#FFC64C'  // Active link = gold
+                      : isNightMode 
+                        ? '#F8F8F8'  // Inactive in dark mode = white
+                        : '#1A1A1A',  // Inactive in light mode = black
                     background: pathname === link.path 
-                      ? (isNightMode ? 'rgba(124, 58, 237, 0.2)' : 'rgba(255, 198, 76, 0.1)')
+                      ? (isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.1)')
                       : 'transparent',
                   }}
                   onClick={() => setIsMobileMenuOpen(false)}

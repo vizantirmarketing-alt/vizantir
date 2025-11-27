@@ -436,16 +436,31 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-6 lg:bottom-10 left-0 right-0 z-20 animate-bounce flex justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <span
-            className="text-xs uppercase tracking-wider"
-            style={{ color: isNightMode ? "#F8F8F8" : "#6B6B6B" }}
-          >
-            Explore
-          </span>
-          <div style={{ color: isNightMode ? "#F8F8F8" : "#6B6B6B" }}>↓</div>
+      {/* Animated scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
+        {/* Mouse icon */}
+        <div 
+          className="w-6 h-10 rounded-full border-2 flex justify-center pt-2"
+          style={{ 
+            borderColor: isNightMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          {/* Scroll wheel dot */}
+          <div 
+            className="w-1 h-2 rounded-full animate-scroll-wheel"
+            style={{ 
+              backgroundColor: isNightMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.5)',
+            }}
+          />
         </div>
+        <span 
+          className="text-xs uppercase tracking-widest"
+          style={{ 
+            color: isNightMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.4)',
+          }}
+        >
+          Scroll
+        </span>
       </div>
 
       <style>{`
