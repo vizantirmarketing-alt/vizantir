@@ -4,10 +4,30 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { motion } from 'framer-motion';
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const { isNightMode } = useTheme();
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
+  };
 
   const faqs = [
     {
@@ -44,12 +64,16 @@ const FAQSection = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
               className="text-4xl md:text-5xl font-bold mb-4"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
               Questions? <span style={{ color: '#00D9FF' }}>Answered.</span>
-            </h2>
+            </motion.h2>
             <p 
               className="text-xl"
               style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B' }}
@@ -58,10 +82,17 @@ const FAQSection = () => {
             </p>
           </div>
 
-          <div className="space-y-4">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="space-y-4"
+          >
             {faqs.map((faq, index) => (
-              <div
+              <motion.div
                 key={index}
+                variants={itemVariants}
                 className="rounded-lg overflow-hidden transition-all duration-300"
                 style={{
                   border: isNightMode ? '1px solid #374151' : '1px solid #E5E7EB',
@@ -101,9 +132,9 @@ const FAQSection = () => {
                     {faq.answer}
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           <div className="text-center mt-12">
             <p 

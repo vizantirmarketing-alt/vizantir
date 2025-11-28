@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useTheme } from '@/contexts/ThemeContext';
+import { motion } from 'framer-motion';
 
 interface Particle {
   x: number;
@@ -17,6 +18,26 @@ const ServicesPreview = () => {
   const { isNightMode } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
 
   const numberStyles = [
     { color: '#0EA5A5', rgb: '14, 165, 165', class: 'number-glow-teal' },
@@ -119,7 +140,11 @@ const ServicesPreview = () => {
       />
 
       <div className="relative z-10 container mx-auto px-4">
-        <h2
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
           className="text-7xl md:text-8xl lg:text-9xl font-black text-center mb-24"
           style={{
             letterSpacing: '-6px',
@@ -128,13 +153,20 @@ const ServicesPreview = () => {
           }}
         >
           SERVICES
-        </h2>
+        </motion.h2>
 
-        <div className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto mb-16">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto mb-16"
+        >
           {services.map((service, index) => {
             return (
-              <div
+              <motion.div
                 key={index}
+                variants={cardVariants}
                 className="group relative rounded-3xl p-12 md:p-16 cursor-pointer transition-all duration-500 overflow-hidden"
                 style={{
                   background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
@@ -178,10 +210,10 @@ const ServicesPreview = () => {
                 >
                   {service.description}
                 </p>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         <div className="text-center">
           <Link

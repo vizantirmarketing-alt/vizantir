@@ -6,6 +6,10 @@ import Navbar from '@/components/navbar/Navbar'
 
 import Footer from '@/components/footer/Footer'
 
+import SmoothScroll from '@/components/SmoothScroll'
+
+import ScrollProgress from '@/components/ScrollProgress'
+
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -33,9 +37,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body style={{ backgroundColor: '#000' }}>
         <ThemeProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <SmoothScroll>
+            <ScrollProgress />
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
         </ThemeProvider>
       </body>
     </html>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { motion } from 'framer-motion';
 
 const Newsletter = () => {
   const { isNightMode } = useTheme();
@@ -22,7 +23,13 @@ const Newsletter = () => {
       }}
     >
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-8"
+        >
           <div className="md:max-w-md">
             <h3
               className="text-xl md:text-2xl font-bold uppercase tracking-wide mb-2"
@@ -62,7 +69,7 @@ const Newsletter = () => {
               <span>→</span>
             </button>
           </form>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

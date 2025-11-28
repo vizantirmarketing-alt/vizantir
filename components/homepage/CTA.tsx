@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
+import { motion } from 'framer-motion';
 
 const CTA = () => {
   const { isNightMode } = useTheme();
@@ -15,32 +16,53 @@ const CTA = () => {
       }}
     >
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="max-w-3xl mx-auto text-center"
+        >
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="text-4xl md:text-5xl font-black mb-6"
             style={{ color: isNightMode ? '#F7F7F7' : '#1A1A1A' }}
           >
             Ready to Transform Your Digital Presence?
-          </h2>
-          <p 
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="text-xl mb-8"
             style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
           >
             Let's discuss how we can help you achieve your marketing goals.
-          </p>
-          <Button 
-            size="lg" 
-            asChild
-            className="transition-all duration-300 hover:scale-105"
-            style={{
-              background: '#FFC64C',
-              color: '#1A1A1A',
-              boxShadow: '0 0 20px rgba(255, 198, 76, 0.4)',
-            }}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Link href="/contact">Start Your Journey Today</Link>
-          </Button>
-        </div>
+            <Button 
+              size="lg" 
+              asChild
+              className="transition-all duration-300 hover:scale-105"
+              style={{
+                background: '#FFC64C',
+                color: '#1A1A1A',
+                boxShadow: '0 0 20px rgba(255, 198, 76, 0.4)',
+              }}
+            >
+              <Link href="/contact">Start Your Journey Today</Link>
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

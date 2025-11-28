@@ -129,17 +129,6 @@ html[data-theme='light'], html[data-theme='light'] body {
   background-color: #FAFAFA;
 }
 
-@keyframes numberPulse {
-  0%, 100% {
-    opacity: 0.15;
-    text-shadow: 0 0 40px rgba(255, 198, 76, 0.2), 0 0 80px rgba(255, 198, 76, 0.1);
-  }
-  50% {
-    opacity: 0.25;
-    text-shadow: 0 0 60px rgba(255, 198, 76, 0.4), 0 0 120px rgba(255, 198, 76, 0.2);
-  }
-}
-
 .group:hover .number-glow-teal {
   opacity: 0.35 !important;
   text-shadow: 0 0 40px rgba(14, 165, 165, 0.5);
@@ -173,4 +162,10 @@ html[data-theme='light'], html[data-theme='light'] body {
 
 .animate-scroll-wheel {
   animation: scroll-wheel 1.5s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

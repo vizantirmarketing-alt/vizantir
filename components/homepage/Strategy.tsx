@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { motion } from 'framer-motion';
 
 const Strategy = () => {
   const { isNightMode } = useTheme();
@@ -245,8 +246,18 @@ const Strategy = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Content */}
-          <div className="max-w-xl">
-            <h3
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="max-w-xl"
+          >
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
               className="text-lg md:text-xl font-medium mb-3"
               style={{
                 color: "#C084FC",
@@ -254,16 +265,24 @@ const Strategy = () => {
               }}
             >
               We Believe
-            </h3>
+            </motion.h3>
 
-            <h2
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight"
               style={{ color: isNightMode ? "#F8F8F8" : "#1A1A1A" }}
             >
               DESIGN + STRATEGY = RESULTS
-            </h2>
+            </motion.h2>
 
-            <p
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="text-base md:text-lg mb-10"
               style={{ color: isNightMode ? "#9CA3AF" : "#4A4A4A", lineHeight: '1.7' }}
             >
@@ -271,28 +290,41 @@ const Strategy = () => {
               <span className="font-semibold" style={{ color: isNightMode ? "#F8F8F8" : "#1A1A1A" }}>
                 growth engines
               </span>.
-            </p>
+            </motion.p>
 
-            <Button
-              size="lg"
-              asChild
-              className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
-              style={{
-                background: "#FFC64C",
-                color: "#1A1A1A",
-                borderRadius: "12px",
-                boxShadow: isNightMode ? "0 8px 30px rgba(255, 198, 76, 0.3)" : "0 8px 30px rgba(255, 198, 76, 0.4)",
-              }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <Link href="/contact">
-                SCHEDULE A CALL TODAY
-                <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
+              <Button
+                size="lg"
+                asChild
+                className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
+                style={{
+                  background: "#FFC64C",
+                  color: "#1A1A1A",
+                  borderRadius: "12px",
+                  boxShadow: isNightMode ? "0 8px 30px rgba(255, 198, 76, 0.3)" : "0 8px 30px rgba(255, 198, 76, 0.4)",
+                }}
+              >
+                <Link href="/contact">
+                  SCHEDULE A CALL TODAY
+                  <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
 
           {/* Right - Globe (now visible on all screens) */}
-          <div className="relative flex items-center justify-center h-[350px] md:h-[500px]">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative flex items-center justify-center h-[350px] md:h-[500px]"
+          >
             {/* Glow background */}
             <div
               className="absolute rounded-full"
@@ -365,7 +397,7 @@ const Strategy = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Mobile stats - show below globe on mobile */}

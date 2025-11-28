@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { motion } from 'framer-motion';
 
 const AboutStory = () => {
   const { isNightMode } = useTheme();
@@ -17,20 +18,35 @@ const AboutStory = () => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Content */}
           <div className="max-w-xl">
-            <h3 
-              className="text-lg md:text-xl font-medium mb-2"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+            {/* Fade up for the heading area */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              The Story Of
-            </h3>
-            <h2 
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-8 tracking-tight"
-              style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
-            >
-              VIZANTIR
-            </h2>
+              <h3 
+                className="text-lg md:text-xl font-medium mb-2"
+                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+              >
+                The Story Of
+              </h3>
+              <h2 
+                className="text-4xl md:text-5xl lg:text-6xl font-black mb-8 tracking-tight"
+                style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+              >
+                VIZANTIR
+              </h2>
+            </motion.div>
             
-            <div className="space-y-6">
+            {/* Staggered fade for paragraphs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+              className="space-y-6"
+            >
               <p 
                 className="text-base md:text-lg"
                 style={{ color: isNightMode ? '#C0C0C0' : '#4A4A4A', lineHeight: '1.7' }}
@@ -68,7 +84,7 @@ const AboutStory = () => {
                 </span>{' '}
                 — never empty promises.
               </p>
-            </div>
+            </motion.div>
 
             <div className="mt-10">
               <Button
@@ -91,7 +107,13 @@ const AboutStory = () => {
           </div>
 
           {/* Right Image */}
-          <div className="relative">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="relative"
+          >
             <div 
               className="rounded-2xl overflow-hidden"
               style={{
@@ -115,7 +137,7 @@ const AboutStory = () => {
                   : 'linear-gradient(135deg, rgba(255, 198, 76, 0.4), rgba(212, 197, 249, 0.4))'
               }}
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

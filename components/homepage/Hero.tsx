@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface Blob {
   x: number;
@@ -302,21 +303,36 @@ const Hero = () => {
   const dayBackground = `radial-gradient(circle at 30% 50%, #FFFFFF 0%, #FAFAFA 60%, #F0F0F0 100%)`;
   const nightBackground = `radial-gradient(circle at 30% 50%, #0A0A0A 0%, #000000 60%, #000000 100%)`;
 
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 150]);
+  const y2 = useTransform(scrollY, [0, 500], [0, 100]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+
   return (
     <section
       className="hero-section relative min-h-screen w-full flex items-center overflow-hidden transition-all duration-700"
       style={{ background: isNightMode ? nightBackground : dayBackground }}
     >
-      <canvas 
+      <motion.canvas 
         ref={canvasRef} 
         className="absolute inset-0 w-full h-full"
-        style={{ willChange: 'transform, opacity', zIndex: 1 }}
+        style={{ 
+          y: y1,
+          opacity,
+          willChange: 'transform, opacity', 
+          zIndex: 1 
+        }}
       />
 
-      <canvas 
+      <motion.canvas 
         ref={particleCanvasRef} 
         className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ willChange: 'transform, opacity', zIndex: 2 }}
+        style={{ 
+          y: y2,
+          opacity,
+          willChange: 'transform, opacity', 
+          zIndex: 2 
+        }}
       />
 
       <div
@@ -462,14 +478,6 @@ const Hero = () => {
           Scroll
         </span>
       </div>
-
-      <style>{`
-        @keyframes gradientShift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-      `}</style>
     </section>
   );
 };
