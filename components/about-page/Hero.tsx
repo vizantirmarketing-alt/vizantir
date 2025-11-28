@@ -8,7 +8,7 @@ const Hero = () => {
   return (
     <section
       className="min-h-[60vh] flex items-center justify-center px-4 pt-24"
-      style={{ background: isNightMode ? '#000' : '#FAFAFA' }}
+      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="text-center max-w-4xl">
         <h1
