@@ -60,24 +60,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
                   
                   if (isDark) {
-                    document.documentElement.style.backgroundColor = '#000000';
-                    document.body.style.backgroundColor = '#000000';
-                    document.documentElement.setAttribute('data-theme', 'dark');
+                    if (document.documentElement) {
+                      document.documentElement.style.backgroundColor = '#000000';
+                    }
+                    if (document.body) {
+                      document.body.style.backgroundColor = '#000000';
+                    }
+                    if (document.documentElement) {
+                      document.documentElement.setAttribute('data-theme', 'dark');
+                    }
                   } else {
-                    document.documentElement.style.backgroundColor = '#FAFAFA';
-                    document.body.style.backgroundColor = '#FAFAFA';
-                    document.documentElement.setAttribute('data-theme', 'light');
+                    if (document.documentElement) {
+                      document.documentElement.style.backgroundColor = '#FAFAFA';
+                    }
+                    if (document.body) {
+                      document.body.style.backgroundColor = '#FAFAFA';
+                    }
+                    if (document.documentElement) {
+                      document.documentElement.setAttribute('data-theme', 'light');
+                    }
                   }
                 } catch (e) {
-                  document.documentElement.style.backgroundColor = '#000000';
-                  document.body.style.backgroundColor = '#000000';
+                  if (document.documentElement) {
+                    document.documentElement.style.backgroundColor = '#000000';
+                  }
+                  if (document.body) {
+                    document.body.style.backgroundColor = '#000000';
+                  }
                 }
               })();
             `,
           }}
         />
       </head>
-      <body className={satoshi.variable}>
+      <body className={satoshi.variable} suppressHydrationWarning>
         <ThemeProvider>
           <SmoothScroll>
             <ScrollProgress />
