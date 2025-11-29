@@ -82,7 +82,7 @@ const AddOnsIcon = () => (
   </svg>
 )
 
-const iconMap: Record<ServiceKey, () => JSX.Element> = {
+const iconMap = {
   web: WebIcon,
   seo: SeoIcon,
   care: CareIcon,
