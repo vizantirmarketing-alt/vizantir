@@ -402,22 +402,22 @@ const Hero = () => {
         {/* RIGHT SIDE - Content */}
         <div className="max-w-xl order-1 lg:order-2 lg:ml-auto text-center lg:text-left mx-auto lg:mx-0">
           <h2
-            className="text-lg md:text-xl font-medium mb-3"
+            className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
             style={{ color: isNightMode ? "#F8F8F8" : "#6B6B6B" }}
         >
           Smart Strategies
           </h2>
 
         <h1
-            className="text-7xl md:text-8xl lg:text-9xl font-black mb-6 lg:mb-8 leading-[0.95]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 lg:mb-8 transition-colors duration-500"
             style={{ color: isNightMode ? "#F8F8F8" : "#1A1A1A" }}
         >
             REAL<br />GROWTH
         </h1>
 
           <p
-            className="text-base md:text-lg font-normal mb-4 lg:mb-6"
-            style={{ color: isNightMode ? "#F8F8F8" : "#6B6B6B", lineHeight: '1.7' }}
+            className="text-base leading-relaxed mb-4 lg:mb-6 transition-colors duration-500"
+            style={{ color: isNightMode ? "#F8F8F8" : "#6B6B6B" }}
           >
             Vizantir is a remote-first digital marketing agency that helps businesses grow with{" "}
             <span className="font-medium">SEO</span>,{" "}
@@ -428,8 +428,8 @@ const Hero = () => {
           </p>
 
           <p
-            className="text-base md:text-lg font-normal mb-8 lg:mb-10 italic"
-            style={{ color: isNightMode ? "#F8F8F8" : "#6B6B6B", lineHeight: '1.7' }}
+            className="text-base leading-relaxed mb-8 lg:mb-10 italic transition-colors duration-500"
+            style={{ color: isNightMode ? "#F8F8F8" : "#6B6B6B" }}
           >
             No offices. No wasted overhead. Just measurable results.
           </p>

@@ -140,7 +140,7 @@ const Navbar = () => {
                     className="absolute top-0.5 w-3 h-3 rounded-full transition-all duration-300 shadow-md"
                     style={{
                       left: isNightMode ? "1rem" : "0.125rem",
-                      background: isNightMode ? "#f1f5f9" : "#FFFFFF",
+                      background: isNightMode ? "#FAFAFA" : "#000000",
                     }}
                   />
                 </div>
@@ -233,7 +233,7 @@ const Navbar = () => {
                       className="absolute top-0.5 w-3 h-3 rounded-full transition-all duration-300 shadow-md"
                       style={{
                         left: isNightMode ? '1rem' : '0.125rem',
-                        background: isNightMode ? '#f1f5f9' : '#FFFFFF',
+                        background: isNightMode ? '#FAFAFA' : '#000000',
                       }}
                     />
                   </div>

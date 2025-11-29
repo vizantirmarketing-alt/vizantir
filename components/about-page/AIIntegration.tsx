@@ -43,7 +43,7 @@ const AIIntegration = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-20 md:py-28 transition-colors duration-500 relative overflow-hidden"
+      className="py-20 md:py-24 transition-colors duration-500 relative overflow-hidden"
       style={{
         background: isNightMode 
           ? '#000000'
@@ -72,23 +72,23 @@ const AIIntegration = () => {
                 AI Website Integration
               </h3>
               <h2
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500 leading-tight"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight transition-colors duration-500 leading-tight"
                 style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
               >
                 Turn Your Website Into an{' '}
                 <span style={{ color: '#00D9FF' }}>Interactive Assistant</span>
               </h2>
               <p
-                className="text-base md:text-lg mb-6 transition-colors duration-500"
-                style={{ color: isNightMode ? '#9CA3AF' : '#4A4A4A', lineHeight: '1.7' }}
+                className="text-base leading-relaxed mb-6 transition-colors duration-500"
+                style={{ color: isNightMode ? '#9CA3AF' : '#4A4A4A' }}
               >
                 We integrate AI directly into your site so customers can ask real questions 
                 and get instant, accurate answers. The AI doesn't guess — it learns your website. 
                 Every page, menu item, policy, and service detail becomes part of its training.
               </p>
               <p
-                className="text-base md:text-lg mb-8 transition-colors duration-500"
-                style={{ color: isNightMode ? '#9CA3AF' : '#4A4A4A', lineHeight: '1.7' }}
+                className="text-base leading-relaxed mb-8 transition-colors duration-500"
+                style={{ color: isNightMode ? '#9CA3AF' : '#4A4A4A' }}
               >
               Instead of digging through menus or calling for details, your visitors get clear, 
               reliable responses in seconds — turning your website into a true customer assistant.
@@ -133,7 +133,7 @@ const AIIntegration = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+                  <p className="font-bold transition-colors duration-500" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
                     Website Assistant
                   </p>
                   <p className="text-xs" style={{ color: '#22C55E' }}>● Online</p>

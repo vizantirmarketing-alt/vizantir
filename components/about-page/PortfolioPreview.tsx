@@ -43,7 +43,7 @@ const PortfolioPreview = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-20 md:py-28 transition-colors duration-500"
+      className="py-20 md:py-24 transition-colors duration-500"
       style={{
         background: isNightMode ? '#000000' : '#FAFAFA',
       }}
@@ -106,7 +106,7 @@ const PortfolioPreview = () => {
                     className="aspect-[16/10] rounded-lg overflow-hidden flex items-center justify-center"
                     style={{ background: 'linear-gradient(135deg, #FFC64C 0%, #FF9500 100%)' }}
                   >
-                    <span className="text-black font-bold text-xl">Pink Salt Salon</span>
+                    <span className="font-bold text-xl" style={{ color: '#1A1A1A' }}>Pink Salt Salon</span>
                   </div>
                 </div>
 
@@ -140,13 +140,16 @@ const PortfolioPreview = () => {
                     padding: '12px',
                   }}
                 >
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-6 rounded-full bg-black z-10" />
+                  <div 
+                    className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-6 rounded-full z-10 transition-colors duration-500"
+                    style={{ background: isNightMode ? '#1A1A1A' : '#000000' }}
+                  />
                   
                   <div 
                     className="aspect-[9/19] rounded-[2rem] overflow-hidden flex items-center justify-center"
                     style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
                   >
-                    <span className="text-white font-bold">Mobile</span>
+                    <span className="font-bold" style={{ color: '#FFFFFF' }}>Mobile</span>
                   </div>
                 </div>
               </div>

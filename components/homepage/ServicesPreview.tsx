@@ -131,7 +131,7 @@ const ServicesPreview = () => {
 
   return (
     <section
-      className="relative min-h-screen py-24 md:py-32 overflow-hidden"
+      className="relative min-h-screen py-20 md:py-24 overflow-hidden"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <canvas
@@ -167,7 +167,7 @@ const ServicesPreview = () => {
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="group relative rounded-3xl p-12 md:p-16 cursor-pointer transition-all duration-500 overflow-hidden"
+                className="group relative rounded-2xl p-12 md:p-16 cursor-pointer transition-all duration-500 overflow-hidden"
                 style={{
                   background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(10px)',

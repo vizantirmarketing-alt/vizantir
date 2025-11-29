@@ -46,7 +46,7 @@ const VisionApproach = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-20 md:py-28 px-4 transition-colors duration-500 relative overflow-hidden"
+      className="py-20 md:py-24 px-4 transition-colors duration-500 relative overflow-hidden"
       style={{
         background: isNightMode ? '#000000' : '#FAFAFA',
       }}

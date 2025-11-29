@@ -11,7 +11,7 @@ const AboutStory = () => {
 
   return (
     <section 
-      className="py-24 md:py-32 transition-colors duration-500"
+      className="py-20 md:py-24 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">

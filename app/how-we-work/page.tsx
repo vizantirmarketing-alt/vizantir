@@ -97,7 +97,7 @@ export default function HowWeWorkPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-block text-xs tracking-[0.25em] uppercase font-semibold mb-6"
+            className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-6 transition-colors duration-500"
             style={{ color: colors.accent }}
           >
             How We Work
@@ -107,19 +107,19 @@ export default function HowWeWorkPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 transition-colors duration-500"
             style={{ color: colors.text }}
           >
             From first call to launch —
             <br />
-            <span style={{ color: colors.textMuted }}>no surprises.</span>
+            <span className="transition-colors duration-500" style={{ color: colors.textMuted }}>no surprises.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg max-w-2xl mx-auto"
+            className="text-lg max-w-2xl mx-auto leading-relaxed transition-colors duration-500"
             style={{ color: colors.textMuted }}
           >
             A clear process with defined scope, fixed pricing, and milestone check-ins.
@@ -139,7 +139,7 @@ export default function HowWeWorkPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-16 text-center"
+            className="text-2xl md:text-3xl font-bold mb-16 text-center transition-colors duration-500"
             style={{ color: colors.text }}
           >
             The Process
@@ -171,13 +171,13 @@ export default function HowWeWorkPage() {
                 {/* Content */}
                 <div className="flex-1 pt-2">
                   <h3
-                    className="text-xl font-semibold mb-2"
+                    className="text-xl font-bold mb-2 transition-colors duration-500"
                     style={{ color: colors.text }}
                   >
                     {step.title}
                   </h3>
                   <p
-                    className="leading-relaxed"
+                    className="text-base leading-relaxed transition-colors duration-500"
                     style={{ color: colors.textMuted }}
                   >
                     {step.description}
@@ -209,8 +209,8 @@ export default function HowWeWorkPage() {
               Platform
             </span>
             <h2
-              className="text-2xl md:text-3xl font-bold"
-              style={{ color: colors.text }}
+            className="text-2xl md:text-3xl font-bold transition-colors duration-500"
+            style={{ color: colors.text }}
             >
               Choosing the Right Fit
             </h2>
@@ -250,13 +250,13 @@ export default function HowWeWorkPage() {
               </div>
 
               <h3
-                className="text-xl font-semibold mb-3"
+                className="text-xl font-bold mb-3 transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 WordPress
               </h3>
 
-              <p className="mb-6" style={{ color: colors.textMuted }}>
+              <p className="mb-6 text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
                 Best for marketing sites, blogs, and businesses that want to update
                 content themselves. Faster to launch, familiar editing experience.
               </p>
@@ -307,13 +307,13 @@ export default function HowWeWorkPage() {
               </div>
 
               <h3
-                className="text-xl font-semibold mb-3"
+                className="text-xl font-bold mb-3 transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 Next.js
               </h3>
 
-              <p className="mb-6" style={{ color: colors.textMuted }}>
+              <p className="mb-6 text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
                 Best for brands that need cinematic motion, peak performance, or custom
                 functionality like dashboards, portals, and integrations.
               </p>
@@ -364,8 +364,8 @@ export default function HowWeWorkPage() {
               Comparison
             </span>
             <h2
-              className="text-2xl md:text-3xl font-bold"
-              style={{ color: colors.text }}
+            className="text-2xl md:text-3xl font-bold transition-colors duration-500"
+            style={{ color: colors.text }}
             >
               Why Vizantir
             </h2>
@@ -397,13 +397,13 @@ export default function HowWeWorkPage() {
               </div>
 
               <h3
-                className="text-lg font-semibold mb-2"
+                className="text-lg font-bold mb-2 transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 Traditional Agencies
               </h3>
 
-              <ul className="space-y-2 text-sm" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
                   <span className="text-red-500 mt-0.5">✗</span>
                   <span>Big teams, big overhead, big invoices</span>
@@ -448,13 +448,13 @@ export default function HowWeWorkPage() {
               </div>
 
               <h3
-                className="text-lg font-semibold mb-2"
+                className="text-lg font-bold mb-2 transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 Hourly Dev Shops
               </h3>
 
-              <ul className="space-y-2 text-sm" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 mt-0.5">✗</span>
                   <span>You buy hours, not outcomes</span>
@@ -511,13 +511,13 @@ export default function HowWeWorkPage() {
               </div>
 
               <h3
-                className="text-lg font-semibold mb-2"
+                className="text-lg font-bold mb-2 transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 Vizantir
               </h3>
 
-              <ul className="space-y-2 text-sm" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-500 mt-0.5">✓</span>
                   <span>Fixed scope, fixed price</span>
@@ -548,7 +548,7 @@ export default function HowWeWorkPage() {
             style={{ color: colors.text }}
           >
             "We don't sell hours.{' '}
-            <span style={{ color: colors.accent }}>We deliver finished products.</span>"
+            <span className="transition-colors duration-500" style={{ color: colors.accent }}>We deliver finished products.</span>"
           </motion.p>
         </div>
       </section>
@@ -579,13 +579,13 @@ export default function HowWeWorkPage() {
               transition={{ duration: 0.5 }}
             >
               <h3
-                className="text-sm font-semibold tracking-wider uppercase mb-6"
+                className="text-xs tracking-[0.25em] uppercase font-medium mb-6 transition-colors duration-500"
                 style={{ color: colors.accent }}
               >
                 Every Project Includes
               </h3>
 
-              <ul className="space-y-4" style={{ color: colors.textMuted }}>
+              <ul className="space-y-4 text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {[
                   'Defined scope before work begins',
                   'Milestone updates throughout',
@@ -609,13 +609,13 @@ export default function HowWeWorkPage() {
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <h3
-                className="text-sm font-semibold tracking-wider uppercase mb-6"
+                className="text-xs tracking-[0.25em] uppercase font-medium mb-6 transition-colors duration-500"
                 style={{ color: colors.textSubtle }}
               >
                 Not Included (Unless Scoped)
               </h3>
 
-              <ul className="space-y-4" style={{ color: colors.textMuted }}>
+              <ul className="space-y-4 text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {[
                   'Unlimited revisions',
                   'Ongoing maintenance',
@@ -624,7 +624,7 @@ export default function HowWeWorkPage() {
                   'Hosting fees',
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <span style={{ color: colors.textSubtle }}>✗</span>
+                    <span className="transition-colors duration-500" style={{ color: colors.textSubtle }}>✗</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -712,14 +712,14 @@ export default function HowWeWorkPage() {
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* CTA Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-24">
+      <section className="px-6 md:px-12 lg:px-20 py-20 md:py-24">
         <div className="max-w-2xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-6"
+            className="text-3xl md:text-4xl font-bold mb-6 transition-colors duration-500"
             style={{ color: colors.text }}
           >
             Ready to start?
@@ -730,7 +730,7 @@ export default function HowWeWorkPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-10"
+            className="mb-10 text-base leading-relaxed transition-colors duration-500"
             style={{ color: colors.textMuted }}
           >
             Let's talk about your project. No commitment, no pressure.

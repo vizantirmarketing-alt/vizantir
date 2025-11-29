@@ -10,7 +10,7 @@ const CTA = () => {
   
   return (
     <section 
-      className="py-24 md:py-32 relative overflow-hidden"
+      className="py-20 md:py-24 relative overflow-hidden"
       style={{
         background: isNightMode ? '#000000' : '#FAFAFA',
       }}

@@ -98,7 +98,7 @@ const GlassTestimonials = () => {
 
   return (
     <section
-      className="relative min-h-screen w-full flex items-center overflow-hidden py-32"
+      className="relative min-h-screen w-full flex items-center overflow-hidden py-20 md:py-24"
       style={{ background: isNightMode ? nightBackground : dayBackground }}
     >
       <div
@@ -171,7 +171,7 @@ const GlassTestimonials = () => {
               onClick={() => handleCardClick(index)}
             >
               <div
-                className="relative rounded-3xl p-12 transition-all duration-500"
+                className="relative rounded-2xl p-12 transition-all duration-500"
                 style={{
                   background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(10px)',
@@ -186,7 +186,7 @@ const GlassTestimonials = () => {
               >
                 {index === activeIndex && (
                   <div
-                    className="absolute inset-0 pointer-events-none rounded-3xl"
+                    className="absolute inset-0 pointer-events-none rounded-2xl"
                     style={{
                       background: `radial-gradient(circle at center, ${
                         isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.05)'

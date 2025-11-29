@@ -109,7 +109,7 @@ export default function ServicesPage() {
       {/* Services Accordion */}
       <section 
         id="services"
-        className="relative px-6 md:px-12 lg:px-20 py-24 transition-colors duration-500"
+        className="relative px-6 md:px-12 lg:px-20 py-20 md:py-24 transition-colors duration-500"
         style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
       >
         <div className="max-w-5xl mx-auto">

@@ -47,7 +47,7 @@ const Marquee = () => {
 
   return (
     <section
-      className="py-12 overflow-hidden relative"
+      className="py-12 md:py-16 overflow-hidden relative"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       {/* Gradient fade on left */}

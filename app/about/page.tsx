@@ -183,7 +183,7 @@ export default function AboutPage() {
 
       {/* Story Section */}
       <section
-        className="py-20 md:py-28"
+        className="py-20 md:py-24"
         style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
       >
         <div className="container mx-auto px-4">
@@ -342,7 +342,7 @@ export default function AboutPage() {
 
       {/* Values Section */}
       <section
-        className="py-20 md:py-28"
+        className="py-20 md:py-24"
         style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
       >
         <div className="container mx-auto px-4">
@@ -354,11 +354,11 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-lg md:text-xl font-medium mb-3" style={{ color: '#C084FC' }}>
+            <h2 className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500" style={{ color: '#C084FC' }}>
               What Drives Us
             </h2>
             <h3
-              className="text-3xl md:text-4xl lg:text-5xl font-black"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight transition-colors duration-500"
               style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
             >
               OUR VALUES

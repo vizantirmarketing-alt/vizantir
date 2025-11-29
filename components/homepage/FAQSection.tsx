@@ -58,7 +58,7 @@ const FAQSection = () => {
 
   return (
     <section 
-      className="py-24"
+      className="py-20 md:py-24"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">

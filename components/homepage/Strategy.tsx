@@ -232,7 +232,7 @@ const Strategy = () => {
 
   return (
     <section
-      className="relative min-h-screen flex items-center overflow-hidden py-24 md:py-32"
+      className="relative min-h-screen flex items-center overflow-hidden py-20 md:py-24"
       style={{
         background: isNightMode ? "#000000" : "radial-gradient(ellipse at 70% 50%, #FFF9E6 0%, #FAFAFA 60%)",
       }}
