@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Users, Target, Zap, Globe } from 'lucide-react'
@@ -13,6 +13,10 @@ import PortfolioPreview from '@/components/about-page/PortfolioPreview'
 
 export default function AboutPage() {
   const { isNightMode } = useTheme()
+
+  const { scrollY } = useScroll()
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0])
+  const heroY = useTransform(scrollY, [0, 500], [0, 100])
 
   const values = [
     {
@@ -69,10 +73,22 @@ export default function AboutPage() {
         style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
       >
         {/* Ribbons Animation Background */}
-        <RibbonsAnimation />
+        <motion.div 
+          className="absolute inset-0"
+          style={{ 
+            opacity: heroOpacity, 
+            y: heroY,
+            willChange: 'transform, opacity'
+          }}
+        >
+          <RibbonsAnimation />
+        </motion.div>
 
         {/* Content */}
-        <div className="relative z-10 text-center max-w-4xl mx-auto px-4 pt-24">
+        <motion.div 
+          className="relative z-10 text-center max-w-4xl mx-auto px-4 pt-24"
+          style={{ opacity: heroOpacity }}
+        >
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -142,10 +158,13 @@ export default function AboutPage() {
               </Link>
             </Button>
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
+        <motion.div 
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20"
+          style={{ opacity: heroOpacity }}
+        >
           <div
             className="w-6 h-10 rounded-full border-2 flex justify-center pt-2"
             style={{
@@ -159,7 +178,7 @@ export default function AboutPage() {
               }}
             />
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Story Section */}
