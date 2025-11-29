@@ -1,0 +1,242 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useTheme } from '@/contexts/ThemeContext'
+
+/*
+  ServicesHero - Architectural Grid
+  
+  Design: Structural, confident, precise
+  - Animated grid lines on load
+  - Corner accents
+  - Content positioned on grid
+  - Scroll-fade matching homepage/about
+  - Day/night theme support
+*/
+
+export default function ServicesHero() {
+  const { isNightMode } = useTheme()
+  const [loaded, setLoaded] = useState(false)
+
+  // Scroll fade effect (matches homepage/about)
+  const { scrollY } = useScroll()
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0])
+  const heroY = useTransform(scrollY, [0, 500], [0, 100])
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Theme colors - matching Vizantir standards
+  const colors = {
+    bg: isNightMode ? '#000000' : '#FAFAFA',
+    line: isNightMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+    accentLine: isNightMode ? 'rgba(255,198,76,0.3)' : 'rgba(180,83,9,0.2)',
+    accentLineBright: isNightMode ? 'rgba(255,198,76,0.5)' : 'rgba(180,83,9,0.35)',
+    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
+    textMuted: isNightMode ? '#888888' : '#6B7280',
+    textSubtle: isNightMode ? '#666666' : '#9CA3AF',
+    accent: isNightMode ? '#FFC64C' : '#B45309',
+    dotGreen: '#10B981',
+  }
+
+  return (
+    <motion.section
+      className="relative min-h-screen w-full overflow-hidden"
+      style={{ 
+        background: colors.bg,
+        opacity: heroOpacity,
+      }}
+    >
+      {/* Animated Grid Lines */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        style={{ y: heroY }}
+      >
+        {/* Vertical lines */}
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div
+            key={`v-${i}`}
+            className="absolute top-0 bottom-0 w-px"
+            style={{
+              left: `${i * 16.666}%`,
+              background: i === 3 ? colors.accentLine : colors.line,
+              transform: loaded ? 'scaleY(1)' : 'scaleY(0)',
+              transformOrigin: 'top',
+              transition: `transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) ${i * 0.03}s`,
+            }}
+          />
+        ))}
+
+        {/* Horizontal lines */}
+        {[1, 2, 3].map((i) => (
+          <div
+            key={`h-${i}`}
+            className="absolute left-0 right-0 h-px"
+            style={{
+              top: `${i * 25}%`,
+              background: i === 2 ? colors.accentLine : colors.line,
+              transform: loaded ? 'scaleX(1)' : 'scaleX(0)',
+              transformOrigin: 'left',
+              transition: `transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) ${0.15 + i * 0.05}s`,
+            }}
+          />
+        ))}
+
+        {/* Top-left corner accent */}
+        <div
+          className="absolute top-0 left-0 w-24 md:w-32 h-24 md:h-32"
+          style={{
+            borderLeft: `1px solid ${colors.accentLineBright}`,
+            borderTop: `1px solid ${colors.accentLineBright}`,
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.6s ease-out 0.3s',
+          }}
+        />
+
+        {/* Bottom-right corner accent */}
+        <div
+          className="absolute bottom-0 right-0 w-32 md:w-48 h-32 md:h-48"
+          style={{
+            borderRight: `1px solid ${colors.accentLineBright}`,
+            borderBottom: `1px solid ${colors.accentLineBright}`,
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.6s ease-out 0.35s',
+          }}
+        />
+
+        {/* Accent dot at center intersection */}
+        <div
+          className="absolute w-2 h-2 rounded-full"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: colors.accent,
+            opacity: loaded ? 0.6 : 0,
+            transition: 'opacity 0.6s ease-out 0.4s',
+            boxShadow: isNightMode ? `0 0 20px ${colors.accent}` : 'none',
+          }}
+        />
+      </motion.div>
+
+      {/* Content Grid */}
+      <motion.div 
+        className="relative z-10 h-screen flex flex-col justify-between px-6 md:px-12 lg:px-20 py-20 md:py-24"
+        style={{ opacity: heroOpacity }}
+      >
+        {/* Top Row */}
+        <div
+          className="flex justify-between items-start"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(-20px)',
+            transition: 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s',
+          }}
+        >
+          <span
+            className="text-xs tracking-[0.25em] uppercase font-medium"
+            style={{ color: colors.accent }}
+          >
+            Services
+          </span>
+          <span
+            className="text-xs tracking-wider hidden sm:block"
+            style={{ color: colors.textSubtle }}
+          >
+            Las Vegas / Remote
+          </span>
+        </div>
+
+        {/* Center Content */}
+        <div className="flex-1 flex items-center">
+          <div className="w-full grid grid-cols-12 gap-4">
+            {/* Main headline */}
+            <div
+              className="col-span-12 lg:col-span-8"
+              style={{
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(40px)',
+                transition: 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s',
+              }}
+            >
+              <h1
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-[1.05] tracking-tight"
+                style={{ color: colors.text }}
+              >
+                Websites, SEO,
+                <br />
+                and growth systems
+                <br />
+                <span style={{ color: colors.textMuted }}>that compound.</span>
+              </h1>
+            </div>
+
+            {/* Side content */}
+            <div
+              className="col-span-12 lg:col-span-3 lg:col-start-10 flex flex-col justify-end mt-8 lg:mt-0"
+              style={{
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(30px)',
+                transition: 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s',
+              }}
+            >
+              <p
+                className="text-sm leading-relaxed mb-6"
+                style={{ color: colors.textMuted }}
+              >
+                From fast WordPress launches to cinematic Next.js builds.
+                A complete digital foundation for brands ready to grow.
+              </p>
+              <a
+                href="#services"
+                className="inline-flex items-center gap-2 text-sm font-medium group"
+                style={{ color: colors.text }}
+              >
+                <span>View all services</span>
+                <svg
+                  className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
+        style={{ opacity: heroOpacity }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: loaded ? 1 : 0 }}
+        transition={{ delay: 0.5, duration: 0.6 }}
+      >
+        <motion.div
+          className="w-6 h-10 rounded-full border-2 flex items-start justify-center p-1.5"
+          style={{ borderColor: isNightMode ? 'rgba(251,191,36,0.3)' : 'rgba(180,83,9,0.25)' }}
+        >
+          <motion.div
+            className="w-1 h-2 rounded-full"
+            style={{ background: colors.accent }}
+            animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+          />
+        </motion.div>
+        <span
+          className="text-[10px] tracking-widest uppercase"
+          style={{ color: colors.textSubtle }}
+        >
+          Scroll
+        </span>
+      </motion.div>
+    </motion.section>
+  )
+}

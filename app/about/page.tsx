@@ -69,7 +69,7 @@ export default function AboutPage() {
     <main>
       {/* Hero Section with Ribbons */}
       <section
-        className="relative min-h-[80vh] flex items-center justify-center overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
         style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
       >
         {/* Ribbons Animation Background */}

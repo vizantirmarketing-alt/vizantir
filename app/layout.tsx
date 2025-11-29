@@ -26,16 +26,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('vizantir-theme') || 'dark';
-                  document.documentElement.style.backgroundColor = theme === 'dark' ? '#000' : '#FAFAFA';
-                  document.documentElement.setAttribute('data-theme', theme);
-                } catch (e) {}
+                  var theme = localStorage.getItem('vizantir-theme');
+                  var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  
+                  if (isDark) {
+                    document.documentElement.style.backgroundColor = '#000000';
+                    document.body.style.backgroundColor = '#000000';
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                  } else {
+                    document.documentElement.style.backgroundColor = '#FAFAFA';
+                    document.body.style.backgroundColor = '#FAFAFA';
+                    document.documentElement.setAttribute('data-theme', 'light');
+                  }
+                } catch (e) {
+                  document.documentElement.style.backgroundColor = '#000000';
+                  document.body.style.backgroundColor = '#000000';
+                }
               })();
             `,
           }}
         />
       </head>
-      <body style={{ backgroundColor: '#000' }}>
+      <body>
         <ThemeProvider>
           <SmoothScroll>
             <ScrollProgress />
