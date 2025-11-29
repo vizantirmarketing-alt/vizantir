@@ -29,7 +29,8 @@ const RibbonsAnimation = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = window.devicePixelRatio || 1;
+    // Get DPR - will be recalculated in resizeCanvas to handle changes
+    const initialDpr = window.devicePixelRatio || 1;
 
     const dayRibbonConfigs = [
       { color: "#FFC64C", angle: 35, startY: 0.15, speed: 0.5, width: 180, opacity: 0.35 },
@@ -72,15 +73,31 @@ const RibbonsAnimation = () => {
 
     const resizeCanvas = () => {
       const rect = canvas.getBoundingClientRect();
+      const currentDpr = window.devicePixelRatio || 1;
       
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      // Set actual canvas size (physical pixels)
+      // Setting width/height automatically resets the context, so we must set transform after
+      canvas.width = rect.width * currentDpr;
+      canvas.height = rect.height * currentDpr;
       
+      // CRITICAL: Always reset transform before scaling
+      // This prevents transform accumulation that causes blurriness
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
+      ctx.scale(currentDpr, currentDpr);
       
+      // Set display size (CSS pixels)
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
+      
+      // Debug logging - remove after confirming fix
+      console.log('Canvas resize:', {
+        width: canvas.width,
+        height: canvas.height,
+        displayWidth: rect.width,
+        displayHeight: rect.height,
+        dpr: currentDpr,
+        transform: ctx.getTransform()
+      });
     };
     
     resizeCanvas();
@@ -97,7 +114,18 @@ const RibbonsAnimation = () => {
       const rect = canvas.getBoundingClientRect();
       const visualWidth = rect.width;
       const visualHeight = rect.height;
+      const currentDpr = window.devicePixelRatio || 1;
       
+      // Verify canvas dimensions match expected size
+      // If they don't, trigger a resize (this handles edge cases)
+      const expectedWidth = rect.width * currentDpr;
+      const expectedHeight = rect.height * currentDpr;
+      if (canvas.width !== expectedWidth || canvas.height !== expectedHeight) {
+        resizeCanvas();
+        return; // Skip this frame, let resize complete
+      }
+      
+      // Clear the canvas in scaled coordinates
       ctx.clearRect(0, 0, visualWidth, visualHeight);
       
       ribbonsRef.current.forEach((ribbon) => {
@@ -129,9 +157,12 @@ const RibbonsAnimation = () => {
 
         ctx.save();
         ctx.globalCompositeOperation = isNightMode ? "screen" : "multiply";
-        ctx.filter = "blur(30px)";
+        // Blur is in the scaled coordinate system, so 30px gives 30px visual blur
+        // But on high DPR, we may need to adjust for crisp rendering
+        ctx.filter = `blur(${30}px)`;
         ctx.globalAlpha = ribbon.opacity;
         ctx.strokeStyle = gradient;
+        // lineWidth is in scaled coordinates (already accounts for DPR via ctx.scale)
         ctx.lineWidth = ribbon.width;
         ctx.lineCap = "round";
         ctx.beginPath();
