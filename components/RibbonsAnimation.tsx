@@ -29,9 +29,6 @@ const RibbonsAnimation = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Get DPR - will be recalculated in resizeCanvas to handle changes
-    const initialDpr = window.devicePixelRatio || 1;
-
     const dayRibbonConfigs = [
       { color: "#FFC64C", angle: 35, startY: 0.15, speed: 0.5, width: 180, opacity: 0.35 },
       { color: "#FFB5A0", angle: -25, startY: 0.45, speed: 0.4, width: 200, opacity: 0.3 },
@@ -48,93 +45,50 @@ const RibbonsAnimation = () => {
 
     const ribbonConfigs = isNightMode ? nightRibbonConfigs : dayRibbonConfigs;
 
+    const setCanvasSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
     const updateRibbons = () => {
-      const rect = canvas.getBoundingClientRect();
-      const visualWidth = rect.width;
-      const visualHeight = rect.height;
-      
       ribbonsRef.current = ribbonConfigs.map((config, index) => {
         const angleRad = (config.angle * Math.PI) / 180;
-        const length = visualWidth * 2.5;
+        const length = canvas.width * 2.5;
         return {
-          startX: -visualWidth * 0.5,
-          startY: visualHeight * config.startY,
-          endX: -visualWidth * 0.5 + Math.cos(angleRad) * length,
-          endY: visualHeight * config.startY + Math.sin(angleRad) * length,
+          startX: -canvas.width * 0.5,
+          startY: canvas.height * config.startY,
+          endX: -canvas.width * 0.5 + Math.cos(angleRad) * length,
+          endY: canvas.height * config.startY + Math.sin(angleRad) * length,
           width: config.width,
           color: config.color,
           opacity: config.opacity,
-          offset: (index * visualWidth * 0.5), // Stagger ribbons evenly
+          offset: (index * canvas.width * 0.5), // Stagger ribbons evenly
           speed: config.speed,
           angle: angleRad,
         };
       });
     };
-
-    const resizeCanvas = () => {
-      const rect = canvas.getBoundingClientRect();
-      const currentDpr = window.devicePixelRatio || 1;
-      
-      // Set actual canvas size (physical pixels)
-      // Setting width/height automatically resets the context, so we must set transform after
-      canvas.width = rect.width * currentDpr;
-      canvas.height = rect.height * currentDpr;
-      
-      // CRITICAL: Always reset transform before scaling
-      // This prevents transform accumulation that causes blurriness
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(currentDpr, currentDpr);
-      
-      // Set display size (CSS pixels)
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      
-      // Debug logging - remove after confirming fix
-      console.log('Canvas resize:', {
-        width: canvas.width,
-        height: canvas.height,
-        displayWidth: rect.width,
-        displayHeight: rect.height,
-        dpr: currentDpr,
-        transform: ctx.getTransform()
-      });
-    };
     
-    resizeCanvas();
+    setCanvasSize();
     updateRibbons();
     
     const handleResize = () => {
-      resizeCanvas();
+      setCanvasSize();
       updateRibbons();
     };
     
     window.addEventListener("resize", handleResize);
 
     const animateRibbons = () => {
-      const rect = canvas.getBoundingClientRect();
-      const visualWidth = rect.width;
-      const visualHeight = rect.height;
-      const currentDpr = window.devicePixelRatio || 1;
-      
-      // Verify canvas dimensions match expected size
-      // If they don't, trigger a resize (this handles edge cases)
-      const expectedWidth = rect.width * currentDpr;
-      const expectedHeight = rect.height * currentDpr;
-      if (canvas.width !== expectedWidth || canvas.height !== expectedHeight) {
-        resizeCanvas();
-        return; // Skip this frame, let resize complete
-      }
-      
-      // Clear the canvas in scaled coordinates
-      ctx.clearRect(0, 0, visualWidth, visualHeight);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       ribbonsRef.current.forEach((ribbon) => {
         ribbon.offset += ribbon.speed;
         
         // Reset when ribbon moves past screen - creates seamless loop
-        const resetThreshold = visualWidth * 2;
+        const resetThreshold = canvas.width * 2;
         if (ribbon.offset > resetThreshold) {
-          ribbon.offset = -visualWidth * 0.8;
+          ribbon.offset = -canvas.width * 0.8;
         }
 
         const currentStartX = ribbon.startX + ribbon.offset;
@@ -157,12 +111,9 @@ const RibbonsAnimation = () => {
 
         ctx.save();
         ctx.globalCompositeOperation = isNightMode ? "screen" : "multiply";
-        // Blur is in the scaled coordinate system, so 30px gives 30px visual blur
-        // But on high DPR, we may need to adjust for crisp rendering
         ctx.filter = `blur(${30}px)`;
         ctx.globalAlpha = ribbon.opacity;
         ctx.strokeStyle = gradient;
-        // lineWidth is in scaled coordinates (already accounts for DPR via ctx.scale)
         ctx.lineWidth = ribbon.width;
         ctx.lineCap = "round";
         ctx.beginPath();
@@ -189,7 +140,12 @@ const RibbonsAnimation = () => {
     <canvas 
       ref={canvasRef} 
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 1 }}
+      style={{ 
+        zIndex: 1,
+        imageRendering: 'crisp-edges',
+        // @ts-ignore - WebkitImageRendering is valid CSS
+        WebkitImageRendering: 'crisp-edges',
+      }}
     />
   );
 };
