@@ -2,13 +2,14 @@
 
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import Link from 'next/link'
 
 export default function CareersPage() {
   const { isNightMode } = useTheme()
 
   return (
-    <main className="min-h-screen transition-colors duration-500 flex items-center justify-center" style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}>
+    <main className="min-h-screen flex items-center justify-center" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       <section className="px-4 py-24 text-center">
         <div className="max-w-2xl mx-auto">
           <motion.div 

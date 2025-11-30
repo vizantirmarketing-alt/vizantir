@@ -146,7 +146,7 @@ const Navbar = () => {
                 </div>
               </button>
 
-              <Link href="/contact">
+              <Link href="/get-started">
                 <button
                   className="glow-button px-6 py-2.5 rounded-lg font-semibold text-sm"
                   style={{
@@ -241,7 +241,7 @@ const Navbar = () => {
               </div>
               
               <div className="mt-4 px-4">
-                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/get-started" onClick={() => setIsMobileMenuOpen(false)}>
                   <button
                     className="glow-button w-full px-6 py-2.5 rounded-lg font-semibold text-sm"
                     style={{

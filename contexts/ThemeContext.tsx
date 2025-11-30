@@ -55,8 +55,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // Update data-theme attribute and background when theme changes
     if (mounted && typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', isNightMode ? 'dark' : 'light')
+      // Add smooth transitions to document elements
+      document.documentElement.style.transition = 'background-color 0.5s ease'
       document.documentElement.style.backgroundColor = isNightMode ? '#000000' : '#FAFAFA'
       if (document.body) {
+        document.body.style.transition = 'background-color 0.5s ease'
         document.body.style.backgroundColor = isNightMode ? '#000000' : '#FAFAFA'
       }
     }
