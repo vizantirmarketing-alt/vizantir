@@ -11,11 +11,21 @@ const Hero = () => {
   const { isNightMode, mounted } = useTheme();
   const { scrollY } = useScroll();
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
-  // Fade out and parallax as you scroll
-  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
-  const y = useTransform(scrollY, [0, 400], [0, 100]);
-  const scale = useTransform(scrollY, [0, 400], [1, 0.95]);
+  // Detect mobile for responsive scroll fade
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Slower fade on mobile (0-1000px scroll), faster on desktop (0-500px)
+  const scrollEnd = isMobile ? 1000 : 500;
+  const opacity = useTransform(scrollY, [0, scrollEnd], [1, 0]);
+  const y = useTransform(scrollY, [0, scrollEnd], [0, 100]);
+  const scale = useTransform(scrollY, [0, scrollEnd], [1, 0.95]);
 
   // Prevent flash by only showing content after theme is mounted
   useEffect(() => {
@@ -146,7 +156,7 @@ const Hero = () => {
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}
-        <div className="relative order-1 h-[500px] sm:h-[600px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible">
+        <div className="relative order-1 h-[280px] sm:h-[350px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible">
           <div className="relative w-full h-full max-w-[700px] -mt-16 lg:-mt-24">
             <LiquidMetalTorus isNightMode={isNightMode} />
           </div>

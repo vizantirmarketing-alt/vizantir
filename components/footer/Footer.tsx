@@ -36,29 +36,69 @@ const Footer = () => {
             <div className="flex gap-4">
               <a 
                 href="#" 
-                className="transition-colors hover:opacity-80"
-                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                className="transition-all duration-300 hover:scale-110"
+                style={{ 
+                  color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFC64C'
+                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B'
+                  e.currentTarget.style.filter = 'none'
+                }}
               >
                 <Facebook size={20} />
               </a>
               <a 
                 href="#" 
-                className="transition-colors hover:opacity-80"
-                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                className="transition-all duration-300 hover:scale-110"
+                style={{ 
+                  color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFC64C'
+                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B'
+                  e.currentTarget.style.filter = 'none'
+                }}
               >
                 <Twitter size={20} />
               </a>
               <a 
                 href="#" 
-                className="transition-colors hover:opacity-80"
-                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                className="transition-all duration-300 hover:scale-110"
+                style={{ 
+                  color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFC64C'
+                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B'
+                  e.currentTarget.style.filter = 'none'
+                }}
               >
                 <Linkedin size={20} />
               </a>
               <a 
                 href="#" 
-                className="transition-colors hover:opacity-80"
-                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                className="transition-all duration-300 hover:scale-110"
+                style={{ 
+                  color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFC64C'
+                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B'
+                  e.currentTarget.style.filter = 'none'
+                }}
               >
                 <Instagram size={20} />
               </a>
@@ -107,7 +147,7 @@ const Footer = () => {
                 { name: 'Blog', href: '/blog' },
                 { name: 'FAQ', href: '/faq' },
                 { name: 'Testimonials', href: '/testimonials' },
-                { name: 'Sitemap', href: '/sitemap' },
+                { name: 'Sitemap', href: '/sitemap-page' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link 
@@ -136,21 +176,21 @@ const Footer = () => {
                 style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
               >
                 <Mail size={18} className="mt-1 flex-shrink-0" />
-                <span>contact@vizantir.com</span>
+                <span>contact: info@vizantir.com</span>
               </li>
               <li 
                 className="flex items-start gap-2"
                 style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
               >
                 <Phone size={18} className="mt-1 flex-shrink-0" />
-                <span>+1 (555) 123-4567</span>
+                <span>+1 (702) 604-6177</span>
               </li>
               <li 
                 className="flex items-start gap-2"
                 style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
               >
                 <MapPin size={18} className="mt-1 flex-shrink-0" />
-                <span>123 Marketing Street, Digital City, DC 12345</span>
+                <span>Las Vegas, NV 89139</span>
               </li>
             </ul>
           </div>
@@ -170,9 +210,9 @@ const Footer = () => {
             </p>
             <div className="flex gap-6">
               {[
-                { name: 'Privacy Policy', href: '/privacy-policy' },
-                { name: 'Terms of Service', href: '/terms-of-service' },
-                { name: 'Cookie Policy', href: '/cookie-policy' },
+                { name: 'Privacy Policy', href: '/privacy' },
+                { name: 'Terms of Service', href: '/terms' },
+                { name: 'Cookie Policy', href: '/cookies' },
                 { name: 'Copyright', href: '/copyright' },
               ].map((link) => (
                 <Link 

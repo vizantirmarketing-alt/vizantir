@@ -10,6 +10,7 @@ interface LiquidMetalTorusProps {
 export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalTorusProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
   const frameRef = useRef<number>(0)
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 })
 
@@ -21,15 +22,18 @@ export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalToru
     // Scene
     const scene = new THREE.Scene()
 
-    // Camera - closer for bigger torus
+    // Camera - further back on mobile for smaller torus
     const camera = new THREE.PerspectiveCamera(
       45,
       container.clientWidth / container.clientHeight,
       0.1,
       1000
     )
-    camera.position.z = 6.5
+    // Pull camera back on mobile (smaller screens) to make torus appear smaller
+    const isMobile = container.clientWidth < 640 // sm breakpoint
+    camera.position.z = isMobile ? 7 : 6.5
     camera.position.y = 0.2
+    cameraRef.current = camera
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({ 
@@ -281,20 +285,29 @@ export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalToru
       material.uniforms.uTime.value = time
       material.uniforms.uMouse.value.set(mouseRef.current.x, mouseRef.current.y)
 
-      renderer.render(scene, camera)
+      renderer.render(scene, cameraRef.current || camera)
     }
     animate()
 
     // Resize handler
     const handleResize = () => {
-      if (!container || !rendererRef.current) return
+      if (!container || !rendererRef.current || !cameraRef.current) return
       
       const width = container.clientWidth
       const height = container.clientHeight
       
+      const camera = cameraRef.current
       camera.aspect = width / height
       camera.updateProjectionMatrix()
+      
+      // Adjust camera position based on screen size
+      const isMobile = width < 640 // sm breakpoint
+      camera.position.z = isMobile ? 7 : 6.5
+      
       rendererRef.current.setSize(width, height)
+      if (material.uniforms?.uResolution) {
+        material.uniforms.uResolution.value.set(width, height)
+      }
     }
     window.addEventListener('resize', handleResize)
 
