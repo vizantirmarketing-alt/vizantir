@@ -9,8 +9,13 @@ import { useTheme } from "@/contexts/ThemeContext";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { isNightMode, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,16 +68,20 @@ const Navbar = () => {
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
           background: isScrolled 
-            ? (isNightMode 
+            ? (!mounted
                 ? 'rgba(10, 10, 10, 0.12)'
-                : 'rgba(250, 250, 250, 0.18)')
+                : isNightMode 
+                  ? 'rgba(10, 10, 10, 0.12)'
+                  : 'rgba(250, 250, 250, 0.18)')
             : 'transparent',
           backdropFilter: isScrolled ? 'blur(14px) saturate(180%)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(14px) saturate(180%)' : 'none',
           borderBottom: isScrolled
-            ? (isNightMode
+            ? (!mounted
                 ? '1px solid rgba(255, 255, 255, 0.08)'
-                : '1px solid rgba(0, 0, 0, 0.03)')
+                : isNightMode
+                  ? '1px solid rgba(255, 255, 255, 0.08)'
+                  : '1px solid rgba(0, 0, 0, 0.03)')
             : 'none',
           boxShadow: isScrolled ? '0 4px 24px rgba(0, 0, 0, 0.04)' : 'none',
           paddingTop: isScrolled ? '0.75rem' : '1.25rem',
@@ -82,11 +91,15 @@ const Navbar = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center transition-opacity duration-300 hover:opacity-80">
-              <img 
-                src={isNightMode ? "/logo/logo-dark.svg" : "/logo/logo-light.svg"} 
-                alt="Vizantir Logo" 
-                className="h-5 md:h-7 w-auto transition-opacity duration-300"
-              />
+              {!mounted ? (
+                <div className="h-5 md:h-7 w-24" />
+              ) : (
+                <img 
+                  src={isNightMode ? "/logo/logo-dark.svg" : "/logo/logo-light.svg"} 
+                  alt="Vizantir Logo" 
+                  className="h-5 md:h-7 w-auto transition-opacity duration-300"
+                />
+              )}
             </Link>
 
             {/* Desktop Navigation */}
@@ -99,9 +112,11 @@ const Navbar = () => {
                   style={{
                     color: pathname === link.path 
                       ? '#FFC64C'  // Active link = gold
-                      : isNightMode 
-                        ? '#F8F8F8'  // Inactive in dark mode = white
-                        : '#1A1A1A',  // Inactive in light mode = black
+                      : !mounted
+                        ? '#F8F8F8'  // Default until mounted
+                        : isNightMode 
+                          ? '#F8F8F8'  // Inactive in dark mode = white
+                          : '#1A1A1A',  // Inactive in light mode = black
                   }}
                 >
                   {link.name}
@@ -114,37 +129,39 @@ const Navbar = () => {
 
             <div className="hidden lg:flex items-center gap-4">
               {/* Theme Toggle */}
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105"
-                style={{
-                  background: isNightMode ? "rgba(30, 41, 59, 0.6)" : "rgba(255, 255, 255, 0.6)",
-                  border: isNightMode ? "1px solid rgba(148, 163, 184, 0.3)" : "1px solid rgba(0, 0, 0, 0.1)",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                {isNightMode ? (
-                  <Moon size={16} style={{ color: "#94a3b8" }} />
-                ) : (
-                  <Sun size={16} style={{ color: "#1A1A1A" }} />
-                )}
-                <div
-                  className="relative w-8 h-4 rounded-full transition-all duration-300"
+              {mounted && (
+                <button
+                  onClick={toggleTheme}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105"
                   style={{
-                    background: isNightMode
-                      ? "linear-gradient(135deg, #1e293b, #334155)"
-                      : "linear-gradient(135deg, #FFC64C, #FFB84D)",
+                    background: isNightMode ? "rgba(30, 41, 59, 0.6)" : "rgba(255, 255, 255, 0.6)",
+                    border: isNightMode ? "1px solid rgba(148, 163, 184, 0.3)" : "1px solid rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                   }}
                 >
+                  {isNightMode ? (
+                    <Moon size={16} style={{ color: "#94a3b8" }} />
+                  ) : (
+                    <Sun size={16} style={{ color: "#1A1A1A" }} />
+                  )}
                   <div
-                    className="absolute top-0.5 w-3 h-3 rounded-full transition-all duration-300 shadow-md"
+                    className="relative w-8 h-4 rounded-full transition-all duration-300"
                     style={{
-                      left: isNightMode ? "1rem" : "0.125rem",
-                      background: isNightMode ? "#FAFAFA" : "#000000",
+                      background: isNightMode
+                        ? "linear-gradient(135deg, #1e293b, #334155)"
+                        : "linear-gradient(135deg, #FFC64C, #FFB84D)",
                     }}
-                  />
-                </div>
-              </button>
+                  >
+                    <div
+                      className="absolute top-0.5 w-3 h-3 rounded-full transition-all duration-300 shadow-md"
+                      style={{
+                        left: isNightMode ? "1rem" : "0.125rem",
+                        background: isNightMode ? "#FAFAFA" : "#000000",
+                      }}
+                    />
+                  </div>
+                </button>
+              )}
 
               <Link href="/get-started">
                 <button
@@ -164,7 +181,7 @@ const Navbar = () => {
             <button 
               className="lg:hidden" 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              style={{ color: isNightMode ? '#F7F7F7' : '#1A1A1A' }}
+              style={{ color: !mounted ? '#F7F7F7' : isNightMode ? '#F7F7F7' : '#1A1A1A' }}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -175,17 +192,23 @@ const Navbar = () => {
             <div 
               className="lg:hidden mt-4 pb-4 pt-4 rounded-lg"
               style={{
-                background: isNightMode 
+                background: !mounted
                   ? 'linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.75) 100%)'
-                  : 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.75) 100%)',
+                  : isNightMode 
+                    ? 'linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.75) 100%)'
+                    : 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.75) 100%)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                border: isNightMode 
-                  ? '1px solid rgba(255, 255, 255, 0.1)' 
-                  : '1px solid rgba(0, 0, 0, 0.08)',
-                boxShadow: isNightMode 
-                  ? '0 8px 32px rgba(0, 0, 0, 0.4)' 
-                  : '0 8px 32px rgba(0, 0, 0, 0.1)',
+                border: !mounted
+                  ? '1px solid rgba(255, 255, 255, 0.1)'
+                  : isNightMode 
+                    ? '1px solid rgba(255, 255, 255, 0.1)' 
+                    : '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: !mounted
+                  ? '0 8px 32px rgba(0, 0, 0, 0.4)'
+                  : isNightMode 
+                    ? '0 8px 32px rgba(0, 0, 0, 0.4)' 
+                    : '0 8px 32px rgba(0, 0, 0, 0.1)',
               }}
             >
               {navLinks.map((link) => (
@@ -196,9 +219,11 @@ const Navbar = () => {
                   style={{
                     color: pathname === link.path 
                       ? '#FFC64C'  // Active link = gold
-                      : isNightMode 
-                        ? '#F8F8F8'  // Inactive in dark mode = white
-                        : '#1A1A1A',  // Inactive in light mode = black
+                      : !mounted
+                        ? '#F8F8F8'  // Default until mounted
+                        : isNightMode 
+                          ? '#F8F8F8'  // Inactive in dark mode = white
+                          : '#1A1A1A',  // Inactive in light mode = black
                     background: pathname === link.path 
                       ? (isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.1)')
                       : 'transparent',
@@ -210,35 +235,37 @@ const Navbar = () => {
               ))}
               
               {/* Mobile Theme Toggle */}
-              <div className="flex items-center justify-center gap-3 py-3 px-4">
-                <span className="text-sm" style={{ color: isNightMode ? '#F7F7F7' : '#1A1A1A' }}>
-                  {isNightMode ? 'Dark' : 'Light'}
-                </span>
-                <button
-                  onClick={toggleTheme}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm transition-all duration-300"
-                  style={{
-                    background: isNightMode ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-                    border: isNightMode ? '1px solid rgba(148, 163, 184, 0.4)' : '1px solid rgba(0, 0, 0, 0.15)',
-                  }}
-                >
-                  {isNightMode ? <Moon size={16} style={{ color: '#94a3b8' }} /> : <Sun size={16} style={{ color: '#1A1A1A' }} />}
-                  <div 
-                    className="relative w-8 h-4 rounded-full transition-all duration-300"
+              {mounted && (
+                <div className="flex items-center justify-center gap-3 py-3 px-4">
+                  <span className="text-sm" style={{ color: isNightMode ? '#F7F7F7' : '#1A1A1A' }}>
+                    {isNightMode ? 'Dark' : 'Light'}
+                  </span>
+                  <button
+                    onClick={toggleTheme}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm transition-all duration-300"
                     style={{
-                      background: isNightMode ? 'linear-gradient(135deg, #1e293b, #334155)' : 'linear-gradient(135deg, #FFC64C, #FFB84D)',
+                      background: isNightMode ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+                      border: isNightMode ? '1px solid rgba(148, 163, 184, 0.4)' : '1px solid rgba(0, 0, 0, 0.15)',
                     }}
                   >
+                    {isNightMode ? <Moon size={16} style={{ color: '#94a3b8' }} /> : <Sun size={16} style={{ color: '#1A1A1A' }} />}
                     <div 
-                      className="absolute top-0.5 w-3 h-3 rounded-full transition-all duration-300 shadow-md"
+                      className="relative w-8 h-4 rounded-full transition-all duration-300"
                       style={{
-                        left: isNightMode ? '1rem' : '0.125rem',
-                        background: isNightMode ? '#FAFAFA' : '#000000',
+                        background: isNightMode ? 'linear-gradient(135deg, #1e293b, #334155)' : 'linear-gradient(135deg, #FFC64C, #FFB84D)',
                       }}
-                    />
-                  </div>
-                </button>
-              </div>
+                    >
+                      <div 
+                        className="absolute top-0.5 w-3 h-3 rounded-full transition-all duration-300 shadow-md"
+                        style={{
+                          left: isNightMode ? '1rem' : '0.125rem',
+                          background: isNightMode ? '#FAFAFA' : '#000000',
+                        }}
+                      />
+                    </div>
+                  </button>
+                </div>
+              )}
               
               <div className="mt-4 px-4">
                 <Link href="/get-started" onClick={() => setIsMobileMenuOpen(false)}>

@@ -11,6 +11,8 @@ import SmoothScroll from '@/components/SmoothScroll'
 
 import ScrollProgress from '@/components/ScrollProgress'
 
+import { ScrollToTop } from '@/components/ScrollToTop'
+
 import './globals.css'
 
 // Load Satoshi font family
@@ -57,7 +59,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               (function() {
                 try {
                   var theme = localStorage.getItem('vizantir-theme');
-                  var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  // Default to dark mode to match server-side rendering
+                  var isDark = theme === 'dark' || theme === null;
                   
                   if (isDark) {
                     if (document.documentElement) {
@@ -81,6 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     }
                   }
                 } catch (e) {
+                  // Default to dark mode on error to match server
                   if (document.documentElement) {
                     document.documentElement.style.backgroundColor = '#000000';
                   }
@@ -96,6 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={satoshi.variable} suppressHydrationWarning>
         <ThemeProvider>
           <SmoothScroll>
+            <ScrollToTop />
             <ScrollProgress />
             <Navbar />
             <main>{children}</main>

@@ -30,6 +30,7 @@ export default function ServicesHero() {
   }, [])
 
   // Theme colors - matching Vizantir standards
+  // Always start with dark mode to match server-side rendering
   const colors = {
     bg: isNightMode ? '#000000' : '#FAFAFA',
     line: isNightMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',

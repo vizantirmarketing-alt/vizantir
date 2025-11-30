@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useLayoutEffect, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 interface ThemeContextType {
   isNightMode: boolean
@@ -8,69 +8,52 @@ interface ThemeContextType {
   mounted: boolean
 }
 
-const ThemeContext = createContext<ThemeContextType>({
-  isNightMode: true,
-  toggleTheme: () => {},
-  mounted: false,
-})
-
-// Helper to get initial theme - safe for SSR
-function getInitialTheme(): boolean {
-  if (typeof window === 'undefined') return true // Default to dark for SSR
-  
-  try {
-    const saved = localStorage.getItem('vizantir-theme')
-    if (saved) {
-      return saved === 'dark'
-    }
-    // Check system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-  } catch {
-    return true // Default to dark on error
-  }
-}
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Initialize with function to read from localStorage synchronously on client
-  const [isNightMode, setIsNightMode] = useState(() => getInitialTheme())
+  // Always start with dark mode on server to prevent mismatch
+  const [isNightMode, setIsNightMode] = useState(true)
   const [mounted, setMounted] = useState(false)
 
-  // Use useLayoutEffect to read theme before first paint (prevents flash)
-  useLayoutEffect(() => {
-    const initialMode = getInitialTheme()
-    setIsNightMode(initialMode)
+  useEffect(() => {
+    // Only read localStorage after component mounts (client-side only)
+    const saved = localStorage.getItem('vizantir-theme')
+    if (saved !== null) {
+      setIsNightMode(saved === 'dark')
+    }
     setMounted(true)
     
-    // Sync data-theme attribute and background immediately
+    // Sync data-theme attribute and background after mount
     if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', initialMode ? 'dark' : 'light')
-      document.documentElement.style.backgroundColor = initialMode ? '#000000' : '#FAFAFA'
+      const theme = saved === 'dark' || (saved === null && true) // Default to dark if no saved preference
+      document.documentElement.setAttribute('data-theme', theme ? 'dark' : 'light')
+      document.documentElement.style.backgroundColor = theme ? '#000000' : '#FAFAFA'
+      document.documentElement.style.transition = 'background-color 0.5s ease'
       if (document.body) {
-        document.body.style.backgroundColor = initialMode ? '#000000' : '#FAFAFA'
+        document.body.style.backgroundColor = theme ? '#000000' : '#FAFAFA'
+        document.body.style.transition = 'background-color 0.5s ease'
       }
     }
   }, [])
 
   useEffect(() => {
-    // Update data-theme attribute and background when theme changes
-    if (mounted && typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', isNightMode ? 'dark' : 'light')
-      // Add smooth transitions to document elements
-      document.documentElement.style.transition = 'background-color 0.5s ease'
-      document.documentElement.style.backgroundColor = isNightMode ? '#000000' : '#FAFAFA'
-      if (document.body) {
-        document.body.style.transition = 'background-color 0.5s ease'
-        document.body.style.backgroundColor = isNightMode ? '#000000' : '#FAFAFA'
+    // Only save to localStorage after initial mount
+    if (mounted) {
+      localStorage.setItem('vizantir-theme', isNightMode ? 'dark' : 'light')
+      
+      // Update data-theme attribute and background when theme changes
+      if (typeof document !== 'undefined') {
+        document.documentElement.setAttribute('data-theme', isNightMode ? 'dark' : 'light')
+        document.documentElement.style.backgroundColor = isNightMode ? '#000000' : '#FAFAFA'
+        if (document.body) {
+          document.body.style.backgroundColor = isNightMode ? '#000000' : '#FAFAFA'
+        }
       }
     }
   }, [isNightMode, mounted])
 
   const toggleTheme = () => {
-    setIsNightMode(prev => {
-      const newMode = !prev
-      localStorage.setItem('vizantir-theme', newMode ? 'dark' : 'light')
-      return newMode
-    })
+    setIsNightMode(prev => !prev)
   }
 
   return (
@@ -81,5 +64,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 }
 
 export function useTheme() {
-  return useContext(ThemeContext)
+  const context = useContext(ThemeContext)
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider')
+  }
+  return context
 }
