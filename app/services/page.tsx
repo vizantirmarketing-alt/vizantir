@@ -3,9 +3,19 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '@/contexts/ThemeContext'
+import Link from 'next/link'
 import ServicesHero from './ServicesHero'
 
 type ServiceKey = 'web' | 'seo' | 'care' | 'marketing' | 'addons'
+
+// Map service IDs to individual service page slugs
+const serviceSlugMap: Record<ServiceKey, string | null> = {
+  'web': 'web-design',
+  'seo': 'seo',
+  'care': null, // No individual page yet
+  'marketing': 'ppc', // Maps to PPC page
+  'addons': null, // No individual page yet
+}
 
 interface Service {
   id: ServiceKey
@@ -235,6 +245,20 @@ export default function ServicesPage() {
                             style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }}
                           >
                             <ServiceContent id={service.id} isNightMode={isNightMode} />
+                            {serviceSlugMap[service.id] && (
+                              <div className="mt-6">
+                                <Link
+                                  href={`/services/${serviceSlugMap[service.id]}`}
+                                  className="inline-flex items-center gap-2 text-sm font-semibold transition-all duration-300 hover:opacity-80"
+                                  style={{ color: '#FFC64C' }}
+                                >
+                                  Learn More
+                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                  </svg>
+                                </Link>
+                              </div>
+                            )}
                           </div>
                         </motion.div>
                       )}

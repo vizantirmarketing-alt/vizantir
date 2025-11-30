@@ -8,6 +8,7 @@ import Link from 'next/link'
 export default function FAQPage() {
   const { isNightMode } = useTheme()
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const faqs = [
     {
@@ -60,6 +61,11 @@ export default function FAQPage() {
     }
   ]
 
+  const filteredFaqs = faqs.filter(faq => 
+    faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
   }
@@ -76,60 +82,118 @@ export default function FAQPage() {
               Get answers to common questions about digital marketing, SEO, PPC, and how we can help grow your business.
             </p>
           </motion.div>
+          
+          {/* Search Bar */}
+          <div className="mt-8 max-w-xl mx-auto">
+            <div className="relative">
+              <svg 
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" 
+                style={{ color: isNightMode ? 'rgba(255,255,255,0.4)' : '#888888' }}
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor" 
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search FAQs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                style={{ 
+                  background: isNightMode ? 'rgba(255,255,255,0.05)' : '#FFFFFF',
+                  border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                  color: isNightMode ? '#FFFFFF' : '#1A1A1A'
+                }}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:opacity-70 transition-opacity"
+                  style={{ color: isNightMode ? 'rgba(255,255,255,0.4)' : '#888888' }}
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="px-4 pb-24">
         <div className="max-w-4xl mx-auto">
           <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="rounded-xl overflow-hidden"
-                style={{ 
-                  background: isNightMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-                  border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`
-                }}
-              >
+            {filteredFaqs.length === 0 ? (
+              <div className="text-center py-12">
+                <p style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
+                  No FAQs found matching &quot;{searchQuery}&quot;
+                </p>
                 <button
-                  onClick={() => toggleFAQ(index)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors"
-                  style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                  onClick={() => setSearchQuery('')}
+                  className="mt-4 text-sm font-medium hover:opacity-80 transition-opacity"
+                  style={{ color: '#FFC64C' }}
                 >
-                  <span className="text-lg font-semibold pr-8">{faq.question}</span>
-                  <motion.span
-                    animate={{ rotate: openIndex === index ? 45 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
-                    style={{ background: '#FFC64C', color: '#1A1A1A' }}
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
-                  </motion.span>
+                  Clear search
                 </button>
-                <AnimatePresence>
-                  {openIndex === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
+              </div>
+            ) : (
+              filteredFaqs.map((faq, index) => {
+                // Find the original index in the full faqs array
+                const originalIndex = faqs.findIndex(f => f.question === faq.question)
+                return (
+                  <motion.div
+                    key={originalIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                    className="rounded-xl overflow-hidden"
+                    style={{ 
+                      background: isNightMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+                      border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`
+                    }}
+                  >
+                    <button
+                      onClick={() => toggleFAQ(originalIndex)}
+                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors"
+                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                     >
-                      <div className="px-6 pb-6">
-                        <p className="leading-relaxed" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
+                      <span className="text-lg font-semibold pr-8">{faq.question}</span>
+                      <motion.span
+                        animate={{ rotate: openIndex === originalIndex ? 45 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+                        style={{ background: '#FFC64C', color: '#1A1A1A' }}
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                      </motion.span>
+                    </button>
+                    <AnimatePresence>
+                      {openIndex === originalIndex && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-6 pb-6">
+                            <p className="leading-relaxed" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
+                              {faq.answer}
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                )
+              })
+            )}
           </div>
 
           {/* CTA Section */}

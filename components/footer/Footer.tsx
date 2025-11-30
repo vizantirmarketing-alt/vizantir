@@ -117,8 +117,8 @@ const Footer = () => {
               {[
                 { name: 'Services', href: '/services' },
                 { name: 'About Us', href: '/about' },
-                { name: 'Case Studies', href: '/case-studies' },
-                { name: 'Portfolio', href: '/portfolio' },
+                // { name: 'Case Studies', href: '/case-studies' }, // Temporarily hidden
+                // { name: 'Portfolio', href: '/portfolio' }, // Temporarily hidden
                 { name: 'Careers', href: '/careers' },
               ].map((link) => (
                 <li key={link.href}>
@@ -146,7 +146,7 @@ const Footer = () => {
               {[
                 { name: 'Blog', href: '/blog' },
                 { name: 'FAQ', href: '/faq' },
-                { name: 'Testimonials', href: '/testimonials' },
+                // { name: 'Testimonials', href: '/testimonials' }, // Temporarily hidden
                 { name: 'Sitemap', href: '/sitemap-page' },
               ].map((link) => (
                 <li key={link.href}>
