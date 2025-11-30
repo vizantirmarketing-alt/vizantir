@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -26,7 +27,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   // Simple markdown-like content rendering
   const renderContent = (content: string) => {
     const lines = content.split('\n')
-    const elements: JSX.Element[] = []
+    const elements: React.ReactElement[] = []
     let currentParagraph: string[] = []
     let listItems: string[] = []
     let inList = false

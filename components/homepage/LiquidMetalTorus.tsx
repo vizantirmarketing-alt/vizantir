@@ -28,7 +28,7 @@ export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalToru
       0.1,
       1000
     )
-    camera.position.z = 6
+    camera.position.z = 6.5
     camera.position.y = 0.2
 
     // Renderer
