@@ -219,3 +219,5 @@ All hero sections use `min-h-screen` as required:
 
 **Next Steps:** Fix all critical and high-priority issues to achieve 100% design system compliance.
 
+
+

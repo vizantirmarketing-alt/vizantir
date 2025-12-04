@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import Script from 'next/script'
 
 import { ThemeProvider } from '@/contexts/ThemeContext'
 
@@ -107,6 +108,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
           </SmoothScroll>
         </ThemeProvider>
+        
+        {/* Chatbase Chatbot */}
+        <Script
+          src="https://www.chatbase.co/embed.min.js"
+          strategy="lazyOnload"
+          id="chatbase-script"
+          defer
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.embeddedChatbotConfig = {
+                chatbotId: "FAr-BdEt5S7mZZY1pDbg-",
+                domain: "www.chatbase.co"
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   )

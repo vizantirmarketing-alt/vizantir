@@ -216,7 +216,7 @@ const Hero = () => {
       </motion.div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
+      <div className="flex absolute bottom-2 sm:bottom-4 md:bottom-12 lg:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-bounce z-20">
         <div 
           className="w-6 h-10 rounded-full border-2 flex justify-center pt-2 transition-colors duration-500"
           style={{ borderColor: isNightMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)' }}
