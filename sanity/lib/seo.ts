@@ -5,3 +5,5 @@ export async function getPageSeo(slug: string) {
   return client.fetch(seoQuery, { slug });
 }
 
+
+

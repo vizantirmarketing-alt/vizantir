@@ -1,12 +1,11 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 
 const PortfolioPreview = () => {
-  const { isNightMode } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -31,171 +30,110 @@ const PortfolioPreview = () => {
     {
       title: 'Pink Salt Salon',
       category: 'Beauty & Wellness',
-      image: '/images/portfolio/pinksalt-mockup.png',
+      description: 'Luxury nail salon website with dark theme, elegant typography, and seamless booking integration.',
+      image: '/ps.png',
+      link: 'https://pinksaltsalonandspa.com',
     },
     {
-      title: 'Client Project',
-      category: 'E-Commerce',
-      image: '/images/portfolio/client-mockup.png',
+      title: 'Essence of Watches',
+      category: 'Luxury E-Commerce',
+      description: 'Pre-owned Rolex marketplace featuring premium design, authentication flow, and advanced filtering.',
+      image: '/eow.png',
+      link: 'https://essenceofwatches.com',
     },
   ];
 
   return (
     <section
       ref={sectionRef}
-      className="py-20 md:py-24 transition-colors duration-500"
-      style={{
-        background: isNightMode ? '#000000' : '#FAFAFA',
-      }}
+      className="py-24 md:py-32 bg-[#0A0A0A]"
     >
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
           <div
-            className={`text-center mb-16 transition-all duration-700 ${
+            className={`text-center mb-20 transition-all duration-700 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <h3
-              className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-            >
+            <p className="text-sm tracking-[0.3em] uppercase text-[#FFC64C] mb-4">
               Our Work
-            </h3>
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500 leading-tight"
-              style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
-            >
+            </p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
               Websites We've Launched
             </h2>
-            <p
-              className="text-xl max-w-2xl mx-auto transition-colors duration-500"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-            >
-              Helping businesses scale their online presence with modern, high-performing websites. 
-              Every website we launch is designed for speed, SEO, and conversions.
+            <p className="text-lg md:text-xl max-w-2xl mx-auto text-gray-400">
+              Modern, high-performing websites designed for speed, SEO, and conversions.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div
-              className={`lg:col-span-7 transition-all duration-700 delay-200 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-              }`}
-            >
-              <div className="relative group">
-                <div
-                  className="relative rounded-xl overflow-hidden shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
-                  style={{
-                    background: isNightMode ? '#1A1A1A' : '#FAFAFA',
-                    padding: '12px 12px 24px 12px',
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-3 px-2">
-                    <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-500" />
-                      <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                      <div className="w-3 h-3 rounded-full bg-green-500" />
-                    </div>
-                    <div 
-                      className="flex-1 h-6 rounded-md mx-2"
-                      style={{ background: isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            {portfolioItems.map((item, index) => (
+              <div
+                key={item.title}
+                className={`group transition-all duration-700 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+                }`}
+                style={{ transitionDelay: `${200 + index * 150}ms` }}
+              >
+                {/* Mockup Image */}
+                <div className="relative mb-8 transition-transform duration-500 group-hover:scale-[1.02]">
+                  <div className="relative aspect-[4/3] w-full">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
-                  
-                  <div 
-                    className="aspect-[16/10] rounded-lg overflow-hidden flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg, #FFC64C 0%, #FF9500 100%)' }}
-                  >
-                    <span className="font-bold text-xl" style={{ color: '#1A1A1A' }}>Pink Salt Salon</span>
-                  </div>
                 </div>
 
-                <div className="mt-6">
-                  <h3
-                    className="text-xl font-bold transition-colors duration-500"
-                    style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
-                  >
-                    {portfolioItems[0].title}
-                  </h3>
-                  <p
-                    className="text-sm transition-colors duration-500"
-                    style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B6B6B' }}
-                  >
-                    {portfolioItems[0].category}
+                {/* Project Info */}
+                <div className="space-y-3">
+                  <p className="text-sm tracking-[0.2em] uppercase text-[#FFC64C]">
+                    {item.category}
                   </p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className={`lg:col-span-5 transition-all duration-700 delay-400 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-              }`}
-            >
-              <div className="relative group flex justify-center lg:justify-start">
-                <div
-                  className="relative w-64 rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] group-hover:rotate-1"
-                  style={{
-                    background: isNightMode ? '#1A1A1A' : '#FAFAFA',
-                    padding: '12px',
-                  }}
-                >
-                  <div 
-                    className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-6 rounded-full z-10 transition-colors duration-500"
-                    style={{ background: isNightMode ? '#1A1A1A' : '#000000' }}
-                  />
+                  <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-[#FFC64C] transition-colors duration-300">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    {item.description}
+                  </p>
                   
-                  <div 
-                    className="aspect-[9/19] rounded-[2rem] overflow-hidden flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-white hover:text-[#FFC64C] transition-colors duration-300 mt-2"
                   >
-                    <span className="font-bold" style={{ color: '#FFFFFF' }}>Mobile</span>
-                  </div>
+                    View Live Site
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </a>
                 </div>
               </div>
-
-              <div className="mt-6 text-center lg:text-left">
-                <h3
-                  className="text-xl font-bold transition-colors duration-500"
-                  style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
-                >
-                  {portfolioItems[1].title}
-                </h3>
-                <p
-                  className="text-sm transition-colors duration-500"
-                  style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B6B6B' }}
-                >
-                  {portfolioItems[1].category}
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
 
+          {/* CTA */}
           <div
-            className={`text-center mt-16 transition-all duration-700 delay-500 ${
+            className={`text-center mt-20 transition-all duration-700 delay-500 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <p
-              className="text-xl mb-8 transition-colors duration-500"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-            >
+            <p className="text-xl mb-8 text-gray-400">
               Ready to grow with a partner who values transparency and measurable results?
             </p>
             
             <Link
-              href="/portfolio"
-              className="inline-flex items-center gap-2 px-8 py-6 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group"
+              href="/contact"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-[#FFC64C] text-[#1A1A1A]"
               style={{
-                background: '#FFC64C',
-                color: '#1A1A1A',
-                borderRadius: '12px',
-                boxShadow: isNightMode
-                  ? '0 8px 30px rgba(255, 198, 76, 0.3)'
-                  : '0 4px 14px rgba(0, 0, 0, 0.1)',
+                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
               }}
             >
-              View All Projects
+              Start Your Project
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
@@ -206,4 +144,3 @@ const PortfolioPreview = () => {
 };
 
 export default PortfolioPreview;
-
