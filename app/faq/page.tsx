@@ -58,6 +58,26 @@ export default function FAQPage() {
     {
       question: "What industries do you work with?",
       answer: "We work with businesses across many industries including professional services (law firms, accountants, consultants), healthcare and wellness, home services (contractors, plumbers, electricians), e-commerce, SaaS companies, real estate, and local retail businesses. Our strategies are customized for each industry's unique challenges and audience behaviors. Whether you're a local service provider or a national brand, we develop targeted approaches that resonate with your specific customer base."
+    },
+    {
+      question: "Why is custom Next.js more expensive than WordPress?",
+      answer: "WordPress uses pre-built themes and plugins – you're paying for assembly. Next.js is built from scratch, line by line, specifically for your brand. You're paying for engineering, not configuration."
+    },
+    {
+      question: "What companies use Next.js?",
+      answer: "Nike, Netflix, TikTok, Notion, Hulu, Twitch, Target, The Washington Post, and OpenAI all run on Next.js. It's the framework billion-dollar companies choose when performance and scale matter."
+    },
+    {
+      question: "What's wrong with WordPress?",
+      answer: "Nothing – for the right use case. But WordPress requires constant plugin updates, security patches, and maintenance. One outdated plugin can break your site or get you hacked. Next.js has no plugins, no database vulnerabilities, and deploys as static files that are nearly impossible to exploit."
+    },
+    {
+      question: "Will I need to maintain my Next.js site?",
+      answer: "Barely. Once deployed on Vercel, your site runs without intervention. No plugin updates, no security patches, no PHP version conflicts. It just works."
+    },
+    {
+      question: "Why should I pay $15k+ when I can get a WordPress site for $3k?",
+      answer: "You can buy a $3k WordPress site. You'll also pay for hosting, security plugins, maintenance, and a developer on retainer for when things break. In two years, you've spent $8k+ and still have a slow site that looks like a template. Our builds are deploy-and-forget with zero recurring headaches."
     }
   ]
 

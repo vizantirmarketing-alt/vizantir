@@ -148,7 +148,7 @@ const services = {
     faqs: [
       { q: "How much does a website cost?", a: "Custom websites range from $5,000-$25,000+ depending on complexity, features, and pages. We provide detailed quotes after understanding your requirements." },
       { q: "How long does it take to build a website?", a: "Typically 4-8 weeks for a standard business website. E-commerce and complex sites may take 8-12 weeks. We'll provide a timeline during the proposal phase." },
-      { q: "Do you use WordPress?", a: "We specialize in Next.js for maximum performance and SEO. However, we can work with WordPress if it better suits your needs for content management." },
+      { q: "Do you use WordPress?", a: "No. We build exclusively with Next.js for maximum performance, security, and SEO. No plugins, no bloat, no maintenance headaches." },
       { q: "Will my website be SEO-friendly?", a: "Absolutely. Every site we build follows SEO best practices including fast load times, clean code, proper heading structure, meta tags, and mobile optimization." }
     ]
   },

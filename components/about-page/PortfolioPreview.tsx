@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const PortfolioPreview = () => {
+  const { isNightMode } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +48,8 @@ const PortfolioPreview = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 bg-[#0A0A0A]"
+      className="py-24 md:py-32 transition-colors duration-500"
+      style={{ background: isNightMode ? '#0A0A0A' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
@@ -59,10 +62,16 @@ const PortfolioPreview = () => {
             <p className="text-sm tracking-[0.3em] uppercase text-[#FFC64C] mb-4">
               Our Work
             </p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
+            <h2 
+              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500"
+              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+            >
               Websites We've Launched
             </h2>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto text-gray-400">
+            <p 
+              className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500"
+              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+            >
               Modern, high-performing websites designed for speed, SEO, and conversions.
             </p>
           </div>
@@ -95,10 +104,16 @@ const PortfolioPreview = () => {
                   <p className="text-sm tracking-[0.2em] uppercase text-[#FFC64C]">
                     {item.category}
                   </p>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-[#FFC64C] transition-colors duration-300">
+                  <h3 
+                    className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
+                    style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                  >
                     {item.title}
                   </h3>
-                  <p className="text-gray-400 leading-relaxed">
+                  <p 
+                    className="leading-relaxed transition-colors duration-500"
+                    style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                  >
                     {item.description}
                   </p>
                   
@@ -106,7 +121,8 @@ const PortfolioPreview = () => {
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-white hover:text-[#FFC64C] transition-colors duration-300 mt-2"
+                    className="inline-flex items-center gap-2 hover:text-[#FFC64C] transition-colors duration-300 mt-2"
+                    style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                   >
                     View Live Site
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -122,7 +138,10 @@ const PortfolioPreview = () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <p className="text-xl mb-8 text-gray-400">
+            <p 
+              className="text-xl mb-8 transition-colors duration-500"
+              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+            >
               Ready to grow with a partner who values transparency and measurable results?
             </p>
             

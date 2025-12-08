@@ -27,7 +27,7 @@ const services: Service[] = [
   {
     id: 'web',
     label: 'Website Design & Development',
-    tagline: 'WordPress for speed to market. Next.js for cinematic performance.',
+    tagline: 'Custom Next.js builds for cinematic performance.',
   },
   {
     id: 'seo',
@@ -398,97 +398,31 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
         className="leading-relaxed transition-colors duration-500"
         style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
-        Choose the platform that matches your goals. WordPress for a fast, flexible launch you can manage yourself.
-        Next.js for cinematic performance and a technical foundation that scales.
+        Custom-built Next.js sites engineered for speed, SEO, and scale.
       </p>
 
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
-          <CategoryLabel isNightMode={isNightMode}>WordPress Websites</CategoryLabel>
-          <div className="space-y-3">
-            <PricingCard
-              title="Starter"
-              price="$2,500+"
-              description="5–8 pages. Clean, modern design. Mobile-friendly. Basic SEO foundations. Ready to launch."
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="Growth"
-              price="$4,000+"
-              description="8–12 pages. Custom layouts. Stronger visuals. Flows designed to build trust and capture leads."
-              featured
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="Premium"
-              price="$6,000+"
-              description="12+ pages. Animations. Booking systems. Memberships. A polished presence that feels established."
-              isNightMode={isNightMode}
-            />
-          </div>
-        </div>
-
-        <div>
-          <CategoryLabel isNightMode={isNightMode}>Next.js Websites</CategoryLabel>
-          <div className="space-y-3">
-            <PricingCard
-              title="Cinematic"
-              price="$8,000+"
-              description="Ultra-fast. Smooth motion. Parallax. Micro-interactions. Premium on every device."
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="With Back-End"
-              price="$10,000+"
-              description="User auth. Dashboards. APIs. Payments. Memberships. Function meets design."
-              featured
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="Enterprise"
-              price="$15,000+"
-              description="Custom component library. Headless CMS. Security-hardened. Built to scale."
-              isNightMode={isNightMode}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="grid md:grid-cols-2 gap-4 p-5 rounded-xl border transition-all duration-500"
-        style={{ 
-          background: isNightMode ? '#000000' : '#FAFAFA',
-          borderColor: isNightMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-          transition: 'background 0.5s ease, border-color 0.5s ease',
-        }}
-      >
-        <div>
-          <p 
-            className="text-xs font-semibold mb-2 transition-colors duration-500"
-            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
-          >
-            WordPress is best when…
-          </p>
-          <p 
-            className="text-xs leading-relaxed transition-colors duration-500"
-            style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-          >
-            You want a flexible marketing site you can update often, with a familiar editor and faster path from idea to launch.
-          </p>
-        </div>
-        <div>
-          <p 
-            className="text-xs font-semibold mb-2 transition-colors duration-500"
-            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
-          >
-            Next.js is best when…
-          </p>
-          <p 
-            className="text-xs leading-relaxed transition-colors duration-500"
-            style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-          >
-            You want cinematic UX, peak performance, and a technical base that supports products, portals, or a larger ecosystem.
-          </p>
+      <div>
+        <CategoryLabel isNightMode={isNightMode}>Next.js Websites</CategoryLabel>
+        <div className="space-y-3">
+          <PricingCard
+            title="Foundation"
+            price="$15,000+"
+            description="5-10 pages. Custom Next.js build. Responsive design, smooth animations, SEO foundations. Clean, fast, and built to perform."
+            isNightMode={isNightMode}
+          />
+          <PricingCard
+            title="Growth"
+            price="$30,000+"
+            description="10-20 pages. Headless CMS integration. Custom animations, advanced SEO architecture, designed to convert and scale."
+            featured
+            isNightMode={isNightMode}
+          />
+          <PricingCard
+            title="Premium"
+            price="$60,000+"
+            description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. A complete digital presence built for serious brands."
+            isNightMode={isNightMode}
+          />
         </div>
       </div>
 

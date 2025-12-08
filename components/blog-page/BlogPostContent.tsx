@@ -4,7 +4,9 @@ import React from 'react'
 import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { getRelatedPosts, type BlogPost } from '@/lib/blog-data'
+import { marked } from 'marked'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { blogPosts, getRelatedPosts, type BlogPost } from '@/lib/blog-data'
 
 interface BlogPostContentProps {
   post: BlogPost
@@ -13,6 +15,16 @@ interface BlogPostContentProps {
 export default function BlogPostContent({ post }: BlogPostContentProps) {
   const { isNightMode } = useTheme()
   const relatedPosts = getRelatedPosts(post.slug, 3)
+  
+  // Ensure we always show 3 related posts, even if we need to go beyond same category
+  const displayRelatedPosts = relatedPosts.length >= 3 
+    ? relatedPosts.slice(0, 3)
+    : relatedPosts
+
+  // Find current post index and adjacent posts
+  const currentIndex = blogPosts.findIndex(p => p.slug === post.slug)
+  const prevPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null
+  const nextPost = currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null
 
   const colors = {
     bg: isNightMode ? '#000000' : '#FAFAFA',
@@ -24,143 +36,10 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
     cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
   }
 
-  // Simple markdown-like content rendering
-  const renderContent = (content: string) => {
-    const lines = content.split('\n')
-    const elements: React.ReactElement[] = []
-    let currentParagraph: string[] = []
-    let listItems: string[] = []
-    let inList = false
-
-    lines.forEach((line, index) => {
-      const trimmed = line.trim()
-
-      // Headings
-      if (trimmed.startsWith('# ')) {
-        if (currentParagraph.length > 0) {
-          elements.push(
-            <p key={`p-${index}`} className="text-base leading-relaxed mb-4 transition-colors duration-500" style={{ color: colors.textMuted }}>
-              {currentParagraph.join(' ')}
-            </p>
-          )
-          currentParagraph = []
-        }
-        elements.push(
-          <h1 key={`h1-${index}`} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 mt-8 transition-colors duration-500" style={{ color: colors.text }}>
-            {trimmed.substring(2)}
-          </h1>
-        )
-        return
-      }
-
-      if (trimmed.startsWith('## ')) {
-        if (currentParagraph.length > 0) {
-          elements.push(
-            <p key={`p-${index}`} className="text-base leading-relaxed mb-4 transition-colors duration-500" style={{ color: colors.textMuted }}>
-              {currentParagraph.join(' ')}
-            </p>
-          )
-          currentParagraph = []
-        }
-        elements.push(
-          <h2 key={`h2-${index}`} className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 mt-8 transition-colors duration-500" style={{ color: colors.text }}>
-            {trimmed.substring(3)}
-          </h2>
-        )
-        return
-      }
-
-      if (trimmed.startsWith('### ')) {
-        if (currentParagraph.length > 0) {
-          elements.push(
-            <p key={`p-${index}`} className="text-base leading-relaxed mb-4 transition-colors duration-500" style={{ color: colors.textMuted }}>
-              {currentParagraph.join(' ')}
-            </p>
-          )
-          currentParagraph = []
-        }
-        elements.push(
-          <h3 key={`h3-${index}`} className="text-2xl md:text-3xl lg:text-4xl font-bold leading-snug mb-3 mt-6 transition-colors duration-500" style={{ color: colors.text }}>
-            {trimmed.substring(4)}
-          </h3>
-        )
-        return
-      }
-
-      // Lists
-      if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-        if (currentParagraph.length > 0) {
-          elements.push(
-            <p key={`p-${index}`} className="text-base leading-relaxed mb-4 transition-colors duration-500" style={{ color: colors.textMuted }}>
-              {currentParagraph.join(' ')}
-            </p>
-          )
-          currentParagraph = []
-        }
-        if (!inList) {
-          inList = true
-          listItems = []
-        }
-        listItems.push(trimmed.substring(2))
-        return
-      }
-
-      // End of list
-      if (inList && trimmed === '') {
-        if (listItems.length > 0) {
-          elements.push(
-            <ul key={`ul-${index}`} className="list-disc list-inside mb-4 space-y-2 ml-4">
-              {listItems.map((item, i) => (
-                <li key={i} className="text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          )
-          listItems = []
-        }
-        inList = false
-        return
-      }
-
-      // Regular paragraph
-      if (trimmed === '') {
-        if (currentParagraph.length > 0) {
-          elements.push(
-            <p key={`p-${index}`} className="text-base leading-relaxed mb-4 transition-colors duration-500" style={{ color: colors.textMuted }}>
-              {currentParagraph.join(' ')}
-            </p>
-          )
-          currentParagraph = []
-        }
-      } else {
-        currentParagraph.push(trimmed)
-      }
-    })
-
-    // Handle remaining content
-    if (currentParagraph.length > 0) {
-      elements.push(
-        <p key="p-final" className="text-base leading-relaxed mb-4 transition-colors duration-500" style={{ color: colors.textMuted }}>
-          {currentParagraph.join(' ')}
-        </p>
-      )
-    }
-
-    if (listItems.length > 0) {
-      elements.push(
-        <ul key="ul-final" className="list-disc list-inside mb-4 space-y-2 ml-4">
-          {listItems.map((item, i) => (
-            <li key={i} className="text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      )
-    }
-
-    return elements
-  }
+  // Check if content starts with HTML tag, if so use it directly, otherwise parse with marked
+  const renderedContent = post.content.trim().startsWith('<') 
+    ? post.content 
+    : marked.parse(post.content) as string
 
   return (
     <main style={{ background: colors.bg }}>
@@ -245,12 +124,84 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
       <section className="px-6 md:px-12 lg:px-20 py-12 md:py-16">
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none">
-            <div className="text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
-              {renderContent(post.content)}
-            </div>
+            <div 
+              className={`blog-content transition-colors duration-500 ${isNightMode ? 'blog-content-dark' : 'blog-content-light'}`}
+              style={{ color: colors.textMuted }}
+              dangerouslySetInnerHTML={{ __html: renderedContent }}
+            />
           </article>
         </div>
       </section>
+
+      {/* Previous/Next Navigation */}
+      {(prevPost || nextPost) && (
+        <section className="px-6 md:px-12 lg:px-20 py-8">
+          <div className="max-w-4xl mx-auto">
+            <div 
+              className="flex justify-between items-center pt-8 border-t gap-4"
+              style={{ 
+                borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+              }}
+            >
+              {prevPost ? (
+                <Link 
+                  href={`/blog/${prevPost.slug}`} 
+                  className="group flex items-center gap-3 flex-1 min-w-0"
+                >
+                  <ArrowLeft 
+                    className="w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:-translate-x-1" 
+                    style={{ color: colors.accent }}
+                  />
+                  <div className="min-w-0">
+                    <span 
+                      className="text-sm block mb-1 transition-colors duration-500"
+                      style={{ color: colors.textSubtle }}
+                    >
+                      Previous
+                    </span>
+                    <p 
+                      className="font-medium truncate transition-colors duration-500 group-hover:opacity-80"
+                      style={{ color: colors.text }}
+                    >
+                      {prevPost.title}
+                    </p>
+                  </div>
+                </Link>
+              ) : (
+                <div className="flex-1" />
+              )}
+
+              {nextPost ? (
+                <Link 
+                  href={`/blog/${nextPost.slug}`} 
+                  className="group flex items-center gap-3 flex-1 min-w-0 text-right justify-end"
+                >
+                  <div className="min-w-0">
+                    <span 
+                      className="text-sm block mb-1 transition-colors duration-500"
+                      style={{ color: colors.textSubtle }}
+                    >
+                      Next
+                    </span>
+                    <p 
+                      className="font-medium truncate transition-colors duration-500 group-hover:opacity-80"
+                      style={{ color: colors.text }}
+                    >
+                      {nextPost.title}
+                    </p>
+                  </div>
+                  <ArrowRight 
+                    className="w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1" 
+                    style={{ color: colors.accent }}
+                  />
+                </Link>
+              ) : (
+                <div className="flex-1" />
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Divider */}
       <div
@@ -263,7 +214,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
       />
 
       {/* Related Posts */}
-      {relatedPosts.length > 0 && (
+      {displayRelatedPosts.length > 0 && (
         <section className="px-6 md:px-12 lg:px-20 py-12 md:py-16">
           <div className="max-w-7xl mx-auto">
             <h2
@@ -273,7 +224,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               Related Articles
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {relatedPosts.map((relatedPost, index) => (
+              {displayRelatedPosts.map((relatedPost, index) => (
                 <motion.article
                   key={relatedPost.slug}
                   initial={{ opacity: 0, y: 20 }}

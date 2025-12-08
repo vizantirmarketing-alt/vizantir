@@ -188,7 +188,7 @@ export default function ServicesHero() {
                 className="text-sm leading-relaxed mb-6"
                 style={{ color: colors.textMuted }}
               >
-                From fast WordPress launches to cinematic Next.js builds.
+                Custom Next.js builds engineered for performance and presence.
                 A complete digital foundation for brands ready to grow.
               </p>
               <a
