@@ -43,6 +43,13 @@ const PortfolioPreview = () => {
       image: '/eow.png',
       link: 'https://essenceofwatches.com',
     },
+    {
+      title: 'Fuji Omakase',
+      category: 'HOSPITALITY',
+      description: 'Michelin-starred omakase restaurant website with immersive animations, editorial design, and premium booking experience.',
+      image: '/fuji-omakase.png',
+      link: 'https://fujiomakase.com',
+    },
   ];
 
   return (
@@ -93,7 +100,9 @@ const PortfolioPreview = () => {
                       src={item.image}
                       alt={item.title}
                       fill
-                      className="object-contain"
+                      className={`object-contain transition-all duration-500 ${
+                        isNightMode ? 'group-hover:drop-shadow-[0_0_50px_rgba(255,198,76,0.15)]' : ''
+                      }`}
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
