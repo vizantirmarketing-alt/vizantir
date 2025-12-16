@@ -14,6 +14,8 @@ import ScrollProgress from '@/components/ScrollProgress'
 
 import { ScrollToTop } from '@/components/ScrollToTop'
 
+import GoogleAnalytics from '@/components/GoogleAnalytics'
+
 import './globals.css'
 
 // Load Satoshi font family
@@ -99,6 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={satoshi.variable} suppressHydrationWarning>
+        <GoogleAnalytics />
         <ThemeProvider>
           <SmoothScroll>
             <ScrollToTop />
