@@ -148,7 +148,7 @@ const FAQSection = () => {
               className="font-semibold transition-colors duration-200 hover:opacity-80"
               style={{ color: '#FFC64C' }}
             >
-              Let's talk →
+              Schedule a Call →
             </Link>
           </div>
         </div>

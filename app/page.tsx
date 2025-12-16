@@ -10,6 +10,7 @@ import Strategy from '@/components/homepage/Strategy'
 import GlassTestimonials from '@/components/homepage/GlassTestimonials'
 import FAQSection from '@/components/homepage/FAQSection'
 import CTA from '@/components/homepage/CTA'
+import WhatHappensNext from '@/components/homepage/WhatHappensNext'
 import Newsletter from '@/components/homepage/Newsletter'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -39,6 +40,7 @@ export default function Home() {
       <GlassTestimonials />
       <FAQSection />
       <CTA />
+      <WhatHappensNext />
       <Newsletter />
     </>
   )

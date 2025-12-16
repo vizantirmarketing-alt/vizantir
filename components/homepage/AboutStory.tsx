@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
@@ -87,22 +86,14 @@ const AboutStory = () => {
             </motion.div>
 
             <div className="mt-10">
-              <Button
-                size="lg"
-                asChild
-                className="text-base px-8 py-6 font-bold border-0 transition-all duration-300 hover:scale-105 group"
-                style={{
-                  background: '#FFC64C',
-                  color: '#1A1A1A',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)',
-                }}
+              <Link
+                href="/about"
+                className="inline-flex items-center font-medium transition-all duration-300 hover:opacity-80 group"
+                style={{ color: '#FFC64C' }}
               >
-                <Link href="/about">
-                  LEARN MORE ABOUT VIZANTIR
-                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
+                Learn More About Vizantir
+                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
           </div>
 
