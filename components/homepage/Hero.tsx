@@ -168,7 +168,7 @@ const Hero = () => {
             className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}
           >
-            Smart Strategies
+            For Growth-Focused Businesses
           </h2>
 
           <h1 
@@ -184,19 +184,14 @@ const Hero = () => {
             className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}
           >
-            Vizantir is a remote-first digital marketing agency that helps businesses grow with{" "}
-            <span style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#1A1A1A', fontWeight: 500 }}>SEO</span>,{" "}
-            <span style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#1A1A1A', fontWeight: 500 }}>Answer Engine Optimization (AEO)</span>,{" "}
-            <span style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#1A1A1A', fontWeight: 500 }}>local GEO marketing</span>,{" "}
-            <span style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#1A1A1A', fontWeight: 500 }}>conversion-focused web design</span>, and{" "}
-            <span style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#1A1A1A', fontWeight: 500 }}>PPC ads that convert</span>.
+            We help B2B companies and local businesses generate qualified leads and revenue through SEO, paid ads, and high-converting websites. No retainers until we prove results.
           </p>
 
           <p 
             className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg italic transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}
           >
-            No offices. No wasted overhead. Just measurable results.
+            Not for everyone. Built for businesses ready to scale.
           </p>
 
           <Button
