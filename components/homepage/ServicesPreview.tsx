@@ -43,29 +43,29 @@ const ServicesPreview = () => {
     { color: '#0EA5A5', rgb: '14, 165, 165', class: 'number-glow-teal' },
     { color: '#8B5CF6', rgb: '139, 92, 246', class: 'number-glow-purple' },
     { color: '#3B82F6', rgb: '59, 130, 246', class: 'number-glow-blue' },
-    { color: '#D4A853', rgb: '212, 168, 83', class: 'number-glow-gold' },
   ];
 
   const services = [
     {
       number: '01',
-      title: 'Web Design',
-      description: 'Premium websites that convert visitors into customers with stunning design and flawless UX that drives results.',
+      title: 'SEO & Content',
+      input: 'We build organic search visibility that compounds over time.',
+      output: 'Keyword strategy, technical optimization, content that ranks',
+      outcome: 'Consistent inbound leads without ad spend',
     },
     {
       number: '02',
-      title: 'SEO Optimization',
-      description: 'Data-driven SEO strategies that dominate search rankings and drive massive organic traffic growth.',
+      title: 'Paid Advertising',
+      input: 'We run Google and Meta ads that generate measurable ROI.',
+      output: 'Campaign setup, creative, ongoing optimization',
+      outcome: 'Predictable lead flow with clear cost-per-acquisition',
     },
     {
       number: '03',
-      title: 'Local SEO',
-      description: 'Dominate local search results and connect with customers in your area through strategic optimization.',
-    },
-    {
-      number: '04',
-      title: 'AI Marketing',
-      description: 'Leverage cutting-edge AI to automate and optimize your marketing campaigns for maximum ROI.',
+      title: 'Web Design & Development',
+      input: 'We build fast, conversion-focused websites on Next.js.',
+      output: 'Custom design, development, CMS integration',
+      outcome: 'A site that turns visitors into customers',
     },
   ];
 
@@ -160,14 +160,14 @@ const ServicesPreview = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto mb-16"
+          className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16"
         >
           {services.map((service, index) => {
             return (
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="group relative rounded-2xl p-12 md:p-16 cursor-pointer transition-all duration-500 overflow-hidden"
+                className="group relative rounded-2xl p-10 md:p-12 cursor-pointer transition-all duration-500 overflow-hidden"
                 style={{
                   background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(10px)',
@@ -196,20 +196,64 @@ const ServicesPreview = () => {
                 </span>
 
                 <h3
-                  className="text-3xl md:text-4xl font-extrabold mb-4 transition-all duration-300 group-hover:translate-x-2 group-hover:text-[#FFC64C]"
+                  className="text-3xl md:text-4xl font-extrabold mb-6 transition-all duration-300 group-hover:translate-x-2 group-hover:text-[#FFC64C]"
                   style={{ color: isNightMode ? '#fff' : '#1a1a1a', lineHeight: '1.2' }}
                 >
                   {service.title}
                 </h3>
+                
+                {/* Input - What it is */}
                 <p
-                  className="text-base md:text-lg"
+                  className="text-base md:text-lg mb-6 font-medium"
                   style={{
-                    color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-                    lineHeight: '1.7',
+                    color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)',
+                    lineHeight: '1.6',
                   }}
                 >
-                  {service.description}
+                  {service.input}
                 </p>
+
+                {/* Output - What you deliver */}
+                <div className="mb-4">
+                  <span
+                    className="text-xs font-semibold uppercase tracking-wider mb-2 block"
+                    style={{
+                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : '#B45309',
+                    }}
+                  >
+                    Output:
+                  </span>
+                  <p
+                    className="text-sm md:text-base"
+                    style={{
+                      color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+                      lineHeight: '1.6',
+                    }}
+                  >
+                    {service.output}
+                  </p>
+                </div>
+
+                {/* Outcome - What changes for the client */}
+                <div>
+                  <span
+                    className="text-xs font-semibold uppercase tracking-wider mb-2 block"
+                    style={{
+                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : '#B45309',
+                    }}
+                  >
+                    Outcome:
+                  </span>
+                  <p
+                    className="text-sm md:text-base font-medium"
+                    style={{
+                      color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)',
+                      lineHeight: '1.6',
+                    }}
+                  >
+                    {service.outcome}
+                  </p>
+                </div>
               </motion.div>
             );
           })}
