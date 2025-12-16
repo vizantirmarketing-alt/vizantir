@@ -31,11 +31,17 @@ const AboutStory = () => {
                 The Story Of
               </h3>
               <h2 
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-8 tracking-tight"
+                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
                 style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
               >
                 VIZANTIR
               </h2>
+              <p 
+                className="text-sm md:text-base mb-8 font-medium"
+                style={{ color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : '#B45309' }}
+              >
+                Based in Las Vegas, Working Nationwide
+              </p>
             </motion.div>
             
             {/* Staggered fade for paragraphs */}
