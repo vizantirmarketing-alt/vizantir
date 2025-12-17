@@ -102,6 +102,7 @@ export function organizationSchema(settings: SiteSettings) {
     ...(settings.email && { email: settings.email }),
     ...(settings.phone && { telephone: settings.phone }),
     ...(settings.foundingDate && { foundingDate: settings.foundingDate }),
+    ...(settings.priceRange && { priceRange: settings.priceRange }),
     
     ...(settings.hasPhysicalLocation && settings.address && {
       address: {
