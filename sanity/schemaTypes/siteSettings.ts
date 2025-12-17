@@ -133,6 +133,40 @@ export const siteSettings = defineType({
       description: 'Business email address',
       validation: (Rule) => Rule.email(),
     }),
+    defineField({
+      name: 'foundingDate',
+      title: 'Founding Date',
+      type: 'string',
+      description: 'Year the organization was founded (e.g., "2024")',
+    }),
+    defineField({
+      name: 'priceRange',
+      title: 'Price Range',
+      type: 'string',
+      description: 'Price range indicator for local business schema',
+      options: {
+        list: [
+          { title: '$', value: '$' },
+          { title: '$$', value: '$$' },
+          { title: '$$$', value: '$$$' },
+          { title: '$$$$', value: '$$$$' },
+        ],
+      },
+    }),
+    defineField({
+      name: 'areaServed',
+      title: 'Area Served',
+      type: 'array',
+      description: 'Locations, regions, or areas where your business operates',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'knowsAbout',
+      title: 'Knows About (E-E-A-T)',
+      type: 'array',
+      description: 'Areas of expertise for E-E-A-T signals (Experience, Expertise, Authoritativeness, Trustworthiness)',
+      of: [{ type: 'string' }],
+    }),
   ],
   preview: {
     select: {

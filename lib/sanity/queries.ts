@@ -17,7 +17,11 @@ export const siteSettingsQuery = groq`
     hasPhysicalLocation,
     address,
     phone,
-    email
+    email,
+    foundingDate,
+    priceRange,
+    areaServed,
+    knowsAbout
   }
 `
 
