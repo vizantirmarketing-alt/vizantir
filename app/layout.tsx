@@ -2,6 +2,17 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import Script from 'next/script'
 
+import { sanityFetch } from '@/lib/sanity/client'
+import { siteSettingsQuery } from '@/lib/sanity/queries'
+import { JsonLd } from '@/components/seo/JsonLd'
+import {
+  websiteSchema,
+  organizationSchema,
+  localBusinessSchema,
+  graphSchema,
+} from '@/lib/schema'
+import type { SiteSettings } from '@/lib/sanity/types'
+
 import { ThemeProvider } from '@/contexts/ThemeContext'
 
 import Navbar from '@/components/navbar/Navbar'
@@ -47,12 +58,107 @@ const satoshi = localFont({
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
 })
 
-export const metadata: Metadata = {
-  title: 'Vizantir | Premium Digital Marketing Agency',
-  description: 'Data-driven SEO and premium web design.',
+async function getSettings(): Promise<SiteSettings | null> {
+  return sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+function getSettingsWithFallback(settings: SiteSettings | null): SiteSettings {
+  if (settings) return settings
+
+  return {
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://vizantir.com',
+    siteName: 'Vizantir',
+    defaultMetaTitle: 'Vizantir | Premium Digital Marketing Agency',
+    defaultMetaDescription: 'Premium digital marketing agency',
+    organizationDescription: 'Premium digital marketing agency',
+    hasPhysicalLocation: false,
+  }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings()
+  const settingsWithFallback = getSettingsWithFallback(settings)
+
+  return {
+    metadataBase: new URL(settingsWithFallback.siteUrl),
+    applicationName: settingsWithFallback.siteName,
+    title: {
+      default: settingsWithFallback.defaultMetaTitle || 'Vizantir | Premium Digital Marketing Agency',
+      template: `%s | ${settingsWithFallback.siteName}`,
+    },
+    description: settingsWithFallback.defaultMetaDescription || settingsWithFallback.organizationDescription,
+    authors: [{ name: settingsWithFallback.siteName }],
+    creator: settingsWithFallback.siteName,
+    publisher: settingsWithFallback.siteName,
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    openGraph: {
+      type: 'website',
+      locale: 'en_US',
+      url: settingsWithFallback.siteUrl,
+      siteName: settingsWithFallback.siteName,
+      title: settingsWithFallback.defaultMetaTitle || 'Vizantir | Premium Digital Marketing Agency',
+      description: settingsWithFallback.defaultMetaDescription || settingsWithFallback.organizationDescription,
+      ...(settingsWithFallback.ogImageUrl && {
+        images: [
+          {
+            url: settingsWithFallback.ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: settingsWithFallback.siteName,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: settingsWithFallback.defaultMetaTitle || 'Vizantir | Premium Digital Marketing Agency',
+      description: settingsWithFallback.defaultMetaDescription || settingsWithFallback.organizationDescription,
+      ...(settingsWithFallback.ogImageUrl && { images: [settingsWithFallback.ogImageUrl] }),
+    },
+    icons: {
+      icon: '/favicon.ico',
+      apple: '/apple-touch-icon.png',
+    },
+    ...(settingsWithFallback.googleVerification && {
+      verification: {
+        google: settingsWithFallback.googleVerification,
+      },
+    }),
+  }
+}
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const settings = await getSettings()
+
+  // Global schemas (appear on every page) - only render if settings exists
+  let globalGraph = null
+  if (settings) {
+    globalGraph = graphSchema([
+      websiteSchema(settings),
+      organizationSchema(settings),
+      localBusinessSchema(settings), // Returns null if no physical location
+    ])
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -101,6 +207,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={satoshi.variable} suppressHydrationWarning>
+        {globalGraph && <JsonLd id="ld-global" data={globalGraph} />}
         <GoogleAnalytics />
         <ThemeProvider>
           <SmoothScroll>
