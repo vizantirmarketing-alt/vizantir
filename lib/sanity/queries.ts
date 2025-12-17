@@ -16,14 +16,8 @@ export const siteSettingsQuery = groq`
     socialLinks,
     hasPhysicalLocation,
     address,
-    coordinates,
     phone,
-    email,
-    googleVerification,
-    priceRange,
-    foundingDate,
-    areaServed,
-    knowsAbout
+    email
   }
 `
 
