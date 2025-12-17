@@ -5,6 +5,7 @@ import { locationBySlugQuery, allLocationsQuery, siteSettingsQuery } from '@/lib
 import { JsonLd } from '@/components/seo/JsonLd'
 import { webPageSchema, locationSchema, faqSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
 import { locationId } from '@/lib/schema/ids'
+import { getOgImage, getCanonicalUrl } from '@/lib/utils/metadata'
 import type { Location, SiteSettings } from '@/lib/sanity/types'
 
 interface Props {
@@ -25,11 +26,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   if (!location || !settings) return {}
   
-  const url = `${settings.siteUrl}/locations/${location.slug}`
+  const url = getCanonicalUrl(settings, `/locations/${location.slug}`)
+  const title = location.metaTitle || `Services in ${location.city}`
+  
   return {
-    title: location.metaTitle || `Services in ${location.city}`,
+    title,
     description: location.metaDescription || location.description,
     alternates: { canonical: url },
+    openGraph: {
+      title,
+      description: location.metaDescription || location.description,
+      url,
+      type: 'website',
+      images: getOgImage({ pageImage: location.ogImageUrl, settings, alt: title }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: location.metaDescription || location.description,
+      images: getOgImage({ pageImage: location.ogImageUrl, settings, alt: title }),
+    },
   }
 }
 
@@ -42,7 +58,7 @@ export default async function LocationPage({ params }: Props) {
   
   if (!location || !settings) notFound()
 
-  const url = `${settings.siteUrl}/locations/${location.slug}`
+  const url = getCanonicalUrl(settings, `/locations/${location.slug}`)
   const pageGraph = graphSchema([
     webPageSchema({
       url,

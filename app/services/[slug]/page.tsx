@@ -11,6 +11,7 @@ import {
   graphSchema,
 } from '@/lib/schema'
 import { serviceId } from '@/lib/schema/ids'
+import { getOgImage, getCanonicalUrl } from '@/lib/utils/metadata'
 import type { Service, SiteSettings } from '@/lib/sanity/types'
 
 interface Props {
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!service || !settings) return {}
 
-  const url = `${settings.siteUrl}/services/${service.slug}`
+  const url = getCanonicalUrl(settings, `/services/${service.slug}`)
 
   return {
     title: service.metaTitle || service.title,
@@ -49,16 +50,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: service.metaDescription || service.description,
       url,
       type: 'website',
-      images: service.ogImageUrl 
-        ? [{ url: service.ogImageUrl }]
-        : settings.ogImageUrl 
-        ? [{ url: settings.ogImageUrl }]
-        : undefined,
+      images: getOgImage({ pageImage: service.ogImageUrl, settings, alt: service.title }),
     },
     twitter: {
       card: 'summary_large_image',
       title: service.metaTitle || service.title,
       description: service.metaDescription || service.description,
+      images: getOgImage({ pageImage: service.ogImageUrl, settings, alt: service.title }),
     },
   }
 }
@@ -75,7 +73,7 @@ export default async function ServicePage({ params }: Props) {
 
   if (!service || !settings) notFound()
 
-  const url = `${settings.siteUrl}/services/${service.slug}`
+  const url = getCanonicalUrl(settings, `/services/${service.slug}`)
 
   // Build page-specific schema graph
   const pageGraph = graphSchema([
