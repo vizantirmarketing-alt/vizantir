@@ -82,7 +82,7 @@ const VisionApproach = () => {
               className="text-3xl md:text-4xl lg:text-[42px] font-bold mb-6 leading-tight transition-colors duration-500"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
-              Making Digital Marketing{' '}
+              Making Web Design{' '}
               <span 
                 style={{
                   background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 25%, #3B82F6 50%, #8B5CF6 75%, #3B82F6 100%)',
@@ -93,16 +93,16 @@ const VisionApproach = () => {
                   animation: 'shimmer 3s linear infinite',
                 }}
               >
-                Transparent
+                Exceptional
               </span>
             </h2>
             <p
               className="text-lg leading-relaxed transition-colors duration-500"
               style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
             >
-              Our vision is to make digital marketing transparent, measurable, and future-ready. 
-              We combine SEO & AEO strategies to dominate search, data-driven insights that 
-              maximize ROI, and creative execution that builds unforgettable brands.
+              Our vision is to make web design exceptional, fast, and conversion-focused. 
+              We combine stunning visual design with modern technology like Next.js, creating 
+              websites that not only look beautiful but perform and convert.
             </p>
           </div>
 

@@ -241,7 +241,7 @@ export default function AboutPageClient() {
                   Just a focused team of specialists who know how to grow businesses.
                 </p>
                 <p>
-                  From SEO and web design to PPC and AI-powered marketing, we bring
+                  From custom web design to SEO and digital strategy, we bring
                   enterprise-level strategies to businesses that want real growth without
                   the agency bloat.
                 </p>
