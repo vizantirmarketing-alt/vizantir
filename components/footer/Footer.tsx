@@ -31,7 +31,7 @@ const Footer = () => {
               className="mb-4"
               style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
             >
-              Premium digital marketing and SEO agency delivering results that convert.
+              Premium web design and development agency delivering websites that convert.
             </p>
             <div className="flex gap-4">
               <a 

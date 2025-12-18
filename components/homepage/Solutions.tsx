@@ -30,16 +30,16 @@ const Solutions = () => {
 
   const services = [
     {
-      image: "/assets/service-seo.jpg",
-      title: "SEO",
-      description: "Boost your Google rankings with keyword research, on-page optimization, backlink strategies, and technical SEO audits designed to attract targeted traffic and long-term authority.",
-      keywords: ["keyword research", "on-page optimization", "backlink strategies", "technical SEO audits"]
-    },
-    {
       image: "/assets/service-webdesign.jpg",
       title: "WEBSITE DESIGN",
       description: "We build modern, responsive websites optimized for speed, mobile experience, user engagement, and conversions. Every site is designed with SEO-friendly structures that drive results.",
       keywords: ["modern, responsive websites", "mobile experience", "user engagement", "conversions", "SEO-friendly structures"]
+    },
+    {
+      image: "/assets/service-seo.jpg",
+      title: "SEO",
+      description: "Boost your Google rankings with keyword research, on-page optimization, backlink strategies, and technical SEO audits designed to attract targeted traffic and long-term authority.",
+      keywords: ["keyword research", "on-page optimization", "backlink strategies", "technical SEO audits"]
     },
     {
       image: "/assets/service-ppc.jpg",
