@@ -2,28 +2,30 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   const content = `# Vizantir
-> Premium digital marketing agency specializing in SEO, AEO, and Next.js development based in Las Vegas, Nevada.
+> Premium web design and development agency based in Las Vegas, Nevada. We create stunning, high-performance websites built on Next.js.
 
 ## About
-Vizantir is a premium digital marketing agency founded in 2024. We help growth-focused businesses achieve measurable results through SEO, web development, and digital marketing. Unlike traditional agencies weighed down by overhead and long contracts, we're fully online and lean — meaning faster execution, lower costs, and more value for every client.
+Vizantir is a premium web design and development agency founded in 2024. We create stunning, high-performance websites that convert visitors into customers. Built on modern technology like Next.js, our sites are fast, responsive, and optimized for search engines. Based in Las Vegas and serving clients nationwide, we help growth-focused businesses stand out online.
 
 ## Services
-- SEO & Content Marketing: Keyword strategy, technical optimization, content that ranks
-- Answer Engine Optimization (AEO): Optimizing for AI-powered search engines and chatbots
-- Next.js Web Development: Fast, conversion-focused websites built on modern technology
-- PPC Advertising: Google Ads and Meta campaigns with measurable ROI
-- Web Design: Modern, responsive websites optimized for speed and conversions
+- Custom Website Design: Stunning, conversion-focused designs tailored to your brand
+- Web Development: Fast, modern websites built on Next.js and React
+- E-commerce Development: Online stores that drive sales
+- Landing Page Design: High-converting pages for campaigns
+- SEO & Content Marketing: Search optimization to drive organic traffic
+- Digital Marketing: PPC, social media, and growth strategies
 
 ## Expertise
-- Search Engine Optimization (SEO)
-- Answer Engine Optimization (AEO)
-- Next.js Development
 - Web Design
+- Website Development
+- Next.js Development
+- UI/UX Design
+- E-commerce
+- SEO
 - Digital Marketing
-- PPC Advertising
 
 ## Who We Work With
-We partner with B2B companies, professional services firms, and established local businesses generating $1M+ in revenue. Our clients are growth-focused leaders who want measurable results, not vanity metrics.
+We partner with B2B companies, professional services firms, and established businesses who want a premium website that stands out and converts. Our clients are growth-focused leaders who value quality design and measurable results.
 
 ## Industries Served
 - Professional Services
@@ -31,15 +33,16 @@ We partner with B2B companies, professional services firms, and established loca
 - Healthcare & Medical
 - Home Services
 - E-commerce
+- Real Estate
 
 ## Why Vizantir
-- 10+ Years Experience in SEO, paid media, and conversion optimization
-- Results Before Retainers: We prove our value before asking for long-term commitment
-- Built for Growth: We work with businesses doing $1M+ who are ready to scale
-- No Fluff, No Vanity Metrics: We report on leads, revenue, and ROI
+- Premium Design Quality: Stunning websites that stand out from templates
+- Modern Technology: Built on Next.js for speed and performance
+- Results-Focused: Every design decision drives conversions
+- No Long Contracts: Flexible engagement, results before retainers
 
 ## Contact
-- Website: https://vizantir.com
+- Website: https://www.vizantir.com
 - Email: info@vizantir.com
 - Phone: +1 (702) 604-6177
 - Location: Las Vegas, Nevada, United States
@@ -48,16 +51,11 @@ We partner with B2B companies, professional services firms, and established loca
 - Instagram: https://www.instagram.com/vizantirmarketing/
 
 ## Key Pages
-- Homepage: https://vizantir.com
-- Services: https://vizantir.com/services
-- About: https://vizantir.com/about
-- Blog: https://vizantir.com/blog
-- Contact: https://vizantir.com/contact
-
-## Recent Blog Posts
-- WordPress vs Next.js: Which Should You Choose in 2025?
-- Is WordPress Still Relevant in 2025?
-- How Much Does a Website Cost in 2025?
+- Homepage: https://www.vizantir.com
+- Services: https://www.vizantir.com/services
+- About: https://www.vizantir.com/about
+- Blog: https://www.vizantir.com/blog
+- Contact: https://www.vizantir.com/contact
 `
 
   return new NextResponse(content, {
