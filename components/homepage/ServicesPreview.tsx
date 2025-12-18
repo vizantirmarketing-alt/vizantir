@@ -48,24 +48,24 @@ const ServicesPreview = () => {
   const services = [
     {
       number: '01',
+      title: 'Web Design & Development',
+      input: 'We create stunning, conversion-focused websites built on Next.js.',
+      output: 'Custom design, development, CMS integration',
+      outcome: 'A site that turns visitors into customers',
+    },
+    {
+      number: '02',
       title: 'SEO & Content',
       input: 'We build organic search visibility that compounds over time.',
       output: 'Keyword strategy, technical optimization, content that ranks',
       outcome: 'Consistent inbound leads without ad spend',
     },
     {
-      number: '02',
+      number: '03',
       title: 'Paid Advertising',
       input: 'We run Google and Meta ads that generate measurable ROI.',
       output: 'Campaign setup, creative, ongoing optimization',
       outcome: 'Predictable lead flow with clear cost-per-acquisition',
-    },
-    {
-      number: '03',
-      title: 'Web Design & Development',
-      input: 'We build fast, conversion-focused websites on Next.js.',
-      output: 'Custom design, development, CMS integration',
-      outcome: 'A site that turns visitors into customers',
     },
   ];
 

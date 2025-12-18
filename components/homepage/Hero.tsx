@@ -168,7 +168,7 @@ const Hero = () => {
             className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}
           >
-            For Growth-Focused Businesses
+            Premium Web Design Agency
           </h2>
 
           <h1 
@@ -184,7 +184,7 @@ const Hero = () => {
             className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}
           >
-            We help B2B companies and local businesses generate qualified leads and revenue through SEO, paid ads, and high-converting websites.
+            We create stunning, high-performance websites that convert visitors into customers. Built on Next.js for speed, designed for results.
           </p>
 
           <p 

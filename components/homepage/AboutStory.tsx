@@ -83,9 +83,9 @@ const AboutStory = () => {
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
                   ClickLV
                 </span>{' '}
-                grow their online visibility. Our promise is simple:{' '}
+                transform their online presence with stunning websites. Our promise is simple:{' '}
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  reach, revenue, and measurable growth
+                  beautiful design, fast performance, and measurable results
                 </span>{' '}
                 — never empty promises.
               </p>

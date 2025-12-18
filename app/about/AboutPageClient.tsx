@@ -129,7 +129,7 @@ export default function AboutPageClient() {
             className="text-lg md:text-xl max-w-2xl mx-auto mb-10"
             style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.7 }}
           >
-            Vizantir is a remote-first digital marketing agency built on one principle:
+            Vizantir is a remote-first web design and development agency built on one principle:
             deliver real, measurable growth without the overhead of traditional agencies.
           </motion.p>
 

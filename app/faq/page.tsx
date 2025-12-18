@@ -12,8 +12,8 @@ export default function FAQPage() {
 
   const faqs = [
     {
-      question: "What is digital marketing and why does my business need it?",
-      answer: "Digital marketing is the promotion of your business through online channels including search engines, social media, email, and paid advertising. In today's digital-first world, over 93% of online experiences begin with a search engine. Without a strong digital presence, your business is invisible to potential customers actively searching for your products or services. Digital marketing allows you to reach targeted audiences, measure results in real-time, and achieve higher ROI compared to traditional marketing methods."
+      question: "What is web design and why does my business need a professional website?",
+      answer: "Web design is the process of creating visually appealing, user-friendly websites that effectively represent your brand and convert visitors into customers. In today's digital-first world, your website is often the first impression potential customers have of your business. A professionally designed website built on modern technology like Next.js provides fast loading times, mobile responsiveness, and optimized user experience. Without a strong web presence, your business is invisible to potential customers actively searching for your products or services online. Professional web design allows you to stand out from competitors, build trust, and drive measurable business results."
     },
     {
       question: "How long does SEO take to show results?",
@@ -99,7 +99,7 @@ export default function FAQPage() {
               Frequently Asked Questions
             </h1>
             <p className="text-lg md:text-xl" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              Get answers to common questions about digital marketing, SEO, PPC, and how we can help grow your business.
+              Get answers to common questions about web design, development, SEO, and how we can help transform your online presence.
             </p>
           </motion.div>
           

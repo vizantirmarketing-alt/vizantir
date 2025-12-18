@@ -69,8 +69,8 @@ function getSettingsWithFallback(settings: SiteSettings | null): SiteSettings {
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://vizantir.com',
     siteName: 'Vizantir',
     defaultMetaTitle: 'Vizantir | Premium Digital Marketing Agency',
-    defaultMetaDescription: 'Premium digital marketing agency',
-    organizationDescription: 'Premium digital marketing agency',
+    defaultMetaDescription: 'Premium web design and development agency',
+    organizationDescription: 'Premium web design and development agency',
     hasPhysicalLocation: false,
   }
 }
