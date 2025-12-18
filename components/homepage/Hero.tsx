@@ -156,24 +156,30 @@ const Hero = () => {
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}
-        <div className="relative order-1 h-[280px] sm:h-[350px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible">
-          <div className="relative w-full h-full max-w-[700px] -mt-16 lg:-mt-24">
+        <div className="relative z-0 order-1 h-[160px] sm:h-[280px] md:h-[350px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible opacity-40 md:opacity-100">
+          <div className="relative w-full h-full max-w-[700px] -mt-8 md:-mt-16 lg:-mt-24 scale-90 md:scale-100">
             <LiquidMetalTorus isNightMode={isNightMode} />
           </div>
         </div>
 
         {/* RIGHT SIDE - Content */}
-        <div className="max-w-2xl order-2 lg:ml-auto text-left">
+        <div className="relative z-10 max-w-2xl order-2 lg:ml-auto text-left">
           <h2 
             className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
-            style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}
+            style={{ 
+              color: isNightMode ? 'rgba(255,255,255,0.7)' : '#1A1A1A',
+              textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none'
+            }}
           >
             Premium Web Design Agency
           </h2>
 
           <h1 
             className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500"
-            style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+            style={{ 
+              color: isNightMode ? '#FFFFFF' : '#1A1A1A',
+              textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none'
+            }}
           >
             REAL
             <br />
@@ -211,7 +217,7 @@ const Hero = () => {
       </motion.div>
 
       {/* Scroll indicator */}
-      <div className="flex absolute bottom-2 sm:bottom-4 md:bottom-12 lg:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-bounce z-20">
+      <div className="hidden md:flex absolute bottom-2 sm:bottom-4 md:bottom-12 lg:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-bounce z-20">
         <div 
           className="w-6 h-10 rounded-full border-2 flex justify-center pt-2 transition-colors duration-500"
           style={{ borderColor: isNightMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)' }}
