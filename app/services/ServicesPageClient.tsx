@@ -27,7 +27,7 @@ const services: Service[] = [
   {
     id: 'web',
     label: 'Website Design & Development',
-    tagline: 'Custom Next.js builds for cinematic performance.',
+    tagline: 'Custom Next.js builds with enterprise SEO architecture — structured data, Core Web Vitals optimization, and AI-search readiness built in.',
   },
   {
     id: 'seo',
@@ -400,6 +400,55 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
       >
         Custom-built Next.js sites engineered for speed, SEO, and scale.
       </p>
+
+      {/* Enterprise Technology Section */}
+      <div 
+        className="py-8 px-6 rounded-xl border text-center"
+        style={{
+          background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
+          borderColor: isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
+        }}
+      >
+        <p 
+          className="text-xs font-semibold tracking-wider uppercase mb-3 transition-colors duration-500"
+          style={{ color: isNightMode ? '#666666' : '#9CA3AF' }}
+        >
+          ENTERPRISE TECHNOLOGY
+        </p>
+        <h3 
+          className="text-lg md:text-xl font-semibold mb-4 transition-colors duration-500"
+          style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+        >
+          Built on the same technology as
+        </h3>
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 mb-4">
+          {['Nike', 'Netflix', 'TikTok', 'Notion', 'Target', 'OpenAI'].map((company, index) => (
+            <span
+              key={index}
+              className="text-sm md:text-base font-medium transition-colors duration-500"
+              style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)' }}
+            >
+              {company}
+            </span>
+          ))}
+        </div>
+        <p 
+          className="text-sm leading-relaxed mb-3 max-w-2xl mx-auto transition-colors duration-500"
+          style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B7280' }}
+        >
+          We build on Next.js — the framework billion-dollar companies choose when performance and scale matter. You get the same speed, security, and SEO advantages.
+        </p>
+        <Link 
+          href="/faq"
+          className="inline-flex items-center gap-1 text-sm font-medium hover:opacity-80 transition-opacity"
+          style={{ color: '#FFC64C' }}
+        >
+          Why Next.js?
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </Link>
+      </div>
 
       <div>
         <CategoryLabel isNightMode={isNightMode}>Next.js Websites</CategoryLabel>
