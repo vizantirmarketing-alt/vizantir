@@ -162,6 +162,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
