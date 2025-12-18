@@ -186,10 +186,9 @@ const ServicesPreview = () => {
               >
                 {/* Muted number - glows on hover */}
                 <span 
-                  className={`absolute right-6 bottom-6 text-[100px] md:text-[120px] font-black pointer-events-none select-none leading-none transition-all duration-500 ${numberStyles[index].class}`}
+                  className={`absolute right-6 bottom-6 text-[100px] md:text-[120px] font-black pointer-events-none select-none leading-none opacity-0 group-hover:opacity-[0.15] transition-all duration-500 ease-out ${numberStyles[index].class}`}
                   style={{ 
                     color: numberStyles[index].color,
-                    opacity: isNightMode ? 0.12 : 0.1,
                   }}
                 >
                   {`0${index + 1}`}

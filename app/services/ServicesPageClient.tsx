@@ -476,11 +476,11 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/services/web-design" 
+        href="/get-started" 
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Learn More
+        Get Started
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
@@ -529,11 +529,11 @@ function SeoContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/services/seo" 
+        href="/get-started" 
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Learn More
+        Get Started
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
@@ -618,11 +618,11 @@ function MarketingContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/services/ppc" 
+        href="/get-started" 
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Learn More
+        Get Started
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
