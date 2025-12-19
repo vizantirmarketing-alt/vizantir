@@ -132,7 +132,7 @@ const faqSchema = {
       name: 'Why should I choose a Las Vegas web design agency?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A local Las Vegas agency understands the unique market dynamics of Southern Nevada—from the tourism-heavy economy to the growing tech and professional services sectors. We know what resonates with Las Vegas customers and can meet in person when needed. Plus, we're in your timezone for responsive communication.',
+        text: 'A local Las Vegas agency understands the unique market dynamics of Southern Nevada—from the tourism-heavy economy to the growing tech and professional services sectors. We know what resonates with Las Vegas customers and can meet in person when needed. Plus, we are in your timezone for responsive communication.',
       },
     },
     {
@@ -156,7 +156,7 @@ const faqSchema = {
       name: 'Do you offer ongoing website maintenance?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'One of the advantages of our Next.js approach is minimal maintenance requirements—no plugin updates, no security patches, no database optimization. We offer optional support packages for content updates and strategic improvements, but your site won't break if you don't maintain it monthly.',
+        text: 'One of the advantages of our Next.js approach is minimal maintenance requirements—no plugin updates, no security patches, no database optimization. We offer optional support packages for content updates and strategic improvements, but your site will not break if you do not maintain it monthly.',
       },
     },
   ],
