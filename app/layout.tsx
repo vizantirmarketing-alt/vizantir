@@ -80,7 +80,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const settingsWithFallback = getSettingsWithFallback(settings)
 
   return {
-    metadataBase: new URL(settingsWithFallback.siteUrl),
+    metadataBase: new URL(settingsWithFallback.siteUrl || 'https://www.vizantir.com'),
     applicationName: settingsWithFallback.siteName,
     title: {
       default: settingsWithFallback.defaultMetaTitle || 'Vizantir | Premium Digital Marketing Agency',
@@ -109,26 +109,24 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: 'website',
       locale: 'en_US',
-      url: settingsWithFallback.siteUrl,
+      url: settingsWithFallback.siteUrl || 'https://www.vizantir.com',
       siteName: settingsWithFallback.siteName,
-      title: settingsWithFallback.defaultMetaTitle || 'Vizantir | Premium Digital Marketing Agency',
-      description: settingsWithFallback.defaultMetaDescription || settingsWithFallback.organizationDescription,
-      ...(settingsWithFallback.ogImageUrl && {
-        images: [
-          {
-            url: settingsWithFallback.ogImageUrl,
-            width: 1200,
-            height: 630,
-            alt: settingsWithFallback.siteName,
-          },
-        ],
-      }),
+      title: 'Vizantir | Web Design Agency Las Vegas',
+      description: 'Custom Next.js development for businesses ready to scale. Built for speed, designed for results.',
+      images: [
+        {
+          url: settingsWithFallback.ogImageUrl || '/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: 'Vizantir - Premium Web Design Agency Las Vegas',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: settingsWithFallback.defaultMetaTitle || 'Vizantir | Premium Digital Marketing Agency',
-      description: settingsWithFallback.defaultMetaDescription || settingsWithFallback.organizationDescription,
-      ...(settingsWithFallback.ogImageUrl && { images: [settingsWithFallback.ogImageUrl] }),
+      title: 'Vizantir | Web Design Agency Las Vegas',
+      description: 'Custom Next.js development for businesses ready to scale. Built for speed, designed for results.',
+      images: [settingsWithFallback.ogImageUrl || '/og-image.png'],
     },
     icons: {
       icon: '/favicon.ico',
