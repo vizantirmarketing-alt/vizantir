@@ -30,13 +30,6 @@ const PortfolioPreview = () => {
 
   const portfolioItems = [
     {
-      title: 'Pink Salt Salon',
-      category: 'Beauty & Wellness',
-      description: 'Luxury nail salon website with dark theme, elegant typography, and seamless booking integration.',
-      image: '/ps.png',
-      link: 'https://pinksaltsalonandspa.com',
-    },
-    {
       title: 'Essence of Watches',
       category: 'Luxury E-Commerce',
       description: 'Pre-owned Rolex marketplace featuring premium design, authentication flow, and advanced filtering.',
@@ -155,13 +148,13 @@ const PortfolioPreview = () => {
             </p>
             
             <Link
-              href="/contact"
+              href="/case-studies"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-[#FFC64C] text-[#1A1A1A]"
               style={{
                 boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
               }}
             >
-              Start Your Project
+              View All Work
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>

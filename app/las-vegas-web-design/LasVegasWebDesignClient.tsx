@@ -193,7 +193,7 @@ export default function LasVegasWebDesignClient() {
                 background: 'transparent',
               }}
             >
-              <Link href="/services">
+              <Link href="/case-studies">
                 View Our Work
               </Link>
             </Button>

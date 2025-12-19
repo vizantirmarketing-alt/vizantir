@@ -1,23 +1,80 @@
-'use client'
+import { Metadata } from 'next'
+import { sanityFetch } from '@/lib/sanity/client'
+import { siteSettingsQuery } from '@/lib/sanity/queries'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
+import type { SiteSettings } from '@/lib/sanity/types'
+import { getCanonicalUrl } from '@/lib/utils/metadata'
+import CaseStudiesClient from './CaseStudiesClient'
 
-import { useTheme } from '@/contexts/ThemeContext'
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
+  
+  if (!settings) {
+    return {
+      title: 'Case Studies',
+      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+    }
+  }
 
-export default function CaseStudiesPage() {
-  const { isNightMode } = useTheme()
-  return (
-    <div 
-      className="min-h-screen pt-24 px-4"
-      style={{ background: isNightMode ? '#000' : '#FAFAFA' }}
-    >
-      <div className="container mx-auto">
-        <h1 
-          className="text-5xl font-black"
-          style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
-        >
-          Case Studies
-        </h1>
-      </div>
-    </div>
-  )
+  const url = getCanonicalUrl(settings, '/case-studies')
+
+  return {
+    title: 'Case Studies',
+    description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+    alternates: { canonical: url },
+    openGraph: {
+      title: 'Case Studies | Vizantir',
+      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+      url,
+      type: 'website',
+      images: settings.ogImageUrl ? [{ url: settings.ogImageUrl }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Case Studies | Vizantir',
+      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+      images: settings.ogImageUrl ? [settings.ogImageUrl] : undefined,
+    },
+  }
 }
 
+export default async function CaseStudiesPage() {
+  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
+  
+  if (!settings) {
+    return <CaseStudiesClient />
+  }
+
+  const url = getCanonicalUrl(settings, '/case-studies')
+
+  const caseStudies = [
+    { name: 'Pink Salt Salon', url: 'https://pinksaltsalonandspa.com' },
+    { name: 'Essence of Watches', url: 'https://essenceofwatches.com' },
+    { name: 'Fuji Omakase', url: 'https://fujiomakase.com' },
+  ]
+
+  const pageGraph = graphSchema([
+    collectionPageSchema({
+      url,
+      name: 'Case Studies',
+      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+      siteUrl: settings.siteUrl,
+      items: caseStudies.map(cs => ({
+        name: cs.name,
+        url: cs.url,
+      })),
+    }),
+    breadcrumbSchema([
+      { name: 'Home', url: settings.siteUrl },
+      { name: 'Case Studies', url },
+    ]),
+  ])
+
+  return (
+    <>
+      {pageGraph && <JsonLd id="ld-case-studies" data={pageGraph} />}
+      <CaseStudiesClient />
+    </>
+  )
+}
