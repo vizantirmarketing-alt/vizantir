@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   
   if (!settings) {
     return {
-      title: 'Case Studies',
+      title: 'Websites We Have Launched | Vizantir',
       description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
     }
   }
@@ -20,11 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const url = getCanonicalUrl(settings, '/case-studies')
 
   return {
-    title: 'Case Studies',
+    title: 'Websites We Have Launched | Vizantir',
     description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
     alternates: { canonical: url },
     openGraph: {
-      title: 'Case Studies | Vizantir',
+      title: 'Websites We Have Launched | Vizantir',
       description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
       url,
       type: 'website',
@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Case Studies | Vizantir',
+      title: 'Websites We Have Launched | Vizantir',
       description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
       images: settings.ogImageUrl ? [settings.ogImageUrl] : undefined,
     },
@@ -57,7 +57,7 @@ export default async function CaseStudiesPage() {
   const pageGraph = graphSchema([
     collectionPageSchema({
       url,
-      name: 'Case Studies',
+      name: 'Websites We Have Launched',
       description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
       siteUrl: settings.siteUrl,
       items: caseStudies.map(cs => ({
@@ -67,7 +67,7 @@ export default async function CaseStudiesPage() {
     }),
     breadcrumbSchema([
       { name: 'Home', url: settings.siteUrl },
-      { name: 'Case Studies', url },
+      { name: 'Websites We Have Launched', url },
     ]),
   ])
 

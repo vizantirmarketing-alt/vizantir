@@ -113,7 +113,7 @@ const CaseStudiesClient = () => {
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
-              Case Studies
+              Websites We Have Launched
             </h1>
             <p 
               className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500"
@@ -175,14 +175,19 @@ const CaseStudiesClient = () => {
                 >
                   {/* Mockup Image */}
                   <div className="relative mb-8 transition-transform duration-500 group-hover:scale-[1.02]">
-                    <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden">
+                    <div className="relative aspect-[4/3] w-full group">
+                      {/* Subtle glow behind mockup */}
+                      <div 
+                        className="absolute inset-0 opacity-20 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
+                        style={{
+                          background: 'radial-gradient(ellipse at center, rgba(255,198,76,0.3), transparent 70%)',
+                        }}
+                      />
                       <Image
                         src={study.image}
                         alt={study.title}
                         fill
-                        className={`object-contain transition-all duration-500 ${
-                          isNightMode ? 'group-hover:drop-shadow-[0_0_50px_rgba(255,198,76,0.15)]' : ''
-                        }`}
+                        className="object-contain transition-all duration-500 relative z-10"
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     </div>
