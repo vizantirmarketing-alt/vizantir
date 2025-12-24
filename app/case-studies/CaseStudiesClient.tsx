@@ -62,6 +62,14 @@ const CaseStudiesClient = () => {
         { label: 'Load Time', value: '<1s' },
       ],
     },
+    {
+      title: 'High Roller Legal',
+      category: 'Legal',
+      description: 'Premium personal injury law firm website with sophisticated typography, trial-ready positioning, and conversion-optimized design. Built to convey authority and win serious injury cases.',
+      image: '/high-roller-legal.png',
+      link: 'https://highrollerlegal.com',
+      services: ['Web Design', 'Next.js Development', 'SEO', 'Conversion Optimization'],
+    },
   ]
 
   const categories = ['All', ...Array.from(new Set(caseStudies.map(cs => cs.category)))]
