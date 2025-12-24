@@ -22,3 +22,4 @@ export function getCanonicalUrl(settings: SiteSettings | null, path: string) {
   return `${settings.siteUrl}${path}`
 }
 
+

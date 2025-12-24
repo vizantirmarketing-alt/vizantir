@@ -116,3 +116,4 @@ export function refCategory(siteUrl: string, slug: string) {
   return { '@id': categoryId(siteUrl, slug) }
 }
 
+
