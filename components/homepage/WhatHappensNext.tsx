@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
+import { trackCTAClick } from '@/lib/analytics';
 
 const WhatHappensNext = () => {
   const { isNightMode } = useTheme();
@@ -140,7 +141,7 @@ const WhatHappensNext = () => {
               boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Link href="/contact">Schedule Your Call</Link>
+            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'what_happens_next')}>Schedule Your Call</Link>
           </Button>
           <p 
             className="text-sm md:text-base"

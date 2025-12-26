@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion, AnimatePresence } from 'framer-motion'
+import { trackCTAClick } from '@/lib/analytics'
 
 interface CaseStudy {
   slug?: string
@@ -276,6 +277,7 @@ const CaseStudiesClient = () => {
             
             <Link
               href="/contact"
+              onClick={() => trackCTAClick('start_your_project', 'case_studies')}
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-[#FFC64C] text-[#1A1A1A]"
               style={{
                 boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',

@@ -8,6 +8,7 @@ import { useTheme } from '@/contexts/ThemeContext'
 import RibbonsAnimation from '@/components/RibbonsAnimation'
 import AIIntegration from '@/components/about-page/AIIntegration'
 import VisionApproach from '@/components/about-page/VisionApproach'
+import { trackCTAClick } from '@/lib/analytics'
 import WhyUs from '@/components/about-page/WhyUs'
 import PortfolioPreview from '@/components/about-page/PortfolioPreview'
 
@@ -152,7 +153,7 @@ export default function AboutPageClient() {
                   : '0 8px 30px rgba(255, 198, 76, 0.4)',
               }}
             >
-              <Link href="/contact">
+              <Link href="/contact" onClick={() => trackCTAClick('work_with_us', 'about')}>
                 Work With Us
                 <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
@@ -499,7 +500,7 @@ export default function AboutPageClient() {
                     : '0 8px 40px rgba(255, 198, 76, 0.5)',
                 }}
               >
-                <Link href="/contact">
+                <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'about')}>
                   Schedule a Call Today
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>

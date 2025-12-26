@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { trackCTAClick } from "@/lib/analytics";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -204,7 +205,7 @@ const Navbar = () => {
                 </button>
               )}
 
-              <Link href="/get-started">
+              <Link href="/get-started" onClick={() => trackCTAClick('get_started', 'navbar')}>
                 <button
                   className="glow-button px-6 py-2.5 rounded-lg font-semibold text-sm"
                   style={{

@@ -26,6 +26,7 @@ import ScrollProgress from '@/components/ScrollProgress'
 import { ScrollToTop } from '@/components/ScrollToTop'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
+import MicrosoftClarity from '@/components/MicrosoftClarity'
 
 import './globals.css'
 
@@ -209,6 +210,7 @@ export default async function RootLayout({
       <body className={satoshi.variable} suppressHydrationWarning>
         {globalGraph && <JsonLd id="ld-global" data={globalGraph} />}
         <GoogleAnalytics />
+        <MicrosoftClarity />
         <ThemeProvider>
           <SmoothScroll>
             <ScrollToTop />

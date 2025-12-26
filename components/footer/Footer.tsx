@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
+import { trackPhoneClick } from "@/lib/analytics"
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -183,7 +184,9 @@ const Footer = () => {
                 style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
               >
                 <Phone size={18} className="mt-1 flex-shrink-0" />
-                <span>+1 (702) 604-6177</span>
+                <a href="tel:+17026046177" onClick={() => trackPhoneClick()} className="hover:opacity-80 transition-opacity">
+                  +1 (702) 604-6177
+                </a>
               </li>
               <li 
                 className="flex items-start gap-2"

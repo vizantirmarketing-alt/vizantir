@@ -4,6 +4,7 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
+import { trackFormSubmission, trackPhoneClick } from '@/lib/analytics'
 
 export default function ContactPageClient() {
   const { isNightMode } = useTheme()
@@ -30,6 +31,7 @@ export default function ContactPageClient() {
     setIsSubmitting(true)
     // Simulate form submission - replace with actual form handler
     await new Promise(resolve => setTimeout(resolve, 1500))
+    trackFormSubmission('contact_form')
     setIsSubmitting(false)
     setIsSubmitted(true)
   }
@@ -162,7 +164,12 @@ export default function ContactPageClient() {
                     </div>
                     <div>
                       <p className="font-semibold mb-1" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Phone</p>
-                      <a href="tel:+17026046177" className="transition-colors hover:opacity-80" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
+                      <a 
+                        href="tel:+17026046177" 
+                        onClick={trackPhoneClick}
+                        className="transition-colors hover:opacity-80" 
+                        style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}
+                      >
                         +1 (702) 604-6177
                       </a>
                     </div>

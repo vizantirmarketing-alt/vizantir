@@ -4,6 +4,7 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
+import { trackCTAClick } from '@/lib/analytics'
 
 export default function GetStartedPage() {
   const { isNightMode } = useTheme()
@@ -112,6 +113,7 @@ export default function GetStartedPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
+                onClick={() => trackCTAClick('schedule_a_call', 'get_started')}
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:scale-105"
                 style={{ background: '#FFC64C', color: '#1A1A1A', borderRadius: '8px' }}
               >
@@ -122,6 +124,7 @@ export default function GetStartedPage() {
               </Link>
               <Link
                 href="/services"
+                onClick={() => trackCTAClick('view_services', 'get_started')}
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80"
                 style={{ 
                   background: 'transparent', 

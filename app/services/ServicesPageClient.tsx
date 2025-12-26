@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
 import ServicesHero from './ServicesHero'
+import { trackCTAClick } from '@/lib/analytics'
 
 type ServiceKey = 'web' | 'cms' | 'analytics' | 'seo' | 'integrations' | 'copywriting' | 'care'
 
@@ -529,6 +530,7 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
 
       <Link 
         href="/get-started" 
+        onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
@@ -581,6 +583,7 @@ function CmsContent({ isNightMode }: { isNightMode: boolean }) {
 
       <Link 
         href="/get-started" 
+        onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
@@ -645,6 +648,7 @@ function AnalyticsContent({ isNightMode }: { isNightMode: boolean }) {
 
       <Link 
         href="/get-started" 
+        onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
@@ -725,6 +729,7 @@ function SeoContent({ isNightMode }: { isNightMode: boolean }) {
 
       <Link 
         href="/get-started" 
+        onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
@@ -789,6 +794,7 @@ function IntegrationsContent({ isNightMode }: { isNightMode: boolean }) {
 
       <Link 
         href="/get-started" 
+        onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
@@ -841,6 +847,7 @@ function CopywritingContent({ isNightMode }: { isNightMode: boolean }) {
 
       <Link 
         href="/get-started" 
+        onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >

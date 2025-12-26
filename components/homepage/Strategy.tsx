@@ -309,7 +309,7 @@ const Strategy = () => {
                   boxShadow: isNightMode ? "0 8px 30px rgba(255, 198, 76, 0.3)" : "0 8px 30px rgba(255, 198, 76, 0.4)",
                 }}
               >
-                <Link href="/contact">
+                <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'strategy')}>
                   Schedule a Call
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Zap, Shield, TrendingUp, Clock, CheckCircle2, MapPin } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
+import { trackPhoneClick } from '@/lib/analytics'
 
 export default function LasVegasWebDesignClient() {
   const { isNightMode } = useTheme()
@@ -497,7 +498,7 @@ export default function LasVegasWebDesignClient() {
               className="mt-6 text-sm"
               style={{ color: colors.textMuted }}
             >
-              Or call us: <a href="tel:+17026046177" style={{ color: colors.accent }}>(702) 604-6177</a>
+              Or call us: <a href="tel:+17026046177" onClick={trackPhoneClick} style={{ color: colors.accent }}>(702) 604-6177</a>
             </p>
           </motion.div>
         </div>

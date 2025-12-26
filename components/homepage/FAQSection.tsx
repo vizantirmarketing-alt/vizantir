@@ -145,6 +145,7 @@ const FAQSection = () => {
             </p>
             <Link 
               href="/contact" 
+              onClick={() => trackCTAClick('schedule_a_call', 'faq_section')}
               className="font-semibold transition-colors duration-200 hover:opacity-80"
               style={{ color: '#FFC64C' }}
             >

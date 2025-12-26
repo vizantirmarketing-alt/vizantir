@@ -59,7 +59,7 @@ const CTA = () => {
                 boxShadow: '0 0 20px rgba(255, 198, 76, 0.4)',
               }}
             >
-              <Link href="/contact">Schedule a Call</Link>
+              <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'cta_section')}>Schedule a Call</Link>
             </Button>
           </motion.div>
         </motion.div>

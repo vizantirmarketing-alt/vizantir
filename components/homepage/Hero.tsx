@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion, useScroll, useTransform } from 'framer-motion';
 import LiquidMetalTorus from "./LiquidMetalTorus";
+import { trackCTAClick } from '@/lib/analytics';
 
 const Hero = () => {
   const { isNightMode, mounted } = useTheme();
@@ -211,7 +212,7 @@ const Hero = () => {
               boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Link href="/contact">Schedule a Call</Link>
+            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>Schedule a Call</Link>
           </Button>
         </div>
       </motion.div>
