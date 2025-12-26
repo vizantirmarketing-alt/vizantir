@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
-import { trackPhoneClick } from "@/lib/analytics"
+import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -177,7 +177,17 @@ const Footer = () => {
                 style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
               >
                 <Mail size={18} className="mt-1 flex-shrink-0" />
-                <span>contact: info@vizantir.com</span>
+                <span>
+                  contact:{' '}
+                  <a 
+                    href="mailto:info@vizantir.com"
+                    onClick={() => trackEvent('email_click', { event_category: 'contact', event_label: 'info@vizantir.com' })}
+                    className="hover:opacity-80 transition-opacity"
+                    style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                  >
+                    info@vizantir.com
+                  </a>
+                </span>
               </li>
               <li 
                 className="flex items-start gap-2"
