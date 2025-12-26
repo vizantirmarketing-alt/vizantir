@@ -1,6 +1,18 @@
 export const trackEvent = (eventName: string, params?: Record<string, any>) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', eventName, params)
+  if (typeof window !== 'undefined') {
+    if (window.gtag) {
+      window.gtag('event', eventName, params)
+    } else {
+      // Fallback: queue events until gtag is available
+      if (!window.dataLayer) {
+        window.dataLayer = []
+      }
+      window.dataLayer.push({
+        event: eventName,
+        ...params
+      })
+      console.warn(`GA4 not loaded yet, queued event: ${eventName}`)
+    }
   }
 }
 
