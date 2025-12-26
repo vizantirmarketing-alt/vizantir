@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
+import { trackCTAClick } from '@/lib/analytics';
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

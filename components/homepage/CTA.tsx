@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
+import { trackCTAClick } from '@/lib/analytics';
 
 const CTA = () => {
   const { isNightMode } = useTheme();
