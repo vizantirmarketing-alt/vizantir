@@ -52,8 +52,8 @@ export default async function CaseStudiesPage() {
     { name: 'Pink Salt Salon', url: 'https://pinksaltsalonandspa.com' },
     { name: 'Eloraé Nails', url: 'https://www.eloraenails.com' },
     { name: 'Essence of Watches', url: 'https://essenceofwatches.com' },
-    { name: 'Fuji Omakase', url: 'https://fujiomakase.com' },
     { name: 'Éclat Lounge', url: 'https://eclatloungelv.com' },
+    { name: 'Fuji Omakase', url: 'https://fujiomakase.com' },
     { name: 'Pétale & Fête', url: 'https://petaleandfete.com' },
     { name: 'High Roller Legal', url: 'https://highrollerlegal.com' },
   ]

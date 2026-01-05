@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { trackCTAClick } from '@/lib/analytics'
 
 interface CaseStudy {
@@ -50,20 +50,20 @@ const CaseStudiesClient = () => {
       services: ['E-Commerce', 'Web Design', 'Next.js Development', 'Payment Integration'],
     },
     {
+      title: 'Éclat Lounge',
+      category: 'Hospitality',
+      description: 'Upscale cocktail lounge website designed around reservations, recurring events, and VIP experiences. Built as a custom hospitality system to support programming, high-intent bookings, and mobile-first traffic for Las Vegas nightlife.',
+      image: '/eclat-lounge-lv.png',
+      link: 'https://eclatloungelv.com',
+      services: ['Web Design', 'Hospitality Website', 'Reservation System', 'Events & VIP'],
+    },
+    {
       title: 'Fuji Omakase',
       category: 'Hospitality',
       description: 'Michelin-starred omakase restaurant website with immersive animations, editorial design, and premium booking experience. Showcasing culinary excellence through elegant design.',
       image: '/fuji-omakase.png',
       link: 'https://fujiomakase.com',
       services: ['Web Design', 'Next.js Development', 'Animation', 'Booking System'],
-    },
-    {
-      title: 'Éclat Lounge',
-      category: 'Hospitality',
-      description: 'Upscale cocktail lounge website with cinematic visuals, rose gold accents, and immersive scroll animations. Designed to capture the sophistication of Las Vegas nightlife.',
-      image: '/eclat-lounge-lv.png',
-      link: 'https://eclatloungelv.com',
-      services: ['Web Design', 'Next.js Development', 'Animation', 'Reservation System'],
     },
     {
       slug: 'petale-et-fete',
@@ -106,11 +106,11 @@ const CaseStudiesClient = () => {
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' as const },
+      transition: { duration: 0.3, ease: 'easeOut' as const },
     },
   }
 
@@ -185,38 +185,32 @@ const CaseStudiesClient = () => {
 
           {/* Case Studies Grid */}
           <motion.div
+            key={selectedCategory}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16"
           >
-            <AnimatePresence mode="wait">
-              {filteredStudies.map((study, index) => (
-                <motion.div
-                  key={study.title}
-                  variants={itemVariants}
-                  layout
-                  className="group"
-                >
-                  {/* Mockup Image */}
-                  <div className="relative mb-8 transition-transform duration-500 group-hover:scale-[1.02]">
-                    <div className="relative aspect-[4/3] w-full group">
-                      {/* Subtle glow behind mockup */}
-                      <div 
-                        className="absolute inset-0 opacity-20 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
-                        style={{
-                          background: 'radial-gradient(ellipse at center, rgba(255,198,76,0.3), transparent 70%)',
-                        }}
-                      />
-                      <Image
-                        src={study.image}
-                        alt={study.title}
-                        fill
-                        className="object-contain transition-all duration-500 relative z-10"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                    </div>
+            {filteredStudies.map((study, index) => (
+              <motion.div
+                key={study.title}
+                variants={itemVariants}
+                className="group"
+              >
+                {/* Mockup Image */}
+                <div className="relative mb-8 transition-transform duration-300 group-hover:scale-[1.02]">
+                  <div className="relative aspect-[4/3] w-full group">
+                    <Image
+                      src={study.image}
+                      alt={study.title}
+                      fill
+                      className="object-contain relative z-10"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      loading={index < 2 ? "eager" : "lazy"}
+                      priority={index < 2}
+                    />
                   </div>
+                </div>
 
                   {/* Project Info */}
                   <div className="space-y-4">
@@ -273,7 +267,6 @@ const CaseStudiesClient = () => {
                   </div>
                 </motion.div>
               ))}
-            </AnimatePresence>
           </motion.div>
 
           {/* Bottom CTA */}
@@ -308,5 +301,5 @@ const CaseStudiesClient = () => {
   )
 }
 
-export default CaseStudiesClient
+export default memo(CaseStudiesClient)
 
