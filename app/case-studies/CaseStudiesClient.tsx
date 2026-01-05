@@ -34,6 +34,14 @@ const CaseStudiesClient = () => {
       services: ['Web Design', 'Next.js Development', 'SEO', 'Booking Integration'],
     },
     {
+      title: 'Eloraé Nails',
+      category: 'Beauty & Wellness',
+      description: 'Premium website for independent beauty professionals—nail techs, estheticians, lash artists. Minimal pages, maximum impact. Custom Next.js build with full service menu, gallery, and booking integration. Not a drag-and-drop template.',
+      image: '/elorae-nails.png',
+      link: 'https://www.eloraenails.com',
+      services: ['Web Design', 'Next.js Development', 'Booking Integration'],
+    },
+    {
       title: 'Essence of Watches',
       category: 'Luxury E-Commerce',
       description: 'Pre-owned Rolex marketplace featuring premium design, authentication flow, and advanced filtering. Custom e-commerce solution with secure payment processing.',
@@ -48,6 +56,14 @@ const CaseStudiesClient = () => {
       image: '/fuji-omakase.png',
       link: 'https://fujiomakase.com',
       services: ['Web Design', 'Next.js Development', 'Animation', 'Booking System'],
+    },
+    {
+      title: 'Éclat Lounge',
+      category: 'Hospitality',
+      description: 'Upscale cocktail lounge website with cinematic visuals, rose gold accents, and immersive scroll animations. Designed to capture the sophistication of Las Vegas nightlife.',
+      image: '/eclat-lounge-lv.png',
+      link: 'https://eclatloungelv.com',
+      services: ['Web Design', 'Next.js Development', 'Animation', 'Reservation System'],
     },
     {
       slug: 'petale-et-fete',
@@ -247,13 +263,12 @@ const CaseStudiesClient = () => {
                     {/* CTA */}
                     <a
                       href={study.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      {...(study.link !== '#' ? { target: '_blank', rel: 'noopener noreferrer' } : { onClick: (e) => e.preventDefault() })}
                       className="inline-flex items-center gap-2 hover:text-[#FFC64C] transition-colors duration-300 mt-4 group/link"
                       style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                     >
-                      View Live Site
-                      <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />
+                      {study.link === '#' ? 'Coming Soon' : 'View Live Site'}
+                      {study.link !== '#' && <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />}
                     </a>
                   </div>
                 </motion.div>
