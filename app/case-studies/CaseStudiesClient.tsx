@@ -69,7 +69,7 @@ const CaseStudiesClient = () => {
       slug: 'petale-et-fete',
       title: 'Pétale & Fête',
       category: 'Events & Weddings',
-      description: 'Elegant event planning website with soft aesthetics and celebration showcase.',
+      description: 'Las Vegas event planning website with inquiry system, portfolio gallery, and vendor coordination. Built for high-end weddings, corporate events, and private celebrations.',
       longDescription: 'Pétale & Fête needed a website that captured the elegance and romance of their Las Vegas event planning services. We designed a soft, feminine aesthetic with organic shapes, beautiful typography, and a portfolio showcase for their celebrations.',
       image: '/petale-fete.png',
       link: 'https://petaleandfete.com',
