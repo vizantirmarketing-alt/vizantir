@@ -26,6 +26,14 @@ const CaseStudiesClient = () => {
 
   const caseStudies: CaseStudy[] = [
     {
+      title: 'Meridian Row',
+      category: 'Commercial Leasing',
+      description: 'Premium commercial real estate website for a 40-55k SF retail, dining, and service development. Features interactive availability maps, property galleries, and broker inquiry system. Built to attract high-quality tenants and streamline leasing.',
+      image: '/meridian-row.png',
+      link: 'https://meridianrow.com',
+      services: ['Web Design', 'Next.js Development', 'Commercial Real Estate', 'Inquiry System'],
+    },
+    {
       title: 'Pink Salt Salon',
       category: 'Beauty & Wellness',
       description: 'Luxury nail salon website with dark theme, elegant typography, and seamless booking integration. Built on Next.js for lightning-fast performance and SEO optimization.',
@@ -302,4 +310,3 @@ const CaseStudiesClient = () => {
 }
 
 export default memo(CaseStudiesClient)
-

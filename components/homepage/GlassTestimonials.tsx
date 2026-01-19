@@ -29,11 +29,11 @@ const GlassTestimonials = () => {
     },
     {
       id: 2,
-      name: 'ClickLV',
+      name: 'Eloraé Nails',
       role: 'Owner',
-      company: 'ClickLV',
-      quote: "Our new site from Vizantir is clean, modern, and built to scale. They nailed the design and functionality, giving us the professional presence we needed.",
-      avatar: 'CL',
+      company: 'Eloraé Nails',
+      quote: "Vizantir built me a site that matches the quality of my work. Clean, professional, and clients actually book through it now. Best investment I've made for my studio.",
+      avatar: 'EN',
       gradient: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
     },
     {
