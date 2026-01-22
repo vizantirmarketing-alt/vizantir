@@ -2,40 +2,35 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import Lenis from 'lenis';
 
-export default function SmoothScroll({ children }: { children: React.ReactNode }) {
-  const lenisRef = useRef<Lenis | null>(null);
+interface SmoothScrollProps {
+  children: React.ReactNode;
+}
+
+export default function SmoothScroll({ children }: SmoothScrollProps) {
   const pathname = usePathname();
-
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-    });
-
-    lenisRef.current = lenis;
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Reset scroll position on route change
   useEffect(() => {
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(0, { immediate: true });
-    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pathname]);
+
+  // Use CSS smooth scrolling instead of JS-based Lenis
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (!prefersReducedMotion) {
+      document.documentElement.style.scrollBehavior = 'smooth';
+    }
+    
+    return () => {
+      document.documentElement.style.scrollBehavior = '';
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, []);
 
   return <>{children}</>;
 }
