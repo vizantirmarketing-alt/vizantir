@@ -1,18 +1,33 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion, useScroll, useTransform } from 'framer-motion';
-import LiquidMetalTorus from "./LiquidMetalTorus";
 import { trackCTAClick } from '@/lib/analytics';
+
+// Lazy load the heavy 3D component
+const LiquidMetalTorus = lazy(() => import('./LiquidMetalTorus'));
+
+// Lightweight placeholder
+const TorusPlaceholder = ({ isNightMode }: { isNightMode: boolean }) => (
+  <div 
+    className="w-full h-full flex items-center justify-center"
+    style={{
+      background: isNightMode 
+        ? 'radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%)'
+        : 'radial-gradient(circle, rgba(255, 198, 76, 0.15) 0%, transparent 70%)'
+    }}
+  />
+);
 
 const Hero = () => {
   const { isNightMode, mounted } = useTheme();
   const { scrollY } = useScroll();
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [show3D, setShow3D] = useState(false);
   
   // Detect mobile for responsive scroll fade
   useEffect(() => {
@@ -20,6 +35,18 @@ const Hero = () => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Defer 3D loading until browser is idle
+  useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(() => setShow3D(true), { timeout: 2000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      // Fallback for Safari
+      const timer = setTimeout(() => setShow3D(true), 1500);
+      return () => clearTimeout(timer);
+    }
   }, []);
   
   // Slower fade on mobile (0-1000px scroll), faster on desktop (0-500px)
@@ -159,7 +186,13 @@ const Hero = () => {
         {/* LEFT SIDE - Liquid Metal Torus */}
         <div className="relative z-0 order-1 h-[160px] sm:h-[280px] md:h-[350px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible opacity-40 md:opacity-100">
           <div className="relative w-full h-full max-w-[700px] -mt-8 md:-mt-16 lg:-mt-24 scale-90 md:scale-100">
-            <LiquidMetalTorus isNightMode={isNightMode} />
+            {show3D ? (
+              <Suspense fallback={<TorusPlaceholder isNightMode={isNightMode} />}>
+                <LiquidMetalTorus isNightMode={isNightMode} />
+              </Suspense>
+            ) : (
+              <TorusPlaceholder isNightMode={isNightMode} />
+            )}
           </div>
         </div>
 
