@@ -163,45 +163,19 @@ export default async function RootLayout({
       <head>
         <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
+        
+        {/* Preconnect hints for third-party scripts */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://www.chatbase.co" />
+        
+        {/* Theme script - simplified to prevent hydration mismatch */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                try {
-                  var theme = localStorage.getItem('vizantir-theme');
-                  // Default to dark mode to match server-side rendering
-                  var isDark = theme === 'dark' || theme === null;
-                  
-                  if (isDark) {
-                    if (document.documentElement) {
-                      document.documentElement.style.backgroundColor = '#000000';
-                    }
-                    if (document.body) {
-                      document.body.style.backgroundColor = '#000000';
-                    }
-                    if (document.documentElement) {
-                      document.documentElement.setAttribute('data-theme', 'dark');
-                    }
-                  } else {
-                    if (document.documentElement) {
-                      document.documentElement.style.backgroundColor = '#FAFAFA';
-                    }
-                    if (document.body) {
-                      document.body.style.backgroundColor = '#FAFAFA';
-                    }
-                    if (document.documentElement) {
-                      document.documentElement.setAttribute('data-theme', 'light');
-                    }
-                  }
-                } catch (e) {
-                  // Default to dark mode on error to match server
-                  if (document.documentElement) {
-                    document.documentElement.style.backgroundColor = '#000000';
-                  }
-                  if (document.body) {
-                    document.body.style.backgroundColor = '#000000';
-                  }
-                }
+                document.documentElement.style.backgroundColor = '#000000';
+                document.documentElement.setAttribute('data-theme', 'dark');
               })();
             `,
           }}

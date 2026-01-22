@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000,
   },
 
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
   async redirects() {
     return [
       // Redirect old WordPress page_id URLs to homepage
@@ -18,6 +22,31 @@ const nextConfig: NextConfig = {
         has: [{ type: 'query', key: 'page_id' }],
         destination: '/',
         permanent: true,
+      },
+    ];
+  },
+
+  async headers() {
+    return [
+      {
+        // Cache static assets for 1 year
+        source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Cache Next.js static chunks
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
       },
     ];
   },
