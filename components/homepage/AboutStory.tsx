@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
@@ -119,10 +120,14 @@ const AboutStory = () => {
                   : '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
               }}
             >
-              <img
+              <Image
                 src="/assets/aboutstory.jpeg"
                 alt="Vizantir team collaboration"
-                className="w-full h-auto object-cover aspect-[4/3]"
+                width={800}
+                height={600}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                className="w-full h-auto object-cover"
+                quality={80}
               />
             </div>
             

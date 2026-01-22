@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Search, Pencil, FileText, Target } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -221,11 +222,15 @@ const Solutions = () => {
                   border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.08)',
                 }}
               >
-                <div className="relative overflow-hidden">
-                  <img
+                <div className="relative overflow-hidden aspect-[4/5]">
+                  <Image
                     src={service.image}
                     alt={service.title}
-                    className="w-full aspect-[4/5] object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    quality={75}
+                    loading={index < 2 ? "eager" : "lazy"}
                   />
                 </div>
 

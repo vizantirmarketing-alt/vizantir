@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -136,9 +137,12 @@ const Navbar = () => {
               {!mounted ? (
                 <div className="h-5 md:h-7 w-24" />
               ) : (
-                <img 
+                <Image 
                   src={isNightMode ? "/logo/logo-dark.svg" : "/logo/logo-light.svg"} 
                   alt="Vizantir Logo" 
+                  width={140}
+                  height={28}
+                  priority
                   className="h-5 md:h-7 w-auto transition-opacity duration-300"
                 />
               )}
