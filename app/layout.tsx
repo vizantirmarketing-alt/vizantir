@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
-import Script from 'next/script'
 
 import { sanityFetch } from '@/lib/sanity/client'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
@@ -27,6 +26,7 @@ import { ScrollToTop } from '@/components/ScrollToTop'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import MicrosoftClarity from '@/components/MicrosoftClarity'
+import ChatbaseWidget from '@/components/ChatbaseWidget'
 
 import './globals.css'
 
@@ -220,24 +220,7 @@ export default async function RootLayout({
             <Footer />
           </SmoothScroll>
         </ThemeProvider>
-        
-        {/* Chatbase Chatbot */}
-        <Script
-          src="https://www.chatbase.co/embed.min.js"
-          strategy="lazyOnload"
-          id="chatbase-script"
-          defer
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.embeddedChatbotConfig = {
-                chatbotId: "FAr-BdEt5S7mZZY1pDbg-",
-                domain: "www.chatbase.co"
-              }
-            `,
-          }}
-        />
+        <ChatbaseWidget />
       </body>
     </html>
   )
