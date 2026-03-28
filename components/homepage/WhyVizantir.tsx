@@ -9,7 +9,7 @@ const WhyVizantir = () => {
   const trustPoints = [
     {
       title: "10+ Years Experience",
-      description: "Deep expertise in SEO, paid media, and conversion optimization across competitive industries.",
+      description: "A decade of hands-on digital marketing and development experience — before Vizantir was built around it.",
     },
     {
       title: "Results Before Retainers",
@@ -20,7 +20,7 @@ const WhyVizantir = () => {
       description: "We work with businesses doing $1M+ who are ready to scale, not startups figuring things out.",
     },
     {
-      title: "No Fluff, No Vanity Metrics",
+      title: "Numbers That Matter",
       description: "We report on leads, revenue, and ROI. Not impressions and likes.",
     },
   ];

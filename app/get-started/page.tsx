@@ -1,54 +1,65 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
 import Link from 'next/link'
 import { trackCTAClick } from '@/lib/analytics'
 
 export default function GetStartedPage() {
   const { isNightMode } = useTheme()
+  const themeNight = isNightMode
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const steps = [
     {
       number: "01",
       title: "Discovery Call",
-      description: "We start with a free 30-minute consultation to understand your business, goals, and challenges. No commitment required."
+      description:
+        "A free call to align on goals, timeline, and what you're trying to ship. No pitch deck. No commitment.",
     },
     {
       number: "02",
-      title: "Custom Strategy",
-      description: "Our team develops a tailored digital marketing strategy based on your industry, competition, and budget."
+      title: "Custom Proposal",
+      description:
+        "You get a written scope: what's in, what's out, a fixed price, and a clear timeline. No vague \"starting at\" numbers.",
     },
     {
       number: "03",
-      title: "Proposal & Agreement",
-      description: "We present a clear proposal with pricing, timeline, and expected outcomes. No hidden fees, no long-term lock-ins."
+      title: "Deposit",
+      description:
+        "50% down secures your spot and kicks off work. You talk to the person building the site — not layers of account staff.",
     },
     {
       number: "04",
-      title: "Kickoff & Onboarding",
-      description: "Once approved, we begin onboarding within 48 hours. You'll have a dedicated account manager and clear communication channels."
+      title: "Build",
+      description:
+        "Design and development with check-ins at milestones. Straight updates so you're never left wondering where things stand.",
     },
     {
       number: "05",
-      title: "Execution & Reporting",
-      description: "We implement the strategy while providing transparent monthly reports so you always know exactly how your investment is performing."
-    }
+      title: "Launch",
+      description:
+        "Final review, remaining balance, then we go live. You get a finished product — not a half-built site and a wish list for \"phase two.\"",
+    },
   ]
 
   return (
-    <main className="min-h-screen" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: (mounted && themeNight) ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
-              Ready to Get Started?
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A' }}>
+              Ready to start?
             </h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              Here's how we work with clients to deliver measurable results. Our process is simple, transparent, and designed around your success.
+            <p className="text-lg md:text-xl max-w-2xl mx-auto" style={{ color: (mounted && themeNight) ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+              Fixed scope, fixed price, direct access to the builder. From first call to launch — here's how every project runs.
             </p>
           </motion.div>
         </div>
@@ -66,9 +77,9 @@ export default function GetStartedPage() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="flex gap-6 p-6 rounded-xl"
                 style={{ 
-                  background: isNightMode ? 'rgba(255,255,255,0.03)' : '#FFFFFF',
-                  border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
-                  boxShadow: isNightMode ? 'none' : '0 2px 12px rgba(0,0,0,0.04)'
+                  background: (mounted && themeNight) ? 'rgba(255,255,255,0.03)' : '#FFFFFF',
+                  border: `1px solid ${(mounted && themeNight) ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                  boxShadow: (mounted && themeNight) ? 'none' : '0 2px 12px rgba(0,0,0,0.04)'
                 }}
               >
                 <div 
@@ -78,10 +89,10 @@ export default function GetStartedPage() {
                   {step.number}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+                  <h3 className="text-xl font-bold mb-2" style={{ color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A' }}>
                     {step.title}
                   </h3>
-                  <p style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+                  <p style={{ color: (mounted && themeNight) ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
                     {step.description}
                   </p>
                 </div>
@@ -100,15 +111,15 @@ export default function GetStartedPage() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-center p-8 md:p-12 rounded-2xl"
             style={{ 
-              background: isNightMode ? 'rgba(255,198,76,0.1)' : 'rgba(255,198,76,0.15)',
+              background: (mounted && themeNight) ? 'rgba(255,198,76,0.1)' : 'rgba(255,198,76,0.15)',
               border: '1px solid rgba(255,198,76,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
-              Let's Start Your Growth Journey
+            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A' }}>
+              Next step: a real conversation
             </h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              Book your free discovery call today. No pressure, no obligation—just a conversation about your business goals.
+            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: (mounted && themeNight) ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+              Book a discovery call. We'll see if the project and timeline line up — no pressure, no hard sell.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -128,9 +139,9 @@ export default function GetStartedPage() {
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80"
                 style={{ 
                   background: 'transparent', 
-                  color: isNightMode ? '#FFFFFF' : '#1A1A1A', 
+                  color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A', 
                   borderRadius: '8px',
-                  border: `2px solid ${isNightMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}`
+                  border: `2px solid ${(mounted && themeNight) ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}`
                 }}
               >
                 View Services

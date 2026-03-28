@@ -11,15 +11,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Always start with dark mode on server to prevent mismatch
-  const [isNightMode, setIsNightMode] = useState(true)
+  // Light on server and first client paint so SSR/CSR match; localStorage applies after mount.
+  const [isNightMode, setIsNightMode] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Only read localStorage after mount (client-side)
     const saved = localStorage.getItem('vizantir-theme')
-    if (saved === 'light') {
-      setIsNightMode(false)
+    if (saved === 'dark') {
+      setIsNightMode(true)
     }
     setMounted(true)
   }, [])

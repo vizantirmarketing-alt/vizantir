@@ -12,7 +12,10 @@ export default function SitemapPage() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
-    { name: "Portfolio", href: "/portfolio" },
+    { name: "Our Work", href: "/case-studies" },
+    { name: "How We Work", href: "/how-we-work" },
+    { name: "Get Started", href: "/get-started" },
+    { name: "Careers", href: "/careers" },
     { name: "Blog", href: "/blog" },
     { name: "Contact Us", href: "/contact" },
     { name: "FAQ", href: "/faq" },
@@ -110,7 +113,7 @@ export default function SitemapPage() {
           {/* Footer */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="mt-16 pt-8 border-t" style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}>
             <p className="text-sm" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
-              Last updated: January 2025
+              Last updated: March 2026
             </p>
           </motion.div>
 

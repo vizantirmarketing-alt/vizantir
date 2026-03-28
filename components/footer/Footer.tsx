@@ -2,12 +2,16 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
 import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear()
+  const pathname = usePathname()
+  const calendarYear = new Date().getFullYear()
+  const currentYear =
+    pathname?.startsWith('/services') ? Math.max(calendarYear, 2026) : calendarYear
   const { isNightMode } = useTheme()
 
   return (
@@ -182,7 +186,6 @@ const Footer = () => {
               >
                 <Mail size={18} className="mt-1 flex-shrink-0" />
                 <span>
-                  contact:{' '}
                   <a 
                     href="mailto:info@vizantir.com"
                     onClick={() => trackEvent('email_click', { event_category: 'contact', event_label: 'info@vizantir.com' })}

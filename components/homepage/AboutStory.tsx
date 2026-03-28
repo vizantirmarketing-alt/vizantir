@@ -80,10 +80,6 @@ const AboutStory = () => {
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
                   Pink Salt Salon
                 </span>{' '}
-                and{' '}
-                <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  ClickLV
-                </span>{' '}
                 transform their online presence with stunning websites. Our promise is simple:{' '}
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
                   beautiful design, fast performance, and measurable results

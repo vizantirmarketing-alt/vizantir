@@ -2,14 +2,26 @@
 
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 export default function CareersPage() {
   const { isNightMode } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitted(true)
+  }
 
   return (
-    <main className="min-h-screen flex items-center justify-center" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen flex items-center justify-center" style={{ background: (mounted && isNightMode) ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       <section className="px-4 py-24 text-center">
         <div className="max-w-2xl mx-auto">
           <motion.div 
@@ -31,26 +43,58 @@ export default function CareersPage() {
             </motion.div>
 
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Careers</h1>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{ color: (mounted && isNightMode) ? '#FFFFFF' : '#1A1A1A' }}>Careers</h1>
               <p className="text-2xl md:text-3xl font-medium" style={{ color: '#FFC64C' }}>Coming Soon</p>
             </div>
 
-            <p className="text-lg md:text-xl leading-relaxed max-w-lg mx-auto" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              We&apos;re building something amazing and will be looking for talented people to join our team. Check back soon for open positions.
+            <p className="text-lg md:text-xl leading-relaxed max-w-lg mx-auto" style={{ color: (mounted && isNightMode) ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+              We&apos;ll reach out when we&apos;re ready to grow the team.
             </p>
 
-            <div className="pt-4">
-              <p className="text-sm mb-4" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>Want to be notified when we&apos;re hiring?</p>
-              <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:scale-105" style={{ background: '#FFC64C', color: '#1A1A1A', borderRadius: '8px' }}>
-                Get in Touch
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
+            <div className="pt-2 max-w-md mx-auto w-full">
+              {submitted ? (
+                <p
+                  className="text-base md:text-lg font-medium"
+                  style={{ color: (mounted && isNightMode) ? '#FFC64C' : '#B45309' }}
+                  role="status"
+                >
+                  You&apos;re on the list. We&apos;ll be in touch.
+                </p>
+              ) : (
+                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:gap-3 items-stretch sm:items-center justify-center">
+                  <label htmlFor="careers-notify-email" className="sr-only">
+                    Email address
+                  </label>
+                  <input
+                    id="careers-notify-email"
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full flex-1 px-4 py-3 rounded-lg text-base outline-none transition-colors focus:ring-2 focus:ring-offset-0"
+                    style={{
+                      background: (mounted && isNightMode) ? 'rgba(255,255,255,0.06)' : '#FFFFFF',
+                      border: `1px solid ${(mounted && isNightMode) ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'}`,
+                      color: (mounted && isNightMode) ? '#F8F8F8' : '#1A1A1A',
+                      boxShadow: (mounted && isNightMode) ? 'none' : '0 1px 2px rgba(0,0,0,0.04)',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto shrink-0 px-8 py-3 font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    style={{ background: '#FFC64C', color: '#1A1A1A', borderRadius: '8px' }}
+                  >
+                    Notify Me
+                  </button>
+                </form>
+              )}
             </div>
 
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }}>
-              <Link href="/" className="inline-flex items-center gap-2 text-sm transition-colors hover:opacity-80" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
+              <Link href="/" className="inline-flex items-center gap-2 text-sm transition-colors hover:opacity-80" style={{ color: (mounted && isNightMode) ? 'rgba(255,255,255,0.5)' : '#888888' }}>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>

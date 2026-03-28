@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      {
+        source: '/portfolio',
+        destination: '/case-studies',
+        permanent: true,
+      },
       // Redirect old WordPress page_id URLs to homepage
       {
         source: '/',
