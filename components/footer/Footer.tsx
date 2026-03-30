@@ -201,8 +201,8 @@ const Footer = () => {
                 style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
               >
                 <Phone size={18} className="mt-1 flex-shrink-0" />
-                <a href="tel:+17026046177" onClick={() => trackPhoneClick()} className="hover:opacity-80 transition-opacity">
-                  +1 (702) 604-6177
+                <a href="tel:+17022890758" onClick={() => trackPhoneClick()} className="hover:opacity-80 transition-opacity">
+                  +1 (702) 289-0758
                 </a>
               </li>
               <li 

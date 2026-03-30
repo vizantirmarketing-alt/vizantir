@@ -498,7 +498,7 @@ export default function LasVegasWebDesignClient() {
               className="mt-6 text-sm"
               style={{ color: colors.textMuted }}
             >
-              Or call us: <a href="tel:+17026046177" onClick={trackPhoneClick} style={{ color: colors.accent }}>(702) 604-6177</a>
+              Or call us: <a href="tel:+17022890758" onClick={trackPhoneClick} style={{ color: colors.accent }}>(702) 289-0758</a>
             </p>
           </motion.div>
         </div>

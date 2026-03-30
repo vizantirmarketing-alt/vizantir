@@ -230,7 +230,7 @@ export default function CookiePolicy() {
         {
           content: "If you have questions about our Cookie Policy or privacy practices, please contact us:",
           contactEmail: "info@vizantir.com",
-          phone: "(702) 604-6177"
+          phone: "(702) 289-0758"
         }
       ]
     }

@@ -28,7 +28,7 @@ export const trackFormSubmission = (formName: string) => {
 export const trackPhoneClick = () => {
   trackEvent('phone_click', { 
     event_category: 'contact',
-    event_label: '+1 (702) 604-6177'
+    event_label: '+1 (702) 289-0758'
   })
 }
 

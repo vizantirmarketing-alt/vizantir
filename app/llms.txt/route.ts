@@ -44,7 +44,7 @@ We partner with B2B companies, professional services firms, and established busi
 ## Contact
 - Website: https://www.vizantir.com
 - Email: info@vizantir.com
-- Phone: +1 (702) 604-6177
+- Phone: +1 (702) 289-0758
 - Location: Las Vegas, Nevada, United States
 
 ## Social

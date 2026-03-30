@@ -165,12 +165,12 @@ export default function ContactPageClient() {
                     <div>
                       <p className="font-semibold mb-1" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Phone</p>
                       <a 
-                        href="tel:+17026046177" 
+                        href="tel:+17022890758" 
                         onClick={trackPhoneClick}
                         className="transition-colors hover:opacity-80" 
                         style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}
                       >
-                        +1 (702) 604-6177
+                        +1 (702) 289-0758
                       </a>
                     </div>
                   </div>

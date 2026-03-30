@@ -40,7 +40,7 @@ const localBusinessSchema = {
   name: 'Vizantir',
   description: 'Premium web design and development agency in Las Vegas specializing in custom Next.js websites.',
   url: 'https://www.vizantir.com',
-  telephone: '+1-702-604-6177',
+  telephone: '+1-702-289-0758',
   email: 'info@vizantir.com',
   address: {
     '@type': 'PostalAddress',
