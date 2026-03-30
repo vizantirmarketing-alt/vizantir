@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'vizantir.com' }],
+        destination: 'https://www.vizantir.com/:path*',
+        permanent: true,
+      },
+      {
         source: '/portfolio',
         destination: '/case-studies',
         permanent: true,
