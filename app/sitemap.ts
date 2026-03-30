@@ -6,9 +6,6 @@ import type { SitemapData, SiteSettings } from '@/lib/sanity/types'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-// Fallback for static pages
-const STATIC_PAGE_DATE = new Date('2025-01-01T00:00:00.000Z')
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [settings, data] = await Promise.all([
     sanityFetchFresh<Pick<SiteSettings, 'siteUrl'>>(siteSettingsQuery),
@@ -19,14 +16,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, lastModified: STATIC_PAGE_DATE, changeFrequency: 'weekly', priority: 1 },
-    { url: `${baseUrl}/about`, lastModified: STATIC_PAGE_DATE, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${baseUrl}/contact`, lastModified: STATIC_PAGE_DATE, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${baseUrl}/services`, lastModified: STATIC_PAGE_DATE, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/blog`, lastModified: STATIC_PAGE_DATE, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/faq`, lastModified: STATIC_PAGE_DATE, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${baseUrl}/careers`, lastModified: STATIC_PAGE_DATE, changeFrequency: 'monthly', priority: 0.5 },
-    // Add more static pages
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/services`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/faq`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/careers`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: 'https://www.vizantir.com/las-vegas-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: 'https://www.vizantir.com/our-work', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://www.vizantir.com/how-we-work', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: 'https://www.vizantir.com/get-started', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
   ]
 
   // Dynamic pages from Sanity
