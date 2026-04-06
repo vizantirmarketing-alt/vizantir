@@ -2,16 +2,13 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
 import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 
 const Footer = () => {
-  const pathname = usePathname()
   const calendarYear = new Date().getFullYear()
-  const currentYear =
-    pathname?.startsWith('/services') ? Math.max(calendarYear, 2026) : calendarYear
+  const currentYear = Math.max(calendarYear, 2026)
   const { isNightMode } = useTheme()
 
   return (
@@ -40,7 +37,7 @@ const Footer = () => {
               className="mb-4"
               style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
             >
-              Premium web design and development agency delivering websites that convert.
+              Premium website design studio for established businesses.
             </p>
             <div className="flex gap-4">
               <a 

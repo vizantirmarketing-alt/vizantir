@@ -21,7 +21,7 @@ export default function CopyrightNotice() {
       <section className="px-4 pb-8">
         <div className="max-w-4xl mx-auto">
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed" style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#4A4A4A' }}>
-            © 2025 Vizantir.com. All rights reserved.
+            © 2026 Vizantir.com. All rights reserved.
           </motion.p>
         </div>
       </section>
@@ -110,7 +110,7 @@ export default function CopyrightNotice() {
           {/* Footer Note */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45 }} className="pt-8 border-t" style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}>
             <p className="text-sm" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
-              This copyright notice is effective as of 2025 and applies to all content on Vizantir.com.
+              This copyright notice is effective as of 2026 and applies to all content on Vizantir.com.
             </p>
           </motion.div>
 

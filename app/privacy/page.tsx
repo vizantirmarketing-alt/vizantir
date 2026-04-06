@@ -51,7 +51,7 @@ export default function PrivacyPolicy() {
           list: [
             "Website usage analytics",
             "User preferences and settings",
-            "Marketing and advertising data",
+            "Website analytics and performance data",
             "Performance and functionality metrics"
           ]
         }
@@ -63,7 +63,7 @@ export default function PrivacyPolicy() {
         {
           subtitle: "Service Delivery",
           list: [
-            "Provide and maintain our digital marketing services",
+            "Provide and maintain our website design and development services",
             "Process payments and manage accounts",
             "Communicate about services and projects",
             "Provide customer support and technical assistance"
@@ -84,7 +84,7 @@ export default function PrivacyPolicy() {
             "Send newsletters and marketing materials",
             "Provide information about our services",
             "Conduct promotional campaigns",
-            "Personalize content and advertisements"
+            "Personalize content and service-related communications"
           ]
         },
         {
@@ -106,8 +106,8 @@ export default function PrivacyPolicy() {
           content: "We may share information with trusted third parties who assist us:",
           list: [
             "Analytics Providers: Google Analytics, website performance tools",
-            "Marketing Platforms: Google Ads, Facebook, LinkedIn advertising",
-            "Communication Tools: Email marketing services, CRM systems",
+            "Hosting and technical providers: Web hosting, deployment, security, and maintenance partners",
+            "Communication Tools: Email and client communication systems",
             "Payment Processors: Secure payment handling services",
             "Technical Services: Web hosting, security, and maintenance providers"
           ]
@@ -160,7 +160,7 @@ export default function PrivacyPolicy() {
         },
         {
           subtitle: "Opt-Out and Consent",
-          list: ["Unsubscribe from marketing communications", "Withdraw consent for data processing", "Opt out of targeted advertising"]
+          list: ["Unsubscribe from marketing communications", "Withdraw consent for data processing", "Opt out of non-essential cookies and analytics where offered"]
         }
       ]
     },

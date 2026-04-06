@@ -25,17 +25,8 @@ export default function TermsAndConditions() {
       title: "1. Services",
       subsections: [
         {
-          subtitle: "1.1 Digital Marketing Services",
-          content: "Vizantir.com provides digital marketing services including but not limited to:",
-          list: [
-            "Search Engine Optimization (SEO)",
-            "Pay-Per-Click Advertising (PPC)",
-            "Social Media Marketing",
-            "Content Marketing",
-            "Web Design and Development",
-            "Analytics and Reporting",
-            "Brand Strategy and Consulting"
-          ]
+          subtitle: "1.1 Services",
+          content: "Vizantir.com provides website design and development services, including website strategy, custom design, custom development, CMS integration, and website care and maintenance."
         },
         {
           subtitle: "1.2 Service Modifications",
