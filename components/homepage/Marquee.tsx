@@ -6,13 +6,13 @@ const Marquee = () => {
   const { isNightMode } = useTheme();
 
   const items = [
-    "WEB DESIGN",
-    "WEBSITE DEVELOPMENT",
-    "UI/UX DESIGN",
-    "NEXT.JS",
-    "E-COMMERCE",
-    "SEO",
-    "DIGITAL MARKETING",
+    "FAST PERFORMANCE",
+    "CONVERSION FOCUSED",
+    "MOBILE FIRST",
+    "SEO DRIVEN",
+    "PREMIUM DESIGN",
+    "MEASURABLE RESULTS",
+    "BUILT TO SCALE",
   ];
 
   const MarqueeContent = () => (

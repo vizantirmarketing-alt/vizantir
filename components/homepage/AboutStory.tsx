@@ -78,7 +78,7 @@ const AboutStory = () => {
               >
                 We've already helped brands like{' '}
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  Pink Salt Salon
+                  Pink Salt Salon and Eloraé Nails
                 </span>{' '}
                 transform their online presence with stunning websites. Our promise is simple:{' '}
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>

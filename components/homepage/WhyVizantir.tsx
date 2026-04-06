@@ -8,8 +8,9 @@ const WhyVizantir = () => {
 
   const trustPoints = [
     {
-      title: "10+ Years Experience",
-      description: "A decade of hands-on digital marketing and development experience — before Vizantir was built around it.",
+      title: "10+ Years Building, 25+ Years Operating",
+      description:
+        "Over a decade of web design and development experience, backed by 25 years of real business ownership. We understand your business because we've run one.",
     },
     {
       title: "Results Before Retainers",
