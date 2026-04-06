@@ -31,6 +31,48 @@ import ChatbaseWidget from '@/components/ChatbaseWidget'
 
 import './globals.css'
 
+const organizationLocalBusinessJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': ['Organization', 'LocalBusiness'],
+  name: 'Vizantir',
+  url: 'https://www.vizantir.com',
+  logo: 'https://www.vizantir.com/logo/logo-light.svg',
+  description:
+    'Premium website design studio based in Las Vegas building custom websites for hospitality groups, law firms, commercial real estate firms, and established businesses nationwide.',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Las Vegas',
+    addressRegion: 'NV',
+    postalCode: '89139',
+    addressCountry: 'US',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 36.1699,
+    longitude: -115.1398,
+  },
+  telephone: '+17022890758',
+  email: 'info@vizantir.com',
+  priceRange: '$$$',
+  serviceArea: {
+    '@type': 'Country',
+    name: 'United States',
+  },
+  sameAs: ['https://www.linkedin.com/company/vizantir'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Website Design Services',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Strategy' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Design' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Development' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Refreshes' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'CMS Integrations' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Care' } },
+    ],
+  },
+}
+
 // Load Satoshi font family
 const satoshi = localFont({
   src: [
@@ -180,6 +222,12 @@ export default async function RootLayout({
     } catch(e) {}
   })();
 `,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationLocalBusinessJsonLd),
           }}
         />
         <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
