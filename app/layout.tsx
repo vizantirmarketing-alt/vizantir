@@ -3,13 +3,6 @@ import localFont from 'next/font/local'
 
 import { sanityFetch } from '@/lib/sanity/client'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
-import { JsonLd } from '@/components/seo/JsonLd'
-import {
-  websiteSchema,
-  organizationSchema,
-  localBusinessSchema,
-  graphSchema,
-} from '@/lib/schema'
 import type { SiteSettings } from '@/lib/sanity/types'
 
 import { ThemeProvider } from '@/contexts/ThemeContext'
@@ -189,18 +182,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const settings = await getSettings()
-
-  // Global schemas (appear on every page) - only render if settings exists
-  let globalGraph = null
-  if (settings) {
-    globalGraph = graphSchema([
-      websiteSchema(settings),
-      organizationSchema(settings),
-      localBusinessSchema(settings), // Returns null if no physical location
-    ])
-  }
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -239,7 +220,6 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://www.chatbase.co" />
       </head>
       <body className={satoshi.variable} suppressHydrationWarning>
-        {globalGraph && <JsonLd id="ld-global" data={globalGraph} />}
         <GoogleAnalytics />
         <MicrosoftClarity />
         <ThemeProvider>
