@@ -66,13 +66,13 @@ const PortfolioPreview = () => {
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
-              Websites We've Launched
+              Selected Work
             </h2>
             <p 
               className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500"
               style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
             >
-              Modern, high-performing websites designed for speed, SEO, and conversions.
+              A selection of custom builds for established businesses.
             </p>
           </div>
 
@@ -144,7 +144,7 @@ const PortfolioPreview = () => {
               className="text-xl mb-8 transition-colors duration-500"
               style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
             >
-              Ready to grow with a partner who values transparency and measurable results?
+              Work with a studio that understands what a website needs to do.
             </p>
             
             <Link

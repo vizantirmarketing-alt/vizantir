@@ -23,7 +23,7 @@ const WhatHappensNext = () => {
     {
       number: '03',
       title: 'See Results',
-      description: "We execute, measure, and optimize until you're seeing real growth.",
+      description: 'We build, refine, and launch — then support the site so it keeps performing.',
     },
   ];
 

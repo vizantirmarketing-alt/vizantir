@@ -57,34 +57,14 @@ const AboutStory = () => {
                 className="text-base md:text-lg"
                 style={{ color: isNightMode ? '#C0C0C0' : '#4A4A4A', lineHeight: '1.7' }}
               >
-                Vizantir was built on{' '}
-                <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  results and transparency
-                </span>. 
-                We run lean by design —{' '}
-                <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  no bloated teams, no account managers in the middle
-                </span>. 
-                Just{' '}
-                <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  senior-level work, fast
-                </span>
-                , with clear communication from scoping to launch.
+                Vizantir was built around a simple idea: businesses should not have to choose between strong design, serious execution, and a process that actually makes sense.
               </p>
               
               <p 
                 className="text-base md:text-lg"
                 style={{ color: isNightMode ? '#C0C0C0' : '#4A4A4A', lineHeight: '1.7' }}
               >
-                We've already helped brands like{' '}
-                <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  Pink Salt Salon and Eloraé Nails
-                </span>{' '}
-                transform their online presence with stunning websites. Our promise is simple:{' '}
-                <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  beautiful design, fast performance, and measurable results
-                </span>{' '}
-                — never empty promises.
+                We design and build premium websites for established businesses — focused on strategy, design, and development. Every project is scoped clearly, built custom, and delivered on time.
               </p>
             </motion.div>
 

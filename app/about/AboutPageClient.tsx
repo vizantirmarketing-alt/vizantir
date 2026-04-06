@@ -10,6 +10,7 @@ import AIIntegration from '@/components/about-page/AIIntegration'
 import VisionApproach from '@/components/about-page/VisionApproach'
 import { trackCTAClick } from '@/lib/analytics'
 import WhyUs from '@/components/about-page/WhyUs'
+import WhatTheWorkShouldDo from '@/components/about-page/WhatTheWorkShouldDo'
 import PortfolioPreview from '@/components/about-page/PortfolioPreview'
 
 export default function AboutPageClient() {
@@ -23,7 +24,8 @@ export default function AboutPageClient() {
     {
       icon: Target,
       title: 'Results-Driven',
-      description: 'Every strategy we build is designed to deliver measurable outcomes. No vanity metrics—just real growth.',
+      description:
+        'Every decision is made with the business outcome in mind — not vanity metrics.',
       color: '#FFC64C',
     },
     {
@@ -298,6 +300,18 @@ export default function AboutPageClient() {
 
       {/* AI Integration */}
       <AIIntegration />
+
+      {/* Section Divider */}
+      <div 
+        className="w-full h-px"
+        style={{ 
+          background: isNightMode 
+            ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)' 
+            : 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+        }}
+      />
+
+      <WhatTheWorkShouldDo />
 
       {/* Section Divider */}
       <div 

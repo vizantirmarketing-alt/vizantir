@@ -2,9 +2,11 @@ import { getPageSeo } from '@/sanity/lib/seo';
 import type { Metadata } from 'next';
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
+import EditorialStatement from '@/components/homepage/EditorialStatement'
 import AboutStory from '@/components/homepage/AboutStory'
 import ServicesPreview from '@/components/homepage/ServicesPreview'
 import WhoWeWorkWith from '@/components/homepage/WhoWeWorkWith'
+import OperatorStatement from '@/components/homepage/OperatorStatement'
 import WhyVizantir from '@/components/homepage/WhyVizantir'
 import ResultsThatSpeak from '@/components/homepage/ResultsThatSpeak'
 import FAQSection from '@/components/homepage/FAQSection'
@@ -31,9 +33,11 @@ export default function Home() {
     <>
       <Hero />
       <Marquee />
+      <EditorialStatement />
       <AboutStory />
       <ServicesPreview />
       <WhoWeWorkWith />
+      <OperatorStatement />
       <WhyVizantir />
       <ResultsThatSpeak />
       <FAQSection />
