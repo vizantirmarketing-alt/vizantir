@@ -11,14 +11,16 @@ export async function generateMetadata(): Promise<Metadata> {
   
   if (!settings) {
     return {
-      title: 'Services',
-      description: 'Our professional services.',
+      title: 'Website Strategy, Design & Development Services | Vizantir',
+      description:
+        'Explore our services including strategy, design, development, CMS integrations and ongoing care tailored for hospitality, legal and luxury brands.',
     }
   }
 
   return {
-    title: 'Services',
-    description: 'Our professional services.',
+    title: 'Website Strategy, Design & Development Services | Vizantir',
+    description:
+      'Explore our services including strategy, design, development, CMS integrations and ongoing care tailored for hospitality, legal and luxury brands.',
     alternates: { canonical: `${settings.siteUrl}/services` },
   }
 }

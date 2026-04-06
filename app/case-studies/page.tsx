@@ -12,28 +12,32 @@ export async function generateMetadata(): Promise<Metadata> {
   
   if (!settings) {
     return {
-      title: 'Websites We Have Launched | Vizantir',
-      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+      title: 'Website Case Studies & Success Stories | Vizantir',
+      description:
+        'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
     }
   }
 
   const url = getCanonicalUrl(settings, '/case-studies')
 
   return {
-    title: 'Websites We Have Launched | Vizantir',
-    description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+    title: 'Website Case Studies & Success Stories | Vizantir',
+    description:
+      'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
     alternates: { canonical: url },
     openGraph: {
-      title: 'Websites We Have Launched | Vizantir',
-      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+      title: 'Website Case Studies & Success Stories | Vizantir',
+      description:
+        'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
       url,
       type: 'website',
       images: settings.ogImageUrl ? [{ url: settings.ogImageUrl }] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Websites We Have Launched | Vizantir',
-      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+      title: 'Website Case Studies & Success Stories | Vizantir',
+      description:
+        'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
       images: settings.ogImageUrl ? [settings.ogImageUrl] : undefined,
     },
   }

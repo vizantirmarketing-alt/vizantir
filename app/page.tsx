@@ -18,11 +18,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSeo('home');
   
   return {
-    title: page?.seo?.metaTitle || 'Vizantir',
-    description: page?.seo?.metaDescription || 'Web Design Agency',
+    title: page?.seo?.metaTitle || 'Premium Web Design Studio in Las Vegas | Vizantir',
+    description:
+      page?.seo?.metaDescription ||
+      'Discover custom, high-performance websites for hospitality, law and real estate brands across the U.S., created by our Las Vegas studio.',
     openGraph: {
-      title: page?.seo?.metaTitle || 'Vizantir',
-      description: page?.seo?.metaDescription || 'Web Design Agency',
+      title: page?.seo?.metaTitle || 'Premium Web Design Studio in Las Vegas | Vizantir',
+      description:
+        page?.seo?.metaDescription ||
+        'Discover custom, high-performance websites for hospitality, law and real estate brands across the U.S., created by our Las Vegas studio.',
       ...(page?.seo?.ogImage && { images: [page.seo.ogImage] }),
     },
   };
