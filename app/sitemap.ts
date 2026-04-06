@@ -26,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: 'https://www.vizantir.com/las-vegas-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: 'https://www.vizantir.com/hospitality-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: 'https://www.vizantir.com/law-firm-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: 'https://www.vizantir.com/commercial-real-estate-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: 'https://www.vizantir.com/our-work', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://www.vizantir.com/how-we-work', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: 'https://www.vizantir.com/get-started', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
