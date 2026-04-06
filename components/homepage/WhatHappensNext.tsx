@@ -12,7 +12,7 @@ const WhatHappensNext = () => {
   const steps = [
     {
       number: '01',
-      title: 'Schedule a Call',
+      title: 'Book a Strategy Call',
       description: "We'll discuss your goals, challenges, and whether we're a fit.",
     },
     {
@@ -141,7 +141,7 @@ const WhatHappensNext = () => {
               boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'what_happens_next')}>Schedule Your Call</Link>
+            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'what_happens_next')}>Book a Strategy Call</Link>
           </Button>
           <p 
             className="text-sm md:text-base"

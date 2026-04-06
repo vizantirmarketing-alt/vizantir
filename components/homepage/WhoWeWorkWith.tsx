@@ -7,11 +7,11 @@ const WhoWeWorkWith = () => {
   const { isNightMode } = useTheme();
 
   const industries = [
-    'Professional Services',
-    'SaaS & Technology',
-    'Healthcare & Medical',
-    'Home Services',
-    'E-commerce',
+    'Hospitality & Restaurants',
+    'Law Firms',
+    'Commercial Real Estate',
+    'Luxury & Lifestyle Brands',
+    'Financial Services',
   ];
 
   return (
@@ -38,7 +38,7 @@ const WhoWeWorkWith = () => {
             className="text-lg md:text-xl leading-relaxed mb-10"
             style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
           >
-            We partner with B2B companies, professional services firms, and established local businesses generating $1M+ in revenue. Our clients are growth-focused leaders who want measurable results, not vanity metrics.
+            We partner with growth-focused operators at established regional and national brands generating $1M+ in revenue. Our clients want measurable results, not vanity metrics.
           </p>
 
           {/* Industries Grid */}

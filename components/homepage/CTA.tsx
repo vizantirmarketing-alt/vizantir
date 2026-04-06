@@ -42,7 +42,7 @@ const CTA = () => {
             className="text-xl mb-8"
             style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
           >
-            Let's discuss how we can help you achieve your marketing goals.
+            Book a strategy call and we&apos;ll map what to fix first—SEO, your site, or paid media.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -60,7 +60,7 @@ const CTA = () => {
                 boxShadow: '0 0 20px rgba(255, 198, 76, 0.4)',
               }}
             >
-              <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'cta_section')}>Schedule a Call</Link>
+              <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'cta_section')}>Book a Strategy Call</Link>
             </Button>
           </motion.div>
         </motion.div>

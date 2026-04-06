@@ -6,10 +6,7 @@ import AboutStory from '@/components/homepage/AboutStory'
 import ServicesPreview from '@/components/homepage/ServicesPreview'
 import WhoWeWorkWith from '@/components/homepage/WhoWeWorkWith'
 import WhyVizantir from '@/components/homepage/WhyVizantir'
-import Solutions from '@/components/homepage/Solutions'
-import Strategy from '@/components/homepage/Strategy'
 import ResultsThatSpeak from '@/components/homepage/ResultsThatSpeak'
-import GlassTestimonials from '@/components/homepage/GlassTestimonials'
 import FAQSection from '@/components/homepage/FAQSection'
 import CTA from '@/components/homepage/CTA'
 import WhatHappensNext from '@/components/homepage/WhatHappensNext'
@@ -38,10 +35,7 @@ export default function Home() {
       <ServicesPreview />
       <WhoWeWorkWith />
       <WhyVizantir />
-      <Solutions />
-      <Strategy />
       <ResultsThatSpeak />
-      <GlassTestimonials />
       <FAQSection />
       <CTA />
       <WhatHappensNext />

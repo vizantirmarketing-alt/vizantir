@@ -36,15 +36,6 @@ const GlassTestimonials = () => {
       avatar: 'EN',
       gradient: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
     },
-    {
-      id: 3,
-      name: 'Essence of Watches',
-      role: 'CEO',
-      company: 'Essence of Watches',
-      quote: "Professional, results-driven, and always innovative. Vizantir transformed our online presence and our sales have never been better.",
-      avatar: 'EW',
-      gradient: 'linear-gradient(135deg, #EC4899, #F472B6)',
-    },
   ];
 
   useEffect(() => {
@@ -55,6 +46,29 @@ const GlassTestimonials = () => {
   }, [testimonials.length]);
 
   const getCardStyle = (index: number) => {
+    const n = testimonials.length;
+    if (n === 2) {
+      if (index === activeIndex) {
+        return {
+          transform: 'translateX(0) translateY(0) rotate(0deg) scale(1)',
+          zIndex: 20,
+          opacity: 1,
+        };
+      }
+      const isLeft = index < activeIndex;
+      return isLeft
+        ? {
+            transform: 'translateX(-280px) translateY(-30px) rotate(-8deg) scale(0.9)',
+            zIndex: 10,
+            opacity: 0.6,
+          }
+        : {
+            transform: 'translateX(280px) translateY(30px) rotate(8deg) scale(0.9)',
+            zIndex: 10,
+            opacity: 0.6,
+          };
+    }
+
     const position = index - activeIndex;
     
     if (position === 0) {
@@ -63,7 +77,7 @@ const GlassTestimonials = () => {
         zIndex: 20,
         opacity: 1,
       };
-    } else if (position === -1 || position === testimonials.length - 1) {
+    } else if (position === -1 || position === n - 1) {
       return {
         transform: 'translateX(-280px) translateY(-30px) rotate(-8deg) scale(0.9)',
         zIndex: 10,

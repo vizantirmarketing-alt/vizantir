@@ -529,12 +529,12 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/get-started" 
+        href="/contact" 
         onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Get Started
+        Book a Strategy Call
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
@@ -582,12 +582,12 @@ function CmsContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/get-started" 
+        href="/contact" 
         onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Get Started
+        Book a Strategy Call
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
@@ -647,12 +647,12 @@ function AnalyticsContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/get-started" 
+        href="/contact" 
         onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Get Started
+        Book a Strategy Call
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
@@ -728,12 +728,12 @@ function SeoContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/get-started" 
+        href="/contact" 
         onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Get Started
+        Book a Strategy Call
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
@@ -793,12 +793,12 @@ function IntegrationsContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/get-started" 
+        href="/contact" 
         onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Get Started
+        Book a Strategy Call
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
@@ -846,12 +846,12 @@ function CopywritingContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <Link 
-        href="/get-started" 
+        href="/contact" 
         onClick={() => trackCTAClick('get_started', 'services')}
         className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
         style={{ color: '#FFC64C' }}
       >
-        Get Started
+        Book a Strategy Call
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>

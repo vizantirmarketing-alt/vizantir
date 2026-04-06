@@ -61,15 +61,15 @@ const AboutStory = () => {
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
                   results and transparency
                 </span>. 
-                Unlike traditional agencies weighed down by overhead and long contracts, we're{' '}
+                We run lean by design —{' '}
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  fully online and lean
+                  no bloated teams, no account managers in the middle
                 </span>. 
-                That means{' '}
+                Just{' '}
                 <span className="font-medium" style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                  faster execution, lower costs, and more value
-                </span>{' '}
-                for every client.
+                  senior-level work, fast
+                </span>
+                , with clear communication from scoping to launch.
               </p>
               
               <p 

@@ -48,24 +48,24 @@ const ServicesPreview = () => {
   const services = [
     {
       number: '01',
-      title: 'Web Design & Development',
-      input: 'We create stunning, conversion-focused websites built on Next.js.',
-      output: 'Custom design, development, CMS integration',
-      outcome: 'A site that turns visitors into customers',
+      title: 'Revenue-Driven Web Design',
+      input: 'Websites built for hospitality groups, law firms, and premium brands—not generic templates.',
+      output: 'Custom Next.js builds, conversion-focused UX, brand-level polish',
+      outcome: 'A site that turns high-intent visitors into booked calls and revenue',
     },
     {
       number: '02',
-      title: 'SEO & Content',
-      input: 'We build organic search visibility that compounds over time.',
-      output: 'Keyword strategy, technical optimization, content that ranks',
-      outcome: 'Consistent inbound leads without ad spend',
+      title: 'SEO Built for Competitive Markets',
+      input: 'Organic visibility where the map pack and SERPs are crowded and every click counts.',
+      output: 'Technical SEO, local and competitive keyword strategy, content that earns rankings',
+      outcome: 'Inbound demand in the markets you actually compete in',
     },
     {
       number: '03',
-      title: 'Paid Advertising',
-      input: 'We run Google and Meta ads that generate measurable ROI.',
-      output: 'Campaign setup, creative, ongoing optimization',
-      outcome: 'Predictable lead flow with clear cost-per-acquisition',
+      title: 'Paid Media Tracked to Revenue',
+      input: 'Google and Meta campaigns judged on leads and sales—not vanity impressions.',
+      output: 'Structured tracking, creative testing, budget allocation toward what converts',
+      outcome: 'Clear cost-per-lead and a media plan tied to real business outcomes',
     },
   ];
 

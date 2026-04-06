@@ -25,15 +25,14 @@ Vizantir is a premium web design and development agency founded in 2024. We crea
 - Digital Marketing
 
 ## Who We Work With
-We partner with B2B companies, professional services firms, and established businesses who want a premium website that stands out and converts. Our clients are growth-focused leaders who value quality design and measurable results.
+We partner with growth-focused operators at established regional and national brands generating $1M+ in revenue. Our clients want measurable results, not vanity metrics.
 
 ## Industries Served
-- Professional Services
-- SaaS & Technology
-- Healthcare & Medical
-- Home Services
-- E-commerce
-- Real Estate
+- Hospitality & Restaurants
+- Law Firms
+- Commercial Real Estate
+- Luxury & Lifestyle Brands
+- Financial Services
 
 ## Why Vizantir
 - Premium Design Quality: Stunning websites that stand out from templates

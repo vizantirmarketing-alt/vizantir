@@ -209,7 +209,7 @@ const Navbar = () => {
                 </button>
               )}
 
-              <Link href="/get-started" onClick={() => trackCTAClick('get_started', 'navbar')}>
+              <Link href="/contact" onClick={() => trackCTAClick('get_started', 'navbar')}>
                 <button
                   className="glow-button px-6 py-2.5 rounded-lg font-semibold text-sm"
                   style={{
@@ -218,7 +218,7 @@ const Navbar = () => {
                     border: 'none',
                   }}
                 >
-                  Get Started
+                  Book a Strategy Call
                 </button>
               </Link>
             </div>
@@ -278,9 +278,9 @@ const Navbar = () => {
             className="nav-link-animate px-8 pb-12 flex flex-col items-center gap-6"
             style={{ animationDelay: `${navLinks.length * 80 + 50}ms` }}
           >
-            {/* Get Started CTA */}
+            {/* Primary CTA */}
             <Link 
-              href="/get-started" 
+              href="/contact" 
               onClick={() => setIsMobileMenuOpen(false)}
               className="w-full max-w-xs"
             >
@@ -292,7 +292,7 @@ const Navbar = () => {
                   border: 'none',
                 }}
               >
-                Get Started
+                Book a Strategy Call
               </button>
             </Link>
 

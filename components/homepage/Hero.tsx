@@ -224,7 +224,7 @@ const Hero = () => {
             className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}
           >
-            We create stunning, high-performance websites that convert visitors into customers. Built on Next.js for speed, designed for results.
+            Your competitors are outranking you, outspending you, and out-converting you. We fix that.
           </p>
 
           <p 
@@ -245,7 +245,7 @@ const Hero = () => {
               boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>Schedule a Call</Link>
+            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>Book a Strategy Call</Link>
           </Button>
         </div>
       </motion.div>

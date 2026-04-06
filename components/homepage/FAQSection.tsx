@@ -32,29 +32,35 @@ const FAQSection = () => {
 
   const faqs = [
     {
-      question: "Why are you cheaper than traditional agencies?",
-      answer: "We're fully remote with zero office overhead. No expensive downtown rent, no bloated teams. We pass those savings directly to you while delivering the same (or better) results. Traditional agencies charge $10K-20K/month because they have to. We don't."
+      question: "Why do clients choose Vizantir over larger agencies?",
+      answer:
+        "Larger agencies charge for overhead — account managers, layers of approval, offices. We cut all of that. What you get is senior-level strategy and execution, faster turnaround, and direct communication from kickoff to launch. No handoffs, no junior teams running your account.",
     },
     {
-      question: "Do I need to sign a long-term contract?",
-      answer: "No. We work month-to-month because we believe results should keep you, not a contract. If we're not delivering measurable growth, you're free to leave. That's how confident we are in our work."
+      question: "How does your engagement model work?",
+      answer:
+        "We don't lock clients into long-term retainers before proving our value. We start with a strategy call to understand your goals, then propose a scoped engagement with clear deliverables and pricing. Ongoing retainers are available once we've earned them.",
     },
     {
-      question: "How quickly will I see results?",
-      answer: "SEO takes 3-6 months to show significant movement. PPC and web design changes show results within 30-60 days. We're transparent about timelines and set realistic expectations from day one—no BS promises of overnight success."
+      question: "What does the timeline look like from kickoff to launch?",
+      answer:
+        "Most website projects are completed within 4–6 weeks from kickoff. SEO and paid media campaigns are typically live within 2 weeks. Timelines depend on scope and how quickly feedback is turned around on your end — we move as fast as you do.",
     },
     {
-      question: "What if I already have a website?",
-      answer: "Great! We can audit your existing site and optimize it for conversions and SEO. If it's built on outdated tech or isn't mobile-optimized, we'll recommend a rebuild. Either way, we work with what you have and improve from there."
+      question: "Can you work with an existing site or brand?",
+      answer:
+        "Yes. We audit what you have, identify what's working and what isn't, and improve from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
     },
     {
-      question: "Do you only work with salons and local businesses?",
-      answer: "No. Pink Salt Salon and ClickLV are our proof of concept—we tested our strategies on our own businesses first. We work with any business that wants measurable growth: e-commerce, B2B services, local businesses, and online brands."
+      question: "What industries do you specialize in?",
+      answer:
+        "We focus on hospitality and restaurants, law firms, commercial real estate, and luxury lifestyle brands. These are competitive, high-stakes markets where design quality and search visibility directly impact revenue — which is exactly where we operate best.",
     },
     {
-      question: "What makes you different from other agencies?",
-      answer: "We practice what we preach. Before taking clients, we grew our own businesses using these exact strategies. We're also brutally honest—if something won't work, we'll tell you. No fluff, no agency-speak, just real strategies that drive revenue."
-    }
+      question: "What's your philosophy on design and results?",
+      answer:
+        "Design without strategy is decoration. Every decision we make — layout, copy, structure, speed — is tied to a business outcome. We build sites that convert, run ads that track to revenue, and measure what actually moves your business forward.",
+    },
   ];
 
   return (
@@ -150,7 +156,7 @@ const FAQSection = () => {
               className="font-semibold transition-colors duration-200 hover:opacity-80"
               style={{ color: '#FFC64C' }}
             >
-              Schedule a Call →
+              Book a Strategy Call →
             </Link>
           </div>
         </div>

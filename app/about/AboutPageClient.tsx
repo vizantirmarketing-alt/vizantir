@@ -501,7 +501,7 @@ export default function AboutPageClient() {
                 }}
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'about')}>
-                  Schedule a Call Today
+                  Book a Strategy Call
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </Button>

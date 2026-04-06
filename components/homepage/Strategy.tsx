@@ -225,12 +225,6 @@ const Strategy = () => {
     return () => cancelAnimationFrame(animationId);
   }, [isNightMode]);
 
-  const stats = [
-    { value: "+347%", label: "Traffic" },
-    { value: "12.5x", label: "ROAS" },
-    { value: "$2.4M", label: "Revenue" },
-  ];
-
   return (
     <section
       className="relative min-h-screen flex items-center overflow-hidden py-20 md:py-24"
@@ -311,7 +305,7 @@ const Strategy = () => {
                 }}
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'strategy')}>
-                  Schedule a Call
+                  Book a Strategy Call
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </Button>
@@ -365,70 +359,7 @@ const Strategy = () => {
                   : "0 0 60px rgba(255, 198, 76, 0.5), 0 0 120px rgba(255, 184, 77, 0.3)",
               }}
             />
-
-            {/* Stats cards - stack on mobile, absolute on desktop */}
-            <div className="absolute right-0 top-0 bottom-0 hidden lg:flex flex-col justify-center gap-6">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="px-5 py-4 rounded-xl backdrop-blur-md"
-                  style={{
-                    background: isNightMode ? "rgba(124, 58, 237, 0.15)" : "rgba(255, 255, 255, 0.85)",
-                    border: isNightMode ? "1px solid rgba(124, 58, 237, 0.4)" : "1px solid rgba(255, 198, 76, 0.5)",
-                    boxShadow: isNightMode ? "0 10px 40px rgba(124, 58, 237, 0.3)" : "0 10px 40px rgba(0, 0, 0, 0.1)",
-                    animation: `floatCard ${3 + index * 0.5}s ease-in-out infinite`,
-                    animationDelay: `${index * 0.3}s`,
-                  }}
-                >
-                  <div
-                    className="text-2xl font-bold"
-                    style={{
-                      color: isNightMode ? "#A78BFA" : "#1A1A1A",
-                      textShadow: isNightMode ? "0 0 20px rgba(167, 139, 250, 0.5)" : "none",
-                    }}
-                  >
-                    {stat.value}
-                  </div>
-                  <div
-                    className="text-xs uppercase tracking-wider"
-                    style={{ color: isNightMode ? "rgba(255,255,255,0.6)" : "#6B6B6B" }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
           </motion.div>
-        </div>
-
-        {/* Mobile stats - show below globe on mobile */}
-        <div className="flex justify-center gap-4 mt-8 lg:hidden">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="px-4 py-3 rounded-xl backdrop-blur-md text-center"
-              style={{
-                background: isNightMode ? "rgba(124, 58, 237, 0.15)" : "rgba(255, 255, 255, 0.85)",
-                border: isNightMode ? "1px solid rgba(124, 58, 237, 0.4)" : "1px solid rgba(255, 198, 76, 0.5)",
-                boxShadow: isNightMode ? "0 10px 40px rgba(124, 58, 237, 0.3)" : "0 10px 40px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <div
-                className="text-xl font-bold"
-                style={{
-                  color: isNightMode ? "#A78BFA" : "#1A1A1A",
-                }}
-              >
-                {stat.value}
-              </div>
-              <div
-                className="text-xs uppercase tracking-wider"
-                style={{ color: isNightMode ? "rgba(255,255,255,0.6)" : "#6B6B6B" }}
-              >
-                {stat.label}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -440,10 +371,6 @@ const Strategy = () => {
         @keyframes pulseOut {
           0% { transform: scale(1); opacity: 0.6; }
           100% { transform: scale(1.3); opacity: 0; }
-        }
-        @keyframes floatCard {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-12px); }
         }
       `}</style>
     </section>
