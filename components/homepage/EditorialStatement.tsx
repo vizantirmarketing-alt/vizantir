@@ -36,7 +36,7 @@ const EditorialStatement = () => {
               className="text-base md:text-lg leading-relaxed lg:pt-1"
               style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.65)' : '#6B6B6B' }}
             >
-              For established businesses, the website is not just a brochure. It shapes trust, sets expectations, and influences whether the right people reach out. Vizantir designs and builds premium websites that help businesses present at a higher level, communicate more clearly, and create a better experience from first impression to inquiry.
+              For established businesses, the website is not just a brochure. It shapes trust, sets expectations, and influences whether the right people reach out. Vizantir is a Las Vegas studio that designs and builds premium websites that help businesses present at a higher level, communicate more clearly, and create a better experience from first impression to inquiry.
             </p>
           </motion.div>
         </div>

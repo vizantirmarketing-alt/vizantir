@@ -130,7 +130,7 @@ export default function AboutPageClient() {
             className="text-lg md:text-xl max-w-2xl mx-auto mb-10"
             style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.7 }}
           >
-            Vizantir is a premium website design studio for established businesses that need a stronger digital presence, cleaner execution, and a site that reflects the level of the business behind it.
+            Vizantir is a Las Vegas–based premium website design studio for established businesses that need a stronger digital presence, cleaner execution, and a site that reflects the level of the business behind it.
           </motion.p>
 
           {/* CTA Button */}

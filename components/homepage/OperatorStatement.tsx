@@ -38,7 +38,7 @@ const OperatorStatement = () => {
             className="text-base md:text-lg leading-relaxed"
             style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.65)' : '#6B6B6B' }}
           >
-            Vizantir was founded by someone with 25 years of business ownership and more than 10 years building websites. That perspective changes the work. Every decision is made with the business in mind: what matters, what is unnecessary, and what actually improves the final result.
+            Vizantir was founded in Las Vegas by someone with 25 years of business ownership and more than 10 years building websites. That perspective changes the work. Every decision is made with the business in mind: what matters, what is unnecessary, and what actually improves the final result.
           </p>
         </motion.div>
       </div>

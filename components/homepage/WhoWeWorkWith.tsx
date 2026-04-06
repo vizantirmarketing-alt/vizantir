@@ -38,7 +38,7 @@ const WhoWeWorkWith = () => {
             className="text-lg md:text-xl leading-relaxed mb-10"
             style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
           >
-            Vizantir works best with established firms and brands where presentation, clarity, and user experience directly affect revenue. That includes hospitality groups, law firms, commercial real estate teams, and premium service businesses that need more than a better-looking redesign.
+            Based in Las Vegas, Vizantir works best with established firms and brands where presentation, clarity, and user experience directly affect revenue. That includes hospitality groups, law firms, commercial real estate teams, and premium service businesses that need more than a better-looking redesign.
           </p>
 
           {/* Industries Grid */}
