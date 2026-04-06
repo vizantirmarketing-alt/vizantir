@@ -61,7 +61,7 @@ export default function FAQPage() {
               Frequently Asked Questions
             </h1>
             <p className="text-lg md:text-xl" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              Get answers to common questions about web design, development, SEO, and how we can help transform your online presence.
+              Get answers to common questions about web design, development, and how we can help you plan, build, and maintain a stronger website.
             </p>
           </motion.div>
           
@@ -193,7 +193,7 @@ export default function FAQPage() {
               Still have questions?
             </h2>
             <p className="text-lg mb-6" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              We&apos;re here to help. Book a strategy call to walk through your site, SEO, or paid media—no pitch deck required.
+              We&apos;re here to help. Book a strategy call to walk through your goals, scope, and fit for your next website build—no pitch deck required.
             </p>
             <Link
               href="/contact"

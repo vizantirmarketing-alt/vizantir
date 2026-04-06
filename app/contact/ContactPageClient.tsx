@@ -184,7 +184,7 @@ export default function ContactPageClient() {
                         Las Vegas, NV 89139
                       </p>
                       <p className="text-sm mt-1" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
-                        Remote-first agency serving clients nationwide
+                        Remote-first studio serving clients nationwide
                       </p>
                     </div>
                   </div>
@@ -304,7 +304,7 @@ export default function ContactPageClient() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Monthly Budget</label>
+                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Project Budget</label>
                       <select
                         name="budget"
                         value={formData.budget}

@@ -130,17 +130,17 @@ const WhyUs = () => {
                           ? '1px solid rgba(255,255,255,0.1)' 
                           : '1px solid rgba(0,0,0,0.1)'
                         : 'none',
+                      ['--approach-accent' as string]: approach.accentColor,
                     }}
                   >
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                           <h3
-                            className="text-4xl md:text-5xl font-black transition-colors duration-300"
+                            className="text-4xl md:text-5xl font-black transition-colors duration-300 group-hover:[color:var(--approach-accent)]"
                             style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                           >
-                            <span className="group-hover:hidden">{approach.title}</span>
-                            <span className="hidden group-hover:inline" style={{ color: approach.accentColor }}>{approach.title}</span>
+                            {approach.title}
                           </h3>
                           <span
                             className="text-sm font-medium uppercase tracking-wider"
