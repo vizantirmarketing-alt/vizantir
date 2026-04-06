@@ -128,11 +128,11 @@
 }
 
 html, body {
-  background-color: #000;
+  background-color: #FAFAFA;
 }
 
-html[data-theme='light'], html[data-theme='light'] body {
-  background-color: #FAFAFA;
+html[data-theme='dark'], html[data-theme='dark'] body {
+  background-color: #000;
 }
 
 .group:hover .number-glow-teal {

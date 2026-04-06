@@ -13,6 +13,7 @@ import {
 import type { SiteSettings } from '@/lib/sanity/types'
 
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import ThemeWrapper from '@/components/ThemeWrapper'
 
 import Navbar from '@/components/navbar/Navbar'
 
@@ -161,6 +162,26 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+  (function() {
+    try {
+      var stored = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = stored === 'dark' || (!stored && prefersDark);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch(e) {}
+  })();
+`,
+          }}
+        />
         <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
         
@@ -168,18 +189,6 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.clarity.ms" />
         <link rel="dns-prefetch" href="https://www.chatbase.co" />
-        
-        {/* Theme script - simplified to prevent hydration mismatch */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                document.documentElement.style.backgroundColor = '#000000';
-                document.documentElement.setAttribute('data-theme', 'dark');
-              })();
-            `,
-          }}
-        />
       </head>
       <body className={satoshi.variable} suppressHydrationWarning>
         {globalGraph && <JsonLd id="ld-global" data={globalGraph} />}
@@ -190,7 +199,9 @@ export default async function RootLayout({
             <ScrollToTop />
             <ScrollProgress />
             <Navbar />
-            <main>{children}</main>
+            <main>
+              <ThemeWrapper>{children}</ThemeWrapper>
+            </main>
             <Footer />
           </SmoothScroll>
         </ThemeProvider>
