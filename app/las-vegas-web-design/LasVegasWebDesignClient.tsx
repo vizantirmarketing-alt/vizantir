@@ -178,7 +178,7 @@ export default function LasVegasWebDesignClient() {
               }}
             >
               <Link href="/get-started">
-                Get a Free Consultation
+                Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
@@ -489,8 +489,8 @@ export default function LasVegasWebDesignClient() {
                 borderRadius: '12px',
               }}
             >
-              <Link href="/get-started">
-                Get Your Free Consultation
+              <Link href="/contact">
+                Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
