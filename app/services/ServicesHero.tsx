@@ -110,7 +110,7 @@ export default function ServicesHero() {
 
         {/* Accent dot at center intersection */}
         <div
-          className="absolute w-2 h-2 rounded-full"
+          className="absolute w-2 h-2 rounded-full hidden lg:block"
           style={{
             top: '50%',
             left: '50%',
@@ -153,7 +153,7 @@ export default function ServicesHero() {
 
         {/* Center Content */}
         <div className="flex-1 flex items-center">
-          <div className="w-full grid grid-cols-12 gap-4">
+          <div className="w-full grid grid-cols-12 gap-4 lg:items-center">
             {/* Main headline */}
             <div
               className="col-span-12 lg:col-span-8"
@@ -173,7 +173,7 @@ export default function ServicesHero() {
 
             {/* Side content */}
             <div
-              className="col-span-12 lg:col-span-3 lg:col-start-10 flex flex-col justify-end mt-8 lg:mt-0"
+              className="col-span-12 lg:col-span-3 lg:col-start-10 flex flex-col justify-center mt-8 lg:mt-0"
               style={{
                 opacity: loaded ? 1 : 0,
                 transform: loaded ? 'translateY(0)' : 'translateY(30px)',
@@ -181,7 +181,7 @@ export default function ServicesHero() {
               }}
             >
               <p
-                className="text-sm leading-relaxed mb-6"
+                className="text-xl leading-relaxed mb-6"
                 style={{ color: colors.textMuted }}
               >
                 Custom websites for established businesses. Strategy-led, design-first, built to perform.
@@ -202,7 +202,7 @@ export default function ServicesHero() {
                 ].map((line) => (
                   <li
                     key={line}
-                    className="flex items-start gap-2.5 text-sm leading-relaxed"
+                    className="flex items-start gap-2.5 text-base leading-relaxed"
                     style={{ color: colors.textMuted }}
                   >
                     <span
