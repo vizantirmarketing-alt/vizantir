@@ -41,7 +41,7 @@ export default function AboutPageClient() {
     {
       icon: Globe,
       title: 'Remote-First',
-      description: 'Global talent, zero overhead. We pass the savings on to you.',
+      description: 'Global talent and async-first collaboration — more focus on the build, less bureaucracy slowing decisions.',
       color: isNightMode ? '#EC4899' : '#FFC64C',
     },
   ]
@@ -130,8 +130,7 @@ export default function AboutPageClient() {
             className="text-lg md:text-xl max-w-2xl mx-auto mb-10"
             style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.7 }}
           >
-            Vizantir is a remote-first web design and development agency built on one principle:
-            deliver real, measurable growth without the overhead of traditional agencies.
+            Vizantir is a premium website design studio — focused on custom sites that earn trust, support sales, and hold up after launch.
           </motion.p>
 
           {/* CTA Button */}
@@ -229,22 +228,20 @@ export default function AboutPageClient() {
                 style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.8 }}
               >
                 <p>
-                  Vizantir was founded with a simple observation: traditional agencies are
-                  broken. Bloated teams, endless meetings, and inflated retainers that don't
-                  correlate with results.
+                  Vizantir was built for businesses that need senior-level execution without agency drag. We are a focused web design studio — not a full-service agency. Every project gets direct access to the people actually doing the work.
                 </p>
                 <p>
-                  We built something different. A{' '}
+                  We stay{' '}
                   <strong style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                    remote-first, results-obsessed
-                  </strong>{' '}
-                  agency that operates lean and moves fast. No offices. No wasted overhead.
-                  Just a focused team of specialists who know how to grow businesses.
+                    lean by design
+                  </strong>
+                  : fewer handoffs, faster decisions, and clear communication from scoping through launch. No layers of account managers — just experienced builders who care how the site performs in the real world.
                 </p>
                 <p>
-                  From custom web design to SEO and digital strategy, we bring
-                  enterprise-level strategies to businesses that want real growth without
-                  the agency bloat.
+                  From website strategy and custom design through development, CMS integration, and ongoing Website Care, we focus on how the site performs for your business — not checkbox deliverables.
+                </p>
+                <p>
+                  Founded by someone with 25 years of business ownership and 10+ years building websites. That operator background is why we scope projects differently, communicate differently, and care about outcomes — not just deliverables.
                 </p>
               </motion.div>
 

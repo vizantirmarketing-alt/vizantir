@@ -224,7 +224,7 @@ const Hero = () => {
             className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}
           >
-            Your competitors are outranking you, outspending you, and out-converting you. We fix that.
+            We design and build premium websites for established businesses that need more than a good-looking website.
           </p>
 
           <p 

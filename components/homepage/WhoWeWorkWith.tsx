@@ -38,7 +38,7 @@ const WhoWeWorkWith = () => {
             className="text-lg md:text-xl leading-relaxed mb-10"
             style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
           >
-            We partner with growth-focused operators at established regional and national brands generating $1M+ in revenue. Our clients want measurable results, not vanity metrics.
+            We work with established businesses where the website has to earn trust quickly, support sales, and reflect the level of the business.
           </p>
 
           {/* Industries Grid */}

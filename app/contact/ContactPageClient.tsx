@@ -37,24 +37,21 @@ export default function ContactPageClient() {
   }
 
   const services = [
-    "SEO (Search Engine Optimization)",
-    "Answer Engine Optimization (AEO)",
-    "Local SEO / GEO Marketing",
-    "PPC Advertising",
-    "Web Design & Development",
-    "Content Marketing",
-    "Social Media Marketing",
-    "Full Digital Marketing Strategy",
-    "Other"
+    "New Website",
+    "Website Redesign",
+    "Platform Migration",
+    "Custom Development",
+    "Website Refresh",
+    "Website Care / Retainer",
+    "Not Sure Yet",
   ]
 
   const budgets = [
-    "Under $1,000/month",
-    "$1,000 - $2,500/month",
-    "$2,500 - $5,000/month",
-    "$5,000 - $10,000/month",
-    "$10,000+/month",
-    "Project-based (one-time)"
+    "$10,000 – $20,000",
+    "$20,000 – $40,000",
+    "$40,000 – $70,000",
+    "$70,000+",
+    "Not Sure Yet",
   ]
 
   const inputStyle = {
@@ -117,10 +114,10 @@ export default function ContactPageClient() {
             className="text-center max-w-3xl mx-auto"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
-              Let&apos;s Grow Your Business
+              Start the Conversation
             </h1>
             <p className="text-lg md:text-xl" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              Ready to take your digital presence to the next level? Get in touch for a free consultation.
+              Tell us about your project. We&apos;ll review fit, scope, and timing — then recommend the right next step.
             </p>
           </motion.div>
         </div>

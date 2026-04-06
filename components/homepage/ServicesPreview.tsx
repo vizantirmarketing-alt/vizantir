@@ -48,24 +48,24 @@ const ServicesPreview = () => {
   const services = [
     {
       number: '01',
-      title: 'Revenue-Driven Web Design',
-      input: 'Websites built for hospitality groups, law firms, and premium brands—not generic templates.',
-      output: 'Custom Next.js builds, conversion-focused UX, brand-level polish',
-      outcome: 'A site that turns high-intent visitors into booked calls and revenue',
+      title: 'Website Design',
+      input: 'Custom design built around your brand, your buyers, and the trust your business needs to convert at a higher level.',
+      output: 'Original design, mobile-first layout, brand-aligned visual system',
+      outcome: 'A website that looks as serious as your business',
     },
     {
       number: '02',
-      title: 'SEO Built for Competitive Markets',
-      input: 'Organic visibility where the map pack and SERPs are crowded and every click counts.',
-      output: 'Technical SEO, local and competitive keyword strategy, content that earns rankings',
-      outcome: 'Inbound demand in the markets you actually compete in',
+      title: 'Website Development',
+      input: 'Custom Next.js and WordPress builds — fast, scalable, and structured for long-term performance.',
+      output: 'Clean codebase, CMS integration, performance-optimized build',
+      outcome: 'A site that loads fast, works everywhere, and scales with your business',
     },
     {
       number: '03',
-      title: 'Paid Media Tracked to Revenue',
-      input: 'Google and Meta campaigns judged on leads and sales—not vanity impressions.',
-      output: 'Structured tracking, creative testing, budget allocation toward what converts',
-      outcome: 'Clear cost-per-lead and a media plan tied to real business outcomes',
+      title: 'Website Care',
+      input: 'Ongoing support, updates, and improvements so your site stays current without you managing it.',
+      output: 'Monthly updates, performance monitoring, content changes',
+      outcome: 'A website that stays sharp after launch',
     },
   ];
 

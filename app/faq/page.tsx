@@ -12,73 +12,35 @@ export default function FAQPage() {
 
   const faqs = [
     {
-      question: "What is web design and why does my business need a professional website?",
-      answer: "Web design is the process of creating visually appealing, user-friendly websites that effectively represent your brand and convert visitors into customers. In today's digital-first world, your website is often the first impression potential customers have of your business. A professionally designed website built on modern technology like Next.js provides fast loading times, mobile responsiveness, and optimized user experience. Without a strong web presence, your business is invisible to potential customers actively searching for your products or services online. Professional web design allows you to stand out from competitors, build trust, and drive measurable business results."
+      question: 'How much does a website project cost?',
+      answer:
+        'Our projects start at $15,000 for focused builds and scale to $30,000–$60,000+ for larger custom engagements. Every project is scoped and priced clearly upfront — no vague starting-at numbers, no surprise invoices.',
     },
     {
-      question: "How long does SEO take to show results?",
-      answer: "SEO is a long-term strategy that typically takes 3-6 months to show significant results, though some improvements can be seen within 4-8 weeks. The timeline depends on factors like your website's current authority, competition level in your industry, and the quality of your SEO strategy. Unlike paid advertising, SEO builds sustainable organic traffic that continues to grow over time. We focus on both quick wins (technical fixes, local SEO optimization) and long-term strategies (content marketing, link building) to deliver consistent growth."
+      question: 'How long does a website project take?',
+      answer:
+        'Most projects are completed within 4–6 weeks from kickoff. Larger or more complex builds may run 8–10 weeks. Timelines are set at scoping and held — we move as fast as your feedback allows.',
     },
     {
-      question: "What is the difference between SEO and PPC advertising?",
-      answer: "SEO (Search Engine Optimization) focuses on earning organic rankings in search results through content optimization, technical improvements, and authority building. Results take longer but provide sustainable, cost-effective traffic. PPC (Pay-Per-Click) advertising delivers immediate visibility by paying for ad placements on search engines and social platforms. While PPC provides instant traffic, costs continue as long as you advertise. The best digital marketing strategies combine both: PPC for immediate leads while SEO builds long-term organic presence."
+      question: 'Do you build in Next.js or WordPress?',
+      answer:
+        "Both, depending on what fits the project. Next.js for performance-critical, custom builds. WordPress when the client needs a widely supported CMS and a familiar editing environment. We'll recommend the right platform based on your goals, team, and content needs — not our preference.",
     },
     {
-      question: "What is Answer Engine Optimization (AEO) and why is it important?",
-      answer: "Answer Engine Optimization (AEO) is the practice of optimizing your content to appear in AI-powered search results, voice assistants, and featured snippets. With the rise of ChatGPT, Google AI Overviews, and voice search, traditional SEO alone isn't enough. AEO focuses on structuring content to directly answer user questions, making it more likely to be cited by AI systems. Businesses that adopt AEO strategies now will have a significant competitive advantage as AI-driven search becomes the norm."
+      question: 'Do you redesign existing websites?',
+      answer:
+        "Yes. We audit what you have, identify what's working, and rebuild from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
     },
     {
-      question: "How much does digital marketing cost?",
-      answer: "Digital marketing costs vary widely based on your goals, industry competition, and chosen services. Small businesses typically invest $1,500-$5,000 per month for comprehensive digital marketing including SEO, content marketing, and social media management. PPC advertising budgets range from $500-$10,000+ monthly depending on your market. At Vizantir, we create custom strategies based on your budget and goals, focusing on the channels that will deliver the highest ROI for your specific business."
+      question: 'What happens after the site launches?',
+      answer:
+        'We offer monthly Website Care retainers starting at $500/month for updates, monitoring, content changes, and ongoing improvements. Most clients stay on retainer after launch so the site keeps performing as the business evolves.',
     },
     {
-      question: "What is local SEO and how can it help my business?",
-      answer: "Local SEO optimizes your online presence to attract customers in your geographic area. This includes optimizing your Google Business Profile, building local citations, managing reviews, and targeting location-based keywords. For businesses serving specific areas, local SEO is critical—46% of all Google searches have local intent. Proper local SEO helps you appear in Google Maps, local pack results, and 'near me' searches, driving foot traffic and local leads to your business."
+      question: 'Do you write copy for the website?',
+      answer:
+        'We can guide the copy structure and messaging strategy as part of the project scope. For full copywriting, we work with trusted partners we can bring in — or we work with your existing content and sharpen it for the web.',
     },
-    {
-      question: "How do you measure digital marketing success?",
-      answer: "We track key performance indicators (KPIs) aligned with your business goals. Common metrics include: organic traffic growth, keyword rankings, conversion rates, cost per acquisition (CPA), return on ad spend (ROAS), lead quality, and revenue attribution. We provide transparent monthly reports with clear data visualizations showing exactly how your investment is performing. Our focus is always on metrics that impact your bottom line—not vanity metrics that look good but don't drive business growth."
-    },
-    {
-      question: "Do I need a new website or can you work with my existing one?",
-      answer: "We can work with most existing websites, though sometimes a redesign is recommended for optimal results. During our initial audit, we evaluate your site's technical health, user experience, mobile responsiveness, page speed, and conversion optimization. If your current website has solid foundations, we'll optimize what you have. If significant issues exist that would limit your marketing success, we'll recommend a conversion-focused redesign that serves as a powerful marketing asset rather than just an online brochure."
-    },
-    {
-      question: "What makes Vizantir different from other digital marketing agencies?",
-      answer: "Vizantir is a remote-first agency, which means no expensive office overhead—savings we pass directly to our clients. We specialize in emerging technologies like Answer Engine Optimization (AEO) and AI-driven marketing strategies that most agencies haven't adopted yet. Our focus is on measurable results and transparent reporting, not locking you into long-term contracts with hidden fees. We treat your business like our own, providing boutique-level attention with enterprise-grade strategies."
-    },
-    {
-      question: "How involved do I need to be in the marketing process?",
-      answer: "Your involvement level is entirely up to you. Some clients prefer weekly strategy calls and hands-on collaboration, while others want us to handle everything and simply receive monthly reports. At minimum, we need initial input about your business goals, target audience, and brand voice. Beyond that, we handle the heavy lifting—strategy, implementation, optimization, and reporting. We keep you informed of progress and major decisions while respecting your time as a business owner."
-    },
-    {
-      question: "Can you guarantee first page rankings on Google?",
-      answer: "No reputable agency can guarantee specific rankings—and you should be wary of any that do. Google's algorithms consider over 200 ranking factors that change constantly. What we can guarantee is implementing proven SEO best practices, transparent reporting, and continuous optimization based on data. Our track record shows consistent ranking improvements and traffic growth for clients across various industries. We set realistic expectations and focus on driving qualified traffic that converts into customers."
-    },
-    {
-      question: "What industries do you work with?",
-      answer: "We work with businesses across many industries including professional services (law firms, accountants, consultants), healthcare and wellness, home services (contractors, plumbers, electricians), e-commerce, SaaS companies, real estate, and local retail businesses. Our strategies are customized for each industry's unique challenges and audience behaviors. Whether you're a local service provider or a national brand, we develop targeted approaches that resonate with your specific customer base."
-    },
-    {
-      question: "Why is custom Next.js more expensive than WordPress?",
-      answer: "WordPress uses pre-built themes and plugins – you're paying for assembly. Next.js is built from scratch, line by line, specifically for your brand. You're paying for engineering, not configuration."
-    },
-    {
-      question: "What companies use Next.js?",
-      answer: "Nike, Netflix, TikTok, Notion, Hulu, Twitch, Target, The Washington Post, and OpenAI all run on Next.js. It's the framework billion-dollar companies choose when performance and scale matter."
-    },
-    {
-      question: "What's wrong with WordPress?",
-      answer: "Nothing – for the right use case. But WordPress requires constant plugin updates, security patches, and maintenance. One outdated plugin can break your site or get you hacked. Next.js has no plugins, no database vulnerabilities, and deploys as static files that are nearly impossible to exploit."
-    },
-    {
-      question: "Will I need to maintain my Next.js site?",
-      answer: "Barely. Once deployed on Vercel, your site runs without intervention. No plugin updates, no security patches, no PHP version conflicts. It just works."
-    },
-    {
-      question: "Why should I pay $15k+ when I can get a WordPress site for $3k?",
-      answer: "You can buy a $3k WordPress site. You'll also pay for hosting, security plugins, maintenance, and a developer on retainer for when things break. In two years, you've spent $8k+ and still have a slow site that looks like a template. Our builds are deploy-and-forget with zero recurring headaches."
-    }
   ]
 
   const filteredFaqs = faqs.filter(faq => 

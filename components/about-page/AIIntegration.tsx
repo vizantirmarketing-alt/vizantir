@@ -35,9 +35,21 @@ const AIIntegration = () => {
   }, [isVisible]);
 
   const demoMessages = [
-    { question: "Do you accept walk-ins?", answer: "Yes! We welcome walk-ins Monday-Saturday. For weekends, we recommend booking ahead." },
-    { question: "What are your prices for highlights?", answer: "Our highlights start at $150 for partial and $220 for full. Includes toner and blowout." },
-    { question: "Do you use eco-friendly products?", answer: "Absolutely! We use sulfate-free, cruelty-free products from sustainable brands." },
+    {
+      question: 'What can the assistant handle for visitors?',
+      answer:
+        'Qualifying inbound inquiries, surfacing service options, answering reservation or availability questions, and routing serious leads to the right contact path.',
+    },
+    {
+      question: 'Can it route serious leads?',
+      answer:
+        'Yes — it can qualify intent, point people to the right services, and move high-value inquiries to the correct next step.',
+    },
+    {
+      question: 'Does it replace your team?',
+      answer:
+        'No. It handles repetitive questions from your site content so your team spends time on real conversations — not repeating the same details.',
+    },
   ];
 
   return (

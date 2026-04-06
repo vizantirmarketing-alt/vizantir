@@ -7,18 +7,7 @@ import Link from 'next/link'
 import ServicesHero from './ServicesHero'
 import { trackCTAClick } from '@/lib/analytics'
 
-type ServiceKey = 'web' | 'cms' | 'analytics' | 'seo' | 'integrations' | 'copywriting' | 'care'
-
-// Map service IDs to individual service page slugs
-const serviceSlugMap: Record<ServiceKey, string | null> = {
-  'web': 'web-design',
-  'cms': null,
-  'analytics': null,
-  'seo': 'seo',
-  'integrations': null,
-  'copywriting': null,
-  'care': null,
-}
+type ServiceKey = 'strategy' | 'design' | 'dev' | 'refresh' | 'cms' | 'care'
 
 interface Service {
   id: ServiceKey
@@ -28,39 +17,40 @@ interface Service {
 
 const services: Service[] = [
   {
-    id: 'web',
-    label: 'Web Design & Development',
-    tagline: 'Custom Next.js builds with enterprise SEO architecture — structured data, Core Web Vitals optimization, and AI-search readiness built in.',
+    id: 'strategy',
+    label: 'Website Strategy',
+    tagline:
+      'Before we design anything, we map the site to your business goals, your buyers, and the trust signals that convert them.',
+  },
+  {
+    id: 'design',
+    label: 'Web Design',
+    tagline:
+      'Original, custom design built around your brand. No templates. No shortcuts. Every layout decision made with your buyer in mind.',
+  },
+  {
+    id: 'dev',
+    label: 'Web Development',
+    tagline:
+      'Custom Next.js and WordPress builds. Fast, clean, scalable — with CMS integration so your team can manage content without touching code.',
+  },
+  {
+    id: 'refresh',
+    label: 'Website Refreshes',
+    tagline:
+      "Already have a site? We rebuild the structure, design, and performance without starting from scratch where it isn't needed.",
   },
   {
     id: 'cms',
-    label: 'Content Management',
-    tagline: 'Sanity CMS integration so you can update content without a developer.',
-  },
-  {
-    id: 'analytics',
-    label: 'Analytics & Optimization',
-    tagline: 'Track what matters. Test what works. Improve what converts.',
-  },
-  {
-    id: 'seo',
-    label: 'SEO & Search',
-    tagline: 'Technical SEO, Local SEO, and AI search optimization that compounds over time.',
-  },
-  {
-    id: 'integrations',
-    label: 'Integrations',
-    tagline: 'Connect your CRM, email, booking, and payment tools seamlessly.',
-  },
-  {
-    id: 'copywriting',
-    label: 'Copywriting',
-    tagline: 'Conversion-focused copy that sounds like your brand, not a template.',
+    label: 'CMS Integrations',
+    tagline:
+      'Sanity, WordPress, and custom CMS setups that give your team control over content without depending on a developer for every change.',
   },
   {
     id: 'care',
-    label: 'Ongoing Support',
-    tagline: 'Maintenance, updates, and growth retainers to keep momentum.',
+    label: 'Website Care',
+    tagline:
+      'Monthly retainers for updates, monitoring, performance improvements, and ongoing support after launch.',
   },
 ]
 
@@ -76,11 +66,28 @@ const WebIcon = () => (
   </svg>
 )
 
-const SeoIcon = () => (
+const StrategyIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-    <path d="M3 20l4-4m0 0l4-6 4 3 6-9" />
-    <circle cx="7" cy="16" r="2" />
-    <path d="M21 7v4h-4" />
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 8v8M8 12h8" />
+  </svg>
+)
+
+const DesignIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
+    <path d="M12 19l7-7 3 3-7 7-3-3z" />
+    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+    <path d="M2 2l7.586 7.586" />
+    <circle cx="11" cy="11" r="2" />
+  </svg>
+)
+
+const RefreshIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
+    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+    <path d="M3 3v5h5" />
+    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+    <path d="M16 21h5v-5" />
   </svg>
 )
 
@@ -88,12 +95,6 @@ const CareIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
     <path d="M12 21C12 21 4 14.5 4 9.5C4 5.36 7.58 3 12 3s8 2.36 8 6.5c0 5-8 11.5-8 11.5z" />
     <path d="M12 3v6m-3-3h6" />
-  </svg>
-)
-
-const MarketingIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
   </svg>
 )
 
@@ -107,50 +108,18 @@ const CmsIcon = () => (
   </svg>
 )
 
-const AnalyticsIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-    <path d="M4 20h16" />
-    <path d="M4 20V10" />
-    <path d="M8 20V14" />
-    <path d="M12 20V8" />
-    <path d="M16 20V12" />
-    <path d="M20 20V4" />
-  </svg>
-)
-
-const IntegrationsIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-    <circle cx="6" cy="6" r="3" />
-    <circle cx="18" cy="6" r="3" />
-    <circle cx="6" cy="18" r="3" />
-    <circle cx="18" cy="18" r="3" />
-    <path d="M6 9v6" />
-    <path d="M18 9v6" />
-    <path d="M9 6h6" />
-    <path d="M9 18h6" />
-  </svg>
-)
-
-const CopywritingIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-    <path d="M12 20h9" />
-    <path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-  </svg>
-)
-
 const iconMap = {
-  web: WebIcon,
+  strategy: StrategyIcon,
+  design: DesignIcon,
+  dev: WebIcon,
+  refresh: RefreshIcon,
   cms: CmsIcon,
-  analytics: AnalyticsIcon,
-  seo: SeoIcon,
-  integrations: IntegrationsIcon,
-  copywriting: CopywritingIcon,
   care: CareIcon,
 }
 
 export default function ServicesPageClient() {
   const { isNightMode } = useTheme()
-  const [openService, setOpenService] = useState<ServiceKey | null>('web')
+  const [openService, setOpenService] = useState<ServiceKey | null>('strategy')
 
   const handleToggle = (id: ServiceKey) => {
     setOpenService((prev) => (prev === id ? null : id))
@@ -183,7 +152,7 @@ export default function ServicesPageClient() {
               className="text-3xl md:text-4xl font-bold transition-colors duration-500"
               style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
             >
-              Everything you need to grow online
+              What we offer
             </h2>
           </motion.div>
 
@@ -353,18 +322,16 @@ interface ServiceContentProps {
 
 function ServiceContent({ id, isNightMode }: ServiceContentProps) {
   switch (id) {
-    case 'web':
-      return <WebContent isNightMode={isNightMode} />
+    case 'strategy':
+      return <StrategyContent isNightMode={isNightMode} />
+    case 'design':
+      return <DesignContent isNightMode={isNightMode} />
+    case 'dev':
+      return <DevContent isNightMode={isNightMode} />
+    case 'refresh':
+      return <RefreshContent isNightMode={isNightMode} />
     case 'cms':
       return <CmsContent isNightMode={isNightMode} />
-    case 'analytics':
-      return <AnalyticsContent isNightMode={isNightMode} />
-    case 'seo':
-      return <SeoContent isNightMode={isNightMode} />
-    case 'integrations':
-      return <IntegrationsContent isNightMode={isNightMode} />
-    case 'copywriting':
-      return <CopywritingContent isNightMode={isNightMode} />
     case 'care':
       return <CareContent isNightMode={isNightMode} />
     default:
@@ -444,31 +411,89 @@ function CategoryLabel({ children, isNightMode }: { children: React.ReactNode; i
 
 /* ===== Content Sections ===== */
 
-function WebContent({ isNightMode }: { isNightMode: boolean }) {
+function strategyCallLink() {
+  return (
+    <Link
+      href="/contact"
+      onClick={() => trackCTAClick('get_started', 'services')}
+      className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity"
+      style={{ color: '#FFC64C' }}
+    >
+      Book a Strategy Call
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </Link>
+  )
+}
+
+function StrategyContent({ isNightMode }: { isNightMode: boolean }) {
   return (
     <div className="space-y-8">
-      <p 
+      <p
         className="leading-relaxed transition-colors duration-500"
         style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
-        Custom-built Next.js sites engineered for speed, SEO, and scale.
+        Before we design anything, we map the site to your business goals, your buyers, and the trust signals that convert them.
+      </p>
+      {strategyCallLink()}
+    </div>
+  )
+}
+
+function DesignContent({ isNightMode }: { isNightMode: boolean }) {
+  return (
+    <div className="space-y-8">
+      <p
+        className="leading-relaxed transition-colors duration-500"
+        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
+      >
+        Original, custom design built around your brand. No templates. No shortcuts. Every layout decision is made with your buyer in mind — so the site earns trust and supports how you actually sell.
+      </p>
+      {strategyCallLink()}
+    </div>
+  )
+}
+
+function DevContent({ isNightMode }: { isNightMode: boolean }) {
+  return (
+    <div className="space-y-8">
+      <p
+        className="leading-relaxed transition-colors duration-500"
+        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
+      >
+        Custom Next.js and WordPress builds. Fast, clean, scalable — with CMS integration so your team can manage content without touching code.
       </p>
 
-      {/* Enterprise Technology Section */}
-      <div 
+      <div
+        className="py-6 px-6 rounded-xl border"
+        style={{
+          background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
+          borderColor: isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
+        }}
+      >
+        <p
+          className="text-sm md:text-base leading-relaxed transition-colors duration-500"
+          style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.85)' : '#4B5563' }}
+        >
+          Every build includes SEO-friendly architecture, structured data, performance optimization, and mobile standards — built in from day one, not bolted on after.
+        </p>
+      </div>
+
+      <div
         className="py-8 px-6 rounded-xl border text-center"
         style={{
           background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
           borderColor: isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
         }}
       >
-        <p 
+        <p
           className="text-xs font-semibold tracking-wider uppercase mb-3 transition-colors duration-500"
           style={{ color: isNightMode ? '#666666' : '#9CA3AF' }}
         >
           ENTERPRISE TECHNOLOGY
         </p>
-        <h3 
+        <h3
           className="text-lg md:text-xl font-semibold mb-4 transition-colors duration-500"
           style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
         >
@@ -485,13 +510,13 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
             </span>
           ))}
         </div>
-        <p 
+        <p
           className="text-sm leading-relaxed mb-3 max-w-2xl mx-auto transition-colors duration-500"
           style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B7280' }}
         >
-          We build on Next.js — the framework billion-dollar companies choose when performance and scale matter. You get the same speed, security, and SEO advantages.
+          We build on Next.js — the framework billion-dollar companies choose when performance and scale matter. You get the same speed, security, and search-friendly structure.
         </p>
-        <Link 
+        <Link
           href="/faq"
           className="inline-flex items-center gap-1 text-sm font-medium hover:opacity-80 transition-opacity"
           style={{ color: '#FFC64C' }}
@@ -504,41 +529,45 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
       </div>
 
       <div>
-        <CategoryLabel isNightMode={isNightMode}>Next.js Websites</CategoryLabel>
+        <CategoryLabel isNightMode={isNightMode}>Website packages</CategoryLabel>
         <div className="space-y-3">
           <PricingCard
-            title="Foundation"
+            title="Essentials"
             price="$15,000+"
-            description="5-10 pages. Custom Next.js build. Responsive design, smooth animations, SEO foundations. Clean, fast, and built to perform."
+            description="5-10 pages. Custom Next.js build. Responsive design, smooth animations. Clean, fast, and built to perform."
             isNightMode={isNightMode}
           />
           <PricingCard
             title="Growth"
             price="$30,000+"
-            description="10-20 pages. Headless CMS integration. Custom animations, advanced SEO architecture, designed to convert and scale."
+            description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, designed to scale."
             featured
             isNightMode={isNightMode}
           />
           <PricingCard
-            title="Premium"
+            title="Enterprise"
             price="$60,000+"
-            description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. A complete digital presence built for serious brands."
+            description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. Built for serious brands."
             isNightMode={isNightMode}
           />
         </div>
       </div>
 
-      <Link 
-        href="/contact" 
-        onClick={() => trackCTAClick('get_started', 'services')}
-        className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
-        style={{ color: '#FFC64C' }}
+      {strategyCallLink()}
+    </div>
+  )
+}
+
+function RefreshContent({ isNightMode }: { isNightMode: boolean }) {
+  return (
+    <div className="space-y-8">
+      <p
+        className="leading-relaxed transition-colors duration-500"
+        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
-        Book a Strategy Call
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </Link>
+        Already have a site? We rebuild the structure, design, and performance without starting from scratch where it isn&apos;t needed — and we&apos;ll tell you honestly when a full rebuild is the better move.
+      </p>
+      {strategyCallLink()}
     </div>
   )
 }
@@ -546,11 +575,11 @@ function WebContent({ isNightMode }: { isNightMode: boolean }) {
 function CmsContent({ isNightMode }: { isNightMode: boolean }) {
   return (
     <div className="space-y-8">
-      <p 
+      <p
         className="leading-relaxed transition-colors duration-500"
         style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
-        Update your website without waiting on a developer. We integrate Sanity CMS so you can edit pages, add blog posts, update team members, and manage content from a simple dashboard.
+        Sanity, WordPress, and custom CMS setups that give your team control over content without depending on a developer for every change.
       </p>
 
       <div className="grid sm:grid-cols-2 gap-3">
@@ -564,7 +593,7 @@ function CmsContent({ isNightMode }: { isNightMode: boolean }) {
         <PricingCard
           title="Blog System"
           price="$1,500+"
-          description="Full blog with categories, tags, authors, and SEO fields. Write and publish without touching code."
+          description="Full blog with categories, tags, authors, and structured metadata fields. Write and publish without touching code."
           isNightMode={isNightMode}
         />
         <PricingCard
@@ -581,281 +610,7 @@ function CmsContent({ isNightMode }: { isNightMode: boolean }) {
         />
       </div>
 
-      <Link 
-        href="/contact" 
-        onClick={() => trackCTAClick('get_started', 'services')}
-        className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
-        style={{ color: '#FFC64C' }}
-      >
-        Book a Strategy Call
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </Link>
-    </div>
-  )
-}
-
-function AnalyticsContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p 
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Stop guessing. We set up the tracking infrastructure so you can see exactly where visitors come from, what they do, and whether they convert — then help you improve it.
-      </p>
-
-      <div className="grid sm:grid-cols-2 gap-3">
-        <PricingCard
-          title="Analytics Setup"
-          price="$500+"
-          description="Google Analytics 4 and Tag Manager configured properly. Events, goals, and basic reporting."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Conversion Tracking"
-          price="$800+"
-          description="Track form submissions, phone clicks, button clicks, and purchases. Know your actual ROI."
-          featured
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Heatmaps & Recordings"
-          price="$400+"
-          description="Microsoft Clarity or Hotjar setup. See where users click, scroll, and get stuck."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="A/B Testing"
-          price="$600+"
-          description="Test headlines, CTAs, layouts. Make decisions based on data, not opinions."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Full Analytics Stack"
-          price="$1,500+"
-          description="GA4 + GTM + Clarity + conversion tracking + custom dashboard. The complete picture."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Monthly Reporting"
-          price="$300/mo"
-          description="Monthly analytics report with insights and recommendations. Know what's working."
-          isNightMode={isNightMode}
-        />
-      </div>
-
-      <Link 
-        href="/contact" 
-        onClick={() => trackCTAClick('get_started', 'services')}
-        className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
-        style={{ color: '#FFC64C' }}
-      >
-        Book a Strategy Call
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </Link>
-    </div>
-  )
-}
-
-function SeoContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p 
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        SEO is a long-term engine, not a one-time setup. These programs build visibility and authority month after month, compounding your organic reach into sustainable revenue — including optimization for AI search engines.
-      </p>
-
-      <div>
-        <CategoryLabel isNightMode={isNightMode}>Monthly Programs</CategoryLabel>
-        <div className="grid sm:grid-cols-2 gap-3">
-          <PricingCard
-            title="Local SEO"
-            price="$800/mo"
-            description="Google Business Profile optimization, local schema, directory listings, review strategy."
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Technical SEO"
-            price="$1,200/mo"
-            description="Site audits, schema markup, Core Web Vitals, sitemap optimization, crawl fixes."
-            featured
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Growth SEO"
-            price="$2,000/mo"
-            description="Content strategy, blog production, backlink outreach, competitor analysis."
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Elite SEO"
-            price="$3,000/mo"
-            description="Authority building at scale. Advanced strategy, high-volume content, category dominance."
-            isNightMode={isNightMode}
-          />
-        </div>
-      </div>
-
-      <div>
-        <CategoryLabel isNightMode={isNightMode}>AI Search Optimization (AEO)</CategoryLabel>
-        <div className="grid sm:grid-cols-2 gap-3">
-          <PricingCard
-            title="AEO Foundation"
-            price="$1,000+"
-            description="llms.txt setup, entity optimization, structured data for ChatGPT and Perplexity visibility."
-            featured
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="AEO + SEO Bundle"
-            price="$1,800/mo"
-            description="Combined traditional SEO and AI search optimization. Future-proof your visibility."
-            isNightMode={isNightMode}
-          />
-        </div>
-        <p 
-          className="mt-4 text-sm transition-colors duration-500"
-          style={{ color: isNightMode ? '#666666' : '#9CA3AF' }}
-        >
-          AI search engines like ChatGPT and Perplexity are changing how people find information. AEO ensures your business appears in AI-generated answers, not just traditional search results.
-        </p>
-      </div>
-
-      <Link 
-        href="/contact" 
-        onClick={() => trackCTAClick('get_started', 'services')}
-        className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
-        style={{ color: '#FFC64C' }}
-      >
-        Book a Strategy Call
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </Link>
-    </div>
-  )
-}
-
-function IntegrationsContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p 
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Your website should work with your tools, not against them. We connect the platforms you already use so data flows automatically and nothing falls through the cracks.
-      </p>
-
-      <div className="grid sm:grid-cols-2 gap-3">
-        <PricingCard
-          title="CRM Integration"
-          price="$500+"
-          description="HubSpot, Salesforce, Pipedrive, Zoho — form submissions flow directly into your pipeline."
-          featured
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Email Marketing"
-          price="$400+"
-          description="Mailchimp, Klaviyo, ConvertKit — capture leads and trigger automated sequences."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Booking & Scheduling"
-          price="$300+"
-          description="Calendly, Cal.com, Acuity — let visitors book directly without back-and-forth."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Payments"
-          price="$800+"
-          description="Stripe, Square, PayPal — accept payments, deposits, or subscriptions on-site."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Chat & Support"
-          price="$300+"
-          description="Intercom, Drift, LiveChat — engage visitors in real-time."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Custom Automation"
-          price="$600+"
-          description="Zapier workflows, webhooks, API connections. Your stack, working together."
-          isNightMode={isNightMode}
-        />
-      </div>
-
-      <Link 
-        href="/contact" 
-        onClick={() => trackCTAClick('get_started', 'services')}
-        className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
-        style={{ color: '#FFC64C' }}
-      >
-        Book a Strategy Call
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </Link>
-    </div>
-  )
-}
-
-function CopywritingContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p 
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Great design with weak copy doesn't convert. We write website copy that sounds like your brand, speaks to your audience, and moves people to act.
-      </p>
-
-      <div className="grid sm:grid-cols-2 gap-3">
-        <PricingCard
-          title="Website Copy"
-          price="$150/page"
-          description="Homepage, about, services — conversion-focused copy that blends clarity with SEO intent."
-          featured
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Landing Page Copy"
-          price="$400+"
-          description="Single-purpose pages built to convert. Headlines, benefits, CTAs, objection handling."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Blog Posts"
-          price="$200/post"
-          description="SEO-optimized articles that rank and establish authority. 1,000-2,000 words."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Email Sequences"
-          price="$500+"
-          description="Welcome series, nurture campaigns, re-engagement flows. Copy that converts over time."
-          isNightMode={isNightMode}
-        />
-      </div>
-
-      <Link 
-        href="/contact" 
-        onClick={() => trackCTAClick('get_started', 'services')}
-        className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity" 
-        style={{ color: '#FFC64C' }}
-      >
-        Book a Strategy Call
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </Link>
+      {strategyCallLink()}
     </div>
   )
 }
@@ -863,62 +618,39 @@ function CopywritingContent({ isNightMode }: { isNightMode: boolean }) {
 function CareContent({ isNightMode }: { isNightMode: boolean }) {
   return (
     <div className="space-y-8">
-      <p 
+      <p
         className="leading-relaxed transition-colors duration-500"
         style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
-        Your website is an asset that needs care. We offer ongoing support to keep it secure, fast, and growing — so you can focus on your business.
+        Monthly retainers for updates, monitoring, performance improvements, and ongoing support after launch.
       </p>
 
       <div>
         <CategoryLabel isNightMode={isNightMode}>Website Care</CategoryLabel>
         <div className="grid sm:grid-cols-3 gap-3">
           <PricingCard
-            title="Essential"
-            price="$149/mo"
-            description="Weekly backups, security scans, uptime monitoring, plugin updates. Peace of mind."
+            title="Care — Essentials"
+            price="$500–$900/mo"
+            description="Core maintenance: updates, backups, monitoring, and prioritized fixes so your site stays reliable."
             isNightMode={isNightMode}
           />
           <PricingCard
-            title="Complete"
-            price="$299/mo"
-            description="Everything in Essential plus content edits, image optimization, and priority support."
+            title="Care — Growth"
+            price="$1,200–$2,000/mo"
+            description="More bandwidth for content changes, performance tuning, and proactive improvements."
             featured
             isNightMode={isNightMode}
           />
           <PricingCard
-            title="Next.js Care"
-            price="$499/mo"
-            description="Deployment management, version upgrades, build monitoring, performance optimization."
+            title="Care — Enterprise"
+            price="$2,500–$4,500/mo"
+            description="Hands-on support for larger sites: faster turnaround, deeper technical work, and ongoing optimization."
             isNightMode={isNightMode}
           />
         </div>
       </div>
 
-      <div>
-        <CategoryLabel isNightMode={isNightMode}>Growth Retainer</CategoryLabel>
-        <div className="grid sm:grid-cols-2 gap-3">
-          <PricingCard
-            title="Growth Lite"
-            price="$1,000/mo"
-            description="Monthly analytics review, conversion recommendations, 5 hours of updates or improvements."
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Growth Pro"
-            price="$2,500/mo"
-            description="Full optimization: A/B testing, CRO, new features, priority support, 15 hours/month."
-            featured
-            isNightMode={isNightMode}
-          />
-        </div>
-        <p 
-          className="mt-4 text-sm transition-colors duration-500"
-          style={{ color: isNightMode ? '#666666' : '#9CA3AF' }}
-        >
-          Growth retainers are for businesses that want continuous improvement — not just maintenance. We actively work to increase your conversions month over month.
-        </p>
-      </div>
+      {strategyCallLink()}
     </div>
   )
 }

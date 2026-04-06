@@ -34,8 +34,8 @@ const WhyUs = () => {
   const benefits = [
     {
       icon: Building2,
-      title: 'No Office Overhead',
-      description: 'No fancy downtown rent. No expensive furniture. Just pure focus on your results.',
+      title: 'Lean by design',
+      description: 'A distributed studio model — less theater, more time on strategy, design, and build quality.',
       color: '#FFC64C',
     },
     {
@@ -46,14 +46,14 @@ const WhyUs = () => {
     },
     {
       icon: DollarSign,
-      title: 'Savings Passed to You',
-      description: 'Every dollar we save on overhead goes directly into your project.',
+      title: 'Direct access',
+      description: 'You collaborate with the people shipping your site — not a rotating cast of account managers.',
       color: '#FFB5A0',
     },
     {
       icon: Zap,
       title: 'Faster Execution',
-      description: 'No bureaucracy. No layers of approval. Just fast, quality work.',
+      description: 'Fewer handoffs and faster decisions — without sacrificing craft.',
       color: '#C084FC',
     },
   ];
@@ -84,8 +84,7 @@ const WhyUs = () => {
               className="text-lg md:text-xl max-w-2xl mx-auto"
               style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}
             >
-              No fancy office. No bloated overhead. No inflated invoices. 
-              We pass the savings directly to you.
+              Lean by design: direct access to the people doing the work, faster decisions, and a studio focused on websites — not full-service agency overhead.
             </p>
           </div>
 

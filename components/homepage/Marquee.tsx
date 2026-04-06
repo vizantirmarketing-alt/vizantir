@@ -6,13 +6,13 @@ const Marquee = () => {
   const { isNightMode } = useTheme();
 
   const items = [
-    "FAST PERFORMANCE",
-    "CONVERSION FOCUSED",
+    "WEBSITE DESIGN",
+    "CUSTOM DEVELOPMENT",
+    "NEXT.JS BUILDS",
     "MOBILE FIRST",
-    "SEO DRIVEN",
     "PREMIUM DESIGN",
-    "MEASURABLE RESULTS",
-    "BUILT TO SCALE",
+    "BUILT TO PERFORM",
+    "STRATEGY LED",
   ];
 
   const MarqueeContent = () => (
@@ -23,6 +23,7 @@ const Marquee = () => {
           className="flex items-center flex-shrink-0"
         >
           <span 
+            suppressHydrationWarning
             className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight whitespace-nowrap"
             style={{ 
               color: isNightMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
@@ -46,6 +47,7 @@ const Marquee = () => {
 
   return (
     <section
+      suppressHydrationWarning
       className="py-12 md:py-16 overflow-hidden relative"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >

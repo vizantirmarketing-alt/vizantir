@@ -167,11 +167,7 @@ export default function ServicesHero() {
                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-[1.05] tracking-tight"
                 style={{ color: colors.text }}
               >
-                Websites, SEO,
-                <br />
-                and growth systems
-                <br />
-                <span style={{ color: colors.textMuted }}>that compound.</span>
+                What We Build
               </h1>
             </div>
 
@@ -188,11 +184,37 @@ export default function ServicesHero() {
                 className="text-sm leading-relaxed mb-6"
                 style={{ color: colors.textMuted }}
               >
-                Custom Next.js builds engineered for performance and presence.
-                A complete digital foundation for brands ready to grow.
+                Custom websites for established businesses. Strategy-led, design-first, built to perform.
               </p>
-              <a
-                href="#services"
+              <p
+                className="text-xs tracking-[0.25em] uppercase font-medium mb-3"
+                style={{ color: colors.accent }}
+              >
+                What&apos;s included in every build
+              </p>
+              <ul className="mb-6 space-y-2 list-none p-0 m-0">
+                {[
+                  'Custom design, no templates',
+                  'Mobile-first development',
+                  'CMS integration included',
+                  'SEO architecture built in',
+                  'Post-launch support available',
+                ].map((line) => (
+                  <li
+                    key={line}
+                    className="flex items-start gap-2.5 text-sm leading-relaxed"
+                    style={{ color: colors.textMuted }}
+                  >
+                    <span
+                      className="mt-2 h-1 w-1 shrink-0 rounded-full"
+                      style={{ background: colors.accent }}
+                      aria-hidden
+                    />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+              <p
                 className="inline-flex items-center gap-2 text-sm font-medium group"
                 style={{ color: colors.text }}
               >
@@ -206,7 +228,7 @@ export default function ServicesHero() {
                 >
                   <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
+              </p>
             </div>
           </div>
         </div>
