@@ -49,21 +49,21 @@ const ServicesPreview = () => {
     {
       number: '01',
       title: 'Website Design',
-      input: 'Custom design built around your brand, your buyers, and the trust your business needs to convert at a higher level.',
+      input: 'Custom visual design built to reflect the level of the business and create a more credible online presence.',
       output: 'Original design, mobile-first layout, brand-aligned visual system',
-      outcome: 'A website that looks as serious as your business',
+      outcome: 'A website that reflects the level of the business',
     },
     {
       number: '02',
       title: 'Website Development',
-      input: 'Custom Next.js and WordPress builds — fast, scalable, and structured for long-term performance.',
+      input: 'Fast, modern builds in Next.js or WordPress, depending on what the business actually needs.',
       output: 'Clean codebase, CMS integration, performance-optimized build',
-      outcome: 'A site that loads fast, works everywhere, and scales with your business',
+      outcome: 'A site that loads fast, works everywhere, and scales with the business',
     },
     {
       number: '03',
       title: 'Website Care',
-      input: 'Ongoing support, updates, and improvements so your site stays current without you managing it.',
+      input: 'Ongoing support for updates, improvements, and post-launch maintenance.',
       output: 'Monthly updates, performance monitoring, content changes',
       outcome: 'A website that stays sharp after launch',
     },
@@ -154,6 +154,20 @@ const ServicesPreview = () => {
         >
           SERVICES
         </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center text-base md:text-lg max-w-3xl mx-auto mb-16 md:mb-20 px-2"
+          style={{
+            color: isNightMode ? 'rgba(255, 255, 255, 0.75)' : 'rgba(0, 0, 0, 0.75)',
+            lineHeight: 1.65,
+          }}
+        >
+          Vizantir focuses on the parts of the website that matter most: strategy, design, development, and long-term usability.
+        </motion.p>
 
         <motion.div
           variants={containerVariants}

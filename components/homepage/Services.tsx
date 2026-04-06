@@ -47,7 +47,7 @@ const Services = () => {
             className="text-xl max-w-2xl mx-auto"
             style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
           >
-            Comprehensive digital marketing solutions tailored to your business goals
+            Comprehensive website design and development solutions tailored to your business goals
           </p>
         </div>
 

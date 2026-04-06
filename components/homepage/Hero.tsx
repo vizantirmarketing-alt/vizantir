@@ -205,7 +205,7 @@ const Hero = () => {
               textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none'
             }}
           >
-            Premium Web Design Agency
+            Premium Website Design Studio
           </h2>
 
           <h1 
@@ -224,14 +224,14 @@ const Hero = () => {
             className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}
           >
-            We design and build premium websites for established businesses that need more than a good-looking website.
+            Vizantir is a premium website design studio building custom websites for established businesses that care about trust, presentation, and performance.
           </p>
 
           <p 
             className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg italic transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}
           >
-            Not for everyone. Built for businesses ready to scale.
+            Every project is shaped to improve how your business is perceived, how your site works, and how confidently people take the next step.
           </p>
 
           <Button

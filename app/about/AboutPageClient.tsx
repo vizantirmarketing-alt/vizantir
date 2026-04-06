@@ -117,9 +117,7 @@ export default function AboutPageClient() {
             className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-[0.95]"
             style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
           >
-            A LEAN TEAM.
-            <br />
-            <span style={{ color: '#FFC64C' }}>BIG RESULTS.</span>
+            Built by an operator, not just a designer.
           </motion.h1>
 
           {/* Subtitle */}
@@ -130,7 +128,7 @@ export default function AboutPageClient() {
             className="text-lg md:text-xl max-w-2xl mx-auto mb-10"
             style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.7 }}
           >
-            Vizantir is a premium website design studio — focused on custom sites that earn trust, support sales, and hold up after launch.
+            Vizantir is a premium website design studio for established businesses that need a stronger digital presence, cleaner execution, and a site that reflects the level of the business behind it.
           </motion.p>
 
           {/* CTA Button */}
@@ -195,17 +193,6 @@ export default function AboutPageClient() {
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.7, ease: 'easeOut' }}
             >
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="text-lg md:text-xl font-medium mb-3"
-                style={{ color: '#C084FC' }}
-              >
-                Our Story
-              </motion.h2>
-
               <motion.h3
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -214,9 +201,7 @@ export default function AboutPageClient() {
                 className="text-3xl md:text-4xl lg:text-5xl font-black mb-8 leading-tight"
                 style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
               >
-                BUILT DIFFERENT.
-                <br />
-                ON PURPOSE.
+                Why Vizantir exists
               </motion.h3>
 
               <motion.div
@@ -228,22 +213,34 @@ export default function AboutPageClient() {
                 style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.8 }}
               >
                 <p>
-                  Vizantir was built for businesses that need senior-level execution without agency drag. We are a focused web design studio — not a full-service agency. Every project gets direct access to the people actually doing the work.
+                  Vizantir was built around a simple idea: businesses should not have to choose between strong design, serious execution, and a process that actually makes sense.
                 </p>
                 <p>
-                  We stay{' '}
-                  <strong style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}>
-                    lean by design
-                  </strong>
-                  : fewer handoffs, faster decisions, and clear communication from scoping through launch. No layers of account managers — just experienced builders who care how the site performs in the real world.
-                </p>
-                <p>
-                  From website strategy and custom design through development, CMS integration, and ongoing Website Care, we focus on how the site performs for your business — not checkbox deliverables.
-                </p>
-                <p>
-                  Founded by someone with 25 years of business ownership and 10+ years building websites. That operator background is why we scope projects differently, communicate differently, and care about outcomes — not just deliverables.
+                  Too many website projects get buried under bloated teams, vague deliverables, and work that looks polished on the surface but does not hold up where it matters. Vizantir was created to be different: leaner, more direct, and more focused on building websites that support real business goals.
                 </p>
               </motion.div>
+
+              <motion.h3
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.25 }}
+                className="text-3xl md:text-4xl lg:text-5xl font-black mt-12 mb-8 leading-tight"
+                style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+              >
+                What makes the approach different
+              </motion.h3>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="text-base md:text-lg mb-0"
+                style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.8 }}
+              >
+                The perspective behind Vizantir comes from 25 years of business ownership and more than 10 years building websites. That means projects are approached with more than design in mind. Every decision is shaped by business reality: how the company is perceived, what the buyer needs to understand, and what the website needs to do beyond looking current.
+              </motion.p>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -464,7 +461,7 @@ export default function AboutPageClient() {
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
               style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
             >
-              READY TO <span style={{ color: '#FFC64C' }}>GROW</span>?
+              The goal is simple
             </motion.h2>
 
             <motion.p
@@ -475,7 +472,7 @@ export default function AboutPageClient() {
               className="text-lg md:text-xl mb-10"
               style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.7 }}
             >
-              Let's talk about how we can help your business achieve real, measurable results.
+              Build websites that look refined, work properly, and help established businesses present with more confidence online.
             </motion.p>
 
             <motion.div

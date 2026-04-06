@@ -8,21 +8,21 @@ const WhyVizantir = () => {
 
   const trustPoints = [
     {
-      title: "10+ Years Building, 25+ Years Operating",
+      title: "Direct Access",
       description:
-        "Over a decade of web design and development experience, backed by 25 years of real business ownership. We understand your business because we've run one.",
+        "You work closely with the person shaping the project — not layers of account management.",
     },
     {
-      title: "Results Before Retainers",
-      description: "We prove our value before asking for long-term commitment. Performance first, always.",
+      title: "Clear Scope",
+      description: "Every engagement is structured around what the site actually needs — not vague add-ons or bloated retainers.",
     },
     {
-      title: "Built for Growth",
-      description: "We work with businesses doing $1M+ who are ready to scale, not startups figuring things out.",
+      title: "Built to Perform",
+      description: "Fast load times, cleaner architecture, mobile polish, and a better experience across every key page.",
     },
     {
-      title: "Numbers That Matter",
-      description: "We report on leads, revenue, and ROI. Not impressions and likes.",
+      title: "Commercial Thinking",
+      description: "The goal is not decoration. The goal is a website that supports trust, clarity, and stronger business outcomes.",
     },
   ];
 
@@ -64,7 +64,7 @@ const WhyVizantir = () => {
             className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
             style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
           >
-            Why Vizantir
+            Why businesses choose Vizantir
           </h2>
         </motion.div>
 

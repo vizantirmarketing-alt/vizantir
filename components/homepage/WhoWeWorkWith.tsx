@@ -31,14 +31,14 @@ const WhoWeWorkWith = () => {
             className="text-4xl md:text-5xl font-black mb-6 tracking-tight"
             style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
           >
-            Who We Work With
+            Built for businesses where trust matters before the sale
           </h2>
           
           <p 
             className="text-lg md:text-xl leading-relaxed mb-10"
             style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
           >
-            We work with established businesses where the website has to earn trust quickly, support sales, and reflect the level of the business.
+            Vizantir works best with established firms and brands where presentation, clarity, and user experience directly affect revenue. That includes hospitality groups, law firms, commercial real estate teams, and premium service businesses that need more than a better-looking redesign.
           </p>
 
           {/* Industries Grid */}

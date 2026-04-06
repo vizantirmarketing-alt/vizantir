@@ -54,13 +54,13 @@ const ResultsThatSpeak = () => {
               className="text-4xl md:text-5xl font-black mb-4 tracking-tight"
               style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
             >
-              Results That Speak
+              Selected Work
             </h2>
             <p 
               className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
               style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
             >
-              Live sites for regional brands—speed, SEO, and conversion paths included.
+              A better website should do more than look updated. It should present the business more clearly, support trust faster, and create a stronger experience from the first click.
             </p>
           </div>
 

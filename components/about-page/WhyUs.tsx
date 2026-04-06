@@ -78,14 +78,19 @@ const WhyUs = () => {
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
-              Why Remote-First?
+              Why the studio model works
             </h2>
-            <p
-              className="text-lg md:text-xl max-w-2xl mx-auto"
+            <div
+              className="text-lg md:text-xl max-w-2xl mx-auto space-y-4"
               style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}
             >
-              Lean by design: direct access to the people doing the work, faster decisions, and a studio focused on websites — not full-service agency overhead.
-            </p>
+              <p>
+                Vizantir runs lean by design. That keeps communication more direct, decisions faster, and execution closer to the source. Instead of passing a project through layers of handoff, the work stays focused, controlled, and aligned from strategy through launch.
+              </p>
+              <p>
+                That structure is not about being cheaper. It is about being sharper.
+              </p>
+            </div>
           </div>
 
           {/* We Build What's Right For You Section */}
@@ -101,13 +106,13 @@ const WhyUs = () => {
                 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
                 style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
               >
-                We Build What's Right For You
+                Choosing the right build, not forcing the wrong one
               </h2>
               <p
                 className="text-lg md:text-xl max-w-2xl mx-auto"
                 style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}
               >
-                Some agencies only do WordPress. Others only do custom. We do what actually makes sense for your business.
+                Not every business needs the same platform. Some projects are better suited to WordPress for easier content control. Others need the performance and flexibility of a custom Next.js build. Vizantir recommends the platform based on what the business actually needs — not what is easiest to sell.
               </p>
             </div>
 

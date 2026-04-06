@@ -32,7 +32,7 @@ const CTA = () => {
             className="text-4xl md:text-5xl font-black mb-6"
             style={{ color: isNightMode ? '#F7F7F7' : '#1A1A1A' }}
           >
-            Ready to Transform Your Digital Presence?
+            If the website needs to do more than just look better, let&apos;s talk.
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -42,7 +42,7 @@ const CTA = () => {
             className="text-xl mb-8"
             style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
           >
-            Book a strategy call and we&apos;ll map what to fix first—SEO, your site, or paid media.
+            We&apos;ll look at what your site needs, what is getting in the way, and whether Vizantir is the right fit to build it.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

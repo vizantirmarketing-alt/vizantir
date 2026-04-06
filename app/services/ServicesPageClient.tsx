@@ -117,6 +117,94 @@ const iconMap = {
   care: CareIcon,
 }
 
+function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="mt-20 md:mt-24"
+    >
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-12">
+        <div>
+          <h3
+            className="text-xl md:text-2xl font-bold mb-2 transition-colors duration-500"
+            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+          >
+            Project Pricing
+          </h3>
+          <p
+            className="text-sm md:text-base mb-6 transition-colors duration-500"
+            style={{ color: isNightMode ? '#888888' : '#6B7280' }}
+          >
+            Fixed scope. Fixed price. No surprises.
+          </p>
+          <div className="space-y-3">
+            <PricingCard
+              title="Essentials"
+              price="$15,000+"
+              description="5-10 pages. Custom Next.js build. Responsive design, smooth animations. Clean, fast, and built to perform."
+              isNightMode={isNightMode}
+            />
+            <PricingCard
+              title="Growth"
+              price="$30,000+"
+              description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, designed to scale."
+              featured
+              isNightMode={isNightMode}
+            />
+            <PricingCard
+              title="Enterprise"
+              price="$60,000+"
+              description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. Built for serious brands."
+              isNightMode={isNightMode}
+            />
+          </div>
+        </div>
+        <div>
+          <h3
+            className="text-xl md:text-2xl font-bold mb-2 transition-colors duration-500"
+            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+          >
+            Website Care
+          </h3>
+          <p
+            className="text-sm md:text-base mb-6 transition-colors duration-500"
+            style={{ color: isNightMode ? '#888888' : '#6B7280' }}
+          >
+            Monthly retainers after launch.
+          </p>
+          <div className="space-y-3">
+            <PricingCard
+              title="Care — Essentials"
+              price="$500–$900/mo"
+              description="Core maintenance: updates, backups, monitoring, and prioritized fixes so your site stays reliable."
+              isNightMode={isNightMode}
+            />
+            <PricingCard
+              title="Care — Growth"
+              price="$1,200–$2,000/mo"
+              description="More bandwidth for content changes, performance tuning, and proactive improvements."
+              featured
+              isNightMode={isNightMode}
+            />
+            <PricingCard
+              title="Care — Enterprise"
+              price="$2,500–$4,500/mo"
+              description="Hands-on support for larger sites: faster turnaround, deeper technical work, and ongoing optimization."
+              isNightMode={isNightMode}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center mt-10">
+        <span className="inline-flex">{strategyCallLink()}</span>
+      </div>
+    </motion.div>
+  )
+}
+
 export default function ServicesPageClient() {
   const { isNightMode } = useTheme()
   const [openService, setOpenService] = useState<ServiceKey | null>('strategy')
@@ -152,7 +240,7 @@ export default function ServicesPageClient() {
               className="text-3xl md:text-4xl font-bold transition-colors duration-500"
               style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
             >
-              What we offer
+              What We Build
             </h2>
           </motion.div>
 
@@ -272,6 +360,8 @@ export default function ServicesPageClient() {
             })}
           </div>
 
+          <StandalonePricingSection isNightMode={isNightMode} />
+
           {/* Bottom CTA */}
           <motion.div
             className="mt-24 text-center"
@@ -295,7 +385,7 @@ export default function ServicesPageClient() {
                 transition: 'background 0.5s ease, color 0.5s ease',
               }}
             >
-              <span>Get in touch</span>
+              <span>Book a Strategy Call</span>
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-1"
                 fill="none"
@@ -528,31 +618,6 @@ function DevContent({ isNightMode }: { isNightMode: boolean }) {
         </Link>
       </div>
 
-      <div>
-        <CategoryLabel isNightMode={isNightMode}>Website packages</CategoryLabel>
-        <div className="space-y-3">
-          <PricingCard
-            title="Essentials"
-            price="$15,000+"
-            description="5-10 pages. Custom Next.js build. Responsive design, smooth animations. Clean, fast, and built to perform."
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Growth"
-            price="$30,000+"
-            description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, designed to scale."
-            featured
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Enterprise"
-            price="$60,000+"
-            description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. Built for serious brands."
-            isNightMode={isNightMode}
-          />
-        </div>
-      </div>
-
       {strategyCallLink()}
     </div>
   )
@@ -624,31 +689,6 @@ function CareContent({ isNightMode }: { isNightMode: boolean }) {
       >
         Monthly retainers for updates, monitoring, performance improvements, and ongoing support after launch.
       </p>
-
-      <div>
-        <CategoryLabel isNightMode={isNightMode}>Website Care</CategoryLabel>
-        <div className="grid sm:grid-cols-3 gap-3">
-          <PricingCard
-            title="Care — Essentials"
-            price="$500–$900/mo"
-            description="Core maintenance: updates, backups, monitoring, and prioritized fixes so your site stays reliable."
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Care — Growth"
-            price="$1,200–$2,000/mo"
-            description="More bandwidth for content changes, performance tuning, and proactive improvements."
-            featured
-            isNightMode={isNightMode}
-          />
-          <PricingCard
-            title="Care — Enterprise"
-            price="$2,500–$4,500/mo"
-            description="Hands-on support for larger sites: faster turnaround, deeper technical work, and ongoing optimization."
-            isNightMode={isNightMode}
-          />
-        </div>
-      </div>
 
       {strategyCallLink()}
     </div>

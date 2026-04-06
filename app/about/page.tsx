@@ -7,10 +7,10 @@ export async function generateMetadata(): Promise<Metadata> {
   
   return {
     title: page?.seo?.metaTitle || 'Vizantir',
-    description: page?.seo?.metaDescription || 'Digital Marketing Agency',
+    description: page?.seo?.metaDescription || 'Premium Website Design Studio',
     openGraph: {
       title: page?.seo?.metaTitle || 'Vizantir',
-      description: page?.seo?.metaDescription || 'Digital Marketing Agency',
+      description: page?.seo?.metaDescription || 'Premium Website Design Studio',
       ...(page?.seo?.ogImage && { images: [page.seo.ogImage] }),
     },
   };
