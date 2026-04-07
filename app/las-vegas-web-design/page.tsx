@@ -33,88 +33,6 @@ export const metadata: Metadata = {
   },
 }
 
-const localBusinessSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  '@id': 'https://www.vizantir.com/#organization',
-  name: 'Vizantir',
-  description: 'Premium web design and development agency in Las Vegas specializing in custom Next.js websites.',
-  url: 'https://www.vizantir.com',
-  telephone: '+1-702-289-0758',
-  email: 'info@vizantir.com',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Las Vegas',
-    addressRegion: 'NV',
-    postalCode: '89139',
-    addressCountry: 'US',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 36.1699,
-    longitude: -115.1398,
-  },
-  areaServed: [
-    {
-      '@type': 'City',
-      name: 'Las Vegas',
-      '@id': 'https://www.wikidata.org/wiki/Q23768',
-    },
-    {
-      '@type': 'City',
-      name: 'Henderson',
-    },
-    {
-      '@type': 'City',
-      name: 'North Las Vegas',
-    },
-    {
-      '@type': 'City',
-      name: 'Summerlin',
-    },
-  ],
-  priceRange: '$$$',
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '09:00',
-    closes: '18:00',
-  },
-  sameAs: [
-    'https://www.linkedin.com/company/vizantir',
-  ],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Web Design Services',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Custom Web Design',
-          description: 'Bespoke website design tailored to your brand',
-        },
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Next.js Development',
-          description: 'High-performance websites built on Next.js',
-        },
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'SEO Optimization',
-          description: 'Search engine optimization for local and national rankings',
-        },
-      },
-    ],
-  },
-}
-
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -184,7 +102,6 @@ const breadcrumbSchema = {
 export default function LasVegasWebDesignPage() {
   return (
     <>
-      <JsonLd id="ld-local-business" data={localBusinessSchema} />
       <JsonLd id="ld-faq" data={faqSchema} />
       <JsonLd id="ld-breadcrumb" data={breadcrumbSchema} />
       <LasVegasWebDesignClient />

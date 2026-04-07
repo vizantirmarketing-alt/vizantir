@@ -30,6 +30,7 @@ const organizationLocalBusinessJsonLd = {
   name: 'Vizantir',
   url: 'https://www.vizantir.com',
   logo: 'https://www.vizantir.com/logo/logo-light.svg',
+  image: 'https://www.vizantir.com/assets/aboutstory.jpeg',
   description:
     'Premium website design studio based in Las Vegas building custom websites for hospitality groups, law firms, commercial real estate firms, and established businesses nationwide.',
   address: {
