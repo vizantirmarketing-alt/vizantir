@@ -156,7 +156,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: 'Custom Next.js development for businesses ready to scale. Built for speed, designed for results.',
       images: [
         {
-          url: settingsWithFallback.ogImageUrl || '/og-image.png',
+          url: settingsWithFallback.ogImageUrl || 'https://www.vizantir.com/og-image.png',
           width: 1200,
           height: 630,
           alt: 'Vizantir - Premium Web Design Agency Las Vegas',
@@ -167,7 +167,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: 'Vizantir | Web Design Agency Las Vegas',
       description: 'Custom Next.js development for businesses ready to scale. Built for speed, designed for results.',
-      images: [settingsWithFallback.ogImageUrl || '/og-image.png'],
+      images: [settingsWithFallback.ogImageUrl || 'https://www.vizantir.com/og-image.png'],
     },
     icons: {
       icon: '/favicon.ico',
