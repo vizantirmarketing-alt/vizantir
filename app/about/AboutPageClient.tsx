@@ -215,10 +215,10 @@ export default function AboutPageClient() {
                 style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.8 }}
               >
                 <p>
-                  Vizantir was built around a simple idea: businesses should not have to choose between strong design, serious execution, and a process that actually makes sense.
+                  I've owned businesses for 25 years. I know what it's like to pay for a website and get something that looks fine in a browser but doesn't actually do anything for the business. That experience is what Vizantir was built to fix.
                 </p>
                 <p>
-                  Too many website projects get buried under bloated teams, vague deliverables, and work that looks polished on the surface but does not hold up where it matters. Vizantir was created to be different: leaner, more direct, and more focused on building websites that support real business goals.
+                  Most agencies hand your project to a junior team, run it through a template, and call it done. We build everything custom — and because I've sat on the client side of this equation for decades, I know exactly what actually matters when the site goes live.
                 </p>
               </motion.div>
 
@@ -241,7 +241,7 @@ export default function AboutPageClient() {
                 className="text-base md:text-lg mb-0"
                 style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.8 }}
               >
-                The perspective behind Vizantir comes from 25 years of business ownership and more than 10 years building websites. That means projects are approached with more than design in mind. Every decision is shaped by business reality: how the company is perceived, what the buyer needs to understand, and what the website needs to do beyond looking current.
+                25 years running businesses and 10+ years building websites means I approach every project with two lenses at once: what looks right and what actually works. Design decisions, copy decisions, structure decisions — all of it gets filtered through the question of what the business actually needs the site to do.
               </motion.p>
 
               <motion.div
