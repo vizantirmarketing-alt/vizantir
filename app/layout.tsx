@@ -245,8 +245,6 @@ export default async function RootLayout({
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
         
         {/* Preconnect hints for third-party scripts */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.clarity.ms" />
         <link rel="dns-prefetch" href="https://www.chatbase.co" />
       </head>
       <body className={satoshi.variable} suppressHydrationWarning>

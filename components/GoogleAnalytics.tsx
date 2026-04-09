@@ -9,9 +9,6 @@ export default function GoogleAnalytics() {
 
   return (
     <>
-      <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-      <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-      
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
         strategy="lazyOnload"
