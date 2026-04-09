@@ -52,7 +52,10 @@ const organizationLocalBusinessJsonLd = {
     '@type': 'Country',
     name: 'United States',
   },
-  sameAs: ['https://www.linkedin.com/in/james-tram-b04b133b5'],
+  sameAs: [
+    'https://www.linkedin.com/in/james-tram-b04b133b5',
+    'https://share.google/maEPqiuwCSecZmnf1',
+  ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Website Design Services',
