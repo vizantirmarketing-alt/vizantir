@@ -50,13 +50,6 @@ const creServiceSchema = {
   description:
     'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.',
   url: 'https://www.vizantir.com/commercial-real-estate-web-design',
-  provider: {
-    '@type': 'Organization',
-    name: 'Vizantir',
-    url: 'https://www.vizantir.com',
-    telephone: '+1-702-289-0758',
-    email: 'info@vizantir.com',
-  },
   areaServed: {
     '@type': 'Country',
     name: 'United States',

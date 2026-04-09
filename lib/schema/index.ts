@@ -10,8 +10,6 @@ import type {
 
 import {
   websiteId,
-  organizationId,
-  localBusinessId,
   webPageId,
   serviceId,
   articleId,
@@ -72,97 +70,6 @@ export function websiteSchema(settings: SiteSettings) {
     description: settings.organizationDescription,
     publisher: refOrganization(settings.siteUrl),
     inLanguage: 'en-US',
-  }
-}
-
-// ============================================
-// Organization Schema
-// ============================================
-
-export function organizationSchema(settings: SiteSettings) {
-  const sameAs = [
-    settings.socialLinks?.linkedin,
-    settings.socialLinks?.twitter,
-    settings.socialLinks?.instagram,
-    settings.socialLinks?.facebook,
-    settings.socialLinks?.youtube,
-  ].filter((url): url is string => Boolean(url))
-
-  return {
-    '@type': 'Organization',
-    '@id': organizationId(settings.siteUrl),
-    name: settings.siteName,
-    url: settings.siteUrl,
-    description: settings.organizationDescription,
-    
-    ...(settings.logoUrl && {
-      logo: { '@type': 'ImageObject', url: settings.logoUrl },
-    }),
-    
-    ...(settings.email && { email: settings.email }),
-    ...(settings.phone && { telephone: settings.phone }),
-    ...(settings.foundingDate && { foundingDate: settings.foundingDate }),
-    ...(settings.priceRange && { priceRange: settings.priceRange }),
-    
-    ...(settings.hasPhysicalLocation && settings.address && {
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: settings.address.street,
-        addressLocality: settings.address.city,
-        addressRegion: settings.address.state,
-        postalCode: settings.address.zip,
-        addressCountry: settings.address.country || 'US',
-      },
-    }),
-    
-    // Area served (customize for your business)
-    ...(settings.areaServed && {
-      areaServed: settings.areaServed.map(area => ({
-        '@type': 'Place',
-        name: area,
-      })),
-    }),
-    
-    // E-E-A-T: What your organization knows about
-    ...(settings.knowsAbout && {
-      knowsAbout: settings.knowsAbout,
-    }),
-    
-    ...(sameAs.length > 0 && { sameAs }),
-  }
-}
-
-// ============================================
-// LocalBusiness Schema (only if physical location)
-// ============================================
-
-export function localBusinessSchema(settings: SiteSettings) {
-  if (!settings.hasPhysicalLocation || !settings.address?.street) return null
-
-  return {
-    '@type': 'LocalBusiness', // Or 'ProfessionalService', 'Restaurant', etc.
-    '@id': localBusinessId(settings.siteUrl),
-    name: settings.siteName,
-    url: settings.siteUrl,
-    ...(settings.ogImageUrl && { image: settings.ogImageUrl }),
-    ...(settings.phone && { telephone: settings.phone }),
-    ...(settings.priceRange && { priceRange: settings.priceRange }),
-    parentOrganization: refOrganization(settings.siteUrl),
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: settings.address.street,
-      addressLocality: settings.address.city,
-      addressRegion: settings.address.state,
-      postalCode: settings.address.zip,
-      addressCountry: settings.address.country || 'US',
-    },
-    ...(hasValidCoordinates(settings.coordinates) && {
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: settings.coordinates.lat,
-        longitude: settings.coordinates.lng,
-      },
-    }),
   }
 }
 
@@ -355,7 +262,7 @@ export function locationSchema(location: Location, siteUrl: string) {
   const url = `${siteUrl}/locations/${location.slug}`
   const id = locationId(siteUrl, location.slug, location.hasPhysicalPresence)
 
-  // Physical location
+  // Physical location — distinct LocalBusiness for this /locations/[slug] URL; site-wide Organization/LocalBusiness is in app/layout.tsx
   if (location.hasPhysicalPresence && location.address?.street) {
     return {
       '@type': 'LocalBusiness',

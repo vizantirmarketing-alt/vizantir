@@ -20,10 +20,6 @@ export function organizationId(siteUrl: string) {
   return `${siteUrl}/#organization`
 }
 
-export function localBusinessId(siteUrl: string) {
-  return `${siteUrl}/#localbusiness`
-}
-
 // ============================================
 // Page Entities
 // ============================================

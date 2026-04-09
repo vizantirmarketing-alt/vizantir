@@ -50,13 +50,6 @@ const lawFirmServiceSchema = {
   description:
     'Custom websites for law firms and legal practices. Built to establish credibility, generate consultations, and present firms at the highest level.',
   url: 'https://www.vizantir.com/law-firm-web-design',
-  provider: {
-    '@type': 'Organization',
-    name: 'Vizantir',
-    url: 'https://www.vizantir.com',
-    telephone: '+1-702-289-0758',
-    email: 'info@vizantir.com',
-  },
   areaServed: {
     '@type': 'Country',
     name: 'United States',

@@ -10,11 +10,6 @@ const servicesPageJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   serviceType: 'Website Design and Development',
-  provider: {
-    '@type': 'Organization',
-    name: 'Vizantir',
-    url: 'https://www.vizantir.com',
-  },
   areaServed: {
     '@type': 'Country',
     name: 'United States',
