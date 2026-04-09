@@ -20,7 +20,7 @@ import { ScrollToTop } from '@/components/ScrollToTop'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import MicrosoftClarity from '@/components/MicrosoftClarity'
-import ChatbaseWidget from '@/components/ChatbaseWidget'
+import DeferredChatbase from '@/components/DeferredChatbase'
 
 import './globals.css'
 
@@ -263,7 +263,7 @@ export default async function RootLayout({
             <Footer />
           </SmoothScroll>
         </ThemeProvider>
-        <ChatbaseWidget />
+        <DeferredChatbase />
       </body>
     </html>
   )
