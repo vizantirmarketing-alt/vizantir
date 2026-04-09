@@ -125,7 +125,6 @@ const Footer = () => {
                 { name: 'About Us', href: '/about' },
                 // { name: 'Case Studies', href: '/case-studies' }, // Temporarily hidden
                 // { name: 'Portfolio', href: '/portfolio' }, // Temporarily hidden
-                { name: 'Careers', href: '/careers' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link 

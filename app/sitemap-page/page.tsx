@@ -15,7 +15,6 @@ export default function SitemapPage() {
     { name: "Our Work", href: "/case-studies" },
     { name: "How We Work", href: "/how-we-work" },
     { name: "Our process", href: "/get-started" },
-    { name: "Careers", href: "/careers" },
     { name: "Blog", href: "/blog" },
     { name: "Contact Us", href: "/contact" },
     { name: "FAQ", href: "/faq" },
