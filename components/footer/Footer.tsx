@@ -42,6 +42,7 @@ const Footer = () => {
             <div className="flex gap-4">
               <a 
                 href="#" 
+                aria-label="Visit our Facebook"
                 className="transition-all duration-300 hover:scale-110"
                 style={{ 
                   color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
@@ -59,6 +60,7 @@ const Footer = () => {
               </a>
               <a 
                 href="#" 
+                aria-label="Visit our Twitter"
                 className="transition-all duration-300 hover:scale-110"
                 style={{ 
                   color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
@@ -76,6 +78,7 @@ const Footer = () => {
               </a>
               <a 
                 href="#" 
+                aria-label="Visit our LinkedIn"
                 className="transition-all duration-300 hover:scale-110"
                 style={{ 
                   color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
@@ -93,6 +96,7 @@ const Footer = () => {
               </a>
               <a 
                 href="#" 
+                aria-label="Visit our Instagram"
                 className="transition-all duration-300 hover:scale-110"
                 style={{ 
                   color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',

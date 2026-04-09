@@ -226,6 +226,8 @@ const Navbar = () => {
             {/* Mobile Menu Button */}
             <button 
               className="lg:hidden z-50 relative" 
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               style={{ color: !mounted ? '#F7F7F7' : isNightMode ? '#F7F7F7' : '#1A1A1A' }}
             >
