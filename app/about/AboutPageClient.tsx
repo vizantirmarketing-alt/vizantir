@@ -2,16 +2,21 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Users, Target, Zap, Globe } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
-import RibbonsAnimation from '@/components/RibbonsAnimation'
 import AIIntegration from '@/components/about-page/AIIntegration'
 import VisionApproach from '@/components/about-page/VisionApproach'
 import { trackCTAClick } from '@/lib/analytics'
 import WhyUs from '@/components/about-page/WhyUs'
 import WhatTheWorkShouldDo from '@/components/about-page/WhatTheWorkShouldDo'
 import PortfolioPreview from '@/components/about-page/PortfolioPreview'
+
+const RibbonsAnimation = dynamic(
+  () => import('@/components/RibbonsAnimation'),
+  { ssr: false, loading: () => null }
+)
 
 export default function AboutPageClient() {
   const { isNightMode } = useTheme()
