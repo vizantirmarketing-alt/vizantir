@@ -166,7 +166,7 @@ const ServicesPreview = () => {
             lineHeight: 1.65,
           }}
         >
-          Vizantir focuses on the parts of the website that matter most: strategy, design, development, and long-term usability.
+          We build websites for businesses that already know what they want — and need a team that can actually deliver it. Strategy, design, development, and support that holds up after launch.
         </motion.p>
 
         <motion.div

@@ -486,7 +486,7 @@ export default function AboutPageClient() {
               className="text-lg md:text-xl mb-10"
               style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: 1.7 }}
             >
-              Build websites that look refined, work properly, and help established businesses present with more confidence online.
+              Every business we work with has already put in the work to build something real. The website should reflect that — not undercut it.
             </motion.p>
 
             <motion.div

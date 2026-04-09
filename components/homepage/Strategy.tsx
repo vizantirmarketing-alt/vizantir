@@ -281,10 +281,7 @@ const Strategy = () => {
               className="text-base md:text-lg mb-10"
               style={{ color: isNightMode ? "#9CA3AF" : "#4A4A4A", lineHeight: '1.7' }}
             >
-              We don't just build websites or run ads — we build{" "}
-              <span className="font-semibold" style={{ color: isNightMode ? "#F8F8F8" : "#1A1A1A" }}>
-                growth engines
-              </span>.
+              Most websites look fine and do nothing. We build sites around a specific outcome — more calls, more bookings, more qualified leads walking through the door.
             </motion.p>
 
             <motion.div
