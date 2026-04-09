@@ -48,6 +48,28 @@ const organizationLocalBusinessJsonLd = {
   telephone: '+17022890758',
   email: 'info@vizantir.com',
   priceRange: '$$$',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5.0',
+    reviewCount: '2',
+    bestRating: '5',
+    worstRating: '1',
+  },
+  review: [
+    {
+      '@type': 'Review',
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+      },
+      author: {
+        '@type': 'Person',
+        name: 'Eloraé Nails',
+      },
+      reviewBody: 'Highly recommend if you want a stress free, high quality website.',
+    },
+  ],
   serviceArea: {
     '@type': 'Country',
     name: 'United States',
