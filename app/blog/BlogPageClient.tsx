@@ -6,12 +6,14 @@ import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
 import { blogPosts, categories } from '@/lib/blog-data'
 
+const themeBgColorTransition = 'background-color 0.3s ease, color 0.3s ease'
+
 export default function BlogPageClient() {
-  const { isNightMode, mounted } = useTheme()
+  const { isNightMode } = useTheme()
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
 
-  const themeNight = mounted && isNightMode
+  const themeNight = isNightMode
 
   const colors = {
     bg: themeNight ? '#000000' : '#FAFAFA',
@@ -45,8 +47,11 @@ export default function BlogPageClient() {
 
   return (
     <main
-      className="min-h-screen transition-colors duration-500"
-      style={{ background: colors.bg }}
+      className="min-h-screen"
+      style={{
+        backgroundColor: colors.bg,
+        transition: themeBgColorTransition,
+      }}
       suppressHydrationWarning
     >
       {/* Hero Section */}
@@ -94,9 +99,10 @@ export default function BlogPageClient() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-5 py-4 pl-12 rounded-xl border outline-none transition-all duration-300 focus:ring-2"
                 style={{
-                  background: colors.inputBg,
+                  backgroundColor: colors.inputBg,
                   borderColor: colors.cardBorder,
                   color: colors.text,
+                  transition: themeBgColorTransition,
                   // @ts-ignore
                   '--tw-ring-color': colors.accent,
                 }}
@@ -150,6 +156,7 @@ export default function BlogPageClient() {
                         ? '#000000'
                         : '#FFFFFF'
                       : colors.textMuted,
+                  transition: themeBgColorTransition,
                 }}
               >
                 {category}
@@ -160,7 +167,10 @@ export default function BlogPageClient() {
       </section>
 
       {/* Divider */}
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <div
+        className="w-full h-px"
+        style={{ background: colors.divider, transition: themeBgColorTransition }}
+      />
 
       {/* Blog Posts Grid */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -201,8 +211,10 @@ export default function BlogPageClient() {
                     <div
                       className="group h-full p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-1"
                       style={{
-                        background: colors.cardBg,
+                        backgroundColor: colors.cardBg,
                         borderColor: colors.cardBorder,
+                        transition:
+                          'background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease',
                       }}
                     >
                       {/* Category & Read Time */}
@@ -214,6 +226,7 @@ export default function BlogPageClient() {
                               ? 'rgba(255,198,76,0.1)'
                               : 'rgba(180,83,9,0.1)',
                             color: colors.accent,
+                            transition: themeBgColorTransition,
                           }}
                         >
                           {post.category}
@@ -253,6 +266,7 @@ export default function BlogPageClient() {
                                 ? 'rgba(255,255,255,0.05)'
                                 : 'rgba(0,0,0,0.05)',
                               color: colors.textSubtle,
+                              transition: themeBgColorTransition,
                             }}
                           >
                             {tag}
@@ -286,7 +300,10 @@ export default function BlogPageClient() {
       </section>
 
       {/* Divider */}
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <div
+        className="w-full h-px"
+        style={{ background: colors.divider, transition: themeBgColorTransition }}
+      />
 
       {/* CTA Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -323,8 +340,9 @@ export default function BlogPageClient() {
               href="/contact"
               className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-bold transition-all duration-300 hover:scale-105 group"
               style={{
-                background: themeNight ? '#F8F8F8' : '#1A1A1A',
+                backgroundColor: themeNight ? '#F8F8F8' : '#1A1A1A',
                 color: themeNight ? '#1A1A1A' : '#FFFFFF',
+                transition: themeBgColorTransition,
               }}
             >
               <span>Get in Touch</span>
