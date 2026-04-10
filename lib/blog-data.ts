@@ -3301,6 +3301,69 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>We offer complimentary performance and conversion reviews for Las Vegas hospitality brands. Book a strategy call and we will show you exactly what your site is costing you.</p>
     `,
   },
+
+  {
+    slug: 'commercial-real-estate-website-design',
+    title: 'What Commercial Real Estate Companies Get Wrong About Their Websites',
+    excerpt: 'CRE companies spend millions on properties and thousands on brochures. Then they let an outdated website undercut all of it. Here is what to fix.',
+    category: 'Strategy',
+    tags: ['Commercial Real Estate', 'CRE', 'Website Design', 'Las Vegas'],
+    readTime: '6 min read',
+    publishedAt: '2026-03-22',
+    author: 'Vizantir',
+    metaDescription: 'What do commercial real estate companies get wrong about their websites? Learn what CRE websites need to attract tenants and investors in 2026.',
+    content: `
+<h2>The Gap Nobody Talks About</h2>
+
+<p>Commercial real estate companies spend significant resources on property photography, brochures, and broker relationships. Then they direct potential tenants and investors to a website that looks like it was built a decade ago.</p>
+
+<p>That gap — between the quality of the properties and the quality of the digital presence — costs deals.</p>
+
+<h2>What CRE Tenants and Investors Do Before They Call</h2>
+
+<p>Before a potential tenant or investor picks up the phone, they have already:</p>
+<ul>
+<li>Visited your website</li>
+<li>Looked at your property listings</li>
+<li>Formed an opinion about the professionalism of your operation</li>
+<li>Compared you to at least two or three competitors</li>
+</ul>
+
+<p>Your website is doing due diligence work before any human conversation happens. It needs to hold up under that scrutiny.</p>
+
+<h2>The Most Common CRE Website Problems</h2>
+
+<p><strong>Outdated design:</strong> A dated website signals a dated operation. CRE is a relationship business, but first impressions happen online now.</p>
+
+<p><strong>Poor property presentation:</strong> Listings with small photos, no floor plans, and no clear availability information send prospects elsewhere.</p>
+
+<p><strong>No clear call to action:</strong> Who should a prospect contact? How? Many CRE sites make this harder than it needs to be.</p>
+
+<p><strong>Slow performance:</strong> A slow website on a mobile device, viewed by an investor between meetings, loses the moment.</p>
+
+<p><strong>No local SEO:</strong> "Commercial office space Las Vegas" and "retail space for lease Las Vegas" are searches happening every day. If you are not showing up, a competitor is.</p>
+
+<h2>What High-Performing CRE Sites Include</h2>
+
+<ul>
+<li>Clean, modern design that reflects the quality of your portfolio</li>
+<li>Property listings with high-quality photography and clear details</li>
+<li>Fast load times on mobile and desktop</li>
+<li>Clear contact and inquiry path for each property</li>
+<li>Local SEO optimization for Las Vegas commercial markets</li>
+</ul>
+
+<h2>The Meridian Row Standard</h2>
+
+<p>When we built the Meridian Row concept, we focused on one outcome: capture the moment a tenant is researching and make the leasing process feel as polished as the property itself. Fast, conversion-focused, and built to reflect the quality of what is being offered.</p>
+
+<p>That is the standard CRE companies in Las Vegas should be holding their websites to.</p>
+
+<h2>Request a Free Review</h2>
+
+<p>We offer complimentary performance and conversion reviews for commercial real estate companies. Book a strategy call and we will show you exactly what your website is costing you in missed inquiries.</p>
+    `,
+  },
 ]
 
 // Helper function to get posts by category
