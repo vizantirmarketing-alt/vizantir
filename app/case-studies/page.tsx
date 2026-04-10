@@ -3,6 +3,13 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
+
+const caseStudiesBreadcrumbGraph = graphSchema([
+  breadcrumbSchema([
+    { name: 'Home', url: 'https://www.vizantir.com' },
+    { name: 'Our Work', url: 'https://www.vizantir.com/our-work' },
+  ]),
+])
 import type { SiteSettings } from '@/lib/sanity/types'
 import { getCanonicalUrl } from '@/lib/utils/metadata'
 import CaseStudiesClient from './CaseStudiesClient'
@@ -47,7 +54,12 @@ export default async function CaseStudiesPage() {
   const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
   
   if (!settings) {
-    return <CaseStudiesClient />
+    return (
+      <>
+        <JsonLd id="ld-breadcrumb" data={caseStudiesBreadcrumbGraph} />
+        <CaseStudiesClient />
+      </>
+    )
   }
 
   const url = getCanonicalUrl(settings, '/case-studies')
@@ -73,14 +85,11 @@ export default async function CaseStudiesPage() {
         url: cs.url,
       })),
     }),
-    breadcrumbSchema([
-      { name: 'Home', url: settings.siteUrl },
-      { name: 'Websites We Have Launched', url },
-    ]),
   ])
 
   return (
     <>
+      <JsonLd id="ld-breadcrumb" data={caseStudiesBreadcrumbGraph} />
       {pageGraph && <JsonLd id="ld-case-studies" data={pageGraph} />}
       <CaseStudiesClient />
     </>

@@ -1,6 +1,15 @@
 import { getPageSeo } from '@/sanity/lib/seo';
 import type { Metadata } from 'next';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumbSchema, graphSchema } from '@/lib/schema';
 import AboutPageClient from './AboutPageClient';
+
+const breadcrumbGraph = graphSchema([
+  breadcrumbSchema([
+    { name: 'Home', url: 'https://www.vizantir.com' },
+    { name: 'About', url: 'https://www.vizantir.com/about' },
+  ]),
+]);
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSeo('about');
@@ -21,5 +30,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function AboutPage() {
-  return <AboutPageClient />;
+  return (
+    <>
+      <JsonLd id="ld-breadcrumb" data={breadcrumbGraph} />
+      <AboutPageClient />
+    </>
+  );
 }
