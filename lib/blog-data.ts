@@ -3603,6 +3603,85 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>Book a strategy call and we will walk you through what a care plan would look like for your specific site.</p>
     `,
   },
+
+  {
+    slug: 'luxury-salon-spa-website-design',
+    title: 'What a Luxury Salon or Spa Website Needs to Actually Book Clients',
+    excerpt: 'Most salon websites look fine but fail where it matters — getting visitors to book. Here is what separates a salon website that fills the calendar from one that just sits there.',
+    category: 'Strategy',
+    tags: ['Salon', 'Spa', 'Website Design', 'Bookings', 'Las Vegas'],
+    readTime: '6 min read',
+    publishedAt: '2026-04-03',
+    author: 'Vizantir',
+    metaDescription: 'What does a luxury salon or spa website need to book more clients? Design, speed, and conversion principles for beauty businesses in Las Vegas.',
+    content: `
+<h2>The Problem With Most Salon Websites</h2>
+
+<p>Most salon and spa websites look presentable. Nice logo, some photos, a list of services. But they fail at the one thing that matters: getting visitors to book an appointment.</p>
+
+<p>The gap between a website that looks fine and a website that fills your calendar comes down to a few specific things.</p>
+
+<h2>Booking Should Never Be More Than One Click Away</h2>
+
+<p>The single most important element on a salon website is a clear, immediate path to booking. Not buried in a menu. Not three pages deep. Right there, above the fold, on every device.</p>
+
+<p>If a potential client has to hunt for your booking link, many of them will not bother. They will find a salon whose website makes it easier.</p>
+
+<h2>Mobile Experience Is Everything</h2>
+
+<p>Most people searching for a salon in Las Vegas are on their phone. They are looking between appointments, during a lunch break, or while sitting in traffic. Your mobile experience needs to be:</p>
+
+<ul>
+<li>Fast — loading in under 3 seconds</li>
+<li>Clean — easy to read and navigate with a thumb</li>
+<li>Conversion-focused — booking button prominent and easy to tap</li>
+</ul>
+
+<p>A desktop-first design that technically works on mobile is not the same as a mobile-first experience. Clients feel the difference.</p>
+
+<h2>Photography Makes or Breaks the Decision</h2>
+
+<p>Luxury salon clients are buying an experience before they ever walk in. Your website photography needs to sell that experience.</p>
+
+<ul>
+<li>Real photos of your space, not stock imagery</li>
+<li>Work photos that show the quality of your results</li>
+<li>A consistent aesthetic that matches your brand</li>
+</ul>
+
+<p>A website with poor or generic photography signals that the experience will be generic too.</p>
+
+<h2>What the Services Page Needs</h2>
+
+<p>Your services page is where decisions get made. It needs:</p>
+
+<ul>
+<li>Clear service names and descriptions</li>
+<li>Pricing — clients who cannot find prices often go somewhere that publishes them</li>
+<li>Time estimates — how long will the appointment take?</li>
+<li>A booking CTA at the bottom of every service</li>
+</ul>
+
+<h2>Trust Signals That Convert</h2>
+
+<ul>
+<li>Google reviews prominently displayed</li>
+<li>Before and after photos where appropriate</li>
+<li>Credentials, certifications, and years of experience</li>
+<li>Clear cancellation and deposit policies — transparency builds trust</li>
+</ul>
+
+<h2>The Eloraé Nails Standard</h2>
+
+<p>When we built the Eloraé Nails website, the brief was simple: clean, fast, and easy to book. We moved them off Wix and built a custom Next.js site that loads fast, looks exactly like the brand, and gets out of the way so clients can book without friction.</p>
+
+<p>That is the standard every luxury salon and spa website should be held to.</p>
+
+<h2>Ready to Fill Your Calendar?</h2>
+
+<p>We build websites for salons, spas, and beauty brands in Las Vegas and nationally. Book a strategy call and we will show you exactly what your current site is costing you in missed bookings.</p>
+    `,
+  },
 ]
 
 // Helper function to get posts by category
