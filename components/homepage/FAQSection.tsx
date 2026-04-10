@@ -85,7 +85,7 @@ const FAQSection = () => {
               className="text-xl"
               style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B' }}
             >
-              Everything you need to know before we start working together.
+              Real questions we get before projects start.
             </p>
           </div>
 

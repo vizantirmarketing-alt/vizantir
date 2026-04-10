@@ -11,7 +11,7 @@ const Marquee = () => {
     "NEXT.JS BUILDS",
     "MOBILE FIRST",
     "PREMIUM DESIGN",
-    "BUILT TO PERFORM",
+    "BUILT TO CONVERT",
     "STRATEGY LED",
   ];
 

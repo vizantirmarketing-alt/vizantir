@@ -22,7 +22,7 @@ const WhatHappensNext = () => {
     },
     {
       number: '03',
-      title: 'See Results',
+      title: 'We Launch and Keep Tuning',
       description: 'We build, refine, and launch — then support the site so it keeps performing.',
     },
   ];
