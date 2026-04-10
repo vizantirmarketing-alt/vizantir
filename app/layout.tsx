@@ -75,8 +75,9 @@ const organizationLocalBusinessJsonLd = {
     name: 'United States',
   },
   sameAs: [
-    'https://www.linkedin.com/in/james-tram-b04b133b5',
-    'https://share.google/maEPqiuwCSecZmnf1',
+    'https://www.linkedin.com/company/vizantir/',
+    'https://www.instagram.com/vizantirdesignstudio',
+    'https://maps.google.com/?cid=7927126809305841776',
   ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -233,10 +234,10 @@ export async function generateMetadata(): Promise<Metadata> {
       description: 'Custom Next.js development for businesses ready to scale. Built for speed, designed for results.',
       images: [
         {
-          url: settingsWithFallback.ogImageUrl || 'https://www.vizantir.com/og-image.png',
+          url: 'https://www.vizantir.com/og-image.png',
           width: 1200,
           height: 630,
-          alt: 'Vizantir - Premium Web Design Agency Las Vegas',
+          alt: 'Vizantir Design Studio - Premium Web Design Las Vegas',
         },
       ],
     },
