@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
+import { Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
 import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 
@@ -41,43 +41,9 @@ const Footer = () => {
             </p>
             <div className="flex gap-4">
               <a 
-                href="#" 
-                aria-label="Visit our Facebook"
-                className="transition-all duration-300 hover:scale-110"
-                style={{ 
-                  color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FFC64C'
-                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B'
-                  e.currentTarget.style.filter = 'none'
-                }}
-              >
-                <Facebook size={20} />
-              </a>
-              <a 
-                href="#" 
-                aria-label="Visit our Twitter"
-                className="transition-all duration-300 hover:scale-110"
-                style={{ 
-                  color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FFC64C'
-                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B'
-                  e.currentTarget.style.filter = 'none'
-                }}
-              >
-                <Twitter size={20} />
-              </a>
-              <a 
-                href="#" 
+                href="https://www.linkedin.com/company/vizantir/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Visit our LinkedIn"
                 className="transition-all duration-300 hover:scale-110"
                 style={{ 
@@ -95,7 +61,9 @@ const Footer = () => {
                 <Linkedin size={20} />
               </a>
               <a 
-                href="#" 
+                href="https://www.instagram.com/vizantirdesignstudio"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Visit our Instagram"
                 className="transition-all duration-300 hover:scale-110"
                 style={{ 

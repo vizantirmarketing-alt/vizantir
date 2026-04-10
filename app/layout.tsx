@@ -209,6 +209,9 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: settingsWithFallback.siteName }],
     creator: settingsWithFallback.siteName,
     publisher: settingsWithFallback.siteName,
+    alternates: {
+      canonical: 'https://www.vizantir.com',
+    },
     formatDetection: {
       email: false,
       address: false,
@@ -230,8 +233,8 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: 'en_US',
       url: settingsWithFallback.siteUrl || 'https://www.vizantir.com',
       siteName: settingsWithFallback.siteName,
-      title: 'Vizantir | Web Design Agency Las Vegas',
-      description: 'Custom Next.js development for businesses ready to scale. Built for speed, designed for results.',
+      title: 'Premium Web Design Studio in Las Vegas | Vizantir',
+      description: 'Custom Next.js websites for hospitality, law, and commercial real estate brands. Built for speed, performance, and conversion.',
       images: [
         {
           url: 'https://www.vizantir.com/og-image.png',
@@ -243,9 +246,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Vizantir | Web Design Agency Las Vegas',
-      description: 'Custom Next.js development for businesses ready to scale. Built for speed, designed for results.',
-      images: [settingsWithFallback.ogImageUrl || 'https://www.vizantir.com/og-image.png'],
+      title: 'Premium Web Design Studio in Las Vegas | Vizantir',
+      description: 'Custom Next.js websites for hospitality, law, and commercial real estate brands. Built for speed, performance, and conversion.',
+      images: ['https://www.vizantir.com/og-image.png'],
     },
     icons: {
       icon: '/favicon.ico',
