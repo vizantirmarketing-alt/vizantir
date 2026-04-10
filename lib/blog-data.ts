@@ -3833,6 +3833,81 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>If you want to make sure it never happens again, book a strategy call and we will walk you through your options.</p>
     `,
   },
+
+  {
+    slug: 'questions-to-ask-before-hiring-web-designer',
+    title: 'Questions to Ask Before Hiring a Web Designer',
+    excerpt: 'Hiring the wrong web designer is an expensive mistake. These are the questions that separate professionals who will deliver from ones who will disappear after the deposit.',
+    category: 'Strategy',
+    tags: ['Web Design', 'Hiring', 'Agency', 'Business'],
+    readTime: '6 min read',
+    publishedAt: '2026-04-06',
+    author: 'Vizantir',
+    metaDescription: 'What questions should you ask before hiring a web designer? The questions that reveal whether an agency or freelancer will actually deliver what they promise.',
+    content: `
+<h2>Most People Ask the Wrong Questions</h2>
+
+<p>When businesses shop for a web designer, they usually ask about price, timeline, and whether the designer has worked in their industry. Those are reasonable questions — but they are not the ones that reveal whether you are about to make a good hire or an expensive mistake.</p>
+
+<p>Here are the questions that actually matter.</p>
+
+<h2>Can I See Live Examples of Sites You Have Built?</h2>
+
+<p>Not mockups. Not concepts. Not a Figma file. Live, indexed websites you can open in a browser, test on your phone, and run through PageSpeed Insights.</p>
+
+<p>If a designer cannot show you live work, that tells you something. Every professional web designer has a body of shipped work. If theirs is hidden or nonexistent, ask why.</p>
+
+<h2>Who Will Actually Be Doing the Work?</h2>
+
+<p>Some agencies sell you on a senior team and then hand your project to a junior developer or an offshore contractor. Ask directly: who will be designing and building my site, and will I have access to them?</p>
+
+<p>You deserve to know who is touching your project.</p>
+
+<h2>What Platform Will You Build On and Why?</h2>
+
+<p>A designer who builds everything on the same platform regardless of client needs is optimizing for their workflow, not your outcome. A good designer can explain why a specific platform is right for your specific project.</p>
+
+<p>If the answer is always WordPress, or always Webflow, or always whatever they know best — that is a flag.</p>
+
+<h2>What Does the Timeline Look Like and What Can Delay It?</h2>
+
+<p>Get a realistic timeline in writing. Then ask what typically causes projects to go over — honest designers will tell you it is usually delayed feedback or scope changes from the client side. That is a good sign. Designers who promise nothing will go wrong are setting you up for disappointment.</p>
+
+<h2>Who Owns the Website When It Is Done?</h2>
+
+<p>You should own everything: the domain, the hosting account, the code, the content. Some agencies retain ownership of the site or lock you into their proprietary systems. Make sure the contract is clear that everything transfers to you at launch.</p>
+
+<h2>What Happens After Launch?</h2>
+
+<p>A website is not finished at launch. Ask about:</p>
+<ul>
+<li>Bug fixes — what is covered and for how long?</li>
+<li>Training — will you show me how to update content?</li>
+<li>Ongoing support — do you offer a care plan?</li>
+<li>What if I need changes six months from now?</li>
+</ul>
+
+<h2>Can You Give Me References?</h2>
+
+<p>A designer with happy clients will have no problem connecting you with two or three of them. If the answer is evasive or the references never materialize, take that seriously.</p>
+
+<h2>What Is Not Included in the Quote?</h2>
+
+<p>Ask what is explicitly excluded. Copywriting? Photography? SEO setup? Third-party integrations? Knowing what is not included prevents surprise invoices after the project is underway.</p>
+
+<h2>How Do You Handle Disagreements?</h2>
+
+<p>This one catches people off guard. But how a designer handles conflict tells you everything about what working with them will be like when something does not go perfectly — and something always does not go perfectly.</p>
+
+<p>A good answer involves clear communication, documented scope, and a willingness to work through problems. A bad answer is defensiveness or vagueness.</p>
+
+<h2>What We Tell Our Clients</h2>
+
+<p>We encourage every potential client to ask us all of these questions. We show live work, explain our process in detail, give full ownership of everything we build, and are honest about what is and is not included.</p>
+
+<p>If you are evaluating agencies right now, book a strategy call. We will answer every question on this list — and a few you have not thought to ask yet.</p>
+    `,
+  },
 ]
 
 // Helper function to get posts by category
