@@ -7,20 +7,22 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { blogPosts, categories } from '@/lib/blog-data'
 
 export default function BlogPageClient() {
-  const { isNightMode } = useTheme()
+  const { isNightMode, mounted } = useTheme()
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
 
+  const themeNight = mounted && isNightMode
+
   const colors = {
-    bg: isNightMode ? '#000000' : '#FAFAFA',
-    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-    textMuted: isNightMode ? '#888888' : '#6B7280',
-    textSubtle: isNightMode ? '#666666' : '#9CA3AF',
-    accent: isNightMode ? '#FFC64C' : '#B45309',
-    cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-    cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    inputBg: isNightMode ? '#111111' : '#FFFFFF',
-    divider: isNightMode
+    bg: themeNight ? '#000000' : '#FAFAFA',
+    text: themeNight ? '#F8F8F8' : '#1A1A1A',
+    textMuted: themeNight ? '#888888' : '#6B7280',
+    textSubtle: themeNight ? '#666666' : '#9CA3AF',
+    accent: themeNight ? '#FFC64C' : '#B45309',
+    cardBg: themeNight ? '#0A0A0A' : '#FFFFFF',
+    cardBorder: themeNight ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    inputBg: themeNight ? '#111111' : '#FFFFFF',
+    divider: themeNight
       ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
       : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
   }
@@ -45,6 +47,7 @@ export default function BlogPageClient() {
     <main
       className="min-h-screen transition-colors duration-500"
       style={{ background: colors.bg }}
+      suppressHydrationWarning
     >
       {/* Hero Section */}
       <section className="relative px-6 md:px-12 lg:px-20 pt-32 pb-16">
@@ -138,12 +141,12 @@ export default function BlogPageClient() {
                   background:
                     activeCategory === category
                       ? colors.accent
-                      : isNightMode
+                      : themeNight
                       ? 'rgba(255,255,255,0.05)'
                       : 'rgba(0,0,0,0.05)',
                   color:
                     activeCategory === category
-                      ? isNightMode
+                      ? themeNight
                         ? '#000000'
                         : '#FFFFFF'
                       : colors.textMuted,
@@ -207,7 +210,7 @@ export default function BlogPageClient() {
                         <span
                           className="text-xs font-medium px-3 py-1 rounded-full transition-colors duration-500"
                           style={{
-                            background: isNightMode
+                            background: themeNight
                               ? 'rgba(255,198,76,0.1)'
                               : 'rgba(180,83,9,0.1)',
                             color: colors.accent,
@@ -246,7 +249,7 @@ export default function BlogPageClient() {
                             key={tag}
                             className="text-xs px-2 py-1 rounded transition-colors duration-500"
                             style={{
-                              background: isNightMode
+                              background: themeNight
                                 ? 'rgba(255,255,255,0.05)'
                                 : 'rgba(0,0,0,0.05)',
                               color: colors.textSubtle,
@@ -320,8 +323,8 @@ export default function BlogPageClient() {
               href="/contact"
               className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-bold transition-all duration-300 hover:scale-105 group"
               style={{
-                background: isNightMode ? '#F8F8F8' : '#1A1A1A',
-                color: isNightMode ? '#1A1A1A' : '#FFFFFF',
+                background: themeNight ? '#F8F8F8' : '#1A1A1A',
+                color: themeNight ? '#1A1A1A' : '#FFFFFF',
               }}
             >
               <span>Get in Touch</span>
