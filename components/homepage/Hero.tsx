@@ -198,7 +198,7 @@ const Hero = () => {
 
         {/* RIGHT SIDE - Content */}
         <div className="relative z-10 max-w-2xl order-2 lg:ml-auto text-left">
-          <h2 
+          <p 
             className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
             style={{ 
               color: isNightMode ? 'rgba(255,255,255,0.7)' : '#1A1A1A',
@@ -206,7 +206,7 @@ const Hero = () => {
             }}
           >
             Premium Website Design Studio
-          </h2>
+          </p>
 
           <h1 
             className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500"
