@@ -3532,6 +3532,77 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>Book a strategy call and we will tell you honestly whether we are the right fit for your project — and if we are not, we will tell you that too.</p>
     `,
   },
+
+  {
+    slug: 'what-is-a-website-care-plan',
+    title: 'What Is a Website Care Plan and Does Your Business Need One?',
+    excerpt: 'Most businesses launch a website and forget about it. A website care plan keeps it secure, fast, and working — so you do not find out something is broken when a client does.',
+    category: 'Strategy',
+    tags: ['Website Care', 'Maintenance', 'Security', 'Business'],
+    readTime: '6 min read',
+    publishedAt: '2026-04-02',
+    author: 'Vizantir',
+    metaDescription: 'What is a website care plan and does your business need one? Learn what website maintenance covers and why ignoring it is a costly mistake.',
+    content: `
+<h2>Your Website Is Not a One-Time Project</h2>
+
+<p>Most businesses treat their website like a brochure — print it once, leave it alone. That approach works fine for a brochure. It does not work for a website.</p>
+
+<p>A website is live infrastructure. It runs software that gets outdated. It stores data that needs protecting. It loads assets that can break. It connects to third-party services that change their APIs.</p>
+
+<p>Ignoring it does not mean nothing happens. It means problems accumulate until something breaks — usually at the worst possible time.</p>
+
+<h2>What Can Go Wrong Without Maintenance</h2>
+
+<ul>
+<li><strong>Security vulnerabilities:</strong> Outdated plugins and themes are the number one cause of WordPress hacks. An unpatched site is an open door.</li>
+<li><strong>Broken functionality:</strong> Payment processors update their APIs. Booking systems change their embed codes. Without monitoring, you may not know something stopped working until a client tells you.</li>
+<li><strong>Performance degradation:</strong> Sites get slower over time without optimization. Images accumulate. Databases grow. Load times creep up.</li>
+<li><strong>Hosting issues:</strong> Server problems, SSL certificate expiration, domain renewal lapses — all of these can take your site offline.</li>
+<li><strong>Content drift:</strong> Outdated hours, old pricing, discontinued services — these erode trust with visitors and hurt SEO.</li>
+</ul>
+
+<h2>What a Website Care Plan Covers</h2>
+
+<p>A good care plan typically includes:</p>
+
+<ul>
+<li>Regular software, plugin, and theme updates</li>
+<li>Security monitoring and malware scanning</li>
+<li>Uptime monitoring with alerts if the site goes down</li>
+<li>Performance checks and optimization</li>
+<li>Regular backups stored off-site</li>
+<li>Content updates — hours, pricing, team, services</li>
+<li>Monthly reporting on traffic and performance</li>
+</ul>
+
+<h2>Does Your Business Need One?</h2>
+
+<p>If your website generates leads, bookings, or revenue — yes.</p>
+
+<p>If clients or prospects visit your website before deciding to work with you — yes.</p>
+
+<p>If your website runs WordPress or any plugin-based platform — especially yes.</p>
+
+<p>The only businesses that might not need a formal care plan are those running a simple static site with no forms, no e-commerce, and no external integrations. Even then, monitoring and backups are worth having.</p>
+
+<h2>What It Costs</h2>
+
+<p>Website care plans typically run $200 to $2,000 per month depending on the complexity of the site and what is included. Most small business sites fall in the $300 to $600 range.</p>
+
+<p>That sounds like a lot until you price a website rebuild after a hack, or calculate the revenue lost during an unplanned outage.</p>
+
+<h2>What Vizantir Offers</h2>
+
+<p>Our care retainers are built for the businesses we work with — hospitality brands, law firms, and commercial real estate companies that cannot afford downtime or a broken booking flow.</p>
+
+<p>We handle updates, monitoring, performance, and content changes so you can focus on running your business.</p>
+
+<h2>Interested?</h2>
+
+<p>Book a strategy call and we will walk you through what a care plan would look like for your specific site.</p>
+    `,
+  },
 ]
 
 // Helper function to get posts by category
