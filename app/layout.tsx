@@ -69,6 +69,20 @@ const organizationLocalBusinessJsonLd = {
       },
       reviewBody: 'Highly recommend if you want a stress free, high quality website.',
     },
+    {
+      '@type': 'Review',
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+      },
+      author: {
+        '@type': 'Person',
+        name: 'Elorae',
+      },
+      reviewBody:
+        'I previously had a WordPress website and was constantly dealing with malware issues, slow performance, and maintenance headaches. Working with Vizantir completely changed that. They rebuilt my site and now it\'s clean, fast, secure, and actually reflects my brand. The process was easy and professional from start to finish. Highly recommend if you want a stress free, high quality website.',
+    },
   ],
   serviceArea: {
     '@type': 'Country',

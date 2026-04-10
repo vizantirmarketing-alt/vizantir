@@ -9,6 +9,7 @@ export const categories = [
   'Cost',
   'Hosting',
   'Philosophy',
+  'Strategy',
   'Business',
   'Technology',
   'Comparison',
@@ -3074,6 +3075,89 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>But the sites we build now are faster, more secure, more flexible, and more durable than anything we built on WordPress. Our clients get better results. We do better work.</p>
 
 <p>That's the trade we made. And we'd make it again.</p>
+    `,
+  },
+
+  {
+    slug: 'how-much-does-a-website-cost-las-vegas',
+    title: 'How Much Does a Website Cost in Las Vegas? (2026 Breakdown)',
+    excerpt: 'A straight answer on what businesses in Las Vegas actually pay for a website in 2026 — from basic builds to custom Next.js development.',
+    category: 'Strategy',
+    tags: ['Website Cost', 'Las Vegas', 'Web Design', 'Pricing'],
+    readTime: '6 min read',
+    publishedAt: '2026-03-01',
+    author: 'Vizantir',
+    metaDescription: 'What does a website cost in Las Vegas in 2026? A breakdown of pricing for small business sites, custom builds, and premium Next.js development.',
+    content: `
+<h2>The Question Nobody Answers Directly</h2>
+
+<p>Most agencies won't publish their prices. They want you on a call first. We get it — every project is different. But you deserve a straight answer before you spend time talking to anyone.</p>
+
+<p>Here's what websites actually cost in Las Vegas in 2026.</p>
+
+<h2>Tier 1: Template-Based Websites ($500 – $3,000)</h2>
+
+<p>This is the Wix, Squarespace, or WordPress template tier. Fast to build, low cost, limited customization.</p>
+
+<ul>
+<li>Pre-built template with your logo and colors dropped in</li>
+<li>Basic pages: Home, About, Services, Contact</li>
+<li>No custom functionality</li>
+<li>Looks like every other small business site</li>
+</ul>
+
+<p>Who it's for: New businesses testing an idea, side projects, or anyone who just needs something live quickly.</p>
+
+<h2>Tier 2: Custom WordPress ($3,000 – $8,000)</h2>
+
+<p>A custom-designed WordPress site built specifically for your brand. More flexibility than a template, but still running on WordPress infrastructure.</p>
+
+<ul>
+<li>Custom design and layout</li>
+<li>Plugin-based functionality</li>
+<li>CMS for easy content updates</li>
+<li>Ongoing hosting and maintenance required</li>
+</ul>
+
+<p>Who it's for: Small to mid-size businesses that need a professional presence but don't have complex technical requirements.</p>
+
+<h2>Tier 3: Custom Next.js Development ($8,000 – $20,000+)</h2>
+
+<p>A fully custom website built from scratch in Next.js. This is what Vizantir builds.</p>
+
+<ul>
+<li>Custom design, animations, and interactions</li>
+<li>Built for speed — typically scores 90+ on Google PageSpeed</li>
+<li>No plugins, no bloat, no security vulnerabilities</li>
+<li>Sanity CMS or similar for content management</li>
+<li>Scales with your business</li>
+</ul>
+
+<p>Who it's for: Established businesses in competitive markets where the website needs to reflect the quality of the brand — hospitality, law, real estate, luxury retail.</p>
+
+<h2>What Affects the Price?</h2>
+
+<p>Beyond the platform, these factors move the number significantly:</p>
+
+<ul>
+<li><strong>Number of pages:</strong> A one-page site costs less than a 20-page site</li>
+<li><strong>Custom functionality:</strong> Booking systems, member portals, calculators add cost</li>
+<li><strong>Content:</strong> Copywriting and photography add $1,000–$5,000</li>
+<li><strong>Timeline:</strong> Rush projects cost more</li>
+<li><strong>Ongoing support:</strong> Care retainers run $500–$2,000/month</li>
+</ul>
+
+<h2>What Vizantir Charges</h2>
+
+<p>Our projects start at $5,000 for straightforward builds and go up from there depending on scope. We work with hospitality brands, law firms, and commercial real estate companies across Las Vegas and nationally.</p>
+
+<p>Every project starts with a strategy call where we scope the work honestly before anyone commits to anything.</p>
+
+<h2>The Bottom Line</h2>
+
+<p>You get what you pay for. A $500 template gets you a $500 result. A $15,000 custom build gets you something that works as hard as your business does.</p>
+
+<p>If you're serious about your digital presence, book a call and we'll tell you exactly what your project would cost.</p>
     `,
   },
 ]
