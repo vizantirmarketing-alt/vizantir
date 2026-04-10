@@ -184,7 +184,7 @@ export default function ServicesHero() {
                 className="text-xl leading-relaxed mb-6"
                 style={{ color: colors.textMuted }}
               >
-                Our Las Vegas studio builds custom websites for established businesses. We start with your business goals, design around them, and build to last.
+                Our Las Vegas studio builds custom websites for established businesses. We figure out what the site needs to do before we design a single page.
               </p>
               <p
                 className="text-xs tracking-[0.25em] uppercase font-medium mb-3"
@@ -197,7 +197,7 @@ export default function ServicesHero() {
                   'Custom design, no templates',
                   'Mobile-first development',
                   'CMS integration included',
-                  'SEO architecture built in',
+                  'URL structure and page hierarchy planned from the start — not added after the fact',
                   'Post-launch support available',
                 ].map((line) => (
                   <li

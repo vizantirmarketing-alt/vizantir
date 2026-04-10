@@ -17,8 +17,8 @@ const WhyVizantir = () => {
       description: "Every engagement is structured around what the site actually needs — not vague add-ons or bloated retainers.",
     },
     {
-      title: "Built to Perform",
-      description: "Fast load times, cleaner architecture, mobile polish, and a better experience across every key page.",
+      title: "Built to Convert",
+      description: "Faster load times, cleaner code, and a mobile experience that does not make people leave.",
     },
     {
       title: "Commercial Thinking",

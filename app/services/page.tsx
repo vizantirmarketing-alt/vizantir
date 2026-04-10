@@ -42,7 +42,7 @@ const servicesPageJsonLd = {
           '@type': 'Service',
           name: 'Web Development',
           description:
-            'Custom Next.js builds that load fast and hold up over time',
+            "Custom Next.js builds — no plugins, no bloat, and fast enough to actually hold a visitor's attention",
         },
       },
       {

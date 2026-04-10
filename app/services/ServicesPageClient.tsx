@@ -144,20 +144,20 @@ function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
             <PricingCard
               title="Essentials"
               price="$15,000+"
-              description="5-10 pages. Custom Next.js build. Responsive design, smooth animations. Clean, fast, and built to perform."
+              description="5-10 pages. Custom Next.js build. Custom design, smooth animations, and a mobile-first build. Most Essentials sites score 85+ on PageSpeed."
               isNightMode={isNightMode}
             />
             <PricingCard
               title="Growth"
               price="$30,000+"
-              description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, built to grow with you."
+              description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, built for more — more pages, more locations, more editors in the CMS."
               featured
               isNightMode={isNightMode}
             />
             <PricingCard
               title="Enterprise"
               price="$60,000+"
-              description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. Built for serious brands."
+              description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. For businesses with complex requirements — multi-stakeholder approvals, compliance needs, or high-traffic campaigns."
               isNightMode={isNightMode}
             />
           </div>
