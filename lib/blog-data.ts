@@ -3766,6 +3766,73 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>We build websites for Las Vegas businesses that are engineered to rank — fast, properly structured, and set up for local search from day one. Book a strategy call and we will audit your current presence and show you exactly where the gaps are.</p>
     `,
   },
+
+  {
+    slug: 'why-wordpress-gets-hacked',
+    title: 'Why WordPress Gets Hacked and What to Do About It',
+    excerpt: 'WordPress powers 40% of the internet and is the most hacked platform on the web. Here is why it happens, what the consequences are, and how to protect yourself.',
+    category: 'Security',
+    tags: ['WordPress', 'Security', 'Hacking', 'Website Protection'],
+    readTime: '7 min read',
+    publishedAt: '2026-04-05',
+    author: 'Vizantir',
+    metaDescription: 'Why does WordPress get hacked so often? Learn the real reasons WordPress sites get compromised and what you can do to protect your business website.',
+    content: `
+<h2>WordPress Is the Most Hacked Platform on the Web</h2>
+
+<p>WordPress powers over 40% of all websites on the internet. That popularity makes it the number one target for hackers. Not because WordPress is inherently insecure — but because the sheer volume of WordPress sites means automated attacks are constantly scanning for vulnerable installations.</p>
+
+<p>If you run a WordPress site, this is not a hypothetical risk. It is an active one.</p>
+
+<h2>Why WordPress Sites Get Hacked</h2>
+
+<p><strong>Outdated plugins and themes:</strong> This is the number one cause. Plugins are third-party code running on your site. When a vulnerability is discovered, the plugin developer releases a patch. If you do not update, that vulnerability stays open — and hackers know exactly which plugin versions are exploitable.</p>
+
+<p><strong>Weak passwords:</strong> Brute force attacks try thousands of username and password combinations automatically. A weak password on your admin account is an open invitation.</p>
+
+<p><strong>Cheap shared hosting:</strong> On shared hosting, your site sits on the same server as hundreds of others. If one site on that server gets compromised, the infection can spread to yours.</p>
+
+<p><strong>Nulled themes and plugins:</strong> Free versions of premium plugins downloaded from unofficial sources often contain malware pre-installed. You are literally installing the hack yourself.</p>
+
+<p><strong>No two-factor authentication:</strong> A password alone is not enough. Without two-factor authentication on your admin login, a stolen password is all a hacker needs.</p>
+
+<h2>What Happens When a WordPress Site Gets Hacked</h2>
+
+<ul>
+<li>Your site gets used to send spam emails — damaging your domain reputation</li>
+<li>Malware gets injected that redirects your visitors to scam sites</li>
+<li>Google flags your site as dangerous and removes it from search results</li>
+<li>Client data stored in your database gets stolen</li>
+<li>Your hosting account gets suspended</li>
+</ul>
+
+<p>Recovery can take days or weeks. The SEO damage from a Google blacklist can take months to reverse. For a business that relies on its website for leads or bookings, this is devastating.</p>
+
+<h2>How to Protect Your WordPress Site</h2>
+
+<ul>
+<li><strong>Update everything immediately:</strong> WordPress core, themes, and plugins should be updated as soon as updates are available</li>
+<li><strong>Use strong, unique passwords:</strong> Use a password manager and never reuse passwords across sites</li>
+<li><strong>Enable two-factor authentication:</strong> On your WordPress admin and your hosting account</li>
+<li><strong>Use managed hosting:</strong> Providers like WP Engine or Kinsta include server-level security that shared hosting does not</li>
+<li><strong>Install a security plugin:</strong> Wordfence or Sucuri provide firewall protection and malware scanning</li>
+<li><strong>Take regular backups:</strong> Off-site backups mean you can restore a clean version quickly if something goes wrong</li>
+<li><strong>Limit login attempts:</strong> Block IPs after a set number of failed login attempts</li>
+</ul>
+
+<h2>Is WordPress Worth the Risk?</h2>
+
+<p>A properly maintained WordPress site on good hosting is reasonably secure. The problem is that most small business owners do not have the time or expertise to maintain it properly.</p>
+
+<p>That is the argument for either a managed care plan or a platform that does not carry the same attack surface. Next.js sites, for example, have no plugin ecosystem, no database exposed to the web, and no admin login to brute force. The attack surface is fundamentally smaller.</p>
+
+<h2>Already Been Hacked?</h2>
+
+<p>If your site has been compromised, the first step is to take it offline, restore from a clean backup, and audit every plugin and theme. Then address the root cause — usually an outdated plugin or weak credentials.</p>
+
+<p>If you want to make sure it never happens again, book a strategy call and we will walk you through your options.</p>
+    `,
+  },
 ]
 
 // Helper function to get posts by category
