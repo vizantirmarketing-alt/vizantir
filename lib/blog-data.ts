@@ -3364,6 +3364,85 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>We offer complimentary performance and conversion reviews for commercial real estate companies. Book a strategy call and we will show you exactly what your website is costing you in missed inquiries.</p>
     `,
   },
+
+  {
+    slug: 'website-speed-matters-business',
+    title: 'Why Your Website Speed Is Costing You Customers (And How to Fix It)',
+    excerpt: 'A slow website is not just annoying — it is actively losing you customers and hurting your Google rankings. Here is what you need to know.',
+    category: 'Performance',
+    tags: ['Website Speed', 'Performance', 'Core Web Vitals', 'SEO'],
+    readTime: '5 min read',
+    publishedAt: '2026-03-29',
+    author: 'Vizantir',
+    metaDescription: 'A slow website costs you customers and hurts your Google rankings. Learn why website speed matters and what to do about it in 2026.',
+    content: `
+<h2>The Number Most Business Owners Do Not Know</h2>
+
+<p>53% of mobile users abandon a website that takes more than 3 seconds to load. More than half. Gone before they have seen a single thing about your business.</p>
+
+<p>And it gets worse: Google uses page speed as a ranking factor. A slow site does not just lose visitors — it loses rankings, which means fewer visitors in the first place.</p>
+
+<h2>What Slow Actually Means</h2>
+
+<p>Go to pagespeed.web.dev right now and run your website. Google will give you a score from 0 to 100.</p>
+
+<ul>
+<li><strong>90–100:</strong> Fast. Your site is not losing customers to speed.</li>
+<li><strong>50–89:</strong> Needs improvement. You are losing some visitors.</li>
+<li><strong>0–49:</strong> Slow. You are actively damaging your business.</li>
+</ul>
+
+<p>Most small business websites score in the 30–60 range on mobile. That means they are failing more than half the people who visit them on a phone.</p>
+
+<h2>Why WordPress Sites Get Slow</h2>
+
+<p>WordPress is the most common culprit. Not because WordPress is bad — it powers 40% of the internet — but because it is easy to make slow.</p>
+
+<ul>
+<li>Too many plugins, each adding load time</li>
+<li>Cheap shared hosting that can not handle traffic</li>
+<li>Unoptimized images loading at full resolution</li>
+<li>Themes bloated with features you are not using</li>
+<li>No caching or CDN configuration</li>
+</ul>
+
+<p>A WordPress site built carelessly on shared hosting can score under 30 on mobile PageSpeed. The same site, properly optimized on good hosting, can score 80+.</p>
+
+<h2>Why Next.js Sites Are Fast By Default</h2>
+
+<p>Next.js is fast by design. Pages are pre-built and served from a CDN, meaning there is no database query or server processing on each page load. Images are automatically optimized. JavaScript is split so only what is needed loads first.</p>
+
+<p>The sites we build at Vizantir typically score 85–100 on desktop and 65–85 on mobile — significantly above the industry average.</p>
+
+<h2>The Three Metrics That Matter</h2>
+
+<p><strong>Largest Contentful Paint (LCP):</strong> How long until the main content is visible. Should be under 2.5 seconds.</p>
+
+<p><strong>Total Blocking Time (TBT):</strong> How long the page is unresponsive to user input. Should be under 200ms.</p>
+
+<p><strong>Cumulative Layout Shift (CLS):</strong> How much the page jumps around while loading. Should be under 0.1.</p>
+
+<p>These three metrics make up Google's Core Web Vitals — the performance scores Google uses to rank your site.</p>
+
+<h2>What To Do About It</h2>
+
+<p>If your site scores below 70 on mobile PageSpeed, here is where to start:</p>
+
+<ul>
+<li>Compress and resize all images</li>
+<li>Upgrade your hosting to a managed provider or Vercel</li>
+<li>Audit your plugins and remove anything unnecessary</li>
+<li>Enable caching</li>
+<li>Consider whether a platform migration makes sense</li>
+</ul>
+
+<p>If you have done all of that and your scores are still poor, the problem is likely architectural — and a rebuild on a modern stack is probably the right answer.</p>
+
+<h2>Get a Free Performance Audit</h2>
+
+<p>We run free performance and conversion reviews for business websites. Book a strategy call and we will show you your scores, what is causing them, and what it would take to fix them.</p>
+    `,
+  },
 ]
 
 // Helper function to get posts by category
