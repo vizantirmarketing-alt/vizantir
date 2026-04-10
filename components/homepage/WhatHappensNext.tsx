@@ -18,7 +18,7 @@ const WhatHappensNext = () => {
     {
       number: '02',
       title: 'Get a Custom Strategy',
-      description: "If we're aligned, we'll deliver a tailored plan with clear deliverables.",
+      description: "If we're aligned, You get a clear scope and a straight timeline before anything starts.",
     },
     {
       number: '03',

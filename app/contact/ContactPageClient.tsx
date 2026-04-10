@@ -117,7 +117,7 @@ export default function ContactPageClient() {
               Start the Conversation
             </h1>
             <p className="text-lg md:text-xl" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              Tell us about your project. We&apos;ll review fit, scope, and timing — then recommend the right next step.
+              Tell me what you&apos;re working on. I&apos;ll let you know if we&apos;re a good fit and what the next step looks like
             </p>
           </motion.div>
         </div>

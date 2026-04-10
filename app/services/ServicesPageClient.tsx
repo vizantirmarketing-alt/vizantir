@@ -32,7 +32,7 @@ const services: Service[] = [
     id: 'dev',
     label: 'Web Development',
     tagline:
-      'Custom Next.js and WordPress builds. Fast, clean, scalable — with CMS integration so your team can manage content without touching code.',
+      'Custom Next.js and WordPress builds. Fast, clean, and easy for your team to update without touching code.',
   },
   {
     id: 'refresh',
@@ -150,7 +150,7 @@ function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
             <PricingCard
               title="Growth"
               price="$30,000+"
-              description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, designed to scale."
+              description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, built to grow with you."
               featured
               isNightMode={isNightMode}
             />
@@ -552,7 +552,7 @@ function DevContent({ isNightMode }: { isNightMode: boolean }) {
         className="leading-relaxed transition-colors duration-500"
         style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
-        Custom Next.js and WordPress builds. Fast, clean, scalable — with CMS integration so your team can manage content without touching code.
+        Custom Next.js and WordPress builds. Fast, clean, and easy for your team to update without touching code.
       </p>
 
       <div

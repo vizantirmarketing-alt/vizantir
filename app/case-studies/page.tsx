@@ -78,7 +78,7 @@ export default async function CaseStudiesPage() {
     collectionPageSchema({
       url,
       name: 'Websites We Have Launched',
-      description: 'Modern, high-performing websites designed for speed, SEO, and conversions.',
+      description: 'Modern websites built to load fast, rank well, and convert visitors',
       siteUrl: settings.siteUrl,
       items: caseStudies.map(cs => ({
         name: cs.name,

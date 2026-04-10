@@ -184,7 +184,7 @@ export default function ServicesHero() {
                 className="text-xl leading-relaxed mb-6"
                 style={{ color: colors.textMuted }}
               >
-                Our Las Vegas studio builds custom websites for established businesses. Strategy-led, design-first, built to perform.
+                Our Las Vegas studio builds custom websites for established businesses. We start with your business goals, design around them, and build to last.
               </p>
               <p
                 className="text-xs tracking-[0.25em] uppercase font-medium mb-3"

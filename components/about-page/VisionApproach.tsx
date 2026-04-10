@@ -29,7 +29,7 @@ const VisionApproach = () => {
     {
       number: '01',
       title: 'Tailored Strategy',
-      description: 'Every business is different, so our projects are custom-built to achieve your goals.',
+      description: 'Every project is built around what your specific business actually needs',
     },
     {
       number: '02',
@@ -40,7 +40,7 @@ const VisionApproach = () => {
     {
       number: '03',
       title: 'Creative That Converts',
-      description: 'From visual systems to website performance, our designs are visually stunning and revenue-driven.',
+      description: 'From visual systems to website performance, every design decision is tied to a business outcome — not just how it looks',
     },
   ];
 

@@ -56,9 +56,9 @@ const ServicesPreview = () => {
     {
       number: '02',
       title: 'Website Development',
-      input: 'Custom Next.js builds — fast, scalable, and structured for long-term performance.',
+      input: 'Custom Next.js builds that load fast and hold up over time',
       output: 'Clean codebase, CMS integration, performance-optimized build',
-      outcome: 'A site that loads fast, works everywhere, and scales with the business',
+      outcome: 'A site that loads fast, works on every device, and grows with you',
     },
     {
       number: '03',

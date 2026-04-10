@@ -152,7 +152,7 @@ const CaseStudiesClient = () => {
               className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500"
               style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
             >
-              Modern, high-performing websites designed for speed, SEO, and conversions.
+              Modern websites built to load fast, rank well, and convert visitors
             </p>
           </motion.div>
 

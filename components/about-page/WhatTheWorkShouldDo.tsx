@@ -21,7 +21,7 @@ const cards = [
   {
     title: 'Stay usable after launch',
     description:
-      'A strong website should be maintainable, scalable, and practical for the team behind it.',
+      'Your team should be able to update it, rely on it, and not think about it',
   },
 ]
 
