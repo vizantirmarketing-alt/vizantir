@@ -3236,6 +3236,71 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>We work with law firms across Las Vegas and nationally. Book a strategy call and we'll audit your current site and show you exactly what needs to change.</p>
     `,
   },
+
+  {
+    slug: 'hospitality-website-design-las-vegas',
+    title: 'Why Your Las Vegas Restaurant or Hotel Website Is Losing You Bookings',
+    excerpt: 'Las Vegas diners and guests research online before they commit. If your hospitality website does not match the quality of your experience, you are losing business.',
+    category: 'Strategy',
+    tags: ['Hospitality', 'Restaurant', 'Hotel', 'Las Vegas', 'Website Design'],
+    readTime: '6 min read',
+    publishedAt: '2026-03-15',
+    author: 'Vizantir',
+    metaDescription: 'Is your Las Vegas restaurant or hotel website losing you bookings? Learn what hospitality websites need to convert visitors into reservations.',
+    content: `
+<h2>The Las Vegas Hospitality Market Is Competitive</h2>
+
+<p>Las Vegas diners and hotel guests have options. Hundreds of them. Before they commit to a reservation, they research online. They look at photos, read menus, check prices, and form an impression of the experience before they ever walk through the door.</p>
+
+<p>Your website is that first impression. And most hospitality websites in Las Vegas are failing that test.</p>
+
+<h2>What Guests Decide From Your Website</h2>
+
+<p>Before making a reservation, a potential guest is asking:</p>
+<ul>
+<li>Does this place look worth the money?</li>
+<li>What is the atmosphere like?</li>
+<li>Is the experience I want clearly communicated?</li>
+<li>How easy is it to actually book?</li>
+</ul>
+
+<p>A poorly designed website answers all four questions wrong — even if your actual experience is exceptional.</p>
+
+<h2>The Most Common Problems</h2>
+
+<p><strong>Slow load times:</strong> A restaurant website that takes 5 seconds to load loses guests before they see a single photo. Speed is non-negotiable in hospitality.</p>
+
+<p><strong>Bad mobile experience:</strong> Most people searching for restaurants in Las Vegas are on their phone, often right before deciding where to go. If your mobile site is clunky, they move on.</p>
+
+<p><strong>Poor photography presentation:</strong> Hospitality is a visual industry. Your website needs to showcase food, atmosphere, and experience in a way that makes people feel something.</p>
+
+<p><strong>Buried reservation process:</strong> Every extra click between landing on your site and completing a reservation loses guests. The path to booking should be immediate and obvious.</p>
+
+<h2>What High-Performing Hospitality Sites Do Differently</h2>
+
+<ul>
+<li>Cinematic hero imagery or video that sets the atmosphere immediately</li>
+<li>Reservation or booking CTA visible without scrolling</li>
+<li>Menu accessible in one click — not a PDF download</li>
+<li>Mobile-first design with large tap targets and fast load</li>
+<li>Clear communication of what makes the experience unique</li>
+</ul>
+
+<h2>The Fuji Omakase Approach</h2>
+
+<p>When we built the Fuji Omakase concept site, the brief was simple: make a reservation feel like part of the experience before guests arrive. Dark, cinematic, and designed to reflect the quality of what's being served.</p>
+
+<p>That is the standard every Las Vegas hospitality brand should be holding their website to.</p>
+
+<h2>What This Costs You If You Ignore It</h2>
+
+<p>Every month your website underperforms, you are losing reservations to competitors whose websites do a better job of selling the experience. In a market like Las Vegas, that adds up fast.</p>
+
+<h2>Start With a Free Audit</h2>
+
+<p>We offer complimentary performance and conversion reviews for Las Vegas hospitality brands. Book a strategy call and we will show you exactly what your site is costing you.</p>
+    `,
+  },
 ]
 
 // Helper function to get posts by category
