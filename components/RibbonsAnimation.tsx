@@ -30,17 +30,17 @@ const RibbonsAnimation = () => {
     if (!ctx) return;
 
     const dayRibbonConfigs = [
-      { color: "#FFC64C", angle: 35, startY: 0.15, speed: 0.5, width: 180, opacity: 0.35 },
-      { color: "#FFB5A0", angle: -25, startY: 0.45, speed: 0.4, width: 200, opacity: 0.3 },
-      { color: "#D4C5F9", angle: 50, startY: 0.7, speed: 0.55, width: 160, opacity: 0.32 },
-      { color: "#B8E6FF", angle: -40, startY: 0.85, speed: 0.45, width: 140, opacity: 0.28 },
+      { color: "#FFC64C", angle: 35, startY: 0.15, speed: 0.75, width: 180, opacity: 0.35 },
+      { color: "#FFB5A0", angle: -25, startY: 0.45, speed: 0.6, width: 200, opacity: 0.3 },
+      { color: "#D4C5F9", angle: 50, startY: 0.7, speed: 0.825, width: 160, opacity: 0.32 },
+      { color: "#B8E6FF", angle: -40, startY: 0.85, speed: 0.675, width: 140, opacity: 0.28 },
     ];
 
     const nightRibbonConfigs = [
-      { color: "#00D9FF", angle: 35, startY: 0.15, speed: 0.5, width: 180, opacity: 0.45 },
-      { color: "#C084FC", angle: -25, startY: 0.45, speed: 0.4, width: 200, opacity: 0.4 },
-      { color: "#FF6B9D", angle: 50, startY: 0.7, speed: 0.55, width: 160, opacity: 0.42 },
-      { color: "#FFC64C", angle: -40, startY: 0.85, speed: 0.45, width: 140, opacity: 0.35 },
+      { color: "#00D9FF", angle: 35, startY: 0.15, speed: 0.75, width: 180, opacity: 0.45 },
+      { color: "#C084FC", angle: -25, startY: 0.45, speed: 0.6, width: 200, opacity: 0.4 },
+      { color: "#FF6B9D", angle: 50, startY: 0.7, speed: 0.825, width: 160, opacity: 0.42 },
+      { color: "#FFC64C", angle: -40, startY: 0.85, speed: 0.675, width: 140, opacity: 0.35 },
     ];
 
     const ribbonConfigs = isNightMode ? nightRibbonConfigs : dayRibbonConfigs;
