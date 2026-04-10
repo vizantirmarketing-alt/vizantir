@@ -3239,14 +3239,14 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 
   {
     slug: 'hospitality-website-design-las-vegas',
-    title: 'Why Your Las Vegas Restaurant or Hotel Website Is Losing You Bookings',
-    excerpt: 'Las Vegas diners and guests research online before they commit. If your hospitality website does not match the quality of your experience, you are losing business.',
+    title: 'Why Most Las Vegas Restaurant Websites Drive Guests Away',
+    excerpt: 'Las Vegas diners research online before they commit. If your restaurant website does not match the quality of your experience, you are losing reservations.',
     category: 'Strategy',
     tags: ['Hospitality', 'Restaurant', 'Hotel', 'Las Vegas', 'Website Design'],
     readTime: '6 min read',
     publishedAt: '2026-03-15',
     author: 'Vizantir',
-    metaDescription: 'Is your Las Vegas restaurant or hotel website losing you bookings? Learn what hospitality websites need to convert visitors into reservations.',
+    metaDescription: 'Is your Las Vegas restaurant website driving guests away? Learn what hospitality websites need to convert visitors into reservations.',
     content: `
 <h2>The Las Vegas Hospitality Market Is Competitive</h2>
 
@@ -3290,7 +3290,7 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 
 <p>When we built the Fuji Omakase concept site, the brief was simple: make a reservation feel like part of the experience before guests arrive. Dark, cinematic, and designed to reflect the quality of what's being served.</p>
 
-<p>That is the standard every Las Vegas hospitality brand should be holding their website to.</p>
+<p>That is the standard every Las Vegas hospitality brand should hold their website to.</p>
 
 <h2>What This Costs You If You Ignore It</h2>
 
@@ -3357,7 +3357,7 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 
 <p>When we built the Meridian Row concept, we focused on one outcome: capture the moment a tenant is researching and make the leasing process feel as polished as the property itself. Fast, conversion-focused, and built to reflect the quality of what is being offered.</p>
 
-<p>That is the standard CRE companies in Las Vegas should be holding their websites to.</p>
+<p>That is the standard CRE companies in Las Vegas should hold their websites to.</p>
 
 <h2>Request a Free Review</h2>
 
@@ -3400,7 +3400,7 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 
 <ul>
 <li>Too many plugins, each adding load time</li>
-<li>Cheap shared hosting that can not handle traffic</li>
+<li>Cheap shared hosting that cannot handle traffic</li>
 <li>Unoptimized images loading at full resolution</li>
 <li>Themes bloated with features you are not using</li>
 <li>No caching or CDN configuration</li>
@@ -3422,7 +3422,7 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 
 <p><strong>Cumulative Layout Shift (CLS):</strong> How much the page jumps around while loading. Should be under 0.1.</p>
 
-<p>These three metrics make up Google's Core Web Vitals — the performance scores Google uses to rank your site.</p>
+<p>These include two Core Web Vitals (LCP and CLS) plus Total Blocking Time, which Lighthouse uses in lab tests. They are central to PageSpeed scores and how Google evaluates page experience.</p>
 
 <h2>What To Do About It</h2>
 
