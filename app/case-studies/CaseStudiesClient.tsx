@@ -10,6 +10,7 @@ import { trackCTAClick } from '@/lib/analytics'
 
 interface CaseStudy {
   slug?: string
+  detailHref?: string
   title: string
   category: string
   description: string
@@ -52,9 +53,9 @@ const CaseStudiesClient = () => {
     {
       title: 'Essence of Watches',
       category: 'Luxury E-Commerce',
-      description: 'Pre-owned Rolex marketplace featuring premium design, authentication flow, and advanced filtering. Custom e-commerce solution with secure payment processing.',
+      description: 'Full custom pre-owned luxury watch e-commerce platform built from the ground up — not a template, not Shopify. Features include authenticated inventory with Sanity CMS, Google and Apple OAuth, cart and wishlist with localStorage persistence, per-watch authentication certificates, price transparency with market value indicators, buyer protection infrastructure, image zoom lightbox, multi-language support in 5 languages (EN, JA, DE, KO, ZH), 12 SEO-optimized blog posts, a 167-entry searchable Rolex reference guide, dynamic sitemap, and transactional email via Resend. Built to the standard of specialist single-dealer platforms like WatchBox and Bob\'s Watches — at a fraction of the infrastructure cost.',
       image: '/eow.png',
-      link: 'https://essenceofwatches.com',
+      link: 'https://www.essenceofwatches.com',
       services: ['E-Commerce', 'Web Design', 'Next.js Development', 'Payment Integration'],
     },
     {
@@ -207,17 +208,31 @@ const CaseStudiesClient = () => {
               >
                 {/* Mockup Image */}
                 <div className="relative mb-8 transition-transform duration-300 group-hover:scale-[1.02]">
-                  <div className="relative aspect-[4/3] w-full group">
-                    <Image
-                      src={study.image}
-                      alt={study.title}
-                      fill
-                      className="object-contain relative z-10"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      loading={index < 2 ? "eager" : "lazy"}
-                      priority={index < 2}
-                    />
-                  </div>
+                  {study.detailHref ? (
+                    <Link href={study.detailHref} className="block relative aspect-[4/3] w-full group">
+                      <Image
+                        src={study.image}
+                        alt={study.title}
+                        fill
+                        className="object-contain relative z-10"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        loading={index < 2 ? "eager" : "lazy"}
+                        priority={index < 2}
+                      />
+                    </Link>
+                  ) : (
+                    <div className="relative aspect-[4/3] w-full group">
+                      <Image
+                        src={study.image}
+                        alt={study.title}
+                        fill
+                        className="object-contain relative z-10"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        loading={index < 2 ? "eager" : "lazy"}
+                        priority={index < 2}
+                      />
+                    </div>
+                  )}
                 </div>
 
                   {/* Project Info */}
@@ -228,13 +243,25 @@ const CaseStudiesClient = () => {
                     >
                       {study.category}
                     </p>
-                    <h3 
-                      className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
-                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
-                    >
-                      {study.title}
-                    </h3>
-                    <p 
+                    {study.detailHref ? (
+                      <Link href={study.detailHref}>
+                        <h3 
+                          className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
+                          style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                        >
+                          {study.title}
+                        </h3>
+                      </Link>
+                    ) : (
+                      <h3 
+                        className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
+                        style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                      >
+                        {study.title}
+                      </h3>
+                    )}
+                    <p
+                      suppressHydrationWarning
                       className="leading-relaxed transition-colors duration-500"
                       style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
                     >
