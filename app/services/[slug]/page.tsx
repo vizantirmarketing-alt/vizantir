@@ -14,6 +14,8 @@ import { serviceId } from '@/lib/schema/ids'
 import { getOgImage, getCanonicalUrl } from '@/lib/utils/metadata'
 import type { Service, SiteSettings } from '@/lib/sanity/types'
 
+import ServicePageContent from './ServicePageContent'
+
 interface Props {
   params: Promise<{ slug: string }>
 }
@@ -97,12 +99,7 @@ export default async function ServicePage({ params }: Props) {
   return (
     <>
       <JsonLd id={`ld-page-${service.slug}`} data={pageGraph} />
-      
-      <main>
-        {/* Your page content here */}
-        <h1>{service.heroHeadline || service.title}</h1>
-        {/* ... */}
-      </main>
+      <ServicePageContent service={service} />
     </>
   )
 }
