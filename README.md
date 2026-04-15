@@ -88,7 +88,7 @@ Deployed automatically to Vercel on push to `main`. Environment variables must b
 | `/` | Homepage |
 | `/about` | About page |
 | `/services` | Services and pricing |
-| `/our-work` | Portfolio / case studies |
+| `/case-studies` | Portfolio / case studies |
 | `/blog` | Blog listing and posts |
 | `/las-vegas-web-design` | Local SEO landing page |
 | `/hospitality-web-design` | Vertical landing page |

@@ -7,7 +7,7 @@ import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schem
 const caseStudiesBreadcrumbGraph = graphSchema([
   breadcrumbSchema([
     { name: 'Home', url: 'https://www.vizantir.com' },
-    { name: 'Our Work', url: 'https://www.vizantir.com/our-work' },
+    { name: 'Our Work', url: 'https://www.vizantir.com/case-studies' },
   ]),
 ])
 import type { SiteSettings } from '@/lib/sanity/types'
