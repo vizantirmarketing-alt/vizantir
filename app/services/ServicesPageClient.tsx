@@ -6,55 +6,8 @@ import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
 import ServicesHero from './ServicesHero'
 import { trackCTAClick } from '@/lib/analytics'
+import type { ServiceListItem } from '@/lib/sanity/types'
 
-type ServiceKey = 'strategy' | 'design' | 'dev' | 'refresh' | 'cms' | 'care'
-
-interface Service {
-  id: ServiceKey
-  label: string
-  tagline: string
-}
-
-const services: Service[] = [
-  {
-    id: 'strategy',
-    label: 'Website Strategy',
-    tagline:
-      'Before we design anything, we map the site to your business goals, your buyers, and the trust signals that convert them.',
-  },
-  {
-    id: 'design',
-    label: 'Web Design',
-    tagline:
-      'Original, custom design built around your brand. No templates. No shortcuts. Every layout decision made with your buyer in mind.',
-  },
-  {
-    id: 'dev',
-    label: 'Web Development',
-    tagline:
-      'Custom Next.js and WordPress builds. Fast, clean, and easy for your team to update without touching code.',
-  },
-  {
-    id: 'refresh',
-    label: 'Website Refreshes',
-    tagline:
-      "Already have a site? We rebuild the structure, design, and performance without starting from scratch where it isn't needed.",
-  },
-  {
-    id: 'cms',
-    label: 'CMS Integrations',
-    tagline:
-      'Sanity, WordPress, and custom CMS setups that give your team control over content without depending on a developer for every change.',
-  },
-  {
-    id: 'care',
-    label: 'Website Care',
-    tagline:
-      'Monthly retainers for updates, monitoring, performance improvements, and ongoing support after launch.',
-  },
-]
-
-// Service Icons
 const WebIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
     <rect x="3" y="4" width="18" height="14" rx="2" />
@@ -108,13 +61,50 @@ const CmsIcon = () => (
   </svg>
 )
 
-const iconMap = {
-  strategy: StrategyIcon,
-  design: DesignIcon,
-  dev: WebIcon,
-  refresh: RefreshIcon,
-  cms: CmsIcon,
-  care: CareIcon,
+const SERVICE_ICONS = [StrategyIcon, DesignIcon, WebIcon, RefreshIcon, CmsIcon, CareIcon]
+
+function strategyCallLink() {
+  return (
+    <Link
+      href="/contact"
+      onClick={() => trackCTAClick('get_started', 'services')}
+      className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity"
+      style={{ color: '#FFC64C' }}
+    >
+      Book a Strategy Call
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </Link>
+  )
+}
+
+function SanityServiceExpandedBody({ service, isNightMode }: { service: ServiceListItem; isNightMode: boolean }) {
+  return (
+    <div className="space-y-8">
+      {service.description ? (
+        <p
+          className="leading-relaxed transition-colors duration-500"
+          style={{ color: isNightMode ? '#888888' : '#6B7280' }}
+        >
+          {service.description}
+        </p>
+      ) : null}
+      {service.slug ? (
+        <Link
+          href={`/services/${service.slug}`}
+          className="inline-flex items-center gap-2 font-semibold hover:opacity-80 transition-opacity"
+          style={{ color: '#FFC64C' }}
+        >
+          Learn more
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </Link>
+      ) : null}
+      {strategyCallLink()}
+    </div>
+  )
 }
 
 function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
@@ -205,30 +195,31 @@ function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
   )
 }
 
-export default function ServicesPageClient() {
-  const { isNightMode } = useTheme()
-  const [openService, setOpenService] = useState<ServiceKey | null>('strategy')
+interface ServicesPageClientProps {
+  services: ServiceListItem[]
+}
 
-  const handleToggle = (id: ServiceKey) => {
-    setOpenService((prev) => (prev === id ? null : id))
+export default function ServicesPageClient({ services }: ServicesPageClientProps) {
+  const { isNightMode } = useTheme()
+  const [openServiceId, setOpenServiceId] = useState<string | null>(() => services[0]?._id ?? null)
+
+  const handleToggle = (id: string) => {
+    setOpenServiceId((prev) => (prev === id ? null : id))
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
-      {/* Hero */}
       <ServicesHero />
 
-      {/* Services Accordion */}
-      <section 
+      <section
         id="services"
         className="relative px-6 md:px-12 lg:px-20 py-20 md:py-24 transition-colors duration-500"
         style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
       >
         <div className="max-w-5xl mx-auto">
-          {/* Section Header */}
           <motion.div
             className="mb-16 text-center"
             initial={{ opacity: 0, y: 20 }}
@@ -244,15 +235,14 @@ export default function ServicesPageClient() {
             </h2>
           </motion.div>
 
-          {/* Service Cards */}
           <div className="space-y-3">
             {services.map((service, index) => {
-              const isOpen = openService === service.id
-              const Icon = iconMap[service.id]
+              const isOpen = openServiceId === service._id
+              const Icon = SERVICE_ICONS[index % SERVICE_ICONS.length]
 
               return (
                 <motion.div
-                  key={service.id}
+                  key={service._id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -260,33 +250,36 @@ export default function ServicesPageClient() {
                 >
                   <button
                     type="button"
-                    onClick={() => handleToggle(service.id)}
+                    onClick={() => handleToggle(service._id)}
                     className="group w-full text-left rounded-2xl p-6 md:p-8 border transition-all duration-500"
                     style={{
-                      background: isNightMode 
-                        ? (isOpen ? '#000000' : '#000000') 
-                        : (isOpen ? '#FAFAFA' : '#FAFAFA'),
-                      borderColor: isNightMode 
-                        ? (isOpen ? 'rgba(255,198,76,0.2)' : 'rgba(255,255,255,0.08)') 
-                        : (isOpen ? 'rgba(180,83,9,0.2)' : 'rgba(0,0,0,0.08)'),
+                      background: isNightMode ? (isOpen ? '#000000' : '#000000') : isOpen ? '#FAFAFA' : '#FAFAFA',
+                      borderColor: isNightMode
+                        ? isOpen
+                          ? 'rgba(255,198,76,0.2)'
+                          : 'rgba(255,255,255,0.08)'
+                        : isOpen
+                          ? 'rgba(180,83,9,0.2)'
+                          : 'rgba(0,0,0,0.08)',
                       boxShadow: isOpen
-                        ? (isNightMode ? '0 10px 40px rgba(0,0,0,0.5)' : '0 10px 40px rgba(0,0,0,0.08)')
+                        ? isNightMode
+                          ? '0 10px 40px rgba(0,0,0,0.5)'
+                          : '0 10px 40px rgba(0,0,0,0.08)'
                         : 'none',
                       transition: 'background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease',
                     }}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-5">
-                        {/* Icon */}
                         <div
                           className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500"
                           style={{
-                            background: isOpen 
+                            background: isOpen
                               ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
-                              : (isNightMode ? '#1A1A1A' : '#F5F5F4'),
-                            color: isOpen 
-                              ? '#FFFFFF' 
-                              : (isNightMode ? '#888888' : '#78716C'),
+                              : isNightMode
+                                ? '#1A1A1A'
+                                : '#F5F5F4',
+                            color: isOpen ? '#FFFFFF' : isNightMode ? '#888888' : '#78716C',
                             boxShadow: isOpen ? '0 8px 20px rgba(245,158,11,0.3)' : 'none',
                             transition: 'background 0.5s ease, color 0.5s ease, box-shadow 0.5s ease',
                           }}
@@ -294,37 +287,49 @@ export default function ServicesPageClient() {
                           <Icon />
                         </div>
 
-                        {/* Text */}
                         <div>
                           <h3
                             className="text-lg md:text-xl font-semibold transition-colors duration-500"
                             style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
                           >
-                            {service.label}
+                            {service.title}
                           </h3>
-                          <p
-                            className="mt-1 text-sm transition-colors duration-500"
-                            style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-                          >
-                            {service.tagline}
-                          </p>
+                          {service.description ? (
+                            <p
+                              className="mt-1 text-sm transition-colors duration-500"
+                              style={{ color: isNightMode ? '#888888' : '#6B7280' }}
+                            >
+                              {service.description}
+                            </p>
+                          ) : null}
                         </div>
                       </div>
 
-                      {/* Arrow */}
                       <div
                         className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500"
                         style={{
                           transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                          background: isOpen 
-                            ? (isNightMode ? 'rgba(255,198,76,0.1)' : '#FEF3C7')
-                            : (isNightMode ? '#000000' : '#FAFAFA'),
-                          borderColor: isOpen 
-                            ? (isNightMode ? 'rgba(255,198,76,0.3)' : 'rgba(180,83,9,0.3)')
-                            : (isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'),
-                          color: isOpen 
-                            ? (isNightMode ? '#FFC64C' : '#B45309')
-                            : (isNightMode ? '#666666' : '#9CA3AF'),
+                          background: isOpen
+                            ? isNightMode
+                              ? 'rgba(255,198,76,0.1)'
+                              : '#FEF3C7'
+                            : isNightMode
+                              ? '#000000'
+                              : '#FAFAFA',
+                          borderColor: isOpen
+                            ? isNightMode
+                              ? 'rgba(255,198,76,0.3)'
+                              : 'rgba(180,83,9,0.3)'
+                            : isNightMode
+                              ? 'rgba(255,255,255,0.1)'
+                              : 'rgba(0,0,0,0.1)',
+                          color: isOpen
+                            ? isNightMode
+                              ? '#FFC64C'
+                              : '#B45309'
+                            : isNightMode
+                              ? '#666666'
+                              : '#9CA3AF',
                           transition: 'transform 0.5s ease, background 0.5s ease, border-color 0.5s ease, color 0.5s ease',
                         }}
                       >
@@ -334,11 +339,10 @@ export default function ServicesPageClient() {
                       </div>
                     </div>
 
-                    {/* Expanded Content */}
                     <AnimatePresence initial={false}>
                       {isOpen && (
                         <motion.div
-                          key={`${service.id}-content`}
+                          key={`${service._id}-content`}
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
@@ -349,7 +353,7 @@ export default function ServicesPageClient() {
                             className="pt-8 mt-8 border-t transition-colors duration-500"
                             style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }}
                           >
-                            <ServiceContent id={service.id} isNightMode={isNightMode} />
+                            <SanityServiceExpandedBody service={service} isNightMode={isNightMode} />
                           </div>
                         </motion.div>
                       )}
@@ -362,7 +366,6 @@ export default function ServicesPageClient() {
 
           <StandalonePricingSection isNightMode={isNightMode} />
 
-          {/* Bottom CTA */}
           <motion.div
             className="mt-24 text-center"
             initial={{ opacity: 0 }}
@@ -370,7 +373,7 @@ export default function ServicesPageClient() {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <p 
+            <p
               className="mb-6 transition-colors duration-500"
               style={{ color: isNightMode ? '#888888' : '#6B7280' }}
             >
@@ -403,34 +406,6 @@ export default function ServicesPageClient() {
   )
 }
 
-/* ===== Service Content ===== */
-
-interface ServiceContentProps {
-  id: ServiceKey
-  isNightMode: boolean
-}
-
-function ServiceContent({ id, isNightMode }: ServiceContentProps) {
-  switch (id) {
-    case 'strategy':
-      return <StrategyContent isNightMode={isNightMode} />
-    case 'design':
-      return <DesignContent isNightMode={isNightMode} />
-    case 'dev':
-      return <DevContent isNightMode={isNightMode} />
-    case 'refresh':
-      return <RefreshContent isNightMode={isNightMode} />
-    case 'cms':
-      return <CmsContent isNightMode={isNightMode} />
-    case 'care':
-      return <CareContent isNightMode={isNightMode} />
-    default:
-      return null
-  }
-}
-
-/* ===== Pricing Card ===== */
-
 interface PricingCardProps {
   title: string
   price: string
@@ -445,13 +420,19 @@ function PricingCard({ title, price, description, featured = false, isNightMode 
       className="relative p-5 rounded-xl border transition-all duration-500"
       style={{
         background: featured
-          ? (isNightMode 
-              ? 'linear-gradient(135deg, rgba(255,198,76,0.1) 0%, rgba(217,119,6,0.05) 100%)'
-              : 'linear-gradient(135deg, rgba(254,243,199,0.8) 0%, rgba(255,237,213,0.6) 100%)')
-          : (isNightMode ? '#000000' : '#FAFAFA'),
+          ? isNightMode
+            ? 'linear-gradient(135deg, rgba(255,198,76,0.1) 0%, rgba(217,119,6,0.05) 100%)'
+            : 'linear-gradient(135deg, rgba(254,243,199,0.8) 0%, rgba(255,237,213,0.6) 100%)'
+          : isNightMode
+            ? '#000000'
+            : '#FAFAFA',
         borderColor: featured
-          ? (isNightMode ? 'rgba(255,198,76,0.2)' : 'rgba(217,119,6,0.2)')
-          : (isNightMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'),
+          ? isNightMode
+            ? 'rgba(255,198,76,0.2)'
+            : 'rgba(217,119,6,0.2)'
+          : isNightMode
+            ? 'rgba(255,255,255,0.06)'
+            : 'rgba(0,0,0,0.06)',
         transition: 'background 0.5s ease, border-color 0.5s ease',
       }}
     >
@@ -464,20 +445,20 @@ function PricingCard({ title, price, description, featured = false, isNightMode 
         </span>
       )}
       <div className="flex items-start justify-between gap-3 mb-3">
-        <h4 
+        <h4
           className="font-medium text-sm transition-colors duration-500"
           style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
         >
           {title}
         </h4>
-        <span 
+        <span
           className="text-sm font-semibold whitespace-nowrap transition-colors duration-500"
           style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
         >
           {price}
         </span>
       </div>
-      <p 
+      <p
         className="text-xs leading-relaxed transition-colors duration-500"
         style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
@@ -486,214 +467,3 @@ function PricingCard({ title, price, description, featured = false, isNightMode 
     </div>
   )
 }
-
-function CategoryLabel({ children, isNightMode }: { children: React.ReactNode; isNightMode: boolean }) {
-  return (
-    <h4 
-      className="text-xs font-semibold tracking-wider uppercase mb-4 transition-colors duration-500"
-      style={{ color: isNightMode ? '#666666' : '#9CA3AF' }}
-    >
-      {children}
-    </h4>
-  )
-}
-
-
-/* ===== Content Sections ===== */
-
-function strategyCallLink() {
-  return (
-    <Link
-      href="/contact"
-      onClick={() => trackCTAClick('get_started', 'services')}
-      className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity"
-      style={{ color: '#FFC64C' }}
-    >
-      Book a Strategy Call
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
-    </Link>
-  )
-}
-
-function StrategyContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Before we design anything, we map the site to your business goals, your buyers, and the trust signals that convert them.
-      </p>
-      {strategyCallLink()}
-    </div>
-  )
-}
-
-function DesignContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Original, custom design built around your brand. No templates. No shortcuts. Every layout decision is made with your buyer in mind — so the site earns trust and supports how you actually sell.
-      </p>
-      {strategyCallLink()}
-    </div>
-  )
-}
-
-function DevContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Custom Next.js and WordPress builds. Fast, clean, and easy for your team to update without touching code.
-      </p>
-
-      <div
-        className="py-6 px-6 rounded-xl border"
-        style={{
-          background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
-          borderColor: isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
-        }}
-      >
-        <p
-          className="text-sm md:text-base leading-relaxed transition-colors duration-500"
-          style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.85)' : '#4B5563' }}
-        >
-          Every build includes SEO-friendly architecture, structured data, performance optimization, and mobile standards — built in from day one, not bolted on after.
-        </p>
-      </div>
-
-      <div
-        className="py-8 px-6 rounded-xl border text-center"
-        style={{
-          background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
-          borderColor: isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
-        }}
-      >
-        <p
-          className="text-xs font-semibold tracking-wider uppercase mb-3 transition-colors duration-500"
-          style={{ color: isNightMode ? '#666666' : '#9CA3AF' }}
-        >
-          ENTERPRISE TECHNOLOGY
-        </p>
-        <h3
-          className="text-lg md:text-xl font-semibold mb-4 transition-colors duration-500"
-          style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
-        >
-          Built on the same technology as
-        </h3>
-        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 mb-4">
-          {['Nike', 'Netflix', 'TikTok', 'Notion', 'Target', 'OpenAI'].map((company, index) => (
-            <span
-              key={index}
-              className="text-sm md:text-base font-medium transition-colors duration-500"
-              style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)' }}
-            >
-              {company}
-            </span>
-          ))}
-        </div>
-        <p
-          className="text-sm leading-relaxed mb-3 max-w-2xl mx-auto transition-colors duration-500"
-          style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B7280' }}
-        >
-          We build on Next.js — the framework billion-dollar companies choose when performance and scale matter. You get the same speed, security, and search-friendly structure.
-        </p>
-        <Link
-          href="/faq"
-          className="inline-flex items-center gap-1 text-sm font-medium hover:opacity-80 transition-opacity"
-          style={{ color: '#FFC64C' }}
-        >
-          Why Next.js?
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </Link>
-      </div>
-
-      {strategyCallLink()}
-    </div>
-  )
-}
-
-function RefreshContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Already have a site? We rebuild the structure, design, and performance without starting from scratch where it isn&apos;t needed — and we&apos;ll tell you honestly when a full rebuild is the better move.
-      </p>
-      {strategyCallLink()}
-    </div>
-  )
-}
-
-function CmsContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Sanity, WordPress, and custom CMS setups that give your team control over content without depending on a developer for every change.
-      </p>
-
-      <div className="grid sm:grid-cols-2 gap-3">
-        <PricingCard
-          title="CMS Integration"
-          price="$3,000+"
-          description="Sanity CMS setup with custom schemas for pages, blog, team, and services. Full training included."
-          featured
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Blog System"
-          price="$1,500+"
-          description="Full blog with categories, tags, authors, and structured metadata fields. Write and publish without touching code."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Portfolio / Case Studies"
-          price="$2,000+"
-          description="Dynamic case study pages you can manage. Add new projects as you complete them."
-          isNightMode={isNightMode}
-        />
-        <PricingCard
-          title="Content Migration"
-          price="$500+"
-          description="Move existing content from WordPress, Squarespace, or other platforms into your new CMS."
-          isNightMode={isNightMode}
-        />
-      </div>
-
-      {strategyCallLink()}
-    </div>
-  )
-}
-
-function CareContent({ isNightMode }: { isNightMode: boolean }) {
-  return (
-    <div className="space-y-8">
-      <p
-        className="leading-relaxed transition-colors duration-500"
-        style={{ color: isNightMode ? '#888888' : '#6B7280' }}
-      >
-        Monthly retainers for updates, monitoring, performance improvements, and ongoing support after launch.
-      </p>
-
-      {strategyCallLink()}
-    </div>
-  )
-}
-
-
-

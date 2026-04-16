@@ -111,6 +111,8 @@ export interface ServiceListItem {
   title: string
   slug: string
   description?: string
+  /** Display order from Sanity; lower appears first on /services */
+  order?: number
 }
 
 export interface Service extends ServiceListItem, SEOFields {

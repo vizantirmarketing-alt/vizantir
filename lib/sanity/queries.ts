@@ -75,12 +75,13 @@ export const postBySlugQuery = groq`
 // ============================================
 
 export const allServicesQuery = groq`
-  *[_type == "service"] | order(title asc) {
+  *[_type == "service"] | order(coalesce(order, 999) asc, title asc) {
     _id,
     _updatedAt,
     title,
     "slug": slug.current,
-    description
+    description,
+    order
   }
 `
 
@@ -200,7 +201,7 @@ export const authorBySlugQuery = groq`
 
 export const sitemapQuery = groq`{
   "posts": *[_type == "post"] { "slug": slug.current, _updatedAt, publishedAt },
-  "services": *[_type == "service"] { "slug": slug.current, _updatedAt },
+  "services": *[_type == "service"] | order(coalesce(order, 999) asc, title asc) { "slug": slug.current, _updatedAt },
   "locations": *[_type == "location"] { "slug": slug.current, _updatedAt },
   "categories": *[_type == "category"] { "slug": slug.current, _updatedAt }
 }`
