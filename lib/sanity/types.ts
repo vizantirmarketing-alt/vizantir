@@ -134,6 +134,35 @@ export interface Service extends ServiceListItem, SEOFields {
   relatedServices?: { title: string; slug: string }[]
 }
 
+export interface CaseStudyImage {
+  alt?: string
+  asset?: {
+    _id: string
+    url: string
+  }
+}
+
+export interface CaseStudyListItem {
+  _id: string
+  _updatedAt: string
+  title: string
+  slug: string
+  client?: string
+  industry?: string
+  summary?: string
+  heroImage?: CaseStudyImage
+  stack?: string[]
+  featured?: boolean
+}
+
+export interface CaseStudy extends CaseStudyListItem, SEOFields {
+  gallery?: CaseStudyImage[]
+  challenge?: any[] // PortableText
+  solution?: any[] // PortableText
+  results?: any[] // PortableText
+  siteUrl?: string
+}
+
 // ============================================
 // Location Types (for multi-location businesses)
 // ============================================

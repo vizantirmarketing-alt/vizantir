@@ -1,4 +1,5 @@
 import { author } from './author';
+import { caseStudy } from './caseStudy';
 import { category } from './category';
 import { location } from './location';
 import { page } from './page';
@@ -12,6 +13,7 @@ export const schemaTypes = [
   author,
   post,
   service,
+  caseStudy,
   location,
   category,
   page,

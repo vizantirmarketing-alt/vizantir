@@ -1,0 +1,355 @@
+'use client'
+
+import { useMemo } from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { PortableText, type PortableTextComponents } from '@portabletext/react'
+import { ArrowRight, ExternalLink } from 'lucide-react'
+
+import { useTheme } from '@/contexts/ThemeContext'
+import type { CaseStudy } from '@/lib/sanity/types'
+
+interface CaseStudyPageContentProps {
+  caseStudy: CaseStudy
+}
+
+export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContentProps) {
+  const { isNightMode } = useTheme()
+
+  const colors = useMemo(
+    () => ({
+      bg: isNightMode ? '#000000' : '#FAFAFA',
+      text: isNightMode ? '#F8F8F8' : '#1A1A1A',
+      textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
+      accent: '#FFC64C',
+      cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
+      cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+      divider: isNightMode
+        ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
+        : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+    }),
+    [isNightMode]
+  )
+
+  const ptComponents: PortableTextComponents = useMemo(
+    () => ({
+      block: {
+        normal: ({ children }) => (
+          <p className="mb-4 text-lg leading-relaxed last:mb-0" style={{ color: colors.textMuted }}>
+            {children}
+          </p>
+        ),
+        h2: ({ children }) => (
+          <h3 className="text-2xl font-bold mt-10 mb-4 first:mt-0" style={{ color: colors.text }}>
+            {children}
+          </h3>
+        ),
+        h3: ({ children }) => (
+          <h4 className="text-xl font-semibold mt-8 mb-3" style={{ color: colors.text }}>
+            {children}
+          </h4>
+        ),
+        blockquote: ({ children }) => (
+          <blockquote
+            className="my-6 border-l-4 pl-6 py-1 text-lg italic"
+            style={{ borderColor: colors.accent, color: colors.textMuted }}
+          >
+            {children}
+          </blockquote>
+        ),
+      },
+      list: {
+        bullet: ({ children }) => (
+          <ul className="mb-4 list-disc space-y-2 pl-6 marker:text-[#FFC64C]" style={{ color: colors.textMuted }}>
+            {children}
+          </ul>
+        ),
+        number: ({ children }) => (
+          <ol className="mb-4 list-decimal space-y-2 pl-6 marker:font-semibold marker:text-[#FFC64C]" style={{ color: colors.textMuted }}>
+            {children}
+          </ol>
+        ),
+      },
+      listItem: {
+        bullet: ({ children }) => <li className="leading-relaxed">{children}</li>,
+        number: ({ children }) => <li className="leading-relaxed">{children}</li>,
+      },
+      marks: {
+        link: ({ value, children }) => {
+          const href = typeof value?.href === 'string' ? value.href : ''
+          if (!href) return <span>{children}</span>
+          const external = /^https?:\/\//.test(href)
+          return (
+            <a
+              href={href}
+              className="font-medium underline underline-offset-2 decoration-[#FFC64C]/50 hover:decoration-[#FFC64C]"
+              style={{ color: colors.accent }}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener noreferrer' : undefined}
+            >
+              {children}
+            </a>
+          )
+        },
+      },
+    }),
+    [colors]
+  )
+
+  const hasChallenge = Array.isArray(caseStudy.challenge) && caseStudy.challenge.length > 0
+  const hasSolution = Array.isArray(caseStudy.solution) && caseStudy.solution.length > 0
+  const hasResults = Array.isArray(caseStudy.results) && caseStudy.results.length > 0
+  const hasStack = Array.isArray(caseStudy.stack) && caseStudy.stack.length > 0
+  const hasGallery = Array.isArray(caseStudy.gallery) && caseStudy.gallery.length > 0
+
+  return (
+    <main style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
+      <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-16 md:pb-20 overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-30"
+          style={{
+            background: isNightMode
+              ? 'radial-gradient(ellipse at top right, rgba(255,198,76,0.12), transparent 55%)'
+              : 'radial-gradient(ellipse at top right, rgba(255,198,76,0.18), transparent 55%)',
+          }}
+        />
+        <div className="relative z-10 mx-auto max-w-5xl">
+          <Link
+            href="/case-studies"
+            className="mb-8 inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-80"
+            style={{ color: colors.textMuted }}
+          >
+            <span aria-hidden>←</span>
+            All case studies
+          </Link>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+            <span
+              className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
+              style={{ color: colors.accent }}
+            >
+              Case Study
+            </span>
+            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
+              {caseStudy.title}
+            </h1>
+            {(caseStudy.client || caseStudy.industry) ? (
+              <p className="mt-5 text-sm uppercase tracking-[0.2em]" style={{ color: colors.textMuted }}>
+                {[caseStudy.client, caseStudy.industry].filter(Boolean).join(' • ')}
+              </p>
+            ) : null}
+            {caseStudy.summary ? (
+              <p className="mt-6 max-w-3xl text-lg leading-relaxed" style={{ color: colors.textMuted }}>
+                {caseStudy.summary}
+              </p>
+            ) : null}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              {caseStudy.siteUrl ? (
+                <a
+                  href={caseStudy.siteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-80"
+                  style={{ color: colors.accent }}
+                >
+                  Visit live site
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              ) : null}
+            </div>
+          </motion.div>
+          {caseStudy.heroImage?.asset?.url ? (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+              className="mt-10 overflow-hidden rounded-2xl border"
+              style={{ borderColor: colors.cardBorder, background: colors.cardBg }}
+            >
+              <img
+                src={caseStudy.heroImage.asset.url}
+                alt={caseStudy.heroImage.alt || caseStudy.title}
+                className="w-full object-cover"
+              />
+            </motion.div>
+          ) : null}
+        </div>
+      </section>
+
+      <div className="h-px w-full" style={{ background: colors.divider }} />
+
+      {hasGallery ? (
+        <>
+          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+            <div className="mx-auto max-w-6xl">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45 }}
+                className="mb-10 text-center md:text-left"
+              >
+                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
+                  Gallery
+                </span>
+                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                  Project visuals
+                </h2>
+              </motion.div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {caseStudy.gallery!.map((image, index) => (
+                  <motion.div
+                    key={`${image.asset?._id || 'gallery'}-${index}`}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.04 }}
+                    className="overflow-hidden rounded-2xl border"
+                    style={{ borderColor: colors.cardBorder, background: colors.cardBg }}
+                  >
+                    {image.asset?.url ? (
+                      <img
+                        src={image.asset.url}
+                        alt={image.alt || `${caseStudy.title} gallery image ${index + 1}`}
+                        className="h-64 w-full object-cover md:h-72"
+                        loading="lazy"
+                      />
+                    ) : null}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+          <div className="h-px w-full" style={{ background: colors.divider }} />
+        </>
+      ) : null}
+
+      {hasChallenge ? (
+        <>
+          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+            <div className="mx-auto max-w-3xl">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45 }}
+              >
+                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
+                  Challenge
+                </span>
+                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                  The problem to solve
+                </h2>
+                <PortableText value={caseStudy.challenge!} components={ptComponents} />
+              </motion.div>
+            </div>
+          </section>
+          <div className="h-px w-full" style={{ background: colors.divider }} />
+        </>
+      ) : null}
+
+      {hasSolution ? (
+        <>
+          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+            <div className="mx-auto max-w-3xl">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45 }}
+              >
+                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
+                  Solution
+                </span>
+                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                  What we built
+                </h2>
+                <PortableText value={caseStudy.solution!} components={ptComponents} />
+              </motion.div>
+            </div>
+          </section>
+          <div className="h-px w-full" style={{ background: colors.divider }} />
+        </>
+      ) : null}
+
+      {hasResults ? (
+        <>
+          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+            <div className="mx-auto max-w-3xl">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45 }}
+              >
+                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
+                  Results
+                </span>
+                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                  Impact and outcomes
+                </h2>
+                <PortableText value={caseStudy.results!} components={ptComponents} />
+              </motion.div>
+            </div>
+          </section>
+          <div className="h-px w-full" style={{ background: colors.divider }} />
+        </>
+      ) : null}
+
+      {hasStack ? (
+        <>
+          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+            <div className="mx-auto max-w-4xl">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45 }}
+                className="mb-10 text-center md:text-left"
+              >
+                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
+                  Stack
+                </span>
+                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                  Technologies used
+                </h2>
+              </motion.div>
+              <div className="flex flex-wrap gap-3">
+                {caseStudy.stack!.map((item, index) => (
+                  <motion.span
+                    key={item}
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: index * 0.03 }}
+                    className="rounded-full border px-4 py-2 text-sm font-medium"
+                    style={{
+                      background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                      color: colors.textMuted,
+                      borderColor: colors.cardBorder,
+                    }}
+                  >
+                    {item}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+          </section>
+          <div className="h-px w-full" style={{ background: colors.divider }} />
+        </>
+      ) : null}
+
+      <section className="px-6 py-16 md:px-12 md:pb-24 lg:px-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <Link
+            href="/case-studies"
+            className="inline-flex items-center gap-2 text-base font-semibold transition-colors hover:opacity-80"
+            style={{ color: colors.accent }}
+          >
+            Back to case studies
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+    </main>
+  )
+}

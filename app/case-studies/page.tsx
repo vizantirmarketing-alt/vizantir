@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { sanityFetch } from '@/lib/sanity/client'
-import { siteSettingsQuery } from '@/lib/sanity/queries'
+import { allCaseStudiesQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
 
@@ -13,6 +13,7 @@ const caseStudiesBreadcrumbGraph = graphSchema([
 import type { SiteSettings } from '@/lib/sanity/types'
 import { getCanonicalUrl } from '@/lib/utils/metadata'
 import CaseStudiesClient from './CaseStudiesClient'
+import type { CaseStudyListItem } from '@/lib/sanity/types'
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
@@ -51,28 +52,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CaseStudiesPage() {
-  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
-  
+  const [settings, caseStudies] = await Promise.all([
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<CaseStudyListItem[]>(allCaseStudiesQuery, {}, { tags: ['case-studies'] }),
+  ])
+
   if (!settings) {
     return (
       <>
         <JsonLd id="ld-breadcrumb" data={caseStudiesBreadcrumbGraph} />
-        <CaseStudiesClient />
+        <CaseStudiesClient caseStudies={caseStudies} />
       </>
     )
   }
 
   const url = getCanonicalUrl(settings, '/case-studies')
-
-  const caseStudies = [
-    { name: 'Pink Salt Salon', url: 'https://pinksaltsalonandspa.com' },
-    { name: 'Eloraé Nails', url: 'https://www.eloraenails.com' },
-    { name: 'Essence of Watches', url: 'https://essenceofwatches.com' },
-    { name: 'Éclat Lounge', url: 'https://eclatloungelv.com' },
-    { name: 'Fuji Omakase', url: 'https://fujiomakase.com' },
-    { name: 'Pétale & Fête', url: 'https://petaleandfete.com' },
-    { name: 'High Roller Legal', url: 'https://highrollerlegal.com' },
-  ]
 
   const pageGraph = graphSchema([
     collectionPageSchema({
@@ -81,8 +75,8 @@ export default async function CaseStudiesPage() {
       description: 'Modern websites built to load fast, rank well, and convert visitors',
       siteUrl: settings.siteUrl,
       items: caseStudies.map(cs => ({
-        name: cs.name,
-        url: cs.url,
+        name: cs.title,
+        url: `${settings.siteUrl}/case-studies/${cs.slug}`,
       })),
     }),
   ])
@@ -91,7 +85,7 @@ export default async function CaseStudiesPage() {
     <>
       <JsonLd id="ld-breadcrumb" data={caseStudiesBreadcrumbGraph} />
       {pageGraph && <JsonLd id="ld-case-studies" data={pageGraph} />}
-      <CaseStudiesClient />
+      <CaseStudiesClient caseStudies={caseStudies} />
     </>
   )
 }

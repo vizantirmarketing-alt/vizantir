@@ -1,108 +1,31 @@
 'use client'
 
-import { useState, memo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight, ExternalLink } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import { trackCTAClick } from '@/lib/analytics'
+import type { CaseStudyListItem } from '@/lib/sanity/types'
 
-interface CaseStudy {
-  slug?: string
-  detailHref?: string
-  title: string
-  category: string
-  description: string
-  longDescription?: string
-  image: string
-  link: string
-  services: string[]
-  results?: Array<{ label: string; value: string }>
+interface CaseStudiesClientProps {
+  caseStudies: CaseStudyListItem[]
 }
 
-const CaseStudiesClient = () => {
+const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   const { isNightMode } = useTheme()
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
 
-  const caseStudies: CaseStudy[] = [
-    {
-      title: 'Meridian Row',
-      category: 'Commercial Leasing',
-      description: 'Premium commercial real estate website for a 40-55k SF retail, dining, and service development. Features interactive availability maps, property galleries, and broker inquiry system. Built to attract high-quality tenants and streamline leasing.',
-      image: '/meridian-row.png',
-      link: 'https://meridianrow.com',
-      services: ['Web Design', 'Next.js Development', 'Commercial Real Estate', 'Inquiry System'],
-    },
-    {
-      title: 'Pink Salt Salon',
-      category: 'Beauty & Wellness',
-      description: 'Luxury nail salon website with dark theme, elegant typography, and seamless booking integration. Built on Next.js for lightning-fast performance and SEO optimization.',
-      image: '/ps.png',
-      link: 'https://pinksaltsalonandspa.com',
-      services: ['Web Design', 'Next.js Development', 'SEO', 'Booking Integration'],
-    },
-    {
-      title: 'Eloraé Nails',
-      category: 'Beauty & Wellness',
-      description: 'Premium website for independent beauty professionals—nail techs, estheticians, lash artists. Minimal pages, maximum impact. Custom Next.js build with full service menu, gallery, and booking integration. Not a drag-and-drop template.',
-      image: '/elorae-nails.png',
-      link: 'https://www.eloraenails.com',
-      services: ['Web Design', 'Next.js Development', 'Booking Integration'],
-    },
-    {
-      title: 'Essence of Watches',
-      category: 'Luxury E-Commerce',
-      description: 'Full custom pre-owned luxury watch e-commerce platform built from the ground up — not a template, not Shopify. Features include authenticated inventory with Sanity CMS, Google and Apple OAuth, cart and wishlist with localStorage persistence, per-watch authentication certificates, price transparency with market value indicators, buyer protection infrastructure, image zoom lightbox, multi-language support in 5 languages (EN, JA, DE, KO, ZH), 12 SEO-optimized blog posts, a 167-entry searchable Rolex reference guide, dynamic sitemap, and transactional email via Resend. Built to the standard of specialist single-dealer platforms like WatchBox and Bob\'s Watches — at a fraction of the infrastructure cost.',
-      image: '/eow.png',
-      link: 'https://www.essenceofwatches.com',
-      services: ['E-Commerce', 'Web Design', 'Next.js Development', 'Payment Integration'],
-    },
-    {
-      title: 'Éclat Lounge',
-      category: 'Hospitality',
-      description: 'Upscale cocktail lounge website designed around reservations, recurring events, and VIP experiences. Built as a custom hospitality system to support programming, high-intent bookings, and mobile-first traffic for Las Vegas nightlife.',
-      image: '/eclat-lounge-lv.png',
-      link: 'https://eclatloungelv.com',
-      services: ['Web Design', 'Hospitality Website', 'Reservation System', 'Events & VIP'],
-    },
-    {
-      title: 'Fuji Omakase',
-      category: 'Hospitality',
-      description: 'Michelin-starred omakase restaurant website with immersive animations, editorial design, and premium booking experience. Showcasing culinary excellence through elegant design.',
-      image: '/fuji-omakase.png',
-      link: 'https://fujiomakase.com',
-      services: ['Web Design', 'Next.js Development', 'Animation', 'Booking System'],
-    },
-    {
-      slug: 'petale-et-fete',
-      title: 'Pétale & Fête',
-      category: 'Events & Weddings',
-      description: 'Las Vegas event planning website with inquiry system, portfolio gallery, and vendor coordination. Built for high-end weddings, corporate events, and private celebrations.',
-      longDescription: 'Pétale & Fête needed a website that captured the elegance and romance of their Las Vegas event planning services. We designed a soft, feminine aesthetic with organic shapes, beautiful typography, and a portfolio showcase for their celebrations.',
-      image: '/petale-fete.png',
-      link: 'https://petaleandfete.com',
-      services: ['Web Design', 'Development', 'Portfolio Gallery'],
-      results: [
-        { label: 'PageSpeed Score', value: '94+' },
-        { label: 'Load Time', value: '<1s' },
-      ],
-    },
-    {
-      title: 'High Roller Legal',
-      category: 'Legal',
-      description: 'Premium personal injury law firm website with sophisticated typography, trial-ready positioning, and conversion-optimized design. Built to convey authority and win serious injury cases.',
-      image: '/high-roller-legal.png',
-      link: 'https://highrollerlegal.com',
-      services: ['Web Design', 'Next.js Development', 'SEO', 'Conversion Optimization'],
-    },
-  ]
-
-  const categories = ['All', ...Array.from(new Set(caseStudies.map(cs => cs.category)))]
+  const categories = useMemo(() => {
+    const industryList = caseStudies
+      .map((cs) => cs.industry)
+      .filter((industry): industry is string => Boolean(industry))
+    return ['All', ...Array.from(new Set(industryList))]
+  }, [caseStudies])
 
   const filteredStudies = selectedCategory === 'All' 
     ? caseStudies 
-    : caseStudies.filter(cs => cs.category === selectedCategory)
+    : caseStudies.filter(cs => cs.industry === selectedCategory)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -206,100 +129,73 @@ const CaseStudiesClient = () => {
                 variants={itemVariants}
                 className="group"
               >
-                {/* Mockup Image */}
-                <div className="relative mb-8 transition-transform duration-300 group-hover:scale-[1.02]">
-                  {study.detailHref ? (
-                    <Link href={study.detailHref} className="block relative aspect-[4/3] w-full group">
-                      <Image
-                        src={study.image}
-                        alt={study.title}
-                        fill
-                        className="object-contain relative z-10"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        loading={index < 2 ? "eager" : "lazy"}
-                        priority={index < 2}
-                      />
-                    </Link>
-                  ) : (
-                    <div className="relative aspect-[4/3] w-full group">
-                      <Image
-                        src={study.image}
-                        alt={study.title}
-                        fill
-                        className="object-contain relative z-10"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        loading={index < 2 ? "eager" : "lazy"}
-                        priority={index < 2}
+                <Link
+                  href={`/case-studies/${study.slug}`}
+                  className="group block rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    background: isNightMode ? '#0A0A0A' : '#FFFFFF',
+                    borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+                  }}
+                >
+                  {study.heroImage?.asset?.url ? (
+                    <div className="mb-6 overflow-hidden rounded-xl border" style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }}>
+                      <img
+                        src={study.heroImage.asset.url}
+                        alt={study.heroImage.alt || study.title}
+                        className="h-56 w-full object-cover"
+                        loading={index < 2 ? 'eager' : 'lazy'}
                       />
                     </div>
-                  )}
-                </div>
+                  ) : null}
 
-                  {/* Project Info */}
                   <div className="space-y-4">
-                    <p 
-                      className="text-sm tracking-[0.2em] uppercase"
-                      style={{ color: '#FFC64C' }}
-                    >
-                      {study.category}
-                    </p>
-                    {study.detailHref ? (
-                      <Link href={study.detailHref}>
-                        <h3 
-                          className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
-                          style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
-                        >
-                          {study.title}
-                        </h3>
-                      </Link>
-                    ) : (
-                      <h3 
-                        className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
-                        style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
-                      >
-                        {study.title}
-                      </h3>
-                    )}
-                    <p
-                      suppressHydrationWarning
-                      className="leading-relaxed transition-colors duration-500"
-                      style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-                    >
-                      {study.description}
-                    </p>
-
-                    {/* Services Tags */}
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      {study.services.map((service) => (
-                        <span
-                          key={service}
-                          className="px-3 py-1 rounded-full text-xs font-medium transition-colors duration-500"
-                          style={{
-                            background: isNightMode
-                              ? 'rgba(255, 255, 255, 0.05)'
-                              : 'rgba(0, 0, 0, 0.05)',
-                            color: isNightMode ? '#A0A0A0' : '#6B6B6B',
-                            border: isNightMode
-                              ? '1px solid rgba(255, 255, 255, 0.1)'
-                              : '1px solid rgba(0, 0, 0, 0.1)',
-                          }}
-                        >
-                          {service}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* CTA */}
-                    <a
-                      href={study.link}
-                      {...(study.link !== '#' ? { target: '_blank', rel: 'noopener noreferrer' } : { onClick: (e) => e.preventDefault() })}
-                      className="inline-flex items-center gap-2 hover:text-[#FFC64C] transition-colors duration-300 mt-4 group/link"
+                    {study.industry ? (
+                      <p className="text-sm tracking-[0.2em] uppercase" style={{ color: '#FFC64C' }}>
+                        {study.industry}
+                      </p>
+                    ) : null}
+                    <h3
+                      className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
                       style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                     >
-                      {study.link === '#' ? 'Coming Soon' : 'View Live Site'}
-                      {study.link !== '#' && <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />}
-                    </a>
+                      {study.title}
+                    </h3>
+                    {study.client ? (
+                      <p className="text-sm font-medium uppercase tracking-[0.15em]" style={{ color: isNightMode ? '#D1D5DB' : '#4B5563' }}>
+                        {study.client}
+                      </p>
+                    ) : null}
+                    {study.summary ? (
+                      <p className="leading-relaxed transition-colors duration-500" style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}>
+                        {study.summary}
+                      </p>
+                    ) : null}
+                    {study.stack?.length ? (
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {study.stack.map((item) => (
+                          <span
+                            key={item}
+                            className="px-3 py-1 rounded-full text-xs font-medium transition-colors duration-500"
+                            style={{
+                              background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                              color: isNightMode ? '#A0A0A0' : '#6B6B6B',
+                              border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+                            }}
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                    <span
+                      className="inline-flex items-center gap-2 font-semibold transition-colors duration-300 group-hover:text-[#FFC64C]"
+                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                    >
+                      View case study
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </span>
                   </div>
+                </Link>
                 </motion.div>
               ))}
           </motion.div>

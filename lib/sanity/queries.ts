@@ -111,6 +111,66 @@ export const serviceBySlugQuery = groq`
 `
 
 // ============================================
+// Case Studies
+// ============================================
+
+export const allCaseStudiesQuery = groq`
+  *[_type == "caseStudy"] | order(featured desc, _updatedAt desc) {
+    _id,
+    _updatedAt,
+    title,
+    "slug": slug.current,
+    client,
+    industry,
+    summary,
+    heroImage{
+      alt,
+      asset->{
+        _id,
+        url
+      }
+    },
+    stack,
+    featured
+  }
+`
+
+export const caseStudyBySlugQuery = groq`
+  *[_type == "caseStudy" && slug.current == $slug][0] {
+    _id,
+    _updatedAt,
+    title,
+    "slug": slug.current,
+    client,
+    industry,
+    summary,
+    heroImage{
+      alt,
+      asset->{
+        _id,
+        url
+      }
+    },
+    gallery[]{
+      alt,
+      asset->{
+        _id,
+        url
+      }
+    },
+    challenge,
+    solution,
+    results,
+    stack,
+    siteUrl,
+    featured,
+    "metaTitle": seo.metaTitle,
+    "metaDescription": seo.metaDescription,
+    "ogImageUrl": seo.ogImage.asset->url
+  }
+`
+
+// ============================================
 // Locations (for multi-location businesses)
 // ============================================
 
