@@ -1838,73 +1838,116 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir Team',
     metaDescription: 'Break down the hidden costs of WordPress ownership including hosting, plugins, security, and maintenance. Learn why a $3k site becomes $10k+ over time.',
     content: `
-    <p>When clients tell us they can get a WordPress site for $3,000, we don't argue. They're right. But that $3,000 is just the down payment.</p>
-    
-    <h2>The Initial Build: $2,500 - $5,000</h2>
-    <p>This is the number everyone focuses on. A freelancer or small agency builds your WordPress site, installs a theme, configures some plugins, adds your content, and launches. Done.</p>
-    <p>But the spending has just begun.</p>
-    
-    <h2>Year One: The Hidden Costs</h2>
-    
-    <h3>Hosting: $240 - $600/year</h3>
-    <p>That $5/month shared hosting won't cut it for a business site. You need managed WordPress hosting for decent speed and security. Budget $20-50/month.</p>
-    
-    <h3>Premium Theme: $50 - $200</h3>
-    <p>Most quality themes require a one-time purchase. Some require annual renewal for updates and support.</p>
-    
-    <h3>Essential Plugins: $300 - $800/year</h3>
-    <p>The good plugins aren't free:</p>
-    <ul>
-      <li>SEO plugin (Yoast/RankMath Pro): $99-199/year</li>
-      <li>Security plugin (Wordfence/Sucuri): $99-199/year</li>
-      <li>Backup plugin: $50-100/year</li>
-      <li>Forms plugin: $50-100/year</li>
-      <li>Speed optimization: $50-100/year</li>
-    </ul>
-    
-    <h3>Maintenance: $1,200 - $3,600/year</h3>
-    <p>WordPress, themes, and plugins need regular updates. Security patches drop constantly. Someone needs to apply these updates, test that nothing broke, and fix conflicts when they arise.</p>
-    <p>Budget 2-5 hours per month at $75-150/hour if you're hiring it out. Or spend that time yourself instead of running your business.</p>
-    
-    <h2>The Emergency Costs</h2>
-    <p>These aren't "if" – they're "when":</p>
-    
-    <h3>Site Got Hacked: $500 - $2,000</h3>
-    <p>Malware cleanup, security audit, restoring from backup, hardening against future attacks. This happens more often than you'd think.</p>
-    
-    <h3>Plugin Conflict Crashed the Site: $200 - $500</h3>
-    <p>An update broke something. Now you need emergency developer time to diagnose and fix it.</p>
-    
-    <h3>Site is Suddenly Slow: $300 - $800</h3>
-    <p>Database bloat, plugin conflicts, hosting issues. Performance optimization isn't a one-time thing.</p>
-    
-    <h2>The Three-Year Total</h2>
-    <p>Let's add it up conservatively:</p>
-    <ul>
-      <li>Initial build: $3,500</li>
-      <li>Hosting (3 years): $1,200</li>
-      <li>Premium plugins (3 years): $1,500</li>
-      <li>Maintenance (3 years): $5,400</li>
-      <li>One hack + two emergencies: $1,500</li>
-    </ul>
-    <p><strong>Three-year total: $13,100</strong></p>
-    <p>That $3,000 site actually cost over $13,000. And you still have a WordPress site that needs ongoing care.</p>
-    
-    <h2>The Next.js Alternative</h2>
-    <p>A custom Next.js site at $15,000-25,000 seems expensive upfront. But here's the three-year cost:</p>
-    <ul>
-      <li>Initial build: $20,000</li>
-      <li>Hosting (Vercel): $0-240/year = $720</li>
-      <li>Plugins: $0</li>
-      <li>Maintenance: Near zero</li>
-      <li>Security emergencies: Virtually none</li>
-    </ul>
-    <p><strong>Three-year total: ~$21,000</strong></p>
-    <p>For $8,000 more, you get a faster site, better security, no maintenance headaches, and three years of your time back.</p>
-    
-    <h2>The Real Question</h2>
-    <p>It's not "how much does a website cost?" It's "how much does owning this website cost over time?"</p>
-    <p>When you factor in total cost of ownership, custom development often wins.</p>
+
+<p>When a client tells us they can get a WordPress site for $3,000, we don't argue. They're right. But $3,000 is the down payment, not the total cost of ownership. Here's what the next three years actually look like.</p>
+
+<h2>The Initial Build: $2,500 – $5,000</h2>
+
+<p>This is the number everyone focuses on. A freelancer or small agency builds a WordPress site, installs a theme, configures plugins, adds your content, launches. Done.</p>
+
+<p>Then the recurring costs begin.</p>
+
+<h2>Year One: The Real Numbers</h2>
+
+<h3>Hosting: $360 – $1,200/year</h3>
+
+<p>Shared hosting at $3–$10/month is inadequate for a business site. Managed WordPress hosting is what you actually need for acceptable performance. Kinsta starts at $35/month and WP Engine at roughly the same. That's $360–$1,200/year depending on traffic and plan tier.</p>
+
+<p>Source: Kinsta and WP Engine published pricing (2026).</p>
+
+<h3>Premium Theme: $50 – $200</h3>
+
+<p>Most quality themes are a one-time purchase. Some require annual renewal for updates and support.</p>
+
+<h3>Essential Plugins: $200 – $1,000/year</h3>
+
+<p>The plugins most business sites actually need are not free. Codeable's 2026 pricing analysis puts plugin license costs at $200–$1,000/year across common business stacks. Typical line items:</p>
+
+<ul>
+  <li>SEO plugin (Yoast Premium, Rank Math Pro): $99–$229/year</li>
+  <li>Security plugin (Wordfence, Sucuri): $199–$499/year</li>
+  <li>Backup plugin: $50–$100/year</li>
+  <li>Forms plugin (Gravity Forms, WPForms): $59–$259/year</li>
+  <li>Page builder (Elementor Pro, Divi): $59–$199/year</li>
+</ul>
+
+<h3>Maintenance: $1,200 – $6,000/year</h3>
+
+<p>WordPress core, themes, and plugins need regular updates. Each update needs to be tested so it doesn't break the site. This happens monthly at minimum.</p>
+
+<p>The 2026 WordPress maintenance market ranges from $30/month (automated-only) to $5,000+/month (enterprise). For a business site with real stakes, Codeable's market analysis puts realistic maintenance at $140–$500/month — $1,680–$6,000/year.</p>
+
+<p>Do it yourself and you pay with your time instead of money.</p>
+
+<h2>The Emergency Costs</h2>
+
+<p>These aren't hypothetical.</p>
+
+<h3>Security Incidents: $200 – $2,000+</h3>
+
+<p>Codeable's 2025 data puts WordPress breach recovery at $200–$2,000+ depending on severity. A Melapress industry survey cited by Codeable found that 64% of WordPress professionals had experienced a breach, with most occurring on sites without structured maintenance.</p>
+
+<h3>Plugin Conflicts That Crash the Site: $200 – $500</h3>
+
+<p>An update breaks something. Now you need emergency developer time to diagnose and fix it.</p>
+
+<h3>Performance Degradation: $500 – $2,000</h3>
+
+<p>WordPress sites slow down as plugins accumulate and databases grow. Performance optimization is periodic maintenance, not a one-time task.</p>
+
+<h2>The Three-Year Total</h2>
+
+<p>Conservative math on a $3,500 WordPress build:</p>
+
+<ul>
+  <li>Initial build: $3,500</li>
+  <li>Managed hosting ($40/month × 36): $1,440</li>
+  <li>Plugin renewals ($400/year × 3): $1,200</li>
+  <li>Maintenance ($250/month × 36): $9,000</li>
+  <li>One security incident + one plugin emergency: $1,500</li>
+</ul>
+
+<p><strong>Three-year total: approximately $16,640.</strong></p>
+
+<p>That $3,500 site actually costs $16K+ over three years. And at the end of it, you still have a WordPress site that needs ongoing attention.</p>
+
+<h2>The Next.js Alternative</h2>
+
+<p>A custom Next.js build at Vizantir starts at $15,000. Three-year math looks different:</p>
+
+<ul>
+  <li>Initial build: $15,000</li>
+  <li>Hosting on Vercel Pro ($20/month × 36): $720 (many marketing sites stay on the free Hobby tier for personal projects, but commercial use requires Pro)</li>
+  <li>Plugin licenses: $0 — there are no plugins</li>
+  <li>Maintenance: typically lower than comparable WordPress care because there's less surface area to patch — budget $100–$300/month depending on scope</li>
+  <li>Security incidents: far less likely. No plugin ecosystem to exploit, no admin login exposed to the internet. Not zero risk — dependencies still need updating — but a structurally smaller attack surface</li>
+</ul>
+
+<p><strong>Three-year total: approximately $20,000–$26,000</strong> depending on maintenance scope.</p>
+
+<p>Source: Vercel published pricing (2026).</p>
+
+<h2>What the Math Actually Says</h2>
+
+<p>The $3,500 WordPress site and the $15,000 Next.js site end up in the same cost neighborhood over three years. The WordPress site might even be slightly more expensive once you factor in one security incident and realistic maintenance.</p>
+
+<p>What you get for roughly the same total spend:</p>
+
+<ul>
+  <li>A faster site (performance affects conversion — Google's own research puts mobile abandonment at 53% past 3 seconds)</li>
+  <li>Fewer moving parts to break</li>
+  <li>A codebase your developer can actually maintain five years from now</li>
+  <li>Less recurring maintenance burden on your team</li>
+</ul>
+
+<h2>The Real Question</h2>
+
+<p>It's not "how much does a website cost?" It's "how much does owning this website cost over time, and what does it give me back?"</p>
+
+<p>When you factor in total cost of ownership and performance, the premium build often wins on the economics alone. When you factor in how the site represents your brand to clients deciding whether to trust you with significant money, the argument gets stronger.</p>
+
+<p>Want the version of this math specific to your business? <a href="/contact">Book a strategy call.</a></p>
+
     `,
   },
   // Billion Dollar Companies Use Next.js
@@ -2060,121 +2103,133 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir Team',
     metaDescription: 'Understand exactly what goes into a premium custom website. From strategy to deployment, here\'s where your $30,000 investment actually goes.',
     content: `
-    <p>When we quote $30,000 for a website, some people blink. Others nod. The difference is usually understanding what that number actually represents.</p>
-    <p>This isn't a criticism of anyone who's surprised – web development pricing is genuinely opaque. So let's open it up.</p>
-    
-    <h2>Phase 1: Discovery & Strategy (10-15% of budget)</h2>
-    
-    <h3>What Happens</h3>
-    <p>Before we write a single line of code, we need to understand your business deeply. Who are your customers? What do competitors do well (and poorly)? What actions should visitors take? What does success look like?</p>
-    
-    <h3>Deliverables</h3>
-    <ul>
-      <li>Competitive analysis</li>
-      <li>User journey mapping</li>
-      <li>Site architecture and navigation</li>
-      <li>Content strategy</li>
-      <li>Technical requirements</li>
-    </ul>
-    
-    <h3>Why It Matters</h3>
-    <p>Skipping strategy is how you end up with a pretty site that doesn't convert. This phase prevents expensive mistakes later.</p>
-    
-    <h2>Phase 2: Design (20-25% of budget)</h2>
-    
-    <h3>What Happens</h3>
-    <p>We design every page, every state, every interaction. Not picking a template – actually designing from scratch based on your brand, your goals, and your users.</p>
-    
-    <h3>Deliverables</h3>
-    <ul>
-      <li>Wireframes for all key pages</li>
-      <li>Full visual designs (desktop and mobile)</li>
-      <li>Interactive prototypes</li>
-      <li>Design system and component library</li>
-      <li>Multiple revision rounds</li>
-    </ul>
-    
-    <h3>Why It Matters</h3>
-    <p>Design isn't decoration. It's how users understand your brand, navigate your content, and decide whether to trust you. Custom design builds credibility that templates can't match.</p>
-    
-    <h2>Phase 3: Development (35-40% of budget)</h2>
-    
-    <h3>What Happens</h3>
-    <p>This is where designs become reality. Every component hand-coded in React. Every animation crafted. Every interaction polished.</p>
-    
-    <h3>Deliverables</h3>
-    <ul>
-      <li>Clean, maintainable Next.js codebase</li>
-      <li>Responsive implementation (all screen sizes)</li>
-      <li>Custom animations and interactions</li>
-      <li>CMS integration (if needed)</li>
-      <li>Third-party integrations</li>
-      <li>Performance optimization</li>
-    </ul>
-    
-    <h3>Why It Matters</h3>
-    <p>This is the craft. The difference between a site that feels premium and one that feels cheap is in the development details – smooth animations, fast transitions, pixel-perfect implementation.</p>
-    
-    <h2>Phase 4: Content & SEO (10-15% of budget)</h2>
-    
-    <h3>What Happens</h3>
-    <p>Content gets structured for both humans and search engines. Meta tags, schema markup, heading hierarchy, image optimization – the invisible work that determines whether Google shows your site.</p>
-    
-    <h3>Deliverables</h3>
-    <ul>
-      <li>SEO architecture</li>
-      <li>Meta tags and Open Graph setup</li>
-      <li>Schema markup</li>
-      <li>Content migration (if applicable)</li>
-      <li>Image optimization</li>
-    </ul>
-    
-    <h3>Why It Matters</h3>
-    <p>A beautiful site nobody finds is worthless. SEO foundations built during development are far more effective than trying to bolt them on later.</p>
-    
-    <h2>Phase 5: Testing & QA (5-10% of budget)</h2>
-    
-    <h3>What Happens</h3>
-    <p>We test on real devices, real browsers, real network conditions. We break things intentionally to make sure they don't break accidentally.</p>
-    
-    <h3>Deliverables</h3>
-    <ul>
-      <li>Cross-browser testing</li>
-      <li>Mobile device testing</li>
-      <li>Performance audits (Core Web Vitals)</li>
-      <li>Accessibility review</li>
-      <li>Bug fixes and polish</li>
-    </ul>
-    
-    <h3>Why It Matters</h3>
-    <p>Finding bugs before launch is cheap. Finding them after launch – when customers are bouncing – is expensive.</p>
-    
-    <h2>Phase 6: Deployment & Launch (5% of budget)</h2>
-    
-    <h3>What Happens</h3>
-    <p>We deploy to Vercel, configure domains, set up analytics, verify everything works in production, and hand over the keys.</p>
-    
-    <h3>Deliverables</h3>
-    <ul>
-      <li>Production deployment</li>
-      <li>Domain and DNS configuration</li>
-      <li>Analytics setup</li>
-      <li>Documentation</li>
-      <li>Training (if needed)</li>
-    </ul>
-    
-    <h2>What You're Really Buying</h2>
-    <p>You're not buying a website. You're buying:</p>
-    <ul>
-      <li><strong>Expertise</strong> – Years of experience knowing what works</li>
-      <li><strong>Time</strong> – 200-400 hours of focused professional work</li>
-      <li><strong>Strategy</strong> – A site that achieves business goals, not just looks nice</li>
-      <li><strong>Quality</strong> – Craft that builds trust with your customers</li>
-      <li><strong>Peace of mind</strong> – A site that won't break, won't get hacked, won't need constant maintenance</li>
-    </ul>
-    
-    <h2>Is It Worth It?</h2>
-    <p>That depends on what your website needs to do. If it's a brochure that sits there, probably not. If it's a core business asset that needs to attract customers, convert leads, and represent your brand – a $30k investment that works is infinitely more valuable than a $3k site that doesn't.</p>
+
+<p>When we quote $30,000 for a website, some people blink. Others nod. The difference is usually whether they understand what that number actually represents.</p>
+
+<p>Web development pricing is genuinely opaque — most agencies won't publish their numbers. So let's open this one up.</p>
+
+<h2>Market Context First</h2>
+
+<p>$30,000 isn't an outlier. For custom Next.js marketing sites in 2026, published industry data from Naturaily puts the typical range at $15,000 to $40,000 for small-to-mid projects, and $50,000 to $200,000+ for advanced builds with SaaS dashboards, e-commerce, or multilingual systems. Premium US and UK agencies bill senior development work at $150 to $300 per hour.</p>
+
+<p>A $30,000 project at those rates represents roughly 120 to 200 hours of senior-level work. That's what you're buying. Here's where those hours actually go.</p>
+
+<h2>Phase 1: Discovery and Strategy (10–15% of budget)</h2>
+
+<p><strong>What happens:</strong> Before a single line of code, we need to understand your business. Who are your customers? What do competitors do well — and badly? What actions should visitors take? What does success actually look like?</p>
+
+<p><strong>Deliverables:</strong></p>
+<ul>
+  <li>Competitive analysis across 5–10 direct competitors</li>
+  <li>User journey mapping for primary conversion paths</li>
+  <li>Site architecture and navigation</li>
+  <li>Content strategy and SEO keyword targets</li>
+  <li>Technical requirements and integration scoping</li>
+</ul>
+
+<p><strong>Why it matters:</strong> Skipping strategy is how you get a good-looking site that doesn't convert. This phase prevents the expensive rework that happens when the wrong thing gets built.</p>
+
+<h2>Phase 2: Design (20–25% of budget)</h2>
+
+<p><strong>What happens:</strong> We design every page, every state, every interaction. Not picking a template — designing from scratch based on your brand, your goals, and your users.</p>
+
+<p><strong>Deliverables:</strong></p>
+<ul>
+  <li>Wireframes for all key pages</li>
+  <li>Full visual designs (desktop, tablet, mobile)</li>
+  <li>Interactive prototypes for review</li>
+  <li>Design system and reusable component library</li>
+  <li>Two to three revision rounds built in</li>
+</ul>
+
+<p><strong>Why it matters:</strong> Your design is how prospects decide whether to trust you with significant money before they've spoken to anyone on your team. For hospitality, law, real estate, and premium service brands, that signal carries the weight of the entire marketing budget.</p>
+
+<h2>Phase 3: Development (35–40% of budget)</h2>
+
+<p><strong>What happens:</strong> Designs become working code. Every component built in Next.js with TypeScript. Every animation tuned. Every interaction tested across devices.</p>
+
+<p><strong>Deliverables:</strong></p>
+<ul>
+  <li>Clean, maintainable Next.js 16 codebase</li>
+  <li>Fully responsive across all screen sizes and devices</li>
+  <li>Custom animations and micro-interactions (Framer Motion where appropriate)</li>
+  <li>CMS integration (Sanity by default, others on request)</li>
+  <li>Third-party integrations (CRM, booking systems, analytics, email)</li>
+  <li>Core Web Vitals optimization built into the build, not added after</li>
+</ul>
+
+<p><strong>Why it matters:</strong> This is the largest line item because it's the most time-intensive. The difference between a site that feels premium and one that feels cheap is almost entirely in the development details — smooth animations, fast transitions, working interactions, consistent spacing. Those don't happen by accident.</p>
+
+<h2>Phase 4: Content and SEO (10–15% of budget)</h2>
+
+<p><strong>What happens:</strong> Content gets structured for both humans and search engines. Meta tags, schema markup, heading hierarchy, image optimization, sitemap architecture. This is the invisible work that determines whether Google shows your site to the people searching for what you sell.</p>
+
+<p><strong>Deliverables:</strong></p>
+<ul>
+  <li>SEO architecture and on-page optimization</li>
+  <li>Meta tags and Open Graph configuration</li>
+  <li>Schema markup for structured data</li>
+  <li>Image optimization and modern format conversion (AVIF/WebP)</li>
+  <li>Content migration from your existing site (if applicable)</li>
+  <li>AI crawler allowances (GPTBot, ClaudeBot, PerplexityBot) for AI Overview visibility</li>
+</ul>
+
+<p><strong>Why it matters:</strong> A beautifully designed site that nobody finds is worthless. SEO foundations built into development are far more effective than trying to bolt them on later.</p>
+
+<h2>Phase 5: Testing and QA (5–10% of budget)</h2>
+
+<p><strong>What happens:</strong> We test on real devices, real browsers, real network conditions. We break things intentionally to make sure they don't break accidentally.</p>
+
+<p><strong>Deliverables:</strong></p>
+<ul>
+  <li>Cross-browser testing (Chrome, Safari, Firefox, Edge)</li>
+  <li>Real device testing on iOS and Android</li>
+  <li>Core Web Vitals audits and performance tuning</li>
+  <li>Accessibility review (WCAG AA compliance)</li>
+  <li>Form submission testing across all conditions</li>
+  <li>Bug fixes and final polish</li>
+</ul>
+
+<p><strong>Why it matters:</strong> Finding bugs before launch is cheap. Finding them after launch — when prospects are bouncing and bookings are breaking — is expensive.</p>
+
+<h2>Phase 6: Deployment and Launch (5% of budget)</h2>
+
+<p><strong>What happens:</strong> We deploy to Vercel, configure domains, set up analytics, verify everything works in production, and hand over the keys — documented.</p>
+
+<p><strong>Deliverables:</strong></p>
+<ul>
+  <li>Production deployment on Vercel</li>
+  <li>Domain and DNS configuration</li>
+  <li>Analytics setup (GA4, Vercel Analytics, or your preferred stack)</li>
+  <li>Documentation for content updates and common tasks</li>
+  <li>Training for your team (if needed)</li>
+</ul>
+
+<h2>What You're Actually Buying</h2>
+
+<p>You're not buying a website. You're buying:</p>
+
+<ul>
+  <li><strong>Strategic input.</strong> Someone thinking about your business and your customers, not just executing a template</li>
+  <li><strong>Senior-level time.</strong> 120–200 hours of work from people who've shipped this before, not junior hours padded out with process</li>
+  <li><strong>Custom design.</strong> Something that reflects your brand specifically, not a reskinned theme thousands of other businesses are using</li>
+  <li><strong>Performance architecture.</strong> Speed and SEO built into the foundation, not layered on after the fact</li>
+  <li><strong>A codebase that lasts.</strong> Clean, documented Next.js that your next developer can actually work with in three years</li>
+  <li><strong>Ownership.</strong> You own the code, the design system, the CMS configuration, the domain — everything. No platform lock-in</li>
+</ul>
+
+<h2>Is It Worth It?</h2>
+
+<p>That depends entirely on what your website needs to do.</p>
+
+<p>If it's a brochure that sits there while your real business happens elsewhere, $30,000 is probably too much. A template site for $2,000 would be honest for that use case.</p>
+
+<p>If the website is a primary channel for leads, bookings, or revenue — especially in hospitality, law, real estate, or premium service businesses where the average client is worth $5,000+ to you — a $30,000 build that performs infinitely outperforms a $3,000 site that doesn't.</p>
+
+<p>The math usually isn't subtle. One qualified lead typically pays for the entire build.</p>
+
+<p>Want to see what the scope looks like for your business specifically? <a href="/contact">Book a strategy call.</a></p>
+
     `,
   },
   // Squarespace vs Custom Website
@@ -3035,75 +3090,106 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'What does a website cost in Las Vegas in 2026? A breakdown of pricing for small business sites, custom builds, and premium Next.js development.',
     content: `
+
 <h2>The Question Nobody Answers Directly</h2>
 
-<p>Most agencies won't publish their prices. They want you on a call first. We get it — every project is different. But you deserve a straight answer before you spend time talking to anyone.</p>
+<p>Most Las Vegas agencies won't publish their prices. They want you on a call first. We get it — every project is different. But you deserve a straight answer before you spend time talking to anyone.</p>
 
-<p>Here's what websites actually cost in Las Vegas in 2026.</p>
+<p>Here's what professional websites actually cost in the Las Vegas market in 2026, grounded in published industry data and local market benchmarks.</p>
 
 <h2>Tier 1: Template-Based Websites ($500 – $3,000)</h2>
 
 <p>This is the Wix, Squarespace, or WordPress template tier. Fast to build, low cost, limited customization.</p>
 
 <ul>
-<li>Pre-built template with your logo and colors dropped in</li>
-<li>Basic pages: Home, About, Services, Contact</li>
-<li>No custom functionality</li>
-<li>Looks like every other small business site</li>
+  <li>Pre-built template with your logo and colors dropped in</li>
+  <li>Basic pages: Home, About, Services, Contact</li>
+  <li>No custom functionality</li>
+  <li>Looks like other small business sites built on the same template</li>
 </ul>
 
-<p>Who it's for: New businesses testing an idea, side projects, or anyone who just needs something live quickly.</p>
+<p><strong>Who it's for:</strong> New businesses testing an idea, side projects, or anyone who just needs something live quickly.</p>
 
-<h2>Tier 2: Custom WordPress ($3,000 – $8,000)</h2>
+<p>If this is where you are, Squarespace is honestly fine. We're not the right fit for this budget — come back when you've outgrown it.</p>
 
-<p>A custom-designed WordPress site built specifically for your brand. More flexibility than a template, but still running on WordPress infrastructure.</p>
+<h2>Tier 2: Professional WordPress or Small-Agency Custom ($5,000 – $15,000)</h2>
+
+<p>A custom-designed WordPress site or small-agency build. More flexibility than a template, but still running on WordPress infrastructure with its associated maintenance obligations.</p>
 
 <ul>
-<li>Custom design and layout</li>
-<li>Plugin-based functionality</li>
-<li>CMS for easy content updates</li>
-<li>Ongoing hosting and maintenance required</li>
+  <li>Custom design and layout</li>
+  <li>Plugin-based functionality</li>
+  <li>CMS for content updates</li>
+  <li>Ongoing hosting, plugin renewals, and maintenance required</li>
 </ul>
 
-<p>Who it's for: Small to mid-size businesses that need a professional presence but don't have complex technical requirements.</p>
+<p><strong>Who it's for:</strong> Small to mid-size local businesses that need a professional presence without complex technical requirements.</p>
 
-<h2>Tier 3: Custom Next.js Development ($8,000 – $20,000+)</h2>
+<p>For context, VegasOps puts realistic 2026 Las Vegas local service site pricing at $6,000 to $18,000. This tier is where most of that spend lands.</p>
 
-<p>A fully custom website built from scratch in Next.js. This is what Vizantir builds.</p>
+<h2>Tier 3: Premium Custom Development ($15,000 – $45,000)</h2>
+
+<p>A fully custom website built from scratch in Next.js. This is where most Vizantir work happens.</p>
 
 <ul>
-<li>Custom design, animations, and interactions</li>
-<li>Built for speed — typically scores 90+ on Google PageSpeed</li>
-<li>No plugins, no bloat, no security vulnerabilities</li>
-<li>Sanity CMS or similar for content management</li>
-<li>Scales with your business</li>
+  <li>Custom design, animations, and interactions (no template underneath)</li>
+  <li>Built for speed — sub-2-second load times on 4G mobile</li>
+  <li>No plugins, no admin login exposed to the public internet</li>
+  <li>Sanity CMS or similar headless CMS for content management</li>
+  <li>Integrations for booking, CRM, email, payment — whatever your business actually needs</li>
+  <li>Core Web Vitals optimization built into the architecture</li>
 </ul>
 
-<p>Who it's for: Established businesses in competitive markets where the website needs to reflect the quality of the brand — hospitality, law, real estate, luxury retail.</p>
+<p><strong>Who it's for:</strong> Established Las Vegas businesses in competitive markets where the website needs to reflect the quality of the brand — hospitality, law, commercial real estate, premium service businesses.</p>
 
-<h2>What Affects the Price?</h2>
+<p>This matches the market. VegasOps puts premium local hospitality builds at $10,000–$30,000+, and hospitality-specific Las Vegas agencies bill room-gallery-and-booking builds at $12,000–$25,000. Premium US agencies bill senior development work at $150–$300 per hour, and a site like this represents 120–200 hours of that work.</p>
+
+<h2>Tier 4: Flagship and Enterprise ($50,000 – $150,000+)</h2>
+
+<p>Multi-location hospitality groups, multi-attorney law firms with full practice-area architecture, commercial real estate platforms with custom property filtering, and premium brand flagship sites with multilingual and multi-region support.</p>
+
+<ul>
+  <li>Deep integrations (PMS, CRM, booking engines, MLS feeds, ERP)</li>
+  <li>Multiple user roles, permissions, and authenticated experiences</li>
+  <li>Multilingual and multi-region support</li>
+  <li>Ongoing development partnership, not launch-and-leave</li>
+</ul>
+
+<p><strong>Who it's for:</strong> Las Vegas enterprise brands where the website is mission-critical business infrastructure.</p>
+
+<h2>What Affects the Price</h2>
 
 <p>Beyond the platform, these factors move the number significantly:</p>
 
 <ul>
-<li><strong>Number of pages:</strong> A one-page site costs less than a 20-page site</li>
-<li><strong>Custom functionality:</strong> Booking systems, member portals, calculators add cost</li>
-<li><strong>Content:</strong> Copywriting and photography add $1,000–$5,000</li>
-<li><strong>Timeline:</strong> Rush projects cost more</li>
-<li><strong>Ongoing support:</strong> Care retainers run $500–$2,000/month</li>
+  <li><strong>Scope, not page count.</strong> A 10-page site with complex user flows and integrations costs more than a 30-page site that's mostly static content</li>
+  <li><strong>Custom functionality.</strong> Booking systems, client portals, dynamic content, custom search and filtering each add real hours</li>
+  <li><strong>Content.</strong> Professional copywriting runs $150–$300 per page. Professional photography for a local shoot runs $1,500–$5,000</li>
+  <li><strong>Integrations.</strong> Every third-party connection — booking engine, CRM, payment processor, email platform — adds development time</li>
+  <li><strong>Timeline.</strong> Standard 8–12 week timelines are priced at normal rates. Rush projects (2–4 weeks) typically add 25–50%</li>
+  <li><strong>Ongoing care.</strong> WordPress care plans start at $300/month; Next.js care plans start at $150/month at Vizantir. Higher-complexity sites scale from there</li>
 </ul>
 
 <h2>What Vizantir Charges</h2>
 
-<p>Our projects start at $5,000 for straightforward builds and go up from there depending on scope. We work with hospitality brands, law firms, and commercial real estate companies across Las Vegas and nationally.</p>
+<p>Our three published tiers:</p>
 
-<p>Every project starts with a strategy call where we scope the work honestly before anyone commits to anything.</p>
+<ul>
+  <li><strong>Launch ($15,000):</strong> Next.js marketing site, 6–10 pages, custom design, built to perform. Entry point for premium brands who want the stack and aesthetic of the top tier without the scope of a flagship build</li>
+  <li><strong>Scale ($30,000):</strong> Full custom builds with animation systems, CMS integration, lead capture infrastructure, and bespoke functionality. The sweet spot for most of our work</li>
+  <li><strong>Flagship ($60,000+):</strong> Multi-region, multi-role, deeply integrated builds for hospitality, law firms, and commercial real estate clients who treat their website as core business infrastructure</li>
+</ul>
+
+<p>Every project starts with a strategy call where we scope the work honestly before anyone commits to anything. If a template site would serve you better, we'll tell you. If the project needs more than what a Launch tier build can deliver, we'll tell you that too.</p>
 
 <h2>The Bottom Line</h2>
 
-<p>You get what you pay for. A $500 template gets you a $500 result. A $15,000 custom build gets you something that works as hard as your business does.</p>
+<p>Las Vegas is a competitive market — hospitality, legal, and real estate businesses here all compete against well-funded brands with serious digital presence. Your website either reflects that competitive reality or it doesn't.</p>
 
-<p>If you're serious about your digital presence, book a call and we'll tell you exactly what your project would cost.</p>
+<p>For premium brands where the website is a primary channel for leads, bookings, or revenue, $20,000–$60,000 is the honest market number. For anyone else, the lower tiers exist for good reason — and we're happy to point you to them.</p>
+
+<p>Want the specific number for your business? <a href="/contact">Book a strategy call</a> and we'll tell you honestly what your project would cost.</p>
+
     `,
   },
 
@@ -4007,75 +4093,95 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'WordPress vs Next.js 3-year total cost of ownership. Why a more expensive custom build often costs less than WordPress over time.',
     content: `
+
 <h2>The Number That Changes the Conversation</h2>
 
-<p>Most businesses compare website quotes based on the build cost alone. A WordPress agency quotes $5,000. A Next.js studio quotes $8,000. WordPress wins on price.</p>
+<p>Most businesses compare website quotes based on the build cost alone. A WordPress agency quotes $5,000. A premium Next.js studio quotes $15,000. WordPress wins on price — on paper.</p>
 
-<p>But that comparison ignores three years of what comes after the build. When you factor in hosting, maintenance, security, and performance work, the picture changes significantly.</p>
+<p>But that comparison ignores three years of what comes after launch. Once you factor in hosting, plugin renewals, maintenance, and security, the picture changes.</p>
 
-<h2>What WordPress Actually Costs Over 3 Years</h2>
+<h2>What a $5,000 WordPress Build Actually Costs Over 3 Years</h2>
 
-<p>Based on industry pricing data for managed WordPress hosting, maintenance retainers, and security services, a realistic 3-year cost breakdown for a custom WordPress site looks like this:</p>
-
-<ul>
-<li>Build: $5,000</li>
-<li>Managed hosting: $3,600 (mid-tier managed hosting runs $50–$100/mo for a business site)</li>
-<li>Maintenance retainer: $7,200 (basic agency retainer at $200/mo)</li>
-<li>Security services and incident protection: $2,400+</li>
-<li>Performance optimization: $1,500</li>
-<li><strong>Estimated 3-year total: $19,700+</strong></li>
-</ul>
-
-<p>These numbers are consistent with multiple 2026 cost analyses from agencies and hosting providers. Your actual numbers will vary based on scope and provider.</p>
-
-<h2>What a Next.js Build Actually Costs Over 3 Years</h2>
+<p>Based on published 2026 pricing from managed WordPress hosting providers, the Codeable maintenance pricing analysis, and typical plugin license costs, a realistic three-year breakdown looks like this:</p>
 
 <ul>
-<li>Build: $8,000</li>
-<li>Hosting: ~$540 (Vercel Pro starts at $20/mo; many sites qualify for the free tier)</li>
-<li>Maintenance retainer: $2,400 (lower ongoing maintenance requirement)</li>
-<li>Security incidents: Near zero — no plugin ecosystem, no exposed admin login</li>
-<li>Performance optimization: Included in the build architecture</li>
-<li><strong>Estimated 3-year total: ~$11,000</strong></li>
+  <li>Build: $5,000</li>
+  <li>Managed hosting: $1,260 (Kinsta and WP Engine start at $35/month — that's $1,260 over three years before any traffic-based upgrades)</li>
+  <li>Plugin licenses: $1,200 (Codeable puts common plugin stack costs at $200–$1,000/year; $400/year is a reasonable midpoint)</li>
+  <li>Maintenance retainer: $9,000 ($250/month for agency-tier care — Codeable's 2026 market data puts this range at $140–$500/month for business sites)</li>
+  <li>One security incident + one performance audit: $1,500 (Codeable's 2025 breach recovery data ranges from $200 to $2,000+; performance work typically $500–$2,000)</li>
 </ul>
 
-<p>Despite the higher build cost, the Next.js site comes out significantly cheaper over 3 years in this model.</p>
+<p><strong>Estimated 3-year total: approximately $17,960.</strong></p>
+
+<p>These are realistic numbers, not worst-case. A site with heavier plugin requirements, more traffic, or tighter uptime needs will cost more.</p>
+
+<h2>What a $15,000 Next.js Build Actually Costs Over 3 Years</h2>
+
+<ul>
+  <li>Build: $15,000 (Vizantir's Launch tier)</li>
+  <li>Hosting on Vercel Pro: $720 ($20/month commercial tier — the free Hobby plan is explicitly non-commercial per Vercel's terms)</li>
+  <li>Plugin licenses: $0 — there are no plugins</li>
+  <li>Maintenance: $5,400 ($150/month — lower than comparable WordPress care because there's less surface area to patch, but not zero. Dependencies still need updating)</li>
+  <li>Security incidents: budget near zero — no plugin ecosystem to exploit and no admin login exposed to the web. Structurally smaller attack surface, though not risk-free</li>
+  <li>Performance optimization: built into the architecture; no separate line item required for typical maintenance</li>
+</ul>
+
+<p><strong>Estimated 3-year total: approximately $21,120.</strong></p>
+
+<p>The $15K Next.js build costs roughly $3,000 more over three years than the $5K WordPress build. Not less. Let's talk about why that still favors the better build.</p>
 
 <h2>Why WordPress Costs More to Maintain</h2>
 
-<p><strong>Plugin licenses:</strong> Most serious WordPress sites rely on paid plugins for page builders, forms, SEO, security, caching, and booking. These costs compound annually and add up faster than most business owners expect.</p>
+<p><strong>Hosting.</strong> Shared hosting at $3–$10/month won't deliver acceptable performance for a business site. Managed WordPress hosting from Kinsta, WP Engine, or Cloudways starts at $30–$35/month and scales with traffic.</p>
 
-<p><strong>Hosting:</strong> Shared hosting at $10–$30/mo is not adequate for a business site. According to WP Farm, managed WordPress hosting for sites generating meaningful revenue typically runs $50–$100/mo — that is $1,800–$3,600 over 3 years before a developer touches anything.</p>
+<p><strong>Plugin renewals.</strong> Professional WordPress sites depend on paid plugins: SEO tools, security suites, forms, caching, page builders, booking systems. Codeable's 2026 pricing puts typical plugin stacks at $200–$1,000 per year, with premium configurations reaching higher.</p>
 
-<p><strong>Security incidents:</strong> WordPress is the most widely targeted CMS on the internet. According to Betlace, emergency fixes after a breach typically run $2,000–$10,000 — and that does not include the SEO damage from a Google blacklist, which can take months to reverse.</p>
+<p><strong>Security incidents.</strong> WordPress is the most targeted CMS on the internet. Codeable cites a Melapress industry survey finding that 64% of WordPress professionals had experienced a breach, with most occurring on sites without structured maintenance. Recovery costs range from $200 to $2,000+ per incident in Codeable's 2025 data.</p>
 
-<p><strong>Performance work:</strong> WordPress sites require ongoing performance maintenance. According to Colorlib's 2026 site speed data, the average WordPress site loads in approximately 3.5 seconds — compared to under 1.5 seconds for a well-built Next.js site.</p>
+<p><strong>Compatibility testing.</strong> WordPress core, theme, and plugin updates can break each other. Someone needs to test each update before it goes live. This work doesn't go away.</p>
 
-<h2>Why Next.js Costs Less to Maintain</h2>
+<h2>Why Next.js Has Lower Recurring Costs</h2>
 
-<p>Next.js sites are pre-built and served from a CDN. There is no database exposed to the web, no plugin ecosystem to patch, and no server-side processing on every page load. The result is a smaller attack surface, faster pages by default, and far less ongoing maintenance required.</p>
+<p>Next.js marketing sites are pre-built at deployment time and served from a CDN. There's no plugin ecosystem, no admin panel exposed to the public internet, and no database query on every page load. The architecture has fewer moving parts, which translates to:</p>
 
-<h2>The Performance Cost of a Slower Site</h2>
+<ul>
+  <li>No plugin licenses (no plugins)</li>
+  <li>Lower hosting costs on Vercel or similar edge platforms</li>
+  <li>Smaller security attack surface</li>
+  <li>Faster default performance with no ongoing optimization required</li>
+</ul>
 
-<p>The financial argument does not stop at maintenance costs. Speed directly affects revenue.</p>
+<h2>The Performance Argument</h2>
 
-<p>Research from Akamai shows that a 1-second delay in page load reduces conversions by approximately 7%. Google's own research puts that figure as high as 20% depending on the industry and audience.</p>
+<p>This is where the cost comparison flips in favor of the premium build.</p>
 
-<p>For a business generating 50 leads per month from their website, even a conservative 10% conversion improvement from faster load times is worth thousands of dollars annually — often more than the entire cost difference between the two builds.</p>
+<p>Google's research on mobile page speed — published on the Google Ad Manager blog — found that 53% of mobile visits are abandoned when pages take longer than 3 seconds to load.</p>
 
-<h2>The Break-Even Point</h2>
+<p>Akamai's 2017 State of Online Retail Performance report, analyzing 10 billion user visits, found that a 100-millisecond delay in load time can reduce conversion rates by up to 7%. A 1-second delay can cut conversions by 22%.</p>
 
-<p>In the example above, the Next.js build costs $3,000 more upfront. But the monthly savings in hosting and maintenance add up to roughly $200/mo — meaning the premium build pays for itself in approximately 15 months.</p>
+<p>For a business generating leads or bookings through its website, even a modest conversion lift from faster load times is worth more than the entire cost difference between the two builds — every single year.</p>
 
-<p>After that, every month is money saved compared to the WordPress alternative.</p>
+<p>A well-built Next.js site typically delivers sub-2-second load times on 4G mobile. A plugin-heavy WordPress site on budget hosting often lands at 5–8 seconds on the same connection. That gap is money.</p>
+
+<h2>The Rebuild Problem</h2>
+
+<p>There's one more cost that rarely appears in initial comparisons: the rebuild.</p>
+
+<p>WordPress sites built on themes and plugin stacks tend to become difficult to maintain after 2–3 years. Plugins conflict. Themes stop receiving updates. The developer who built the site is no longer available. Rebuilding from scratch becomes cheaper than continuing to patch.</p>
+
+<p>A clean, documented Next.js codebase doesn't have this problem in the same way. Framework upgrades (Next.js 16 → 17 → 18) are real work, but they're incremental. The core architecture keeps serving you for 5+ years without starting over.</p>
 
 <h2>The Bottom Line</h2>
 
-<p>WordPress is cheaper to get out the door. A well-built Next.js site is typically cheaper to own over time — and it performs better, converts better, and requires less ongoing attention.</p>
+<p>WordPress is cheaper on day one. Over three years, the cost difference narrows significantly — and once you factor in performance-driven revenue impact, the premium build typically comes out ahead.</p>
 
-<p>If you are making a decision based on 3-year value rather than day-one cost, the numbers consistently favor the better build.</p>
+<p>The better question isn't "which website costs less to build" but "which website costs less to own over time while generating more revenue."</p>
 
-<p>Book a strategy call and we will walk you through what this looks like for your specific situation.</p>
+<p>For established businesses in competitive markets, the answer is almost always the better build.</p>
+
+<p>Want the three-year math specific to your situation? <a href="/contact">Book a strategy call.</a></p>
+
     `,
   },
 
@@ -4090,69 +4196,80 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'Why a $15,000 custom website is often cheaper than a $5,000 WordPress build. The ROI argument that changes how business owners think about website investment.',
     content: `
+
 <h2>The Question Nobody Asks at the Beginning</h2>
 
-<p>When a business owner gets two website quotes — one for $5,000 and one for $15,000 — they almost always ask: what is the difference?</p>
+<p>When a business owner gets two website quotes — one for $5,000 and one for $15,000 — the obvious question is: why does one cost three times more than the other?</p>
 
-<p>The better question is: what does each one cost me over the next three years?</p>
+<p>The better question: what does each one cost over the next three years, and what does each one generate in that time?</p>
 
-<p>The answer to that question changes the decision entirely.</p>
+<p>That question changes the decision.</p>
 
 <h2>What the $5,000 Website Actually Costs</h2>
 
-<p>A $5,000 WordPress build gets you live quickly. But the ongoing costs begin immediately after launch.</p>
+<p>A $5,000 WordPress build gets you live quickly. But the recurring costs begin the day after launch.</p>
 
 <ul>
-<li>Managed hosting: $50–$100/mo for a business site that performs adequately</li>
-<li>Plugin licenses: $200–$500/year for the tools needed to run a serious site</li>
-<li>Maintenance retainer: $200–$400/mo to keep it updated, secure, and performing</li>
-<li>Security incidents: $2,000–$10,000 per breach event, according to Betlace — and breaches are common on unmanaged WordPress sites</li>
-<li>Performance optimization: $1,000–$2,000 as the site slows down over time</li>
+  <li><strong>Managed hosting:</strong> $35–$100/month for a business site that performs adequately (Kinsta and WP Engine start at $35/month; scaling plans go higher)</li>
+  <li><strong>Plugin licenses:</strong> $200–$1,000/year for the common business plugin stack — SEO, security, forms, backup, page builder (Codeable's 2026 pricing analysis)</li>
+  <li><strong>Maintenance retainer:</strong> $140–$500/month to keep it updated, secure, and functioning (Codeable's market data for business-tier care)</li>
+  <li><strong>Security incidents:</strong> $200–$2,000+ per breach event (Codeable's 2025 recovery data). A Melapress industry survey found 64% of WordPress professionals had experienced a breach, with most on sites without structured maintenance</li>
+  <li><strong>Performance optimization:</strong> $500–$2,000 periodically as the site slows down under plugin accumulation and database growth</li>
 </ul>
 
-<p>By year three, that $5,000 website has realistically cost $18,000–$25,000 in total. And it is still running on a platform that requires constant attention to stay secure and fast.</p>
+<p>Over three years, a $5,000 WordPress site realistically costs $17,000–$22,000 in total ownership. Conservative math: $5K build + $1,500 hosting + $1,200 plugins + $9,000 maintenance + $1,500 incidents = about $18,000.</p>
 
 <h2>What the $15,000 Website Actually Costs</h2>
 
-<p>A $15,000 custom Next.js build has a higher day-one cost. But the ongoing costs are structurally lower.</p>
+<p>A $15,000 custom Next.js build costs more on day one. Over three years, the recurring costs are structurally lower.</p>
 
 <ul>
-<li>Hosting: $0–$20/mo on Vercel — no expensive managed WordPress hosting required</li>
-<li>Plugin licenses: $0 — there are no plugins</li>
-<li>Maintenance: Lower ongoing cost because the architecture does not require constant patching</li>
-<li>Security incidents: Near zero — no plugin ecosystem to exploit, no WordPress admin login to brute force</li>
-<li>Performance: Built into the architecture — not something that needs to be re-optimized quarterly</li>
+  <li><strong>Hosting on Vercel Pro:</strong> $240/year ($20/month commercial tier; the free Hobby plan is explicitly non-commercial per Vercel's terms)</li>
+  <li><strong>Plugin licenses:</strong> $0 — there are no plugins</li>
+  <li><strong>Maintenance:</strong> $100–$300/month — lower than comparable WordPress care because there's less surface area to patch. Not zero: dependencies still need updating and framework version upgrades are real work</li>
+  <li><strong>Security incidents:</strong> budget near zero — no plugin ecosystem to exploit and no admin login exposed to the public internet. Structurally smaller attack surface, not risk-free</li>
+  <li><strong>Performance:</strong> built into the architecture. No recurring performance audits required for typical marketing sites</li>
 </ul>
 
-<p>By year three, the total cost of ownership is often lower than the $5,000 WordPress build — despite being three times the upfront investment.</p>
+<p>Over three years, the total ownership cost is approximately $15K + $720 hosting + $5,400 maintenance = about $21,000.</p>
 
-<h2>The Performance Difference Compounds the Argument</h2>
+<h2>Honest Math: They Cost About the Same</h2>
 
-<p>Beyond maintenance costs, there is the revenue impact of performance.</p>
+<p>Over three years, the $5,000 WordPress site and the $15,000 Next.js site end up in roughly the same cost neighborhood — often within a few thousand dollars of each other.</p>
 
-<p>According to Colorlib's 2026 site speed data, the average WordPress site loads in approximately 3.5 seconds. A well-built Next.js site typically loads in under 1.5 seconds.</p>
+<p>So if the total spend is comparable, why is the $15K build the better economic decision? Because cost isn't the only variable. Revenue is the other half of the equation.</p>
 
-<p>Research from Akamai shows that a 1-second delay reduces conversions by approximately 7%. Google's research puts that number as high as 20%.</p>
+<h2>Where the Premium Build Actually Wins</h2>
 
-<p>For a business that generates leads or bookings through its website, the revenue difference between a 3.5-second site and a 1.5-second site is often larger than the entire cost difference between the two builds — every single year.</p>
+<h3>1. Performance drives revenue</h3>
 
-<h2>The Rebuild Problem</h2>
+<p>Google's research, published on the Google Ad Manager blog, found that 53% of mobile visits are abandoned when pages take longer than 3 seconds to load.</p>
 
-<p>There is one more cost that rarely appears in the initial comparison: the rebuild.</p>
+<p>Akamai's State of Online Retail Performance report, analyzing 10 billion user visits, found that a 100-millisecond delay can reduce conversion rates by up to 7%. A 1-second delay can cut conversions by 22%.</p>
 
-<p>WordPress sites built on themes and plugins tend to become difficult to maintain after 2–3 years. Plugins conflict. The theme becomes outdated. The developer who built it is no longer available. The site that cost $5,000 to build now costs $5,000–$8,000 to rebuild.</p>
+<p>A well-built Next.js site typically loads in under 2 seconds on 4G mobile. A plugin-heavy WordPress site on mid-tier managed hosting often lands at 4–8 seconds on the same connection. For a business generating leads or bookings through its website, that performance gap represents real revenue every month — often more than the entire cost difference between the two builds.</p>
 
-<p>A custom-built Next.js site does not have this problem. The codebase is clean, documented, and maintainable. Developers can pick it up and extend it years later without starting over.</p>
+<h3>2. The rebuild cycle is longer</h3>
+
+<p>Industry research from multiple agencies puts WordPress site lifespan at 2–3 years without consistent maintenance, extending to 4–5 years with proper care. After that, accumulated plugin conflicts, outdated themes, and framework drift typically force a rebuild.</p>
+
+<p>A clean, documented Next.js codebase extends that cycle. Framework upgrades are real work but incremental. The core architecture reliably serves a business for 5+ years without starting over. One rebuild cycle avoided is $5,000–$15,000 saved.</p>
+
+<h3>3. First impressions compound</h3>
+
+<p>For hospitality brands, law firms, commercial real estate, and premium service businesses, the website isn't just a lead generation tool — it's the evidence a prospect uses to decide whether to trust you with significant money.</p>
+
+<p>A $5,000 template-heavy WordPress site signals "I'll take the cheapest option." A $15,000 custom build signals the opposite. That signal affects close rates on deals worth ten or a hundred times the cost difference between the two sites.</p>
 
 <h2>Who the $5,000 Website Is Right For</h2>
 
-<p>This is not an argument that every business needs a $15,000 website. The cheaper option makes sense when:</p>
+<p>The cheaper build genuinely makes sense when:</p>
 
 <ul>
-<li>You are testing an idea and need something live quickly</li>
-<li>The website is not a primary lead generation tool</li>
-<li>Budget constraints make a lower upfront cost necessary</li>
-<li>The site is genuinely simple — a few pages, no complex functionality</li>
+  <li>You're testing a business idea and need something live fast</li>
+  <li>The website isn't a primary lead generation channel</li>
+  <li>Budget constraints make a lower upfront cost necessary</li>
+  <li>The site is truly simple — few pages, no complex functionality, no competitive positioning to protect</li>
 </ul>
 
 <h2>Who the $15,000 Website Is Right For</h2>
@@ -4160,19 +4277,21 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 <p>The premium build makes sense when:</p>
 
 <ul>
-<li>The website is a primary channel for leads, bookings, or revenue</li>
-<li>Performance and first impression directly affect whether clients choose you</li>
-<li>You are in a competitive market where the website needs to reflect the quality of the brand</li>
-<li>You want to own something that works well for 5+ years without a rebuild</li>
+  <li>The website is a primary channel for leads, bookings, or revenue</li>
+  <li>Performance and first impression directly affect whether clients choose you</li>
+  <li>You operate in a competitive market where the site needs to reflect the quality of your brand</li>
+  <li>You want to own something that works well for 5+ years without a rebuild</li>
+  <li>You sell services or products where the average client is worth $5,000+ to your business</li>
 </ul>
 
-<h2>The Real Question</h2>
+<h2>The Real Calculation</h2>
 
-<p>The question is not which website costs less. The question is which website costs less while generating more.</p>
+<p>"Which website is cheaper" is the wrong question. The right question is: "Which website costs less per dollar of revenue it generates for me?"</p>
 
-<p>For most established businesses in competitive markets, the answer is the better build.</p>
+<p>For established businesses in competitive markets, the answer is almost always the better build — not because it costs less in absolute terms, but because the revenue it produces and the impression it creates make the economics obvious.</p>
 
-<p>Book a strategy call and we will show you the numbers for your specific situation.</p>
+<p>Want the version of this math for your specific business? <a href="/contact">Book a strategy call.</a></p>
+
     `,
   },
 
@@ -4187,75 +4306,91 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'Hidden WordPress costs your agency is not telling you about. Plugin licenses, hosting upgrades, security incidents, and maintenance costs that add up fast.',
     content: `
+
 <h2>The Quote Looks Reasonable. Then the Bills Start.</h2>
 
 <p>A WordPress agency quotes you $4,000–$8,000 for a custom site. It sounds fair. You sign, they build, you launch.</p>
 
-<p>Then the hosting invoice arrives. Then the plugin renewal emails. Then the site gets slow and you need someone to fix it. Then, if you are unlucky, the site gets hacked.</p>
+<p>Then the hosting invoice arrives. Then the plugin renewal emails. Then the site gets slow and you need someone to fix it. Then, if you're unlucky, the site gets compromised.</p>
 
-<p>None of this was in the original quote. Here is what to ask about before you sign anything.</p>
+<p>None of this was in the original quote. Here's what to ask about before you sign.</p>
 
 <h2>Plugin License Costs</h2>
 
-<p>Most professional WordPress sites depend on paid plugins — for page building, forms, SEO, security, caching, booking systems, and more. The agency includes these in the build. What they often do not tell you is that the licenses renew annually and the cost falls on you after year one.</p>
+<p>Most professional WordPress sites depend on paid plugins — for page building, forms, SEO, security, caching, booking systems, and more. The agency includes these in the build. What they often don't tell you is that the licenses renew annually and the cost falls on you after year one.</p>
 
-<p>A modest business site might use 5–10 paid plugins at $50–$200 each per year. A more complex site with booking integrations, advanced forms, and premium security tools can easily hit $500–$1,000 per year in plugin renewals alone — before a developer touches anything.</p>
+<p>Codeable's 2026 pricing analysis puts a typical business plugin stack at $200–$1,000/year across common line items:</p>
 
-<p>Ask your agency: which paid plugins will my site depend on, and what are the annual renewal costs?</p>
+<ul>
+  <li>SEO plugin (Yoast Premium, Rank Math Pro): $99–$229/year</li>
+  <li>Security plugin (Wordfence, Sucuri): $199–$499/year</li>
+  <li>Forms (Gravity Forms, WPForms): $59–$259/year</li>
+  <li>Page builder (Elementor Pro, Divi): $59–$199/year</li>
+  <li>Backup plugin (UpdraftPlus Premium, BlogVault): $70–$120/year</li>
+</ul>
+
+<p>Ask your agency directly: which paid plugins will my site depend on, and what are the annual renewal costs?</p>
 
 <h2>Hosting Upgrade Costs</h2>
 
-<p>Basic shared WordPress hosting costs $10–$30 per month. It is also inadequate for a business site that needs to load fast, stay secure, and handle real traffic.</p>
+<p>Shared hosting at $3–$10/month is inadequate for a business site that needs to load fast, stay secure, and handle real traffic.</p>
 
-<p>Managed WordPress hosting that actually delivers performance — from providers like WP Engine, Kinsta, or Flywheel — typically runs $30–$100 per month for a standard business site, according to WP Farm's 2025 hosting cost analysis. That is $360–$1,200 per year just for hosting.</p>
+<p>Managed WordPress hosting that actually delivers performance — Kinsta and WP Engine being the two most common — starts at $35/month per site according to their published 2026 pricing. That's $420/year at entry level, and scales with traffic. A business site receiving meaningful traffic often lands at $600–$1,200/year.</p>
 
-<p>Some agencies include hosting in their quote. Many do not. Ask directly: what hosting do you recommend, and what does it cost per month after launch?</p>
+<p>Some agencies include hosting in their quote. Many don't. Ask directly: what hosting do you recommend, and what does it cost per month after launch?</p>
 
 <h2>Maintenance and Update Costs</h2>
 
-<p>WordPress requires ongoing maintenance. Core updates, plugin updates, theme updates — each one needs to be tested to make sure it does not break something. This is not a one-time task. It happens every month, often multiple times per month.</p>
+<p>WordPress requires ongoing maintenance. Core updates, plugin updates, theme updates — each one needs to be tested to make sure it doesn't break something.</p>
 
-<p>Agencies typically charge $200–$600 per month for a basic WordPress maintenance retainer, according to Codeable's 2026 WordPress maintenance pricing data. That is $2,400–$7,200 per year for someone to keep the site updated, backed up, and monitored.</p>
+<p>Codeable's 2026 market analysis puts the WordPress maintenance range at $30/month (automated-only) to $5,000+/month (enterprise). For a business site with real stakes, realistic professional maintenance sits at $140–$500/month — $1,680–$6,000/year — for someone to keep the site updated, tested, backed up, and monitored.</p>
 
-<p>If you do not pay for maintenance, the updates do not happen — and outdated plugins are the number one cause of WordPress hacks.</p>
+<p>If you don't pay for maintenance, the updates don't happen. And outdated plugins are the number one entry point for WordPress compromises.</p>
 
 <h2>Security Incident Costs</h2>
 
-<p>This is the hidden cost that hurts the most. WordPress is the most widely targeted CMS on the internet, and a significant percentage of WordPress sites experience a security incident at some point.</p>
+<p>This is the hidden cost that hurts the most.</p>
 
-<p>When it happens, remediation is not cheap. According to Betlace, emergency fixes after a WordPress breach typically run $2,000–$10,000. That includes malware removal, database cleanup, security hardening, and restoration from backup.</p>
+<p>Patchstack's State of WordPress Security 2026 report documented 11,334 new WordPress vulnerabilities discovered in 2025 — a 42% increase over 2024. 91% of those vulnerabilities were in plugins, not WordPress core itself. The median time from vulnerability disclosure to active exploitation is 5 hours.</p>
 
-<p>What is not included in that number: the SEO damage. If Google detects malware on your site and blacklists it, recovery can take months. For a business that generates leads through organic search, that is a significant revenue event.</p>
+<p>When a site gets compromised, Codeable's 2025 recovery data puts remediation at $200–$2,000+ depending on severity. A Melapress industry survey cited by Codeable found that 64% of WordPress professionals had experienced a breach — most on sites without structured maintenance.</p>
+
+<p>What's not included in the remediation invoice: the SEO damage. If Google detects malware and blacklists the site, recovery takes time. For a business that generates leads through organic search, that ranking gap is a real revenue event that never appears as a line item anywhere.</p>
 
 <h2>Performance Optimization Costs</h2>
 
 <p>WordPress sites tend to slow down over time. Plugins accumulate. The database grows. Images are added without optimization. Caching configurations drift.</p>
 
-<p>According to Colorlib's 2026 site speed data, the average WordPress site loads in approximately 3.5 seconds — and that is the average, meaning many sites are significantly slower. A performance audit and optimization typically costs $1,000–$2,000 and needs to be repeated as the site evolves.</p>
+<p>Colorlib's 2026 site speed data puts average desktop page load at 2.5 seconds and average mobile at 8.6 seconds across all websites — and only 33% of websites pass all three Core Web Vitals. Google's own research found that 53% of mobile visits are abandoned when pages take longer than 3 seconds to load.</p>
+
+<p>A performance audit and optimization typically costs $500–$2,000, and needs to be repeated as the site evolves.</p>
 
 <h2>The Rebuild Cost</h2>
 
-<p>After 2–3 years, many WordPress sites reach a point where maintenance becomes more expensive than rebuilding. Plugins conflict with each other, the theme becomes outdated, the developer who built it is no longer available, and the codebase becomes difficult to work with.</p>
+<p>Industry research puts WordPress site lifespan at 2–3 years without consistent maintenance, extending to 4–5 years with proper care. After that, plugins conflict with each other, the theme becomes outdated, the original developer is no longer available, and the codebase becomes difficult to work with.</p>
 
 <p>The $5,000 site that seemed like a good deal now costs another $5,000–$8,000 to rebuild. And the cycle starts again.</p>
 
 <h2>What to Ask Before You Sign</h2>
 
 <ul>
-<li>Which paid plugins will my site depend on, and what are the annual renewal costs?</li>
-<li>What hosting do you recommend, and what does it cost per month after launch?</li>
-<li>Do you offer a maintenance retainer, and what does it cover?</li>
-<li>What happens if my site gets hacked — is cleanup included or billed separately?</li>
-<li>Who owns the site and all its assets when the project is complete?</li>
+  <li>Which paid plugins will my site depend on, and what are the annual renewal costs?</li>
+  <li>What hosting do you recommend, and what does it cost per month after launch?</li>
+  <li>Do you offer a maintenance retainer, and what does it cover?</li>
+  <li>What happens if my site gets compromised — is cleanup included or billed separately?</li>
+  <li>Who owns the site, the CMS configuration, and all the assets when the project is complete?</li>
 </ul>
 
-<p>A professional agency will answer all of these questions clearly and upfront. If the answers are vague, that is information too.</p>
+<p>A professional agency will answer all of these clearly and upfront. If the answers are vague, that's information too.</p>
 
 <h2>A Different Approach</h2>
 
-<p>We build on Next.js specifically because it eliminates most of these hidden costs. No plugin licenses, near-zero hosting costs on Vercel, a smaller security attack surface, and performance built into the architecture rather than bolted on afterward.</p>
+<p>We build on Next.js specifically because it eliminates most of these hidden costs. No plugin licenses. Lower hosting costs on Vercel ($20/month on the commercial Pro tier). A smaller security attack surface because there's no plugin ecosystem and no admin panel exposed to the public internet. Performance built into the architecture rather than bolted on afterward.</p>
 
-<p>If you want to understand what your website will actually cost — build and beyond — book a strategy call and we will give you the full picture before you commit to anything.</p>
+<p>It's not free of recurring costs — dependencies still need updating, and framework upgrades are real work. But the structural burden is meaningfully lower than WordPress, and the ceiling on what the site can do is higher.</p>
+
+<p>If you want to understand what your website will actually cost — build and beyond — <a href="/contact">book a strategy call</a> and we'll give you the full picture before you commit to anything.</p>
+
     `,
   },
 
@@ -4270,101 +4405,109 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'How much does website maintenance cost in 2026? A breakdown of real market pricing from $50/mo to $5,000/mo and what is included at each level.',
     content: `
+
 <h2>The Range Is Wider Than You Think</h2>
 
-<p>Website maintenance pricing in 2026 ranges from $50 per month to $5,000 per month — and both ends of that range exist for legitimate reasons. What you need depends on your platform, your site's complexity, and how much your business relies on the website to function.</p>
+<p>Website maintenance pricing in 2026 ranges from $30 per month to $5,000+ per month — and both ends of that range exist for legitimate reasons. What you actually need depends on your platform, your site's complexity, and how much your business relies on the website to function.</p>
 
-<p>Here is a breakdown of what the market actually charges and what you get at each level.</p>
+<p>Here's a breakdown of what the market actually charges and what you get at each level.</p>
 
-<h2>Tier 1: $50–$150/Month (Basic WordPress Care)</h2>
+<h2>Tier 1: $30–$100/month (Automated Basics)</h2>
 
-<p>This is the commodity tier — automated plugin updates, scheduled backups, uptime monitoring, and basic malware scanning. These plans are typically offered by freelancers or automated services.</p>
+<p>This is the commodity tier — automated plugin updates, scheduled backups, uptime monitoring, and basic malware scanning. These plans are typically offered by freelancers, automated services, or bundled as part of managed hosting.</p>
 
-<p>What is included:</p>
+<p>What's included:</p>
 <ul>
-<li>Core, theme, and plugin updates</li>
-<li>Automated daily or weekly backups</li>
-<li>Uptime monitoring with email alerts</li>
-<li>Basic security scanning</li>
+  <li>Automated core, theme, and plugin updates</li>
+  <li>Automated daily or weekly backups</li>
+  <li>Uptime monitoring with email alerts</li>
+  <li>Basic security scanning</li>
 </ul>
 
-<p>What is not included: anything that requires a human. If something breaks after an update, if you need a content change, or if your site gets hacked, that is billed separately.</p>
+<p>What's not included: anything that requires a human. If something breaks after an update, if you need a content change, or if your site gets compromised, that's billed separately.</p>
 
-<p>Who it is for: Simple WordPress sites where downtime is inconvenient but not catastrophic. Not appropriate for a business where the website generates significant leads or revenue.</p>
+<p>Who it's for: Simple WordPress sites where downtime is inconvenient but not catastrophic. Not appropriate for a business where the website generates significant leads or revenue.</p>
 
-<h2>Tier 2: $250–$600/Month (Agency WordPress Care)</h2>
+<h2>Tier 2: $140–$500/month (Professional WordPress Care)</h2>
 
-<p>This is the standard small business tier from a professional agency. According to Codeable's 2026 WordPress maintenance pricing data, most agencies targeting business clients charge in this range for foundational care.</p>
+<p>This is the standard business tier from a professional agency. Codeable — one of the largest WordPress freelance marketplaces, whose published maintenance plans start at $140/month — sets the floor for what serious WordPress care costs in 2026.</p>
 
-<p>What is included:</p>
+<p>What's typically included:</p>
 <ul>
-<li>Everything in Tier 1</li>
-<li>Manual update testing before deployment</li>
-<li>Performance monitoring and basic optimization</li>
-<li>Security hardening and firewall management</li>
-<li>A small number of content update hours per month</li>
-<li>Priority support response</li>
+  <li>Everything in Tier 1</li>
+  <li>Manual update testing on staging before deployment</li>
+  <li>Regression testing to catch breakages before visitors do</li>
+  <li>Daily off-site backups with verification</li>
+  <li>Scheduled malware and vulnerability scans</li>
+  <li>A small number of dedicated development hours per month for small tasks</li>
+  <li>Priority support response</li>
 </ul>
 
-<p>Who it is for: Small to mid-size businesses where the website is a meaningful lead generation tool and downtime or security issues would directly impact revenue.</p>
+<p>Who it's for: Small to mid-size businesses where the website is a meaningful lead generation tool and downtime or security issues would directly impact revenue.</p>
 
-<h2>Tier 3: $750–$2,000/Month (Growth Retainer)</h2>
+<h2>Tier 3: $500–$1,500/month (Advanced and Small Business Growth)</h2>
 
-<p>At this tier, maintenance becomes proactive rather than reactive. The agency is not just keeping the lights on — they are actively improving the site.</p>
+<p>At this tier, maintenance shifts from reactive to proactive. The agency isn't just keeping the lights on — they're actively improving the site.</p>
 
-<p>What is included:</p>
+<p>What's typically included:</p>
 <ul>
-<li>Everything in Tier 2</li>
-<li>Regular performance audits and optimization</li>
-<li>Meaningful developer hours for changes and improvements</li>
-<li>SEO monitoring and technical fixes</li>
-<li>Conversion rate review and recommendations</li>
-<li>Monthly reporting on traffic and performance metrics</li>
+  <li>Everything in Tier 2</li>
+  <li>Regular performance audits and Core Web Vitals optimization</li>
+  <li>Meaningful developer hours for changes and improvements (typically 3–8 hours/month)</li>
+  <li>SEO monitoring and technical fixes</li>
+  <li>Conversion rate review and recommendations</li>
+  <li>Monthly reporting on traffic, performance, and security</li>
 </ul>
 
-<p>Who it is for: Businesses where the website is a primary revenue channel and ongoing improvement is part of the growth strategy — hospitality brands, law firms, commercial real estate companies.</p>
+<p>Who it's for: Businesses where the website is a primary revenue channel and ongoing improvement is part of the growth strategy — hospitality, law firms, commercial real estate, and premium service brands.</p>
 
-<h2>Tier 4: $2,000–$5,000+/Month (Enterprise and Custom)</h2>
+<h2>Tier 4: $1,500–$5,000+/month (Enterprise and E-Commerce)</h2>
 
-<p>This tier is for complex sites, high-traffic platforms, or businesses that need their agency to function as an extension of their team.</p>
+<p>This tier is for complex sites, high-traffic platforms, WooCommerce stores, or businesses that need their agency to function as an extension of their team.</p>
 
-<p>What is included:</p>
+<p>For context, Codeable's published WooCommerce maintenance data puts store retainers at $500–$3,000/month — with the upper end adding strategic consulting and rapid feature development on top of standard maintenance.</p>
+
+<p>What's typically included:</p>
 <ul>
-<li>Everything in Tier 3</li>
-<li>Significant monthly development hours</li>
-<li>New feature development and A/B testing</li>
-<li>SLA-backed response times</li>
-<li>Multi-property or multi-location support</li>
-<li>Dedicated account management</li>
+  <li>Everything in Tier 3</li>
+  <li>Significant monthly development hours (typically 10–30+)</li>
+  <li>New feature development and A/B testing</li>
+  <li>SLA-backed response times</li>
+  <li>Multi-property or multi-location support</li>
+  <li>Dedicated account management</li>
 </ul>
 
-<p>Who it is for: Enterprise brands, multi-location businesses, e-commerce platforms, and any organization where the website is mission-critical infrastructure.</p>
+<p>Who it's for: Enterprise brands, multi-location businesses, e-commerce platforms, and any organization where the website is mission-critical infrastructure.</p>
 
-<h2>WordPress vs Next.js Maintenance Costs</h2>
+<h2>WordPress vs. Next.js Maintenance Costs</h2>
 
-<p>Platform matters significantly for maintenance pricing. WordPress sites require more ongoing attention by nature — plugin updates, security patching, performance management, and compatibility testing are recurring tasks that do not go away.</p>
+<p>Platform matters for maintenance pricing. WordPress sites require more ongoing attention by nature — plugin updates, security patching, performance management, and compatibility testing are recurring tasks that don't go away.</p>
 
-<p>Custom Next.js sites have a smaller maintenance footprint. There are no plugins to update, the hosting infrastructure is simpler, and the security attack surface is smaller. This typically translates to lower monthly maintenance costs for equivalent support levels.</p>
+<p>Patchstack's State of WordPress Security 2026 report documented 11,334 new WordPress vulnerabilities in 2025 alone, with 91% in plugins. Every plugin is a recurring maintenance obligation.</p>
 
-<p>Several 2026 agency cost analyses note that WordPress sites generate significantly more ongoing maintenance revenue for agencies than comparable Next.js builds — because they need more work, not because the agency is charging more per hour.</p>
+<p>Custom Next.js sites have a smaller maintenance footprint. No plugins to patch. No admin panel exposed to the public internet. Simpler hosting infrastructure. That translates to lower monthly maintenance costs for equivalent support levels — typically $100–$300/month for a marketing site with light ongoing changes, scaling higher for sites with custom functionality, CMS integration, or regular content work.</p>
+
+<p>Next.js maintenance isn't zero. Framework upgrades (Next.js 16 → 17 → 18) are real work. npm dependencies need updating. Any site that handles authentication, payments, or form submissions has ongoing security considerations. But the recurring burden is structurally lower than WordPress, and the gap widens over time as plugins accumulate.</p>
 
 <h2>What to Look for in a Maintenance Plan</h2>
 
 <ul>
-<li><strong>Backup frequency and storage:</strong> Daily backups stored off-site are the minimum for a business site</li>
-<li><strong>Update testing:</strong> Updates should be tested before deployment, not just applied automatically</li>
-<li><strong>Response time SLA:</strong> How quickly will someone respond if something breaks?</li>
-<li><strong>What triggers extra billing:</strong> Know exactly what is included and what gets billed hourly</li>
-<li><strong>Reporting:</strong> Monthly reports on uptime, performance, and traffic are a sign of a professional operation</li>
+  <li><strong>Backup frequency and storage:</strong> Daily off-site backups are the minimum for a business site</li>
+  <li><strong>Update testing:</strong> Updates should be tested on staging before production, not just applied automatically</li>
+  <li><strong>Response time SLA:</strong> How quickly will someone respond if something breaks?</li>
+  <li><strong>What triggers extra billing:</strong> Know exactly what's included and what gets billed hourly</li>
+  <li><strong>Reporting:</strong> Monthly reports on uptime, performance, and traffic are a sign of a professional operation</li>
+  <li><strong>Ownership:</strong> Who owns the code, the CMS, the hosting configuration, and the backups if you leave?</li>
 </ul>
 
 <h2>What Vizantir Offers</h2>
 
-<p>Our care retainers are built for the businesses we work with — hospitality brands, law firms, and commercial real estate companies that cannot afford downtime or a broken booking flow.</p>
+<p>Our care retainers are built for the businesses we work with — hospitality brands, law firms, and commercial real estate companies that can't afford downtime or a broken booking flow.</p>
 
-<p>Plans start at $500/month and scale based on the complexity of your site and how much ongoing development you need.</p>
+<p>WordPress care plans start at $300/month and scale based on complexity. Next.js care plans start at $150/month and scale similarly.</p>
 
-<p>Book a strategy call and we will recommend the right level of support for your specific situation.</p>
+<p><a href="/contact">Book a strategy call</a> and we'll recommend the right level of support for your specific situation.</p>
+
     `,
   },
 
@@ -4464,74 +4607,86 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'What does a WordPress security breach actually cost? Emergency fixes, SEO damage, lost revenue — the real financial impact of a hacked WordPress site.',
     content: `
+
 <h2>It Happens More Than You Think</h2>
 
-<p>WordPress powers over 40% of the internet and is the most targeted CMS by a significant margin. The plugin ecosystem that makes WordPress flexible also makes it vulnerable — each plugin is third-party code that can introduce security gaps, and outdated plugins are the number one entry point for attackers.</p>
+<p>WordPress powers 43% of the web and is the most targeted content management system by a wide margin — not because it's uniquely insecure, but because attacking it at scale makes economic sense for criminals.</p>
 
-<p>For most business owners, a hack feels like a remote possibility. For WordPress site owners who are not actively maintaining their sites, it is a question of when, not if.</p>
+<p>Patchstack's State of WordPress Security 2026 report documented 11,334 new vulnerabilities discovered in the WordPress ecosystem in 2025 — a 42% increase over 2024. 91% of those vulnerabilities were in plugins, not in WordPress core itself. The median time from public vulnerability disclosure to active exploitation is now 5 hours.</p>
+
+<p>A Melapress industry survey cited by Codeable found that 64% of WordPress professionals had experienced a security breach at some point, with the overwhelming majority occurring on sites without structured maintenance.</p>
+
+<p>For most business owners, a compromise feels like a remote possibility. For WordPress site owners who aren't actively maintaining their sites, it's closer to a question of when, not if.</p>
 
 <h2>The Immediate Costs</h2>
 
-<p><strong>Emergency remediation:</strong> When a WordPress site gets hacked, cleaning it up is not simple. Malware embeds itself in core files, themes, plugins, and the database. Finding and removing it without breaking the site requires an experienced developer.</p>
+<p><strong>Emergency remediation.</strong> When a WordPress site is compromised, cleaning it up isn't simple. Modern attacks inject code into legitimate WordPress core, plugin, and theme files rather than dropping standalone malicious files — which means traditional "scan and delete" tools miss most of it. Finding and removing infections without breaking the site requires an experienced developer.</p>
 
-<p>According to Betlace's 2026 analysis of WordPress maintenance costs, emergency fixes after a breach typically run $2,000–$10,000 depending on the severity and complexity of the infection. Basic malware cleanup from a specialist service runs $590–$1,000 at minimum, according to Codeable's 2026 maintenance pricing data.</p>
+<p>Codeable's 2025 recovery pricing data puts WordPress breach cleanup at $200–$2,000+ depending on severity and complexity. Simple single-page infections at the lower end; sophisticated multi-file compromises at the upper end.</p>
 
-<p><strong>Hosting suspension:</strong> Most hosting providers will suspend a site the moment they detect malware — to protect other sites on the same server. While your site is suspended, it is completely offline. Every hour of downtime is lost revenue for a business that relies on its website for bookings, leads, or e-commerce.</p>
+<p><strong>Hosting suspension.</strong> Most hosting providers suspend a site the moment they detect malware — to protect other sites on the same server. While your site is suspended, it's completely offline. Every hour of downtime is lost revenue for a business that relies on its website for bookings, leads, or transactions.</p>
 
-<p><strong>Emergency developer time:</strong> Beyond the cleanup itself, someone needs to identify how the site was compromised, patch the vulnerability, harden the security configuration, and verify the fix. This takes time that gets billed at emergency rates.</p>
+<p><strong>Emergency developer time.</strong> Beyond the cleanup itself, someone needs to identify how the site was compromised, patch the vulnerability, harden the security configuration, and verify the fix. This typically adds $500–$2,000 in developer time at emergency rates.</p>
 
 <h2>The SEO Damage</h2>
 
-<p>This is the hidden cost that most business owners do not anticipate — and it is often more expensive than the cleanup itself.</p>
+<p>This is the cost most business owners don't anticipate — and it's often more expensive than the cleanup itself.</p>
 
-<p>When Google detects malware on a site, it adds a warning label to search results: "This site may harm your computer." It may also remove the site from search results entirely until the issue is resolved and the site is manually reviewed.</p>
+<p>When Google detects malware, it adds a warning label to search results ("This site may be hacked") and can remove the site from search entirely until the issue is resolved and the site is manually reviewed.</p>
 
-<p>Getting out of Google's blacklist requires submitting a reconsideration request after cleanup. The review process takes time. And even after the blacklist is lifted, the ranking damage can persist for months as Google rebuilds trust in the domain.</p>
+<p>Sucuri's analysis found that when a website is blocklisted by Google Safe Browsing, it typically loses nearly 95% of its organic traffic immediately. Getting delisted requires cleaning the site thoroughly, submitting a reconsideration request through Google Search Console, and waiting for manual review. Minor infections often clear within a few days. Complex ones can take weeks.</p>
 
-<p>For a business that generates leads through organic search, a 60–90 day ranking drop is a significant revenue event — one that never appears in the remediation invoice but is very real.</p>
+<p>Even after the blocklist warning is lifted, full ranking recovery typically takes 1–3 months as Google rebuilds trust in the domain. For a business that generates leads through organic search, that gap is a significant revenue event — one that never appears on the remediation invoice but is very real.</p>
 
 <h2>The Reputation Cost</h2>
 
-<p>Hacked sites are often used to redirect visitors to scam pages, serve malware to site visitors, or send spam emails from the domain. Any visitor who lands on a compromised site during the breach window has a negative experience associated with your brand.</p>
+<p>Compromised sites are often used to redirect visitors to scam pages, serve malware, or send spam from the domain. Any visitor who lands on the site during the breach window has a negative experience associated with your brand.</p>
 
-<p>If your site is used to send spam, your domain gets flagged by email providers. Future emails from your business domain — invoices, proposals, client communications — end up in spam folders. Recovering domain reputation takes months of consistent clean sending.</p>
+<p>If your domain is used to send spam, email providers flag it. Future emails from your business domain — invoices, proposals, client communications — start landing in spam folders. Recovering domain reputation takes months of consistent clean sending and sometimes requires setting up new authentication (DMARC, DKIM, SPF) if the previous setup was compromised.</p>
 
 <h2>The Total Picture</h2>
 
-<p>Add it up across a realistic scenario:</p>
+<p>Add it up across a realistic scenario for a business that depends on its website for leads or revenue:</p>
+
 <ul>
-<li>Emergency malware cleanup: $2,000–$10,000</li>
-<li>Developer time for security hardening: $500–$2,000</li>
-<li>Lost revenue during downtime: variable, but significant for booking-dependent businesses</li>
-<li>SEO recovery period: 60–90 days of reduced organic traffic</li>
-<li>Email reputation recovery: months of deliverability issues</li>
+  <li>Emergency malware cleanup: $200–$2,000+</li>
+  <li>Developer time for root cause analysis and hardening: $500–$2,000</li>
+  <li>Lost revenue during downtime: variable, but significant for booking-dependent businesses</li>
+  <li>SEO recovery period: 1–3 months of reduced organic traffic (up to 95% drop while blocklisted)</li>
+  <li>Email deliverability recovery: weeks to months of reduced inbox placement</li>
 </ul>
 
-<p>A single breach event can easily cost a business $15,000–$30,000 in total impact once you account for everything. For a hospitality brand, law firm, or real estate company where a significant portion of leads come through organic search, the number is higher.</p>
+<p>For a hospitality brand, law firm, or real estate company where a meaningful portion of leads come through organic search or email, the total impact of a single incident can easily reach five figures once you include the SEO and deliverability recovery periods — not just the cleanup invoice.</p>
 
 <h2>What Prevents It</h2>
 
-<p>The good news is that most WordPress hacks are preventable with basic maintenance:</p>
+<p>The good news: most WordPress compromises are preventable with basic maintenance. Patchstack's 2026 report found that 91% of vulnerabilities are in plugins, and most breaches happen on sites where plugins aren't being updated.</p>
+
+<p>Preventive measures that meaningfully reduce risk:</p>
 
 <ul>
-<li>Keeping all plugins, themes, and WordPress core updated</li>
-<li>Using strong, unique passwords and two-factor authentication on the admin account</li>
-<li>Running on managed hosting with server-level security</li>
-<li>Installing a reputable security plugin with active firewall protection</li>
-<li>Taking regular off-site backups so recovery is fast when something goes wrong</li>
+  <li>Keeping all plugins, themes, and WordPress core updated — especially within the 5-hour post-disclosure window when most exploitation happens</li>
+  <li>Removing plugins you don't actively use (every installed plugin is an attack surface, whether active or not)</li>
+  <li>Using strong, unique passwords and two-factor authentication on admin accounts</li>
+  <li>Running on managed hosting with server-level security (Kinsta, WP Engine, or similar)</li>
+  <li>Installing a reputable security plugin with active firewall protection</li>
+  <li>Taking regular off-site backups so recovery is fast when something goes wrong</li>
 </ul>
 
-<p>This is exactly what a professional WordPress maintenance retainer covers. The $200–$400/month you spend on maintenance is insurance against a $10,000+ remediation event.</p>
+<p>This is exactly what a professional WordPress maintenance retainer covers. The $140–$500/month you spend on maintenance (Codeable's 2026 market data for business-tier care) is insurance against a multi-thousand-dollar remediation event plus the much larger revenue impact of an SEO blocklist.</p>
 
 <h2>The Alternative Architecture</h2>
 
-<p>Custom Next.js sites have a fundamentally different security profile. There is no plugin ecosystem to exploit, no WordPress admin login to brute force, and no database exposed to the web. The attack surface is smaller by design.</p>
+<p>Custom Next.js sites have a fundamentally different security profile. There's no plugin ecosystem to exploit, no WordPress admin login exposed to the public internet to brute force, and no database query running on every page request. The attack surface is structurally smaller.</p>
 
-<p>We have never had a Next.js site we built get hacked. That is not a coincidence — it is an architectural advantage.</p>
+<p>That doesn't mean Next.js sites are invulnerable. Dependencies still need updating. npm packages can have vulnerabilities. Framework upgrades are real work. Any site that handles form submissions, authentication, or payments has potential attack vectors that need proper handling.</p>
 
-<h2>Already Dealing With a Hacked Site?</h2>
+<p>But the dominant attack pattern on WordPress — automated scanning for known plugin vulnerabilities, exploitation within hours of disclosure — simply doesn't apply to a statically-rendered Next.js marketing site. That's an architectural advantage, not a marketing claim.</p>
 
-<p>Book a strategy call and we will help you understand your options — whether that is a cleanup and hardening of your current WordPress site or a migration to a more secure architecture.</p>
+<h2>Already Dealing With a Compromised Site?</h2>
+
+<p><a href="/contact">Book a strategy call</a> and we'll help you understand your options — whether that's cleaning and hardening your current WordPress site, or migrating to a more secure architecture.</p>
+
     `,
   },
 
