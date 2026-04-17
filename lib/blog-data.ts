@@ -327,182 +327,128 @@ export const blogPosts: BlogPost[] = [
       `Real pricing for business websites in 2026. From DIY templates to custom development — what to expect at every budget level.`,
     category: 'Cost',
     tags: ['Pricing', 'Web Development', 'Budget', 'Business'],
-    readTime: '7 min read',
+    readTime: '9 min read',
     publishedAt: '2026-01-10',
     author: 'Vizantir',
     metaDescription:
-      `How much does a business website cost in 2026? Real pricing breakdown from DIY to custom development, with factors that affect cost.`,
+      `A transparent breakdown of what business websites actually cost in 2026, where Vizantir's $15K / $30K / $60K tiers fit in the real market, and what drives the price at every level.`,
     content: `
-## The Real Answer
+Most agencies won't tell you what a website costs until you get on a call. That's not how we work.
 
-A business website in 2026 costs anywhere from $500 to $50,000+.
+Here's the honest breakdown of what you'll pay in 2026, where our pricing fits, and what you actually get at each level.
 
-That's a wide range because "website" means different things:
-- A 5-page marketing site
-- A 50-page corporate portal
-- An e-commerce store with 1,000 products
-- A custom web application with user accounts
+## The Short Answer
 
-Let's break down realistic costs at every level.
+A professional business website in 2026 costs anywhere from $500 to $150,000+.
 
-## Tier 1: DIY / Template ($500 - $2,000)
+That range is wide because "website" means very different things. A template someone fills in on Squarespace is a website. So is a custom-built platform for a luxury hotel group with booking integrations in four languages.
 
-**What you get:**
-- Pre-made template (Squarespace, Wix, WordPress theme)
-- Basic customization (logo, colors, content)
-- Standard features (contact form, gallery, blog)
+The real question isn't what a website costs. It's what kind of business you're running, and what the site needs to do for it.
 
-**Who it's for:**
-- Solo entrepreneurs testing an idea
-- Businesses that just need "something online"
-- Tight budgets with no room for custom work
+## The Four Honest Tiers
 
-**The catch:**
-- Looks like a template (because it is)
-- Limited functionality
-- You do all the work yourself
-- Performance and SEO are often mediocre
+### Tier 1: DIY and Templates ($500 – $3,000)
 
-## Tier 2: Professional WordPress ($2,500 - $6,000)
+Squarespace, Wix, a WordPress theme someone customized for you. You or a freelancer swap in your logo, your colors, your copy.
 
-**What you get:**
-- Custom design (not a template)
-- 5-12 pages
-- Mobile responsive
-- SEO foundations
-- Contact forms
-- Basic training on how to edit content
+**Good fit for:** solo entrepreneurs, side projects, businesses that just need something online while they figure out the real thing.
 
-**Who it's for:**
-- Small businesses ready to look professional
-- Companies that need to launch in 3-5 weeks
-- Budgets that prioritize value over cutting edge
+**What you give up:** originality, performance, and the ability to do anything the template wasn't designed for. Your site will look like other sites built on the same template, because it is one.
 
-**What's included at each price point:**
+This isn't our tier. If this is where you are, honestly — Squarespace is fine. Come back when you've outgrown it.
 
-**$2,500 - $3,500 (Starter):**
-- 5-8 pages
-- Clean, modern design
-- Mobile friendly
-- Basic SEO setup
+### Tier 2: Professional WordPress or Small-Agency Custom ($5,000 – $15,000)
 
-**$4,000 - $5,000 (Growth):**
-- 8-12 pages
-- Custom layouts
-- Stronger visual design
-- Lead capture optimization
+This is where most small businesses land. A small agency or experienced freelancer builds you a custom WordPress site, usually 8–15 pages, with a design that looks bespoke even if parts of it are templated underneath.
 
-**$5,500 - $6,000 (Premium):**
-- 12+ pages
-- Animations
-- Booking/scheduling systems
-- Membership features
+**What you get:** a professional site that represents you well, mobile-responsive, SEO foundations in place, a CMS you can update yourself. Timelines run 4–8 weeks.
 
-## Tier 3: Custom Next.js ($8,000 - $15,000)
+**The ceiling:** WordPress gets slow as you add plugins. Custom functionality means hiring a developer on top of the designer. Performance is usually mediocre unless someone actively tunes it.
+
+**Vizantir's entry tier — $15,000 — sits right at the top of this band.** The difference is what's under the hood: Next.js instead of WordPress, which means faster load times, better SEO performance out of the gate, and lower long-term maintenance costs. If you're comparing a $15K Next.js build against a $10K WordPress build, you're not comparing equivalent products.
+
+### Tier 3: Premium Custom Development ($20,000 – $45,000)
+
+This is the heart of the premium custom market in 2026. For hospitality, law firms, and established brands that need their website to be a genuine competitive asset, this is where real investment lives.
 
 **What you get:**
-- Blazing fast performance
-- Smooth animations and interactions
-- Custom functionality
-- Modern tech stack
-- Lower long-term hosting costs
 
-**Who it's for:**
-- Brands that want to stand out
-- Businesses where first impressions matter
-- Companies planning to scale
-- Anyone who values performance
+- Fully custom design built from a strategic brief, not a template
+- Next.js or similar modern framework with premium animations, micro-interactions, and performance tuning
+- Custom functionality: booking systems, client portals, dynamic content, integrations with CRMs and third-party platforms
+- Content strategy, on-brand copywriting, and SEO architecture built in from day one
+- 8–12 week timelines with proper discovery, design review, and QA
 
-**What's included at each price point:**
+**Market context:** Most premium agencies working in this band charge $150–$300/hour. A site like this typically represents 150–300 hours of work. Do the math and you land in this range whether the agency quotes you hourly or fixed-fee.
 
-**$8,000 - $10,000 (Cinematic):**
-- Marketing site with premium animations
-- Parallax scrolling
-- Micro-interactions
-- Optimized for speed
+**Vizantir's mid-tier builds — $30,000 — sit in the middle of this band.** That reflects the actual cost of doing this work at quality. Anyone quoting significantly less is either cutting corners on strategy, using junior talent, or reusing a design system they'll quietly apply to other clients.
 
-**$10,000 - $12,000 (With Back-End):**
-- User authentication
-- Dashboards
-- Database integration
-- API connections
+### Tier 4: Flagship and Enterprise ($50,000 – $150,000+)
 
-**$12,000+ (Web App):**
-- Multi-user platforms
-- Complex integrations
-- Custom business logic
-- Scalable architecture
+Large hospitality groups. Multi-location law firms with dozens of attorney profiles and multilingual requirements. Commercial real estate firms with custom property databases and advanced filtering. SaaS companies launching a product marketing site that needs to carry the weight of the entire brand.
 
-## Tier 4: Enterprise ($25,000+)
+**What you get at this level:**
 
-**What you get:**
-- Large-scale custom development
-- Multiple user roles and permissions
-- Complex integrations (CRM, ERP, payment systems)
-- Ongoing development and support
+- Custom design systems built from the ground up
+- Multiple user roles, permissions, and authenticated experiences
+- Deep integrations (PMS, CRM, ERP, booking engines, MLS feeds)
+- Multilingual and multi-region support
+- Ongoing development partnership, not just a launch-and-leave
 
-**Who it's for:**
-- Companies with complex requirements
-- Businesses with significant web traffic
-- Organizations needing custom applications
+**Vizantir's flagship tier — $60,000 — is the entry point for this band.** This is where we work with the most ambitious clients. It's also where the market genuinely ranges from $60K to well over $150K depending on scope.
 
-## What Affects the Price?
+## What Actually Drives the Price
 
-### 1. Number of Pages
-More pages = more design, more development, more content.
+Six things move the number more than anything else:
 
-### 2. Custom Functionality
-Every custom feature adds development time:
-- E-commerce
-- Booking systems
-- User accounts
-- Calculators
-- Interactive tools
+**1. Scope, not page count.** A 10-page site with complex user flows, integrations, and custom functionality costs more than a 30-page site that's mostly static content. Agencies that quote by the page aren't really quoting your project.
 
-### 3. Design Complexity
-- Template-based: Cheaper
-- Custom design: Mid-range
-- Cinematic with animations: Premium
+**2. Design originality.** Template-led work is fast and cheap because the hard decisions were made for you by someone else. Custom design involves 20–40 hours of UX research, wireframing, and visual direction before a single component gets built.
 
-### 4. Content
-- You provide content: Cheaper
-- We write content: Add $150-300/page
-- Professional photography: Add $500-2,000
+**3. Tech stack.** WordPress is cheap to build on and expensive to maintain. Next.js is the reverse — higher upfront investment, significantly lower total cost over three years. Which one is right for you depends on who will maintain the site after launch.
 
-### 5. Integrations
-- CRM connections
-- Email marketing
-- Payment processing
-- Third-party APIs
+**4. Content.** If you bring finished copy and photography, your cost is lower. If you need professional copywriting (typically $150–$300 per page from a strategic writer) or original photography ($1,500–$5,000 for a proper shoot), that's real money.
 
-### 6. Timeline
-- Standard (4-8 weeks): Normal pricing
-- Rush (2-3 weeks): Add 25-50%
+**5. Integrations.** Every third-party connection — booking engine, CRM, payment processor, email platform — adds development time. Clean APIs are cheap. Legacy systems are expensive.
 
-## Ongoing Costs to Budget For
+**6. Timeline.** Standard 8–12 week timelines are priced at normal rates. Rush projects (2–4 weeks) typically add 25–50% because they require reshuffling other work.
 
-Don't forget these annual costs:
+## The Ongoing Costs Most Agencies Don't Mention
 
-- **Hosting:** $120-600/year
-- **Domain:** $15-50/year
-- **SSL certificate:** Usually included with hosting
-- **Maintenance/updates:** $0-3,600/year
-- **Content updates:** $0-2,400/year (if you hire someone)
+A website isn't a one-time purchase. Annual costs to budget for:
+
+- Hosting: $150–$2,000/year depending on traffic and infrastructure
+- Domain: $15–$50/year
+- Maintenance and security: $1,200–$6,000/year for a professional site
+- Content updates: $0–$5,000/year if you hire someone
+- Performance and SEO work: $2,400–$12,000/year if you want the site to keep improving
+
+Over a three-year horizon, ongoing costs often match or exceed the initial build. A $15K WordPress site with $4K/year in maintenance and hosting costs $27K over three years. A $30K Next.js site with $1,500/year in hosting costs $34.5K. The gap closes fast.
+
+## Where Vizantir Fits
+
+We're transparent about our numbers because we're confident about our positioning.
+
+- **Launch ($15,000):** Next.js marketing site, 6–10 pages, custom design, built to perform. Entry point for premium brands who want the stack and aesthetic of the top tier without the scope of a flagship build.
+- **Scale ($30,000):** Full custom builds with animation systems, CMS integration, lead capture infrastructure, and bespoke functionality. The sweet spot for most of our work.
+- **Flagship ($60,000+):** Multi-region, multi-role, deeply integrated builds for hospitality, law firms, and commercial real estate clients who treat their website as core business infrastructure.
+
+These numbers sit inside the real 2026 market. We're not the cheapest and we're not trying to be. We're priced accurately for the work we do.
 
 ## How to Get the Best Value
 
-1. **Know your goals first** — What does success look like?
-2. **Start with must-haves** — Add nice-to-haves later
-3. **Get a fixed quote** — Avoid hourly billing surprises
-4. **Invest in quality** — A cheap site that doesn't convert costs more in the long run
+1. **Know what the site needs to do.** Lead generation, bookings, brand positioning, all three? The answer changes everything about what you should build.
+2. **Invest where the leverage is.** Design and performance compound over years. Cutting corners on either costs more in the long run than doing it right the first time.
+3. **Get a fixed-fee quote.** Hourly billing on website work almost always ends badly for the client.
+4. **Understand what you're actually buying.** Ask who owns the code, the CMS, and the domain. Ask if the design system is yours or the agency's. The contract matters more than the invoice.
 
 ## The Bottom Line
 
-Most small businesses spend $3,000-8,000 on their website. That's enough for a professional, custom site that represents your brand well.
+If your business is at the stage where your website needs to genuinely represent you to clients who are evaluating whether to trust you with significant money — premium hospitality guests, legal clients, commercial real estate partners — budget between $20,000 and $60,000.
 
-If you need performance, animations, or custom functionality, budget $8,000-15,000.
+If you need more than that, we'll tell you honestly. If you need less, we'll tell you that too.
 
-Not sure where you fit? Let's talk through your needs and I'll give you an honest estimate.
+Ready to talk about what yours actually needs? [Book a strategy call.](/contact)
     `,
   },
 

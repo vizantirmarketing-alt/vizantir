@@ -1,7 +1,8 @@
 'use client'
 
-import { memo, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
@@ -10,6 +11,13 @@ import type { CaseStudyListItem } from '@/lib/sanity/types'
 
 interface CaseStudiesClientProps {
   caseStudies: CaseStudyListItem[]
+}
+
+/** next/image requires an absolute URL; Sanity may return protocol-relative `//cdn...` */
+function absoluteImageUrl(url: string) {
+  const trimmed = url.trim()
+  if (trimmed.startsWith('//')) return `https:${trimmed}`
+  return trimmed
 }
 
 const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
@@ -26,6 +34,20 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   const filteredStudies = selectedCategory === 'All' 
     ? caseStudies 
     : caseStudies.filter(cs => cs.industry === selectedCategory)
+
+  useEffect(() => {
+    for (const study of caseStudies) {
+      const url = study.heroImage?.asset?.url
+      if (!url) continue
+      let hostname: string
+      try {
+        hostname = new URL(url.trim().startsWith('//') ? `https:${url.trim()}` : url.trim()).hostname
+      } catch {
+        hostname = '(invalid URL)'
+      }
+      console.log('[case-studies] study.heroImage.asset.url', study.title, url, '→ hostname:', hostname)
+    }
+  }, [caseStudies])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -127,28 +149,38 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
               <motion.div
                 key={study.title}
                 variants={itemVariants}
-                className="group"
+                className="group flex h-full flex-col"
               >
                 <Link
                   href={`/case-studies/${study.slug}`}
-                  className="group block rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1"
+                  className="group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1"
                   style={{
                     background: isNightMode ? '#0A0A0A' : '#FFFFFF',
                     borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
                   }}
                 >
                   {study.heroImage?.asset?.url ? (
-                    <div className="mb-6 overflow-hidden rounded-xl border" style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }}>
-                      <img
-                        src={study.heroImage.asset.url}
+                    <div
+                      className="relative mb-6 w-full shrink-0 overflow-hidden rounded-xl border bg-gray-100 dark:bg-zinc-900"
+                      style={{
+                        height: '280px',
+                        position: 'relative',
+                        width: '100%',
+                        borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+                      }}
+                    >
+                      <Image
+                        src={absoluteImageUrl(study.heroImage.asset.url)}
                         alt={study.heroImage.alt || study.title}
-                        className="h-56 w-full object-cover"
-                        loading={index < 2 ? 'eager' : 'lazy'}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        priority={index < 2}
                       />
                     </div>
                   ) : null}
 
-                  <div className="space-y-4">
+                  <div className="flex min-h-0 flex-1 flex-col gap-4">
                     {study.industry ? (
                       <p className="text-sm tracking-[0.2em] uppercase" style={{ color: '#FFC64C' }}>
                         {study.industry}
@@ -188,7 +220,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                       </div>
                     ) : null}
                     <span
-                      className="inline-flex items-center gap-2 font-semibold transition-colors duration-300 group-hover:text-[#FFC64C]"
+                      className="mt-auto inline-flex items-center gap-2 font-semibold transition-colors duration-300 group-hover:text-[#FFC64C]"
                       style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                     >
                       View case study
