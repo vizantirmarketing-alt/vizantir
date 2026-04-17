@@ -3,9 +3,10 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { PortableText, type PortableTextComponents } from '@portabletext/react'
+import { PortableText } from '@portabletext/react'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
+import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { useTheme } from '@/contexts/ThemeContext'
 import type { CaseStudy } from '@/lib/sanity/types'
 
@@ -29,71 +30,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
     }),
     [isNightMode]
-  )
-
-  const ptComponents: PortableTextComponents = useMemo(
-    () => ({
-      block: {
-        normal: ({ children }) => (
-          <p className="mb-4 text-lg leading-relaxed last:mb-0" style={{ color: colors.textMuted }}>
-            {children}
-          </p>
-        ),
-        h2: ({ children }) => (
-          <h3 className="text-2xl font-bold mt-10 mb-4 first:mt-0" style={{ color: colors.text }}>
-            {children}
-          </h3>
-        ),
-        h3: ({ children }) => (
-          <h4 className="text-xl font-semibold mt-8 mb-3" style={{ color: colors.text }}>
-            {children}
-          </h4>
-        ),
-        blockquote: ({ children }) => (
-          <blockquote
-            className="my-6 border-l-4 pl-6 py-1 text-lg italic"
-            style={{ borderColor: colors.accent, color: colors.textMuted }}
-          >
-            {children}
-          </blockquote>
-        ),
-      },
-      list: {
-        bullet: ({ children }) => (
-          <ul className="mb-4 list-disc space-y-2 pl-6 marker:text-[#FFC64C]" style={{ color: colors.textMuted }}>
-            {children}
-          </ul>
-        ),
-        number: ({ children }) => (
-          <ol className="mb-4 list-decimal space-y-2 pl-6 marker:font-semibold marker:text-[#FFC64C]" style={{ color: colors.textMuted }}>
-            {children}
-          </ol>
-        ),
-      },
-      listItem: {
-        bullet: ({ children }) => <li className="leading-relaxed">{children}</li>,
-        number: ({ children }) => <li className="leading-relaxed">{children}</li>,
-      },
-      marks: {
-        link: ({ value, children }) => {
-          const href = typeof value?.href === 'string' ? value.href : ''
-          if (!href) return <span>{children}</span>
-          const external = /^https?:\/\//.test(href)
-          return (
-            <a
-              href={href}
-              className="font-medium underline underline-offset-2 decoration-[#FFC64C]/50 hover:decoration-[#FFC64C]"
-              style={{ color: colors.accent }}
-              target={external ? '_blank' : undefined}
-              rel={external ? 'noopener noreferrer' : undefined}
-            >
-              {children}
-            </a>
-          )
-        },
-      },
-    }),
-    [colors]
   )
 
   const hasChallenge = Array.isArray(caseStudy.challenge) && caseStudy.challenge.length > 0
@@ -239,7 +175,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   The problem to solve
                 </h2>
-                <PortableText value={caseStudy.challenge!} components={ptComponents} />
+                <PortableText value={caseStudy.challenge!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
           </section>
@@ -263,7 +199,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   What we built
                 </h2>
-                <PortableText value={caseStudy.solution!} components={ptComponents} />
+                <PortableText value={caseStudy.solution!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
           </section>
@@ -287,7 +223,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   Impact and outcomes
                 </h2>
-                <PortableText value={caseStudy.results!} components={ptComponents} />
+                <PortableText value={caseStudy.results!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
           </section>

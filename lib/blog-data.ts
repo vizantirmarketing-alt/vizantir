@@ -799,24 +799,27 @@ Need a security audit for your WordPress site? Let's take a look.
 
 <p>Unlike client-side React apps, Next.js can:</p>
 <ul>
-<li>Render pages on the server (SSR)</li>
-<li>Generate static HTML at build time (SSG)</li>
-<li>Deliver content to crawlers without JavaScript</li>
+  <li>Generate static HTML at build time (SSG — the fastest option for marketing sites)</li>
+  <li>Render pages on the server (SSR — for dynamic content)</li>
+  <li>Use Incremental Static Regeneration (ISR — static pages that revalidate in the background)</li>
+  <li>Deliver complete content to crawlers without requiring them to execute JavaScript</li>
 </ul>
 
-<p>This solves the fundamental problem that killed SEO for traditional React apps: Google seeing a blank page.</p>
+<p>This solves the fundamental problem that killed SEO for traditional React apps: Google or an AI crawler seeing a blank page while waiting for JavaScript to render content.</p>
 
-<p>But rendering is just the foundation. Let's cover everything you need for Next.js SEO.</p>
+<p>But rendering is just the foundation. Here's everything you need for Next.js 16 SEO.</p>
 
-<h2>1. Meta Tags and Head Management</h2>
+<h2>1. Metadata API</h2>
 
-<p>Next.js provides the Head component (or Metadata API in App Router) for managing meta tags.</p>
+<p>Next.js 16 uses the Metadata API in the App Router. Static metadata is a simple export. Dynamic metadata uses an async function that can fetch data.</p>
 
-<p><strong>Essential meta tags for every page:</strong></p>
+<p><strong>Static metadata for a fixed page:</strong></p>
 
-<pre><code>export const metadata = {
+<pre><code>import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
   title: 'Your Page Title | Brand Name',
-  description: 'A compelling 150-160 character description with your target keyword.',
+  description: 'A compelling 150–160 character description with your target keyword.',
   openGraph: {
     title: 'Your Page Title',
     description: 'Description for social sharing',
@@ -825,81 +828,102 @@ Need a security audit for your WordPress site? Let's take a look.
 }
 </code></pre>
 
+<p><strong>Dynamic metadata for routes that fetch data (Next.js 16 syntax — note params is now a Promise):</strong></p>
+
+<pre><code>import type { Metadata } from 'next'
+
+type Props = {
+  params: Promise&lt;{ slug: string }&gt;
+}
+
+export async function generateMetadata({ params }: Props): Promise&lt;Metadata&gt; {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      images: [post.coverImage],
+    },
+  }
+}
+</code></pre>
+
 <p><strong>Best practices:</strong></p>
 <ul>
-<li>Unique title and description for every page</li>
-<li>Include target keyword in title (front-loaded)</li>
-<li>Keep titles under 60 characters</li>
-<li>Keep descriptions between 150-160 characters</li>
-<li>Add Open Graph tags for social sharing</li>
+  <li>Unique title and description for every page</li>
+  <li>Include target keyword in title (front-loaded)</li>
+  <li>Keep titles under 60 characters</li>
+  <li>Keep descriptions between 150–160 characters</li>
+  <li>Add Open Graph tags for social sharing</li>
+  <li>Set <code>metadataBase</code> on your root layout so all image URLs resolve correctly</li>
 </ul>
 
 <h2>2. URL Structure</h2>
 
-<p>Next.js creates URLs based on your file structure. Use this to your advantage.</p>
+<p>Next.js creates URLs based on your file structure. Use that to your advantage.</p>
 
-<p><strong>Good URL structure:</strong></p>
+<p><strong>Good:</strong></p>
 <ul>
-<li>/blog/wordpress-vs-nextjs (descriptive, keyword-rich)</li>
-<li>/services/web-design (clear hierarchy)</li>
+  <li><code>/blog/wordpress-vs-nextjs</code> — descriptive, keyword-rich</li>
+  <li><code>/services/web-design</code> — clear hierarchy</li>
 </ul>
 
 <p><strong>Avoid:</strong></p>
 <ul>
-<li>/blog/post-123 (no keywords)</li>
-<li>/p?id=456 (query parameters)</li>
+  <li><code>/blog/post-123</code> — no keywords</li>
+  <li><code>/p?id=456</code> — query parameters (poor crawl signals)</li>
 </ul>
 
-<p>Use the <code>generateStaticParams</code> function to create clean URLs for dynamic routes.</p>
+<p>For dynamic routes you want statically generated at build time, use <code>generateStaticParams</code> to tell Next.js which slugs to pre-render.</p>
 
 <h2>3. Core Web Vitals</h2>
 
-<p>Google uses Core Web Vitals as a ranking factor. Next.js helps you score well:</p>
+<p>Google uses three Core Web Vitals as ranking signals:</p>
 
-<p><strong>LCP (Largest Contentful Paint):</strong></p>
+<p><strong>LCP (Largest Contentful Paint):</strong> How long until the main content becomes visible. Target under 2.5 seconds.</p>
+
 <ul>
-<li>Use next/image for automatic optimization</li>
-<li>Preload critical images with priority prop</li>
-<li>Avoid huge hero images</li>
+  <li>Use <code>next/image</code> for automatic optimization</li>
+  <li>Set <code>priority</code> on above-the-fold images</li>
+  <li>Avoid massive hero images — compress and serve modern formats</li>
 </ul>
 
-<p><strong>FID/INP (Interaction Responsiveness):</strong></p>
+<p><strong>INP (Interaction to Next Paint):</strong> Replaced First Input Delay in March 2024. Measures overall responsiveness to user interactions. Target under 200ms.</p>
+
 <ul>
-<li>Minimize JavaScript bundles</li>
-<li>Use dynamic imports for heavy components</li>
-<li>Avoid blocking the main thread</li>
+  <li>Minimize client-side JavaScript bundles</li>
+  <li>Use React Server Components wherever possible — they ship zero client JS</li>
+  <li>Use dynamic imports for heavy components</li>
+  <li>Don't reach for <code>'use client'</code> unless you actually need interactivity</li>
 </ul>
 
-<p><strong>CLS (Cumulative Layout Shift):</strong></p>
-<ul>
-<li>Always specify image dimensions</li>
-<li>Reserve space for dynamic content</li>
-<li>Avoid inserting content above existing content</li>
-</ul>
+<p><strong>CLS (Cumulative Layout Shift):</strong> How much the page jumps around while loading. Target under 0.1.</p>
 
-<p>Next.js handles many optimizations automatically:</p>
 <ul>
-<li>Image optimization</li>
-<li>Font optimization</li>
-<li>Code splitting</li>
-<li>Prefetching</li>
+  <li>Always specify image dimensions (width, height)</li>
+  <li>Reserve space for dynamic content</li>
+  <li>Don't insert content above existing content after load</li>
 </ul>
 
 <h2>4. Structured Data (Schema)</h2>
 
-<p>Structured data helps Google understand your content and can earn rich snippets.</p>
+<p>Structured data helps Google and AI crawlers understand your content — and qualifies you for rich snippets and AI Overview citations.</p>
 
 <p><strong>Common schema types for business sites:</strong></p>
 <ul>
-<li>Organization</li>
-<li>LocalBusiness</li>
-<li>Article</li>
-<li>FAQPage</li>
-<li>Product</li>
-<li>Service</li>
+  <li>Organization</li>
+  <li>LocalBusiness</li>
+  <li>Article</li>
+  <li>FAQPage</li>
+  <li>Product</li>
+  <li>Service</li>
 </ul>
 
-<p><strong>Implementation in Next.js:</strong></p>
+<p><strong>Implementation:</strong></p>
 
 <pre><code>export default function Page() {
   const schema = {
@@ -914,24 +938,26 @@ Need a security audit for your WordPress site? Let's take a look.
   }
 
   return (
-    <>
-      <script
+    &lt;&gt;
+      &lt;script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
+      /&gt;
       {/* Page content */}
-    </>
+    &lt;/&gt;
   )
 }
 </code></pre>
 
+<p>Be careful: avoid schema deduplication bugs when multiple components on one page emit overlapping schema. Pick one source of truth per page.</p>
+
 <h2>5. Sitemap and Robots.txt</h2>
 
-<p><strong>Sitemap:</strong> Create a sitemap.xml to help Google discover your pages.</p>
+<p><strong>Sitemap:</strong> Next.js 16 generates sitemaps from a <code>sitemap.ts</code> file in the app directory.</p>
 
-<p>Next.js can generate sitemaps automatically with the sitemap.ts file:</p>
+<pre><code>import type { MetadataRoute } from 'next'
 
-<pre><code>export default async function sitemap() {
+export default async function sitemap(): Promise&lt;MetadataRoute.Sitemap&gt; {
   return [
     { url: 'https://yoursite.com', lastModified: new Date() },
     { url: 'https://yoursite.com/about', lastModified: new Date() },
@@ -940,74 +966,81 @@ Need a security audit for your WordPress site? Let's take a look.
 }
 </code></pre>
 
-<p><strong>Robots.txt:</strong> Control what crawlers can access.</p>
+<p><strong>Robots.txt:</strong> Generated from <code>app/robots.ts</code>. Important in 2026 — explicitly allow AI crawlers if you want visibility in AI Overviews, ChatGPT Search, and Perplexity:</p>
 
-<pre><code>User-agent: *
-Allow: /
-Disallow: /api/
-Sitemap: https://yoursite.com/sitemap.xml
+<pre><code>import type { MetadataRoute } from 'next'
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: [
+      { userAgent: '*', allow: '/', disallow: ['/api/'] },
+      { userAgent: 'GPTBot', allow: '/' },
+      { userAgent: 'ClaudeBot', allow: '/' },
+      { userAgent: 'PerplexityBot', allow: '/' },
+    ],
+    sitemap: 'https://yoursite.com/sitemap.xml',
+  }
+}
 </code></pre>
 
 <h2>6. Internal Linking</h2>
 
 <p>Internal links help Google understand your site structure and distribute page authority.</p>
 
-<p><strong>Best practices:</strong></p>
 <ul>
-<li>Link to related content naturally</li>
-<li>Use descriptive anchor text (not "click here")</li>
-<li>Ensure important pages are within 3 clicks of homepage</li>
-<li>Create topic clusters with pillar pages</li>
+  <li>Link to related content naturally</li>
+  <li>Use descriptive anchor text (not "click here")</li>
+  <li>Keep important pages within 3 clicks of the homepage</li>
+  <li>Create topic clusters with pillar pages</li>
 </ul>
 
 <h2>7. Image Optimization</h2>
 
-<p>Next.js Image component handles most optimization automatically:</p>
+<p>The <code>next/image</code> component handles most optimization automatically:</p>
 
 <pre><code>import Image from 'next/image'
 
-<Image
+&lt;Image
   src="/hero.jpg"
-  alt="Descriptive alt text with keywords"
+  alt="Descriptive alt text with relevant keywords"
   width={1200}
   height={600}
-  priority // for above-the-fold images
-/>
+  priority
+/&gt;
 </code></pre>
 
-<p><strong>What next/image does:</strong></p>
+<p><strong>What <code>next/image</code> does:</strong></p>
 <ul>
-<li>Converts to WebP/AVIF</li>
-<li>Resizes for device</li>
-<li>Lazy loads by default</li>
-<li>Prevents layout shift</li>
+  <li>Converts to WebP/AVIF automatically</li>
+  <li>Resizes for each device</li>
+  <li>Lazy loads by default (disable with <code>priority</code> for above-the-fold)</li>
+  <li>Prevents layout shift by reserving space</li>
 </ul>
 
-<p><strong>Don't forget alt text</strong> — it's important for accessibility and SEO.</p>
+<p>Alt text matters — for accessibility first, for SEO second.</p>
 
 <h2>8. Page Speed</h2>
 
-<p>Page speed is a ranking factor. Next.js gives you a head start, but you can optimize further:</p>
+<p>Page speed is a ranking factor. Next.js gives you a head start but you can push further:</p>
 
 <ul>
-<li>Use static generation (SSG) when possible</li>
-<li>Minimize third-party scripts</li>
-<li>Lazy load below-fold content</li>
-<li>Use CDN (Vercel includes this)</li>
-<li>Monitor with Lighthouse and PageSpeed Insights</li>
+  <li>Use static generation (SSG) whenever possible — fastest option</li>
+  <li>Minimize third-party scripts — every one adds to INP</li>
+  <li>Lazy load below-fold content</li>
+  <li>Use the Vercel CDN (or comparable edge network)</li>
+  <li>Monitor with Lighthouse and real-user data from Vercel Analytics or web-vitals library</li>
 </ul>
 
 <h2>9. Mobile Optimization</h2>
 
-<p>Google uses mobile-first indexing. Your mobile experience matters most.</p>
+<p>Google uses mobile-first indexing. Your mobile experience is what determines rankings.</p>
 
-<p><strong>Checklist:</strong></p>
 <ul>
-<li>Responsive design (test at 375px width)</li>
-<li>Readable text without zooming (16px minimum)</li>
-<li>Tap targets sized properly (48px minimum)</li>
-<li>No horizontal scrolling</li>
-<li>Fast loading on 3G</li>
+  <li>Test at 375px width (iPhone mini) to catch breakpoints</li>
+  <li>Readable text without zooming (16px minimum body text)</li>
+  <li>Tap targets sized properly (48px minimum)</li>
+  <li>No horizontal scrolling</li>
+  <li>Fast loading on 4G (not just Wi-Fi)</li>
 </ul>
 
 <h2>10. Content Quality</h2>
@@ -1015,42 +1048,41 @@ Sitemap: https://yoursite.com/sitemap.xml
 <p>Technical SEO gets you in the game. Content quality wins it.</p>
 
 <ul>
-<li>Answer user questions thoroughly</li>
-<li>Use headers to structure content (H1, H2, H3)</li>
-<li>Include target keywords naturally</li>
-<li>Write for humans first, search engines second</li>
-<li>Update content regularly</li>
+  <li>Answer user questions thoroughly</li>
+  <li>Use proper heading hierarchy (one H1, logical H2/H3 structure)</li>
+  <li>Include target keywords naturally — don't stuff</li>
+  <li>Write for humans first, search engines second</li>
+  <li>Update content when facts change</li>
+  <li>Structure answers in concise factual paragraphs that AI crawlers can extract</li>
 </ul>
 
 <h2>Common Next.js SEO Mistakes</h2>
 
 <ol>
-<li><strong>Client-side only rendering</strong> — Use SSR or SSG for SEO-critical pages</li>
-<li><strong>Missing meta descriptions</strong> — Every page needs unique metadata</li>
-<li><strong>Ignoring Core Web Vitals</strong> — Monitor and optimize regularly</li>
-<li><strong>No structured data</strong> — Missing rich snippet opportunities</li>
-<li><strong>Slow third-party scripts</strong> — Audit and remove unnecessary scripts</li>
+  <li><strong>Client-side-only rendering</strong> — Use Server Components by default; only add <code>'use client'</code> when you actually need interactivity</li>
+  <li><strong>Missing meta descriptions</strong> — Every page needs unique metadata</li>
+  <li><strong>Static metadata on routes that need dynamic data</strong> — Use <code>generateMetadata</code> so titles and descriptions are locale- and data-aware</li>
+  <li><strong>Ignoring Core Web Vitals</strong> — Monitor INP, LCP, and CLS regularly</li>
+  <li><strong>No structured data</strong> — Missing rich snippet and AI Overview opportunities</li>
+  <li><strong>Slow third-party scripts</strong> — Audit and delay non-critical scripts with <code>next/script</code></li>
+  <li><strong>Blocking AI crawlers in robots.txt</strong> — Default deny is costing you visibility in 2026</li>
 </ol>
 
 <h2>The Bottom Line</h2>
 
-<p>Next.js provides an excellent foundation for SEO:</p>
+<p>Next.js 16 provides an excellent foundation for SEO:</p>
 <ul>
-<li>Server rendering for crawlability</li>
-<li>Fast performance for Core Web Vitals</li>
-<li>Built-in image and font optimization</li>
-<li>Easy metadata management</li>
+  <li>Server rendering and static generation for crawlability</li>
+  <li>Fast performance for Core Web Vitals</li>
+  <li>Built-in image, font, and script optimization</li>
+  <li>Clean metadata API with file-based conventions</li>
+  <li>First-class support for AI crawler visibility</li>
 </ul>
 
-<p>But the framework alone doesn't guarantee rankings. You still need:</p>
-<ul>
-<li>Quality content</li>
-<li>Proper on-page optimization</li>
-<li>Good internal linking</li>
-<li>Regular monitoring and updates</li>
-</ul>
+<p>But the framework alone doesn't guarantee rankings. You still need quality content, proper on-page optimization, good internal linking, and regular monitoring.</p>
 
-<p>Need help with Next.js SEO? Let's optimize your site.</p>
+<p>Need help implementing SEO on your Next.js site? <a href="/contact">Book a strategy call</a> and we'll audit your current setup and show you exactly where the gaps are.</p>
+
     `,
   },
 
@@ -3408,71 +3440,79 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'A slow website costs you customers and hurts your Google rankings. Learn why website speed matters and what to do about it in 2026.',
     content: `
-<h2>The Number Most Business Owners Do Not Know</h2>
 
-<p>53% of mobile users abandon a website that takes more than 3 seconds to load. More than half. Gone before they have seen a single thing about your business.</p>
+<h2>The Number Most Business Owners Don't Know</h2>
 
-<p>And it gets worse: Google uses page speed as a ranking factor. A slow site does not just lose visitors — it loses rankings, which means fewer visitors in the first place.</p>
+<p>53% of mobile users abandon a website that takes more than 3 seconds to load. More than half. Gone before they've seen a single thing about your business.</p>
+
+<p>That number is from Google's own mobile performance research, published on the Google Ad Manager blog. It's not an industry estimate — it's what Google measures across its own ad network.</p>
+
+<p>And it gets worse: Google uses Core Web Vitals as a ranking factor. A slow site doesn't just lose visitors — it loses rankings, which means fewer visitors in the first place.</p>
 
 <h2>What Slow Actually Means</h2>
 
-<p>Go to pagespeed.web.dev right now and run your website. Google will give you a score from 0 to 100.</p>
+<p>Go to pagespeed.web.dev and run your website. Google will give you a score from 0 to 100.</p>
 
 <ul>
-<li><strong>90–100:</strong> Fast. Your site is not losing customers to speed.</li>
-<li><strong>50–89:</strong> Needs improvement. You are losing some visitors.</li>
-<li><strong>0–49:</strong> Slow. You are actively damaging your business.</li>
+  <li><strong>90–100:</strong> Fast. Your site is not losing customers to speed.</li>
+  <li><strong>50–89:</strong> Needs improvement. You're losing some visitors.</li>
+  <li><strong>0–49:</strong> Slow. You're actively damaging your business.</li>
 </ul>
 
-<p>Most small business websites score in the 30–60 range on mobile. That means they are failing more than half the people who visit them on a phone.</p>
+<p>Most small business websites score in the 30–60 range on mobile. That means they're failing more than half the people who visit them on a phone.</p>
 
 <h2>Why WordPress Sites Get Slow</h2>
 
-<p>WordPress is the most common culprit. Not because WordPress is bad — it powers 40% of the internet — but because it is easy to make slow.</p>
+<p>WordPress is the most common culprit — not because WordPress is bad, but because it's easy to make slow. It powers 43.5% of the web, and most of those sites carry baseline performance problems.</p>
+
+<p>Hostinger's 2025 website load time statistics put the average WordPress site at 2.5 seconds on desktop but 13.25 seconds on mobile — 4.65 seconds slower than the cross-platform mobile average. Mobile is where most traffic is, and mobile is where WordPress struggles most.</p>
+
+<p>The usual causes:</p>
 
 <ul>
-<li>Too many plugins, each adding load time</li>
-<li>Cheap shared hosting that cannot handle traffic</li>
-<li>Unoptimized images loading at full resolution</li>
-<li>Themes bloated with features you are not using</li>
-<li>No caching or CDN configuration</li>
+  <li>Too many plugins, each adding load time</li>
+  <li>Cheap shared hosting that can't keep up with real traffic</li>
+  <li>Unoptimized images loading at full resolution</li>
+  <li>Themes bloated with features you're not using</li>
+  <li>No caching or CDN configuration</li>
 </ul>
 
-<p>A WordPress site built carelessly on shared hosting can score under 30 on mobile PageSpeed. The same site, properly optimized on good hosting, can score 80+.</p>
+<p>A WordPress site built carelessly on shared hosting can score under 30 on mobile PageSpeed. The same site properly optimized on managed hosting can reach 80+. The platform isn't the problem on its own — how it's configured is.</p>
 
 <h2>Why Next.js Sites Are Fast By Default</h2>
 
-<p>Next.js is fast by design. Pages are pre-built and served from a CDN, meaning there is no database query or server processing on each page load. Images are automatically optimized. JavaScript is split so only what is needed loads first.</p>
+<p>Next.js is fast by design. Pages are pre-built and served from a CDN, meaning there's no database query or server processing on each page load. Images are automatically optimized. JavaScript is split so only what's needed loads first.</p>
 
-<p>The sites we build at Vizantir typically score 85–100 on desktop and 65–85 on mobile — significantly above the industry average.</p>
+<p>Chrome team data reports that top-performing sites average around 1,220ms for Largest Contentful Paint. A well-built Next.js site typically sits in that range — roughly half the time of the average WordPress site on desktop, and dramatically faster on mobile.</p>
 
 <h2>The Three Metrics That Matter</h2>
 
-<p><strong>Largest Contentful Paint (LCP):</strong> How long until the main content is visible. Should be under 2.5 seconds.</p>
+<p>Google uses three Core Web Vitals as ranking signals:</p>
 
-<p><strong>Total Blocking Time (TBT):</strong> How long the page is unresponsive to user input. Should be under 200ms.</p>
+<p><strong>Largest Contentful Paint (LCP):</strong> How long until the main content is visible. Target: under 2.5 seconds.</p>
 
-<p><strong>Cumulative Layout Shift (CLS):</strong> How much the page jumps around while loading. Should be under 0.1.</p>
+<p><strong>Interaction to Next Paint (INP):</strong> How quickly the page responds to user interactions. Replaced First Input Delay in March 2024. Target: under 200ms.</p>
 
-<p>These include two Core Web Vitals (LCP and CLS) plus Total Blocking Time, which Lighthouse uses in lab tests. They are central to PageSpeed scores and how Google evaluates page experience.</p>
+<p><strong>Cumulative Layout Shift (CLS):</strong> How much the page jumps around while loading. Target: under 0.1.</p>
+
+<p>These are the signals Google uses to rank pages on real user experience, not just subjective quality. A site that fails on any of them loses ranking and conversions simultaneously.</p>
 
 <h2>What To Do About It</h2>
 
-<p>If your site scores below 70 on mobile PageSpeed, here is where to start:</p>
+<p>If your site scores below 70 on mobile PageSpeed, here's where to start — in order of impact:</p>
 
 <ul>
-<li>Compress and resize all images</li>
-<li>Upgrade your hosting to a managed provider or Vercel</li>
-<li>Audit your plugins and remove anything unnecessary</li>
-<li>Enable caching</li>
-<li>Consider whether a platform migration makes sense</li>
+  <li><strong>Upgrade your hosting.</strong> If your Time to First Byte is over 600ms, hosting is the bottleneck and nothing else matters until it's fixed</li>
+  <li><strong>Compress and resize images.</strong> Unoptimized images are the single biggest performance killer on most sites</li>
+  <li><strong>Audit your plugins.</strong> Remove anything you're not actively using</li>
+  <li><strong>Enable caching.</strong> Either at the hosting level or via a plugin like WP Rocket</li>
+  <li><strong>Consider a platform migration.</strong> If you've done all of the above and still can't hit acceptable scores, the problem is architectural</li>
 </ul>
 
-<p>If you have done all of that and your scores are still poor, the problem is likely architectural — and a rebuild on a modern stack is probably the right answer.</p>
+<h2>Get a Performance Audit</h2>
 
-<h2>Get a Free Performance Audit</h2>
+<p>Every Vizantir project starts with a performance review — we measure your current scores, identify the specific issues hurting you, and give you the numbers before any commitment. <a href="/contact">Book a strategy call</a> and we'll show you exactly what's costing you rankings and revenue.</p>
 
-<p>We run free performance and conversion reviews for business websites. Book a strategy call and we will show you your scores, what is causing them, and what it would take to fix them.</p>
     `,
   },
 
@@ -3726,76 +3766,104 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'How can Las Vegas businesses rank higher on Google in 2026? A practical guide to local SEO, Google Business Profile, and what actually moves rankings.',
     content: `
+
 <h2>Ranking in Las Vegas Is Competitive — But Winnable</h2>
 
 <p>Las Vegas is a competitive market. Every industry has established players with years of domain authority, hundreds of reviews, and agencies actively managing their SEO.</p>
 
-<p>But most local businesses are not doing the basics well. And the basics, done consistently, are enough to outrank the majority of your competitors.</p>
+<p>But most local businesses aren't doing the basics well. And the basics, done consistently in 2026, are enough to outrank the majority of your competitors.</p>
 
-<h2>Understand How Google Decides Who Ranks</h2>
+<h2>Understand How Google Decides Who Ranks in 2026</h2>
 
-<p>Google uses hundreds of signals to rank local businesses. The most important ones for Las Vegas businesses are:</p>
+<p>Google has historically ranked local businesses on three signals: relevance, distance, and prominence. Those still matter. But the Whitespark 2026 Local Search Ranking Factors report confirms a shift — the traditional fundamentals are table stakes now, and what separates top-ranked businesses from mid-pack competitors is engagement:</p>
 
 <ul>
-<li><strong>Relevance:</strong> Does your website clearly match what the searcher is looking for?</li>
-<li><strong>Distance:</strong> How close is your business to the searcher?</li>
-<li><strong>Prominence:</strong> How well-known and trusted is your business online?</li>
+  <li>Post activity on your Google Business Profile</li>
+  <li>Photo freshness and upload frequency</li>
+  <li>Review velocity (how many new reviews you get per month)</li>
+  <li>Accurate, current operating hours</li>
+  <li>Profile interactions — clicks, direction requests, calls, booking taps</li>
 </ul>
 
-<p>You cannot control distance. You can control relevance and prominence — and that is where most businesses have the biggest gaps.</p>
+<p>Google is rewarding businesses that look alive, not just businesses that exist. A profile set up once and forgotten isn't just losing ground — it's becoming invisible to AI-powered local discovery entirely.</p>
 
 <h2>Fix 1: Optimize Your Google Business Profile</h2>
 
-<p>Your Google Business Profile is the single highest-leverage SEO asset a local business has. Most businesses set it up once and never touch it again.</p>
+<p>Your Google Business Profile is the single highest-leverage SEO asset a local business has. WebFX's 2026 benchmark research found that profiles with 10 or more photos receive double the engagement of the average profile, and completeness alone can mean a 50% ranking improvement over partially filled profiles.</p>
 
 <ul>
-<li>Make sure your name, address, and phone number are accurate and consistent everywhere</li>
-<li>Choose the most specific primary category available</li>
-<li>Add your opening date — Google shows "X years in business" which builds trust</li>
-<li>Upload photos regularly — businesses with more photos get more clicks</li>
-<li>Post updates at least once a week</li>
-<li>Respond to every review, positive and negative</li>
+  <li>Make sure your name, address, and phone number are accurate and consistent everywhere</li>
+  <li>Choose the most specific primary category available — this carries more weight than almost any other signal</li>
+  <li>Add secondary categories that capture other services you offer</li>
+  <li>Add your opening date — Google shows "X years in business" which builds trust</li>
+  <li>Upload fresh photos at least twice a week — recency matters more than total volume</li>
+  <li>Post updates at least twice per week (posting frequency became a top-tier ranking signal in 2026)</li>
+  <li>Respond to every review, positive and negative, within 24 hours</li>
+  <li>Enable messaging and booking if applicable — Google tracks response times and converts those to ranking signals</li>
 </ul>
 
-<h2>Fix 2: Get More Google Reviews</h2>
+<h2>Fix 2: Get More Google Reviews — the Right Way</h2>
 
-<p>Reviews are one of the strongest local ranking signals Google uses. More reviews, more recent reviews, and higher average ratings all improve your position in the local pack.</p>
+<p>Reviews remain one of the strongest local ranking signals. But the rules have tightened in 2026. Google's AI filters now flag suspicious patterns, including:</p>
 
-<p>The fastest way to get reviews is to ask directly. Text or email every client with a direct link to your Google review page. Most happy clients will leave a review if you make it easy.</p>
+<ul>
+  <li>Perfect 5.0 ratings with zero negative feedback (often flagged as manipulated)</li>
+  <li>Review bursts followed by long silences</li>
+  <li>Reviews in exchange for discounts or incentives (explicit policy violation)</li>
+</ul>
 
-<p>A business with 50 reviews will almost always outrank a competitor with 5 — even if the competitor has a better website.</p>
+<p>The goal isn't a flawless score. The goal is a 4.5+ average with at least 20 recent reviews and steady velocity. Text or email every client with a direct Google review link. Use QR codes on receipts or at the counter. Ask specifically — most happy clients will leave a review if it's easy.</p>
+
+<p>A business with 50 real reviews, active responses, and steady new reviews will almost always outrank a competitor with 200 old reviews and nothing recent.</p>
 
 <h2>Fix 3: Make Sure Your Website Is Optimized for Local Search</h2>
 
 <ul>
-<li>Include your city and service area naturally in your page titles, headings, and body copy</li>
-<li>Have one clear H1 on every page that describes what you do and where</li>
-<li>Add LocalBusiness schema markup so Google can read your NAP data directly from your code</li>
-<li>Make sure your site loads fast — Google rewards fast sites with higher rankings</li>
-<li>Get your sitemap submitted to Google Search Console</li>
+  <li>Include your city and service area naturally in page titles, headings, and body copy</li>
+  <li>One clear H1 on every page that describes what you do and where</li>
+  <li>Add LocalBusiness schema markup so Google can read your NAP data directly from your code</li>
+  <li>Make sure your site loads fast — Core Web Vitals (LCP, INP, CLS) directly affect rankings</li>
+  <li>Submit your sitemap to Google Search Console and monitor coverage</li>
+  <li>Allow AI crawlers (GPTBot, ClaudeBot, PerplexityBot) in robots.txt — AI Overviews are increasingly where local discovery happens</li>
 </ul>
 
-<h2>Fix 4: Build Local Citations</h2>
+<h2>Fix 4: Build Local Citations — but Quality Over Volume</h2>
 
-<p>A citation is any mention of your business name, address, and phone number on another website. Yelp, the Better Business Bureau, Clutch, industry directories — these all count.</p>
+<p>A citation is any mention of your business name, address, and phone number on another website. Yelp, the Better Business Bureau, Clutch, industry-specific directories — these all count.</p>
 
-<p>Consistency matters. If your address is listed differently across directories, Google gets confused and your rankings suffer. Audit your citations and make sure every listing matches your Google Business Profile exactly.</p>
+<p>In 2026, the rules shifted. Fewer high-authority, accurate citations now outperform mass directory submissions. Inconsistencies across directories create data quality flags in Google's verification systems — old addresses, different phone formats, abbreviated vs. full street names all suppress rankings.</p>
+
+<p>Audit your existing citations first. Make sure every listing matches your Google Business Profile exactly before adding new ones.</p>
 
 <h2>Fix 5: Create Content That Answers Local Questions</h2>
 
-<p>Blog posts and service pages that answer specific questions Las Vegas customers are searching for drive organic traffic and establish authority.</p>
+<p>Blog posts and service pages that answer specific questions Las Vegas customers are searching for drive organic traffic and establish authority — both for traditional search and AI Overviews.</p>
 
-<p>"How much does a website cost in Las Vegas" is a search happening every day. If you have a page that answers it well, you have a chance to rank for it. If you do not, a competitor will.</p>
+<p>"How much does a website cost in Las Vegas" is a search happening every day. If you have a page that answers it well, you have a chance to rank for it — and a chance to be cited in Google's AI-generated summary of the search results. If you don't, a competitor will.</p>
 
-<h2>What Takes Time and What Is Immediate</h2>
+<h2>Fix 6: Prepare for AI Overviews</h2>
 
-<p>Some of these fixes show results within days — Google Business Profile updates, for example, can improve your local pack rankings quickly. Others, like domain authority and review accumulation, take months of consistent effort.</p>
+<p>Google's AI Overviews now pull directly from Business Profiles and structured website content. Businesses with professionally taken photos, fresh posts, clear service descriptions, and well-structured content get surfaced in these AI-generated answer cards. Businesses with blurry photos, stale profiles, and JavaScript-heavy sites that don't parse cleanly get passed over.</p>
 
-<p>The businesses that rank at the top of Google in Las Vegas are not there because of a one-time campaign. They are there because they have been doing the basics consistently for years.</p>
+<p>The fundamentals of this aren't mysterious — they're just extensions of what already works:</p>
+
+<ul>
+  <li>Clean semantic HTML (proper heading hierarchy, not decorative divs)</li>
+  <li>Content that directly answers common questions in concise factual paragraphs</li>
+  <li>Schema markup that labels what you are and what you do</li>
+  <li>Professional-quality photos, updated regularly</li>
+</ul>
+
+<h2>What Takes Time and What's Immediate</h2>
+
+<p>Some of these fixes show results within days — Google Business Profile updates, fresh photos, and a posting cadence can improve local pack visibility quickly. Others — domain authority, review accumulation, citation cleanup — take months of consistent effort.</p>
+
+<p>The businesses ranking at the top of Google in Las Vegas aren't there because of a one-time campaign. They're there because they've been doing the basics consistently for years.</p>
 
 <h2>Need Help?</h2>
 
-<p>We build websites for Las Vegas businesses that are engineered to rank — fast, properly structured, and set up for local search from day one. Book a strategy call and we will audit your current presence and show you exactly where the gaps are.</p>
+<p>We build websites for Las Vegas businesses engineered to rank — fast, properly structured, and set up for local search and AI Overviews from day one. <a href="/contact">Book a strategy call</a> and we'll audit your current presence and show you exactly where the gaps are.</p>
+
     `,
   },
 
@@ -4522,77 +4590,78 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'How does website speed affect revenue? The research on page load time and conversion rates — and what it means for your business in 2026.',
     content: `
-<h2>Speed Is Not a Technical Problem. It Is a Revenue Problem.</h2>
 
-<p>Most business owners think of website speed as a technical concern — something their developer worries about, not something that affects the bottom line.</p>
+<h2>Speed Is Not a Technical Problem. It's a Revenue Problem.</h2>
 
-<p>The data says otherwise.</p>
+<p>Most business owners think of website speed as a technical concern — something their developer worries about, not something that directly affects the bottom line.</p>
 
-<h2>What the Research Shows</h2>
+<p>The data disagrees.</p>
 
-<p>The relationship between page load time and conversion rate is well documented and consistent across industries.</p>
+<h2>What the Research Actually Shows</h2>
 
-<p>Research from Akamai found that a 1-second delay in page load time reduces conversions by approximately 7%. Google's own performance research puts that figure as high as 20% depending on the industry and audience.</p>
+<p>The relationship between page load time and conversion rate is one of the most studied topics in web performance. The numbers are consistent across multiple major studies:</p>
 
-<p>To put that in concrete terms: if your website currently converts 100 visitors into 10 leads per month, a 2-second improvement in load time could conservatively add 1–4 leads per month — without changing anything else about your marketing or your offer.</p>
+<ul>
+  <li><strong>Akamai's State of Online Retail Performance report</strong> analyzed 10 billion retail site visits. A 100-millisecond delay reduced conversions by up to 7%. A 1-second delay reduced conversions by up to 22%.</li>
+  <li><strong>The Portent study</strong> measured an average 4.42% conversion drop per additional second of load time, across 20 industries.</li>
+  <li><strong>Amazon's internal data</strong> (widely cited) found that every 100ms of latency cost them 1% in sales.</li>
+  <li><strong>Walmart</strong> reported a 2% conversion increase for every 1 second of load time improvement.</li>
+</ul>
 
-<p>At scale, those numbers compound quickly.</p>
+<p>The specific numbers vary by industry and audience, but the direction is uniform: faster sites convert better. The only argument is about magnitude.</p>
 
 <h2>The Mobile Problem Is Worse</h2>
 
 <p>Most of your website visitors are on a phone. And mobile performance is consistently worse than desktop performance for most business websites.</p>
 
-<p>According to Hostinger's 2025 website load time statistics, the average WordPress site loads in 2.5 seconds on desktop — and 13.25 seconds on mobile. That is not a typo. More than 13 seconds on a phone, on a slow 4G connection.</p>
+<p>Hostinger's 2025 website load time statistics put the average WordPress site at 2.5 seconds on desktop and 13.25 seconds on mobile. That's not a typo — 13.25 seconds on a phone, which is 4.65 seconds slower than the cross-platform mobile average.</p>
 
-<p>53% of mobile users abandon a site that takes more than 3 seconds to load, according to Google's mobile performance research. A site loading in 13 seconds is not losing some visitors. It is losing almost all of them.</p>
+<p>Google's own mobile performance research found that 53% of mobile users abandon a site that takes more than 3 seconds to load. A site loading in 13 seconds is not losing some visitors. It's losing the overwhelming majority of them before the page even finishes rendering.</p>
 
 <h2>What Google Does With Slow Sites</h2>
 
 <p>Beyond the direct conversion impact, slow sites rank lower in Google search results.</p>
 
-<p>Google uses Core Web Vitals as a ranking factor — specifically Largest Contentful Paint (LCP), which measures how quickly the main content of a page becomes visible. A site with poor LCP scores will rank below faster competitors, all else being equal.</p>
+<p>Google uses Core Web Vitals as a ranking factor. Sites that pass all three metrics (LCP, INP, CLS) receive a ranking boost; sites that fail them get demoted, all else being equal.</p>
 
-<p>This means a slow site is not just converting fewer of the visitors it gets — it is also getting fewer visitors in the first place.</p>
+<p>This compounds: a slow site converts fewer of the visitors it gets, and gets fewer visitors in the first place because Google ranks it lower.</p>
 
-<h2>The WordPress vs Next.js Speed Gap</h2>
+<h2>The WordPress vs. Next.js Speed Gap</h2>
 
 <p>Platform choice is the biggest determinant of baseline speed for most business websites.</p>
 
-<p>According to Colorlib's 2026 site speed statistics, the average WordPress site loads in approximately 3.5 seconds. According to benchmarks published by Vezert in 2026, a well-built Next.js site typically achieves an LCP of around 1.1 seconds — more than 2 seconds faster than the WordPress average.</p>
+<p>As noted above, Hostinger's data puts the average WordPress site at 13.25 seconds on mobile. According to Chrome team data reported across performance research, top-performing sites average around 1,220 milliseconds for Largest Contentful Paint — roughly 10x faster than the average WordPress mobile experience.</p>
 
-<p>That difference is not marginal. Based on the Akamai research, 2 additional seconds of load time could be reducing your conversions by 14% or more compared to a faster competitor.</p>
+<p>A well-built Next.js site typically lives in that top-performing range by default. Not because Next.js is magic, but because the architecture eliminates most of what makes WordPress slow — no plugin stack, no database query per page view, static HTML served from a CDN.</p>
 
-<h2>A Real-World Example</h2>
+<p>Based on the Akamai research, 10+ seconds of additional load time doesn't just reduce conversions — it effectively eliminates them for the mobile traffic that makes up most of your audience.</p>
 
-<p>Consider a Las Vegas restaurant with a website that loads in 4 seconds on mobile. Based on industry research:</p>
+<h2>A Realistic Example</h2>
 
-<ul>
-<li>A significant portion of mobile visitors abandon before the page loads</li>
-<li>Of those who stay, the slow experience reduces the likelihood of a reservation</li>
-<li>Google ranks the site lower for competitive searches like "restaurant las vegas" because of poor Core Web Vitals</li>
-</ul>
+<p>A Las Vegas restaurant with a WordPress website loading in 8 seconds on mobile is losing most of its mobile traffic before anyone sees the menu. It's also ranking lower than competitors with faster sites for searches like "restaurants near me" — because Google's Core Web Vitals signal is working against them.</p>
 
-<p>Now consider the same restaurant with a site that loads in under 1.5 seconds. More visitors stay. More of them book. Google ranks the site higher. The marketing spend goes further because the site converts better.</p>
+<p>The same restaurant with a Next.js site loading in under 2 seconds: more visitors stay, more reach the reservation flow, more complete the booking. Google ranks them higher. The marketing spend goes further because the site actually converts.</p>
 
-<p>The website did not get a new design. It just got faster.</p>
+<p>Nothing about the design or offer changed. The site just got faster.</p>
 
 <h2>What Makes a Website Fast</h2>
 
-<p>The biggest factors in page load speed are:</p>
+<p>The biggest factors in page load speed:</p>
 
 <ul>
-<li><strong>Hosting infrastructure:</strong> A CDN-served static site loads faster than a server-rendered WordPress site on shared hosting</li>
-<li><strong>Image optimization:</strong> Unoptimized images are the most common cause of slow load times</li>
-<li><strong>JavaScript payload:</strong> Too much JavaScript blocking the initial render slows everything down</li>
-<li><strong>Third-party scripts:</strong> Analytics, chat widgets, and ad trackers all add load time</li>
-<li><strong>Platform architecture:</strong> Next.js static pages load from CDN with no database query — fundamentally faster than WordPress by design</li>
+  <li><strong>Hosting infrastructure.</strong> A CDN-served static site loads faster than a server-rendered WordPress site on shared hosting</li>
+  <li><strong>Image optimization.</strong> Unoptimized images are the most common cause of slow load times</li>
+  <li><strong>JavaScript payload.</strong> Too much JavaScript blocking the initial render slows everything down</li>
+  <li><strong>Third-party scripts.</strong> Analytics, chat widgets, ad trackers — each one adds load time</li>
+  <li><strong>Platform architecture.</strong> Next.js static pages load from CDN with no database query. WordPress can match this with heavy caching, but it's an ongoing fight rather than the default</li>
 </ul>
 
 <h2>Find Out How Your Site Scores</h2>
 
-<p>Go to pagespeed.web.dev and run your website right now. If your mobile performance score is below 70, your site is actively costing you customers and rankings.</p>
+<p>Go to pagespeed.web.dev and run your website right now — on mobile. If your mobile performance score is below 70, your site is actively costing you customers and rankings.</p>
 
-<p>Book a strategy call and we will run a full performance audit, show you exactly where the problems are, and tell you what it would take to fix them.</p>
+<p><a href="/contact">Book a strategy call</a> and we'll run a full performance audit, show you exactly where the problems are, and tell you what it would take to fix them.</p>
+
     `,
   },
 
@@ -4701,6 +4770,7 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
     author: 'Vizantir',
     metaDescription: 'Why do Las Vegas hospitality brands need a faster website? The data on page speed, conversions, and Google rankings for restaurants and hotels.',
     content: `
+
 <h2>Las Vegas Is One of the Most Competitive Hospitality Markets in the World</h2>
 
 <p>A potential guest searching for a restaurant or hotel in Las Vegas has hundreds of options. They research on their phone, often in the moment — between meetings, while waiting for a ride, or right before deciding where to go for dinner.</p>
@@ -4709,55 +4779,57 @@ If you'd rather have an expert handle it — or explore whether a faster platfor
 
 <h2>What Slow Actually Costs You</h2>
 
-<p>The relationship between page load speed and conversions is well documented.</p>
+<p>The relationship between page load speed and conversions is one of the most studied topics in web performance.</p>
 
-<p>Research from Akamai shows that a 1-second delay in page load time reduces conversions by approximately 7%. Google's performance research puts that number as high as 20% for mobile users.</p>
+<p>Akamai's State of Online Retail Performance report, analyzing 10 billion retail site visits, found that a 100-millisecond delay reduces conversion rates by up to 7%. A 1-second delay reduces conversions by up to 22%. The Portent study across 20 industries put the average conversion drop at 4.42% per additional second of load time.</p>
 
-<p>According to Hostinger's 2025 website load time statistics, the average WordPress site loads in 13.25 seconds on mobile. According to Google's own mobile performance research, 53% of mobile users abandon a site that takes more than 3 seconds to load.</p>
+<p>Hostinger's 2025 website load time statistics put the average WordPress site at 13.25 seconds on mobile — 4.65 seconds slower than the cross-platform mobile average. Google's own mobile performance research found that 53% of mobile users abandon a site that takes more than 3 seconds to load.</p>
 
-<p>A Las Vegas restaurant with a 13-second mobile load time is not losing some potential reservations. It is losing the vast majority of mobile visitors before they ever see the menu.</p>
+<p>A Las Vegas restaurant with a 13-second mobile load time isn't losing some potential reservations. It's losing the overwhelming majority of mobile visitors before they ever see the menu.</p>
 
 <h2>The Google Rankings Problem</h2>
 
 <p>Beyond the direct conversion impact, slow sites rank lower in Google search results.</p>
 
-<p>Google uses Core Web Vitals as a ranking factor — including Largest Contentful Paint, which measures how quickly the main content of a page becomes visible. A hospitality website with poor LCP scores will rank below faster competitors for searches like "restaurants in Las Vegas" or "boutique hotels Las Vegas."</p>
+<p>Google uses Core Web Vitals as a ranking factor — specifically Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS). A hospitality website with poor scores will rank below faster competitors for searches like "restaurants in Las Vegas" or "boutique hotels Las Vegas."</p>
 
 <p>This compounds the problem: a slow site gets fewer visitors from search and converts a smaller percentage of the visitors it does get.</p>
 
 <h2>The Speed Gap Between WordPress and Next.js</h2>
 
-<p>Most hospitality websites in Las Vegas are built on WordPress or website builders like Squarespace and Wix. These platforms are easy to set up but carry a performance ceiling.</p>
+<p>Most hospitality websites in Las Vegas are built on WordPress or website builders like Squarespace and Wix. These platforms are easy to set up but carry a performance ceiling — especially on mobile.</p>
 
-<p>According to Colorlib's 2026 site speed data, the average WordPress site loads in approximately 3.5 seconds on desktop. According to benchmarks from Vezert published in 2026, a well-built Next.js site typically achieves a Largest Contentful Paint of around 1.1 seconds — more than twice as fast.</p>
+<p>As noted above, Hostinger's data puts the average WordPress site at 13.25 seconds on mobile. Chrome team data reported across performance research shows that top-performing sites average around 1,220 milliseconds for Largest Contentful Paint — roughly 10x faster than the average WordPress mobile experience.</p>
 
-<p>That difference translates directly into more visitors staying on the page, more of them reaching the reservation flow, and more bookings completed.</p>
+<p>A well-built Next.js site typically sits in that top-performing range by default. Not because Next.js is magic, but because the architecture eliminates most of what makes WordPress slow on mobile — no plugin stack, no database query per page view, static HTML served from a CDN.</p>
 
 <h2>What a Fast Hospitality Website Looks Like</h2>
 
 <p>The best-performing hospitality websites share a few characteristics:</p>
 
 <ul>
-<li>They load the hero image and main content in under 1.5 seconds on mobile</li>
-<li>The reservation or booking CTA is visible without scrolling on every device</li>
-<li>The menu is accessible in one click and formatted as a web page, not a PDF</li>
-<li>Photography loads progressively — visitors see something immediately rather than waiting for the full image</li>
-<li>The mobile experience is designed first, not adapted from desktop</li>
+  <li>Hero image and main content visible in under 2 seconds on mobile</li>
+  <li>Reservation or booking CTA visible without scrolling on every device</li>
+  <li>Menu accessible in one click, formatted as a web page — not a PDF</li>
+  <li>Photography loads progressively — visitors see something immediately instead of waiting for the full image</li>
+  <li>Mobile experience designed first, not adapted from desktop</li>
+  <li>Booking widget embedded directly in the site design — no redirect to a third-party booking page</li>
 </ul>
 
 <h2>The Compounding Advantage</h2>
 
-<p>A faster website does not just convert better today. It builds a compounding advantage over time.</p>
+<p>A faster website doesn't just convert better today. It builds a compounding advantage over time.</p>
 
 <p>Better Core Web Vitals scores improve Google rankings, which drive more organic traffic. More organic traffic means more potential guests entering the booking funnel. A higher conversion rate means more of those guests complete a reservation.</p>
 
-<p>For a Las Vegas restaurant or hotel generating 200 website visits per month from organic search, a 15% improvement in conversion rate from better performance is worth dozens of additional reservations per year — without increasing marketing spend.</p>
+<p>For a Las Vegas hospitality business, applying the conservative 7% Akamai figure per second of improvement: shaving 4 seconds off load time on a site generating 500 monthly mobile visits could realistically add 10–30% more completed bookings — without increasing marketing spend, without changing the offer, without running a single extra ad.</p>
 
 <h2>Where to Start</h2>
 
 <p>Go to pagespeed.web.dev and run your hospitality website right now — on mobile. If your performance score is below 70, your site is actively costing you reservations and rankings.</p>
 
-<p>We offer complimentary performance and conversion reviews for Las Vegas hospitality brands. Book a strategy call and we will show you your scores, what is causing them, and what a faster site would mean for your business.</p>
+<p><a href="/contact">Book a strategy call</a> and we'll run a full performance review, show you your scores, explain what's causing them, and tell you what a faster site would mean for your business.</p>
+
     `,
   },
 ]
