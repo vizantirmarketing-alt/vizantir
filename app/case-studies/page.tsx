@@ -57,6 +57,8 @@ export default async function CaseStudiesPage() {
     sanityFetch<CaseStudyListItem[]>(allCaseStudiesQuery, {}, { tags: ['case-studies'] }),
   ])
 
+  console.log('[case-studies] Sanity titles:', caseStudies.map((cs) => cs.title))
+
   if (!settings) {
     return (
       <>
