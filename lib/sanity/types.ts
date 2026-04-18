@@ -153,14 +153,14 @@ export interface CaseStudyListItem {
   heroImage?: CaseStudyImage
   stack?: string[]
   featured?: boolean
+  siteUrl?: string
+  challenge?: any[] // PortableText
+  solution?: any[] // PortableText
+  results?: any[] // PortableText
 }
 
 export interface CaseStudy extends CaseStudyListItem, SEOFields {
   gallery?: CaseStudyImage[]
-  challenge?: any[] // PortableText
-  solution?: any[] // PortableText
-  results?: any[] // PortableText
-  siteUrl?: string
 }
 
 // ============================================

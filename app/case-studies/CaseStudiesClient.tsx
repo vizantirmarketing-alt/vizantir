@@ -1,11 +1,12 @@
 'use client'
 
-import { memo, useEffect, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight } from 'lucide-react'
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
+import { ArrowRight, ExternalLink } from 'lucide-react'
+
+import { useTheme } from '@/contexts/ThemeContext'
 import { trackCTAClick } from '@/lib/analytics'
 import type { CaseStudyListItem } from '@/lib/sanity/types'
 
@@ -24,6 +25,18 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   const { isNightMode } = useTheme()
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
 
+  const colors = useMemo(
+    () => ({
+      bg: isNightMode ? '#000000' : '#FAFAFA',
+      text: isNightMode ? '#F8F8F8' : '#1A1A1A',
+      textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
+      accent: '#FFC64C',
+      cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
+      cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    }),
+    [isNightMode],
+  )
+
   const categories = useMemo(() => {
     const industryList = caseStudies
       .map((cs) => cs.industry)
@@ -31,23 +44,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
     return ['All', ...Array.from(new Set(industryList))]
   }, [caseStudies])
 
-  const filteredStudies = selectedCategory === 'All' 
-    ? caseStudies 
-    : caseStudies.filter(cs => cs.industry === selectedCategory)
-
-  useEffect(() => {
-    for (const study of caseStudies) {
-      const url = study.heroImage?.asset?.url
-      if (!url) continue
-      let hostname: string
-      try {
-        hostname = new URL(url.trim().startsWith('//') ? `https:${url.trim()}` : url.trim()).hostname
-      } catch {
-        hostname = '(invalid URL)'
-      }
-      console.log('[case-studies] study.heroImage.asset.url', study.title, url, '→ hostname:', hostname)
-    }
-  }, [caseStudies])
+  const filteredStudies = selectedCategory === 'All' ? caseStudies : caseStudies.filter((cs) => cs.industry === selectedCategory)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -69,35 +66,29 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   }
 
   return (
-    <main 
+    <main
       className="min-h-screen pt-24 pb-20 transition-colors duration-500"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: colors.bg }}
     >
       <div className="container mx-auto px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="mx-auto max-w-7xl">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <p 
-              className="text-sm tracking-[0.3em] uppercase mb-4"
-              style={{ color: '#FFC64C' }}
-            >
+            <p className="mb-4 text-sm uppercase tracking-[0.3em]" style={{ color: colors.accent }}>
               Our Work
             </p>
-            <h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500"
-              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+            <h1
+              className="mb-6 text-4xl font-black tracking-tight transition-colors duration-500 md:text-5xl lg:text-6xl"
+              style={{ color: colors.text }}
             >
               Websites We Have Launched
             </h1>
-            <p 
-              className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-            >
+            <p className="mx-auto max-w-2xl text-lg transition-colors duration-500 md:text-xl" style={{ color: colors.textMuted }}>
               Modern websites built to load fast, rank well, and convert visitors
             </p>
           </motion.div>
@@ -107,29 +98,33 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex flex-wrap items-center justify-center gap-3 mb-16"
+            className="mb-16 flex flex-wrap items-center justify-center gap-3"
           >
             {categories.map((category) => (
               <button
                 key={category}
+                type="button"
                 onClick={() => setSelectedCategory(category)}
-                className="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300"
+                className="rounded-full px-6 py-2.5 text-sm font-medium transition-all duration-300"
                 style={{
-                  background: selectedCategory === category
-                    ? '#FFC64C'
-                    : isNightMode
-                    ? 'rgba(255, 255, 255, 0.05)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                  color: selectedCategory === category
-                    ? '#1A1A1A'
-                    : isNightMode
-                    ? '#FFFFFF'
-                    : '#1A1A1A',
-                  border: selectedCategory === category
-                    ? 'none'
-                    : isNightMode
-                    ? '1px solid rgba(255, 255, 255, 0.1)'
-                    : '1px solid rgba(0, 0, 0, 0.1)',
+                  background:
+                    selectedCategory === category
+                      ? colors.accent
+                      : isNightMode
+                        ? 'rgba(255, 255, 255, 0.05)'
+                        : 'rgba(0, 0, 0, 0.05)',
+                  color:
+                    selectedCategory === category
+                      ? '#1A1A1A'
+                      : isNightMode
+                        ? '#FFFFFF'
+                        : '#1A1A1A',
+                  border:
+                    selectedCategory === category
+                      ? 'none'
+                      : isNightMode
+                        ? '1px solid rgba(255, 255, 255, 0.1)'
+                        : '1px solid rgba(0, 0, 0, 0.1)',
                 }}
               >
                 {category}
@@ -143,93 +138,107 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16"
+            className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16"
           >
             {filteredStudies.map((study, index) => (
               <motion.div
-                key={study.title}
+                key={study._id}
                 variants={itemVariants}
-                className="group flex h-full flex-col"
+                className="group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1"
+                style={{
+                  background: colors.cardBg,
+                  borderColor: colors.cardBorder,
+                }}
               >
-                <Link
-                  href={`/case-studies/${study.slug}`}
-                  className="group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1"
-                  style={{
-                    background: isNightMode ? '#0A0A0A' : '#FFFFFF',
-                    borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-                  }}
-                >
-                  {study.heroImage?.asset?.url ? (
-                    <div
-                      className="relative mb-6 w-full shrink-0 overflow-hidden rounded-xl border bg-gray-100 dark:bg-zinc-900"
-                      style={{
-                        height: '280px',
-                        position: 'relative',
-                        width: '100%',
-                        borderColor: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-                      }}
-                    >
-                      <Image
-                        src={absoluteImageUrl(study.heroImage.asset.url)}
-                        alt={study.heroImage.alt || study.title}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        priority={index < 2}
-                      />
+                {study.heroImage?.asset?.url ? (
+                  <div
+                    className="relative mb-6 w-full shrink-0 overflow-hidden rounded-xl border p-px"
+                    style={{
+                      height: '400px',
+                      width: '100%',
+                      borderColor: colors.cardBorder,
+                      background: colors.cardBg,
+                    }}
+                  >
+                    <Image
+                      src={absoluteImageUrl(study.heroImage.asset.url)}
+                      alt={study.heroImage.alt || study.title}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      priority={index < 2}
+                    />
+                  </div>
+                ) : null}
+
+                <div className="flex min-h-0 flex-1 flex-col gap-4">
+                  {study.industry ? (
+                    <p className="text-sm uppercase tracking-[0.2em]" style={{ color: colors.accent }}>
+                      {study.industry}
+                    </p>
+                  ) : null}
+                  <h3
+                    className="text-2xl font-bold transition-colors duration-300 group-hover:text-[#FFC64C] md:text-3xl"
+                    style={{ color: colors.text }}
+                  >
+                    {study.title}
+                  </h3>
+                  {study.client ? (
+                    <p className="text-sm font-medium uppercase tracking-[0.15em]" style={{ color: colors.textMuted }}>
+                      {study.client}
+                    </p>
+                  ) : null}
+                  {study.summary ? (
+                    <p className="leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
+                      {study.summary}
+                    </p>
+                  ) : null}
+                  {study.stack?.length ? (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {study.stack.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full px-3 py-1 text-xs font-medium transition-colors duration-500"
+                          style={{
+                            background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                            color: colors.textMuted,
+                            border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+                          }}
+                        >
+                          {item}
+                        </span>
+                      ))}
                     </div>
                   ) : null}
+                </div>
 
-                  <div className="flex min-h-0 flex-1 flex-col gap-4">
-                    {study.industry ? (
-                      <p className="text-sm tracking-[0.2em] uppercase" style={{ color: '#FFC64C' }}>
-                        {study.industry}
-                      </p>
-                    ) : null}
-                    <h3
-                      className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
-                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                <div
+                  className="mt-6 flex flex-col gap-4 border-t pt-5"
+                  style={{ borderColor: colors.cardBorder }}
+                >
+                  {study.siteUrl ? (
+                    <a
+                      href={study.siteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-85 md:text-base"
+                      style={{ color: colors.accent }}
                     >
-                      {study.title}
-                    </h3>
-                    {study.client ? (
-                      <p className="text-sm font-medium uppercase tracking-[0.15em]" style={{ color: isNightMode ? '#D1D5DB' : '#4B5563' }}>
-                        {study.client}
-                      </p>
-                    ) : null}
-                    {study.summary ? (
-                      <p className="leading-relaxed transition-colors duration-500" style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}>
-                        {study.summary}
-                      </p>
-                    ) : null}
-                    {study.stack?.length ? (
-                      <div className="flex flex-wrap gap-2 pt-2">
-                        {study.stack.map((item) => (
-                          <span
-                            key={item}
-                            className="px-3 py-1 rounded-full text-xs font-medium transition-colors duration-500"
-                            style={{
-                              background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
-                              color: isNightMode ? '#A0A0A0' : '#6B6B6B',
-                              border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
-                            }}
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-                    <span
-                      className="mt-auto inline-flex items-center gap-2 font-semibold transition-colors duration-300 group-hover:text-[#FFC64C]"
-                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
-                    >
-                      View case study
-                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                    </span>
-                  </div>
-                </Link>
-                </motion.div>
-              ))}
+                      Visit live site
+                      <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
+                    </a>
+                  ) : null}
+                  <Link
+                    href={`/case-studies/${study.slug}`}
+                    className="inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-85 md:text-base"
+                    style={{ color: colors.accent }}
+                  >
+                    Read case study
+                    <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
 
           {/* Bottom CTA */}
@@ -237,25 +246,22 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center mt-20"
+            className="mt-20 text-center"
           >
-            <p 
-              className="text-xl mb-8 transition-colors duration-500"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-            >
+            <p className="mb-8 text-xl transition-colors duration-500" style={{ color: colors.textMuted }}>
               Ready to grow with a partner who values transparency and measurable results?
             </p>
-            
+
             <Link
               href="/contact"
               onClick={() => trackCTAClick('start_your_project', 'case_studies')}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-[#FFC64C] text-[#1A1A1A]"
+              className="group inline-flex items-center gap-2 rounded-xl bg-[#FFC64C] px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-105"
               style={{
                 boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
               }}
             >
               Start Your Project
-              <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
         </div>

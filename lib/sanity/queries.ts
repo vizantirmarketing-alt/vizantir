@@ -138,7 +138,11 @@ export const allCaseStudiesQuery = groq`
       }
     },
     stack,
-    featured
+    featured,
+    siteUrl,
+    challenge,
+    solution,
+    results
   }
 `
 

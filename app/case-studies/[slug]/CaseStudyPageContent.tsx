@@ -29,14 +29,13 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
         : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
     }),
-    [isNightMode]
+    [isNightMode],
   )
 
   const hasChallenge = Array.isArray(caseStudy.challenge) && caseStudy.challenge.length > 0
   const hasSolution = Array.isArray(caseStudy.solution) && caseStudy.solution.length > 0
   const hasResults = Array.isArray(caseStudy.results) && caseStudy.results.length > 0
   const hasStack = Array.isArray(caseStudy.stack) && caseStudy.stack.length > 0
-  const hasGallery = Array.isArray(caseStudy.gallery) && caseStudy.gallery.length > 0
 
   return (
     <main style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
@@ -112,52 +111,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
       </section>
 
       <div className="h-px w-full" style={{ background: colors.divider }} />
-
-      {hasGallery ? (
-        <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
-            <div className="mx-auto max-w-6xl">
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45 }}
-                className="mb-10 text-center md:text-left"
-              >
-                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
-                  Gallery
-                </span>
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  Project visuals
-                </h2>
-              </motion.div>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {caseStudy.gallery!.map((image, index) => (
-                  <motion.div
-                    key={`${image.asset?._id || 'gallery'}-${index}`}
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.04 }}
-                    className="overflow-hidden rounded-2xl border"
-                    style={{ borderColor: colors.cardBorder, background: colors.cardBg }}
-                  >
-                    {image.asset?.url ? (
-                      <img
-                        src={image.asset.url}
-                        alt={image.alt || `${caseStudy.title} gallery image ${index + 1}`}
-                        className="h-64 w-full object-cover md:h-72"
-                        loading="lazy"
-                      />
-                    ) : null}
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-          <div className="h-px w-full" style={{ background: colors.divider }} />
-        </>
-      ) : null}
 
       {hasChallenge ? (
         <>
