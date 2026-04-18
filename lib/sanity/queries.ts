@@ -37,6 +37,10 @@ export const allPostsQuery = groq`
     "slug": slug.current,
     publishedAt,
     excerpt,
+    category,
+    tags,
+    readTime,
+    "metaDescription": seo.metaDescription,
     "author": author-> {
       name,
       "slug": slug.current
@@ -53,6 +57,9 @@ export const postBySlugQuery = groq`
     publishedAt,
     excerpt,
     body,
+    category,
+    tags,
+    readTime,
     "metaTitle": seo.metaTitle,
     "metaDescription": seo.metaDescription,
     "ogImageUrl": coalesce(seo.ogImage.asset->url, mainImage.asset->url),

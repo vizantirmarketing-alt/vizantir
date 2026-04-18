@@ -4,11 +4,32 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
-import { blogPosts, categories } from '@/lib/blog-data'
+import { categories } from '@/lib/blog-data'
 
 const themeBgColorTransition = 'background-color 0.3s ease, color 0.3s ease'
 
-export default function BlogPageClient() {
+export type SanityBlogPostPreview = {
+  _id: string
+  _updatedAt: string
+  title: string
+  slug: string
+  publishedAt: string
+  excerpt?: string
+  category?: string
+  tags?: string[]
+  readTime?: string
+  metaDescription?: string
+  author?: {
+    name: string
+    slug: string
+  }
+}
+
+type Props = {
+  posts: SanityBlogPostPreview[]
+}
+
+export default function BlogPageClient({ posts }: Props) {
   const { isNightMode } = useTheme()
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
@@ -31,19 +52,22 @@ export default function BlogPageClient() {
 
   // Filter posts based on search and category
   const filteredPosts = useMemo(() => {
-    return blogPosts.filter((post) => {
+    return posts.filter((post) => {
+      const excerpt = post.excerpt ?? ''
+      const tags = post.tags ?? []
+
       const matchesSearch =
         searchQuery === '' ||
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
 
       const matchesCategory =
         activeCategory === 'All' || post.category === activeCategory
 
       return matchesSearch && matchesCategory
     })
-  }, [searchQuery, activeCategory])
+  }, [posts, searchQuery, activeCategory])
 
   return (
     <main
@@ -148,8 +172,8 @@ export default function BlogPageClient() {
                     activeCategory === category
                       ? colors.accent
                       : themeNight
-                      ? 'rgba(255,255,255,0.05)'
-                      : 'rgba(0,0,0,0.05)',
+                        ? 'rgba(255,255,255,0.05)'
+                        : 'rgba(0,0,0,0.05)',
                   color:
                     activeCategory === category
                       ? themeNight
@@ -202,7 +226,7 @@ export default function BlogPageClient() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post, index) => (
                 <motion.article
-                  key={post.slug}
+                  key={post._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
@@ -229,13 +253,13 @@ export default function BlogPageClient() {
                             transition: themeBgColorTransition,
                           }}
                         >
-                          {post.category}
+                          {post.category ?? 'Article'}
                         </span>
                         <span
                           className="text-xs transition-colors duration-500"
                           style={{ color: colors.textSubtle }}
                         >
-                          {post.readTime}
+                          {post.readTime ?? ''}
                         </span>
                       </div>
 
@@ -249,15 +273,24 @@ export default function BlogPageClient() {
 
                       {/* Excerpt */}
                       <p
-                        className="text-sm leading-relaxed mb-4 transition-colors duration-500"
+                        className="text-sm leading-relaxed mb-3 transition-colors duration-500"
                         style={{ color: colors.textMuted }}
                       >
-                        {post.excerpt}
+                        {post.excerpt ?? post.metaDescription ?? ''}
                       </p>
+
+                      {post.author?.name ? (
+                        <p
+                          className="text-xs mb-4 transition-colors duration-500"
+                          style={{ color: colors.textSubtle }}
+                        >
+                          {post.author.name}
+                        </p>
+                      ) : null}
 
                       {/* Tags */}
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {post.tags.slice(0, 3).map((tag) => (
+                        {(post.tags ?? []).slice(0, 3).map((tag) => (
                           <span
                             key={tag}
                             className="text-xs px-2 py-1 rounded transition-colors duration-500"

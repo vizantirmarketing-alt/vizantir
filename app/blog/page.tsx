@@ -3,12 +3,12 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { allPostsQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
-import type { PostListItem, SiteSettings } from '@/lib/sanity/types'
-import BlogPageClient from './BlogPageClient'
+import type { SiteSettings } from '@/lib/sanity/types'
+import BlogPageClient, { type SanityBlogPostPreview } from './BlogPageClient'
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
-  
+
   if (!settings) {
     return {
       title: 'Insights & Resources on Web Design & Strategy | Vizantir Blog',
@@ -27,12 +27,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogPage() {
   const [posts, settings] = await Promise.all([
-    sanityFetch<PostListItem[]>(allPostsQuery, {}, { tags: ['posts'] }),
+    sanityFetch<SanityBlogPostPreview[]>(allPostsQuery, {}, { tags: ['posts'] }),
     sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
   ])
 
+  const postList = posts ?? []
+
   if (!settings) {
-    return <BlogPageClient />
+    return <BlogPageClient posts={postList} />
   }
 
   const url = `${settings.siteUrl}/blog`
@@ -42,7 +44,7 @@ export default async function BlogPage() {
       name: 'Blog',
       description: 'Latest articles and insights.',
       siteUrl: settings.siteUrl,
-      items: (posts || []).map((p) => ({ name: p.title, url: `${settings.siteUrl}/blog/${p.slug}` })),
+      items: postList.map((p) => ({ name: p.title, url: `${settings.siteUrl}/blog/${p.slug}` })),
     }),
     breadcrumbSchema([
       { name: 'Home', url: settings.siteUrl },
@@ -53,7 +55,7 @@ export default async function BlogPage() {
   return (
     <>
       <JsonLd id="ld-blog-index" data={pageGraph} />
-      <BlogPageClient />
+      <BlogPageClient posts={postList} />
     </>
   )
 }
