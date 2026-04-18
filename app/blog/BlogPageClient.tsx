@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
-import { categories } from '@/lib/blog-data'
+import { blogCategories } from '@/lib/blog-categories'
 
 const themeBgColorTransition = 'background-color 0.3s ease, color 0.3s ease'
 
@@ -162,7 +162,7 @@ export default function BlogPageClient({ posts }: Props) {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-wrap justify-center gap-2 mb-12"
           >
-            {['All', ...categories].map((category) => (
+            {['All', ...blogCategories].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}

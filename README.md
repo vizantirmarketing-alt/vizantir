@@ -100,7 +100,7 @@ Deployed automatically to Vercel on push to `main`. Environment variables must b
 
 ## Notes
 
-- Blog content is driven by `lib/blog-data.ts` — add new posts there
+- Blog content lives in Sanity CMS; edit posts in Studio at `/studio`
 - Services display order on `/services` is controlled by the `order` field on each `service` document in Sanity Studio
 - Schema markup lives in `lib/schema/index.ts` and `app/layout.tsx`
 - Commit workflow: `git add .` → `git commit -m "..."` → `git push`
