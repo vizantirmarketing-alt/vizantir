@@ -11,16 +11,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!settings) {
     return {
-      title: 'Insights & Resources on Web Design & Strategy | Vizantir Blog',
+      title: 'Insights & Guides | Vizantir Blog',
       description:
-        'Read articles on website strategy, design trends, technology and best practices for hospitality, legal and luxury brands written by our experts.',
+        'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.',
     }
   }
 
   return {
-    title: 'Insights & Resources on Web Design & Strategy | Vizantir Blog',
+    title: 'Insights & Guides | Vizantir Blog',
     description:
-      'Read articles on website strategy, design trends, technology and best practices for hospitality, legal and luxury brands written by our experts.',
+      'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.',
     alternates: { canonical: `${settings.siteUrl}/blog` },
   }
 }

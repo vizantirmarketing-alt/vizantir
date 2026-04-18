@@ -1,6 +1,8 @@
 /**
- * Update existing Sanity post bodies from HTML files in content-updates/.
- * Filename (without .html) = post slug. Default: dry run. Pass --live to write.
+ * Update existing Sanity posts from content-updates/.
+ * - .html → portable body (body field only)
+ * - .json → simple string fields present in the file (never body)
+ * Default: dry run. Pass --live to write.
  */
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
@@ -21,6 +23,9 @@ const ROOT = join(__dirname, '..')
 const CONTENT_DIR = join(ROOT, 'content-updates')
 
 const API_VERSION = '2025-12-05'
+
+/** JSON keys we accept (string values only). meta* map to seo.* on the document. */
+const JSON_STRING_KEYS = ['excerpt', 'title', 'readTime', 'metaTitle', 'metaDescription'] as const
 
 /** Matches post schema `codeBlock.language` options */
 type CodeLanguage =
@@ -220,16 +225,22 @@ function replacePlaceholdersWithCodeBlocks(
   })
 }
 
-function htmlFileToSlug(filename: string): string {
-  if (!filename.endsWith('.html')) return filename
-  return filename.slice(0, -'.html'.length)
+function slugFromContentFile(file: string): string {
+  return file.replace(/\.(html|json)$/i, '')
 }
 
-function listHtmlFiles(): string[] {
+function fileKind(file: string): 'html' | 'json' | 'other' {
+  const lower = file.toLowerCase()
+  if (lower.endsWith('.html')) return 'html'
+  if (lower.endsWith('.json')) return 'json'
+  return 'other'
+}
+
+function listContentDirFiles(): string[] {
   if (!existsSync(CONTENT_DIR)) {
     return []
   }
-  return readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.html') && !f.startsWith('.'))
+  return readdirSync(CONTENT_DIR).filter((f) => !f.startsWith('.'))
 }
 
 function htmlToPortableBody(html: string, blockContentType: ArraySchemaType): TypedObject[] {
@@ -241,10 +252,62 @@ function htmlToPortableBody(html: string, blockContentType: ArraySchemaType): Ty
   return withCode.map((b) => normalizeBlock(b) as TypedObject)
 }
 
+function formatHtmlBodySummary(blockCount: number, codeBlockCount: number): string {
+  const codePart = codeBlockCount === 1 ? '1 code block' : `${codeBlockCount} code blocks`
+  return `${blockCount} blocks, ${codePart}`
+}
+
+function formatJsonFieldsSummary(labelFields: string[]): string {
+  if (labelFields.length === 0) return ''
+  if (labelFields.length === 1) return `${labelFields[0]} only`
+  return labelFields.join(', ')
+}
+
+/**
+ * Build Sanity .set() payload from parsed JSON object. Only known string fields.
+ * Returns label order for logging (excerpt, title, readTime, metaTitle, metaDescription).
+ */
+function buildPatchFromJsonObject(obj: Record<string, unknown>): { set: Record<string, unknown>; labelFields: string[] } | null {
+  const set: Record<string, unknown> = {}
+  const labelFields: string[] = []
+
+  for (const key of JSON_STRING_KEYS) {
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) continue
+    const v = obj[key]
+    if (typeof v !== 'string') {
+      console.warn(`Skipping JSON field "${key}": expected string, got ${typeof v}`)
+      continue
+    }
+    if (key === 'metaTitle') {
+      set['seo.metaTitle'] = v
+      labelFields.push('metaTitle')
+    } else if (key === 'metaDescription') {
+      set['seo.metaDescription'] = v
+      labelFields.push('metaDescription')
+    } else {
+      set[key] = v
+      labelFields.push(key)
+    }
+  }
+
+  if (Object.keys(set).length === 0) return null
+  return { set, labelFields }
+}
+
 async function main() {
-  const htmlFiles = listHtmlFiles()
-  if (htmlFiles.length === 0) {
-    console.log('No .html files found in content-updates/ — nothing to do')
+  const allFiles = listContentDirFiles()
+
+  for (const f of allFiles) {
+    if (f === '.gitkeep') continue
+    if (fileKind(f) === 'other') {
+      console.warn(`Warning: skipping "${f}" (unsupported extension — use .html or .json)`)
+    }
+  }
+
+  const tasks = allFiles.filter((f) => f !== '.gitkeep' && (fileKind(f) === 'html' || fileKind(f) === 'json')).sort()
+
+  if (tasks.length === 0) {
+    console.log('No .html or .json files found in content-updates/ — nothing to do')
     process.exit(0)
   }
 
@@ -270,24 +333,14 @@ async function main() {
   })
 
   const blockContentType = compileBodyBlockType()
-  const total = htmlFiles.length
+  const total = tasks.length
   let processed = 0
 
-  for (const file of htmlFiles.sort()) {
+  for (const file of tasks) {
     processed++
-    const slug = htmlFileToSlug(file)
+    const slug = slugFromContentFile(file)
     const filePath = join(CONTENT_DIR, file)
-    const html = readFileSync(filePath, 'utf8')
-    let newBlocks: TypedObject[]
-    try {
-      newBlocks = htmlToPortableBody(html, blockContentType)
-    } catch (e) {
-      console.error(`[${processed}/${total}] Error converting HTML for "${slug}":`, e)
-      continue
-    }
-
-    const codeBlockCount = newBlocks.filter((b) => b._type === 'codeBlock').length
-    const blockCount = newBlocks.length
+    const kind = fileKind(file)
 
     const existingId = await client.fetch<string | null>(
       `*[_type == "post" && slug.current == $slug][0]._id`,
@@ -299,15 +352,60 @@ async function main() {
       continue
     }
 
-    if (!isLive) {
-      console.log(
-        `[${processed}/${total}] Would update: ${slug} (${blockCount} blocks, ${codeBlockCount} code blocks)`,
-      )
+    if (kind === 'html') {
+      const html = readFileSync(filePath, 'utf8')
+      let newBlocks: TypedObject[]
+      try {
+        newBlocks = htmlToPortableBody(html, blockContentType)
+      } catch (e) {
+        console.error(`[${processed}/${total}] Error converting HTML for "${slug}":`, e)
+        continue
+      }
+
+      const codeBlockCount = newBlocks.filter((b) => b._type === 'codeBlock').length
+      const blockCount = newBlocks.length
+      const summary = formatHtmlBodySummary(blockCount, codeBlockCount)
+
+      if (!isLive) {
+        console.log(`[${processed}/${total}] Would update: ${slug} (${summary})`)
+        continue
+      }
+
+      await client.patch(existingId).set({ body: newBlocks }).commit()
+      console.log(`[${processed}/${total}] Updated: ${slug} (${summary})`)
       continue
     }
 
-    await client.patch(existingId).set({ body: newBlocks }).commit()
-    console.log(`[${processed}/${total}] Updated: ${slug} (${blockCount} blocks, ${codeBlockCount} code blocks)`)
+    // JSON: simple fields only, never body
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(readFileSync(filePath, 'utf8'))
+    } catch (e) {
+      console.error(`[${processed}/${total}] Invalid JSON for "${file}":`, e)
+      continue
+    }
+
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      console.error(`[${processed}/${total}] JSON for "${slug}" must be a plain object — skipping`)
+      continue
+    }
+
+    const built = buildPatchFromJsonObject(parsed as Record<string, unknown>)
+    if (!built) {
+      console.warn(`[${processed}/${total}] JSON for "${slug}" has no supported string fields — skipping`)
+      continue
+    }
+
+    const { set, labelFields } = built
+    const fieldSummary = formatJsonFieldsSummary(labelFields)
+
+    if (!isLive) {
+      console.log(`[${processed}/${total}] Would update: ${slug} (${fieldSummary})`)
+      continue
+    }
+
+    await client.patch(existingId).set(set).commit()
+    console.log(`[${processed}/${total}] Updated: ${slug} (${fieldSummary})`)
   }
 }
 

@@ -349,7 +349,7 @@ export default function BlogPageClient({ posts }: Props) {
             className="text-3xl md:text-4xl font-bold mb-6 transition-colors duration-500"
             style={{ color: colors.text }}
           >
-            Still have questions?
+            Want to talk through your project?
           </motion.h2>
 
           <motion.p
@@ -360,7 +360,7 @@ export default function BlogPageClient({ posts }: Props) {
             className="mb-10 transition-colors duration-500"
             style={{ color: colors.textMuted }}
           >
-            Let's talk about your project. No commitment, no pressure.
+            No commitment, no pressure — just honest advice.
           </motion.p>
 
           <motion.div
@@ -378,7 +378,7 @@ export default function BlogPageClient({ posts }: Props) {
                 transition: themeBgColorTransition,
               }}
             >
-              <span>Get in Touch</span>
+              <span>Book a Strategy Call</span>
               <svg
                 className="w-5 h-5 transition-transform group-hover:translate-x-1"
                 fill="none"
