@@ -43,3 +43,8 @@ content-updates/*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cursor / local AI IDE
+.cursor/
+.cursorrules
+.cursor-*
