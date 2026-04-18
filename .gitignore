@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Local HTML drafts for blog body updates (scripts/update-blog-posts.ts)
+content-updates/*
+!content-updates/.gitkeep
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
