@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { trackCTAClick } from "@/lib/analytics";
+import { mainNavLinks } from "@/data/navigation";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,16 +39,6 @@ const Navbar = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMobileMenuOpen]);
-
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Services", path: "/services" },
-    { name: "Our Work", path: "/case-studies" },
-    { name: "How We Work", path: "/how-we-work" },
-    { name: "Blog", path: "/blog" },
-    { name: "Contact Us", path: "/contact" },
-  ];
 
   return (
     <>
@@ -150,10 +141,11 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
+              {mainNavLinks.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
+                  title={link.description}
                   className="relative text-sm font-medium transition-all duration-300 hover:opacity-80"
                   style={{
                     color: pathname === link.path 
@@ -253,10 +245,11 @@ const Navbar = () => {
         >
           {/* Navigation Links - Centered */}
           <div className="flex-1 flex flex-col items-center justify-center gap-6 px-8">
-            {navLinks.map((link, index) => (
+            {mainNavLinks.map((link, index) => (
               <Link
                 key={link.path}
                 href={link.path}
+                title={link.description}
                 className="nav-link-animate text-2xl font-medium transition-all duration-300 hover:scale-105"
                 style={{
                   animationDelay: `${index * 80}ms`,
@@ -278,7 +271,7 @@ const Navbar = () => {
           {/* Bottom Section - CTA & Toggle */}
           <div 
             className="nav-link-animate px-8 pb-12 flex flex-col items-center gap-6"
-            style={{ animationDelay: `${navLinks.length * 80 + 50}ms` }}
+            style={{ animationDelay: `${mainNavLinks.length * 80 + 50}ms` }}
           >
             {/* Primary CTA */}
             <Link 
