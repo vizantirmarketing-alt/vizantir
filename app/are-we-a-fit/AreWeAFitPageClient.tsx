@@ -62,7 +62,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.06 }}
-            className="font-serif text-3xl font-bold leading-tight tracking-tight transition-colors duration-500 sm:text-4xl md:text-5xl lg:text-[2.75rem] lg:leading-[1.12]"
+            className="text-3xl font-bold leading-tight tracking-tight transition-colors duration-500 sm:text-4xl md:text-5xl lg:text-[2.75rem] lg:leading-[1.12]"
             style={{ color: colors.text }}
           >
             {content.heroHeading}
@@ -87,7 +87,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           <motion.div {...sectionMotion}>
             <h2
               id="ideal-fit-heading"
-              className="font-serif mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+              className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.idealSection.heading}
@@ -117,7 +117,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           <motion.div {...sectionMotion}>
             <h2
               id="not-fit-heading"
-              className="font-serif mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+              className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.notIdealSection.heading}
@@ -159,7 +159,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           >
             <h2
               id="budget-heading"
-              className="font-serif mb-5 text-2xl font-bold tracking-tight md:text-3xl"
+              className="mb-5 text-2xl font-bold tracking-tight md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.budgetSection.heading}
@@ -181,7 +181,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           <motion.div {...sectionMotion}>
             <h2
               id="closing-heading"
-              className="font-serif mb-6 text-2xl font-bold tracking-tight md:text-3xl"
+              className="mb-6 text-2xl font-bold tracking-tight md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.closingSection.heading}
