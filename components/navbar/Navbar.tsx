@@ -101,23 +101,23 @@ const Navbar = () => {
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: isScrolled 
+          background: (isScrolled || isMobileMenuOpen)
             ? (!mounted
-                ? 'rgba(10, 10, 10, 0.12)'
+                ? 'rgba(10, 10, 10, 0.98)'
                 : isNightMode 
-                  ? 'rgba(10, 10, 10, 0.12)'
-                  : 'rgba(250, 250, 250, 0.18)')
+                  ? (isMobileMenuOpen ? 'rgba(10, 10, 10, 0.98)' : 'rgba(10, 10, 10, 0.12)')
+                  : (isMobileMenuOpen ? 'rgba(255, 255, 255, 0.98)' : 'rgba(250, 250, 250, 0.18)'))
             : 'transparent',
-          backdropFilter: isScrolled ? 'blur(14px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(14px) saturate(180%)' : 'none',
-          borderBottom: isScrolled
+          backdropFilter: (isScrolled || isMobileMenuOpen) ? 'blur(20px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: (isScrolled || isMobileMenuOpen) ? 'blur(20px) saturate(180%)' : 'none',
+          borderBottom: isScrolled && !isMobileMenuOpen
             ? (!mounted
                 ? '1px solid rgba(255, 255, 255, 0.08)'
                 : isNightMode
                   ? '1px solid rgba(255, 255, 255, 0.08)'
                   : '1px solid rgba(0, 0, 0, 0.03)')
             : 'none',
-          boxShadow: isScrolled ? '0 4px 24px rgba(0, 0, 0, 0.04)' : 'none',
+          boxShadow: isScrolled && !isMobileMenuOpen ? '0 4px 24px rgba(0, 0, 0, 0.04)' : 'none',
           paddingTop: isScrolled ? '0.75rem' : '1.25rem',
           paddingBottom: isScrolled ? '0.75rem' : '1.25rem',
         }}
