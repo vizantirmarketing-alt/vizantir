@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
 import { useTheme } from '@/contexts/ThemeContext'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import { trackCTAClick } from '@/lib/analytics'
 import type { CaseStudyListItem } from '@/lib/sanity/types'
 
@@ -79,9 +80,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             transition={{ duration: 0.6 }}
             className="mb-16 text-center"
           >
-            <p className="mb-4 text-sm uppercase tracking-[0.3em]" style={{ color: colors.accent }}>
-              Our Work
-            </p>
+            <Eyebrow className="mb-4">Our Work</Eyebrow>
             <h1
               className="mb-6 text-4xl font-black tracking-tight transition-colors duration-500 md:text-5xl lg:text-6xl"
               style={{ color: colors.text }}

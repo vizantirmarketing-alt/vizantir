@@ -9,6 +9,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/contexts/ThemeContext'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import type { Service } from '@/lib/sanity/types'
 
 interface ServicePageContentProps {
@@ -69,12 +70,9 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             All services
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <span
-              className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-              style={{ color: colors.accent }}
-            >
+            <Eyebrow align="start" className="mb-4">
               Service
-            </span>
+            </Eyebrow>
             <h1
               className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl"
               style={{ color: colors.text }}

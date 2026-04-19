@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import { trackCTAClick } from '@/lib/analytics'
 import type { AreWeAFitPageContent } from '@/data/are-we-a-fit'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -19,7 +20,6 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
     bg: isNightMode ? '#000000' : '#FAFAFA',
     text: isNightMode ? '#F8F8F8' : '#1A1A1A',
     textMuted: isNightMode ? '#888888' : '#6B7280',
-    accent: isNightMode ? '#FFC64C' : '#B45309',
     accentSolid: '#FFC64C',
     cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
     cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
@@ -54,24 +54,9 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-5 flex flex-col items-center gap-4"
+            className="mb-5"
           >
-            <span
-              className="inline-block h-px w-14 max-w-[35%] opacity-40"
-              style={{ background: colors.accentSolid }}
-              aria-hidden
-            />
-            <span
-              className="inline-block text-xs font-medium uppercase tracking-[0.25em]"
-              style={{ color: colors.accent }}
-            >
-              {content.heroEyebrow}
-            </span>
-            <span
-              className="inline-block h-px w-24 max-w-[45%] opacity-25"
-              style={{ background: colors.accentSolid }}
-              aria-hidden
-            />
+            <Eyebrow>{content.heroEyebrow}</Eyebrow>
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}

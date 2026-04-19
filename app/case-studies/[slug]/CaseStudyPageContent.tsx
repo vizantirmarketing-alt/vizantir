@@ -8,6 +8,7 @@ import { ArrowRight, ExternalLink } from 'lucide-react'
 
 import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { useTheme } from '@/contexts/ThemeContext'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import type { CaseStudy } from '@/lib/sanity/types'
 
 interface CaseStudyPageContentProps {
@@ -58,12 +59,9 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             All case studies
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <span
-              className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-              style={{ color: colors.accent }}
-            >
+            <Eyebrow align="start" className="mb-4">
               Case Study
-            </span>
+            </Eyebrow>
             <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
               {caseStudy.title}
             </h1>

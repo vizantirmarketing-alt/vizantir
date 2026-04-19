@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Users, Target, Zap, Globe } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import AIIntegration from '@/components/about-page/AIIntegration'
 import VisionApproach from '@/components/about-page/VisionApproach'
 import { trackCTAClick } from '@/lib/analytics'
@@ -97,23 +98,14 @@ export default function AboutPageClient() {
           className="relative z-10 text-center max-w-4xl mx-auto px-4 pt-24"
           style={{ opacity: heroOpacity }}
         >
-          {/* Badge */}
+          {/* Hero kicker */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-6 inline-block px-5 py-2.5 rounded-full border backdrop-blur-md"
-            style={{
-              background: isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.15)',
-              borderColor: isNightMode ? 'rgba(255, 198, 76, 0.3)' : 'rgba(255, 198, 76, 0.5)',
-            }}
+            className="mb-6"
           >
-            <span
-              className="text-sm font-medium"
-              style={{ color: isNightMode ? '#FFC64C' : '#1A1A1A' }}
-            >
-              ✦ Who We Are
-            </span>
+            <Eyebrow uppercase={false}>✦ Who We Are</Eyebrow>
           </motion.div>
 
           {/* Title */}

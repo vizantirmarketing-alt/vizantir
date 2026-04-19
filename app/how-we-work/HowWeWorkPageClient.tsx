@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 export default function HowWeWorkPageClient() {
   const { isNightMode } = useTheme()
@@ -93,15 +94,14 @@ export default function HowWeWorkPageClient() {
       {/* Hero Section */}
       <section className="relative px-6 md:px-12 lg:px-20 pt-32 pb-20">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.span
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-6 transition-colors duration-500"
-            style={{ color: colors.accent }}
+            className="mb-6"
           >
-            How We Work
-          </motion.span>
+            <Eyebrow>How We Work</Eyebrow>
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
