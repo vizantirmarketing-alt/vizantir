@@ -234,32 +234,6 @@ export default function ServicesHero() {
         </div>
       </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
-        style={{ opacity: heroOpacity }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: loaded ? 1 : 0 }}
-        transition={{ delay: 0.5, duration: 0.6 }}
-      >
-        <motion.div
-          className="w-6 h-10 rounded-full border-2 flex items-start justify-center p-1.5"
-          style={{ borderColor: isNightMode ? 'rgba(251,191,36,0.3)' : 'rgba(180,83,9,0.25)' }}
-        >
-          <motion.div
-            className="w-1 h-2 rounded-full"
-            style={{ background: colors.accent }}
-            animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-          />
-        </motion.div>
-        <span
-          className="text-[10px] tracking-widest uppercase"
-          style={{ color: colors.textSubtle }}
-        >
-          Scroll
-        </span>
-      </motion.div>
     </motion.section>
   )
 }

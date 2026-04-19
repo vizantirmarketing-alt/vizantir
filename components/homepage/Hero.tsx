@@ -250,27 +250,6 @@ const Hero = () => {
         </div>
       </motion.div>
 
-      {/* Scroll indicator */}
-      <div className="hidden md:flex absolute bottom-2 sm:bottom-4 md:bottom-12 lg:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-bounce z-20">
-        <div 
-          className="w-6 h-10 rounded-full border-2 flex justify-center pt-2 transition-colors duration-500"
-          style={{ borderColor: isNightMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)' }}
-        >
-          <div 
-            className="w-1 h-2 rounded-full transition-colors duration-500"
-            style={{ 
-              backgroundColor: isNightMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.4)',
-              animation: 'scrollWheel 1.5s ease-in-out infinite' 
-            }}
-          />
-        </div>
-        <span 
-          className="text-xs uppercase tracking-widest transition-colors duration-500"
-          style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)' }}
-        >
-          Scroll
-        </span>
-      </div>
     </motion.section>
   );
 };

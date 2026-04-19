@@ -157,25 +157,6 @@ export default function AboutPageClient() {
           </motion.div>
         </motion.div>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20"
-          style={{ opacity: heroOpacity }}
-        >
-          <div
-            className="w-6 h-10 rounded-full border-2 flex justify-center pt-2"
-            style={{
-              borderColor: isNightMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
-            }}
-          >
-            <div
-              className="w-1 h-2 rounded-full animate-scroll-wheel"
-              style={{
-                backgroundColor: isNightMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.4)',
-              }}
-            />
-          </div>
-        </motion.div>
       </section>
 
       {/* Story Section */}
