@@ -277,3 +277,15 @@ export const sitemapQuery = groq`{
   "categories": *[_type == "category"] { "slug": slug.current, _updatedAt }
 }`
 
+export const homepageFaqsQuery = `*[_type == "faq" && (placement == "homepage" || placement == "both")] | order(sortOrder asc) {
+  _id,
+  question,
+  answer
+}`
+
+export const faqPageFaqsQuery = `*[_type == "faq" && (placement == "faqPage" || placement == "both")] | order(sortOrder asc) {
+  _id,
+  question,
+  answer
+}`
+

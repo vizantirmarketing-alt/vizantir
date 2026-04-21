@@ -46,4 +46,9 @@ export const structure: StructureResolver = (S) =>
         .id('category')
         .schemaType('category')
         .child(S.documentTypeList('category').title('Categories')),
+      S.listItem()
+        .title('FAQs')
+        .id('faq')
+        .schemaType('faq')
+        .child(S.documentTypeList('faq').title('FAQs')),
     ]);

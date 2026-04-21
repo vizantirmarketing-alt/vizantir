@@ -1,5 +1,8 @@
 import { getPageSeo } from '@/sanity/lib/seo';
 import type { Metadata } from 'next';
+import { sanityFetch } from '@/lib/sanity/client';
+import { homepageFaqsQuery } from '@/lib/sanity/queries';
+import type { Faq } from '@/components/homepage/FAQSection';
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
 import EditorialStatement from '@/components/homepage/EditorialStatement'
@@ -32,7 +35,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Home() {
+export default async function Home() {
+  const faqs = await sanityFetch<Faq[]>(homepageFaqsQuery, {}, { tags: ['faq'] });
+
   return (
     <>
       <Hero />
@@ -44,7 +49,7 @@ export default function Home() {
       <OperatorStatement />
       <WhyVizantir />
       <ResultsThatSpeak />
-      <FAQSection />
+      <FAQSection faqs={faqs} />
       <CTA />
       <WhatHappensNext />
       <Newsletter />

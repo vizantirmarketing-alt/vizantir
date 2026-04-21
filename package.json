@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "update:posts": "tsx scripts/update-blog-posts.ts",
-    "update:posts:live": "tsx scripts/update-blog-posts.ts --live"
+    "update:posts:live": "tsx scripts/update-blog-posts.ts --live",
+    "migrate:faqs": "tsx scripts/migrate-faqs.ts",
+    "migrate:faqs:live": "tsx scripts/migrate-faqs.ts --live"
   },
   "dependencies": {
     "@portabletext/react": "^5.0.0",

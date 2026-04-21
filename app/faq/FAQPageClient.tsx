@@ -1,55 +1,27 @@
 'use client'
 
+import type { Faq } from '@/components/homepage/FAQSection'
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 
-export default function FAQPageClient() {
-  const { isNightMode } = useTheme()
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
-  const [searchQuery, setSearchQuery] = useState('')
+export interface FAQPageClientProps {
+  faqs: Faq[]
+}
 
-  const faqs = [
-    {
-      question: 'How much does a website project cost?',
-      answer:
-        'Our projects start at $15,000 for focused builds and scale to $30,000–$60,000+ for larger custom engagements. Every project is scoped and priced clearly upfront — no vague starting-at numbers, no surprise invoices.',
-    },
-    {
-      question: 'How long does a website project take?',
-      answer:
-        'Most projects are completed within 4–6 weeks from kickoff. Larger or more complex builds may run 8–10 weeks. Timelines are set at scoping and held — we move as fast as your feedback allows.',
-    },
-    {
-      question: 'Do you build in Next.js or WordPress?',
-      answer:
-        "Both, depending on what fits the project. Next.js for performance-critical, custom builds. WordPress when the client needs a widely supported CMS and a familiar editing environment. We'll recommend the right platform based on your goals, team, and content needs — not our preference.",
-    },
-    {
-      question: 'Do you redesign existing websites?',
-      answer:
-        "Yes. We audit what you have, identify what's working, and rebuild from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
-    },
-    {
-      question: 'What happens after the site launches?',
-      answer:
-        'We offer monthly Website Care retainers starting at $500/month for updates, monitoring, content changes, and ongoing improvements. Most clients stay on retainer after launch so the site keeps performing as the business evolves.',
-    },
-    {
-      question: 'Do you write copy for the website?',
-      answer:
-        'We can guide the copy structure and messaging strategy as part of the project scope. For full copywriting, we work with trusted partners we can bring in — or we work with your existing content and sharpen it for the web.',
-    },
-  ]
+export default function FAQPageClient({ faqs }: FAQPageClientProps) {
+  const { isNightMode } = useTheme()
+  const [openId, setOpenId] = useState<string | null>(() => faqs[0]?._id ?? null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const filteredFaqs = faqs.filter(faq => 
     faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
     faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index)
+  const toggleFAQ = (id: string) => {
+    setOpenId(openId === id ? null : id)
   }
 
   return (
@@ -124,11 +96,9 @@ export default function FAQPageClient() {
               </div>
             ) : (
               filteredFaqs.map((faq, index) => {
-                // Find the original index in the full faqs array
-                const originalIndex = faqs.findIndex(f => f.question === faq.question)
                 return (
                   <motion.div
-                    key={originalIndex}
+                    key={faq._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.05 }}
@@ -139,13 +109,13 @@ export default function FAQPageClient() {
                     }}
                   >
                     <button
-                      onClick={() => toggleFAQ(originalIndex)}
+                      onClick={() => toggleFAQ(faq._id)}
                       className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors"
                       style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                     >
                       <span className="text-lg font-semibold pr-8">{faq.question}</span>
                       <motion.span
-                        animate={{ rotate: openIndex === originalIndex ? 45 : 0 }}
+                        animate={{ rotate: openId === faq._id ? 45 : 0 }}
                         transition={{ duration: 0.2 }}
                         className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
                         style={{ background: '#FFC64C', color: '#1A1A1A' }}
@@ -156,7 +126,7 @@ export default function FAQPageClient() {
                       </motion.span>
                     </button>
                     <AnimatePresence>
-                      {openIndex === originalIndex && (
+                      {openId === faq._id && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}

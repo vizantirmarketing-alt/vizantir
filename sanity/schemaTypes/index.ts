@@ -1,6 +1,7 @@
 import { author } from './author';
 import { caseStudy } from './caseStudy';
 import { category } from './category';
+import faq from './faq';
 import { location } from './location';
 import { page } from './page';
 import { post } from './post';
@@ -17,5 +18,6 @@ export const schemaTypes = [
   location,
   category,
   page,
+  faq,
   siteSettings,
 ];
