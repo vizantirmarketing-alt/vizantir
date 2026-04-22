@@ -6,7 +6,29 @@ import { breadcrumbSchema, graphSchema } from '@/lib/schema'
 
 import AreWeAFitPageClient from './AreWeAFitPageClient'
 
-export const metadata: Metadata = areWeAFitMetadata
+const areWeAFitDescription =
+  'Honest criteria on whether Vizantir is the right premium web design studio for your business — read this before booking a Strategy Call.'
+
+export const metadata: Metadata = {
+  ...areWeAFitMetadata,
+  title: 'Are We a Fit? | Vizantir',
+  description: areWeAFitDescription,
+  openGraph: {
+    ...(typeof areWeAFitMetadata.openGraph === 'object' && areWeAFitMetadata.openGraph !== null
+      ? areWeAFitMetadata.openGraph
+      : {}),
+    title: 'Are We a Fit? | Vizantir',
+    description: areWeAFitDescription,
+  },
+  twitter:
+    typeof areWeAFitMetadata.twitter === 'object' && areWeAFitMetadata.twitter !== null
+      ? {
+          ...areWeAFitMetadata.twitter,
+          title: 'Are We a Fit? | Vizantir',
+          description: areWeAFitDescription,
+        }
+      : areWeAFitMetadata.twitter,
+}
 
 const breadcrumbGraph = graphSchema([
   breadcrumbSchema([

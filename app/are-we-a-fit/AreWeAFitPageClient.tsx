@@ -13,6 +13,29 @@ interface AreWeAFitPageClientProps {
   content: AreWeAFitPageContent
 }
 
+const heroEyebrow = 'Before you book'
+const heroHeading = "We're not for everyone."
+const heroSubheading =
+  'Honest criteria to help you decide before you book a Strategy Call.'
+const idealHeading = "You're a fit if..."
+const idealBullets = [
+  'You run an established business — not a pre-launch idea or side project',
+  'You already know your current website is hurting your brand',
+  'You want a custom site designed around your business, not a template',
+  "You're ready to invest $15,000 or more in a premium project",
+] as const
+const notIdealHeading = "You're not a fit if..."
+const notIdealBullets = [
+  "You're hunting for the cheapest web design agency in Las Vegas",
+  'You want unlimited revisions, hourly billing, or "just buy more hours to finish"',
+  'You need a plugin-heavy WordPress template, not a custom Next.js build',
+  'You need the site live in two weeks',
+] as const
+const budgetBody =
+  'Projects start at $15,000 and scale to $60,000+ depending on scope. If budget is your primary concern, platforms like Squarespace, Webflow, and Wix will serve you well. Vizantir is for businesses where a mediocre website costs more than a great one.'
+const closingBody =
+  "That's what the Strategy Call is for. Thirty minutes, no pitch deck, no pressure. Even if we're not the right fit, you'll leave with a clearer sense of what kind of project yours actually needs."
+
 export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProps) {
   const { isNightMode } = useTheme()
 
@@ -56,7 +79,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             transition={{ duration: 0.5 }}
             className="mb-5"
           >
-            <Eyebrow>{content.heroEyebrow}</Eyebrow>
+            <Eyebrow>{heroEyebrow}</Eyebrow>
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
@@ -65,7 +88,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             className="text-3xl font-bold leading-tight tracking-tight transition-colors duration-500 sm:text-4xl md:text-5xl lg:text-[2.75rem] lg:leading-[1.12]"
             style={{ color: colors.text }}
           >
-            {content.heroHeading}
+            {heroHeading}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -74,7 +97,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed md:text-xl"
             style={{ color: colors.textMuted }}
           >
-            {content.heroSubheading}
+            {heroSubheading}
           </motion.p>
         </div>
       </section>
@@ -90,10 +113,10 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
               style={{ color: colors.text }}
             >
-              {content.idealSection.heading}
+              {idealHeading}
             </h2>
             <ul className="space-y-4">
-              {(content.idealSection.bullets ?? []).map((item) => (
+              {idealBullets.map((item) => (
                 <li key={item} className="flex gap-3.5">
                   <Check
                     className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
@@ -120,10 +143,10 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
               style={{ color: colors.text }}
             >
-              {content.notIdealSection.heading}
+              {notIdealHeading}
             </h2>
             <ul className="space-y-4">
-              {(content.notIdealSection.bullets ?? []).map((item) => (
+              {notIdealBullets.map((item) => (
                 <li key={item} className="flex gap-3.5">
                   <X
                     className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
@@ -164,11 +187,9 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             >
               {content.budgetSection.heading}
             </h2>
-            {content.budgetSection.body ? (
-              <p className="text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
-                {content.budgetSection.body}
-              </p>
-            ) : null}
+            <p className="text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
+              {budgetBody}
+            </p>
           </motion.div>
         </div>
       </section>
@@ -186,11 +207,9 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             >
               {content.closingSection.heading}
             </h2>
-            {content.closingSection.body ? (
-              <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
-                {content.closingSection.body}
-              </p>
-            ) : null}
+            <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
+              {closingBody}
+            </p>
             <Link
               href={content.closingCta.href}
               onClick={() => trackCTAClick('book_strategy_call', 'are_we_a_fit')}
