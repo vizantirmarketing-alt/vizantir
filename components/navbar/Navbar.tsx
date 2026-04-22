@@ -67,57 +67,28 @@ const Navbar = () => {
                       0 0 70px rgba(255, 198, 76, 0.4),
                       0 0 100px rgba(255, 198, 76, 0.2) !important;
         }
-
-        @keyframes fadeSlideIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes menuFadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        .mobile-menu-overlay {
-          animation: menuFadeIn 0.3s ease-out forwards;
-        }
-
-        .nav-link-animate {
-          opacity: 0;
-          animation: fadeSlideIn 0.4s ease-out forwards;
-        }
       `}</style>
 
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: (isScrolled || isMobileMenuOpen)
+          background: isScrolled
             ? (!mounted
                 ? 'rgba(10, 10, 10, 0.98)'
-                : isNightMode 
-                  ? (isMobileMenuOpen ? 'rgba(10, 10, 10, 0.98)' : 'rgba(10, 10, 10, 0.12)')
-                  : (isMobileMenuOpen ? 'rgba(255, 255, 255, 0.98)' : 'rgba(250, 250, 250, 0.18)'))
+                : isNightMode
+                  ? 'rgba(10, 10, 10, 0.12)'
+                  : 'rgba(250, 250, 250, 0.18)')
             : 'transparent',
-          backdropFilter: (isScrolled || isMobileMenuOpen) ? 'blur(20px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: (isScrolled || isMobileMenuOpen) ? 'blur(20px) saturate(180%)' : 'none',
-          borderBottom: isScrolled && !isMobileMenuOpen
+          backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+          borderBottom: isScrolled
             ? (!mounted
                 ? '1px solid rgba(255, 255, 255, 0.08)'
                 : isNightMode
                   ? '1px solid rgba(255, 255, 255, 0.08)'
                   : '1px solid rgba(0, 0, 0, 0.03)')
             : 'none',
-          boxShadow: isScrolled && !isMobileMenuOpen ? '0 4px 24px rgba(0, 0, 0, 0.04)' : 'none',
+          boxShadow: isScrolled ? '0 4px 24px rgba(0, 0, 0, 0.04)' : 'none',
           paddingTop: isScrolled ? '0.75rem' : '1.25rem',
           paddingBottom: isScrolled ? '0.75rem' : '1.25rem',
         }}
@@ -216,71 +187,148 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
-              className="lg:hidden z-50 relative" 
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              style={{ color: !mounted ? '#F7F7F7' : isNightMode ? '#F7F7F7' : '#1A1A1A' }}
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {!isMobileMenuOpen && (
+              <button
+                className="lg:hidden z-50 relative"
+                aria-label="Open menu"
+                aria-expanded={false}
+                onClick={() => setIsMobileMenuOpen(true)}
+                style={{ color: !mounted ? '#F7F7F7' : isNightMode ? '#F7F7F7' : '#1A1A1A' }}
+              >
+                <Menu size={24} />
+              </button>
+            )}
           </div>
         </div>
       </nav>
 
-      {/* Full-Screen Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div 
-          className="mobile-menu-overlay fixed inset-0 z-40 lg:hidden flex flex-col"
+      {/* Mobile Bottom Sheet */}
+      <div
+        className={`lg:hidden fixed inset-0 z-[60] ${
+          isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
+        }`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        {/* Backdrop */}
+        <div
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="absolute inset-0"
           style={{
+            opacity: isMobileMenuOpen ? 1 : 0,
+            transition: 'opacity 500ms ease',
+            background: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+          }}
+        />
+
+        {/* Sheet */}
+        <div
+          className="absolute inset-0 shadow-2xl flex flex-col"
+          style={{
+            height: '100vh',
+            maxHeight: '100vh',
+            transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(100%)',
+            transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
+            willChange: 'transform',
             background: !mounted
-              ? 'rgba(10, 10, 10, 0.98)'
-              : isNightMode 
-                ? 'rgba(10, 10, 10, 0.98)'
-                : 'rgba(255, 255, 255, 0.98)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+              ? 'rgba(10, 10, 10, 1)'
+              : isNightMode
+                ? 'rgba(10, 10, 10, 1)'
+                : 'rgba(255, 255, 255, 1)',
           }}
         >
-          {/* Navigation Links - Centered */}
-          <div className="flex-1 flex flex-col items-center justify-center gap-6 px-8">
-            {mainNavLinks.map((link, index) => (
+          {/* Header Row */}
+          <div
+            className="flex items-center justify-between px-6 pt-3 pb-3"
+            style={{
+              borderBottom: !mounted
+                ? '1px solid rgba(255, 255, 255, 0.08)'
+                : isNightMode
+                  ? '1px solid rgba(255, 255, 255, 0.08)'
+                  : '1px solid rgba(0, 0, 0, 0.06)',
+            }}
+          >
+            {mounted && (
+              <Image
+                src={isNightMode ? '/logo/logo-dark.svg' : '/logo/logo-light.svg'}
+                alt="Vizantir Logo"
+                width={120}
+                height={24}
+                className="h-5 w-auto"
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+              style={{
+                background: !mounted
+                  ? 'rgba(255, 255, 255, 0.05)'
+                  : isNightMode
+                    ? 'rgba(255, 255, 255, 0.05)'
+                    : 'rgba(0, 0, 0, 0.04)',
+                border: !mounted
+                  ? '1px solid rgba(255, 255, 255, 0.08)'
+                  : isNightMode
+                    ? '1px solid rgba(255, 255, 255, 0.08)'
+                    : '1px solid rgba(0, 0, 0, 0.06)',
+                color: !mounted
+                  ? '#F7F7F7'
+                  : isNightMode
+                    ? '#F7F7F7'
+                    : '#1A1A1A',
+              }}
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="px-6 flex-1 flex flex-col justify-center">
+            {mainNavLinks.map((link, idx) => (
               <Link
                 key={link.path}
                 href={link.path}
-                title={link.description}
-                className="nav-link-animate text-2xl font-medium transition-all duration-300 hover:scale-105"
-                style={{
-                  animationDelay: `${index * 80}ms`,
-                  color: pathname === link.path 
-                    ? '#FFC64C'
-                    : !mounted
-                      ? '#F8F8F8'
-                      : isNightMode 
-                        ? '#F8F8F8'
-                        : '#1A1A1A',
-                }}
                 onClick={() => setIsMobileMenuOpen(false)}
+                className="block py-3 transition-all duration-300"
+                style={{
+                  borderBottom:
+                    idx === mainNavLinks.length - 1
+                      ? 'none'
+                      : !mounted
+                        ? '1px solid rgba(255, 255, 255, 0.06)'
+                        : isNightMode
+                          ? '1px solid rgba(255, 255, 255, 0.06)'
+                          : '1px solid rgba(0, 0, 0, 0.04)',
+                  color:
+                    pathname === link.path
+                      ? '#FFC64C'
+                      : !mounted
+                        ? '#F8F8F8'
+                        : isNightMode
+                          ? '#F8F8F8'
+                          : '#1A1A1A',
+                }}
               >
-                {link.name}
+                <span className="text-lg font-medium">{link.name}</span>
               </Link>
             ))}
-          </div>
+          </nav>
 
-          {/* Bottom Section - CTA & Toggle */}
-          <div 
-            className="nav-link-animate px-8 pb-12 flex flex-col items-center gap-6"
-            style={{ animationDelay: `${mainNavLinks.length * 80 + 50}ms` }}
-          >
+          {/* Bottom Actions */}
+          <div className="px-6 pb-5 pt-3 space-y-2.5">
             {/* Primary CTA */}
-            <Link 
-              href="/contact" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full max-w-xs"
+            <Link
+              href="/contact"
+              onClick={() => {
+                setIsMobileMenuOpen(false)
+                trackCTAClick('get_started', 'mobile_menu')
+              }}
             >
               <button
-                className="glow-button w-full px-8 py-4 rounded-xl font-semibold text-base"
+                className="glow-button w-full px-8 py-4 rounded-full font-semibold text-base"
                 style={{
                   background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
                   color: '#1A1A1A',
@@ -291,51 +339,53 @@ const Navbar = () => {
               </button>
             </Link>
 
-            {/* Theme Toggle */}
+            {/* Theme Toggle — centered below CTAs */}
             {mounted && (
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-3 px-5 py-2.5 rounded-full transition-all duration-300"
-                style={{
-                  background: isNightMode ? 'rgba(30, 41, 59, 0.6)' : 'rgba(0, 0, 0, 0.05)',
-                  border: isNightMode ? '1px solid rgba(148, 163, 184, 0.3)' : '1px solid rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <Sun 
-                  size={18} 
-                  style={{ 
-                    color: !isNightMode ? '#FFC64C' : (isNightMode ? '#64748b' : '#9ca3af'),
-                    transition: 'color 0.3s ease'
-                  }} 
-                />
-                <div 
-                  className="relative w-10 h-5 rounded-full transition-all duration-300"
+              <div className="pt-5 flex justify-center">
+                <button
+                  onClick={toggleTheme}
+                  className="flex items-center gap-3 px-5 py-2.5 rounded-full transition-all duration-300"
                   style={{
-                    background: isNightMode 
-                      ? 'linear-gradient(135deg, #1e293b, #334155)' 
-                      : 'linear-gradient(135deg, #FFC64C, #FFB84D)',
+                    background: isNightMode ? 'rgba(30, 41, 59, 0.6)' : 'rgba(0, 0, 0, 0.05)',
+                    border: isNightMode ? '1px solid rgba(148, 163, 184, 0.3)' : '1px solid rgba(0, 0, 0, 0.1)',
                   }}
                 >
-                  <div 
-                    className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-300 shadow-md"
+                  <Sun
+                    size={18}
                     style={{
-                      left: isNightMode ? '1.375rem' : '0.125rem',
-                      background: isNightMode ? '#FAFAFA' : '#1A1A1A',
+                      color: !isNightMode ? '#FFC64C' : '#64748b',
+                      transition: 'color 0.3s ease',
                     }}
                   />
-                </div>
-                <Moon 
-                  size={18} 
-                  style={{ 
-                    color: isNightMode ? '#FFC64C' : (isNightMode ? '#64748b' : '#9ca3af'),
-                    transition: 'color 0.3s ease'
-                  }} 
-                />
-              </button>
+                  <div
+                    className="relative w-10 h-5 rounded-full transition-all duration-300"
+                    style={{
+                      background: isNightMode
+                        ? 'linear-gradient(135deg, #1e293b, #334155)'
+                        : 'linear-gradient(135deg, #FFC64C, #FFB84D)',
+                    }}
+                  >
+                    <div
+                      className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-300 shadow-md"
+                      style={{
+                        left: isNightMode ? '1.375rem' : '0.125rem',
+                        background: isNightMode ? '#FAFAFA' : '#1A1A1A',
+                      }}
+                    />
+                  </div>
+                  <Moon
+                    size={18}
+                    style={{
+                      color: isNightMode ? '#FFC64C' : '#64748b',
+                      transition: 'color 0.3s ease',
+                    }}
+                  />
+                </button>
+              </div>
             )}
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };
