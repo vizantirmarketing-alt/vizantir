@@ -1,39 +1,45 @@
-import { getPageSeo } from '@/sanity/lib/seo';
-import type { Metadata } from 'next';
-import { JsonLd } from '@/components/seo/JsonLd';
-import { breadcrumbSchema, graphSchema } from '@/lib/schema';
-import AboutPageClient from './AboutPageClient';
+import type { Metadata } from 'next'
+
+import AboutCta from '@/components/about-page/AboutCta'
+import AboutDivider from '@/components/about-page/AboutDivider'
+import AboutHero from '@/components/about-page/AboutHero'
+import AboutIntroExamples from '@/components/about-page/AboutIntroExamples'
+import AboutSection from '@/components/about-page/AboutSection'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { aboutMetadata, aboutPageContent } from '@/data/about'
+import { breadcrumbSchema, graphSchema } from '@/lib/schema'
 
 const breadcrumbGraph = graphSchema([
   breadcrumbSchema([
     { name: 'Home', url: 'https://www.vizantir.com' },
     { name: 'About', url: 'https://www.vizantir.com/about' },
   ]),
-]);
+])
 
-export async function generateMetadata(): Promise<Metadata> {
-  const page = await getPageSeo('about');
-  
-  return {
-    title: page?.seo?.metaTitle || 'About Vizantir | Premium Web Design Studio Las Vegas',
-    description:
-      page?.seo?.metaDescription ||
-      'Learn about our team and philosophy as we craft bespoke websites for restaurants, law firms and real estate clients nationwide from Las Vegas.',
-    openGraph: {
-      title: page?.seo?.metaTitle || 'About Vizantir | Premium Web Design Studio Las Vegas',
-      description:
-        page?.seo?.metaDescription ||
-        'Learn about our team and philosophy as we craft bespoke websites for restaurants, law firms and real estate clients nationwide from Las Vegas.',
-      ...(page?.seo?.ogImage && { images: [page.seo.ogImage] }),
-    },
-  };
-}
+export const metadata: Metadata = aboutMetadata
 
 export default function AboutPage() {
   return (
     <>
       <JsonLd id="ld-breadcrumb" data={breadcrumbGraph} />
-      <AboutPageClient />
+      <main className="min-h-screen bg-background text-foreground">
+        <AboutHero eyebrow={aboutPageContent.eyebrow} content={aboutPageContent.hero} />
+        <AboutDivider />
+        <AboutIntroExamples content={aboutPageContent.intro} />
+        <AboutDivider />
+        {aboutPageContent.sections.map((section) => {
+          const shouldRenderPostSectionDivider = section.id === 'whoWeWorkWith'
+
+          return (
+            <div key={section.id}>
+              <AboutSection section={section} />
+              {shouldRenderPostSectionDivider ? <AboutDivider /> : null}
+            </div>
+          )
+        })}
+        <AboutDivider />
+        <AboutCta content={aboutPageContent.finalCta} />
+      </main>
     </>
-  );
+  )
 }
