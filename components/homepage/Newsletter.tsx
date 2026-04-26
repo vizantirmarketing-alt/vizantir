@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 const Newsletter = () => {
   const { isNightMode } = useTheme();
@@ -62,11 +63,14 @@ const Newsletter = () => {
             />
             <button
               type="submit"
-              className="px-8 py-3 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
-              style={{ background: '#FFC64C', color: '#1A1A1A' }}
+              className="rounded-xl px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
+              style={{
+                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
+                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+              }}
             >
               Send
-              <span>→</span>
+              <ArrowRight className="h-4 w-4" />
             </button>
           </form>
         </motion.div>

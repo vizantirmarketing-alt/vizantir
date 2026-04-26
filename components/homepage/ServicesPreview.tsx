@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 interface Particle {
   x: number;
@@ -275,23 +276,11 @@ const ServicesPreview = () => {
         <div className="text-center">
           <Link
             href="/services"
-            className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105"
-            style={{
-              background: 'rgba(255, 198, 76, 0.1)',
-              border: '2px solid rgba(255, 198, 76, 0.3)',
-              color: '#FFC64C',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#FFC64C';
-              e.currentTarget.style.color = '#000';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 198, 76, 0.1)';
-              e.currentTarget.style.color = '#FFC64C';
-            }}
+            className="group inline-flex items-center gap-2 font-semibold transition-opacity duration-300 hover:opacity-85"
+            style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
           >
-            View All Services
-            <span>→</span>
+            <span>View All Services</span>
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
       </div>

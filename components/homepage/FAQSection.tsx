@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
@@ -126,10 +126,11 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
             <Link 
               href="/contact" 
               onClick={() => trackCTAClick('schedule_a_call', 'faq_section')}
-              className="font-semibold transition-colors duration-200 hover:opacity-80"
-              style={{ color: '#FFC64C' }}
+              className="group inline-flex items-center gap-2 font-semibold transition-opacity duration-300 hover:opacity-85"
+              style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
             >
-              Book a Strategy Call →
+              <span>Book a Strategy Call</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
         </div>

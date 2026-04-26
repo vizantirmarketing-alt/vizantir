@@ -133,12 +133,10 @@ const WhatHappensNext = () => {
           <Button
             size="lg"
             asChild
-            className="text-base lg:text-lg px-8 lg:px-10 py-6 lg:py-7 font-bold border-0 transition-all duration-300 hover:scale-105 mb-4"
+            className="mb-4 rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
             style={{
-              background: "#FFC64C",
-              color: "#1A1A1A",
-              borderRadius: "8px",
-              boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1)",
+              background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
+              boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
             }}
           >
             <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'what_happens_next')}>Book a Strategy Call</Link>

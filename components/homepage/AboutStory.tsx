@@ -71,11 +71,11 @@ const AboutStory = () => {
             <div className="mt-10">
               <Link
                 href="/about"
-                className="inline-flex items-center font-medium transition-all duration-300 hover:opacity-80 group"
-                style={{ color: '#FFC64C' }}
+                className="group inline-flex items-center gap-2 font-medium transition-opacity duration-300 hover:opacity-85"
+                style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
               >
-                Learn More About Vizantir
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <span>Learn More About Vizantir</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           </div>

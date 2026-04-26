@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 
@@ -113,11 +113,11 @@ const ResultsThatSpeak = () => {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-[#FFC64C]"
-                  style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+                  className="group inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-85"
+                  style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
                 >
-                  View live site
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                  <span>View live site</span>
+                  <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </a>
               </motion.article>
             ))}
@@ -126,8 +126,11 @@ const ResultsThatSpeak = () => {
           <div className="text-center mt-12 md:mt-14">
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-[1.02] bg-[#FFC64C] text-[#1A1A1A]"
-              style={{ boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)' }}
+              className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+              style={{
+                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
+                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+              }}
             >
               View all work
               <ArrowRight className="w-5 h-5" />

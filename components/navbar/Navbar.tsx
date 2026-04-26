@@ -174,11 +174,11 @@ const Navbar = () => {
 
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'navbar')}>
                 <button
-                  className="glow-button px-6 py-2.5 rounded-lg font-semibold text-sm"
+                  className="px-6 py-2.5 rounded-xl text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
                     color: '#1A1A1A',
-                    border: 'none',
+                    boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
                   }}
                 >
                   Book a Strategy Call
@@ -328,11 +328,11 @@ const Navbar = () => {
               }}
             >
               <button
-                className="glow-button w-full px-8 py-4 rounded-full font-semibold text-base"
+                className="w-full rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
                 style={{
                   background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
                   color: '#1A1A1A',
-                  border: 'none',
+                  boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
                 }}
               >
                 Book a Strategy Call
