@@ -5,6 +5,7 @@ import { homepageFaqsQuery } from '@/lib/sanity/queries';
 import type { Faq } from '@/components/homepage/FAQSection';
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
+import SectionDivider from '@/components/ui/SectionDivider'
 import dynamic from 'next/dynamic'
 
 const EditorialStatement = dynamic(() => import('@/components/homepage/EditorialStatement'))
@@ -46,12 +47,15 @@ export default async function Home() {
       <Marquee />
       <EditorialStatement />
       <AboutStory />
+      <SectionDivider />
       <ServicesPreview />
       <WhoWeWorkWith />
       <OperatorStatement />
       <WhyVizantir />
+      <SectionDivider />
       <ResultsThatSpeak />
       <FAQSection faqs={faqs} />
+      <SectionDivider />
       <CTA />
       <WhatHappensNext />
       <Newsletter />
