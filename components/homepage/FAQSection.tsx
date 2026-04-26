@@ -52,7 +52,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               className="text-4xl md:text-5xl font-bold mb-4"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
-              Questions? <span style={{ color: '#00D9FF' }}>Answered.</span>
+              Questions? <span style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}>Answered.</span>
             </motion.h2>
             <p 
               className="text-xl"
@@ -100,7 +100,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                     className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${
                       openIndex === index ? 'rotate-180' : ''
                     }`}
-                    style={{ color: '#00D9FF' }}
+                    style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
                   />
                 </button>
                 

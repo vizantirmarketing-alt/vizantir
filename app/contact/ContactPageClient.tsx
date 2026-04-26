@@ -6,7 +6,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { trackFormSubmission, trackPhoneClick } from '@/lib/analytics'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import AboutDivider from '@/components/about-page/AboutDivider'
+import SectionDivider from '@/components/ui/SectionDivider'
 
 export default function ContactPageClient() {
   const { isNightMode } = useTheme()
@@ -137,7 +137,7 @@ export default function ContactPageClient() {
         </div>
       </section>
 
-      <AboutDivider />
+      <SectionDivider />
 
       {/* Contact Section */}
       <section className="px-4 pb-24">
@@ -384,7 +384,7 @@ export default function ContactPageClient() {
     </div>
       </section>
 
-      <AboutDivider />
+      <SectionDivider />
     </main>
   )
 }

@@ -16,7 +16,7 @@ const TorusPlaceholder = ({ isNightMode }: { isNightMode: boolean }) => (
     className="w-full h-full flex items-center justify-center"
     style={{
       background: isNightMode 
-        ? 'radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%)'
+        ? 'radial-gradient(circle, rgba(255, 198, 76, 0.2) 0%, transparent 70%)'
         : 'radial-gradient(circle, rgba(255, 198, 76, 0.15) 0%, transparent 70%)'
     }}
   />
@@ -94,15 +94,15 @@ const Hero = () => {
           opacity,
           background: isNightMode 
             ? `
-              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(100, 40, 160, 0.35) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(160, 80, 20, 0.25) 0%, transparent 45%),
-              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(6, 150, 180, 0.18) 0%, transparent 40%),
-              radial-gradient(ellipse 40% 40% at 35% 70%, rgba(80, 20, 120, 0.2) 0%, transparent 35%)
+              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.25) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 132, 30, 0.15) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 198, 76, 0.12) 0%, transparent 40%),
+              radial-gradient(ellipse 40% 40% at 35% 70%, rgba(180, 132, 30, 0.1) 0%, transparent 35%)
             `
             : `
-              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.25) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(212, 197, 249, 0.3) 0%, transparent 45%),
-              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(184, 230, 255, 0.25) 0%, transparent 40%)
+              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.1) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 198, 76, 0.08) 0%, transparent 40%)
             `,
         }}
       />
@@ -124,9 +124,9 @@ const Hero = () => {
           </linearGradient>
           <linearGradient id="lineGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-            <stop offset="30%" stopColor={isNightMode ? "rgba(139,92,246,0.2)" : "rgba(255,198,76,0.3)"} />
-            <stop offset="50%" stopColor={isNightMode ? "rgba(255,255,255,0.15)" : "rgba(212,197,249,0.25)"} />
-            <stop offset="70%" stopColor={isNightMode ? "rgba(6,182,212,0.12)" : "rgba(184,230,255,0.2)"} />
+            <stop offset="30%" stopColor={isNightMode ? "rgba(255,198,76,0.24)" : "rgba(255,198,76,0.3)"} />
+            <stop offset="50%" stopColor={isNightMode ? "rgba(180,132,30,0.18)" : "rgba(180,83,9,0.2)"} />
+            <stop offset="70%" stopColor={isNightMode ? "rgba(255,198,76,0.12)" : "rgba(255,198,76,0.16)"} />
             <stop offset="100%" stopColor="rgba(255,255,255,0)" />
           </linearGradient>
         </defs>

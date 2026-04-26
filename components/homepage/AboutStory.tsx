@@ -111,7 +111,7 @@ const AboutStory = () => {
               className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-2xl"
               style={{
                 background: isNightMode 
-                  ? 'linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(6, 182, 212, 0.3))' 
+                  ? 'linear-gradient(135deg, rgba(255, 198, 76, 0.3), rgba(180, 83, 9, 0.2))' 
                   : 'linear-gradient(135deg, rgba(255, 198, 76, 0.4), rgba(212, 197, 249, 0.4))'
               }}
             />

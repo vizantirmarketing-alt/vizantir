@@ -40,9 +40,9 @@ const ServicesPreview = () => {
   };
 
   const numberStyles = [
-    { color: '#0EA5A5', rgb: '14, 165, 165', class: 'number-glow-teal' },
-    { color: '#8B5CF6', rgb: '139, 92, 246', class: 'number-glow-purple' },
-    { color: '#3B82F6', rgb: '59, 130, 246', class: 'number-glow-blue' },
+    { color: '#FFC64C', rgb: '255, 198, 76', class: 'number-glow-teal' },
+    { color: '#FFC64C', rgb: '255, 198, 76', class: 'number-glow-purple' },
+    { color: '#FFC64C', rgb: '255, 198, 76', class: 'number-glow-blue' },
   ];
 
   const services = [
