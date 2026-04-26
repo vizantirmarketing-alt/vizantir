@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Eyebrow } from '@/components/ui/Eyebrow'
+import SectionDivider from '@/components/ui/SectionDivider'
 import { VerticalBadge } from '@/components/ui/VerticalBadge'
 import { ArrowRight, Zap, Shield, TrendingUp, Clock, CheckCircle2, MapPin } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -210,7 +212,7 @@ export default function LasVegasWebDesignClient() {
       </section>
 
       {/* Divider */}
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* Why Las Vegas Businesses Choose Us */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -222,12 +224,7 @@ export default function LasVegasWebDesignClient() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <span
-              className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-4"
-              style={{ color: colors.accent }}
-            >
-              Why Choose Us
-            </span>
+            <Eyebrow>Why Choose Us</Eyebrow>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
               style={{ color: colors.text }}
@@ -285,7 +282,7 @@ export default function LasVegasWebDesignClient() {
       </section>
 
       {/* Divider */}
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* The Las Vegas Difference */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -297,12 +294,7 @@ export default function LasVegasWebDesignClient() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <span
-                className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-4"
-                style={{ color: colors.accent }}
-              >
-                Local Expertise
-              </span>
+              <Eyebrow align="start">Local Expertise</Eyebrow>
               <h2
                 className="text-3xl md:text-4xl font-bold mb-6"
                 style={{ color: colors.text }}
@@ -377,7 +369,7 @@ export default function LasVegasWebDesignClient() {
       </section>
 
       {/* Divider */}
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* FAQ Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -389,12 +381,7 @@ export default function LasVegasWebDesignClient() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <span
-              className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-4"
-              style={{ color: colors.accent }}
-            >
-              FAQ
-            </span>
+            <Eyebrow>FAQ</Eyebrow>
             <h2
               className="text-3xl md:text-4xl font-bold"
               style={{ color: colors.text }}
@@ -439,7 +426,7 @@ export default function LasVegasWebDesignClient() {
       </section>
 
       {/* Divider */}
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* CTA Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
