@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
+import { Eyebrow } from '@/components/ui/Eyebrow';
 
 const ResultsThatSpeak = () => {
   const { isNightMode } = useTheme();
@@ -47,9 +48,9 @@ const ResultsThatSpeak = () => {
           className="max-w-7xl mx-auto"
         >
           <div className="text-center mb-14 md:mb-16">
-            <p className="text-sm tracking-[0.25em] uppercase text-[#FFC64C] mb-3">
-              Our Work
-            </p>
+            <div className="mb-3 flex justify-center">
+              <Eyebrow>Our Work</Eyebrow>
+            </div>
             <h2 
               className="text-4xl md:text-5xl font-black mb-4 tracking-tight"
               style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}

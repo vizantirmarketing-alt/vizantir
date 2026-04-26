@@ -84,16 +84,16 @@ const WhatHappensNext = () => {
               className="relative p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1"
               style={{
                 background: isNightMode 
-                  ? 'rgba(255, 255, 255, 0.03)' 
-                  : 'rgba(255, 255, 255, 0.7)',
+                  ? 'rgba(255, 255, 255, 0.04)' 
+                  : 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
                 border: isNightMode 
                   ? '1px solid rgba(255, 255, 255, 0.08)' 
                   : '1px solid rgba(0, 0, 0, 0.08)',
                 boxShadow: isNightMode 
-                  ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
-                  : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                  ? 'none' 
+                  : '0 1px 3px rgba(0, 0, 0, 0.04)',
               }}
             >
               {/* Step Number */}

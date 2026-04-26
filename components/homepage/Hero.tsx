@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
+import { Eyebrow } from '@/components/ui/Eyebrow';
 
 // Lazy load the heavy 3D component
 const LiquidMetalTorus = lazy(() => import('./LiquidMetalTorus'));
@@ -198,6 +199,9 @@ const Hero = () => {
 
         {/* RIGHT SIDE - Content */}
         <div className="relative z-10 max-w-2xl order-2 lg:ml-auto text-left">
+          <div className="mb-4">
+            <Eyebrow align="start">Vizantir Studio</Eyebrow>
+          </div>
           <p 
             className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
             style={{ 

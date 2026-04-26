@@ -184,19 +184,25 @@ const ServicesPreview = () => {
                 variants={cardVariants}
                 className="group relative rounded-2xl p-10 md:p-12 cursor-pointer transition-all duration-500 overflow-hidden"
                 style={{
-                  background: isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)',
+                  background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
                   backdropFilter: 'blur(10px)',
                   WebkitBackdropFilter: 'blur(10px)',
                   border: isNightMode ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
                   boxShadow: isNightMode 
-                    ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
-                    : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                    ? 'none' 
+                    : '0 1px 3px rgba(0, 0, 0, 0.04)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.85)';
+                  e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.07)' : 'rgba(0, 0, 0, 0.04)';
+                  e.currentTarget.style.borderColor = isNightMode
+                    ? 'rgba(255, 198, 76, 0.15)'
+                    : 'rgba(180, 83, 9, 0.12)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.7)';
+                  e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)';
+                  e.currentTarget.style.borderColor = isNightMode
+                    ? 'rgba(255, 255, 255, 0.08)'
+                    : 'rgba(0, 0, 0, 0.08)';
                 }}
               >
                 {/* Muted number - glows on hover */}

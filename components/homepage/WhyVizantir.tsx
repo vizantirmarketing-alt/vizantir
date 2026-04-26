@@ -83,29 +83,29 @@ const WhyVizantir = () => {
               className="group relative p-8 lg:p-10 rounded-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
               style={{
                 background: isNightMode 
-                  ? 'rgba(255, 255, 255, 0.03)' 
-                  : 'rgba(255, 255, 255, 0.7)',
+                  ? 'rgba(255, 255, 255, 0.04)' 
+                  : 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
                 border: isNightMode 
                   ? '1px solid rgba(255, 255, 255, 0.08)' 
                   : '1px solid rgba(0, 0, 0, 0.08)',
                 boxShadow: isNightMode 
-                  ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
-                  : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                  ? 'none' 
+                  : '0 1px 3px rgba(0, 0, 0, 0.04)',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = isNightMode 
-                  ? 'rgba(255, 255, 255, 0.08)' 
-                  : 'rgba(255, 255, 255, 0.85)';
+                  ? 'rgba(255, 255, 255, 0.07)' 
+                  : 'rgba(0, 0, 0, 0.04)';
                 e.currentTarget.style.borderColor = isNightMode 
-                  ? 'rgba(255, 198, 76, 0.3)' 
-                  : 'rgba(255, 198, 76, 0.4)';
+                  ? 'rgba(255, 198, 76, 0.15)' 
+                  : 'rgba(180, 83, 9, 0.12)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = isNightMode 
-                  ? 'rgba(255, 255, 255, 0.03)' 
-                  : 'rgba(255, 255, 255, 0.7)';
+                  ? 'rgba(255, 255, 255, 0.04)' 
+                  : 'rgba(0, 0, 0, 0.02)';
                 e.currentTarget.style.borderColor = isNightMode 
                   ? 'rgba(255, 255, 255, 0.08)' 
                   : 'rgba(0, 0, 0, 0.08)';

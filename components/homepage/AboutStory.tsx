@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
+import { Eyebrow } from '@/components/ui/Eyebrow';
 
 const AboutStory = () => {
   const { isNightMode } = useTheme();
@@ -25,12 +26,9 @@ const AboutStory = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <h3 
-                className="text-lg md:text-xl font-medium mb-2"
-                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-              >
-                The Story Of
-              </h3>
+              <div className="mb-2">
+                <Eyebrow align="start">The Story Of</Eyebrow>
+              </div>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
                 style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
