@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { VerticalBadge } from '@/components/ui/VerticalBadge'
 import { ArrowRight, Zap, Shield, TrendingUp, Clock, CheckCircle2, MapPin } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -116,24 +117,7 @@ export default function LasVegasWebDesignClient() {
         
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full border backdrop-blur-md"
-            style={{
-              background: isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.15)',
-              borderColor: isNightMode ? 'rgba(255, 198, 76, 0.3)' : 'rgba(255, 198, 76, 0.5)',
-            }}
-          >
-            <MapPin size={16} style={{ color: colors.accent }} />
-            <span
-              className="text-sm font-medium"
-              style={{ color: isNightMode ? '#FFC64C' : '#1A1A1A' }}
-            >
-              Las Vegas, Nevada
-            </span>
-          </motion.div>
+          <VerticalBadge icon={MapPin} label="Las Vegas, Nevada" isNightMode={isNightMode} />
 
           {/* Headline */}
           <motion.h1
