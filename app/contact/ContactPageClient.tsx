@@ -5,6 +5,8 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 import { trackFormSubmission, trackPhoneClick } from '@/lib/analytics'
+import { Eyebrow } from '@/components/ui/Eyebrow'
+import AboutDivider from '@/components/about-page/AboutDivider'
 
 export default function ContactPageClient() {
   const { isNightMode } = useTheme()
@@ -55,8 +57,8 @@ export default function ContactPageClient() {
   ]
 
   const inputStyle = {
-    background: isNightMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-    border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+    background: isNightMode ? '#0A0A0A' : '#FFFFFF',
+    border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
     color: isNightMode ? '#FFFFFF' : '#1A1A1A',
   }
 
@@ -105,23 +107,37 @@ export default function ContactPageClient() {
     <main className="min-h-screen" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative overflow-hidden pt-32 pb-16 px-4">
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: isNightMode
+              ? 'radial-gradient(ellipse at top left, rgba(255, 198, 76, 0.08) 0%, transparent 60%)'
+              : 'radial-gradient(ellipse at top left, rgba(180, 83, 9, 0.05) 0%, transparent 60%)',
+          }}
+          aria-hidden
+        />
+        <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto"
           >
+            <div className="mb-6">
+              <Eyebrow>Contact</Eyebrow>
+            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
               Start the Conversation
             </h1>
             <p className="text-lg md:text-xl" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
-              Tell me what you&apos;re working on. I&apos;ll let you know if we&apos;re a good fit and what the next step looks like
+              Tell us what you&apos;re working on. We&apos;ll let you know if we&apos;re a good fit and what the next step looks like
             </p>
           </motion.div>
         </div>
       </section>
+
+      <AboutDivider />
 
       {/* Contact Section */}
       <section className="px-4 pb-24">
@@ -192,7 +208,7 @@ export default function ContactPageClient() {
               </div>
 
               {/* Business Hours */}
-              <div className="p-6 rounded-xl" style={{ background: isNightMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}` }}>
+              <div className="p-6 rounded-2xl" style={{ background: isNightMode ? '#0A0A0A' : '#FFFFFF', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}` }}>
                 <h3 className="font-semibold mb-4" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Business Hours</h3>
                 <div className="space-y-2 text-sm" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
                   <div className="flex justify-between">
@@ -211,7 +227,7 @@ export default function ContactPageClient() {
               </div>
 
               {/* Response Time */}
-              <div className="flex items-center gap-3 p-4 rounded-lg" style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+              <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: isNightMode ? '#0A0A0A' : '#FFFFFF', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}` }}>
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <p className="text-sm" style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#4A4A4A' }}>
                   Average response time: <strong>Under 24 hours</strong>
@@ -226,7 +242,7 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-3"
             >
-              <div className="p-6 md:p-8 rounded-2xl" style={{ background: isNightMode ? 'rgba(255,255,255,0.03)' : '#FFFFFF', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`, boxShadow: isNightMode ? 'none' : '0 4px 24px rgba(0,0,0,0.06)' }}>
+              <div className="p-6 md:p-8 rounded-2xl" style={{ background: isNightMode ? '#0A0A0A' : '#FFFFFF', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`, boxShadow: isNightMode ? 'none' : '0 4px 24px rgba(0,0,0,0.06)' }}>
                 <h2 className="text-2xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
                   Start Your Project
                 </h2>
@@ -335,8 +351,8 @@ export default function ContactPageClient() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    style={{ background: '#FFC64C', color: '#1A1A1A' }}
+                    className="w-full rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    style={{ background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)', color: '#1A1A1A', boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)' }}
                   >
                     {isSubmitting ? (
                       <>
@@ -367,6 +383,8 @@ export default function ContactPageClient() {
       </div>
     </div>
       </section>
+
+      <AboutDivider />
     </main>
   )
 }
