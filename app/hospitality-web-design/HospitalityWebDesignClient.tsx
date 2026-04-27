@@ -129,11 +129,11 @@ export default function HospitalityWebDesignClient() {
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-6 md:px-12 lg:px-20 pt-32 pb-20 overflow-hidden">
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0"
           style={{
             background: isNightMode
-              ? 'radial-gradient(ellipse at top right, rgba(255,198,76,0.15), transparent 60%)'
-              : 'radial-gradient(ellipse at top right, rgba(255,198,76,0.2), transparent 60%)',
+              ? 'radial-gradient(ellipse at top right, rgba(255, 198, 76, 0.08), transparent 60%)'
+              : 'radial-gradient(ellipse at top right, rgba(180, 83, 9, 0.05), transparent 60%)',
           }}
         />
 
@@ -262,7 +262,9 @@ export default function HospitalityWebDesignClient() {
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: `${colors.accent}15` }}
+                  style={{
+                    background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
+                  }}
                 >
                   <card.icon size={24} style={{ color: colors.accent }} />
                 </div>
@@ -390,7 +392,9 @@ export default function HospitalityWebDesignClient() {
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: `${colors.accent}15` }}
+                  style={{
+                    background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
+                  }}
                 >
                   <CheckCircle2 size={24} style={{ color: colors.accent }} />
                 </div>
