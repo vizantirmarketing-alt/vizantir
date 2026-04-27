@@ -172,11 +172,11 @@ export default function HospitalityWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
+              className="rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] group"
               style={{
-                background: colors.accent,
+                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
                 color: '#1A1A1A',
-                borderRadius: '12px',
+                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
               }}
             >
               <Link href="/contact">
@@ -184,20 +184,14 @@ export default function HospitalityWebDesignClient() {
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              asChild
-              className="text-base px-8 py-6 font-semibold transition-all duration-300 hover:scale-105"
-              style={{
-                borderColor: isNightMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
-                color: colors.text,
-                borderRadius: '12px',
-                background: 'transparent',
-              }}
+            <Link
+              href="/case-studies"
+              className="inline-flex items-center gap-2 text-base font-semibold transition-colors duration-300 group"
+              style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
             >
-              <Link href="/case-studies">View Our Work</Link>
-            </Button>
+              View Our Work
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Link>
           </motion.div>
 
           <motion.div
@@ -483,11 +477,11 @@ export default function HospitalityWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="text-base px-10 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
+              className="rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] group"
               style={{
-                background: colors.accent,
+                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
                 color: '#1A1A1A',
-                borderRadius: '12px',
+                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
               }}
             >
               <Link href="/contact">
