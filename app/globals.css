@@ -124,6 +124,7 @@
 
 html, body {
   background-color: #FAFAFA;
+  transition: background-color 500ms ease;
 }
 
 html[data-theme='dark'], html[data-theme='dark'] body {
