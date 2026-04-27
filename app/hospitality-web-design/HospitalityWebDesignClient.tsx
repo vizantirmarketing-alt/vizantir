@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { VerticalBadge } from '@/components/ui/VerticalBadge'
 import {
   ArrowRight,
   Zap,
@@ -135,30 +136,13 @@ export default function HospitalityWebDesignClient() {
         />
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full border backdrop-blur-md"
-            style={{
-              background: isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.15)',
-              borderColor: isNightMode ? 'rgba(255, 198, 76, 0.3)' : 'rgba(255, 198, 76, 0.5)',
-            }}
-          >
-            <UtensilsCrossed size={16} style={{ color: colors.accent }} />
-            <span
-              className="text-sm font-medium"
-              style={{ color: isNightMode ? '#FFC64C' : '#1A1A1A' }}
-            >
-              Restaurants · Hotels · Lounges
-            </span>
-          </motion.div>
+          <VerticalBadge icon={UtensilsCrossed} label="Restaurants · Hotels · Lounges" isNightMode={isNightMode} />
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.05]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.1]"
             style={{ color: colors.text }}
           >
             Hospitality Web Design
