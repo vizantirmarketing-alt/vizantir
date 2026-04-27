@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Eyebrow } from '@/components/ui/Eyebrow'
+import SectionDivider from '@/components/ui/SectionDivider'
 import { VerticalBadge } from '@/components/ui/VerticalBadge'
 import {
   ArrowRight,
@@ -222,7 +224,7 @@ export default function HospitalityWebDesignClient() {
         </div>
       </section>
 
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* Why Choose Us */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -234,12 +236,7 @@ export default function HospitalityWebDesignClient() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <span
-              className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-4"
-              style={{ color: colors.accent }}
-            >
-              Why Choose Us
-            </span>
+            <Eyebrow>Why Choose Us</Eyebrow>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
               style={{ color: colors.text }}
@@ -287,7 +284,7 @@ export default function HospitalityWebDesignClient() {
         </div>
       </section>
 
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* Industry Expertise */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -299,12 +296,7 @@ export default function HospitalityWebDesignClient() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <span
-                className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-4"
-                style={{ color: colors.accent }}
-              >
-                Industry Expertise
-              </span>
+              <Eyebrow align="start">Industry Expertise</Eyebrow>
               <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: colors.text }}>
                 We Understand Hospitality Businesses
               </h2>
@@ -365,7 +357,7 @@ export default function HospitalityWebDesignClient() {
         </div>
       </section>
 
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* What the work includes */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -417,7 +409,7 @@ export default function HospitalityWebDesignClient() {
         </div>
       </section>
 
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* FAQ Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -429,12 +421,7 @@ export default function HospitalityWebDesignClient() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <span
-              className="inline-block text-xs tracking-[0.25em] uppercase font-medium mb-4"
-              style={{ color: colors.accent }}
-            >
-              FAQ
-            </span>
+            <Eyebrow>FAQ</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold" style={{ color: colors.text }}>
               Hospitality Web Design Questions
             </h2>
@@ -469,7 +456,7 @@ export default function HospitalityWebDesignClient() {
         </div>
       </section>
 
-      <div className="w-full h-px" style={{ background: colors.divider }} />
+      <SectionDivider />
 
       {/* CTA Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
