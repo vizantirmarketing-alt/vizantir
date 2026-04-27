@@ -231,22 +231,32 @@ export default async function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-  (function() {
-    try {
-      var stored = localStorage.getItem('theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var isDark = stored === 'dark' || (!stored && prefersDark);
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.setAttribute('data-theme', 'light');
+            __html: `(function() {
+  try {
+    var stored = localStorage.getItem('vizantir-theme');
+    
+    // Migrate legacy 'theme' key if present and new key is not set
+    if (!stored) {
+      var legacy = localStorage.getItem('theme');
+      if (legacy === 'dark') {
+        stored = 'night';
+        localStorage.setItem('vizantir-theme', 'night');
+      } else if (legacy === 'light') {
+        stored = 'day';
+        localStorage.setItem('vizantir-theme', 'day');
       }
-    } catch(e) {}
-  })();
-`,
+      if (legacy !== null) {
+        localStorage.removeItem('theme');
+      }
+    }
+    
+    if (stored === 'night') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  } catch (e) {}
+})();`,
           }}
         />
         <meta property="og:image" content="https://www.vizantir.com/og-image.png" />
