@@ -1,8 +1,23 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+type NextConfigWithEslint = NextConfig & {
+  eslint?: {
+    ignoreDuringBuilds?: boolean;
+    dirs?: string[];
+  };
+};
+
+const nextConfig: NextConfigWithEslint = {
   trailingSlash: false,
-  
+
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
+    dirs: ["app", "components", "lib"],
+  },
+
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
