@@ -14,6 +14,9 @@ Premium website design studio based in Las Vegas. Built with Next.js, TypeScript
 - **CMS:** Sanity v3 (Studio at `/studio`)
 - **Animations:** Framer Motion
 - **Hosting:** Vercel
+- **Database:** Supabase (Postgres) — form submissions, rate limiting
+- **Bot protection:** Cloudflare Turnstile
+- **Transactional email:** Resend
 - **Analytics:** Google Analytics 4, Microsoft Clarity
 
 ---
@@ -51,6 +54,23 @@ NEXT_PUBLIC_SITE_URL=https://www.vizantir.com
 # Analytics
 NEXT_PUBLIC_GA_ID=your_ga4_measurement_id
 NEXT_PUBLIC_CLARITY_ID=your_clarity_id
+
+# Supabase (form submissions, rate limiting)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Cloudflare Turnstile (bot protection on public forms)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+
+# Rate limiting (generate with: openssl rand -hex 32)
+RATE_LIMIT_SALT=
+
+# Resend (contact form notifications)
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=info@vizantir.com
+CONTACT_NOTIFICATION_EMAIL=info@vizantir.com
 ```
 
 ### 4. Run the development server
@@ -73,9 +93,11 @@ Studio runs at [http://localhost:3000/studio](http://localhost:3000/studio). You
 app/                  # Next.js App Router pages
 components/           # Reusable UI components
 content-updates/      # Drafts for batch content updates (gitignored)
+docs/                 # Standards and reference implementations
 lib/                  # Utilities, schema types, Sanity queries
 sanity/               # Sanity schema types and structure
 scripts/              # One-off and reusable operational scripts
+supabase/             # SQL migrations
 public/               # Static assets
 ```
 
@@ -96,6 +118,7 @@ Deployed automatically to Vercel on push to `main`. Environment variables must b
 | `/services` | Services and pricing |
 | `/case-studies` | Portfolio / case studies |
 | `/blog` | Blog listing and posts |
+| `/contact` | Contact form (protected) |
 | `/las-vegas-web-design` | Local SEO landing page |
 | `/hospitality-web-design` | Vertical landing page |
 | `/law-firm-web-design` | Vertical landing page |
@@ -146,6 +169,30 @@ rm content-updates/*.json
 
 ---
 
+## Form Protection
+
+All public forms on this site follow the Vizantir form protection standard. The contact form at `/contact` implements honeypot, Cloudflare Turnstile, IP-hashed rate limiting, and email validation, with submissions stored in Supabase and notifications sent via Resend.
+
+For the full standard and reference implementations of other form types, see:
+
+- `docs/standards/form-protection.md` — the standard
+- `docs/standards/form-protection-reference/` — working reference implementations
+
+When applying form protection to a new project (Vizantir client work, etc.), copy from the reference and adapt — do not write protection from scratch.
+
+---
+
+## Database (Supabase)
+
+Database schema lives in `supabase/migrations/`. To apply migrations to a new Supabase project, paste the SQL into the Supabase SQL Editor and run.
+
+Required setup for any new Supabase project hosting Vizantir forms:
+- Run all files in `supabase/migrations/` in order
+- Verify tables exist via Table Editor
+- Confirm `service_role` has explicit GRANTs on form tables (some Supabase projects require this if "Automatically expose new tables" was disabled at project creation — see `docs/standards/form-protection.md` for details)
+
+---
+
 ## Notes
 
 - Blog content lives in Sanity CMS; edit posts in Studio at `/studio`
@@ -155,3 +202,4 @@ rm content-updates/*.json
 - Blog categories are defined in `lib/blog-categories.ts`
 - Commit workflow: `git add .` → `git commit -m "..."` → `git push`
 - Never chain git commands with `&&`
+- Form protection standard documented at `docs/standards/form-protection.md`. Apply when adding any public-facing form.
