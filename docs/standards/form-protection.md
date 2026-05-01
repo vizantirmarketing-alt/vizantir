@@ -663,6 +663,28 @@ Before any form goes to prod, verify each layer manually:
 
 ---
 
+## Deploying to production (Vercel)
+
+When deploying a form-protected project to Vercel, complete this checklist before going live:
+
+1. Set every env var from the project's `.env.local` in Vercel dashboard → Settings → Environment Variables. Mark them for Production (and Preview, if you want forms to work on preview deploys). Do not commit `.env.local`.
+
+2. `NEXT_PUBLIC_SITE_URL` must be the production URL (`https://vizantir.com`), not localhost.
+
+3. Cloudflare Turnstile widget: add the production hostname (`vizantir.com`, `www.vizantir.com` if applicable) to the widget's allowed hostnames list. The development widget can stay configured with localhost; you can use one widget for both, or split into a dev widget and prod widget if you want to keep stats separate.
+
+4. Resend: verify the production sending domain is fully verified (DKIM, SPF, MX, DMARC all green). Test by sending a real email from the Resend Emails page before the first form submission.
+
+5. Run the SQL migration against the production Supabase project (if different from dev). Verify with: `select count(*) from rate_limits;` `select count(*) from contact_submissions;` — both should return 0 with no errors.
+
+6. After deploy, do one real end-to-end test: submit the live form with a real address you can check, verify the email arrives at `CONTACT_NOTIFICATION_EMAIL`, verify the row lands in `contact_submissions`.
+
+7. Set up a recurring cleanup of the `rate_limits` table to prevent indefinite growth. Either:
+   - Supabase scheduled function running nightly: `delete from rate_limits where created_at < now() - interval '7 days';`
+   - Or a Vercel cron hitting an admin endpoint that runs the same query.
+
+---
+
 ## What this doesn't cover
 
 - **Auth forms** (login, signup, password reset). Need account lockout, optional 2FA, audit logs, session security. Separate doc.
