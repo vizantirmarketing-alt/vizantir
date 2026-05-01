@@ -24,6 +24,12 @@ Next.js ships safe primitives, not safe applications. A bare `route.ts` with `aw
 
 Form protection is engineering work. It's billable. A standardized protection package on a Vizantir project is roughly 2–3 hours of integration time per form, scoped into the build.
 
+## Supabase project setup gotcha
+
+When you create a Supabase project, the **Automatically expose new tables and functions** option determines whether new tables automatically receive table privileges for the Data API roles (`anon`, `authenticated`, and `service_role`). Vizantir's standard recommendation is to leave this disabled so exposure stays under explicit migration control—which means any table your server touches with the service role must get explicit `GRANT` statements in SQL migrations, not only RLS policies.
+
+If production logs show `permission denied for table …` even though RLS policies reference `service_role`, check for missing `GRANT`s. Postgres enforces table privileges before Row Level Security; without grants, the statement fails at that layer and RLS is never evaluated.
+
 ---
 
 ## The six layers
@@ -215,6 +221,12 @@ alter table rate_limits enable row level security;
 -- Service role only. No anon access.
 create policy "service_role_all" on rate_limits
   for all using (auth.role() = 'service_role');
+
+-- Required when "Automatically expose new tables" was disabled at project setup.
+-- Without this, service_role lacks table-level privileges and queries fail with
+-- "permission denied for table X" — RLS policy is irrelevant if Postgres
+-- rejects at the privilege layer first.
+grant select, insert, update, delete on public.rate_limits to service_role;
 ```
 
 ### Env
@@ -413,6 +425,12 @@ alter table newsletter_subscribers enable row level security;
 
 create policy "service_role_all" on newsletter_subscribers
   for all using (auth.role() = 'service_role');
+
+-- Required when "Automatically expose new tables" was disabled at project setup.
+-- Without this, service_role lacks table-level privileges and queries fail with
+-- "permission denied for table X" — RLS policy is irrelevant if Postgres
+-- rejects at the privilege layer first.
+grant select, insert, update, delete on public.newsletter_subscribers to service_role;
 ```
 
 ### Resend setup
@@ -661,6 +679,7 @@ When the standard changes, log it here.
 | Date       | Change                                       | Reason |
 |------------|----------------------------------------------|--------|
 | 2026-04-30 | Initial standard. Six-layer model. Resend chosen for transactional. | Foundation. |
+| 2026-04-30 | Added explicit service_role GRANTs to all migrations. RLS alone insufficient when auto-expose disabled. | Production debugging revealed Postgres rejects at privilege layer before RLS. |
 
 ---
 

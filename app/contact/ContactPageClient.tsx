@@ -7,6 +7,9 @@ import Link from 'next/link'
 import { trackFormSubmission, trackPhoneClick } from '@/lib/analytics'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
+import { Honeypot } from '@/components/forms/Honeypot'
+import { TurnstileWidget } from '@/components/forms/TurnstileWidget'
+import { CONTACT_BUDGETS, CONTACT_SERVICES } from '@/lib/forms/contact-fields'
 
 export default function ContactPageClient() {
   const { isNightMode } = useTheme()
@@ -21,6 +24,10 @@ export default function ContactPageClient() {
     message: ''
   })
 
+  const [websiteHoneypot, setWebsiteHoneypot] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -30,31 +37,57 @@ export default function ContactPageClient() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
     setIsSubmitting(true)
-    // Simulate form submission - replace with actual form handler
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    trackFormSubmission('contact_form')
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          service: formData.service,
+          budget: formData.budget,
+          message: formData.message,
+          website: websiteHoneypot,
+          turnstileToken,
+        }),
+      })
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      }
+
+      if (res.ok && data.ok) {
+        trackFormSubmission('contact_form')
+        setIsSubmitted(true)
+        return
+      }
+
+      if (res.status === 429) {
+        setSubmitError('Too many attempts. Please try again later.')
+        return
+      }
+
+      if (
+        res.status === 400 &&
+        data.error === 'Verification failed. Please try again.'
+      ) {
+        setSubmitError('Verification failed. Please try again.')
+        return
+      }
+
+      setSubmitError(
+        typeof data.error === 'string' && data.error.length > 0
+          ? data.error
+          : 'Something went wrong. Please try again.'
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
-
-  const services = [
-    "New Website",
-    "Website Redesign",
-    "Platform Migration",
-    "Custom Development",
-    "Website Refresh",
-    "Website Care / Retainer",
-    "Not Sure Yet",
-  ]
-
-  const budgets = [
-    "$10,000 – $20,000",
-    "$20,000 – $40,000",
-    "$40,000 – $70,000",
-    "$70,000+",
-    "Not Sure Yet",
-  ]
 
   const inputStyle = {
     background: isNightMode ? '#0A0A0A' : '#FFFFFF',
@@ -247,7 +280,7 @@ export default function ContactPageClient() {
                   Start Your Project
                 </h2>
                 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="relative space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium mb-2" style={labelStyle}>Full Name *</label>
@@ -314,7 +347,7 @@ export default function ContactPageClient() {
                         style={inputStyle}
                       >
                         <option value="">Select a service</option>
-                        {services.map((service, index) => (
+                        {CONTACT_SERVICES.map((service, index) => (
                           <option key={index} value={service}>{service}</option>
                         ))}
                       </select>
@@ -329,7 +362,7 @@ export default function ContactPageClient() {
                         style={inputStyle}
                       >
                         <option value="">Select your budget</option>
-                        {budgets.map((budget, index) => (
+                        {CONTACT_BUDGETS.map((budget, index) => (
                           <option key={index} value={budget}>{budget}</option>
                         ))}
                       </select>
@@ -348,9 +381,22 @@ export default function ContactPageClient() {
                       placeholder="What are your goals? What challenges are you facing? Any specific requirements?"
                     />
                   </div>
+                  <Honeypot value={websiteHoneypot} onChange={setWebsiteHoneypot} />
+                  <div>
+                    <TurnstileWidget
+                      onVerify={(token) => setTurnstileToken(token)}
+                      onExpire={() => setTurnstileToken(null)}
+                      onError={() => setTurnstileToken(null)}
+                    />
+                  </div>
+                  {submitError ? (
+                    <p className="text-sm mt-2" style={labelStyle}>
+                      {submitError}
+                    </p>
+                  ) : null}
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || turnstileToken === null}
                     className="w-full rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     style={{ background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)', color: '#1A1A1A', boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)' }}
                   >
