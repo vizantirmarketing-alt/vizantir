@@ -22,6 +22,8 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 import MicrosoftClarity from '@/components/MicrosoftClarity'
 import DeferredChatbase from '@/components/DeferredChatbase'
 
+import { Analytics } from '@vercel/analytics/next'
+
 import './globals.css'
 
 const organizationLocalBusinessJsonLd = {
@@ -290,6 +292,7 @@ export default async function RootLayout({
           </SmoothScroll>
         </ThemeProvider>
         <DeferredChatbase />
+        <Analytics />
       </body>
     </html>
   )
