@@ -46,7 +46,7 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 SANITY_API_WRITE_TOKEN=your_write_token
-SANITY_WEBHOOK_SECRET=your_webhook_secret
+SANITY_REVALIDATE_SECRET=your_revalidate_secret
 
 # Site
 NEXT_PUBLIC_SITE_URL=https://www.vizantir.com
@@ -166,6 +166,35 @@ The `content-updates/` folder is gitignored. Clean up drafts after a successful 
 rm content-updates/*.html
 rm content-updates/*.json
 ```
+
+---
+
+## Content Revalidation
+
+This site uses on-demand ISR (Incremental Static Regeneration) so that content updates in Sanity Studio appear on the live site within seconds — no redeploy required.
+
+### How it works
+
+1. Editor publishes a change in Sanity Studio (`/studio`)
+2. Sanity fires a webhook to `POST /api/revalidate`
+3. The route validates the request signature using `SANITY_REVALIDATE_SECRET` and calls `revalidateTag(_type, 'max')` for the affected document type
+4. Next.js invalidates the cache for any `sanityFetch` queries tagged with that document type
+5. The next request to the live site fetches fresh content from Sanity
+
+### Cache tagging
+
+All `sanityFetch` calls in the codebase pass cache tags matching the Sanity `_type` they query (e.g. `tags: ['faq']`, `tags: ['post', 'author']`). This is what enables targeted invalidation on publish.
+
+### Configuration
+
+- **Webhook receiver:** `app/api/revalidate/route.ts`
+- **Secret:** `SANITY_REVALIDATE_SECRET` (must match the `Secret` field in the Sanity webhook config at sanity.io/manage)
+- **Webhook URL:** `https://www.vizantir.com/api/revalidate`
+- **Sanity webhook projection:** `{ _type, "slug": slug.current }`
+
+### When to redeploy
+
+Code changes still require a redeploy. Only Sanity content changes use the revalidation path. Adding new env vars, schema changes, or component updates → push to `main` and let Vercel rebuild.
 
 ---
 
