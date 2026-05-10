@@ -16,7 +16,7 @@ import CaseStudiesClient from './CaseStudiesClient'
 import type { CaseStudyListItem } from '@/lib/sanity/types'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
+  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
   
   if (!settings) {
     return {
@@ -53,8 +53,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function CaseStudiesPage() {
   const [settings, caseStudies] = await Promise.all([
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
-    sanityFetch<CaseStudyListItem[]>(allCaseStudiesQuery, {}, { tags: ['case-studies'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
+    sanityFetch<CaseStudyListItem[]>(allCaseStudiesQuery, {}, { tags: ['caseStudy'] }),
   ])
 
   console.log('[case-studies] Sanity titles:', caseStudies.map((cs) => cs.title))

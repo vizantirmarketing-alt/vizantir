@@ -15,7 +15,7 @@ export async function generateStaticParams() {
   const caseStudies = await sanityFetch<{ slug: string }[]>(
     allCaseStudiesQuery,
     {},
-    { tags: ['case-studies'] }
+    { tags: ['caseStudy'] }
   )
 
   return caseStudies.map((caseStudy) => ({ slug: caseStudy.slug }))
@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
 
   const [caseStudy, settings] = await Promise.all([
-    sanityFetch<CaseStudy | null>(caseStudyBySlugQuery, { slug }, { tags: ['case-studies', `case-study-${slug}`] }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<CaseStudy | null>(caseStudyBySlugQuery, { slug }, { tags: ['caseStudy'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
 
   if (!caseStudy) return {}
@@ -60,7 +60,7 @@ export default async function CaseStudyPage({ params }: Props) {
   const caseStudy = await sanityFetch<CaseStudy | null>(
     caseStudyBySlugQuery,
     { slug },
-    { tags: ['case-studies', `case-study-${slug}`] }
+    { tags: ['caseStudy'] }
   )
 
   if (!caseStudy) notFound()

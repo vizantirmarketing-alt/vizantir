@@ -7,7 +7,7 @@ import type { SiteSettings } from '@/lib/sanity/types'
 import BlogPageClient, { type SanityBlogPostPreview } from './BlogPageClient'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
+  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
 
   if (!settings) {
     return {
@@ -27,8 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogPage() {
   const [posts, settings] = await Promise.all([
-    sanityFetch<SanityBlogPostPreview[]>(allPostsQuery, {}, { tags: ['posts'] }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<SanityBlogPostPreview[]>(allPostsQuery, {}, { tags: ['post', 'author'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
 
   const postList = posts ?? []

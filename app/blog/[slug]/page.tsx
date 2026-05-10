@@ -13,7 +13,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const posts = await sanityFetch<{ slug: string }[]>(allPostsQuery, {}, { tags: ['posts'] })
+  const posts = await sanityFetch<{ slug: string }[]>(allPostsQuery, {}, { tags: ['post', 'author'] })
   return posts.map((post) => ({ slug: post.slug }))
 }
 
@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
 
   const [post, settings] = await Promise.all([
-    sanityFetch<SanityBlogPost | null>(postBySlugQuery, { slug }, { tags: ['posts', `post-${slug}`] }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<SanityBlogPost | null>(postBySlugQuery, { slug }, { tags: ['post', 'author'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
 
   if (!post) {
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params
-  const post = await sanityFetch<SanityBlogPost | null>(postBySlugQuery, { slug }, { tags: ['posts', `post-${slug}`] })
+  const post = await sanityFetch<SanityBlogPost | null>(postBySlugQuery, { slug }, { tags: ['post', 'author'] })
 
   if (!post) {
     notFound()

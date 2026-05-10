@@ -24,7 +24,7 @@ export async function generateStaticParams() {
   const services = await sanityFetch<{ slug: string }[]>(
     allServicesQuery,
     {},
-    { tags: ['services'] }
+    { tags: ['service'] }
   )
   return services.map((service) => ({ slug: service.slug }))
 }
@@ -33,10 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
 
   const [service, settings] = await Promise.all([
-    sanityFetch<Service>(serviceBySlugQuery, { slug }, { 
-      tags: ['services', `service-${slug}`] 
-    }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<Service>(serviceBySlugQuery, { slug }, { tags: ['service'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
 
   if (!service || !settings) return {}
@@ -67,10 +65,8 @@ export default async function ServicePage({ params }: Props) {
   const { slug } = await params
 
   const [service, settings] = await Promise.all([
-    sanityFetch<Service>(serviceBySlugQuery, { slug }, { 
-      tags: ['services', `service-${slug}`] 
-    }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<Service>(serviceBySlugQuery, { slug }, { tags: ['service'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
 
   if (!service || !settings) notFound()

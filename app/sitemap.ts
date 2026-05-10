@@ -1,15 +1,16 @@
 import { MetadataRoute } from 'next'
-import { sanityFetchFresh } from '@/lib/sanity/client'
+import { sanityFetch } from '@/lib/sanity/client'
 import { sitemapQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import type { SitemapData, SiteSettings } from '@/lib/sanity/types'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [settings, data] = await Promise.all([
-    sanityFetchFresh<Pick<SiteSettings, 'siteUrl'>>(siteSettingsQuery),
-    sanityFetchFresh<SitemapData>(sitemapQuery),
+    sanityFetch<Pick<SiteSettings, 'siteUrl'>>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
+    sanityFetch<SitemapData>(sitemapQuery, {}, {
+      tags: ['post', 'service', 'location', 'category'],
+    }),
   ])
 
   const baseUrl = settings?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'https://vizantir.com'
@@ -56,8 +57,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [...staticPages, ...postPages, ...servicePages, ...locationPages]
 }
-
-
-
-
-

@@ -7,7 +7,7 @@ import type { ServiceListItem, SiteSettings } from '@/lib/sanity/types'
 import ServicesPageClient from './ServicesPageClient'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
+  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
 
   if (!settings) {
     return {
@@ -27,8 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ServicesPage() {
   const [services, settings] = await Promise.all([
-    sanityFetch<ServiceListItem[]>(allServicesQuery, {}, { tags: ['services'] }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<ServiceListItem[]>(allServicesQuery, {}, { tags: ['service'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
 
   // Order matches `allServicesQuery` only (GROQ `order(...)`). No sorting in React.

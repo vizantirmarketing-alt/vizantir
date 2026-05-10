@@ -1,70 +1,33 @@
 import { revalidateTag } from 'next/cache'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
+import { parseBody } from 'next-sanity/webhook'
 
-interface SanityWebhookPayload {
-  _type: string
-  _id: string
-  slug?: { current: string }
-}
-
-/**
- * Webhook endpoint for Sanity to trigger cache revalidation
- * 
- * Setup in Sanity:
- * 1. Go to sanity.io/manage → Your Project → API → Webhooks
- * 2. Create webhook pointing to: https://yoursite.com/api/revalidate
- * 3. Add header: x-sanity-webhook-secret = YOUR_SECRET
- * 4. Trigger on: Create, Update, Delete
- */
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const secret = request.headers.get('x-sanity-webhook-secret')
-    
-    if (secret !== process.env.SANITY_WEBHOOK_SECRET) {
-      return NextResponse.json({ error: 'Invalid secret' }, { status: 401 })
+    const { isValidSignature, body } = await parseBody<{
+      _type: string
+      slug?: { current?: string }
+    }>(req, process.env.SANITY_REVALIDATE_SECRET)
+
+    if (!isValidSignature) {
+      return new Response('Invalid Signature', { status: 401 })
     }
 
-    const body: SanityWebhookPayload = await request.json()
-    const { _type, slug } = body
-    const slugValue = slug?.current
-
-    const revalidatedTags: string[] = []
-
-    // Map document types to cache tags
-    // Customize this for your content types
-    const tagMap: Record<string, string[]> = {
-      post: ['posts'],
-      service: ['services'],
-      location: ['locations'],
-      category: ['categories'],
-      author: ['authors', 'posts'], // Authors affect posts too
-      siteSettings: ['settings', 'posts', 'services', 'locations', 'categories'],
+    if (!body?._type) {
+      return new Response('Bad Request', { status: 400 })
     }
 
-    const tagsToRevalidate = tagMap[_type] || []
-    
-    for (const tag of tagsToRevalidate) {
-      revalidateTag(tag, 'max')
-      revalidatedTags.push(tag)
-    }
-
-    // Also revalidate the specific slug if present
-    if (slugValue) {
-      const slugTag = `${_type}-${slugValue}`
-      revalidateTag(slugTag, 'max')
-      revalidatedTags.push(slugTag)
-    }
-
-    console.log(`[Revalidate] Type: ${_type}, Tags: ${revalidatedTags.join(', ')}`)
+    // Revalidate the document type tag (Next.js 16 requires a cache life profile)
+    revalidateTag(body._type, 'max')
 
     return NextResponse.json({
+      status: 200,
       revalidated: true,
-      tags: revalidatedTags,
-      timestamp: Date.now(),
+      now: Date.now(),
+      body,
     })
-  } catch (error) {
-    console.error('Revalidation error:', error)
-    return NextResponse.json({ error: 'Revalidation failed' }, { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    return new Response(message, { status: 500 })
   }
 }
-

@@ -13,15 +13,15 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const locations = await sanityFetch<{ slug: string }[]>(allLocationsQuery, {}, { tags: ['locations'] })
+  const locations = await sanityFetch<{ slug: string }[]>(allLocationsQuery, {}, { tags: ['location'] })
   return (locations || []).map((l) => ({ slug: l.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const [location, settings] = await Promise.all([
-    sanityFetch<Location>(locationBySlugQuery, { slug }, { tags: ['locations', `location-${slug}`] }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<Location>(locationBySlugQuery, { slug }, { tags: ['location'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
   
   if (!location || !settings) return {}
@@ -52,8 +52,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocationPage({ params }: Props) {
   const { slug } = await params
   const [location, settings] = await Promise.all([
-    sanityFetch<Location>(locationBySlugQuery, { slug }, { tags: ['locations', `location-${slug}`] }),
-    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] }),
+    sanityFetch<Location>(locationBySlugQuery, { slug }, { tags: ['location'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
   
   if (!location || !settings) notFound()

@@ -139,7 +139,7 @@ const satoshi = localFont({
 })
 
 async function getSettings(): Promise<SiteSettings | null> {
-  return sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['settings'] })
+  return sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
 }
 
 function getSettingsWithFallback(settings: SiteSettings | null): SiteSettings {

@@ -30,7 +30,10 @@ export default async function SchemaDebugPage({ params }: Props) {
     )
   }
 
-  const settings = await sanityFetch<any>(siteSettingsQuery, {}, { fresh: true })
+  const settings = await sanityFetch<any>(siteSettingsQuery, {}, {
+    fresh: true,
+    tags: ['siteSettings'],
+  })
   if (!settings) {
     return (
       <div style={{ padding: '2rem', fontFamily: 'monospace' }}>
@@ -45,7 +48,10 @@ export default async function SchemaDebugPage({ params }: Props) {
 
   switch (type) {
     case 'service':
-      const service = await sanityFetch<any>(serviceBySlugQuery, { slug }, { fresh: true })
+      const service = await sanityFetch<any>(serviceBySlugQuery, { slug }, {
+        fresh: true,
+        tags: ['service'],
+      })
       if (!service) notFound()
       pageUrl = `${settings.siteUrl}/services/${slug}`
       schemaData = graphSchema([
@@ -56,7 +62,10 @@ export default async function SchemaDebugPage({ params }: Props) {
       ])
       break
     case 'location':
-      const location = await sanityFetch<any>(locationBySlugQuery, { slug }, { fresh: true })
+      const location = await sanityFetch<any>(locationBySlugQuery, { slug }, {
+        fresh: true,
+        tags: ['location'],
+      })
       if (!location) notFound()
       pageUrl = `${settings.siteUrl}/locations/${slug}`
       schemaData = graphSchema([
@@ -66,7 +75,10 @@ export default async function SchemaDebugPage({ params }: Props) {
       ])
       break
     case 'post':
-      const post = await sanityFetch<any>(postBySlugQuery, { slug }, { fresh: true })
+      const post = await sanityFetch<any>(postBySlugQuery, { slug }, {
+        fresh: true,
+        tags: ['post'],
+      })
       if (!post) notFound()
       pageUrl = `${settings.siteUrl}/blog/${slug}`
       schemaData = graphSchema([
