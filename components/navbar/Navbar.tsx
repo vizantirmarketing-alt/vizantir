@@ -111,7 +111,7 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden xl:flex items-center gap-8">
               {mainNavLinks.map((link) => (
                 <Link
                   key={link.path}
@@ -136,7 +136,7 @@ const Navbar = () => {
               ))}
             </div>
 
-            <div className="hidden lg:flex items-center gap-4">
+            <div className="hidden xl:flex items-center gap-4">
               {/* Theme Toggle */}
               {mounted && (
                 <button
@@ -189,7 +189,7 @@ const Navbar = () => {
             {/* Mobile Menu Button */}
             {!isMobileMenuOpen && (
               <button
-                className="lg:hidden z-50 relative"
+                className="xl:hidden z-50 relative"
                 aria-label="Open menu"
                 aria-expanded={false}
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -207,7 +207,7 @@ const Navbar = () => {
 
       {/* Mobile Bottom Sheet */}
       <div
-        className={`lg:hidden fixed inset-0 z-[60] ${
+        className={`xl:hidden fixed inset-0 z-[60] ${
           isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         aria-hidden={!isMobileMenuOpen}
