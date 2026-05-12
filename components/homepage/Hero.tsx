@@ -24,9 +24,8 @@ const TorusPlaceholder = ({ isNightMode }: { isNightMode: boolean }) => (
 );
 
 const Hero = () => {
-  const { isNightMode, mounted } = useTheme();
+  const { isNightMode } = useTheme();
   const { scrollY } = useScroll();
-  const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [show3D, setShow3D] = useState(false);
   
@@ -56,27 +55,6 @@ const Hero = () => {
   const y = useTransform(scrollY, [0, scrollEnd], [0, 100]);
   const scale = useTransform(scrollY, [0, scrollEnd], [1, 0.95]);
 
-  // Prevent flash by only showing content after theme is mounted
-  useEffect(() => {
-    if (mounted) {
-      // Small delay to ensure smooth transition
-      const timer = setTimeout(() => setIsVisible(true), 50);
-      return () => clearTimeout(timer);
-    }
-  }, [mounted]);
-
-  // Don't render until theme is mounted to prevent flash
-  if (!mounted) {
-    return (
-      <section 
-        className="hero-section relative min-h-screen w-full flex items-center overflow-x-clip overflow-y-visible"
-        style={{ 
-          background: '#000000' // Default to dark during SSR
-        }}
-      />
-    );
-  }
-
   return (
     <motion.section 
       className="hero-section relative min-h-screen w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
@@ -84,8 +62,6 @@ const Hero = () => {
         background: isNightMode 
           ? '#000000' 
           : '#FAFAFA',
-        opacity: isVisible ? 1 : 0,
-        transition: 'opacity 0.3s ease-in-out'
       }}
     >
       {/* Background gradient - purple/amber glow on LEFT side */}
