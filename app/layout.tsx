@@ -19,7 +19,6 @@ import ScrollProgress from '@/components/ScrollProgress'
 import { ScrollToTop } from '@/components/ScrollToTop'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
-import MicrosoftClarity from '@/components/MicrosoftClarity'
 import DeferredChatbase from '@/components/DeferredChatbase'
 
 import { Analytics } from '@vercel/analytics/next'
@@ -279,7 +278,6 @@ export default async function RootLayout({
       </head>
       <body className={satoshi.variable} suppressHydrationWarning>
         <GoogleAnalytics />
-        <MicrosoftClarity />
         <ThemeProvider>
           <SmoothScroll>
             <ScrollToTop />

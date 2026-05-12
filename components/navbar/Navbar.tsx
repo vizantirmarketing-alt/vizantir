@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { trackCTAClick } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
@@ -195,7 +195,10 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(true)}
                 style={{ color: !mounted ? '#F7F7F7' : isNightMode ? '#F7F7F7' : '#1A1A1A' }}
               >
-                <Menu size={24} />
+                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M4 8h16" />
+                  <path d="M4 16h16" />
+                </svg>
               </button>
             )}
           </div>
