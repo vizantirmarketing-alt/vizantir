@@ -224,7 +224,7 @@ const Hero = () => {
                 Built for{' '}
               </span>
               <span
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] align-baseline"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] align-baseline"
                 style={{
                   color: isNightMode ? '#FFFFFF' : '#1A1A1A',
                   textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none',
