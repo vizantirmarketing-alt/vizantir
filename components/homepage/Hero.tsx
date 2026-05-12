@@ -219,9 +219,53 @@ const Hero = () => {
               textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none'
             }}
           >
-            REAL
-            <br />
-            GROWTH
+            <span
+              className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em]"
+              style={{
+                color: isNightMode ? 'rgba(255,255,255,0.72)' : '#5C5C5C',
+                textShadow: 'none',
+              }}
+            >
+              Custom websites
+            </span>
+            <span
+              className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] mt-1"
+              style={{
+                color: isNightMode ? 'rgba(255,255,255,0.72)' : '#5C5C5C',
+                textShadow: 'none',
+              }}
+            >
+              for established brands.
+            </span>
+            <span className="block mt-3 sm:mt-4">
+              <span
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] align-baseline"
+                style={{
+                  color: isNightMode ? 'rgba(255,255,255,0.72)' : '#5C5C5C',
+                  textShadow: 'none',
+                }}
+              >
+                Built for{' '}
+              </span>
+              <span
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] align-baseline"
+                style={{
+                  color: isNightMode ? '#FFFFFF' : '#1A1A1A',
+                  textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none',
+                }}
+              >
+                real growth
+              </span>
+              <span
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] align-baseline"
+                style={{
+                  color: isNightMode ? 'rgba(255,255,255,0.72)' : '#5C5C5C',
+                  textShadow: 'none',
+                }}
+              >
+                .
+              </span>
+            </span>
           </h1>
 
           <p 
