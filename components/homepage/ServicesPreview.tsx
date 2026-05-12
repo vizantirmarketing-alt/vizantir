@@ -175,7 +175,7 @@ const ServicesPreview = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16"
         >
           {services.map((service, index) => {
             return (
@@ -216,7 +216,7 @@ const ServicesPreview = () => {
                 </span>
 
                 <h3
-                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal break-words transition-all duration-300 group-hover:translate-x-2 group-hover:text-[#FFC64C]"
+                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-[#FFC64C]"
                   style={{ color: isNightMode ? '#fff' : '#1a1a1a', lineHeight: '1.2' }}
                 >
                   {service.title}
