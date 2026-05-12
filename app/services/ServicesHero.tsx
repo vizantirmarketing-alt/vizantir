@@ -45,7 +45,7 @@ export default function ServicesHero() {
 
   return (
     <motion.section
-      className="relative min-h-screen w-full overflow-hidden"
+      className="relative min-h-[60vh] md:min-h-screen w-full overflow-hidden"
       style={{ 
         background: colors.bg,
         opacity: heroOpacity,
@@ -125,7 +125,7 @@ export default function ServicesHero() {
 
       {/* Content Grid */}
       <motion.div 
-        className="relative z-10 h-screen flex flex-col justify-between px-6 md:px-12 lg:px-20 py-20 md:py-24"
+        className="relative z-10 min-h-[60vh] md:h-screen flex flex-col justify-between px-6 md:px-12 lg:px-20 py-20 md:py-24"
         style={{ opacity: heroOpacity }}
       >
         {/* Top Row */}
@@ -152,7 +152,7 @@ export default function ServicesHero() {
         </div>
 
         {/* Center Content */}
-        <div className="flex-1 flex items-center">
+        <div className="flex-1 flex items-start md:items-center pt-8 md:pt-0">
           <div className="w-full grid grid-cols-12 gap-4 lg:items-center">
             {/* Main headline */}
             <div

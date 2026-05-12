@@ -182,7 +182,7 @@ const ServicesPreview = () => {
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="group relative rounded-2xl p-10 md:p-12 cursor-pointer transition-all duration-500 overflow-hidden"
+                className="group relative min-w-0 rounded-2xl p-10 md:p-12 cursor-pointer transition-all duration-500 overflow-hidden"
                 style={{
                   background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
                   backdropFilter: 'blur(10px)',
@@ -216,7 +216,7 @@ const ServicesPreview = () => {
                 </span>
 
                 <h3
-                  className="text-3xl md:text-4xl font-extrabold mb-6 transition-all duration-300 group-hover:translate-x-2 group-hover:text-[#FFC64C]"
+                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal break-words transition-all duration-300 group-hover:translate-x-2 group-hover:text-[#FFC64C]"
                   style={{ color: isNightMode ? '#fff' : '#1a1a1a', lineHeight: '1.2' }}
                 >
                   {service.title}
