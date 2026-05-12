@@ -215,31 +215,33 @@ const Hero = () => {
             </span>
             <span className="block mt-3 sm:mt-4">
               <span
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] align-baseline"
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em]"
                 style={{
                   color: isNightMode ? 'rgba(255,255,255,0.72)' : '#5C5C5C',
                   textShadow: 'none',
                 }}
               >
-                Built for{' '}
+                Built for
               </span>
-              <span
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] align-baseline"
-                style={{
-                  color: isNightMode ? '#FFFFFF' : '#1A1A1A',
-                  textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none',
-                }}
-              >
-                real growth
-              </span>
-              <span
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] align-baseline"
-                style={{
-                  color: isNightMode ? 'rgba(255,255,255,0.72)' : '#5C5C5C',
-                  textShadow: 'none',
-                }}
-              >
-                .
+              <span className="block whitespace-nowrap">
+                <span
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em]"
+                  style={{
+                    color: isNightMode ? '#FFFFFF' : '#1A1A1A',
+                    textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none',
+                  }}
+                >
+                  real growth
+                </span>
+                <span
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em]"
+                  style={{
+                    color: isNightMode ? 'rgba(255,255,255,0.72)' : '#5C5C5C',
+                    textShadow: 'none',
+                  }}
+                >
+                  .
+                </span>
               </span>
             </span>
           </h1>
