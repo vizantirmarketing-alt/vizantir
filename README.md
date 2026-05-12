@@ -17,7 +17,7 @@ Premium website design studio based in Las Vegas. Built with Next.js, TypeScript
 - **Database:** Supabase (Postgres) — form submissions, rate limiting
 - **Bot protection:** Cloudflare Turnstile
 - **Transactional email:** Resend
-- **Analytics:** Google Analytics 4, Vercel Analytics
+- **Analytics:** Vercel Analytics
 
 ---
 
@@ -50,9 +50,6 @@ SANITY_REVALIDATE_SECRET=your_revalidate_secret
 
 # Site
 NEXT_PUBLIC_SITE_URL=https://www.vizantir.com
-
-# Analytics
-NEXT_PUBLIC_GA_ID=your_ga4_measurement_id
 
 # Supabase (form submissions, rate limiting)
 NEXT_PUBLIC_SUPABASE_URL=

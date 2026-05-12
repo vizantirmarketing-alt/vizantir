@@ -18,7 +18,6 @@ import ScrollProgress from '@/components/ScrollProgress'
 
 import { ScrollToTop } from '@/components/ScrollToTop'
 
-import GoogleAnalytics from '@/components/GoogleAnalytics'
 import DeferredChatbase from '@/components/DeferredChatbase'
 
 import { Analytics } from '@vercel/analytics/next'
@@ -277,7 +276,6 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://www.chatbase.co" />
       </head>
       <body className={satoshi.variable} suppressHydrationWarning>
-        <GoogleAnalytics />
         <ThemeProvider>
           <SmoothScroll>
             <ScrollToTop />

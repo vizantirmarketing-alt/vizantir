@@ -45,7 +45,7 @@ export default function CookiePolicy() {
           subtitle: "2. Performance and Analytics Cookies",
           content: "These cookies help us understand how visitors interact with our website:",
           list: [
-            "Google Analytics: Tracks website traffic and user behavior",
+            "Vercel Analytics: Aggregate traffic and web vitals metrics",
             "Page Load Times: Monitors website performance",
             "Error Tracking: Identifies and fixes technical issues"
           ]
@@ -86,8 +86,7 @@ export default function CookiePolicy() {
         {
           subtitle: "Analytics Services",
           list: [
-            "Google Analytics: Web analytics service",
-            "Google Tag Manager: Tag management system",
+            "Vercel Analytics: Web analytics provided by our hosting platform",
             "Hotjar: User behavior analytics"
           ]
         },
@@ -156,7 +155,6 @@ export default function CookiePolicy() {
           subtitle: "Opt-Out Options",
           content: "You can opt out of specific tracking:",
           list: [
-            "Google Analytics: Google Analytics Opt-out",
             "Google Ads: Ad Settings",
             "Facebook: Ad Preferences"
           ]

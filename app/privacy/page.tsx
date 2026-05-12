@@ -105,7 +105,7 @@ export default function PrivacyPolicy() {
           subtitle: "Service Providers",
           content: "We may share information with trusted third parties who assist us:",
           list: [
-            "Analytics Providers: Google Analytics, website performance tools",
+            "Analytics Providers: Vercel Analytics and related website performance tools",
             "Hosting and technical providers: Web hosting, deployment, security, and maintenance partners",
             "Communication Tools: Email and client communication systems",
             "Payment Processors: Secure payment handling services",
@@ -137,7 +137,7 @@ export default function PrivacyPolicy() {
           list: [
             "Client Data: Duration of business relationship plus 7 years",
             "Marketing Data: 3 years from last interaction",
-            "Website Analytics: 26 months (Google Analytics default)",
+            "Website Analytics: Retained according to our analytics provider's policies",
             "Communication Records: 3-7 years depending on type"
           ]
         }
