@@ -32,7 +32,9 @@ const Hero = () => {
   // Detect mobile for responsive scroll fade
   useEffect(() => {
     setIsMobile(window.innerWidth < 768)
-    const handleViewportChange = () => setIsMobile(window.innerWidth < 768)
+    const handleViewportChange = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
     window.addEventListener('resize', handleViewportChange)
     window.addEventListener('orientationchange', handleViewportChange)
     return () => {
@@ -165,7 +167,7 @@ const Hero = () => {
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}
-        <div className="relative z-0 order-1 h-[160px] sm:h-[280px] md:h-[350px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible opacity-40 md:opacity-100">
+        <div className="relative z-0 order-1 min-w-0 h-[160px] sm:h-[280px] md:h-[350px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible opacity-40 md:opacity-100">
           <div className="relative w-full h-full max-w-[700px] -mt-8 md:-mt-16 lg:-mt-24 scale-90 md:scale-100">
             {show3D ? (
               <Suspense fallback={<TorusPlaceholder isNightMode={isNightMode} />}>
@@ -178,7 +180,7 @@ const Hero = () => {
         </div>
 
         {/* RIGHT SIDE - Content */}
-        <div className="relative z-10 max-w-2xl order-2 lg:ml-auto text-left">
+        <div className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left">
           <div className="mb-4">
             <Eyebrow align="start">Vizantir Studio</Eyebrow>
           </div>
@@ -227,7 +229,7 @@ const Hero = () => {
               >
                 Built for
               </span>
-              <span className="block whitespace-nowrap">
+              <span className="block lg:whitespace-nowrap">
                 <span
                   className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em]"
                   style={{

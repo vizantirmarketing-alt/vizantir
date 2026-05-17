@@ -296,10 +296,15 @@ export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalToru
 
       const width = container.clientWidth
       const height = container.clientHeight
-      if (width <= 0 || height <= 0) return
+
+      if (width <= 0 || height <= 0) {
+        return
+      }
+
+      const aspect = width / height
 
       const cam = cameraRef.current
-      cam.aspect = width / height
+      cam.aspect = aspect
       cam.updateProjectionMatrix()
 
       const isMobileNow = width < 640
@@ -312,7 +317,9 @@ export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalToru
       }
     }
 
-    const resizeObserver = new ResizeObserver(() => syncSize())
+    const resizeObserver = new ResizeObserver(() => {
+      syncSize()
+    })
     resizeObserver.observe(container)
 
     // Fallback + iOS: orientationchange often precedes final layout; double rAF defers past it.
