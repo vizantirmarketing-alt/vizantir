@@ -207,7 +207,7 @@ const Navbar = () => {
 
       {/* Mobile Bottom Sheet */}
       <div
-        className={`xl:hidden fixed inset-0 z-[60] ${
+        className={`xl:hidden fixed top-0 left-0 right-0 z-[60] h-[100dvh] max-h-[100dvh] min-h-0 ${
           isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         aria-hidden={!isMobileMenuOpen}
@@ -227,10 +227,8 @@ const Navbar = () => {
 
         {/* Sheet */}
         <div
-          className="absolute inset-0 shadow-2xl flex flex-col"
+          className="absolute inset-0 shadow-2xl flex flex-col min-h-0 overscroll-y-contain"
           style={{
-            height: '100vh',
-            maxHeight: '100vh',
             transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(100%)',
             transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
             willChange: 'transform',
@@ -243,7 +241,7 @@ const Navbar = () => {
         >
           {/* Header Row */}
           <div
-            className="flex items-center justify-between px-6 pt-3 pb-3"
+            className="shrink-0 flex items-center justify-between px-6 pt-3 pb-3"
             style={{
               borderBottom: !mounted
                 ? '1px solid rgba(255, 255, 255, 0.08)'
@@ -289,49 +287,52 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="px-6 flex-1 flex flex-col justify-center">
-            {mainNavLinks.map((link, idx) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 transition-all duration-300"
-                style={{
-                  borderBottom:
-                    idx === mainNavLinks.length - 1
-                      ? 'none'
-                      : !mounted
-                        ? '1px solid rgba(255, 255, 255, 0.06)'
-                        : isNightMode
+          <nav className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-6">
+            <div className="min-h-full flex flex-col justify-center">
+              {mainNavLinks.map((link, idx) => (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-3 transition-all duration-300"
+                  style={{
+                    borderBottom:
+                      idx === mainNavLinks.length - 1
+                        ? 'none'
+                        : !mounted
                           ? '1px solid rgba(255, 255, 255, 0.06)'
-                          : '1px solid rgba(0, 0, 0, 0.04)',
-                  color:
-                    pathname === link.path
-                      ? '#FFC64C'
-                      : !mounted
-                        ? '#F8F8F8'
-                        : isNightMode
+                          : isNightMode
+                            ? '1px solid rgba(255, 255, 255, 0.06)'
+                            : '1px solid rgba(0, 0, 0, 0.04)',
+                    color:
+                      pathname === link.path
+                        ? '#FFC64C'
+                        : !mounted
                           ? '#F8F8F8'
-                          : '#1A1A1A',
-                }}
-              >
-                <span className="text-lg font-medium">{link.name}</span>
-              </Link>
-            ))}
+                          : isNightMode
+                            ? '#F8F8F8'
+                            : '#1A1A1A',
+                  }}
+                >
+                  <span className="text-lg font-medium">{link.name}</span>
+                </Link>
+              ))}
+            </div>
           </nav>
 
           {/* Bottom Actions */}
-          <div className="px-6 pb-5 pt-3 space-y-2.5">
+          <div className="shrink-0 px-6 pb-5 pt-3 space-y-2.5">
             {/* Primary CTA */}
             <Link
               href="/contact"
+              className="block w-full max-w-sm mx-auto"
               onClick={() => {
                 setIsMobileMenuOpen(false)
                 trackCTAClick('get_started', 'mobile_menu')
               }}
             >
               <button
-                className="w-full rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+                className="w-full rounded-xl px-8 py-3 text-base font-medium text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
                 style={{
                   background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
                   color: '#1A1A1A',
@@ -344,10 +345,10 @@ const Navbar = () => {
 
             {/* Theme Toggle — centered below CTAs */}
             {mounted && (
-              <div className="pt-5 flex justify-center">
+              <div className="pt-4 flex justify-center">
                 <button
                   onClick={toggleTheme}
-                  className="flex items-center gap-3 px-5 py-2.5 rounded-full transition-all duration-300"
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-300"
                   style={{
                     background: isNightMode ? 'rgba(30, 41, 59, 0.6)' : 'rgba(0, 0, 0, 0.05)',
                     border: isNightMode ? '1px solid rgba(148, 163, 184, 0.3)' : '1px solid rgba(0, 0, 0, 0.1)',
