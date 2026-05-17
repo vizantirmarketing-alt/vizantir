@@ -16,6 +16,5 @@ export const mainNavLinks: MainNavLink[] = [
     path: '/are-we-a-fit',
     description: 'Honest criteria on whether Vizantir is the right web design studio for your business.',
   },
-  { name: 'Blog', path: '/blog' },
   { name: 'Contact Us', path: '/contact' },
 ]
