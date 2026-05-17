@@ -31,11 +31,15 @@ const Hero = () => {
   
   // Detect mobile for responsive scroll fade
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    setIsMobile(window.innerWidth < 768)
+    const handleViewportChange = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleViewportChange)
+    window.addEventListener('orientationchange', handleViewportChange)
+    return () => {
+      window.removeEventListener('resize', handleViewportChange)
+      window.removeEventListener('orientationchange', handleViewportChange)
+    }
+  }, [])
 
   // Defer 3D loading until browser is idle
   useEffect(() => {

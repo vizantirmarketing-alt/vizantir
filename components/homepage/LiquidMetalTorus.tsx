@@ -289,31 +289,47 @@ export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalToru
     }
     animate()
 
-    // Resize handler
-    const handleResize = () => {
+    // Sync canvas + camera when the container laid-out size changes (preferred:
+    // fires after orientation / layout settles; window resize alone can race on iOS Safari).
+    const syncSize = () => {
       if (!container || !rendererRef.current || !cameraRef.current) return
-      
+
       const width = container.clientWidth
       const height = container.clientHeight
-      
-      const camera = cameraRef.current
-      camera.aspect = width / height
-      camera.updateProjectionMatrix()
-      
-      // Adjust camera position based on screen size
-      const isMobile = width < 640 // sm breakpoint
-      camera.position.z = isMobile ? 7 : 6.5
-      
+      if (width <= 0 || height <= 0) return
+
+      const cam = cameraRef.current
+      cam.aspect = width / height
+      cam.updateProjectionMatrix()
+
+      const isMobileNow = width < 640
+      cam.position.z = isMobileNow ? 7 : 6.5
+
       rendererRef.current.setSize(width, height)
+      rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       if (material.uniforms?.uResolution) {
         material.uniforms.uResolution.value.set(width, height)
       }
     }
-    window.addEventListener('resize', handleResize)
+
+    const resizeObserver = new ResizeObserver(() => syncSize())
+    resizeObserver.observe(container)
+
+    // Fallback + iOS: orientationchange often precedes final layout; double rAF defers past it.
+    const handleWindowResize = () => syncSize()
+    const handleOrientationChange = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(syncSize)
+      })
+    }
+    window.addEventListener('resize', handleWindowResize)
+    window.addEventListener('orientationchange', handleOrientationChange)
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', handleResize)
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', handleWindowResize)
+      window.removeEventListener('orientationchange', handleOrientationChange)
       window.removeEventListener('mousemove', handleMouseMove)
       cancelAnimationFrame(frameRef.current)
       if (container && rendererRef.current) {
