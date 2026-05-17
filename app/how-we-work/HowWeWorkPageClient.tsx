@@ -80,7 +80,7 @@ export default function HowWeWorkPageClient() {
     {
       question: 'What happens after launch?',
       answer:
-        'Launch support is included. For ongoing maintenance, we offer care packages starting at $149/month.',
+        'Launch support is included. For ongoing maintenance, we offer monthly Website Care retainers starting at $500/month, with Growth and Enterprise tiers when you need more bandwidth.',
     },
   ]
 

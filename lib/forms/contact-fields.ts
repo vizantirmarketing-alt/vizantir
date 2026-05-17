@@ -10,7 +10,7 @@ export const CONTACT_SERVICES = [
 ] as const;
 
 export const CONTACT_BUDGETS = [
-  '$10,000 – $20,000',
+  '$15,000 – $25,000',
   '$20,000 – $40,000',
   '$40,000 – $70,000',
   '$70,000+',

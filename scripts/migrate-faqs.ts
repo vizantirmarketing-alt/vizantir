@@ -98,7 +98,7 @@ const FAQS: FaqSeed[] = [
   {
     question: 'What happens after the site launches?',
     answer:
-      'We offer monthly Website Care retainers starting at $150/month for Next.js sites for updates, monitoring, content changes, and ongoing improvements. Most clients stay on retainer after launch so the site keeps performing as the business evolves.',
+      'We offer monthly Website Care retainers starting at $500/month for Next.js sites for updates, monitoring, content changes, and ongoing improvements, with Growth and Enterprise tiers when you need more bandwidth. Most clients stay on retainer after launch so the site keeps performing as the business evolves.',
     placement: 'faqPage',
     sortOrder: 50,
   },
