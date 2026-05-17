@@ -287,66 +287,39 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-6">
-            <div className="min-h-full flex flex-col justify-center">
-              {mainNavLinks.map((link, idx) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 transition-all duration-300"
-                  style={{
-                    borderBottom:
-                      idx === mainNavLinks.length - 1
-                        ? 'none'
-                        : !mounted
-                          ? '1px solid rgba(255, 255, 255, 0.06)'
-                          : isNightMode
-                            ? '1px solid rgba(255, 255, 255, 0.06)'
-                            : '1px solid rgba(0, 0, 0, 0.04)',
-                    color:
-                      pathname === link.path
-                        ? '#FFC64C'
-                        : !mounted
-                          ? '#F8F8F8'
-                          : isNightMode
-                            ? '#F8F8F8'
-                            : '#1A1A1A',
-                  }}
-                >
-                  <span className="text-lg font-medium">{link.name}</span>
-                </Link>
-              ))}
-            </div>
-          </nav>
-
-          {/* Bottom Actions */}
-          <div className="shrink-0 px-6 pb-5 pt-3 space-y-2.5">
-            {/* Primary CTA */}
-            <Link
-              href="/contact"
-              className="block w-full max-w-sm mx-auto"
-              onClick={() => {
-                setIsMobileMenuOpen(false)
-                trackCTAClick('get_started', 'mobile_menu')
-              }}
-            >
-              <button
-                className="w-full rounded-xl px-8 py-3 text-base font-medium text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+          <nav className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-6 pb-6">
+            {mainNavLinks.map((link, idx) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block py-3 transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
-                  color: '#1A1A1A',
-                  boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                  borderBottom:
+                    idx === mainNavLinks.length - 1
+                      ? 'none'
+                      : !mounted
+                        ? '1px solid rgba(255, 255, 255, 0.06)'
+                        : isNightMode
+                          ? '1px solid rgba(255, 255, 255, 0.06)'
+                          : '1px solid rgba(0, 0, 0, 0.04)',
+                  color:
+                    pathname === link.path
+                      ? '#FFC64C'
+                      : !mounted
+                        ? '#F8F8F8'
+                        : isNightMode
+                          ? '#F8F8F8'
+                          : '#1A1A1A',
                 }}
               >
-                Book a Strategy Call
-              </button>
-            </Link>
-
-            {/* Theme Toggle — centered below CTAs */}
+                <span className="text-lg font-medium">{link.name}</span>
+              </Link>
+            ))}
             {mounted && (
               <div className="pt-4 flex justify-center">
                 <button
+                  type="button"
                   onClick={toggleTheme}
                   className="flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-300"
                   style={{
@@ -387,7 +360,7 @@ const Navbar = () => {
                 </button>
               </div>
             )}
-          </div>
+          </nav>
         </div>
       </div>
     </>
