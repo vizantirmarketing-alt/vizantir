@@ -8,6 +8,7 @@ import { ArrowRight, ExternalLink } from 'lucide-react'
 
 import { useTheme } from '@/contexts/ThemeContext'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { shouldShowCaseStudyClient } from '@/lib/case-studies/metadata'
 import { trackCTAClick } from '@/lib/analytics'
 import type { CaseStudyListItem } from '@/lib/sanity/types'
 
@@ -182,7 +183,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                   >
                     {study.title}
                   </h3>
-                  {study.client ? (
+                  {shouldShowCaseStudyClient(study.title, study.client) ? (
                     <p className="text-sm font-medium uppercase tracking-[0.15em]" style={{ color: colors.textMuted }}>
                       {study.client}
                     </p>

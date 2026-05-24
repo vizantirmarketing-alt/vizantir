@@ -9,6 +9,7 @@ import { ArrowRight, ExternalLink } from 'lucide-react'
 import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { useTheme } from '@/contexts/ThemeContext'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { formatCaseStudyMetadataLine } from '@/lib/case-studies/metadata'
 import type { CaseStudy } from '@/lib/sanity/types'
 
 interface CaseStudyPageContentProps {
@@ -32,6 +33,8 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
     }),
     [isNightMode],
   )
+
+  const metadataLine = formatCaseStudyMetadataLine(caseStudy.title, caseStudy.client, caseStudy.industry)
 
   const hasChallenge = Array.isArray(caseStudy.challenge) && caseStudy.challenge.length > 0
   const hasSolution = Array.isArray(caseStudy.solution) && caseStudy.solution.length > 0
@@ -65,9 +68,9 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
               {caseStudy.title}
             </h1>
-            {(caseStudy.client || caseStudy.industry) ? (
+            {metadataLine ? (
               <p className="mt-5 text-sm uppercase tracking-[0.2em]" style={{ color: colors.textMuted }}>
-                {[caseStudy.client, caseStudy.industry].filter(Boolean).join(' • ')}
+                {metadataLine}
               </p>
             ) : null}
             {caseStudy.summary ? (

@@ -10,7 +10,8 @@
     "update:posts": "tsx scripts/update-blog-posts.ts",
     "update:posts:live": "tsx scripts/update-blog-posts.ts --live",
     "migrate:faqs": "tsx scripts/migrate-faqs.ts",
-    "migrate:faqs:live": "tsx scripts/migrate-faqs.ts --live"
+    "migrate:faqs:live": "tsx scripts/migrate-faqs.ts --live",
+    "create:gei": "tsx scripts/create-gei-case-study.ts"
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^1.5.1",
