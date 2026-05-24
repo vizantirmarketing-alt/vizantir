@@ -12,11 +12,11 @@ const ResultsThatSpeak = () => {
 
   const projects = [
     {
-      title: 'Pink Salt Salon',
-      category: 'Beauty & Wellness',
-      outcome: 'Luxury salon site with booking-forward UX and SEO tuned for local search.',
-      image: '/ps.png',
-      link: 'https://pinksaltsalonandspa.com',
+      title: 'Golden Era Integra',
+      category: 'AUTOMOTIVE / ENTHUSIAST',
+      outcome: 'Editorial platform for a 1995 Acura Integra GS-R restoration — documented build journal, parts archive, and garage sale system, all running on Sanity CMS.',
+      image: '/g-e-i.png',
+      link: 'https://goldeneraintegra.com',
     },
     {
       title: 'Eloraé Nails',

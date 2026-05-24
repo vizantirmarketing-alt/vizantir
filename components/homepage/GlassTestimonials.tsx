@@ -20,11 +20,11 @@ const GlassTestimonials = () => {
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      name: 'Pink Salt Salon',
-      role: 'Owner',
-      company: 'Pink Salt Salon',
-      quote: "Vizantir built us a gorgeous website that truly matches our salon's vibe. It's simple for clients to navigate, optimized for search, and already bringing in new business. Couldn't be happier.",
-      avatar: 'PS',
+      name: 'Golden Era Integra',
+      role: 'Founder',
+      company: 'Golden Era Integra',
+      quote: 'Vizantir built the editorial platform exactly right — build journal, parts archive, garage sale system, all running on Sanity CMS. It presents the restoration the way it deserves.',
+      avatar: 'GEI',
       gradient: 'linear-gradient(135deg, #FFC64C, #FF9500)',
     },
     {
