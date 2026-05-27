@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [settings, data] = await Promise.all([
     sanityFetch<Pick<SiteSettings, 'siteUrl'>>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
     sanityFetch<SitemapData>(sitemapQuery, {}, {
-      tags: ['post', 'service', 'location', 'category'],
+      tags: ['post', 'service', 'caseStudy', 'location'],
     }),
   ])
 
@@ -23,14 +23,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/services`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/faq`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
-    { url: 'https://www.vizantir.com/las-vegas-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: 'https://www.vizantir.com/hospitality-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: 'https://www.vizantir.com/law-firm-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: 'https://www.vizantir.com/commercial-real-estate-web-design', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: 'https://www.vizantir.com/case-studies', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: 'https://www.vizantir.com/how-we-work', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/las-vegas-web-design`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/hospitality-web-design`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/law-firm-web-design`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/commercial-real-estate-web-design`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/case-studies`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/how-we-work`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/are-we-a-fit`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.75 },
-    { url: 'https://www.vizantir.com/get-started', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/get-started`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/cookies`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/copyright`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ]
 
   // Dynamic pages from Sanity
@@ -48,6 +52,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }))
 
+  const caseStudyPages: MetadataRoute.Sitemap = (data?.caseStudies || []).map((c) => ({
+    url: `${baseUrl}/case-studies/${c.slug}`,
+    lastModified: new Date(c._updatedAt),
+    changeFrequency: 'monthly',
+    priority: 0.75,
+  }))
+
   const locationPages: MetadataRoute.Sitemap = (data?.locations || []).map((l) => ({
     url: `${baseUrl}/locations/${l.slug}`,
     lastModified: new Date(l._updatedAt),
@@ -55,5 +66,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  return [...staticPages, ...postPages, ...servicePages, ...locationPages]
+  return [...staticPages, ...postPages, ...servicePages, ...caseStudyPages, ...locationPages]
 }

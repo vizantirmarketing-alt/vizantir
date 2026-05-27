@@ -226,9 +226,8 @@ export interface SitemapData {
   pages?: { slug: string; _updatedAt: string }[]
   posts?: { slug: string; _updatedAt: string; publishedAt: string }[]
   services?: { slug: string; _updatedAt: string }[]
+  caseStudies?: { slug: string; _updatedAt: string }[]
   locations?: { slug: string; _updatedAt: string }[]
-  categories?: { slug: string; _updatedAt: string }[]
-  // Add more content types as needed
 }
 
 

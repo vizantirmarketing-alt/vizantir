@@ -271,10 +271,10 @@ export const authorBySlugQuery = groq`
 // ============================================
 
 export const sitemapQuery = groq`{
-  "posts": *[_type == "post"] { "slug": slug.current, _updatedAt, publishedAt },
-  "services": *[_type == "service"] | order(coalesce(order, 999) asc, title asc) { "slug": slug.current, _updatedAt },
-  "locations": *[_type == "location"] { "slug": slug.current, _updatedAt },
-  "categories": *[_type == "category"] { "slug": slug.current, _updatedAt }
+  "posts": *[_type == "post" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt, publishedAt },
+  "services": *[_type == "service" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(coalesce(order, 999) asc, title asc) { "slug": slug.current, _updatedAt },
+  "caseStudies": *[_type == "caseStudy" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt },
+  "locations": *[_type == "location" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt }
 }`
 
 export const homepageFaqsQuery = `*[_type == "faq" && (placement == "homepage" || placement == "both")] | order(sortOrder asc) {
