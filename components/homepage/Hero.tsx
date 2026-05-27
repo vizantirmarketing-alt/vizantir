@@ -26,15 +26,17 @@ const TorusPlaceholder = ({ isNightMode }: { isNightMode: boolean }) => (
 const Hero = () => {
   const { isNightMode } = useTheme();
   const { scrollY } = useScroll();
-  const [isMobile, setIsMobile] = useState(false);
+  const [isBelowLg, setIsBelowLg] = useState(false);
+  const [isBelowMd, setIsBelowMd] = useState(false);
   const [show3D, setShow3D] = useState(false);
   
-  // Detect mobile for responsive scroll fade
+  // Below-lg: centered glow (matches lg:grid-cols-2). Below-md: slower scroll fade.
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768)
     const handleViewportChange = () => {
-      setIsMobile(window.innerWidth < 768)
+      setIsBelowLg(window.innerWidth < 1024)
+      setIsBelowMd(window.innerWidth < 768)
     }
+    handleViewportChange()
     window.addEventListener('resize', handleViewportChange)
     window.addEventListener('orientationchange', handleViewportChange)
     return () => {
@@ -56,10 +58,36 @@ const Hero = () => {
   }, []);
   
   // Slower fade on mobile (0-1000px scroll), faster on desktop (0-500px)
-  const scrollEnd = isMobile ? 1000 : 500;
+  const scrollEnd = isBelowMd ? 1000 : 500;
   const opacity = useTransform(scrollY, [0, scrollEnd], [1, 0]);
   const y = useTransform(scrollY, [0, scrollEnd], [0, 100]);
   const scale = useTransform(scrollY, [0, scrollEnd], [1, 0.95]);
+
+  const heroGlowBackground = isNightMode
+    ? isBelowLg
+      ? `
+              radial-gradient(ellipse 80% 80% at 50% 50%, rgba(255, 198, 76, 0.25) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 60% at 50% 65%, rgba(180, 132, 30, 0.15) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 50% at 50% 30%, rgba(255, 198, 76, 0.12) 0%, transparent 40%),
+              radial-gradient(ellipse 40% 40% at 50% 70%, rgba(180, 132, 30, 0.1) 0%, transparent 35%)
+            `
+      : `
+              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.25) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 132, 30, 0.15) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 198, 76, 0.12) 0%, transparent 40%),
+              radial-gradient(ellipse 40% 40% at 35% 70%, rgba(180, 132, 30, 0.1) 0%, transparent 35%)
+            `
+    : isBelowLg
+      ? `
+              radial-gradient(ellipse 80% 80% at 50% 50%, rgba(255, 198, 76, 0.1) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 60% at 50% 65%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 50% at 50% 30%, rgba(255, 198, 76, 0.08) 0%, transparent 40%)
+            `
+      : `
+              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.1) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 198, 76, 0.08) 0%, transparent 40%)
+            `;
 
   return (
     <motion.section 
@@ -75,18 +103,7 @@ const Hero = () => {
         className="absolute inset-0 pointer-events-none transition-opacity duration-700"
         style={{
           opacity,
-          background: isNightMode 
-            ? `
-              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.25) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 132, 30, 0.15) 0%, transparent 45%),
-              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 198, 76, 0.12) 0%, transparent 40%),
-              radial-gradient(ellipse 40% 40% at 35% 70%, rgba(180, 132, 30, 0.1) 0%, transparent 35%)
-            `
-            : `
-              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.1) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
-              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 198, 76, 0.08) 0%, transparent 40%)
-            `,
+          background: heroGlowBackground,
         }}
       />
       
