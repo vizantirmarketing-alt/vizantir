@@ -382,25 +382,66 @@ function PricingCard({
   featured = false,
   isNightMode,
 }: PricingCardProps) {
+  const glassTransition = 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease'
+
+  const defaultGlass = {
+    background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    border: isNightMode
+      ? '1px solid rgba(255, 255, 255, 0.08)'
+      : '1px solid rgba(0, 0, 0, 0.08)',
+    boxShadow: isNightMode ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.04)',
+    transition: glassTransition,
+  }
+
+  const featuredGlass = {
+    background: isNightMode ? 'rgba(255, 198, 76, 0.06)' : 'rgba(180, 132, 30, 0.04)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    border: isNightMode
+      ? '1px solid rgba(255, 198, 76, 0.2)'
+      : '1px solid rgba(180, 132, 30, 0.15)',
+    boxShadow: isNightMode
+      ? '0 0 40px rgba(255, 198, 76, 0.08)'
+      : '0 4px 24px rgba(180, 132, 30, 0.08)',
+    transition: glassTransition,
+  }
+
+  const baseGlass = featured ? featuredGlass : defaultGlass
+
   return (
     <div
-      className="relative p-5 rounded-xl border transition-all duration-500"
-      style={{
-        background: featured
-          ? isNightMode
-            ? 'linear-gradient(135deg, var(--gold-muted-subtle) 0%, color-mix(in srgb, var(--gold-accent) 5%, transparent) 100%)'
-            : 'linear-gradient(135deg, rgba(254,243,199,0.8) 0%, rgba(255,237,213,0.6) 100%)'
-          : isNightMode
-            ? '#000000'
-            : '#FAFAFA',
-        borderColor: featured
-          ? isNightMode
-            ? 'var(--gold-muted-border)'
-            : 'color-mix(in srgb, var(--gold-accent) 20%, transparent)'
-          : isNightMode
-            ? 'rgba(255,255,255,0.06)'
-            : 'rgba(0,0,0,0.06)',
-        transition: 'background 0.5s ease, border-color 0.5s ease',
+      className="relative p-5 rounded-xl border transition-all duration-300"
+      style={baseGlass}
+      onMouseEnter={(e) => {
+        if (featured) {
+          e.currentTarget.style.background = isNightMode
+            ? 'rgba(255, 198, 76, 0.09)'
+            : 'rgba(180, 132, 30, 0.06)'
+          e.currentTarget.style.border = isNightMode
+            ? '1px solid rgba(255, 198, 76, 0.3)'
+            : '1px solid rgba(180, 132, 30, 0.25)'
+          e.currentTarget.style.boxShadow = isNightMode
+            ? '0 0 48px rgba(255, 198, 76, 0.12)'
+            : '0 4px 28px rgba(180, 132, 30, 0.12)'
+        } else {
+          e.currentTarget.style.background = isNightMode
+            ? 'rgba(255, 255, 255, 0.07)'
+            : 'rgba(0, 0, 0, 0.04)'
+          e.currentTarget.style.border = isNightMode
+            ? '1px solid rgba(255, 198, 76, 0.2)'
+            : '1px solid rgba(180, 132, 30, 0.2)'
+        }
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = baseGlass.background
+        e.currentTarget.style.border = baseGlass.border
+        if (featured) {
+          e.currentTarget.style.boxShadow = featuredGlass.boxShadow
+        } else {
+          e.currentTarget.style.boxShadow = defaultGlass.boxShadow
+        }
       }}
     >
       {featured && (
