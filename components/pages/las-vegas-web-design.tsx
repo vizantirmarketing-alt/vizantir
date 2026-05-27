@@ -165,7 +165,7 @@ export default function LasVegasWebDesignPage() {
             className="text-center mb-16"
           >
             <Eyebrow>Process</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">{process.heading}</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">{process.heading}</h2>
             <p className="text-lg text-muted-foreground">{process.subheading}</p>
           </motion.div>
 
@@ -208,7 +208,7 @@ export default function LasVegasWebDesignPage() {
             className="text-center mb-16"
           >
             <Eyebrow>Pricing</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">{pricing.heading}</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">{pricing.heading}</h2>
             <p className="text-lg max-w-2xl mx-auto text-muted-foreground">{pricing.subheading}</p>
           </motion.div>
 
@@ -269,7 +269,7 @@ export default function LasVegasWebDesignPage() {
               transition={{ duration: 0.5 }}
             >
               <Eyebrow align="start">Industries</Eyebrow>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">{industries.heading}</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">{industries.heading}</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">{industries.body}</p>
             </motion.div>
 
@@ -308,7 +308,7 @@ export default function LasVegasWebDesignPage() {
             className="text-center mb-12"
           >
             <Eyebrow>FAQ</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">{faqs.heading}</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">{faqs.heading}</h2>
           </motion.div>
 
           <motion.div

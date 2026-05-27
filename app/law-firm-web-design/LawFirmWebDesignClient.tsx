@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
-import { VerticalBadge } from '@/components/ui/VerticalBadge'
 import {
   ArrowRight,
   Scale,
@@ -15,24 +14,9 @@ import {
   CheckCircle2,
   Gavel,
 } from 'lucide-react'
-import { useTheme } from '@/contexts/ThemeContext'
 import { trackPhoneClick } from '@/lib/analytics'
 
 export default function LawFirmWebDesignClient() {
-  const { isNightMode } = useTheme()
-
-  const colors = {
-    bg: isNightMode ? '#000000' : '#FAFAFA',
-    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-    textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
-    accent: 'var(--gold-primary)',
-    cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-    cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    divider: isNightMode
-      ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
-      : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
-  }
-
   const whyCards = [
     {
       icon: Scale,
@@ -126,39 +110,40 @@ export default function LawFirmWebDesignClient() {
   }
 
   return (
-    <main style={{ background: colors.bg }} className="transition-colors duration-500">
+    <main className="bg-background text-foreground transition-colors duration-500">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-6 md:px-12 lg:px-20 pt-32 pb-20 overflow-hidden">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: isNightMode
-              ? 'radial-gradient(ellipse at top right, rgba(255, 198, 76, 0.08), transparent 60%)'
-              : 'radial-gradient(ellipse at top right, rgba(180, 83, 9, 0.05), transparent 60%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--gold-muted-subtle)_0%,transparent_60%)]" />
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <VerticalBadge icon={Gavel} label="Law Firms · Legal Practices · Attorneys" isNightMode={isNightMode} />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-muted/50 mb-8"
+          >
+            <Gavel size={16} className="text-gold-accent" />
+            <span className="text-sm text-muted-foreground">
+              Law Firms · Legal Practices · Attorneys
+            </span>
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.05]"
-            style={{ color: colors.text }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.05] text-foreground"
           >
             Law Firm Web Design
             <br />
-            <span style={{ color: colors.accent }}>That Builds Trust</span>
+            <span className="text-gold-accent">That Builds Trust</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl max-w-3xl mx-auto mb-10"
-            style={{ color: colors.textMuted, lineHeight: 1.7 }}
+            className="text-lg md:text-xl max-w-3xl mx-auto mb-10 text-muted-foreground leading-relaxed"
           >
             We build custom websites for law firms and legal practices — designed to establish
             credibility, communicate expertise, and convert visitors into consultation requests.
@@ -173,12 +158,7 @@ export default function LawFirmWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] group"
-              style={{
-                background: 'var(--gold-gradient)',
-                color: '#1A1A1A',
-                boxShadow: 'var(--gold-shadow)',
-              }}
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02] group"
             >
               <Link href="/contact">
                 Book a Strategy Call
@@ -187,8 +167,7 @@ export default function LawFirmWebDesignClient() {
             </Button>
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 text-base font-semibold transition-colors duration-300 group"
-              style={{ color: 'var(--gold-accent)' }}
+              className="inline-flex items-center justify-center gap-2 text-base font-semibold text-gold-accent transition-colors duration-300 hover:opacity-80 group"
             >
               View Our Work
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -207,12 +186,8 @@ export default function LawFirmWebDesignClient() {
               { value: '10+', label: 'Years Experience' },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-2xl md:text-3xl font-bold" style={{ color: colors.accent }}>
-                  {stat.value}
-                </div>
-                <div className="text-sm" style={{ color: colors.textMuted }}>
-                  {stat.label}
-                </div>
+                <div className="text-2xl md:text-3xl font-bold text-gold-accent">{stat.value}</div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -232,13 +207,10 @@ export default function LawFirmWebDesignClient() {
             className="text-center mb-16"
           >
             <Eyebrow>Why Choose Us</Eyebrow>
-            <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
-              style={{ color: colors.text }}
-            >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
               Web Design Built for Law Firms
             </h2>
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: colors.textMuted }}>
+            <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
               A law firm&apos;s website is often the first impression a potential client gets. It needs
               to communicate authority, build trust, and make it easy to take the next step.
             </p>
@@ -255,26 +227,13 @@ export default function LawFirmWebDesignClient() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-1"
-                style={{
-                  background: colors.cardBg,
-                  borderColor: colors.cardBorder,
-                }}
+                className="p-6 rounded-2xl border border-border bg-muted transition-all duration-300 hover:-translate-y-1 hover:border-gold-muted-border"
               >
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{
-                    background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
-                  }}
-                >
-                  <card.icon size={24} style={{ color: colors.accent }} />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02] dark:bg-white/[0.04]">
+                  <card.icon size={24} className="text-gold-accent" />
                 </div>
-                <h3 className="text-lg font-bold mb-2" style={{ color: colors.text }}>
-                  {card.title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: colors.textMuted }}>
-                  {card.description}
-                </p>
+                <h3 className="text-lg font-bold mb-2 text-foreground">{card.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -294,13 +253,10 @@ export default function LawFirmWebDesignClient() {
               transition={{ duration: 0.5 }}
             >
               <Eyebrow align="start">Industry Expertise</Eyebrow>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: colors.text }}>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
                 We Understand Law Firm Positioning
               </h2>
-              <p
-                className="text-lg mb-6"
-                style={{ color: colors.textMuted, lineHeight: 1.7 }}
-              >
+              <p className="text-lg mb-6 text-muted-foreground leading-relaxed">
                 Law firm websites require a different approach than most. The design needs to signal
                 authority without feeling cold, and the content needs to answer the questions clients
                 are already asking.
@@ -310,10 +266,9 @@ export default function LawFirmWebDesignClient() {
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2
                       size={20}
-                      className="flex-shrink-0 mt-0.5"
-                      style={{ color: colors.accent }}
+                      className="flex-shrink-0 mt-0.5 text-gold-accent"
                     />
-                    <span style={{ color: colors.textMuted }}>{item}</span>
+                    <span className="text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -324,29 +279,18 @@ export default function LawFirmWebDesignClient() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="p-8 rounded-2xl border"
-              style={{
-                background: colors.cardBg,
-                borderColor: colors.cardBorder,
-              }}
+              className="p-8 rounded-2xl border border-border bg-muted"
             >
-              <h3 className="text-xl font-bold mb-4" style={{ color: colors.text }}>
-                Firm types
-              </h3>
-              <p className="text-sm mb-6" style={{ color: colors.textMuted }}>
-                Legal practices we support:
-              </p>
+              <h3 className="text-xl font-bold mb-4 text-foreground">Firm types</h3>
+              <p className="text-sm mb-6 text-muted-foreground">Legal practices we support:</p>
               <ul className="space-y-3">
                 {firmTypes.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2
                       size={20}
-                      className="flex-shrink-0 mt-0.5"
-                      style={{ color: colors.accent }}
+                      className="flex-shrink-0 mt-0.5 text-gold-accent"
                     />
-                    <span className="text-sm" style={{ color: colors.textMuted }}>
-                      {item}
-                    </span>
+                    <span className="text-sm text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -367,10 +311,7 @@ export default function LawFirmWebDesignClient() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-bold"
-              style={{ color: colors.text }}
-            >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
               Everything Your Law Firm Site Needs
             </h2>
           </motion.div>
@@ -386,23 +327,12 @@ export default function LawFirmWebDesignClient() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-1"
-                style={{
-                  background: colors.cardBg,
-                  borderColor: colors.cardBorder,
-                }}
+                className="p-6 rounded-2xl border border-border bg-muted transition-all duration-300 hover:-translate-y-1 hover:border-gold-muted-border"
               >
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{
-                    background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
-                  }}
-                >
-                  <CheckCircle2 size={24} style={{ color: colors.accent }} />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02] dark:bg-white/[0.04]">
+                  <CheckCircle2 size={24} className="text-gold-accent" />
                 </div>
-                <p className="text-sm leading-relaxed font-medium" style={{ color: colors.text }}>
-                  {line}
-                </p>
+                <p className="text-sm leading-relaxed font-medium text-foreground">{line}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -422,7 +352,7 @@ export default function LawFirmWebDesignClient() {
             className="text-center mb-12"
           >
             <Eyebrow>FAQ</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold" style={{ color: colors.text }}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
               Law Firm Web Design Questions
             </h2>
           </motion.div>
@@ -438,18 +368,10 @@ export default function LawFirmWebDesignClient() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl border"
-                style={{
-                  background: colors.cardBg,
-                  borderColor: colors.cardBorder,
-                }}
+                className="p-6 rounded-2xl border border-border bg-muted"
               >
-                <h3 className="text-lg font-semibold mb-3" style={{ color: colors.text }}>
-                  {faq.question}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: colors.textMuted }}>
-                  {faq.answer}
-                </p>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">{faq.question}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -467,43 +389,32 @@ export default function LawFirmWebDesignClient() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
-              style={{ color: colors.text }}
-            >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
               Ready to Present Your Firm at a Higher Level?
             </h2>
-            <p
-              className="text-lg mb-10 max-w-2xl mx-auto"
-              style={{ color: colors.textMuted }}
-            >
+            <p className="text-lg mb-10 max-w-2xl mx-auto text-muted-foreground">
               Let&apos;s talk about what your site needs to do and whether Vizantir is the right fit
               to build it.
             </p>
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] group"
-              style={{
-                background: 'var(--gold-gradient)',
-                color: '#1A1A1A',
-                boxShadow: 'var(--gold-shadow)',
-              }}
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02] group"
             >
               <Link href="/contact">
                 Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <p className="mt-6 text-sm" style={{ color: colors.textMuted }}>
+            <p className="mt-6 text-sm text-muted-foreground">
               Or call us:{' '}
-              <a
+              <Link
                 href="tel:+17022890758"
                 onClick={trackPhoneClick}
-                style={{ color: colors.accent }}
+                className="text-gold-accent hover:opacity-80 transition-opacity"
               >
                 (702) 289-0758
-              </a>
+              </Link>
             </p>
           </motion.div>
         </div>
