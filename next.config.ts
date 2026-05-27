@@ -1,21 +1,10 @@
 import type { NextConfig } from "next";
 
-type NextConfigWithEslint = NextConfig & {
-  eslint?: {
-    ignoreDuringBuilds?: boolean;
-    dirs?: string[];
-  };
-};
-
-const nextConfig: NextConfigWithEslint = {
+const nextConfig: NextConfig = {
   trailingSlash: false,
 
   typescript: {
     ignoreBuildErrors: false,
-  },
-  eslint: {
-    ignoreDuringBuilds: false,
-    dirs: ["app", "components", "lib"],
   },
 
   images: {
