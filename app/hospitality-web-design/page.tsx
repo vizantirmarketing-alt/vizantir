@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import HospitalityWebDesignClient from './HospitalityWebDesignClient'
+import { hospitalityPricingFaqs } from '@/data/industry-pricing-faqs'
 
 export const metadata: Metadata = {
   title: 'Hospitality Web Design for Restaurants & Hotels | Vizantir',
@@ -66,7 +67,7 @@ const faqSchema = {
       name: 'How much does a restaurant website cost?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Custom restaurant websites at Vizantir start at $15,000. The investment covers strategy, design, development, and CMS integration so your team can update menus and events without a developer.',
+        text: hospitalityPricingFaqs.cost,
       },
     },
     {
@@ -82,7 +83,7 @@ const faqSchema = {
       name: 'How long does it take to build a restaurant website?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Most hospitality projects take 6-10 weeks from kickoff to launch, depending on scope and content readiness.',
+        text: hospitalityPricingFaqs.timeline,
       },
     },
     {

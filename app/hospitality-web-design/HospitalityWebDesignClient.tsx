@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   UtensilsCrossed,
 } from 'lucide-react'
+import { hospitalityPricingFaqs } from '@/data/industry-pricing-faqs'
 import { trackPhoneClick } from '@/lib/analytics'
 
 export default function HospitalityWebDesignClient() {
@@ -69,8 +70,7 @@ export default function HospitalityWebDesignClient() {
   const faqs = [
     {
       question: 'How much does a restaurant website cost?',
-      answer:
-        'Custom restaurant websites at Vizantir start at $15,000. The investment covers strategy, design, development, and CMS integration so your team can update menus and events without a developer.',
+      answer: hospitalityPricingFaqs.cost,
     },
     {
       question: 'Can you integrate with OpenTable or Resy?',
@@ -79,8 +79,7 @@ export default function HospitalityWebDesignClient() {
     },
     {
       question: 'How long does it take to build a restaurant website?',
-      answer:
-        'Most hospitality projects take 6-10 weeks from kickoff to launch, depending on scope and content readiness.',
+      answer: hospitalityPricingFaqs.timeline,
     },
     {
       question: 'Do you work with hotels as well as restaurants?',

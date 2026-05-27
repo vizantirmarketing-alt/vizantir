@@ -9,10 +9,6 @@ export const CONTACT_SERVICES = [
   'Not Sure Yet',
 ] as const;
 
-export const CONTACT_BUDGETS = [
-  '$15,000 – $25,000',
-  '$20,000 – $40,000',
-  '$40,000 – $70,000',
-  '$70,000+',
-  'Not Sure Yet',
-] as const;
+import { CONTACT_BUDGET_FROM_PRICING } from '@/data/pricing'
+
+export const CONTACT_BUDGETS = CONTACT_BUDGET_FROM_PRICING

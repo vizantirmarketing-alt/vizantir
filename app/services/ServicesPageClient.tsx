@@ -7,6 +7,7 @@ import Link from 'next/link'
 import ServicesHero from './ServicesHero'
 import { trackCTAClick } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
+import { carePricing, projectPricing } from '@/data/pricing'
 
 const WebIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
@@ -131,25 +132,16 @@ function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
             Fixed scope. Fixed price. No surprises.
           </p>
           <div className="space-y-3">
-            <PricingCard
-              title="Essentials"
-              price="$15,000+"
-              description="5-10 pages. Custom Next.js build. Custom design, smooth animations, and a mobile-first build. Most Essentials sites score 85+ on PageSpeed."
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="Growth"
-              price="$30,000+"
-              description="10-20 pages. Headless CMS integration. Custom animations, conversion-focused structure, built for more — more pages, more locations, more editors in the CMS."
-              featured
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="Enterprise"
-              price="$60,000+"
-              description="20+ pages or e-commerce. Complex animations, full CMS, third-party integrations. For businesses with complex requirements — multi-stakeholder approvals, compliance needs, or high-traffic campaigns."
-              isNightMode={isNightMode}
-            />
+            {projectPricing.map((tier) => (
+              <PricingCard
+                key={tier.slug}
+                title={tier.name}
+                price={tier.price}
+                description={tier.description}
+                featured={tier.featured}
+                isNightMode={isNightMode}
+              />
+            ))}
           </div>
         </div>
         <div>
@@ -166,25 +158,16 @@ function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
             Monthly retainers after launch.
           </p>
           <div className="space-y-3">
-            <PricingCard
-              title="Care — Essentials"
-              price="$500–$900/mo"
-              description="Core maintenance: updates, backups, monitoring, and prioritized fixes so your site stays reliable."
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="Care — Growth"
-              price="$1,200–$2,000/mo"
-              description="More bandwidth for content changes, performance tuning, and proactive improvements."
-              featured
-              isNightMode={isNightMode}
-            />
-            <PricingCard
-              title="Care — Enterprise"
-              price="$2,500–$4,500/mo"
-              description="Hands-on support for larger sites: faster turnaround, deeper technical work, and ongoing optimization."
-              isNightMode={isNightMode}
-            />
+            {carePricing.map((tier) => (
+              <PricingCard
+                key={tier.slug}
+                title={tier.name}
+                price={tier.price}
+                description={tier.description}
+                featured={tier.slug === 'growth-care'}
+                isNightMode={isNightMode}
+              />
+            ))}
           </div>
         </div>
       </div>

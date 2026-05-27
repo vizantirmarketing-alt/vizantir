@@ -1,3 +1,7 @@
+import { projectPricing, pricingFAQs } from './pricing'
+
+const essentialsProjectTier = projectPricing[0]
+
 export interface LasVegasHeroContent {
   eyebrow: string
   heading: string
@@ -172,53 +176,15 @@ export const lasVegasPageData: LasVegasPageData = {
     heading: 'Project pricing',
     subheading:
       'Fixed-price builds for businesses ready to invest in a site that lasts. All tiers include strategy, design, development, and CMS setup.',
-    retainerNote:
-      'After launch, Website Care retainers start at $1,500/month for content updates, minor feature work, and priority support.',
-    tiers: [
-      {
-        name: 'Launch',
-        price: '$15,000',
-        timeline: '6–8 weeks',
-        description:
-          'For a focused rebuild: core pages, contact flow, and CMS for a team that needs a credible presence fast.',
-        includes: [
-          'Up to 8 custom pages',
-          'Mobile-first responsive design',
-          'Sanity CMS with editor training',
-          'Contact forms and basic analytics',
-          'Technical SEO setup',
-        ],
-      },
-      {
-        name: 'Scale',
-        price: '$30,000',
-        timeline: '8–12 weeks',
-        description:
-          'For growing companies with richer content: service lines, case studies, blog, and integrations that support lead flow.',
-        includes: [
-          'Up to 20 custom pages',
-          'Blog or resources section',
-          'Advanced animations and interactions',
-          'Third-party integrations (CRM, booking, etc.)',
-          'Extended discovery and content strategy',
-        ],
-        featured: true,
-      },
-      {
-        name: 'Flagship',
-        price: '$60,000+',
-        timeline: '12–16+ weeks',
-        description:
-          'For complex builds: multi-location brands, custom data displays, member portals, or applications beyond a marketing site.',
-        includes: [
-          'Unlimited pages within agreed scope',
-          'Custom functionality and API work',
-          'Multi-language or multi-location architecture',
-          'Dedicated project timeline and staging environments',
-          'Post-launch optimization sprint',
-        ],
-      },
-    ],
+    retainerNote: pricingFAQs.retainer,
+    tiers: projectPricing.map((tier) => ({
+      name: tier.name,
+      price: tier.price,
+      timeline: tier.timeline,
+      description: tier.description,
+      includes: tier.includes,
+      ...(tier.featured ? { featured: true as const } : {}),
+    })),
   },
   industries: {
     heading: 'Who we build for',
@@ -239,8 +205,7 @@ export const lasVegasPageData: LasVegasPageData = {
     items: [
       {
         question: 'How much does web design cost in Las Vegas?',
-        answer:
-          'Template sites from local freelancers often run $3,000–$8,000. Custom WordPress builds typically land between $8,000 and $20,000. Vizantir projects start at $15,000 for a fixed-scope Next.js build. Price depends on page count, integrations, and content complexity. We quote after discovery, not before.',
+        answer: `Template sites from local freelancers often run $3,000–$8,000. Custom WordPress builds typically land between $8,000 and $20,000. Vizantir projects start at ${essentialsProjectTier.price} for a fixed-scope Next.js build. Price depends on page count, integrations, and content complexity. We quote after discovery, not before.`,
       },
       {
         question: 'Why hire a Las Vegas web design studio instead of a national agency?',
@@ -259,8 +224,7 @@ export const lasVegasPageData: LasVegasPageData = {
       },
       {
         question: 'How long does a website project take?',
-        answer:
-          'Launch-tier projects usually take six to eight weeks. Scale projects run eight to twelve. Flagship builds can stretch beyond sixteen weeks depending on custom functionality. Timelines assume you can provide content and feedback on schedule.',
+        answer: `${pricingFAQs.timeline} Timelines assume you can provide content and feedback on schedule.`,
       },
       {
         question: 'Can you redesign an existing site without starting from zero?',
@@ -269,8 +233,7 @@ export const lasVegasPageData: LasVegasPageData = {
       },
       {
         question: 'What happens after launch?',
-        answer:
-          'You own the site and the codebase. Website Care retainers start at $1,500/month if you want us handling updates, content changes, and small improvements. Many clients manage day-to-day edits themselves through Sanity and call us for larger work.',
+        answer: `You own the site and the codebase. ${pricingFAQs.retainer} if you want us handling updates, content changes, and small improvements. Many clients manage day-to-day edits themselves through Sanity and call us for larger work.`,
       },
     ],
   },

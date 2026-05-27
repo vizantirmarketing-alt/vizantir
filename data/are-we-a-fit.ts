@@ -1,5 +1,9 @@
 import type { Metadata } from 'next'
 
+import { projectPricing } from './pricing'
+
+const [essentialsProjectTier, , enterpriseProjectTier] = projectPricing
+
 const canonicalUrl = 'https://www.vizantir.com/are-we-a-fit'
 
 export const areWeAFitMetadata: Metadata = {
@@ -62,7 +66,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
       'You work in hospitality, law, real estate, luxury, or financial services',
       'You want a custom website designed around your business — not a template with your logo pasted on it',
       'You care about strategy, conversion, and search visibility — not just aesthetics',
-      "You're ready to invest $15,000 or more in a premium web design project",
+      `You're ready to invest ${essentialsProjectTier.price} or more in a premium web design project`,
     ],
   },
   notIdealSection: {
@@ -80,7 +84,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
   budgetSection: {
     id: 'budget',
     heading: "Let's talk web design pricing honestly.",
-    body: "Custom website design projects at Vizantir start at $15,000 and scale up based on scope and complexity. That's not the cheapest option in the Las Vegas web design market — and it's not meant to be. If budget is your primary concern, there are excellent template-based solutions from platforms like Squarespace, Webflow, and Wix that will serve you well. Vizantir is for businesses where the cost of a mediocre website — lost trust, lost leads, lost deals — is higher than the investment in a premium one.",
+    body: `Custom website design projects at Vizantir start at ${essentialsProjectTier.price} and scale up to ${enterpriseProjectTier.price} depending on scope and complexity. That's not the cheapest option in the Las Vegas web design market — and it's not meant to be. If budget is your primary concern, there are excellent template-based solutions from platforms like Squarespace, Webflow, and Wix that will serve you well. Vizantir is for businesses where the cost of a mediocre website — lost trust, lost leads, lost deals — is higher than the investment in a premium one.`,
   },
   closingSection: {
     id: 'closing',

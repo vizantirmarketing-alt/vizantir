@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Gavel,
 } from 'lucide-react'
+import { lawFirmPricingFaqs } from '@/data/industry-pricing-faqs'
 import { trackPhoneClick } from '@/lib/analytics'
 
 export default function LawFirmWebDesignClient() {
@@ -70,13 +71,11 @@ export default function LawFirmWebDesignClient() {
   const faqs = [
     {
       question: 'How much does a law firm website cost?',
-      answer:
-        'Custom law firm websites at Vizantir start at $15,000. That covers strategy, design, development, and a CMS so your team can update content without a developer.',
+      answer: lawFirmPricingFaqs.cost,
     },
     {
       question: 'How long does it take to build a law firm website?',
-      answer:
-        'Most law firm projects take 6-10 weeks from kickoff to launch depending on the number of practice areas and attorneys.',
+      answer: lawFirmPricingFaqs.timeline,
     },
     {
       question: 'Do you build practice area pages?',

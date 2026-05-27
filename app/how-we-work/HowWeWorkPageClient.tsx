@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { carePricing } from '@/data/pricing'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -80,7 +81,7 @@ export default function HowWeWorkPageClient() {
     {
       question: 'What happens after launch?',
       answer:
-        'Launch support is included. For ongoing maintenance, we offer monthly Website Care retainers starting at $500/month, with Growth and Enterprise tiers when you need more bandwidth.',
+        `Launch support is included. For ongoing maintenance, we offer monthly Website Care retainers starting at ${carePricing[0].price} for Essentials Care, with Growth Care and Enterprise Care when you need more bandwidth.`,
     },
   ]
 

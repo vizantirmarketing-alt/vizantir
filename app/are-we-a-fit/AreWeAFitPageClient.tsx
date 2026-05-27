@@ -18,23 +18,7 @@ const heroHeading = "We're not for everyone."
 const heroSubheading =
   'Honest criteria to help you decide before you book a Strategy Call.'
 const idealHeading = "You're a fit if..."
-const idealBullets = [
-  'You run an established business — not a pre-launch idea or side project',
-  'You already know your current website is hurting your brand',
-  'You want a custom site designed around your business, not a template',
-  "You're ready to invest $15,000 or more in a premium project",
-] as const
 const notIdealHeading = "You're not a fit if..."
-const notIdealBullets = [
-  "You're hunting for the cheapest web design agency in Las Vegas",
-  'You want unlimited revisions, hourly billing, or "just buy more hours to finish"',
-  'You need a plugin-heavy WordPress template, not a custom Next.js build',
-  'You need the site live in two weeks',
-] as const
-const budgetBody =
-  'Projects start at $15,000 and scale to $60,000+ depending on scope. If budget is your primary concern, platforms like Squarespace, Webflow, and Wix will serve you well. Vizantir is for businesses where a mediocre website costs more than a great one.'
-const closingBody =
-  "That's what the Strategy Call is for. Thirty minutes, no pitch deck, no pressure. Even if we're not the right fit, you'll leave with a clearer sense of what kind of project yours actually needs."
 
 export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProps) {
   const { isNightMode } = useTheme()
@@ -116,7 +100,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {idealHeading}
             </h2>
             <ul className="space-y-4">
-              {idealBullets.map((item) => (
+              {content.idealSection.bullets?.map((item) => (
                 <li key={item} className="flex gap-3.5">
                   <Check
                     className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
@@ -146,7 +130,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {notIdealHeading}
             </h2>
             <ul className="space-y-4">
-              {notIdealBullets.map((item) => (
+              {content.notIdealSection.bullets?.map((item) => (
                 <li key={item} className="flex gap-3.5">
                   <X
                     className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
@@ -188,7 +172,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {content.budgetSection.heading}
             </h2>
             <p className="text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
-              {budgetBody}
+              {content.budgetSection.body}
             </p>
           </motion.div>
         </div>
@@ -208,7 +192,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {content.closingSection.heading}
             </h2>
             <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
-              {closingBody}
+              {content.closingSection.body}
             </p>
             <Link
               href={content.closingCta.href}

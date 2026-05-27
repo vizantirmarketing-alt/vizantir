@@ -13,6 +13,7 @@ import {
   Zap,
   CheckCircle2,
 } from 'lucide-react'
+import { commercialRealEstatePricingFaqs } from '@/data/industry-pricing-faqs'
 import { trackPhoneClick } from '@/lib/analytics'
 
 export default function CREWebDesignClient() {
@@ -67,8 +68,7 @@ export default function CREWebDesignClient() {
   const faqs = [
     {
       question: 'How much does a commercial real estate website cost?',
-      answer:
-        'Custom CRE websites at Vizantir start at $15,000. The investment covers strategy, design, development, and CMS so your team can manage listings and content without a developer.',
+      answer: commercialRealEstatePricingFaqs.cost,
     },
     {
       question: 'Can you integrate property listings into the site?',
@@ -77,8 +77,7 @@ export default function CREWebDesignClient() {
     },
     {
       question: 'How long does it take to build a CRE website?',
-      answer:
-        'Most commercial real estate projects take 6-10 weeks from kickoff to launch depending on the number of listings and pages required.',
+      answer: commercialRealEstatePricingFaqs.timeline,
     },
     {
       question: 'Do you work with developers and property management firms as well as brokerages?',

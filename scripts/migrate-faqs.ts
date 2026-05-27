@@ -13,6 +13,8 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const ROOT = join(__dirname, '..')
 
+import { pricingFAQs } from '../data/pricing'
+
 const API_VERSION = '2025-12-05'
 
 type Placement = 'homepage' | 'faqPage' | 'both'
@@ -41,8 +43,7 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: 'What does the timeline look like from kickoff to launch?',
-    answer:
-      'Most website projects are completed within 4–6 weeks from kickoff. SEO and paid media campaigns are typically live within 2 weeks. Timelines depend on scope and how quickly feedback is turned around on your end — we move as fast as you do.',
+    answer: `${pricingFAQs.timeline} SEO and paid media campaigns are typically live within 2 weeks.`,
     placement: 'homepage',
     sortOrder: 30,
   },
@@ -69,15 +70,13 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: 'How much does a website project cost?',
-    answer:
-      'Our projects start at $15,000 for focused builds and scale to $30,000–$60,000+ for larger custom engagements. Every project is scoped and priced clearly upfront — no vague starting-at numbers, no surprise invoices.',
+    answer: `${pricingFAQs.cost} Every project is scoped and priced clearly upfront — no vague starting-at numbers, no surprise invoices.`,
     placement: 'faqPage',
     sortOrder: 10,
   },
   {
     question: 'How long does a website project take?',
-    answer:
-      'Most projects are completed within 4–6 weeks from kickoff. Larger or more complex builds may run 8–10 weeks. Timelines are set at scoping and held — we move as fast as your feedback allows.',
+    answer: `${pricingFAQs.timeline} Timelines are set at scoping and held — we move as fast as your feedback allows.`,
     placement: 'faqPage',
     sortOrder: 20,
   },
@@ -97,8 +96,7 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: 'What happens after the site launches?',
-    answer:
-      'We offer monthly Website Care retainers starting at $500/month for Next.js sites for updates, monitoring, content changes, and ongoing improvements, with Growth and Enterprise tiers when you need more bandwidth. Most clients stay on retainer after launch so the site keeps performing as the business evolves.',
+    answer: `${pricingFAQs.retainer} Most clients stay on retainer after launch so the site keeps performing as the business evolves.`,
     placement: 'faqPage',
     sortOrder: 50,
   },
