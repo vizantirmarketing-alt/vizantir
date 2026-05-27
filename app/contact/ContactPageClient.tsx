@@ -127,7 +127,7 @@ export default function ContactPageClient() {
           <Link
             href="/"
             className="inline-flex items-center gap-2 px-6 py-3 font-semibold transition-all duration-300 hover:scale-105"
-            style={{ background: '#FFC64C', color: '#1A1A1A', borderRadius: '8px' }}
+            style={{ background: 'var(--gold-primary)', color: '#1A1A1A', borderRadius: '8px' }}
           >
             Back to Home
           </Link>
@@ -191,20 +191,20 @@ export default function ContactPageClient() {
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255, 198, 76, 0.15)' }}>
-                      <svg className="w-6 h-6" style={{ color: '#FFC64C' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <svg className="w-6 h-6" style={{ color: 'var(--gold-primary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                       </svg>
                     </div>
                     <div>
                       <p className="font-semibold mb-1" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Email</p>
-                      <a href="mailto:info@vizantir.com" className="transition-colors hover:opacity-80" style={{ color: '#FFC64C' }}>
+                      <a href="mailto:info@vizantir.com" className="transition-colors hover:opacity-80" style={{ color: 'var(--gold-primary)' }}>
                         info@vizantir.com
                       </a>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255, 198, 76, 0.15)' }}>
-                      <svg className="w-6 h-6" style={{ color: '#FFC64C' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <svg className="w-6 h-6" style={{ color: 'var(--gold-primary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                       </svg>
                     </div>
@@ -222,7 +222,7 @@ export default function ContactPageClient() {
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255, 198, 76, 0.15)' }}>
-                      <svg className="w-6 h-6" style={{ color: '#FFC64C' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <svg className="w-6 h-6" style={{ color: 'var(--gold-primary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                       </svg>
@@ -290,7 +290,7 @@ export default function ContactPageClient() {
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
                         style={inputStyle}
                         placeholder="John Smith"
                       />
@@ -303,7 +303,7 @@ export default function ContactPageClient() {
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
                         style={inputStyle}
                         placeholder="john@company.com"
                       />
@@ -317,7 +317,7 @@ export default function ContactPageClient() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
                         style={inputStyle}
                         placeholder="(555) 123-4567"
                       />
@@ -329,7 +329,7 @@ export default function ContactPageClient() {
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
                         style={inputStyle}
                         placeholder="Your Company"
                       />
@@ -343,7 +343,7 @@ export default function ContactPageClient() {
                         required
                         value={formData.service}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all appearance-none cursor-pointer"
                         style={inputStyle}
                       >
                         <option value="">Select a service</option>
@@ -358,7 +358,7 @@ export default function ContactPageClient() {
                         name="budget"
                         value={formData.budget}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all appearance-none cursor-pointer"
                         style={inputStyle}
                       >
                         <option value="">Select your budget</option>
@@ -376,7 +376,7 @@ export default function ContactPageClient() {
                       rows={5}
                       value={formData.message}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all resize-none"
                       style={inputStyle}
                       placeholder="What are your goals? What challenges are you facing? Any specific requirements?"
                     />
@@ -398,7 +398,7 @@ export default function ContactPageClient() {
                     type="submit"
                     disabled={isSubmitting || turnstileToken === null}
                     className="w-full rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    style={{ background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)', color: '#1A1A1A', boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)' }}
+                    style={{ background: 'var(--gold-gradient)', color: '#1A1A1A', boxShadow: 'var(--gold-shadow)' }}
                   >
                     {isSubmitting ? (
                       <>

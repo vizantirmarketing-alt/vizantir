@@ -59,7 +59,7 @@ export default function SitemapPage() {
             {/* Main Pages */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
-                <span className="w-2 h-2 rounded-full" style={{ background: '#FFC64C' }} />
+                <span className="w-2 h-2 rounded-full" style={{ background: 'var(--gold-primary)' }} />
                 Pages
               </h2>
               <ul className="space-y-3">
@@ -76,7 +76,7 @@ export default function SitemapPage() {
             {/* Legal Pages */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
-                <span className="w-2 h-2 rounded-full" style={{ background: '#FFC64C' }} />
+                <span className="w-2 h-2 rounded-full" style={{ background: 'var(--gold-primary)' }} />
                 Legal
               </h2>
               <ul className="space-y-3">
@@ -93,7 +93,7 @@ export default function SitemapPage() {
             {/* Blog Categories */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
-                <span className="w-2 h-2 rounded-full" style={{ background: '#FFC64C' }} />
+                <span className="w-2 h-2 rounded-full" style={{ background: 'var(--gold-primary)' }} />
                 Blog Categories
               </h2>
               <ul className="space-y-3">

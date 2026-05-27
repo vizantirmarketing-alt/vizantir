@@ -108,7 +108,7 @@ const Strategy = () => {
 
     const primaryColor = isNightMode ? "124, 58, 237" : "255, 198, 76";
     const secondaryColor = isNightMode ? "6, 182, 212" : "255, 184, 77";
-    const accentColor = "#FFC64C";
+    const accentColor = 'var(--gold-primary)';
 
     const dataPoints = [
       { lat: 0.5, lon: 0, color: accentColor },
@@ -295,10 +295,10 @@ const Strategy = () => {
                 asChild
                 className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
                 style={{
-                  background: "#FFC64C",
+                  background: 'var(--gold-primary)',
                   color: "#1A1A1A",
                   borderRadius: "12px",
-                  boxShadow: isNightMode ? "0 8px 30px rgba(255, 198, 76, 0.3)" : "0 8px 30px rgba(255, 198, 76, 0.4)",
+                  boxShadow: isNightMode ? 'var(--gold-shadow)' : "0 8px 30px rgba(255, 198, 76, 0.4)",
                 }}
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'strategy')}>

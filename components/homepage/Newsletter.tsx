@@ -65,8 +65,8 @@ const Newsletter = () => {
               type="submit"
               className="rounded-xl px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
               style={{
-                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                background: 'var(--gold-gradient)',
+                boxShadow: 'var(--gold-shadow)',
               }}
             >
               Send

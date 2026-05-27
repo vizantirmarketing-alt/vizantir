@@ -24,7 +24,7 @@ export default function CREWebDesignClient() {
     bg: isNightMode ? '#000000' : '#FAFAFA',
     text: isNightMode ? '#F8F8F8' : '#1A1A1A',
     textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
-    accent: '#FFC64C',
+    accent: 'var(--gold-primary)',
     cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
     cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
     divider: isNightMode
@@ -172,9 +172,9 @@ export default function CREWebDesignClient() {
               asChild
               className="rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] group"
               style={{
-                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
+                background: 'var(--gold-gradient)',
                 color: '#1A1A1A',
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                boxShadow: 'var(--gold-shadow)',
               }}
             >
               <Link href="/contact">
@@ -185,7 +185,7 @@ export default function CREWebDesignClient() {
             <Link
               href="/case-studies"
               className="inline-flex items-center gap-2 text-base font-semibold transition-colors duration-300 group"
-              style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
+              style={{ color: 'var(--gold-accent)' }}
             >
               View Our Work
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -480,9 +480,9 @@ export default function CREWebDesignClient() {
               asChild
               className="rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] group"
               style={{
-                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
+                background: 'var(--gold-gradient)',
                 color: '#1A1A1A',
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                boxShadow: 'var(--gold-shadow)',
               }}
             >
               <Link href="/contact">

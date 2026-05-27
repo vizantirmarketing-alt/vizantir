@@ -15,7 +15,7 @@ export default function HowWeWorkPageClient() {
     text: isNightMode ? '#F8F8F8' : '#1A1A1A',
     textMuted: isNightMode ? '#888888' : '#6B7280',
     textSubtle: isNightMode ? '#666666' : '#9CA3AF',
-    accent: isNightMode ? '#FFC64C' : '#B45309',
+    accent: 'var(--gold-accent)',
     cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
     cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
     divider: isNightMode
@@ -438,10 +438,10 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
                 style={{
-                  background: isNightMode ? 'rgba(251,191,36,0.1)' : 'rgba(251,191,36,0.1)',
+                  background: isNightMode ? 'rgba(255, 198, 76,0.1)' : 'rgba(255, 198, 76,0.1)',
                 }}
               >
-                <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-5 h-5 text-gold-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
@@ -456,19 +456,19 @@ export default function HowWeWorkPageClient() {
 
               <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-500 mt-0.5">✗</span>
+                  <span className="text-gold-accent mt-0.5">✗</span>
                   <span>You buy hours, not outcomes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-500 mt-0.5">✗</span>
+                  <span className="text-gold-accent mt-0.5">✗</span>
                   <span>100 hours in, project 60% done</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-500 mt-0.5">✗</span>
+                  <span className="text-gold-accent mt-0.5">✗</span>
                   <span>No guaranteed deliverable</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-amber-500 mt-0.5">✗</span>
+                  <span className="text-gold-accent mt-0.5">✗</span>
                   <span>"Buy more hours to finish"</span>
                 </li>
               </ul>

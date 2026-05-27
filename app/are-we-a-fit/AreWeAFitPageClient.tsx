@@ -43,7 +43,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
     bg: isNightMode ? '#000000' : '#FAFAFA',
     text: isNightMode ? '#F8F8F8' : '#1A1A1A',
     textMuted: isNightMode ? '#888888' : '#6B7280',
-    accentSolid: '#FFC64C',
+    accentSolid: 'var(--gold-primary)',
     cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
     cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
     divider: isNightMode
@@ -215,8 +215,8 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               onClick={() => trackCTAClick('book_strategy_call', 'are_we_a_fit')}
               className="inline-block rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
               style={{
-                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                background: 'var(--gold-gradient)',
+                boxShadow: 'var(--gold-shadow)',
               }}
             >
               {content.closingCta.label}

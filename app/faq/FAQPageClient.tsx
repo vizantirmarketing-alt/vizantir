@@ -55,7 +55,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 placeholder="Search FAQs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                className="w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
                 style={{ 
                   background: isNightMode ? 'rgba(255,255,255,0.05)' : '#FFFFFF',
                   border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
@@ -89,7 +89,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 <button
                   onClick={() => setSearchQuery('')}
                   className="mt-4 text-sm font-medium hover:opacity-80 transition-opacity"
-                  style={{ color: '#FFC64C' }}
+                  style={{ color: 'var(--gold-primary)' }}
                 >
                   Clear search
                 </button>
@@ -118,7 +118,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                         animate={{ rotate: openId === faq._id ? 45 : 0 }}
                         transition={{ duration: 0.2 }}
                         className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
-                        style={{ background: '#FFC64C', color: '#1A1A1A' }}
+                        style={{ background: 'var(--gold-primary)', color: '#1A1A1A' }}
                       >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -168,7 +168,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:scale-105"
-              style={{ background: '#FFC64C', color: '#1A1A1A', borderRadius: '8px' }}
+              style={{ background: 'var(--gold-primary)', color: '#1A1A1A', borderRadius: '8px' }}
             >
               Book a Strategy Call
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

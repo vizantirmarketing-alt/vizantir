@@ -24,7 +24,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
       bg: isNightMode ? '#000000' : '#FAFAFA',
       text: isNightMode ? '#F8F8F8' : '#1A1A1A',
       textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
-      accent: '#FFC64C',
+      accent: 'var(--gold-primary)',
       cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
       cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
       divider: isNightMode

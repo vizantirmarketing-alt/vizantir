@@ -271,8 +271,8 @@ const Hero = () => {
             asChild
             className="rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
             style={{
-              background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
-              boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+              background: 'var(--gold-gradient)',
+              boxShadow: 'var(--gold-shadow)',
             }}
           >
             <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>Book a Strategy Call</Link>

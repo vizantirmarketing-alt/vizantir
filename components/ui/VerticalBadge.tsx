@@ -13,15 +13,15 @@ export function VerticalBadge({ icon: Icon, label, isNightMode }: VerticalBadgeP
   const surface = isNightMode
     ? {
         background: 'rgba(255, 255, 255, 0.04)',
-        borderColor: 'rgba(255, 198, 76, 0.3)',
+        borderColor: 'var(--gold-muted)',
       }
     : {
         background: 'rgba(0, 0, 0, 0.02)',
-        borderColor: 'rgba(180, 83, 9, 0.3)',
+        borderColor: 'var(--gold-muted)',
       }
 
-  const iconColor = isNightMode ? '#FFC64C' : '#B45309'
-  const labelColor = isNightMode ? '#FFC64C' : '#1A1A1A'
+  const iconColor = 'var(--gold-accent)'
+  const labelColor = isNightMode ? 'var(--gold-primary)' : '#1A1A1A'
 
   return (
     <motion.div

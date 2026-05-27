@@ -95,11 +95,11 @@ const ResultsThatSpeak = () => {
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </a>
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#FFC64C] mb-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-gold-primary mb-1">
                   {item.category}
                 </p>
                 <h3 
-                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-[#FFC64C] transition-colors"
+                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-gold-primary transition-colors"
                   style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                 >
                   {item.title}
@@ -115,7 +115,7 @@ const ResultsThatSpeak = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-85"
-                  style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
+                  style={{ color: 'var(--gold-accent)' }}
                 >
                   <span>View live site</span>
                   <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -129,8 +129,8 @@ const ResultsThatSpeak = () => {
               href="/case-studies"
               className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
               style={{
-                background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                background: 'var(--gold-gradient)',
+                boxShadow: 'var(--gold-shadow)',
               }}
             >
               View all work

@@ -50,7 +50,7 @@ const Footer = () => {
                   color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FFC64C'
+                  e.currentTarget.style.color = 'var(--gold-primary)'
                   e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
                 }}
                 onMouseLeave={(e) => {
@@ -70,7 +70,7 @@ const Footer = () => {
                   color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FFC64C'
+                  e.currentTarget.style.color = 'var(--gold-primary)'
                   e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
                 }}
                 onMouseLeave={(e) => {
@@ -95,6 +95,7 @@ const Footer = () => {
               {[
                 { name: 'Services', href: '/services' },
                 { name: 'About Us', href: '/about' },
+                { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
                 // { name: 'Case Studies', href: '/case-studies' }, // Temporarily hidden
                 // { name: 'Portfolio', href: '/portfolio' }, // Temporarily hidden
               ].map((link) => (

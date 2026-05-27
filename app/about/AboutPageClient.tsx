@@ -32,25 +32,25 @@ export default function AboutPageClient() {
       title: 'Results-Driven',
       description:
         'Every decision is made with the business outcome in mind — not vanity metrics.',
-      color: '#FFC64C',
+      color: 'var(--gold-primary)',
     },
     {
       icon: Zap,
       title: 'Lean & Fast',
       description: 'No bloated teams or endless meetings. We move quickly and execute with precision.',
-      color: isNightMode ? '#06B6D4' : '#FFC64C',
+      color: isNightMode ? '#06B6D4' : 'var(--gold-primary)',
     },
     {
       icon: Users,
       title: 'Partner Mindset',
       description: "We treat your business like our own. Your success is our success.",
-      color: isNightMode ? '#8B5CF6' : '#FFC64C',
+      color: isNightMode ? '#8B5CF6' : 'var(--gold-primary)',
     },
     {
       icon: Globe,
       title: 'Remote-First',
       description: 'Global talent and async-first collaboration — more focus on the build, less bureaucracy slowing decisions.',
-      color: isNightMode ? '#EC4899' : '#FFC64C',
+      color: isNightMode ? '#EC4899' : 'var(--gold-primary)',
     },
   ]
 
@@ -141,11 +141,11 @@ export default function AboutPageClient() {
               asChild
               className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
               style={{
-                background: '#FFC64C',
+                background: 'var(--gold-primary)',
                 color: '#1A1A1A',
                 borderRadius: '12px',
                 boxShadow: isNightMode
-                  ? '0 8px 30px rgba(255, 198, 76, 0.3)'
+                  ? 'var(--gold-shadow)'
                   : '0 8px 30px rgba(255, 198, 76, 0.4)',
               }}
             >
@@ -234,11 +234,11 @@ export default function AboutPageClient() {
                   asChild
                   className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
                   style={{
-                    background: '#FFC64C',
+                    background: 'var(--gold-primary)',
                     color: '#1A1A1A',
                     borderRadius: '12px',
                     boxShadow: isNightMode
-                      ? '0 8px 30px rgba(255, 198, 76, 0.3)'
+                      ? 'var(--gold-shadow)'
                       : '0 8px 30px rgba(255, 198, 76, 0.4)',
                   }}
                 >
@@ -478,7 +478,7 @@ export default function AboutPageClient() {
                 asChild
                 className="text-lg px-10 py-7 font-bold border-0 transition-all duration-300 hover:scale-105 group"
                 style={{
-                  background: '#FFC64C',
+                  background: 'var(--gold-primary)',
                   color: '#1A1A1A',
                   borderRadius: '12px',
                   boxShadow: isNightMode

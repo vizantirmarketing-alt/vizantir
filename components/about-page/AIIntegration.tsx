@@ -109,11 +109,11 @@ const AIIntegration = () => {
             <button
               className="px-8 py-6 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105"
               style={{
-                background: '#FFC64C',
+                background: 'var(--gold-primary)',
                 color: '#1A1A1A',
                 borderRadius: '12px',
                 boxShadow: isNightMode
-                  ? '0 8px 30px rgba(255, 198, 76, 0.3)'
+                  ? 'var(--gold-shadow)'
                   : '0 4px 14px rgba(0, 0, 0, 0.1)',
               }}
             >
@@ -138,7 +138,7 @@ const AIIntegration = () => {
               >
                 <div 
                   className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ background: '#FFC64C' }}
+                  style={{ background: 'var(--gold-primary)' }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -157,7 +157,7 @@ const AIIntegration = () => {
                   <div
                     className="px-4 py-3 rounded-2xl rounded-tr-sm max-w-[80%] transition-all duration-500"
                     style={{
-                      background: '#FFC64C',
+                      background: 'var(--gold-primary)',
                       color: '#000000',
                     }}
                   >
@@ -193,7 +193,7 @@ const AIIntegration = () => {
                 </div>
                 <button
                   className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ background: '#FFC64C' }}
+                  style={{ background: 'var(--gold-primary)' }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2">
                     <line x1="22" y1="2" x2="11" y2="13" />
@@ -208,7 +208,7 @@ const AIIntegration = () => {
                     key={i}
                     className="w-2 h-2 rounded-full transition-all duration-300"
                     style={{
-                      background: i === currentMessage ? '#FFC64C' : (isNightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'),
+                      background: i === currentMessage ? 'var(--gold-primary)' : (isNightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'),
                     }}
                   />
                 ))}

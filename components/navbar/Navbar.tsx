@@ -120,7 +120,7 @@ const Navbar = () => {
                   className="relative text-sm font-medium transition-all duration-300 hover:opacity-80"
                   style={{
                     color: pathname === link.path 
-                      ? '#FFC64C'
+                      ? 'var(--gold-primary)'
                       : !mounted
                         ? '#F8F8F8'
                         : isNightMode 
@@ -158,7 +158,7 @@ const Navbar = () => {
                     style={{
                       background: isNightMode
                         ? "linear-gradient(135deg, #1e293b, #334155)"
-                        : "linear-gradient(135deg, #FFC64C, #FFB84D)",
+                        : 'var(--gold-gradient)',
                     }}
                   >
                     <div
@@ -176,9 +176,9 @@ const Navbar = () => {
                 <button
                   className="px-6 py-2.5 rounded-xl text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
                   style={{
-                    background: 'linear-gradient(135deg, #FFC64C 0%, #FFB84D 100%)',
+                    background: 'var(--gold-gradient)',
                     color: '#1A1A1A',
-                    boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                    boxShadow: 'var(--gold-shadow)',
                   }}
                 >
                   Book a Strategy Call
@@ -305,7 +305,7 @@ const Navbar = () => {
                           : '1px solid rgba(0, 0, 0, 0.04)',
                   color:
                     pathname === link.path
-                      ? '#FFC64C'
+                      ? 'var(--gold-primary)'
                       : !mounted
                         ? '#F8F8F8'
                         : isNightMode
@@ -330,7 +330,7 @@ const Navbar = () => {
                   <Sun
                     size={18}
                     style={{
-                      color: !isNightMode ? '#FFC64C' : '#64748b',
+                      color: !isNightMode ? 'var(--gold-primary)' : '#64748b',
                       transition: 'color 0.3s ease',
                     }}
                   />
@@ -339,7 +339,7 @@ const Navbar = () => {
                     style={{
                       background: isNightMode
                         ? 'linear-gradient(135deg, #1e293b, #334155)'
-                        : 'linear-gradient(135deg, #FFC64C, #FFB84D)',
+                        : 'var(--gold-gradient)',
                     }}
                   >
                     <div
@@ -353,7 +353,7 @@ const Navbar = () => {
                   <Moon
                     size={18}
                     style={{
-                      color: isNightMode ? '#FFC64C' : '#64748b',
+                      color: isNightMode ? 'var(--gold-primary)' : '#64748b',
                       transition: 'color 0.3s ease',
                     }}
                   />

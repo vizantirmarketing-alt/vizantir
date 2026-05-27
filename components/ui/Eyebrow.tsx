@@ -21,8 +21,8 @@ export interface EyebrowProps {
  */
 export function Eyebrow({ children, className, align = 'center', uppercase = true }: EyebrowProps) {
   const { isNightMode } = useTheme()
-  const accent = isNightMode ? '#FFC64C' : '#B45309'
-  const lineColor = '#FFC64C'
+  const accent = 'var(--gold-accent)'
+  const lineColor = 'var(--gold-primary)'
 
   return (
     <div

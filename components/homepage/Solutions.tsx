@@ -109,7 +109,7 @@ const Solutions = () => {
           viewport={{ once: true, margin: '-100px' }}
         >
           {features.map((feature, index) => {
-            const badgeColors = ['#FFC64C', '#3B82F6', '#C084FC', '#00D9FF']
+            const badgeColors = ['var(--gold-primary)', '#3B82F6', '#C084FC', '#00D9FF']
             const badgeColor = badgeColors[index]
             const rgb = index === 0 ? '255, 198, 76' : 
                        index === 1 ? '59, 130, 246' :
@@ -266,7 +266,7 @@ const Solutions = () => {
             asChild
             className="text-base px-10 py-7 font-semibold border-0 transition-transform hover:scale-105"
             style={{
-              background: '#FFC64C',
+              background: 'var(--gold-primary)',
               color: '#1A1A1A',
               borderRadius: '12px',
             }}

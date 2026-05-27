@@ -25,7 +25,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       bg: isNightMode ? '#000000' : '#FAFAFA',
       text: isNightMode ? '#F8F8F8' : '#1A1A1A',
       textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
-      accent: '#FFC64C',
+      accent: 'var(--gold-primary)',
       cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
       cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
       divider: isNightMode
@@ -365,7 +365,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                         animate={{ rotate: openFaqIndex === index ? 45 : 0 }}
                         transition={{ duration: 0.2 }}
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                        style={{ background: '#FFC64C', color: '#1A1A1A' }}
+                        style={{ background: 'var(--gold-primary)', color: '#1A1A1A' }}
                         aria-hidden
                       >
                         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -482,7 +482,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
               size="lg"
               asChild
               className="text-base font-semibold transition-all duration-300 hover:scale-105"
-              style={{ background: '#FFC64C', color: '#1A1A1A', borderRadius: '8px' }}
+              style={{ background: 'var(--gold-primary)', color: '#1A1A1A', borderRadius: '8px' }}
             >
               <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4">
                 Book a strategy call

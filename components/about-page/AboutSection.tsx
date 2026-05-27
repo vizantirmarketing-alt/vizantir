@@ -12,7 +12,7 @@ export default function AboutSection({ section }: AboutSectionProps) {
   const colors = {
     text: isNightMode ? '#F8F8F8' : '#1A1A1A',
     textMuted: isNightMode ? '#888888' : '#6B7280',
-    accentSolid: '#FFC64C',
+    accentSolid: 'var(--gold-primary)',
     cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
     budgetAsideBg: isNightMode ? 'rgba(255,198,76,0.06)' : 'rgba(180,83,9,0.06)',
   }

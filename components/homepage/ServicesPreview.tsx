@@ -41,9 +41,9 @@ const ServicesPreview = () => {
   };
 
   const numberStyles = [
-    { color: '#FFC64C', rgb: '255, 198, 76', class: 'number-glow-teal' },
-    { color: '#FFC64C', rgb: '255, 198, 76', class: 'number-glow-purple' },
-    { color: '#FFC64C', rgb: '255, 198, 76', class: 'number-glow-blue' },
+    { color: 'var(--gold-primary)', rgb: '255, 198, 76', class: 'number-glow-teal' },
+    { color: 'var(--gold-primary)', rgb: '255, 198, 76', class: 'number-glow-purple' },
+    { color: 'var(--gold-primary)', rgb: '255, 198, 76', class: 'number-glow-blue' },
   ];
 
   const services = [
@@ -216,7 +216,7 @@ const ServicesPreview = () => {
                 </span>
 
                 <h3
-                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-[#FFC64C]"
+                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-gold-primary"
                   style={{ color: isNightMode ? '#fff' : '#1a1a1a', lineHeight: '1.2' }}
                 >
                   {service.title}
@@ -238,7 +238,7 @@ const ServicesPreview = () => {
                   <span
                     className="text-xs font-semibold uppercase tracking-wider mb-2 block"
                     style={{
-                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : '#B45309',
+                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : 'var(--gold-accent)',
                     }}
                   >
                     Output:
@@ -259,7 +259,7 @@ const ServicesPreview = () => {
                   <span
                     className="text-xs font-semibold uppercase tracking-wider mb-2 block"
                     style={{
-                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : '#B45309',
+                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : 'var(--gold-accent)',
                     }}
                   >
                     Outcome:
@@ -283,7 +283,7 @@ const ServicesPreview = () => {
           <Link
             href="/services"
             className="group inline-flex items-center gap-2 font-semibold transition-opacity duration-300 hover:opacity-85"
-            style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
+            style={{ color: 'var(--gold-accent)' }}
           >
             <span>View All Services</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

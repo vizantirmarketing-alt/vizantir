@@ -74,7 +74,7 @@ const VisionApproach = () => {
             <p
               className="text-sm font-semibold tracking-widest uppercase mb-4"
               style={{ 
-                color: '#FFC64C',
+                color: 'var(--gold-primary)',
               }}
             >
               Our Vision

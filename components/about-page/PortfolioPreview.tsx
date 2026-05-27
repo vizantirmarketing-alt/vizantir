@@ -59,7 +59,7 @@ const PortfolioPreview = () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <p className="text-sm tracking-[0.3em] uppercase text-[#FFC64C] mb-4">
+            <p className="text-sm tracking-[0.3em] uppercase text-gold-primary mb-4">
               Our Work
             </p>
             <h2 
@@ -103,11 +103,11 @@ const PortfolioPreview = () => {
 
                 {/* Project Info */}
                 <div className="space-y-3">
-                  <p className="text-sm tracking-[0.2em] uppercase text-[#FFC64C]">
+                  <p className="text-sm tracking-[0.2em] uppercase text-gold-primary">
                     {item.category}
                   </p>
                   <h3 
-                    className="text-2xl md:text-3xl font-bold group-hover:text-[#FFC64C] transition-colors duration-300"
+                    className="text-2xl md:text-3xl font-bold group-hover:text-gold-primary transition-colors duration-300"
                     style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                   >
                     {item.title}
@@ -123,7 +123,7 @@ const PortfolioPreview = () => {
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 hover:text-[#FFC64C] transition-colors duration-300 mt-2"
+                    className="inline-flex items-center gap-2 hover:text-gold-primary transition-colors duration-300 mt-2"
                     style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                   >
                     View Live Site
@@ -149,9 +149,9 @@ const PortfolioPreview = () => {
             
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-[#FFC64C] text-[#1A1A1A]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-gold-primary text-[#1A1A1A]"
               style={{
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                boxShadow: 'var(--gold-shadow)',
               }}
             >
               View All Work

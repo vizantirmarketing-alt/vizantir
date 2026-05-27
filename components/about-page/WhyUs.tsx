@@ -26,7 +26,7 @@ const WhyUs = () => {
       title: 'Not Sure?',
       tag: "Let's Talk",
       description: "That's what the discovery call is for. We'll learn about your business and recommend the right approach — no pressure, no jargon.",
-      accentColor: '#FFC64C',
+      accentColor: 'var(--gold-primary)',
       link: '/contact',
     },
   ];
@@ -36,7 +36,7 @@ const WhyUs = () => {
       icon: Building2,
       title: 'Lean by design',
       description: 'A distributed studio model — less theater, more time on strategy, design, and build quality.',
-      color: '#FFC64C',
+      color: 'var(--gold-primary)',
     },
     {
       icon: Wifi,

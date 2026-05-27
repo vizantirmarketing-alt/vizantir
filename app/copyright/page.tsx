@@ -52,7 +52,7 @@ export default function CopyrightNotice() {
                 "Displaying our images on other websites, social media platforms, or publications"
               ].map((item, index) => (
                 <li key={index} className="flex items-start gap-3" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#FFC64C' }} />
+                  <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--gold-primary)' }} />
                   {item}
                 </li>
               ))}
@@ -81,7 +81,7 @@ export default function CopyrightNotice() {
                 "Immediate cease and desist demands"
               ].map((item, index) => (
                 <li key={index} className="flex items-start gap-3" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#FFC64C' }} />
+                  <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--gold-primary)' }} />
                   {item}
                 </li>
               ))}
@@ -102,7 +102,7 @@ export default function CopyrightNotice() {
             <p className="leading-relaxed mb-3" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
               For questions regarding copyright permissions or to report unauthorized use of our content, please contact:
             </p>
-            <a href="mailto:info@vizantir.com" className="font-medium transition-colors hover:opacity-80" style={{ color: '#FFC64C' }}>
+            <a href="mailto:info@vizantir.com" className="font-medium transition-colors hover:opacity-80" style={{ color: 'var(--gold-primary)' }}>
               info@vizantir.com
             </a>
           </motion.div>

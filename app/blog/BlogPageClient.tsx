@@ -42,7 +42,7 @@ export default function BlogPageClient({ posts }: Props) {
     text: themeNight ? '#F8F8F8' : '#1A1A1A',
     textMuted: themeNight ? '#888888' : '#6B7280',
     textSubtle: themeNight ? '#666666' : '#9CA3AF',
-    accent: themeNight ? '#FFC64C' : '#B45309',
+    accent: 'var(--gold-accent)',
     cardBg: themeNight ? '#0A0A0A' : '#FFFFFF',
     cardBorder: themeNight ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
     inputBg: themeNight ? '#111111' : '#FFFFFF',

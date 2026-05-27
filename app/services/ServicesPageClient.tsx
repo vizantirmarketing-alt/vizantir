@@ -69,7 +69,7 @@ function strategyCallLink() {
       href="/contact"
       onClick={() => trackCTAClick('get_started', 'services')}
       className="inline-flex items-center gap-2 mt-4 font-semibold hover:opacity-80 transition-opacity"
-      style={{ color: '#FFC64C' }}
+      style={{ color: 'var(--gold-primary)' }}
     >
       Book a Strategy Call
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -94,7 +94,7 @@ function SanityServiceExpandedBody({ service, isNightMode }: { service: ServiceL
         <Link
           href={`/services/${service.slug}`}
           className="inline-flex items-center gap-2 font-semibold hover:opacity-80 transition-opacity"
-          style={{ color: '#FFC64C' }}
+          style={{ color: 'var(--gold-primary)' }}
         >
           Learn more
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -275,12 +275,12 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                           className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500"
                           style={{
                             background: isOpen
-                              ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+                              ? 'var(--gold-gradient)'
                               : isNightMode
                                 ? '#1A1A1A'
                                 : '#F5F5F4',
                             color: isOpen ? '#FFFFFF' : isNightMode ? '#888888' : '#78716C',
-                            boxShadow: isOpen ? '0 8px 20px rgba(245,158,11,0.3)' : 'none',
+                            boxShadow: isOpen ? 'var(--gold-shadow)' : 'none',
                             transition: 'background 0.5s ease, color 0.5s ease, box-shadow 0.5s ease',
                           }}
                         >
@@ -325,8 +325,8 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                               : 'rgba(0,0,0,0.1)',
                           color: isOpen
                             ? isNightMode
-                              ? '#FFC64C'
-                              : '#B45309'
+                              ? 'var(--gold-primary)'
+                              : 'var(--gold-accent)'
                             : isNightMode
                               ? '#666666'
                               : '#9CA3AF',
@@ -421,15 +421,15 @@ function PricingCard({ title, price, description, featured = false, isNightMode 
       style={{
         background: featured
           ? isNightMode
-            ? 'linear-gradient(135deg, rgba(255,198,76,0.1) 0%, rgba(217,119,6,0.05) 100%)'
+            ? 'linear-gradient(135deg, var(--gold-muted-subtle) 0%, color-mix(in srgb, var(--gold-accent) 5%, transparent) 100%)'
             : 'linear-gradient(135deg, rgba(254,243,199,0.8) 0%, rgba(255,237,213,0.6) 100%)'
           : isNightMode
             ? '#000000'
             : '#FAFAFA',
         borderColor: featured
           ? isNightMode
-            ? 'rgba(255,198,76,0.2)'
-            : 'rgba(217,119,6,0.2)'
+            ? 'var(--gold-muted-border)'
+            : 'color-mix(in srgb, var(--gold-accent) 20%, transparent)'
           : isNightMode
             ? 'rgba(255,255,255,0.06)'
             : 'rgba(0,0,0,0.06)',
@@ -439,7 +439,7 @@ function PricingCard({ title, price, description, featured = false, isNightMode 
       {featured && (
         <span
           className="absolute -top-2 right-4 text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-full font-medium"
-          style={{ background: isNightMode ? '#FFC64C' : '#F59E0B', color: '#000000' }}
+          style={{ background: isNightMode ? 'var(--gold-primary)' : 'var(--gold-primary)', color: '#000000' }}
         >
           Popular
         </span>
@@ -453,7 +453,7 @@ function PricingCard({ title, price, description, featured = false, isNightMode 
         </h4>
         <span
           className="text-sm font-semibold whitespace-nowrap transition-colors duration-500"
-          style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
+          style={{ color: 'var(--gold-accent)' }}
         >
           {price}
         </span>

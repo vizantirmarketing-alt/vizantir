@@ -37,6 +37,14 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-gold-primary: var(--gold-primary);
+  --color-gold-accent: var(--gold-accent);
+  --color-gold-gradient-end: var(--gold-gradient-end);
+  --color-gold-muted: var(--gold-muted);
+  --color-gold-muted-subtle: var(--gold-muted-subtle);
+  --color-gold-muted-border: var(--gold-muted-border);
+  --color-gold-focus: var(--gold-focus);
+  --shadow-gold: var(--gold-shadow);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -76,6 +84,18 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Vizantir brand gold */
+  --gold-primary: #ffc64c;
+  --gold-accent: #b45309;
+  --gold-gradient: linear-gradient(135deg, #ffc64c 0%, #ffb84d 100%);
+  --gold-gradient-end: #ffb84d;
+  --gold-muted: rgba(180, 83, 9, 0.3);
+  --gold-muted-subtle: rgba(180, 83, 9, 0.06);
+  --gold-muted-border: rgba(180, 83, 9, 0.2);
+  --gold-shadow: 0 8px 30px rgba(255, 198, 76, 0.3);
+  --gold-glow: rgba(255, 198, 76, 0.3);
+  --gold-focus: rgba(255, 198, 76, 0.5);
 }
 
 .dark {
@@ -110,6 +130,17 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  --gold-accent: #ffc64c;
+  --gold-muted: rgba(255, 198, 76, 0.2);
+  --gold-muted-subtle: rgba(255, 198, 76, 0.08);
+  --gold-muted-border: rgba(255, 198, 76, 0.2);
+}
+
+@layer utilities {
+  .bg-gold-gradient {
+    background: var(--gold-gradient);
+  }
 }
 
 @layer base {
@@ -123,12 +154,8 @@
 }
 
 html, body {
-  background-color: #FAFAFA;
+  background-color: var(--background);
   transition: background-color 500ms ease;
-}
-
-html[data-theme='dark'], html[data-theme='dark'] body {
-  background-color: #000;
 }
 
 .group:hover .number-glow-teal {
@@ -144,11 +171,6 @@ html[data-theme='dark'], html[data-theme='dark'] body {
 .group:hover .number-glow-blue {
   opacity: 0.35 !important;
   text-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
-}
-
-.group:hover .number-glow-gold {
-  opacity: 0.35 !important;
-  text-shadow: 0 0 40px rgba(212, 168, 83, 0.5);
 }
 
 @keyframes scroll-wheel {

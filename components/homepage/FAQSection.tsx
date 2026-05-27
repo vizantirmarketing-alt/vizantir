@@ -52,7 +52,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               className="text-4xl md:text-5xl font-bold mb-4"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
-              Questions? <span style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}>Answered.</span>
+              Questions? <span style={{ color: 'var(--gold-accent)' }}>Answered.</span>
             </motion.h2>
             <p 
               className="text-xl"
@@ -100,7 +100,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                     className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${
                       openIndex === index ? 'rotate-180' : ''
                     }`}
-                    style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
+                    style={{ color: 'var(--gold-accent)' }}
                   />
                 </button>
                 
@@ -127,7 +127,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               href="/contact" 
               onClick={() => trackCTAClick('schedule_a_call', 'faq_section')}
               className="group inline-flex items-center gap-2 font-semibold transition-opacity duration-300 hover:opacity-85"
-              style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
+              style={{ color: 'var(--gold-accent)' }}
             >
               <span>Book a Strategy Call</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

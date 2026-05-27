@@ -45,7 +45,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
     text: isNightMode ? '#F8F8F8' : '#1A1A1A',
     textMuted: isNightMode ? '#888888' : '#6B7280',
     textSubtle: isNightMode ? '#666666' : '#9CA3AF',
-    accent: isNightMode ? '#FFC64C' : '#B45309',
+    accent: 'var(--gold-accent)',
     cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
     cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
   }

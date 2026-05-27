@@ -266,7 +266,7 @@ export default function CookiePolicy() {
                     <ul className="space-y-2 ml-6">
                       {subsection.list.map((item, itemIndex) => (
                         <li key={itemIndex} className="flex items-start gap-3" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
-                          <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#FFC64C' }} />
+                          <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--gold-primary)' }} />
                           {item}
                         </li>
                       ))}
@@ -274,7 +274,7 @@ export default function CookiePolicy() {
                   )}
                   {subsection.contactEmail && (
                     <div className="mt-3">
-                      <a href={`mailto:${subsection.contactEmail}`} className="font-medium transition-colors hover:opacity-80 block" style={{ color: '#FFC64C' }}>{subsection.contactEmail}</a>
+                      <a href={`mailto:${subsection.contactEmail}`} className="font-medium transition-colors hover:opacity-80 block" style={{ color: 'var(--gold-primary)' }}>{subsection.contactEmail}</a>
                       {subsection.phone && <p className="mt-1" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>{subsection.phone}</p>}
                     </div>
                   )}

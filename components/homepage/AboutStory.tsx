@@ -37,7 +37,7 @@ const AboutStory = () => {
               </h2>
               <p 
                 className="text-sm md:text-base mb-8 font-medium"
-                style={{ color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : '#B45309' }}
+                style={{ color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : 'var(--gold-accent)' }}
               >
                 Based in Las Vegas, Working Nationwide
               </p>
@@ -70,7 +70,7 @@ const AboutStory = () => {
               <Link
                 href="/about"
                 className="group inline-flex items-center gap-2 font-medium transition-opacity duration-300 hover:opacity-85"
-                style={{ color: isNightMode ? '#FFC64C' : '#B45309' }}
+                style={{ color: 'var(--gold-accent)' }}
               >
                 <span>Learn More About Vizantir</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -32,7 +32,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
       bg: isNightMode ? '#000000' : '#FAFAFA',
       text: isNightMode ? '#F8F8F8' : '#1A1A1A',
       textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
-      accent: '#FFC64C',
+      accent: 'var(--gold-primary)',
       cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
       cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
     }),
@@ -178,7 +178,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     </p>
                   ) : null}
                   <h3
-                    className="text-2xl font-bold transition-colors duration-300 group-hover:text-[#FFC64C] md:text-3xl"
+                    className="text-2xl font-bold transition-colors duration-300 group-hover:text-gold-primary md:text-3xl"
                     style={{ color: colors.text }}
                   >
                     {study.title}
@@ -255,9 +255,9 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             <Link
               href="/contact"
               onClick={() => trackCTAClick('start_your_project', 'case_studies')}
-              className="group inline-flex items-center gap-2 rounded-xl bg-[#FFC64C] px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-105"
+              className="group inline-flex items-center gap-2 rounded-xl bg-gold-primary px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-105"
               style={{
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.3)',
+                boxShadow: 'var(--gold-shadow)',
               }}
             >
               Start Your Project
