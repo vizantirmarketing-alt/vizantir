@@ -44,7 +44,7 @@ Create a `.env.local` file in the project root:
 # Sanity
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
+NEXT_PUBLIC_SANITY_API_VERSION=2025-12-05
 SANITY_API_WRITE_TOKEN=your_write_token
 SANITY_REVALIDATE_SECRET=your_revalidate_secret
 
@@ -89,6 +89,8 @@ Studio runs at [http://localhost:3000/studio](http://localhost:3000/studio). You
 app/                  # Next.js App Router pages
 components/           # Reusable UI components
 content-updates/      # Drafts for batch content updates (gitignored)
+contexts/             # React contexts (theme, etc.)
+data/                 # Typed data exports (pricing, navigation, page content)
 docs/                 # Standards and reference implementations
 lib/                  # Utilities, schema types, Sanity queries
 sanity/               # Sanity schema types and structure
@@ -105,7 +107,9 @@ Deployed automatically to Vercel on push to `main`. Environment variables must b
 
 ---
 
-## Key Pages
+## Highlighted Pages
+
+Representative routes only. Full route list: `/sitemap-page` (generated from app routes and Sanity content).
 
 | Route | Description |
 |-------|-------------|
@@ -120,6 +124,56 @@ Deployed automatically to Vercel on push to `main`. Environment variables must b
 | `/law-firm-web-design` | Vertical landing page |
 | `/commercial-real-estate-web-design` | Vertical landing page |
 | `/studio` | Sanity Studio (authenticated) |
+
+---
+
+## Pricing
+
+Single source of truth: `data/pricing.ts`.
+
+- **Project tiers** (Essentials, Growth, Enterprise): `projectPricing` array
+- **Care tiers** (Essentials Care, Growth Care, Enterprise Care): `carePricing` array
+- **Shared FAQ strings**: `pricingFAQs` object — used by Sanity migration scripts
+- **Industry page helpers**: `industryProjectCostAnswer`, `industryProjectTimelineAnswer`
+- **Contact form budget options**: `CONTACT_BUDGET_FROM_PRICING`
+- **Tier lookups**: `getProjectTier`, `getCareTier`
+
+Edit `data/pricing.ts` only. Consumers update automatically: `/services`, `/las-vegas-web-design`, `/are-we-a-fit`, industry landing pages, contact form, sitemap.
+
+Sanity FAQ documents are not synced automatically. After pricing changes, run:
+
+```bash
+npm run update:faq-pricing -- --execute
+```
+
+---
+
+## Shared UI Components
+
+Reuse these instead of re-implementing:
+
+| Component | Path | Use |
+|-----------|------|-----|
+| AccordionIndicator | `components/ui/AccordionIndicator.tsx` | Animated +/− for expandable surfaces |
+| Eyebrow | `components/ui/Eyebrow.tsx` | Gold uppercase label above section headings |
+| SectionDivider | `components/ui/SectionDivider.tsx` | Gold gradient divider between sections |
+| VerticalBadge | `components/ui/VerticalBadge.tsx` | Vertical landing page badge (deprecated for new pages; still referenced in existing layouts) |
+
+---
+
+## Copy Conventions
+
+Client-facing copy must read as human-written. Avoid:
+
+- Em-dash overuse
+- "It's worth noting"
+- "Dive into"
+- "Seamless", "robust", "elevate", "empower", "unlock", "cutting-edge"
+- "In today's fast-paced world"
+- Parallel three-item lists with identical length/structure
+- "Not just X — but Y" constructions
+
+Repo documentation (including this file) follows standard developer README structure. No marketing filler.
 
 ---
 
@@ -162,6 +216,24 @@ The `content-updates/` folder is gitignored. Clean up drafts after a successful 
 rm content-updates/*.html
 rm content-updates/*.json
 ```
+
+---
+
+## Scripts
+
+Operational scripts. Write-capable scripts require `SANITY_API_WRITE_TOKEN` in `.env.local`.
+
+| Command | Description |
+|---------|-------------|
+| `npm run update:posts` | Dry run: blog post updates from `content-updates/` (see above) |
+| `npm run update:posts:live` | Write blog post updates to Sanity |
+| `npm run update:faq-pricing` | Dry run: update Sanity FAQ documents from `data/pricing.ts` |
+| `npm run update:faq-pricing -- --execute` | Write FAQ pricing copy to Sanity |
+| `npm run migrate:faqs` | Dry run: one-time FAQ document seed migration |
+| `npm run migrate:faqs:live` | Write FAQ seed documents to Sanity |
+| `npm run create:gei` | Create Golden Era Integra case study in Sanity (idempotent slug check) |
+
+Standard Next.js scripts (`dev`, `build`, `start`, `lint`) are unchanged from the Next.js defaults.
 
 ---
 
