@@ -230,6 +230,18 @@ export interface SitemapData {
   locations?: { slug: string; _updatedAt: string }[]
 }
 
+export interface SitemapPageItem {
+  slug: string
+  title: string
+  _updatedAt: string
+}
+
+export interface SitemapPageData {
+  posts: SitemapPageItem[]
+  services: SitemapPageItem[]
+  caseStudies: SitemapPageItem[]
+}
+
 
 
 

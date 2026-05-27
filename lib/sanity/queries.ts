@@ -277,6 +277,24 @@ export const sitemapQuery = groq`{
   "locations": *[_type == "location" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt }
 }`
 
+export const sitemapPageQuery = groq`{
+  "posts": *[_type == "post" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(publishedAt desc) {
+    "slug": slug.current,
+    title,
+    _updatedAt
+  },
+  "services": *[_type == "service" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(coalesce(order, 999) asc, title asc) {
+    "slug": slug.current,
+    title,
+    _updatedAt
+  },
+  "caseStudies": *[_type == "caseStudy" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(title asc) {
+    "slug": slug.current,
+    title,
+    _updatedAt
+  }
+}`
+
 export const homepageFaqsQuery = `*[_type == "faq" && (placement == "homepage" || placement == "both")] | order(sortOrder asc) {
   _id,
   question,
