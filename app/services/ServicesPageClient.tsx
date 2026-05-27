@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { CheckCircle2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
@@ -138,6 +139,7 @@ function StandalonePricingSection({ isNightMode }: { isNightMode: boolean }) {
                 title={tier.name}
                 price={tier.price}
                 description={tier.description}
+                includes={tier.includes}
                 featured={tier.featured}
                 isNightMode={isNightMode}
               />
@@ -393,11 +395,19 @@ interface PricingCardProps {
   title: string
   price: string
   description: string
+  includes?: readonly string[]
   featured?: boolean
   isNightMode: boolean
 }
 
-function PricingCard({ title, price, description, featured = false, isNightMode }: PricingCardProps) {
+function PricingCard({
+  title,
+  price,
+  description,
+  includes,
+  featured = false,
+  isNightMode,
+}: PricingCardProps) {
   return (
     <div
       className="relative p-5 rounded-xl border transition-all duration-500"
@@ -442,11 +452,21 @@ function PricingCard({ title, price, description, featured = false, isNightMode 
         </span>
       </div>
       <p
-        className="text-xs leading-relaxed transition-colors duration-500"
+        className={`text-xs leading-relaxed transition-colors duration-500${includes?.length ? ' mb-4' : ''}`}
         style={{ color: isNightMode ? '#888888' : '#6B7280' }}
       >
         {description}
       </p>
+      {includes && includes.length > 0 ? (
+        <ul className="space-y-3">
+          {includes.map((line, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
+              <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-gold-accent" aria-hidden />
+              {line}
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   )
 }
