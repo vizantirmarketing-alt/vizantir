@@ -287,18 +287,18 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex flex-1 flex-col min-h-0 px-6 pb-8">
-            <div className="flex flex-1 flex-col justify-evenly min-h-0 overflow-y-auto overscroll-y-contain">
+          <nav className="flex flex-1 flex-col min-h-0 overflow-hidden px-6 pb-8">
+            <div className="flex flex-1 flex-col justify-evenly min-h-0 overflow-hidden">
               {mainNavLinks.map((link, idx) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block py-6 transition-all duration-300 ${
+                  className={`block py-3 sm:py-4 transition-all duration-300 ${
                     idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
                   } ${pathname === link.path ? 'text-gold-primary' : 'text-foreground'}`}
                 >
-                  <span className="text-2xl font-medium">{link.name}</span>
+                  <span className="text-xl sm:text-2xl font-medium">{link.name}</span>
                 </Link>
               ))}
             </div>
