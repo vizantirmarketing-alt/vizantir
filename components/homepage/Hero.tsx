@@ -65,12 +65,7 @@ const Hero = () => {
 
   const heroGlowBackground = isNightMode
     ? isBelowLg
-      ? `
-              radial-gradient(ellipse 80% 80% at 50% 50%, rgba(255, 198, 76, 0.25) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 50% 65%, rgba(180, 132, 30, 0.15) 0%, transparent 45%),
-              radial-gradient(ellipse 50% 50% at 50% 30%, rgba(255, 198, 76, 0.12) 0%, transparent 40%),
-              radial-gradient(ellipse 40% 40% at 50% 70%, rgba(180, 132, 30, 0.1) 0%, transparent 35%)
-            `
+      ? 'radial-gradient(ellipse 120% 70% at 50% 45%, rgba(255, 198, 76, 0.22) 0%, rgba(180, 132, 30, 0.1) 35%, transparent 70%)'
       : `
               radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.25) 0%, transparent 50%),
               radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 132, 30, 0.15) 0%, transparent 45%),
@@ -78,11 +73,7 @@ const Hero = () => {
               radial-gradient(ellipse 40% 40% at 35% 70%, rgba(180, 132, 30, 0.1) 0%, transparent 35%)
             `
     : isBelowLg
-      ? `
-              radial-gradient(ellipse 80% 80% at 50% 50%, rgba(255, 198, 76, 0.1) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 50% 65%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
-              radial-gradient(ellipse 50% 50% at 50% 30%, rgba(255, 198, 76, 0.08) 0%, transparent 40%)
-            `
+      ? 'radial-gradient(ellipse 120% 70% at 50% 45%, rgba(255, 198, 76, 0.1) 0%, rgba(180, 83, 9, 0.05) 35%, transparent 70%)'
       : `
               radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.1) 0%, transparent 50%),
               radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
