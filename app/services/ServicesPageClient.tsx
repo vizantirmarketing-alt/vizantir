@@ -8,6 +8,7 @@ import Link from 'next/link'
 import ServicesHero from './ServicesHero'
 import { trackCTAClick } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
+import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { carePricing, projectPricing } from '@/data/pricing'
 
 const WebIcon = () => (
@@ -290,38 +291,11 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                         </div>
                       </div>
 
-                      <div
-                        className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500"
-                        style={{
-                          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                          background: isOpen
-                            ? isNightMode
-                              ? 'rgba(255,198,76,0.1)'
-                              : '#FEF3C7'
-                            : isNightMode
-                              ? '#000000'
-                              : '#FAFAFA',
-                          borderColor: isOpen
-                            ? isNightMode
-                              ? 'rgba(255,198,76,0.3)'
-                              : 'rgba(180,83,9,0.3)'
-                            : isNightMode
-                              ? 'rgba(255,255,255,0.1)'
-                              : 'rgba(0,0,0,0.1)',
-                          color: isOpen
-                            ? isNightMode
-                              ? 'var(--gold-primary)'
-                              : 'var(--gold-accent)'
-                            : isNightMode
-                              ? '#666666'
-                              : '#9CA3AF',
-                          transition: 'transform 0.5s ease, background 0.5s ease, border-color 0.5s ease, color 0.5s ease',
-                        }}
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                          <path d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
+                      <AccordionIndicator
+                        isOpen={isOpen}
+                        className="w-5 h-5 flex-shrink-0"
+                        style={{ color: 'var(--gold-accent)' }}
+                      />
                     </div>
 
                     <AnimatePresence initial={false}>
