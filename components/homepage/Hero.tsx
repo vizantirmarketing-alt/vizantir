@@ -60,6 +60,11 @@ const Hero = () => {
   // Slower fade on mobile (0-1000px scroll), faster on desktop (0-500px)
   const scrollEnd = isBelowMd ? 1000 : 500;
   const opacity = useTransform(scrollY, [0, scrollEnd], [1, 0]);
+  const contentOpacity = useTransform(
+    scrollY,
+    isBelowMd ? [0, scrollEnd * 0.6, scrollEnd] : [0, scrollEnd],
+    isBelowMd ? [1, 1, 0] : [1, 0],
+  );
   const y = useTransform(scrollY, [0, scrollEnd], [0, 100]);
   const scale = useTransform(scrollY, [0, scrollEnd], [1, 0.95]);
 
@@ -171,7 +176,7 @@ const Hero = () => {
 
       <motion.div 
         className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-screen py-24 lg:py-20"
-        style={{ opacity, y, scale }}
+        style={{ y, scale }}
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}
@@ -188,7 +193,10 @@ const Hero = () => {
         </div>
 
         {/* RIGHT SIDE - Content */}
-        <div className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left">
+        <motion.div
+          className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left"
+          style={{ opacity: contentOpacity }}
+        >
           <div className="mb-4">
             <Eyebrow align="start">Vizantir Studio</Eyebrow>
           </div>
@@ -285,7 +293,7 @@ const Hero = () => {
           >
             <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>Book a Strategy Call</Link>
           </Button>
-        </div>
+        </motion.div>
       </motion.div>
 
     </motion.section>
