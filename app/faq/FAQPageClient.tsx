@@ -1,6 +1,7 @@
 'use client'
 
 import type { Faq } from '@/components/homepage/FAQSection'
+import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { useTheme } from '@/contexts/ThemeContext'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
@@ -114,16 +115,11 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                       style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
                     >
                       <span className="text-lg font-semibold pr-8">{faq.question}</span>
-                      <motion.span
-                        animate={{ rotate: openId === faq._id ? 45 : 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
-                        style={{ background: 'var(--gold-primary)', color: '#1A1A1A' }}
-                      >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                      </motion.span>
+                      <AccordionIndicator
+                        isOpen={openId === faq._id}
+                        className="w-5 h-5"
+                        style={{ color: 'var(--gold-accent)' }}
+                      />
                     </button>
                     <AnimatePresence>
                       {openId === faq._id && (

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { AccordionIndicator } from '@/components/ui/AccordionIndicator';
 import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
@@ -96,10 +97,9 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                   >
                     {faq.question}
                   </span>
-                  <ChevronDown
-                    className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${
-                      openIndex === index ? 'rotate-180' : ''
-                    }`}
+                  <AccordionIndicator
+                    isOpen={openIndex === index}
+                    className="w-5 h-5"
                     style={{ color: 'var(--gold-accent)' }}
                   />
                 </button>
