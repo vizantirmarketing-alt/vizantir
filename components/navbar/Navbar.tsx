@@ -287,77 +287,78 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-6 pb-6">
-            {mainNavLinks.map((link, idx) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 transition-all duration-300"
-                style={{
-                  borderBottom:
-                    idx === mainNavLinks.length - 1
-                      ? 'none'
-                      : !mounted
-                        ? '1px solid rgba(255, 255, 255, 0.06)'
-                        : isNightMode
-                          ? '1px solid rgba(255, 255, 255, 0.06)'
-                          : '1px solid rgba(0, 0, 0, 0.04)',
-                  color:
-                    pathname === link.path
-                      ? 'var(--gold-primary)'
-                      : !mounted
-                        ? '#F8F8F8'
-                        : isNightMode
-                          ? '#F8F8F8'
-                          : '#1A1A1A',
-                }}
-              >
-                <span className="text-lg font-medium">{link.name}</span>
-              </Link>
-            ))}
-            {mounted && (
-              <div className="pt-4 flex justify-center">
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-300"
-                  style={{
-                    background: isNightMode ? 'rgba(30, 41, 59, 0.6)' : 'rgba(0, 0, 0, 0.05)',
-                    border: isNightMode ? '1px solid rgba(148, 163, 184, 0.3)' : '1px solid rgba(0, 0, 0, 0.1)',
-                  }}
+          <nav className="flex flex-1 flex-col min-h-0 px-6 pb-8">
+            <div className="flex flex-1 flex-col justify-evenly min-h-0 overflow-y-auto overscroll-y-contain">
+              {mainNavLinks.map((link, idx) => (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block py-6 transition-all duration-300 ${
+                    idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
+                  } ${pathname === link.path ? 'text-gold-primary' : 'text-foreground'}`}
                 >
-                  <Sun
-                    size={18}
+                  <span className="text-2xl font-medium">{link.name}</span>
+                </Link>
+              ))}
+            </div>
+
+            {mounted && (
+              <div className="shrink-0 pt-6 space-y-4">
+                <Link
+                  href="/contact"
+                  onClick={() => {
+                    trackCTAClick('get_started', 'navbar');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 active:scale-[0.98]"
+                >
+                  Book a Strategy Call
+                </Link>
+
+                <div className="flex items-center justify-center gap-3">
+                  <span className="text-sm font-medium text-muted-foreground">Theme</span>
+                  <button
+                    type="button"
+                    onClick={toggleTheme}
+                    className="flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-300"
                     style={{
-                      color: !isNightMode ? 'var(--gold-primary)' : '#64748b',
-                      transition: 'color 0.3s ease',
-                    }}
-                  />
-                  <div
-                    className="relative w-10 h-5 rounded-full transition-all duration-300"
-                    style={{
-                      background: isNightMode
-                        ? 'linear-gradient(135deg, #1e293b, #334155)'
-                        : 'var(--gold-gradient)',
+                      background: isNightMode ? 'rgba(30, 41, 59, 0.6)' : 'rgba(0, 0, 0, 0.05)',
+                      border: isNightMode ? '1px solid rgba(148, 163, 184, 0.3)' : '1px solid rgba(0, 0, 0, 0.1)',
                     }}
                   >
-                    <div
-                      className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-300 shadow-md"
+                    <Sun
+                      size={18}
                       style={{
-                        left: isNightMode ? '1.375rem' : '0.125rem',
-                        background: isNightMode ? '#FAFAFA' : '#1A1A1A',
+                        color: !isNightMode ? 'var(--gold-primary)' : '#64748b',
+                        transition: 'color 0.3s ease',
                       }}
                     />
-                  </div>
-                  <Moon
-                    size={18}
-                    style={{
-                      color: isNightMode ? 'var(--gold-primary)' : '#64748b',
-                      transition: 'color 0.3s ease',
-                    }}
-                  />
-                </button>
+                    <div
+                      className="relative w-10 h-5 rounded-full transition-all duration-300"
+                      style={{
+                        background: isNightMode
+                          ? 'linear-gradient(135deg, #1e293b, #334155)'
+                          : 'var(--gold-gradient)',
+                      }}
+                    >
+                      <div
+                        className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-300 shadow-md"
+                        style={{
+                          left: isNightMode ? '1.375rem' : '0.125rem',
+                          background: isNightMode ? '#FAFAFA' : '#1A1A1A',
+                        }}
+                      />
+                    </div>
+                    <Moon
+                      size={18}
+                      style={{
+                        color: isNightMode ? 'var(--gold-primary)' : '#64748b',
+                        transition: 'color 0.3s ease',
+                      }}
+                    />
+                  </button>
+                </div>
               </div>
             )}
           </nav>
