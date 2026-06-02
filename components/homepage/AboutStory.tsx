@@ -27,19 +27,19 @@ const AboutStory = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <div className="mb-2">
-                <Eyebrow align="start">The Story Of</Eyebrow>
+                <Eyebrow align="start">The Difference</Eyebrow>
               </div>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
                 style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
               >
-                VIZANTIR
+                Your business has outgrown what you started with.
               </h2>
               <p 
                 className="text-sm md:text-base mb-8 font-medium"
                 style={{ color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : 'var(--gold-accent)' }}
               >
-                Based in Las Vegas, Working Nationwide
+                When the right person lands on your site, they should already trust you before they read a word.
               </p>
             </motion.div>
             
@@ -55,14 +55,14 @@ const AboutStory = () => {
                 className="text-base md:text-lg"
                 style={{ color: isNightMode ? '#C0C0C0' : '#4A4A4A', lineHeight: '1.7' }}
               >
-                Vizantir was built around a simple idea: businesses should not have to choose between strong design, serious execution, and a process that actually makes sense.
+                Most websites look fine on the surface. They just don&apos;t do anything. They don&apos;t rank. They don&apos;t convert. They don&apos;t reflect the business you&apos;ve actually become.
               </p>
               
               <p 
                 className="text-base md:text-lg"
                 style={{ color: isNightMode ? '#C0C0C0' : '#4A4A4A', lineHeight: '1.7' }}
               >
-                We design and build premium websites for established businesses — focused on strategy, design, and development. Every project is scoped clearly, built custom, and delivered on time.
+                We build from the ground up — considered, crafted, and coded for the way your business actually operates. Every decision is intentional. Every line of code earns its place.
               </p>
             </motion.div>
 
@@ -72,7 +72,7 @@ const AboutStory = () => {
                 className="group inline-flex items-center gap-2 font-medium transition-opacity duration-300 hover:opacity-85"
                 style={{ color: 'var(--gold-accent)' }}
               >
-                <span>Learn More About Vizantir</span>
+                <span>How We Work</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
