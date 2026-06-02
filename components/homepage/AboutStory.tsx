@@ -16,7 +16,7 @@ const AboutStory = () => {
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        <div className="grid lg:grid-cols-2 gap-5 lg:gap-14 items-center">
           {/* Left Content */}
           <div className="max-w-xl">
             {/* Fade up for the heading area */}
@@ -66,7 +66,7 @@ const AboutStory = () => {
               </p>
             </motion.div>
 
-            <div className="mt-10">
+            <div className="mt-5">
               <Link
                 href="/about"
                 className="group inline-flex items-center gap-2 font-medium transition-opacity duration-300 hover:opacity-85"

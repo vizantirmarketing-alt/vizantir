@@ -33,10 +33,10 @@ const Newsletter = () => {
         >
           <div className="md:max-w-md">
             <h3
-              className="text-xl md:text-2xl font-bold uppercase tracking-wide mb-2"
+              className="text-xl md:text-2xl font-bold tracking-wide mb-2"
               style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
             >
-              Subscribe to Our Weekly Newsletter
+              Subscribe to our newsletter
             </h3>
             <p
               className="text-sm"
