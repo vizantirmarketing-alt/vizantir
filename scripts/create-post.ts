@@ -62,21 +62,19 @@ async function main() {
 
 const POST_DATA = {
   _type: 'post',
-  title: 'Why Your Website Looks Fine But Isn\'t Working',
+  title: 'Why Your Website Needs to Work in Every Direction',
   slug: {
     _type: 'slug',
-    current: 'why-your-website-looks-fine-but-isnt-working',
+    current: 'why-your-website-needs-to-work-in-every-direction',
   },
-  publishedAt: '2026-06-02T20:00:00.000Z',
+  publishedAt: '2026-06-02T21:00:00.000Z',
   category: 'Strategy',
-  excerpt:
-    'A website can look polished and still do nothing. Here is why that happens and what to look at first.',
-  readTime: '6 min read',
-  tags: ['conversion', 'strategy', 'web-design', 'las-vegas'],
+  excerpt: 'Most sites are tested on desktop and a phone held upright. Here is what gets missed — and why it matters more than you think.',
+  readTime: '5 min read',
+  tags: ['responsive-design', 'mobile', 'strategy', 'web-design'],
   seo: {
-    metaTitle: 'Why Your Website Looks Fine But Isn\'t Working | Vizantir',
-    metaDescription:
-      'If your website looks decent but isn\'t generating leads or calls, the problem is usually not the design. Here is what to look at first.',
+    metaTitle: 'Why Your Website Needs to Work in Every Direction | Vizantir',
+    metaDescription: 'Portrait, landscape, tablet, mobile — your website should work perfectly on every screen and orientation. Here is what to check and why it matters.',
     noIndex: false,
   },
 } as const

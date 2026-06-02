@@ -95,6 +95,13 @@ const FAQS: FaqSeed[] = [
     sortOrder: 32,
   },
   {
+    question: 'Will my website work on all devices and screen sizes?',
+    answer:
+      'Every site we build is tested across mobile, tablet, and desktop — portrait and landscape. Mobile is treated as the primary experience, not an afterthought. If it does not look and work correctly on every screen size and orientation, it does not ship.',
+    placement: 'faqPage',
+    sortOrder: 34,
+  },
+  {
     question: 'Do you redesign existing websites?',
     answer:
       "Yes. We audit what you have, identify what's working, and rebuild from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
