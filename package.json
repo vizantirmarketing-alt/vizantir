@@ -12,7 +12,8 @@
     "update:faq-pricing": "tsx scripts/update-faq-pricing.ts",
     "migrate:faqs": "tsx scripts/migrate-faqs.ts",
     "migrate:faqs:live": "tsx scripts/migrate-faqs.ts --live",
-    "create:gei": "tsx scripts/create-gei-case-study.ts"
+    "create:gei": "tsx scripts/create-gei-case-study.ts",
+    "create:post": "tsx scripts/create-post.ts"
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^1.5.1",
