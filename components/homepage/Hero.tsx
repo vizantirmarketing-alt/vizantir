@@ -198,17 +198,8 @@ const Hero = () => {
           style={{ opacity: contentOpacity }}
         >
           <div className="mb-4">
-            <Eyebrow align="start">Vizantir Studio</Eyebrow>
+            <Eyebrow align="start">Vizantir Design Studio · Las Vegas</Eyebrow>
           </div>
-          <p 
-            className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
-            style={{ 
-              color: isNightMode ? 'rgba(255,255,255,0.7)' : '#1A1A1A',
-              textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none'
-            }}
-          >
-            Premium Website Design Studio
-          </p>
 
           <h1 
             className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500"
@@ -224,7 +215,7 @@ const Hero = () => {
                 textShadow: 'none',
               }}
             >
-              Custom websites
+              We build websites
             </span>
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] mt-1"
@@ -233,7 +224,7 @@ const Hero = () => {
                 textShadow: 'none',
               }}
             >
-              for established brands.
+              that make people stop and say
             </span>
             <span className="block mt-3 sm:mt-4">
               <span
@@ -243,7 +234,7 @@ const Hero = () => {
                   textShadow: 'none',
                 }}
               >
-                Built for
+                —
               </span>
               <span className="block lg:whitespace-nowrap">
                 <span
@@ -253,7 +244,7 @@ const Hero = () => {
                     textShadow: !isNightMode ? '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' : 'none',
                   }}
                 >
-                  real growth
+                  who did this?
                 </span>
                 <span
                   className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em]"
@@ -262,7 +253,6 @@ const Hero = () => {
                     textShadow: 'none',
                   }}
                 >
-                  .
                 </span>
               </span>
             </span>
@@ -272,14 +262,14 @@ const Hero = () => {
             className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}
           >
-            Vizantir is a premium website design studio building custom websites for established businesses that care about trust, presentation, and performance.
+            Not generated overnight.
           </p>
 
           <p 
             className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg italic transition-colors duration-500"
             style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}
           >
-            Every project is shaped to improve how your business is perceived, how your site works, and how confidently people take the next step.
+            Built to last, perform, and represent you at your best.
           </p>
 
           <Button
@@ -291,7 +281,7 @@ const Hero = () => {
               boxShadow: 'var(--gold-shadow)',
             }}
           >
-            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>Book a Strategy Call</Link>
+            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
           </Button>
         </motion.div>
       </motion.div>
