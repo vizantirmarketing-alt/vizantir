@@ -88,6 +88,13 @@ const FAQS: FaqSeed[] = [
     sortOrder: 30,
   },
   {
+    question: 'Do you use templates or website builders?',
+    answer:
+      'Every site we build is custom — scoped to your business, coded from scratch. Builders and templates have their place when budget is the only driver. When the goal is a site that performs, ranks, and holds up under real scrutiny, that approach does not get you there. We have never shipped a template.',
+    placement: 'faqPage',
+    sortOrder: 32,
+  },
+  {
     question: 'Do you redesign existing websites?',
     answer:
       "Yes. We audit what you have, identify what's working, and rebuild from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
