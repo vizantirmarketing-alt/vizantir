@@ -36,7 +36,7 @@ const ResultsThatSpeak = () => {
 
   return (
     <section 
-      className="py-20 md:py-24 transition-colors duration-500"
+      className="py-16 md:py-20 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
@@ -47,7 +47,7 @@ const ResultsThatSpeak = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="max-w-7xl mx-auto"
         >
-          <div className="text-center mb-14 md:mb-16">
+          <div className="text-center mb-10 md:mb-12">
             <div className="mb-3 flex justify-center">
               <Eyebrow>Our Work</Eyebrow>
             </div>
@@ -124,7 +124,7 @@ const ResultsThatSpeak = () => {
             ))}
           </div>
 
-          <div className="text-center mt-12 md:mt-14">
+          <div className="text-center mt-10 md:mt-12">
             <Link
               href="/case-studies"
               className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"

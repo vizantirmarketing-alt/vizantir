@@ -17,7 +17,7 @@ const Newsletter = () => {
 
   return (
     <section
-      className="py-20"
+      className="py-16"
       style={{
         background: isNightMode ? '#000000' : '#FAFAFA',
         borderTop: isNightMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)',

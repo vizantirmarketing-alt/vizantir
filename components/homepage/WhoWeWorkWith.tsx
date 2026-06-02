@@ -16,7 +16,7 @@ const WhoWeWorkWith = () => {
 
   return (
     <section 
-      className="py-20 md:py-24 transition-colors duration-500"
+      className="py-16 md:py-20 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
@@ -35,10 +35,10 @@ const WhoWeWorkWith = () => {
           </h2>
           
           <p 
-            className="text-lg md:text-xl leading-relaxed mb-10"
+            className="text-lg md:text-xl leading-relaxed mb-8"
             style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
           >
-            Based in Las Vegas, Vizantir works best with established firms and brands where presentation, clarity, and user experience directly affect revenue. That includes hospitality groups, law firms, commercial real estate teams, and premium service businesses that need more than a better-looking redesign.
+            We work best with businesses where the first impression directly affects whether someone picks up the phone. If your site isn&apos;t doing that job, that&apos;s where we come in.
           </p>
 
           {/* Industries Grid */}

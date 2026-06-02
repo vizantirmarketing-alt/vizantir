@@ -8,12 +8,12 @@ const OperatorStatement = () => {
 
   return (
     <section
-      className="py-20 md:py-24 transition-colors duration-500"
+      className="py-16 md:py-20 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <div
-          className="w-full max-w-5xl mx-auto h-px mb-16 md:mb-20"
+          className="w-full max-w-5xl mx-auto h-px mb-12 md:mb-14"
           style={{
             background: isNightMode
               ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.25), transparent)'
@@ -38,7 +38,7 @@ const OperatorStatement = () => {
             className="text-base md:text-lg leading-relaxed"
             style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.65)' : '#6B6B6B' }}
           >
-            Vizantir was founded in Las Vegas by someone with 25 years of business ownership and more than 10 years building websites. That perspective changes the work. Every decision is made with the business in mind: what matters, what is unnecessary, and what actually improves the final result.
+            Vizantir was founded in Las Vegas by someone with 25 years of business ownership and over a decade building websites. That perspective changes the work. Every decision is made with the business in mind: what matters, what is unnecessary, and what actually improves the final result.
           </p>
         </motion.div>
       </div>

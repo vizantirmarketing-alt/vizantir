@@ -11,7 +11,7 @@ const CTA = () => {
   
   return (
     <section 
-      className="py-20 md:py-24 relative overflow-hidden"
+      className="py-16 md:py-20 relative overflow-hidden"
       style={{
         background: isNightMode ? '#000000' : '#FAFAFA',
       }}
@@ -42,7 +42,7 @@ const CTA = () => {
             className="text-xl mb-8"
             style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
           >
-            We&apos;ll look at what your site needs, what is getting in the way, and whether Vizantir is the right fit to build it.
+            We&apos;ll look at what&apos;s holding your site back and tell you honestly what it needs.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

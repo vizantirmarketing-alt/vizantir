@@ -49,7 +49,7 @@ const WhatHappensNext = () => {
 
   return (
     <section 
-      className="py-20 md:py-24 transition-colors duration-500"
+      className="py-16 md:py-20 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
@@ -59,7 +59,7 @@ const WhatHappensNext = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
@@ -75,7 +75,7 @@ const WhatHappensNext = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12"
+          className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-10"
         >
           {steps.map((step, index) => (
             <motion.div

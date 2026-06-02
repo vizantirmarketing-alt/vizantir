@@ -12,11 +12,11 @@ const AboutStory = () => {
 
   return (
     <section 
-      className="py-20 md:py-24 transition-colors duration-500"
+      className="py-16 md:py-20 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
           {/* Left Content */}
           <div className="max-w-xl">
             {/* Fade up for the heading area */}

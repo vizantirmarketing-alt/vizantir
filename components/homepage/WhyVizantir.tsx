@@ -48,7 +48,7 @@ const WhyVizantir = () => {
 
   return (
     <section 
-      className="py-20 md:py-24 transition-colors duration-500"
+      className="py-16 md:py-20 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
@@ -58,7 +58,7 @@ const WhyVizantir = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" as const }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"

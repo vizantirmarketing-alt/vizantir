@@ -132,7 +132,7 @@ const ServicesPreview = () => {
 
   return (
     <section
-      className="relative min-h-screen py-20 md:py-24 overflow-hidden"
+      className="relative min-h-screen py-16 md:py-20 overflow-hidden"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <canvas
@@ -146,7 +146,7 @@ const ServicesPreview = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-7xl md:text-8xl lg:text-9xl font-black text-center mb-24"
+          className="text-7xl md:text-8xl lg:text-9xl font-black text-center mb-16"
           style={{
             letterSpacing: '-6px',
             lineHeight: '0.9',
@@ -161,13 +161,13 @@ const ServicesPreview = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center text-base md:text-lg max-w-3xl mx-auto mb-16 md:mb-20 px-2"
+          className="text-center text-base md:text-lg max-w-3xl mx-auto mb-12 md:mb-14 px-2"
           style={{
             color: isNightMode ? 'rgba(255, 255, 255, 0.75)' : 'rgba(0, 0, 0, 0.75)',
             lineHeight: 1.65,
           }}
         >
-          We build websites for businesses that already know what they want — and need a team that can actually deliver it. Strategy, design, development, and support that holds up after launch.
+          Every site is built around what your business actually needs — not what looks good in a proposal.
         </motion.p>
 
         <motion.div
@@ -175,7 +175,7 @@ const ServicesPreview = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12"
         >
           {services.map((service, index) => {
             return (

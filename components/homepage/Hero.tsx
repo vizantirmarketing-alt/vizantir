@@ -175,7 +175,7 @@ const Hero = () => {
       />
 
       <motion.div 
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-screen py-24 lg:py-20"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-screen py-16 lg:py-16"
         style={{ y, scale }}
       >
         

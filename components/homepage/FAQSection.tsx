@@ -39,12 +39,12 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
 
   return (
     <section 
-      className="py-20 md:py-24"
+      className="py-16 md:py-20"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -116,7 +116,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
             ))}
           </motion.div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-10">
             <p 
               className="mb-4"
               style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B' }}

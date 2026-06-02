@@ -8,11 +8,11 @@ const EditorialStatement = () => {
 
   return (
     <section
-      className="py-20 md:py-24 transition-colors duration-500"
+      className="py-16 md:py-20 transition-colors duration-500"
       style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 lg:items-start max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 lg:items-start max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
