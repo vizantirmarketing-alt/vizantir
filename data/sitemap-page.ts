@@ -16,6 +16,7 @@ export const sitemapMainPages: SitemapLink[] = [
 
 export const sitemapIndustryPages: SitemapLink[] = [
   { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
+  { name: 'Website Redesign Las Vegas', href: '/website-redesign-las-vegas' },
   { name: 'Law Firm Web Design', href: '/law-firm-web-design' },
   { name: 'Hospitality Web Design', href: '/hospitality-web-design' },
   { name: 'Commercial Real Estate Web Design', href: '/commercial-real-estate-web-design' },
