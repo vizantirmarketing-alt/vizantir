@@ -44,6 +44,12 @@ const EditorialStatement = () => {
             >
               A small number of clients at a time. Full attention on each one. The result is a site that feels like yours — because it is.
             </p>
+            <p
+              className="text-base md:text-lg leading-relaxed lg:pt-1"
+              style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.65)' : '#6B6B6B' }}
+            >
+              Some websites are built. Most are assembled. You can tell the difference — and so can Google.
+            </p>
           </motion.div>
         </div>
       </div>
