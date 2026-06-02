@@ -30,7 +30,7 @@ export default function HowWeWorkPageClient() {
       number: '01',
       title: 'Discovery',
       description:
-        "We start with a conversation. I learn your goals, timeline, and what success looks like for you. No commitment. No pressure.",
+        'We start by learning your business — not just your goals, but your market, your competitors, and where the real opportunity is. Before any design work begins we map what the site needs to do, who it needs to reach, and what will make someone choose you over the next option they find.',
     },
     {
       number: '02',

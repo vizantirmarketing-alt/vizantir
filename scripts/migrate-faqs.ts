@@ -102,6 +102,13 @@ const FAQS: FaqSeed[] = [
     sortOrder: 34,
   },
   {
+    question: 'Do you research my competitors before designing the site?',
+    answer:
+      'Yes. Before any design work starts we look at how your competitors are positioning themselves online — what they are doing well and where the gaps are. That research shapes the strategy, the structure, and the direction of the site. You should not be guessing what makes you different. We find it.',
+    placement: 'faqPage',
+    sortOrder: 36,
+  },
+  {
     question: 'Do you redesign existing websites?',
     answer:
       "Yes. We audit what you have, identify what's working, and rebuild from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
