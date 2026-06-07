@@ -210,7 +210,7 @@ const Navbar = () => {
         className={`xl:hidden fixed top-0 left-0 right-0 z-[60] h-[100dvh] max-h-[100dvh] min-h-0 ${
           isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
-        aria-hidden={!isMobileMenuOpen}
+        inert={!isMobileMenuOpen ? true : undefined}
       >
         {/* Backdrop */}
         <div
@@ -296,7 +296,7 @@ const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block py-3 sm:py-4 transition-all duration-300 ${
                     idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
-                  } ${pathname === link.path ? 'text-gold-primary' : 'text-foreground'}`}
+                  } ${mounted && pathname === link.path ? 'text-gold-primary' : 'text-foreground'}`}
                 >
                   <span className="text-xl sm:text-2xl font-medium">{link.name}</span>
                 </Link>
