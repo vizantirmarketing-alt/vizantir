@@ -49,7 +49,7 @@ A five-step process with defined scope and fixed pricing: Discovery (goals, time
 
 ## How to engage
 Book a 30-minute Strategy Call — no pitch deck, no pressure. Vizantir will say honestly whether it's the right fit or recommend someone better suited. If aligned, the client gets a clear scope and timeline before work begins.
-Contact: info@vizantir.com | +1 (702) 289-0758 | Las Vegas, NV 89139
+Contact: https://vizantir.com/contact | +1 (702) 289-0758 | Las Vegas, NV 89139
 Hours: Mon–Fri 9:00 AM–6:00 PM PST; Saturday by appointment; Sunday closed. Typical response under 24 hours.
 
 ## Social

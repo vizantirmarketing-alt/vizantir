@@ -155,14 +155,14 @@ const Footer = () => {
               >
                 <Mail size={18} className="mt-1 flex-shrink-0" />
                 <span>
-                  <a 
-                    href="mailto:info@vizantir.com"
-                    onClick={() => trackEvent('email_click', { event_category: 'contact', event_label: 'info@vizantir.com' })}
+                  <Link
+                    href="/contact"
+                    onClick={() => trackEvent('contact_click', { event_category: 'contact', event_label: 'footer_contact' })}
                     className="hover:opacity-80 transition-opacity"
                     style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
                   >
-                    info@vizantir.com
-                  </a>
+                    Contact
+                  </Link>
                 </span>
               </li>
               <li 
