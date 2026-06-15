@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 
 interface Ribbon {
   startX: number;
@@ -17,7 +16,6 @@ interface Ribbon {
 }
 
 const RibbonsAnimation = () => {
-  const { isNightMode } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ribbonsRef = useRef<Ribbon[]>([]);
   const animationRef = useRef<number | undefined>(undefined);
@@ -36,14 +34,7 @@ const RibbonsAnimation = () => {
       { color: "#B8E6FF", angle: -40, startY: 0.85, speed: 0.675, width: 140, opacity: 0.28 },
     ];
 
-    const nightRibbonConfigs = [
-      { color: "#00D9FF", angle: 35, startY: 0.15, speed: 0.75, width: 180, opacity: 0.45 },
-      { color: "#C084FC", angle: -25, startY: 0.45, speed: 0.6, width: 200, opacity: 0.4 },
-      { color: "#FF6B9D", angle: 50, startY: 0.7, speed: 0.825, width: 160, opacity: 0.42 },
-      { color: 'var(--gold-primary)', angle: -40, startY: 0.85, speed: 0.675, width: 140, opacity: 0.35 },
-    ];
-
-    const ribbonConfigs = isNightMode ? nightRibbonConfigs : dayRibbonConfigs;
+    const ribbonConfigs = dayRibbonConfigs;
 
     const setCanvasSize = () => {
       canvas.width = window.innerWidth;
@@ -110,7 +101,7 @@ const RibbonsAnimation = () => {
         gradient.addColorStop(1, ribbon.color + "00");
 
         ctx.save();
-        ctx.globalCompositeOperation = isNightMode ? "screen" : "multiply";
+        ctx.globalCompositeOperation = "multiply";
         ctx.filter = `blur(${30}px)`;
         ctx.globalAlpha = ribbon.opacity;
         ctx.strokeStyle = gradient;
@@ -134,7 +125,7 @@ const RibbonsAnimation = () => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isNightMode]);
+  }, []);
 
   return (
     <canvas 

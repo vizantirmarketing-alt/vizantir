@@ -4,12 +4,10 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
 const Strategy = () => {
-  const { isNightMode } = useTheme();
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const globeCanvasRef = useRef<HTMLCanvasElement>(null);
   const rotationRef = useRef(0);
@@ -53,8 +51,8 @@ const Strategy = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const primaryColor = isNightMode ? "124, 58, 237" : "255, 198, 76";
-      const secondaryColor = isNightMode ? "6, 182, 212" : "255, 184, 77";
+      const primaryColor = "255, 198, 76";
+      const secondaryColor = "255, 184, 77";
 
       particles.forEach((p, i) => {
         p.x += p.vx;
@@ -90,7 +88,7 @@ const Strategy = () => {
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(animationId);
     };
-  }, [isNightMode]);
+  }, []);
 
   // 3D Globe animation
   useEffect(() => {
@@ -106,16 +104,16 @@ const Strategy = () => {
     const centerY = height / 2;
     const radius = Math.min(width, height) / 2 - 10;
 
-    const primaryColor = isNightMode ? "124, 58, 237" : "255, 198, 76";
-    const secondaryColor = isNightMode ? "6, 182, 212" : "255, 184, 77";
+    const primaryColor = "255, 198, 76";
+    const secondaryColor = "255, 184, 77";
     const accentColor = 'var(--gold-primary)';
 
     const dataPoints = [
       { lat: 0.5, lon: 0, color: accentColor },
       { lat: -0.3, lon: 1.5, color: accentColor },
-      { lat: 0.8, lon: 2.5, color: isNightMode ? "#06B6D4" : accentColor },
+      { lat: 0.8, lon: 2.5, color: accentColor },
       { lat: -0.6, lon: 4, color: accentColor },
-      { lat: 0.2, lon: 5, color: isNightMode ? "#06B6D4" : accentColor },
+      { lat: 0.2, lon: 5, color: accentColor },
       { lat: -0.1, lon: 3.5, color: accentColor },
     ];
 
@@ -126,8 +124,8 @@ const Strategy = () => {
 
       const gradient = ctx.createRadialGradient(centerX - 40, centerY - 40, 0, centerX, centerY, radius);
       gradient.addColorStop(0, `rgba(${primaryColor}, 0.15)`);
-      gradient.addColorStop(0.5, isNightMode ? 'rgba(30, 30, 60, 0.3)' : 'rgba(255, 250, 240, 0.3)');
-      gradient.addColorStop(1, isNightMode ? 'rgba(10, 10, 30, 0.5)' : 'rgba(255, 245, 230, 0.5)');
+      gradient.addColorStop(0.5, 'rgba(255, 250, 240, 0.3)');
+      gradient.addColorStop(1, 'rgba(255, 245, 230, 0.5)');
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -223,13 +221,13 @@ const Strategy = () => {
     drawGlobe();
 
     return () => cancelAnimationFrame(animationId);
-  }, [isNightMode]);
+  }, []);
 
   return (
     <section
       className="relative min-h-screen flex items-center overflow-hidden py-20 md:py-24"
       style={{
-        background: isNightMode ? "#000000" : "radial-gradient(ellipse at 70% 50%, #FFF9E6 0%, #FAFAFA 60%)",
+        background: "radial-gradient(ellipse at 70% 50%, #FFF9E6 0%, #FAFAFA 60%)",
       }}
     >
       <canvas
@@ -256,7 +254,7 @@ const Strategy = () => {
               className="text-lg md:text-xl font-medium mb-3"
               style={{
                 color: "#C084FC",
-                textShadow: isNightMode ? "0 0 20px rgba(192, 132, 252, 0.5)" : "none",
+                textShadow: "none",
               }}
             >
               We Believe
@@ -268,7 +266,7 @@ const Strategy = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight"
-              style={{ color: isNightMode ? "#F8F8F8" : "#1A1A1A" }}
+              style={{ color: "#1A1A1A" }}
             >
               DESIGN + STRATEGY = RESULTS
             </motion.h2>
@@ -279,7 +277,7 @@ const Strategy = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-base md:text-lg mb-10"
-              style={{ color: isNightMode ? "#9CA3AF" : "#4A4A4A", lineHeight: '1.7' }}
+              style={{ color: "#4A4A4A", lineHeight: '1.7' }}
             >
               Most websites look fine and do nothing. We build sites around a specific outcome — more calls, more bookings, more qualified leads walking through the door.
             </motion.p>
@@ -298,7 +296,7 @@ const Strategy = () => {
                   background: 'var(--gold-primary)',
                   color: "#1A1A1A",
                   borderRadius: "12px",
-                  boxShadow: isNightMode ? 'var(--gold-shadow)' : "0 8px 30px rgba(255, 198, 76, 0.4)",
+                  boxShadow: "0 8px 30px rgba(255, 198, 76, 0.4)",
                 }}
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'strategy')}>
@@ -323,9 +321,7 @@ const Strategy = () => {
               style={{
                 width: "240px",
                 height: "240px",
-                background: isNightMode
-                  ? "radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%)"
-                  : "radial-gradient(circle, rgba(255, 198, 76, 0.3) 0%, transparent 70%)",
+                background: "radial-gradient(circle, rgba(255, 198, 76, 0.3) 0%, transparent 70%)",
                 animation: "pulseGlow 3s ease-in-out infinite",
               }}
             />
@@ -338,7 +334,7 @@ const Strategy = () => {
                 style={{
                   width: `${300 + ring * 50}px`,
                   height: `${300 + ring * 50}px`,
-                  border: `1px solid ${isNightMode ? "rgba(124, 58, 237, 0.4)" : "rgba(255, 198, 76, 0.5)"}`,
+                  border: `1px solid rgba(255, 198, 76, 0.5)`,
                   animation: `pulseOut 3s ease-out infinite ${ring * 0.7}s`,
                 }}
               />
@@ -351,9 +347,7 @@ const Strategy = () => {
               height={250}
               className="relative z-10 rounded-full w-[200px] h-[200px] md:w-[300px] md:h-[300px]"
               style={{
-                boxShadow: isNightMode
-                  ? "0 0 60px rgba(124, 58, 237, 0.5), 0 0 120px rgba(6, 182, 212, 0.3)"
-                  : "0 0 60px rgba(255, 198, 76, 0.5), 0 0 120px rgba(255, 184, 77, 0.3)",
+                boxShadow: "0 0 60px rgba(255, 198, 76, 0.5), 0 0 120px rgba(255, 184, 77, 0.3)",
               }}
             />
           </motion.div>
