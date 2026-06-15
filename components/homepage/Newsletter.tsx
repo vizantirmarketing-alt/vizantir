@@ -1,12 +1,10 @@
 'use client'
 
 import { useState } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 const Newsletter = () => {
-  const { isNightMode } = useTheme();
   const [email, setEmail] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,8 +17,8 @@ const Newsletter = () => {
     <section
       className="py-16"
       style={{
-        background: isNightMode ? '#000000' : '#FAFAFA',
-        borderTop: isNightMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)',
+        background: '#FAFAFA',
+        borderTop: '1px solid rgba(0,0,0,0.1)',
       }}
     >
       <div className="container mx-auto px-4">
@@ -34,13 +32,13 @@ const Newsletter = () => {
           <div className="md:max-w-md">
             <h3
               className="text-xl md:text-2xl font-bold tracking-wide mb-2"
-              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+              style={{ color: '#1A1A1A' }}
             >
               Subscribe to our newsletter
             </h3>
             <p
               className="text-sm"
-              style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}
+              style={{ color: 'rgba(0,0,0,0.6)' }}
             >
               We hate junk mail too. Only valuable updates, no clutter.
             </p>
@@ -56,9 +54,9 @@ const Newsletter = () => {
               suppressHydrationWarning
               className="flex-1 px-5 py-3 rounded-lg text-sm outline-none transition-all duration-300"
               style={{
-                background: isNightMode ? 'rgba(255,255,255,0.05)' : '#FFFFFF',
-                border: isNightMode ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(0,0,0,0.15)',
-                color: isNightMode ? '#FFFFFF' : '#1A1A1A',
+                background: '#FFFFFF',
+                border: '1px solid rgba(0,0,0,0.15)',
+                color: '#1A1A1A',
               }}
             />
             <button
@@ -80,4 +78,3 @@ const Newsletter = () => {
 };
 
 export default Newsletter;
-

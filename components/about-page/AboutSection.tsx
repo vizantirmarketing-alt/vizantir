@@ -1,6 +1,5 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext'
 import type { AboutNarrativeSection } from '@/data/about'
 
 interface AboutSectionProps {
@@ -8,13 +7,12 @@ interface AboutSectionProps {
 }
 
 export default function AboutSection({ section }: AboutSectionProps) {
-  const { isNightMode } = useTheme()
   const colors = {
-    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-    textMuted: isNightMode ? '#888888' : '#6B7280',
+    text: '#1A1A1A',
+    textMuted: '#6B7280',
     accentSolid: 'var(--gold-primary)',
-    cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    budgetAsideBg: isNightMode ? 'rgba(255,198,76,0.06)' : 'rgba(180,83,9,0.06)',
+    cardBorder: 'rgba(0,0,0,0.08)',
+    budgetAsideBg: 'rgba(180,83,9,0.06)',
   }
 
   if (section.id === 'whatWeBuildOn') {

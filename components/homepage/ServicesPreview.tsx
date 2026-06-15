@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
@@ -16,7 +15,6 @@ interface Particle {
 }
 
 const ServicesPreview = () => {
-  const { isNightMode } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
 
@@ -93,9 +91,7 @@ const ServicesPreview = () => {
         vx: (Math.random() - 0.5) * 2,
         vy: (Math.random() - 0.5) * 2,
         radius: Math.random() * 2,
-        color: isNightMode 
-          ? `rgba(255, 198, 76, ${Math.random() * 0.5})`
-          : `rgba(255, 152, 0, ${Math.random() * 0.3})`,
+        color: `rgba(255, 152, 0, ${Math.random() * 0.3})`,
       });
     }
 
@@ -128,12 +124,12 @@ const ServicesPreview = () => {
       window.removeEventListener('resize', setCanvasSize);
       cancelAnimationFrame(animationId);
     };
-  }, [isNightMode]);
+  }, []);
 
   return (
     <section
       className="relative min-h-screen py-16 md:py-20 overflow-hidden"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <canvas
         ref={canvasRef}
@@ -150,7 +146,7 @@ const ServicesPreview = () => {
           style={{
             letterSpacing: '-6px',
             lineHeight: '0.9',
-            color: isNightMode ? '#F8F8F8' : '#1A1A1A',
+            color: '#1A1A1A',
           }}
         >
           SERVICES
@@ -163,7 +159,7 @@ const ServicesPreview = () => {
           transition={{ duration: 0.5 }}
           className="text-center text-base md:text-lg max-w-3xl mx-auto mb-12 md:mb-14 px-2"
           style={{
-            color: isNightMode ? 'rgba(255, 255, 255, 0.75)' : 'rgba(0, 0, 0, 0.75)',
+            color: 'rgba(0, 0, 0, 0.75)',
             lineHeight: 1.65,
           }}
         >
@@ -184,25 +180,19 @@ const ServicesPreview = () => {
                 variants={cardVariants}
                 className="group relative min-w-0 rounded-2xl p-10 md:p-12 cursor-pointer transition-all duration-500 overflow-hidden"
                 style={{
-                  background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
+                  background: 'rgba(0, 0, 0, 0.02)',
                   backdropFilter: 'blur(10px)',
                   WebkitBackdropFilter: 'blur(10px)',
-                  border: isNightMode ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
-                  boxShadow: isNightMode 
-                    ? 'none' 
-                    : '0 1px 3px rgba(0, 0, 0, 0.04)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.07)' : 'rgba(0, 0, 0, 0.04)';
-                  e.currentTarget.style.borderColor = isNightMode
-                    ? 'rgba(255, 198, 76, 0.15)'
-                    : 'rgba(180, 83, 9, 0.12)';
+                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                  e.currentTarget.style.borderColor = 'rgba(180, 83, 9, 0.12)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)';
-                  e.currentTarget.style.borderColor = isNightMode
-                    ? 'rgba(255, 255, 255, 0.08)'
-                    : 'rgba(0, 0, 0, 0.08)';
+                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
+                  e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)';
                 }}
               >
                 {/* Muted number - glows on hover */}
@@ -217,7 +207,7 @@ const ServicesPreview = () => {
 
                 <h3
                   className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-gold-primary"
-                  style={{ color: isNightMode ? '#fff' : '#1a1a1a', lineHeight: '1.2' }}
+                  style={{ color: '#1a1a1a', lineHeight: '1.2' }}
                 >
                   {service.title}
                 </h3>
@@ -226,7 +216,7 @@ const ServicesPreview = () => {
                 <p
                   className="text-base md:text-lg mb-6 font-medium"
                   style={{
-                    color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)',
+                    color: 'rgba(0, 0, 0, 0.8)',
                     lineHeight: '1.6',
                   }}
                 >
@@ -238,7 +228,7 @@ const ServicesPreview = () => {
                   <span
                     className="text-xs font-semibold uppercase tracking-wider mb-2 block"
                     style={{
-                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : 'var(--gold-accent)',
+                      color: 'var(--gold-accent)',
                     }}
                   >
                     Output:
@@ -246,7 +236,7 @@ const ServicesPreview = () => {
                   <p
                     className="text-sm md:text-base"
                     style={{
-                      color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+                      color: 'rgba(0, 0, 0, 0.7)',
                       lineHeight: '1.6',
                     }}
                   >
@@ -259,7 +249,7 @@ const ServicesPreview = () => {
                   <span
                     className="text-xs font-semibold uppercase tracking-wider mb-2 block"
                     style={{
-                      color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : 'var(--gold-accent)',
+                      color: 'var(--gold-accent)',
                     }}
                   >
                     Outcome:
@@ -267,7 +257,7 @@ const ServicesPreview = () => {
                   <p
                     className="text-sm md:text-base font-medium"
                     style={{
-                      color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)',
+                      color: 'rgba(0, 0, 0, 0.9)',
                       lineHeight: '1.6',
                     }}
                   >
@@ -295,4 +285,3 @@ const ServicesPreview = () => {
 };
 
 export default ServicesPreview;
-

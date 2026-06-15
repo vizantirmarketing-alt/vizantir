@@ -1,12 +1,9 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext';
 import { Building2, Wifi, DollarSign, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 const WhyUs = () => {
-  const { isNightMode } = useTheme();
-
   const approaches = [
     {
       title: 'WordPress',
@@ -62,7 +59,7 @@ const WhyUs = () => {
     <section
       className="py-20 md:py-28 transition-all duration-700"
       style={{
-        background: isNightMode ? '#000000' : '#FAFAFA',
+        background: '#FAFAFA',
       }}
     >
       <div className="container mx-auto px-4">
@@ -76,13 +73,13 @@ const WhyUs = () => {
             </span>
             <h2
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
-              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+              style={{ color: '#1A1A1A' }}
             >
               Why the studio model works
             </h2>
             <div
               className="text-lg md:text-xl max-w-2xl mx-auto space-y-4"
-              style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}
+              style={{ color: 'rgba(0,0,0,0.6)' }}
             >
               <p>
                 Vizantir runs lean by design. That keeps communication more direct, decisions faster, and execution closer to the source. Instead of passing a project through layers of handoff, the work stays focused, controlled, and aligned from strategy through launch.
@@ -104,13 +101,13 @@ const WhyUs = () => {
               </span>
               <h2
                 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
-                style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                style={{ color: '#1A1A1A' }}
               >
                 Choosing the right build, not forcing the wrong one
               </h2>
               <p
                 className="text-lg md:text-xl max-w-2xl mx-auto"
-                style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}
+                style={{ color: 'rgba(0,0,0,0.6)' }}
               >
                 Not every business needs the same platform. Some projects are better suited to WordPress for easier content control. Others need the performance and flexibility of a custom Next.js build. Vizantir recommends the platform based on what the business actually needs — not what is easiest to sell.
               </p>
@@ -126,9 +123,7 @@ const WhyUs = () => {
                     }`}
                     style={{
                       borderBottom: index < approaches.length - 1
-                        ? isNightMode 
-                          ? '1px solid rgba(255,255,255,0.1)' 
-                          : '1px solid rgba(0,0,0,0.1)'
+                        ? '1px solid rgba(0,0,0,0.1)'
                         : 'none',
                       ['--approach-accent' as string]: approach.accentColor,
                     }}
@@ -138,13 +133,13 @@ const WhyUs = () => {
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                           <h3
                             className="text-4xl md:text-5xl font-black transition-colors duration-300 group-hover:[color:var(--approach-accent)]"
-                            style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                            style={{ color: '#1A1A1A' }}
                           >
                             {approach.title}
                           </h3>
                           <span
                             className="text-sm font-medium uppercase tracking-wider"
-                            style={{ color: isNightMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)' }}
+                            style={{ color: 'rgba(0,0,0,0.4)' }}
                           >
                             {approach.tag}
                           </span>
@@ -158,7 +153,7 @@ const WhyUs = () => {
                         <p
                           className="text-base md:text-lg mt-6 transition-all duration-500 overflow-hidden md:opacity-0 md:max-h-0 group-hover:opacity-100 group-hover:max-h-[300px]"
                           style={{
-                            color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)',
+                            color: 'rgba(0,0,0,0.6)',
                             lineHeight: '1.7',
                           }}
                         >
@@ -186,11 +181,11 @@ const WhyUs = () => {
                 key={index}
                 className="group p-8 rounded-2xl transition-all duration-300 hover:scale-[1.02]"
                 style={{
-                  background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.7)',
+                  background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(10px)',
                   WebkitBackdropFilter: 'blur(10px)',
-                  border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.08)',
-                  boxShadow: isNightMode ? 'none' : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
                 }}
               >
                 <div
@@ -203,13 +198,13 @@ const WhyUs = () => {
                 </div>
                 <h3
                   className="text-xl font-bold mb-3"
-                  style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                  style={{ color: '#1A1A1A' }}
                 >
                   {benefit.title}
                 </h3>
                 <p
                   className="leading-relaxed"
-                  style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}
+                  style={{ color: 'rgba(0,0,0,0.6)' }}
                 >
                   {benefit.description}
                 </p>
@@ -223,4 +218,3 @@ const WhyUs = () => {
 };
 
 export default WhyUs;
-

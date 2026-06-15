@@ -4,12 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Search, Pencil, FileText, Target } from 'lucide-react'
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 
 const Solutions = () => {
-  const { isNightMode } = useTheme()
-
   const features = [
     {
       icon: Search,
@@ -61,7 +58,7 @@ const Solutions = () => {
     keywords.forEach(keyword => {
       result = result.replace(
         keyword,
-        `<strong style="color: ${isNightMode ? '#F8F8F8' : '#1A1A1A'}">${keyword}</strong>`
+        `<strong style="color: #1A1A1A">${keyword}</strong>`
       )
     })
     return <span dangerouslySetInnerHTML={{ __html: result }} />
@@ -96,7 +93,7 @@ const Solutions = () => {
   return (
     <section
       className="py-20 md:py-24 transition-colors duration-500 overflow-hidden"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         
@@ -125,10 +122,10 @@ const Solutions = () => {
                 <div 
                   className="relative text-center px-6 py-10 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 w-full flex flex-col"
                   style={{
-                    background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.7)',
+                    background: 'rgba(255, 255, 255, 0.7)',
                     backdropFilter: 'blur(10px)',
-                    border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.08)',
-                    boxShadow: isNightMode ? 'none' : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                    border: '1px solid rgba(0, 0, 0, 0.08)',
+                    boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
                     minHeight: '280px',
                   }}
                 >
@@ -154,7 +151,7 @@ const Solutions = () => {
 
                   <p 
                     className="text-base md:text-lg flex-1"
-                    style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: '1.7' }}
+                    style={{ color: '#6B6B6B', lineHeight: '1.7' }}
                   >
                     {feature.description}
                   </p>
@@ -174,13 +171,13 @@ const Solutions = () => {
         >
           <h3 
             className="text-lg md:text-xl font-medium mb-3 tracking-wide"
-            style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B' }}
+            style={{ color: '#6B6B6B' }}
           >
             Discover Our
           </h3>
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight relative inline-block"
-            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+            style={{ color: '#1A1A1A' }}
           >
             DIGITAL SOLUTIONS
             {/* Animated gradient underline */}
@@ -217,9 +214,9 @@ const Solutions = () => {
               <div 
                 className="relative rounded-2xl overflow-hidden transition-all duration-500 group-hover:-translate-y-2 h-full flex flex-col"
                 style={{
-                  background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.7)',
+                  background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(10px)',
-                  border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.08)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
                 }}
               >
                 <div className="relative overflow-hidden aspect-[4/5]">
@@ -237,13 +234,13 @@ const Solutions = () => {
                 <div className="p-6 flex-1 flex flex-col">
                   <h4 
                     className="text-2xl md:text-3xl font-bold mb-4"
-                    style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+                    style={{ color: '#1A1A1A' }}
                   >
                     {service.title}
                   </h4>
                   <p 
                     className="text-base"
-                    style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B', lineHeight: '1.7' }}
+                    style={{ color: '#6B6B6B', lineHeight: '1.7' }}
                   >
                     {renderDescription(service.description, service.keywords)}
                   </p>
@@ -284,4 +281,3 @@ const Solutions = () => {
 }
 
 export default Solutions
-

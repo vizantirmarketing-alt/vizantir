@@ -1,11 +1,8 @@
 'use client'
 
-import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 
 const WhoWeWorkWith = () => {
-  const { isNightMode } = useTheme();
-
   const industries = [
     'Hospitality & Restaurants',
     'Law Firms',
@@ -17,7 +14,7 @@ const WhoWeWorkWith = () => {
   return (
     <section 
       className="py-16 md:py-20 transition-colors duration-500"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <motion.div
@@ -29,14 +26,14 @@ const WhoWeWorkWith = () => {
         >
           <h2 
             className="text-4xl md:text-5xl font-black mb-6 tracking-tight"
-            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+            style={{ color: '#1A1A1A' }}
           >
             Built for businesses where trust matters before the sale
           </h2>
           
           <p 
             className="text-lg md:text-xl leading-relaxed mb-8"
-            style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
+            style={{ color: '#6B6B6B' }}
           >
             We work best with businesses where the first impression directly affects whether someone picks up the phone. If your site isn&apos;t doing that job, that&apos;s where we come in.
           </p>
@@ -58,16 +55,10 @@ const WhoWeWorkWith = () => {
                 transition={{ duration: 0.3, delay: index * 0.1 }}
                 className="px-6 py-3 rounded-full text-sm md:text-base font-medium transition-all duration-300 hover:scale-105"
                 style={{
-                  background: isNightMode 
-                    ? 'rgba(255, 255, 255, 0.05)' 
-                    : 'rgba(255, 255, 255, 0.8)',
-                  border: isNightMode 
-                    ? '1px solid rgba(255, 255, 255, 0.1)' 
-                    : '1px solid rgba(0, 0, 0, 0.1)',
-                  color: isNightMode ? 'rgba(255, 255, 255, 0.8)' : '#4A4A4A',
-                  boxShadow: isNightMode 
-                    ? '0 2px 8px rgba(0, 0, 0, 0.2)' 
-                    : '0 2px 8px rgba(0, 0, 0, 0.05)',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                  color: '#4A4A4A',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
                 }}
               >
                 {industry}
@@ -81,7 +72,6 @@ const WhoWeWorkWith = () => {
 };
 
 export default WhoWeWorkWith;
-
 
 
 

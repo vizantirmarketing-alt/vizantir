@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator';
-import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
@@ -16,7 +15,6 @@ export interface FAQSectionProps {
 
 const FAQSection = ({ faqs }: FAQSectionProps) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const { isNightMode } = useTheme();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -40,7 +38,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
   return (
     <section 
       className="py-16 md:py-20"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
@@ -51,13 +49,13 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="text-4xl md:text-5xl font-bold mb-4"
-              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+              style={{ color: '#1A1A1A' }}
             >
               Questions? <span style={{ color: 'var(--gold-accent)' }}>Answered.</span>
             </motion.h2>
             <p 
               className="text-xl"
-              style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B' }}
+              style={{ color: '#6B6B6B' }}
             >
               Real questions we get before projects start.
             </p>
@@ -76,24 +74,24 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                 variants={itemVariants}
                 className="rounded-lg overflow-hidden transition-all duration-300"
                 style={{
-                  border: isNightMode ? '1px solid #374151' : '1px solid #E5E7EB',
-                  background: isNightMode ? '#000000' : '#FFFFFF'
+                  border: '1px solid #E5E7EB',
+                  background: '#FFFFFF'
                 }}
               >
                 <button
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
                   className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200"
-                  style={{ background: isNightMode ? '#000000' : '#FFFFFF' }}
+                  style={{ background: '#FFFFFF' }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = isNightMode ? '#111111' : '#F9FAFB';
+                    e.currentTarget.style.background = '#F9FAFB';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = isNightMode ? '#000000' : '#FFFFFF';
+                    e.currentTarget.style.background = '#FFFFFF';
                   }}
                 >
                   <span 
                     className="text-lg font-semibold pr-8"
-                    style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                    style={{ color: '#1A1A1A' }}
                   >
                     {faq.question}
                   </span>
@@ -107,7 +105,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                 {openIndex === index && (
                   <div 
                     className="px-6 pb-5 leading-relaxed"
-                    style={{ color: isNightMode ? '#D1D5DB' : '#4B5563' }}
+                    style={{ color: '#4B5563' }}
                   >
                     {faq.answer}
                   </div>
@@ -119,7 +117,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
           <div className="text-center mt-10">
             <p 
               className="mb-4"
-              style={{ color: isNightMode ? '#9CA3AF' : '#6B6B6B' }}
+              style={{ color: '#6B6B6B' }}
             >
               Still have questions?
             </p>
@@ -140,4 +138,3 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
 };
 
 export default FAQSection;
-

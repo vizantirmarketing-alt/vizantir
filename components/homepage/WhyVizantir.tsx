@@ -1,11 +1,8 @@
 'use client'
 
-import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 
 const WhyVizantir = () => {
-  const { isNightMode } = useTheme();
-
   const trustPoints = [
     {
       title: "Direct Access",
@@ -49,7 +46,7 @@ const WhyVizantir = () => {
   return (
     <section 
       className="py-16 md:py-20 transition-colors duration-500"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         {/* Header */}
@@ -62,7 +59,7 @@ const WhyVizantir = () => {
         >
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
-            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+            style={{ color: '#1A1A1A' }}
           >
             Why businesses choose Vizantir
           </h2>
@@ -82,44 +79,30 @@ const WhyVizantir = () => {
               variants={cardVariants}
               className="group relative p-8 lg:p-10 rounded-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
               style={{
-                background: isNightMode 
-                  ? 'rgba(255, 255, 255, 0.04)' 
-                  : 'rgba(0, 0, 0, 0.02)',
+                background: 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
-                border: isNightMode 
-                  ? '1px solid rgba(255, 255, 255, 0.08)' 
-                  : '1px solid rgba(0, 0, 0, 0.08)',
-                boxShadow: isNightMode 
-                  ? 'none' 
-                  : '0 1px 3px rgba(0, 0, 0, 0.04)',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = isNightMode 
-                  ? 'rgba(255, 255, 255, 0.07)' 
-                  : 'rgba(0, 0, 0, 0.04)';
-                e.currentTarget.style.borderColor = isNightMode 
-                  ? 'rgba(255, 198, 76, 0.15)' 
-                  : 'rgba(180, 83, 9, 0.12)';
+                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                e.currentTarget.style.borderColor = 'rgba(180, 83, 9, 0.12)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = isNightMode 
-                  ? 'rgba(255, 255, 255, 0.04)' 
-                  : 'rgba(0, 0, 0, 0.02)';
-                e.currentTarget.style.borderColor = isNightMode 
-                  ? 'rgba(255, 255, 255, 0.08)' 
-                  : 'rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
+                e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)';
               }}
             >
               <h3 
                 className="text-xl md:text-2xl font-bold mb-3 transition-colors duration-300"
-                style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+                style={{ color: '#1A1A1A' }}
               >
                 {point.title}
               </h3>
               <p 
                 className="text-base md:text-lg leading-relaxed"
-                style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B6B6B' }}
+                style={{ color: '#6B6B6B' }}
               >
                 {point.description}
               </p>
@@ -132,4 +115,3 @@ const WhyVizantir = () => {
 };
 
 export default WhyVizantir;
-

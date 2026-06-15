@@ -3,13 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 
 const ResultsThatSpeak = () => {
-  const { isNightMode } = useTheme();
-
   const projects = [
     {
       title: 'Golden Era Integra',
@@ -37,7 +34,7 @@ const ResultsThatSpeak = () => {
   return (
     <section 
       className="py-16 md:py-20 transition-colors duration-500"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <motion.div
@@ -53,13 +50,13 @@ const ResultsThatSpeak = () => {
             </div>
             <h2 
               className="text-4xl md:text-5xl font-black mb-4 tracking-tight"
-              style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+              style={{ color: '#1A1A1A' }}
             >
               Selected Work
             </h2>
             <p 
               className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-              style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
+              style={{ color: '#6B6B6B' }}
             >
               A better website should do more than look updated. It should present the business more clearly, support trust faster, and create a stronger experience from the first click.
             </p>
@@ -81,10 +78,8 @@ const ResultsThatSpeak = () => {
                   rel="noopener noreferrer"
                   className="relative mb-5 block overflow-hidden rounded-2xl aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.02]"
                   style={{
-                    boxShadow: isNightMode
-                      ? '0 12px 40px rgba(0, 0, 0, 0.45)'
-                      : '0 12px 40px rgba(0, 0, 0, 0.08)',
-                    background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
+                    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
+                    background: 'rgba(0, 0, 0, 0.04)',
                   }}
                 >
                   <Image
@@ -100,13 +95,13 @@ const ResultsThatSpeak = () => {
                 </p>
                 <h3 
                   className="text-xl md:text-2xl font-bold mb-2 group-hover:text-gold-primary transition-colors"
-                  style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                  style={{ color: '#1A1A1A' }}
                 >
                   {item.title}
                 </h3>
                 <p 
                   className="text-sm md:text-base leading-relaxed flex-1 mb-4"
-                  style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                  style={{ color: '#6B6B6B' }}
                 >
                   {item.outcome}
                 </p>

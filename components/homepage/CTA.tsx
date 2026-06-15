@@ -2,18 +2,15 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
 const CTA = () => {
-  const { isNightMode } = useTheme();
-  
   return (
     <section 
       className="py-16 md:py-20 relative overflow-hidden"
       style={{
-        background: isNightMode ? '#000000' : '#FAFAFA',
+        background: '#FAFAFA',
       }}
     >
       <div className="container mx-auto px-4 relative z-10">
@@ -30,7 +27,7 @@ const CTA = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-4xl md:text-5xl font-black mb-6"
-            style={{ color: isNightMode ? '#F7F7F7' : '#1A1A1A' }}
+            style={{ color: '#1A1A1A' }}
           >
             If the website needs to do more than just look better, let&apos;s talk.
           </motion.h2>
@@ -40,7 +37,7 @@ const CTA = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-xl mb-8"
-            style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+            style={{ color: '#6B6B6B' }}
           >
             We&apos;ll look at what&apos;s holding your site back and tell you honestly what it needs.
           </motion.p>
@@ -69,4 +66,3 @@ const CTA = () => {
 };
 
 export default CTA;
-

@@ -2,13 +2,10 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
 const WhatHappensNext = () => {
-  const { isNightMode } = useTheme();
-
   const steps = [
     {
       number: '01',
@@ -51,7 +48,7 @@ const WhatHappensNext = () => {
   return (
     <section 
       className="py-16 md:py-20 transition-colors duration-500"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         {/* Header */}
@@ -64,7 +61,7 @@ const WhatHappensNext = () => {
         >
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
-            style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+            style={{ color: '#1A1A1A' }}
           >
             What Happens Next
           </h2>
@@ -84,24 +81,18 @@ const WhatHappensNext = () => {
               variants={cardVariants}
               className="relative p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1"
               style={{
-                background: isNightMode 
-                  ? 'rgba(255, 255, 255, 0.04)' 
-                  : 'rgba(0, 0, 0, 0.02)',
+                background: 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
-                border: isNightMode 
-                  ? '1px solid rgba(255, 255, 255, 0.08)' 
-                  : '1px solid rgba(0, 0, 0, 0.08)',
-                boxShadow: isNightMode 
-                  ? 'none' 
-                  : '0 1px 3px rgba(0, 0, 0, 0.04)',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
               }}
             >
               {/* Step Number */}
               <div 
                 className="text-6xl md:text-7xl font-black mb-4 leading-none"
                 style={{ 
-                  color: isNightMode ? 'rgba(255, 198, 76, 0.15)' : 'rgba(255, 198, 76, 0.2)',
+                  color: 'rgba(255, 198, 76, 0.2)',
                 }}
               >
                 {step.number}
@@ -109,13 +100,13 @@ const WhatHappensNext = () => {
 
               <h3 
                 className="text-xl md:text-2xl font-bold mb-3"
-                style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+                style={{ color: '#1A1A1A' }}
               >
                 {step.title}
               </h3>
               <p 
                 className="text-base md:text-lg leading-relaxed"
-                style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B6B6B' }}
+                style={{ color: '#6B6B6B' }}
               >
                 {step.description}
               </p>
@@ -144,7 +135,7 @@ const WhatHappensNext = () => {
           </Button>
           <p 
             className="text-sm md:text-base"
-            style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.5)' : '#888888' }}
+            style={{ color: '#888888' }}
           >
             No commitment. No pitch deck. Just a conversation.
           </p>
@@ -155,4 +146,3 @@ const WhatHappensNext = () => {
 };
 
 export default WhatHappensNext;
-
