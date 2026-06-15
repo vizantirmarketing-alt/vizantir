@@ -40,11 +40,11 @@ const Hero = () => {
   // Defer 3D loading until browser is idle
   useEffect(() => {
     if ('requestIdleCallback' in window) {
-      const id = requestIdleCallback(() => setShow3D(true), { timeout: 2000 });
+      const id = requestIdleCallback(() => setShow3D(true), { timeout: 500 });
       return () => cancelIdleCallback(id);
     } else {
       // Fallback for Safari
-      const timer = setTimeout(() => setShow3D(true), 1500);
+      const timer = setTimeout(() => setShow3D(true), 300);
       return () => clearTimeout(timer);
     }
   }, []);
