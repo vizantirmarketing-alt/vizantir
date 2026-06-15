@@ -214,8 +214,8 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex flex-1 flex-col min-h-0 overflow-hidden px-6 pb-8">
-            <div className="flex flex-1 flex-col justify-evenly min-h-0 overflow-hidden">
+          <nav className="flex flex-1 flex-col min-h-0 overflow-y-auto overscroll-contain px-6 pb-8">
+            <div className="flex flex-1 flex-col justify-evenly short-landscape:justify-start short-landscape:gap-4 min-h-0">
               {mainNavLinks.map((link, idx) => (
                 <Link
                   key={link.path}
@@ -229,22 +229,22 @@ const Navbar = () => {
                 </Link>
               ))}
             </div>
-
-            {mounted && (
-              <div className="shrink-0 pt-6 space-y-4">
-                <Link
-                  href="/contact"
-                  onClick={() => {
-                    trackCTAClick('get_started', 'navbar');
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 active:scale-[0.98]"
-                >
-                  Book a Strategy Call
-                </Link>
-              </div>
-            )}
           </nav>
+
+          {mounted && (
+            <div className="shrink-0 px-6 pt-4 pb-6 space-y-4 border-t border-border/40 bg-white">
+              <Link
+                href="/contact"
+                onClick={() => {
+                  trackCTAClick('get_started', 'navbar');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 active:scale-[0.98]"
+              >
+                Book a Strategy Call
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </>
