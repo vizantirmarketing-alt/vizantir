@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
 import { trackPhoneClick, trackEvent } from "@/lib/analytics"
+import MadeInUSA from "@/components/ui/MadeInUSA"
 
 const Footer = () => {
   const calendarYear = new Date().getFullYear()
@@ -191,12 +192,15 @@ const Footer = () => {
           style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p 
-              className="text-sm"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
-            >
-              © {currentYear} Vizantir. All rights reserved.
-            </p>
+            <div className="flex flex-wrap items-center gap-4">
+              <p 
+                className="text-sm"
+                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+              >
+                © {currentYear} Vizantir. All rights reserved.
+              </p>
+              <MadeInUSA />
+            </div>
             <div className="flex gap-6">
               {[
                 { name: 'Privacy Policy', href: '/privacy' },
