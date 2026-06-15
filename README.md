@@ -157,7 +157,6 @@ Reuse these instead of re-implementing:
 | AccordionIndicator | `components/ui/AccordionIndicator.tsx` | Animated +/− for expandable surfaces |
 | Eyebrow | `components/ui/Eyebrow.tsx` | Gold uppercase label above section headings |
 | SectionDivider | `components/ui/SectionDivider.tsx` | Gold gradient divider between sections |
-| VerticalBadge | `components/ui/VerticalBadge.tsx` | Vertical landing page badge (deprecated for new pages; still referenced in existing layouts) |
 
 ---
 
