@@ -228,7 +228,7 @@ export default function LawFirmWebDesignClient() {
                 variants={itemVariants}
                 className="p-6 rounded-2xl border border-border bg-muted transition-all duration-300 hover:-translate-y-1 hover:border-gold-muted-border"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02] dark:bg-white/[0.04]">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
                   <card.icon size={24} className="text-gold-accent" />
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-foreground">{card.title}</h3>
@@ -328,7 +328,7 @@ export default function LawFirmWebDesignClient() {
                 variants={itemVariants}
                 className="p-6 rounded-2xl border border-border bg-muted transition-all duration-300 hover:-translate-y-1 hover:border-gold-muted-border"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02] dark:bg-white/[0.04]">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
                   <CheckCircle2 size={24} className="text-gold-accent" />
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-foreground">{line}</p>

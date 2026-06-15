@@ -1,20 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { trackCTAClick } from '@/lib/analytics'
 
 export default function GetStartedPageClient() {
-  const { isNightMode } = useTheme()
-  const themeNight = isNightMode
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
   const steps = [
     {
       number: "01",
@@ -49,16 +39,16 @@ export default function GetStartedPageClient() {
   ]
 
   return (
-    <main className="min-h-screen" style={{ background: (mounted && themeNight) ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
               Ready to start?
             </h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto" style={{ color: (mounted && themeNight) ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+            <p className="text-lg md:text-xl max-w-2xl mx-auto" style={{ color: '#6B6B6B' }}>
               Fixed scope, fixed price, direct access to the builder. From first call to launch — here's how every project runs.
             </p>
           </motion.div>
@@ -77,9 +67,9 @@ export default function GetStartedPageClient() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="flex gap-6 p-6 rounded-xl"
                 style={{ 
-                  background: (mounted && themeNight) ? 'rgba(255,255,255,0.03)' : '#FFFFFF',
-                  border: `1px solid ${(mounted && themeNight) ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
-                  boxShadow: (mounted && themeNight) ? 'none' : '0 2px 12px rgba(0,0,0,0.04)'
+                  background: '#FFFFFF',
+                  border: '1px solid rgba(0,0,0,0.08)',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.04)'
                 }}
               >
                 <div 
@@ -89,10 +79,10 @@ export default function GetStartedPageClient() {
                   {step.number}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2" style={{ color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A' }}>
+                  <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                     {step.title}
                   </h3>
-                  <p style={{ color: (mounted && themeNight) ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+                  <p style={{ color: '#6B6B6B' }}>
                     {step.description}
                   </p>
                 </div>
@@ -111,14 +101,14 @@ export default function GetStartedPageClient() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-center p-8 md:p-12 rounded-2xl"
             style={{ 
-              background: (mounted && themeNight) ? 'rgba(255,198,76,0.1)' : 'rgba(255,198,76,0.15)',
+              background: 'rgba(255,198,76,0.15)',
               border: '1px solid rgba(255,198,76,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A' }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
               Next step: a real conversation
             </h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: (mounted && themeNight) ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: '#6B6B6B' }}>
               Book a discovery call. We'll see if the project and timeline line up — no pressure, no hard sell.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -139,9 +129,9 @@ export default function GetStartedPageClient() {
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80"
                 style={{ 
                   background: 'transparent', 
-                  color: (mounted && themeNight) ? '#FFFFFF' : '#1A1A1A', 
+                  color: '#1A1A1A', 
                   borderRadius: '8px',
-                  border: `2px solid ${(mounted && themeNight) ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}`
+                  border: '2px solid rgba(0,0,0,0.2)'
                 }}
               >
                 View Services

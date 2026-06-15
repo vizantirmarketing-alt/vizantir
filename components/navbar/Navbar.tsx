@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
 import { trackCTAClick } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
 
@@ -14,7 +13,6 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const { isNightMode } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -72,22 +70,10 @@ const Navbar = () => {
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: isScrolled
-            ? (!mounted
-                ? 'rgba(10, 10, 10, 0.98)'
-                : isNightMode
-                  ? 'rgba(10, 10, 10, 0.12)'
-                  : 'rgba(250, 250, 250, 0.18)')
-            : 'transparent',
+          background: isScrolled ? 'rgba(250, 250, 250, 0.18)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
-          borderBottom: isScrolled
-            ? (!mounted
-                ? '1px solid rgba(255, 255, 255, 0.08)'
-                : isNightMode
-                  ? '1px solid rgba(255, 255, 255, 0.08)'
-                  : '1px solid rgba(0, 0, 0, 0.03)')
-            : 'none',
+          borderBottom: isScrolled ? '1px solid rgba(0, 0, 0, 0.03)' : 'none',
           boxShadow: isScrolled ? '0 4px 24px rgba(0, 0, 0, 0.04)' : 'none',
           paddingTop: isScrolled ? '0.75rem' : '1.25rem',
           paddingBottom: isScrolled ? '0.75rem' : '1.25rem',
@@ -100,7 +86,7 @@ const Navbar = () => {
                 <div className="h-5 md:h-7 w-24" />
               ) : (
                 <Image 
-                  src={isNightMode ? "/logo/logo-dark.svg" : "/logo/logo-light.svg"} 
+                  src="/logo/logo-light.svg" 
                   alt="Vizantir Logo" 
                   width={140}
                   height={28}
@@ -121,11 +107,7 @@ const Navbar = () => {
                   style={{
                     color: pathname === link.path 
                       ? 'var(--gold-primary)'
-                      : !mounted
-                        ? '#F8F8F8'
-                        : isNightMode 
-                          ? '#F8F8F8'
-                          : '#1A1A1A',
+                      : '#1A1A1A',
                   }}
                 >
                   {link.name}
@@ -158,7 +140,7 @@ const Navbar = () => {
                 aria-label="Open menu"
                 aria-expanded={false}
                 onClick={() => setIsMobileMenuOpen(true)}
-                style={{ color: !mounted ? '#F7F7F7' : isNightMode ? '#F7F7F7' : '#1A1A1A' }}
+                style={{ color: '#1A1A1A' }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M4 8h16" />
@@ -197,27 +179,19 @@ const Navbar = () => {
             transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(100%)',
             transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
             willChange: 'transform',
-            background: !mounted
-              ? 'rgba(10, 10, 10, 1)'
-              : isNightMode
-                ? 'rgba(10, 10, 10, 1)'
-                : 'rgba(255, 255, 255, 1)',
+            background: 'rgba(255, 255, 255, 1)',
           }}
         >
           {/* Header Row */}
           <div
             className="shrink-0 flex items-center justify-between px-6 pt-3 pb-3"
             style={{
-              borderBottom: !mounted
-                ? '1px solid rgba(255, 255, 255, 0.08)'
-                : isNightMode
-                  ? '1px solid rgba(255, 255, 255, 0.08)'
-                  : '1px solid rgba(0, 0, 0, 0.06)',
+              borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
             }}
           >
             {mounted && (
               <Image
-                src={isNightMode ? '/logo/logo-dark.svg' : '/logo/logo-light.svg'}
+                src="/logo/logo-light.svg"
                 alt="Vizantir Logo"
                 width={120}
                 height={24}
@@ -230,21 +204,9 @@ const Navbar = () => {
               aria-label="Close menu"
               className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
               style={{
-                background: !mounted
-                  ? 'rgba(255, 255, 255, 0.05)'
-                  : isNightMode
-                    ? 'rgba(255, 255, 255, 0.05)'
-                    : 'rgba(0, 0, 0, 0.04)',
-                border: !mounted
-                  ? '1px solid rgba(255, 255, 255, 0.08)'
-                  : isNightMode
-                    ? '1px solid rgba(255, 255, 255, 0.08)'
-                    : '1px solid rgba(0, 0, 0, 0.06)',
-                color: !mounted
-                  ? '#F7F7F7'
-                  : isNightMode
-                    ? '#F7F7F7'
-                    : '#1A1A1A',
+                background: 'rgba(0, 0, 0, 0.04)',
+                border: '1px solid rgba(0, 0, 0, 0.06)',
+                color: '#1A1A1A',
               }}
             >
               <X size={18} />

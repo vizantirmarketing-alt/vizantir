@@ -1,10 +1,8 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext';
 import { useEffect, useRef, useState } from 'react';
 
 const VisionApproach = () => {
-  const { isNightMode } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -44,21 +42,29 @@ const VisionApproach = () => {
     },
   ];
 
+  const getBadgeColor = (index: number) =>
+    index === 0 ? '#3B82F6' : index === 1 ? '#C084FC' : '#00D9FF';
+
+  const getBadgeBg = (index: number) =>
+    index === 0
+      ? 'rgba(59, 130, 246, 0.15)'
+      : index === 1
+        ? 'rgba(192, 132, 252, 0.15)'
+        : 'rgba(0, 217, 255, 0.15)';
+
   return (
     <section
       ref={sectionRef}
       className="py-20 md:py-24 px-4 transition-colors duration-500 relative overflow-hidden"
       style={{
-        background: isNightMode ? '#000000' : '#FAFAFA',
+        background: '#FAFAFA',
       }}
     >
       {/* Pulsing background shape - centered vertically */}
       <div 
         className="absolute top-1/2 -translate-y-1/2 -right-[100px] w-[800px] h-[800px] rounded-full pointer-events-none"
         style={{
-          background: isNightMode
-            ? 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 40%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 40%, transparent 70%)',
           animation: 'pulseBg 8s ease-in-out infinite',
         }}
       />
@@ -81,13 +87,13 @@ const VisionApproach = () => {
             </p>
             <h2
               className="text-3xl md:text-4xl lg:text-[42px] font-bold mb-6 leading-tight transition-colors duration-500"
-              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+              style={{ color: '#1A1A1A' }}
             >
               Building websites that reflect the level of the business
             </h2>
             <p
               className="text-lg leading-relaxed transition-colors duration-500"
-              style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : '#6B6B6B' }}
+              style={{ color: '#6B6B6B' }}
             >
               Every project starts with understanding what the business needs to communicate, who it is speaking to, and what the website needs to do beyond looking current.
             </p>
@@ -113,67 +119,40 @@ const VisionApproach = () => {
                   key={item.number}
                   className="flex gap-5 p-6 rounded-2xl border cursor-pointer transition-all duration-400 hover:-translate-y-1.5"
                   style={{
-                    background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.7)',
+                    background: 'rgba(255, 255, 255, 0.7)',
                     backdropFilter: 'blur(10px)',
                     WebkitBackdropFilter: 'blur(10px)',
-                    borderColor: isNightMode 
-                      ? 'rgba(255, 255, 255, 0.1)' 
-                      : 'rgba(0, 0, 0, 0.08)',
+                    borderColor: 'rgba(0, 0, 0, 0.08)',
                     opacity: isVisible ? 1 : 0,
                     WebkitTransform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(30px, 0, 0)',
                     transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(30px, 0, 0)',
                     transitionDelay: `${300 + index * 200}ms`,
-                    boxShadow: isNightMode ? 'none' : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                    boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
                     WebkitBackfaceVisibility: 'hidden',
                     backfaceVisibility: 'hidden',
                     willChange: 'transform, opacity',
                   }}
                   onMouseEnter={(e) => {
-                    const badgeColor = index === 0 ? '#3B82F6' : index === 1 ? '#C084FC' : '#00D9FF';
+                    const badgeColor = getBadgeColor(index);
                     const rgb = index === 0 ? '59, 130, 246' : index === 1 ? '192, 132, 252' : '0, 217, 255';
-                    e.currentTarget.style.boxShadow = isNightMode 
-                      ? '0 20px 40px rgba(139, 92, 246, 0.2)' 
-                      : `0 20px 40px rgba(${rgb}, 0.15)`;
-                    e.currentTarget.style.borderColor = isNightMode ? 'rgba(255, 255, 255, 0.15)' : badgeColor;
-                    e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.85)';
+                    e.currentTarget.style.boxShadow = `0 20px 40px rgba(${rgb}, 0.15)`;
+                    e.currentTarget.style.borderColor = badgeColor;
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.85)';
                     const numEl = e.currentTarget.querySelector('.approach-num') as HTMLElement;
                     if (numEl) {
-                      const badgeIndex = approaches.findIndex(a => a.number === item.number);
-                      const hoverColor = isNightMode 
-                        ? 'linear-gradient(135deg, #3B82F6, #8B5CF6)'
-                        : badgeIndex === 0 
-                          ? '#3B82F6'
-                          : badgeIndex === 1 
-                            ? '#C084FC'
-                            : '#00D9FF';
-                      numEl.style.background = hoverColor;
+                      numEl.style.background = badgeColor;
                       numEl.style.color = '#FFFFFF';
                       numEl.style.transform = 'scale(1.1)';
                     }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = isNightMode ? 'none' : '0 4px 24px rgba(0, 0, 0, 0.06)';
-                    e.currentTarget.style.borderColor = isNightMode 
-                      ? 'rgba(255, 255, 255, 0.1)' 
-                      : 'rgba(0, 0, 0, 0.08)';
-                    e.currentTarget.style.background = isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.7)';
+                    e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.06)';
+                    e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
                     const numEl = e.currentTarget.querySelector('.approach-num') as HTMLElement;
                     if (numEl) {
-                      const badgeIndex = approaches.findIndex(a => a.number === item.number);
-                      numEl.style.background = isNightMode 
-                        ? 'rgba(139, 92, 246, 0.2)' 
-                        : badgeIndex === 0 
-                          ? 'rgba(59, 130, 246, 0.15)' 
-                          : badgeIndex === 1 
-                            ? 'rgba(192, 132, 252, 0.15)' 
-                            : 'rgba(0, 217, 255, 0.15)';
-                      numEl.style.color = isNightMode 
-                        ? '#A78BFA' 
-                        : badgeIndex === 0 
-                          ? '#3B82F6' 
-                          : badgeIndex === 1 
-                            ? '#C084FC' 
-                            : '#00D9FF';
+                      numEl.style.background = getBadgeBg(index);
+                      numEl.style.color = getBadgeColor(index);
                       numEl.style.transform = 'scale(1)';
                     }
                   }}
@@ -181,20 +160,8 @@ const VisionApproach = () => {
                   <div
                     className="approach-num w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 transition-all duration-300"
                     style={{
-                      background: isNightMode 
-                        ? 'rgba(139, 92, 246, 0.2)' 
-                        : index === 0 
-                          ? 'rgba(59, 130, 246, 0.15)' 
-                          : index === 1 
-                            ? 'rgba(192, 132, 252, 0.15)' 
-                            : 'rgba(0, 217, 255, 0.15)',
-                      color: isNightMode 
-                        ? '#A78BFA' 
-                        : index === 0 
-                          ? '#3B82F6' 
-                          : index === 1 
-                            ? '#C084FC' 
-                            : '#00D9FF',
+                      background: getBadgeBg(index),
+                      color: getBadgeColor(index),
                     }}
                   >
                     {item.number}
@@ -202,13 +169,13 @@ const VisionApproach = () => {
                   <div>
                     <h4
                       className="text-lg font-semibold mb-2 transition-colors duration-500"
-                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                      style={{ color: '#1A1A1A' }}
                     >
                       {item.title}
                     </h4>
                     <p
                       className="text-sm leading-relaxed transition-colors duration-500"
-                      style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.6)' : '#6B6B6B' }}
+                      style={{ color: '#6B6B6B' }}
                     >
                       {item.description}
                     </p>

@@ -1,7 +1,6 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { useTheme } from '@/contexts/ThemeContext'
 
 export interface EyebrowProps {
   children: React.ReactNode
@@ -20,7 +19,6 @@ export interface EyebrowProps {
  * Matches /how-we-work and /are-we-a-fit hero treatment.
  */
 export function Eyebrow({ children, className, align = 'center', uppercase = true }: EyebrowProps) {
-  const { isNightMode } = useTheme()
   const accent = 'var(--gold-accent)'
   const lineColor = 'var(--gold-primary)'
 

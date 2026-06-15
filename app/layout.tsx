@@ -5,9 +5,6 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import type { SiteSettings } from '@/lib/sanity/types'
 
-import { ThemeProvider } from '@/contexts/ThemeContext'
-import ThemeWrapper from '@/components/ThemeWrapper'
-
 import Navbar from '@/components/navbar/Navbar'
 
 import Footer from '@/components/footer/Footer'
@@ -227,7 +224,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <meta property="og:image" content="https://www.vizantir.com/og-image.png" />
         <meta property="og:image:width" content="1200" />
@@ -245,18 +242,14 @@ export default async function RootLayout({
         {/* Preconnect hints for third-party scripts */}
         <link rel="dns-prefetch" href="https://www.chatbase.co" />
       </head>
-      <body className={satoshi.variable} suppressHydrationWarning>
-        <ThemeProvider>
-          <SmoothScroll>
-            <ScrollToTop />
-            <ScrollProgress />
-            <Navbar />
-            <main>
-              <ThemeWrapper>{children}</ThemeWrapper>
-            </main>
-            <Footer />
-          </SmoothScroll>
-        </ThemeProvider>
+      <body className={satoshi.variable}>
+        <SmoothScroll>
+          <ScrollToTop />
+          <ScrollProgress />
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </SmoothScroll>
         <DeferredChatbase />
         <Analytics />
       </body>

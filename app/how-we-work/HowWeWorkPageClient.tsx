@@ -4,25 +4,20 @@ import { useState } from 'react'
 import { carePricing } from '@/data/pricing'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useTheme } from '@/contexts/ThemeContext'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 
 export default function HowWeWorkPageClient() {
-  const { isNightMode } = useTheme()
-
   // Colors matching Vizantir design system
   const colors = {
-    bg: isNightMode ? '#000000' : '#FAFAFA',
-    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-    textMuted: isNightMode ? '#888888' : '#6B7280',
-    textSubtle: isNightMode ? '#666666' : '#9CA3AF',
+    bg: '#FAFAFA',
+    text: '#1A1A1A',
+    textMuted: '#6B7280',
+    textSubtle: '#9CA3AF',
     accent: 'var(--gold-accent)',
-    cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-    cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    divider: isNightMode
-      ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
-      : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+    cardBg: '#FFFFFF',
+    cardBorder: 'rgba(0,0,0,0.08)',
+    divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
   }
 
   const processSteps = [
@@ -161,9 +156,7 @@ export default function HowWeWorkPageClient() {
                 <div
                   className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center text-lg font-bold"
                   style={{
-                    background: isNightMode
-                      ? 'rgba(255,198,76,0.1)'
-                      : 'rgba(180,83,9,0.1)',
+                    background: 'rgba(180,83,9,0.1)',
                     color: colors.accent,
                   }}
                 >
@@ -234,9 +227,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
                 style={{
-                  background: isNightMode
-                    ? 'rgba(255,198,76,0.1)'
-                    : 'rgba(180,83,9,0.1)',
+                  background: 'rgba(180,83,9,0.1)',
                 }}
               >
                 <svg
@@ -290,9 +281,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
                 style={{
-                  background: isNightMode
-                    ? 'rgba(255,198,76,0.1)'
-                    : 'rgba(180,83,9,0.1)',
+                  background: 'rgba(180,83,9,0.1)',
                 }}
               >
                 <svg
@@ -390,7 +379,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
                 style={{
-                  background: isNightMode ? 'rgba(239,68,68,0.1)' : 'rgba(239,68,68,0.1)',
+                  background: 'rgba(239,68,68,0.1)',
                 }}
               >
                 <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -440,7 +429,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
                 style={{
-                  background: isNightMode ? 'rgba(255, 198, 76,0.1)' : 'rgba(255, 198, 76,0.1)',
+                  background: 'rgba(255, 198, 76,0.1)',
                 }}
               >
                 <svg className="w-5 h-5 text-gold-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -484,10 +473,8 @@ export default function HowWeWorkPageClient() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="p-6 rounded-2xl border relative overflow-hidden"
               style={{
-                background: isNightMode
-                  ? 'linear-gradient(135deg, rgba(255,198,76,0.1) 0%, rgba(255,198,76,0.02) 100%)'
-                  : 'linear-gradient(135deg, rgba(180,83,9,0.1) 0%, rgba(180,83,9,0.02) 100%)',
-                borderColor: isNightMode ? 'rgba(255,198,76,0.3)' : 'rgba(180,83,9,0.3)',
+                background: 'linear-gradient(135deg, rgba(180,83,9,0.1) 0%, rgba(180,83,9,0.02) 100%)',
+                borderColor: 'rgba(180,83,9,0.3)',
               }}
             >
               {/* Popular badge */}
@@ -495,7 +482,7 @@ export default function HowWeWorkPageClient() {
                 className="absolute top-4 right-4 text-[10px] tracking-wider uppercase px-2 py-1 rounded-full font-semibold"
                 style={{
                   background: colors.accent,
-                  color: isNightMode ? '#000000' : '#FFFFFF',
+                  color: '#FFFFFF',
                 }}
               >
                 Better
@@ -504,7 +491,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
                 style={{
-                  background: isNightMode ? 'rgba(16,185,129,0.1)' : 'rgba(16,185,129,0.1)',
+                  background: 'rgba(16,185,129,0.1)',
                 }}
               >
                 <svg className="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -669,9 +656,7 @@ export default function HowWeWorkPageClient() {
                     background: colors.cardBg,
                     borderColor:
                       openFaq === index
-                        ? isNightMode
-                          ? 'rgba(255,198,76,0.3)'
-                          : 'rgba(180,83,9,0.3)'
+                        ? 'rgba(180,83,9,0.3)'
                         : colors.cardBorder,
                   }}
                 >
@@ -742,8 +727,8 @@ export default function HowWeWorkPageClient() {
               href="/contact"
               className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:scale-105 group"
               style={{
-                background: isNightMode ? '#F8F8F8' : '#1A1A1A',
-                color: isNightMode ? '#1A1A1A' : '#FFFFFF',
+                background: '#1A1A1A',
+                color: '#FFFFFF',
               }}
             >
               <span>Get in Touch</span>

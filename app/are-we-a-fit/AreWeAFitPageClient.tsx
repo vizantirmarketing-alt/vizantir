@@ -7,7 +7,6 @@ import { Check, X } from 'lucide-react'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { trackCTAClick } from '@/lib/analytics'
 import type { AreWeAFitPageContent } from '@/data/are-we-a-fit'
-import { useTheme } from '@/contexts/ThemeContext'
 
 interface AreWeAFitPageClientProps {
   content: AreWeAFitPageContent
@@ -21,23 +20,17 @@ const idealHeading = "You're a fit if..."
 const notIdealHeading = "You're not a fit if..."
 
 export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProps) {
-  const { isNightMode } = useTheme()
-
   const colors = {
-    bg: isNightMode ? '#000000' : '#FAFAFA',
-    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-    textMuted: isNightMode ? '#888888' : '#6B7280',
+    bg: '#FAFAFA',
+    text: '#1A1A1A',
+    textMuted: '#6B7280',
     accentSolid: 'var(--gold-primary)',
-    cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-    cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    divider: isNightMode
-      ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
-      : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
-    budgetAsideBg: isNightMode ? 'rgba(255,198,76,0.06)' : 'rgba(180,83,9,0.06)',
-    heroWash: isNightMode
-      ? 'radial-gradient(ellipse 85% 60% at 50% -5%, rgba(255,198,76,0.09), transparent 55%)'
-      : 'radial-gradient(ellipse 85% 60% at 50% -5%, rgba(255,198,76,0.14), transparent 55%)',
-    fitBulletIcon: isNightMode ? 'rgba(255, 198, 76, 0.9)' : 'rgba(180, 83, 9, 0.88)',
+    cardBg: '#FFFFFF',
+    cardBorder: 'rgba(0,0,0,0.08)',
+    divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+    budgetAsideBg: 'rgba(180,83,9,0.06)',
+    heroWash: 'radial-gradient(ellipse 85% 60% at 50% -5%, rgba(255,198,76,0.14), transparent 55%)',
+    fitBulletIcon: 'rgba(180, 83, 9, 0.88)',
   }
 
   const sectionMotion = {

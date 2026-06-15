@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useTheme } from '@/contexts/ThemeContext'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { blogCategories } from '@/lib/blog-categories'
 
@@ -31,24 +30,19 @@ type Props = {
 }
 
 export default function BlogPageClient({ posts }: Props) {
-  const { isNightMode } = useTheme()
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
 
-  const themeNight = isNightMode
-
   const colors = {
-    bg: themeNight ? '#000000' : '#FAFAFA',
-    text: themeNight ? '#F8F8F8' : '#1A1A1A',
-    textMuted: themeNight ? '#888888' : '#6B7280',
-    textSubtle: themeNight ? '#666666' : '#9CA3AF',
+    bg: '#FAFAFA',
+    text: '#1A1A1A',
+    textMuted: '#6B7280',
+    textSubtle: '#9CA3AF',
     accent: 'var(--gold-accent)',
-    cardBg: themeNight ? '#0A0A0A' : '#FFFFFF',
-    cardBorder: themeNight ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    inputBg: themeNight ? '#111111' : '#FFFFFF',
-    divider: themeNight
-      ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
-      : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+    cardBg: '#FFFFFF',
+    cardBorder: 'rgba(0,0,0,0.08)',
+    inputBg: '#FFFFFF',
+    divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
   }
 
   // Filter posts based on search and category
@@ -167,14 +161,10 @@ export default function BlogPageClient({ posts }: Props) {
                   background:
                     activeCategory === category
                       ? colors.accent
-                      : themeNight
-                        ? 'rgba(255,255,255,0.05)'
-                        : 'rgba(0,0,0,0.05)',
+                      : 'rgba(0,0,0,0.05)',
                   color:
                     activeCategory === category
-                      ? themeNight
-                        ? '#000000'
-                        : '#FFFFFF'
+                      ? '#FFFFFF'
                       : colors.textMuted,
                   transition: themeBgColorTransition,
                 }}
@@ -242,9 +232,7 @@ export default function BlogPageClient({ posts }: Props) {
                         <span
                           className="text-xs font-medium px-3 py-1 rounded-full transition-colors duration-500"
                           style={{
-                            background: themeNight
-                              ? 'rgba(255,198,76,0.1)'
-                              : 'rgba(180,83,9,0.1)',
+                            background: 'rgba(180,83,9,0.1)',
                             color: colors.accent,
                             transition: themeBgColorTransition,
                           }}
@@ -291,9 +279,7 @@ export default function BlogPageClient({ posts }: Props) {
                             key={tag}
                             className="text-xs px-2 py-1 rounded transition-colors duration-500"
                             style={{
-                              background: themeNight
-                                ? 'rgba(255,255,255,0.05)'
-                                : 'rgba(0,0,0,0.05)',
+                              background: 'rgba(0,0,0,0.05)',
                               color: colors.textSubtle,
                               transition: themeBgColorTransition,
                             }}
@@ -369,8 +355,8 @@ export default function BlogPageClient({ posts }: Props) {
               href="/contact"
               className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-bold transition-all duration-300 hover:scale-105 group"
               style={{
-                backgroundColor: themeNight ? '#F8F8F8' : '#1A1A1A',
-                color: themeNight ? '#1A1A1A' : '#FFFFFF',
+                backgroundColor: '#1A1A1A',
+                color: '#FFFFFF',
                 transition: themeBgColorTransition,
               }}
             >
