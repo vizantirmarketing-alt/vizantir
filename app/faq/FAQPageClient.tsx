@@ -2,7 +2,6 @@
 
 import type { Faq } from '@/components/homepage/FAQSection'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -12,7 +11,6 @@ export interface FAQPageClientProps {
 }
 
 export default function FAQPageClient({ faqs }: FAQPageClientProps) {
-  const { isNightMode } = useTheme()
   const [openId, setOpenId] = useState<string | null>(() => faqs[0]?._id ?? null)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -26,14 +24,14 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
   }
 
   return (
-    <main className="min-h-screen" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
               Frequently Asked Questions
             </h1>
-            <p className="text-lg md:text-xl" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+            <p className="text-lg md:text-xl" style={{ color: '#6B6B6B' }}>
               Get answers to common questions about web design, development, and how we can help you plan, build, and maintain a stronger website.
             </p>
           </motion.div>
@@ -43,7 +41,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             <div className="relative">
               <svg 
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" 
-                style={{ color: isNightMode ? 'rgba(255,255,255,0.4)' : '#888888' }}
+                style={{ color: '#888888' }}
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 
@@ -58,16 +56,16 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
                 style={{ 
-                  background: isNightMode ? 'rgba(255,255,255,0.05)' : '#FFFFFF',
-                  border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                  color: isNightMode ? '#FFFFFF' : '#1A1A1A'
+                  background: '#FFFFFF',
+                  border: `1px solid ${'rgba(0,0,0,0.1)'}`,
+                  color: '#1A1A1A'
                 }}
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
                   className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:opacity-70 transition-opacity"
-                  style={{ color: isNightMode ? 'rgba(255,255,255,0.4)' : '#888888' }}
+                  style={{ color: '#888888' }}
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -84,7 +82,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
           <div className="space-y-4">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-12">
-                <p style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
+                <p style={{ color: '#888888' }}>
                   No FAQs found matching &quot;{searchQuery}&quot;
                 </p>
                 <button
@@ -105,14 +103,14 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                     transition={{ duration: 0.5, delay: index * 0.05 }}
                     className="rounded-xl overflow-hidden"
                     style={{ 
-                      background: isNightMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-                      border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`
+                      background: 'rgba(0,0,0,0.02)',
+                      border: `1px solid ${'rgba(0,0,0,0.08)'}`
                     }}
                   >
                     <button
                       onClick={() => toggleFAQ(faq._id)}
                       className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors"
-                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                      style={{ color: '#1A1A1A' }}
                     >
                       <span className="text-lg font-semibold pr-8">{faq.question}</span>
                       <AccordionIndicator
@@ -131,7 +129,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                           className="overflow-hidden"
                         >
                           <div className="px-6 pb-6">
-                            <p className="leading-relaxed" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
+                            <p className="leading-relaxed" style={{ color: '#4A4A4A' }}>
                               {faq.answer}
                             </p>
                           </div>
@@ -151,14 +149,14 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="mt-16 text-center p-8 md:p-12 rounded-2xl"
             style={{ 
-              background: isNightMode ? 'rgba(255,198,76,0.1)' : 'rgba(255,198,76,0.15)',
+              background: 'rgba(255,198,76,0.15)',
               border: '1px solid rgba(255,198,76,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
               Still have questions?
             </h2>
-            <p className="text-lg mb-6" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+            <p className="text-lg mb-6" style={{ color: '#6B6B6B' }}>
               We&apos;re here to help. Book a strategy call to walk through your goals, scope, and fit for your next website build—no pitch deck required.
             </p>
             <Link

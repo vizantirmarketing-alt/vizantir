@@ -1,6 +1,5 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -12,8 +11,6 @@ import { TurnstileWidget } from '@/components/forms/TurnstileWidget'
 import { CONTACT_BUDGETS, CONTACT_SERVICES } from '@/lib/forms/contact-fields'
 
 export default function ContactPageClient() {
-  const { isNightMode } = useTheme()
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -90,18 +87,18 @@ export default function ContactPageClient() {
   }
 
   const inputStyle = {
-    background: isNightMode ? '#0A0A0A' : '#FFFFFF',
-    border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
-    color: isNightMode ? '#FFFFFF' : '#1A1A1A',
+    background: '#FFFFFF',
+    border: `1px solid rgba(0,0,0,0.08)`,
+    color: '#1A1A1A',
   }
 
   const labelStyle = {
-    color: isNightMode ? 'rgba(255,255,255,0.8)' : '#4A4A4A'
+    color: '#4A4A4A'
   }
 
   if (isSubmitted) {
     return (
-      <main className="min-h-screen flex items-center justify-center" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+      <main className="min-h-screen flex items-center justify-center" style={{ background: '#FAFAFA', transition: 'background-color 0.5s ease' }}>
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -118,10 +115,10 @@ export default function ContactPageClient() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </motion.div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
             Message Sent!
           </h1>
-          <p className="text-lg mb-8" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+          <p className="text-lg mb-8" style={{ color: '#6B6B6B' }}>
             Thank you for reaching out. We&apos;ll get back to you within 24 hours.
           </p>
           <Link
@@ -137,16 +134,14 @@ export default function ContactPageClient() {
   }
 
   return (
-    <main className="min-h-screen" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-32 pb-16 px-4">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background: isNightMode
-              ? 'radial-gradient(ellipse at top left, rgba(255, 198, 76, 0.08) 0%, transparent 60%)'
-              : 'radial-gradient(ellipse at top left, rgba(180, 83, 9, 0.05) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse at top left, rgba(180, 83, 9, 0.05) 0%, transparent 60%)',
           }}
           aria-hidden
         />
@@ -160,10 +155,10 @@ export default function ContactPageClient() {
             <div className="mb-6">
               <Eyebrow>Contact</Eyebrow>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
               Start the Conversation
             </h1>
-            <p className="text-lg md:text-xl" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#6B6B6B' }}>
+            <p className="text-lg md:text-xl" style={{ color: '#6B6B6B' }}>
               Tell us what you&apos;re working on. We&apos;ll let you know if we&apos;re a good fit and what the next step looks like
             </p>
           </motion.div>
@@ -185,7 +180,7 @@ export default function ContactPageClient() {
               className="lg:col-span-2 space-y-8"
             >
               <div>
-                <h2 className="text-2xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+                <h2 className="text-2xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
                   Contact Information
                 </h2>
                 <div className="space-y-6">
@@ -196,7 +191,7 @@ export default function ContactPageClient() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold mb-1" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Email</p>
+                      <p className="font-semibold mb-1" style={{ color: '#1A1A1A' }}>Email</p>
                       <a href="mailto:info@vizantir.com" className="transition-colors hover:opacity-80" style={{ color: 'var(--gold-primary)' }}>
                         info@vizantir.com
                       </a>
@@ -209,12 +204,12 @@ export default function ContactPageClient() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold mb-1" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Phone</p>
+                      <p className="font-semibold mb-1" style={{ color: '#1A1A1A' }}>Phone</p>
                       <a 
                         href="tel:+17022890758" 
                         onClick={trackPhoneClick}
                         className="transition-colors hover:opacity-80" 
-                        style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}
+                        style={{ color: '#4A4A4A' }}
                       >
                         +1 (702) 289-0758
                       </a>
@@ -228,11 +223,11 @@ export default function ContactPageClient() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold mb-1" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Location</p>
-                      <p style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
+                      <p className="font-semibold mb-1" style={{ color: '#1A1A1A' }}>Location</p>
+                      <p style={{ color: '#4A4A4A' }}>
                         Las Vegas, NV 89139
                       </p>
-                      <p className="text-sm mt-1" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
+                      <p className="text-sm mt-1" style={{ color: '#888888' }}>
                         Remote-first studio serving clients nationwide
                       </p>
                     </div>
@@ -241,9 +236,9 @@ export default function ContactPageClient() {
               </div>
 
               {/* Business Hours */}
-              <div className="p-6 rounded-2xl" style={{ background: isNightMode ? '#0A0A0A' : '#FFFFFF', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}` }}>
-                <h3 className="font-semibold mb-4" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Business Hours</h3>
-                <div className="space-y-2 text-sm" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
+              <div className="p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+                <h3 className="font-semibold mb-4" style={{ color: '#1A1A1A' }}>Business Hours</h3>
+                <div className="space-y-2 text-sm" style={{ color: '#4A4A4A' }}>
                   <div className="flex justify-between">
                     <span>Monday - Friday</span>
                     <span>9:00 AM - 6:00 PM PST</span>
@@ -260,9 +255,9 @@ export default function ContactPageClient() {
               </div>
 
               {/* Response Time */}
-              <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: isNightMode ? '#0A0A0A' : '#FFFFFF', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}` }}>
+              <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <p className="text-sm" style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#4A4A4A' }}>
+                <p className="text-sm" style={{ color: '#4A4A4A' }}>
                   Average response time: <strong>Under 24 hours</strong>
                 </p>
               </div>
@@ -275,8 +270,8 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-3"
             >
-              <div className="p-6 md:p-8 rounded-2xl" style={{ background: isNightMode ? '#0A0A0A' : '#FFFFFF', border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`, boxShadow: isNightMode ? 'none' : '0 4px 24px rgba(0,0,0,0.06)' }}>
-                <h2 className="text-2xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+              <div className="p-6 md:p-8 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+                <h2 className="text-2xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
                   Start Your Project
                 </h2>
                 
@@ -417,7 +412,7 @@ export default function ContactPageClient() {
                       </>
                     )}
                   </button>
-                  <p className="text-xs text-center" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>
+                  <p className="text-xs text-center" style={{ color: '#888888' }}>
                     By submitting this form, you agree to our{' '}
                     <Link href="/privacy" className="underline hover:opacity-80">Privacy Policy</Link>
                     {' '}and{' '}

@@ -1,6 +1,5 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
@@ -18,8 +17,6 @@ interface Section {
 }
 
 export default function TermsAndConditions() {
-  const { isNightMode } = useTheme()
-
   const sections: Section[] = [
     {
       title: "1. Services",
@@ -177,19 +174,19 @@ export default function TermsAndConditions() {
   ]
 
   return (
-    <main className="min-h-screen" style={{ background: isNightMode ? '#000000' : '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: '#FAFAFA', transition: 'background-color 0.5s ease' }}>
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>Terms and Conditions</h1>
-            <p className="text-lg" style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}>Effective Date: January 1, 2025</p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>Terms and Conditions</h1>
+            <p className="text-lg" style={{ color: '#6B6B6B' }}>Effective Date: January 1, 2025</p>
           </motion.div>
         </div>
       </section>
 
       <section className="px-4 pb-8">
         <div className="max-w-4xl mx-auto">
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed" style={{ color: isNightMode ? 'rgba(255,255,255,0.8)' : '#4A4A4A' }}>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed" style={{ color: '#4A4A4A' }}>
             Welcome to Vizantir.com. These Terms and Conditions (&quot;Terms&quot;) govern your use of our website and services. By accessing our website or engaging our services, you agree to be bound by these Terms.
           </motion.p>
         </div>
@@ -199,15 +196,15 @@ export default function TermsAndConditions() {
         <div className="max-w-4xl mx-auto">
           {sections.map((section, sectionIndex) => (
             <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>{section.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>{section.title}</h2>
               {section.subsections.map((subsection, subIndex) => (
                 <div key={subIndex} className="mb-6">
-                  {subsection.subtitle && <h3 className="text-xl font-semibold mb-3" style={{ color: isNightMode ? 'rgba(255,255,255,0.9)' : '#2A2A2A' }}>{subsection.subtitle}</h3>}
-                  {subsection.content && <p className="leading-relaxed mb-3" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>{subsection.content}</p>}
+                  {subsection.subtitle && <h3 className="text-xl font-semibold mb-3" style={{ color: '#2A2A2A' }}>{subsection.subtitle}</h3>}
+                  {subsection.content && <p className="leading-relaxed mb-3" style={{ color: '#4A4A4A' }}>{subsection.content}</p>}
                   {subsection.list && (
                     <ul className="space-y-2 ml-6">
                       {subsection.list.map((item, itemIndex) => (
-                        <li key={itemIndex} className="flex items-start gap-3" style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}>
+                        <li key={itemIndex} className="flex items-start gap-3" style={{ color: '#4A4A4A' }}>
                           <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--gold-primary)' }} />
                           {item}
                         </li>
@@ -219,8 +216,8 @@ export default function TermsAndConditions() {
               ))}
             </motion.div>
           ))}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}>
-            <p className="text-sm" style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}>Last Updated: January 1, 2025</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
+            <p className="text-sm" style={{ color: '#888888' }}>Last Updated: January 1, 2025</p>
           </motion.div>
         </div>
       </section>

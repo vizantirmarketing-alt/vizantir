@@ -1,10 +1,8 @@
 'use client'
 
 import React from 'react'
-import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
 
 import type { PortableTextBlock } from '@portabletext/types'
 
@@ -38,16 +36,14 @@ interface BlogPostContentProps {
 }
 
 export default function BlogPostContent({ post }: BlogPostContentProps) {
-  const { isNightMode } = useTheme()
-
   const colors = {
-    bg: isNightMode ? '#000000' : '#FAFAFA',
-    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-    textMuted: isNightMode ? '#888888' : '#6B7280',
-    textSubtle: isNightMode ? '#666666' : '#9CA3AF',
+    bg: '#FAFAFA',
+    text: '#1A1A1A',
+    textMuted: '#6B7280',
+    textSubtle: '#9CA3AF',
     accent: 'var(--gold-accent)',
-    cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-    cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    cardBg: '#FFFFFF',
+    cardBorder: 'rgba(0,0,0,0.08)',
   }
 
   const tags = post.tags ?? []
@@ -76,7 +72,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               <span
                 className="inline-block text-xs tracking-[0.25em] uppercase font-medium px-3 py-1 rounded-full transition-colors duration-500"
                 style={{
-                  background: isNightMode ? 'rgba(255,198,76,0.1)' : 'rgba(180,83,9,0.1)',
+                  background: 'rgba(180,83,9,0.1)',
                   color: colors.accent,
                 }}
               >
@@ -143,9 +139,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
       <div
         className="w-full h-px"
         style={{
-          background: isNightMode
-            ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
-            : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
         }}
       />
 
@@ -154,7 +148,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none">
             <div
-              className={`blog-content transition-colors duration-500 ${isNightMode ? 'blog-content-dark' : 'blog-content-light'}`}
+              className={`blog-content transition-colors duration-500 blog-content-light`}
               style={{ color: colors.textMuted }}
             >
               <PortableTextRenderer value={post.body} />

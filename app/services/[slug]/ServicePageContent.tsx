@@ -9,7 +9,6 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
-import { useTheme } from '@/contexts/ThemeContext'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import type { Service } from '@/lib/sanity/types'
 
@@ -18,22 +17,19 @@ interface ServicePageContentProps {
 }
 
 export default function ServicePageContent({ service }: ServicePageContentProps) {
-  const { isNightMode } = useTheme()
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0)
 
   const colors = useMemo(
     () => ({
-      bg: isNightMode ? '#000000' : '#FAFAFA',
-      text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-      textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
+      bg: '#FAFAFA',
+      text: '#1A1A1A',
+      textMuted: '#6B6B6B',
       accent: 'var(--gold-primary)',
-      cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-      cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-      divider: isNightMode
-        ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
-        : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+      cardBg: '#FFFFFF',
+      cardBorder: 'rgba(0,0,0,0.08)',
+      divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
     }),
-    [isNightMode]
+    []
   )
 
   const sortedProcess = useMemo(() => {
@@ -56,9 +52,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
-            background: isNightMode
-              ? 'radial-gradient(ellipse at top right, rgba(255,198,76,0.12), transparent 55%)'
-              : 'radial-gradient(ellipse at top right, rgba(255,198,76,0.18), transparent 55%)',
+            background: 'radial-gradient(ellipse at top right, rgba(255,198,76,0.18), transparent 55%)',
           }}
         />
         <div className="relative z-10 mx-auto max-w-4xl">
@@ -351,15 +345,15 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     transition={{ duration: 0.4, delay: index * 0.04 }}
                     className="overflow-hidden rounded-xl"
                     style={{
-                      background: isNightMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-                      border: `1px solid ${isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                      background: 'rgba(0,0,0,0.02)',
+                      border: `1px solid rgba(0,0,0,0.08)`,
                     }}
                   >
                     <button
                       type="button"
                       onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
                       className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors"
-                      style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                      style={{ color: '#1A1A1A' }}
                     >
                       <span className="pr-4 text-lg font-semibold">{faq.question}</span>
                       <AccordionIndicator
@@ -380,7 +374,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                           <div className="px-6 pb-6">
                             <p
                               className="leading-relaxed whitespace-pre-wrap"
-                              style={{ color: isNightMode ? 'rgba(255,255,255,0.7)' : '#4A4A4A' }}
+                              style={{ color: '#4A4A4A' }}
                             >
                               {faq.answer}
                             </p>
@@ -463,7 +457,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             transition={{ duration: 0.5 }}
             className="rounded-2xl p-8 md:p-12"
             style={{
-              background: isNightMode ? 'rgba(255,198,76,0.1)' : 'rgba(255,198,76,0.15)',
+              background: 'rgba(255,198,76,0.15)',
               border: '1px solid rgba(255,198,76,0.3)',
             }}
           >

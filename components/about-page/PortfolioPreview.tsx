@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
 
 const PortfolioPreview = () => {
-  const { isNightMode } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +47,7 @@ const PortfolioPreview = () => {
     <section
       ref={sectionRef}
       className="py-24 md:py-32 transition-colors duration-500"
-      style={{ background: isNightMode ? '#0A0A0A' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
@@ -64,13 +62,13 @@ const PortfolioPreview = () => {
             </p>
             <h2 
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500"
-              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+              style={{ color: '#1A1A1A' }}
             >
               Selected Work
             </h2>
             <p 
               className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+              style={{ color: '#6B6B6B' }}
             >
               A selection of custom builds for established businesses.
             </p>
@@ -93,9 +91,7 @@ const PortfolioPreview = () => {
                       src={item.image}
                       alt={item.title}
                       fill
-                      className={`object-contain transition-all duration-500 ${
-                        isNightMode ? 'group-hover:drop-shadow-[0_0_50px_rgba(255,198,76,0.15)]' : ''
-                      }`}
+                      className="object-contain transition-all duration-500"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
@@ -108,13 +104,13 @@ const PortfolioPreview = () => {
                   </p>
                   <h3 
                     className="text-2xl md:text-3xl font-bold group-hover:text-gold-primary transition-colors duration-300"
-                    style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                    style={{ color: '#1A1A1A' }}
                   >
                     {item.title}
                   </h3>
                   <p 
                     className="leading-relaxed transition-colors duration-500"
-                    style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                    style={{ color: '#6B6B6B' }}
                   >
                     {item.description}
                   </p>
@@ -124,7 +120,7 @@ const PortfolioPreview = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 hover:text-gold-primary transition-colors duration-300 mt-2"
-                    style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+                    style={{ color: '#1A1A1A' }}
                   >
                     View Live Site
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -142,7 +138,7 @@ const PortfolioPreview = () => {
           >
             <p 
               className="text-xl mb-8 transition-colors duration-500"
-              style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+              style={{ color: '#6B6B6B' }}
             >
               Work with a studio that understands what a website needs to do.
             </p>

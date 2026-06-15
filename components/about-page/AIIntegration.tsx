@@ -1,10 +1,8 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext';
 import { useEffect, useRef, useState } from 'react';
 
 const AIIntegration = () => {
-  const { isNightMode } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const [currentMessage, setCurrentMessage] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -57,15 +55,13 @@ const AIIntegration = () => {
       ref={sectionRef}
       className="py-20 md:py-24 transition-colors duration-500 relative overflow-hidden"
       style={{
-        background: isNightMode 
-          ? '#000000'
-          : '#FAFAFA',
+        background: '#FAFAFA',
       }}
     >
       <div 
         className="absolute inset-0 opacity-30"
         style={{
-          background: `radial-gradient(ellipse at center, ${isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.15)'} 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse at center, rgba(255, 198, 76, 0.15) 0%, transparent 70%)`,
         }}
       />
 
@@ -79,20 +75,20 @@ const AIIntegration = () => {
             >
               <h3
                 className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
-                style={{ color: isNightMode ? '#A0A0A0' : '#6B6B6B' }}
+                style={{ color: '#6B6B6B' }}
               >
                 AI Website Integration
               </h3>
               <h2
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight transition-colors duration-500 leading-tight"
-                style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+                style={{ color: '#1A1A1A' }}
               >
                 Turn Your Website Into an{' '}
                 <span style={{ color: '#00D9FF' }}>Interactive Assistant</span>
               </h2>
               <p
                 className="text-base leading-relaxed mb-6 transition-colors duration-500"
-                style={{ color: isNightMode ? '#9CA3AF' : '#4A4A4A' }}
+                style={{ color: '#4A4A4A' }}
               >
                 We integrate AI directly into your site so customers can ask real questions 
                 and get instant, accurate answers. The AI doesn't guess — it learns your website. 
@@ -100,7 +96,7 @@ const AIIntegration = () => {
               </p>
               <p
                 className="text-base leading-relaxed mb-8 transition-colors duration-500"
-                style={{ color: isNightMode ? '#9CA3AF' : '#4A4A4A' }}
+                style={{ color: '#4A4A4A' }}
               >
               Instead of digging through menus or calling for details, your visitors get clear, 
               reliable responses in seconds — turning your website into a true customer assistant.
@@ -112,9 +108,7 @@ const AIIntegration = () => {
                 background: 'var(--gold-primary)',
                 color: '#1A1A1A',
                 borderRadius: '12px',
-                boxShadow: isNightMode
-                  ? 'var(--gold-shadow)'
-                  : '0 4px 14px rgba(0, 0, 0, 0.1)',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)',
               }}
             >
               Make My Website Smarter
@@ -129,12 +123,12 @@ const AIIntegration = () => {
             <div
               className="rounded-2xl p-6 border shadow-2xl"
               style={{
-                background: isNightMode ? '#000000' : '#FAFAFA',
-                borderColor: isNightMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                background: '#FAFAFA',
+                borderColor: 'rgba(0, 0, 0, 0.1)',
               }}
             >
               <div className="flex items-center gap-3 pb-4 border-b mb-4"
-                style={{ borderColor: isNightMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' }}
+                style={{ borderColor: 'rgba(0, 0, 0, 0.1)' }}
               >
                 <div 
                   className="w-10 h-10 rounded-full flex items-center justify-center"
@@ -145,7 +139,7 @@ const AIIntegration = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-bold transition-colors duration-500" style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}>
+                  <p className="font-bold transition-colors duration-500" style={{ color: '#1A1A1A' }}>
                     Website Assistant
                   </p>
                   <p className="text-xs" style={{ color: '#22C55E' }}>● Online</p>
@@ -169,8 +163,8 @@ const AIIntegration = () => {
                   <div
                     className="px-4 py-3 rounded-2xl rounded-tl-sm max-w-[80%] transition-all duration-500"
                     style={{
-                      background: isNightMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-                      color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : '#1A1A1A',
+                      background: 'rgba(0, 0, 0, 0.05)',
+                      color: '#1A1A1A',
                     }}
                   >
                     <p className="text-sm">{demoMessages[currentMessage].answer}</p>
@@ -180,13 +174,13 @@ const AIIntegration = () => {
 
               <div 
                 className="mt-4 pt-4 border-t flex items-center gap-3"
-                style={{ borderColor: isNightMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' }}
+                style={{ borderColor: 'rgba(0, 0, 0, 0.1)' }}
               >
                 <div
                   className="flex-1 px-4 py-3 rounded-full text-sm"
                   style={{
-                    background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
-                    color: isNightMode ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)',
+                    background: 'rgba(0, 0, 0, 0.05)',
+                    color: 'rgba(0, 0, 0, 0.4)',
                   }}
                 >
                   Ask anything about this business...
@@ -208,7 +202,7 @@ const AIIntegration = () => {
                     key={i}
                     className="w-2 h-2 rounded-full transition-all duration-300"
                     style={{
-                      background: i === currentMessage ? 'var(--gold-primary)' : (isNightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'),
+                      background: i === currentMessage ? 'var(--gold-primary)' : 'rgba(0, 0, 0, 0.2)',
                     }}
                   />
                 ))}
@@ -223,4 +217,3 @@ const AIIntegration = () => {
 };
 
 export default AIIntegration;
-

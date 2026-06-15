@@ -7,7 +7,6 @@ import { PortableText } from '@portabletext/react'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
 import { vizantirPortableTextComponents } from '@/components/portable-text'
-import { useTheme } from '@/contexts/ThemeContext'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { formatCaseStudyMetadataLine } from '@/lib/case-studies/metadata'
 import type { CaseStudy } from '@/lib/sanity/types'
@@ -17,21 +16,17 @@ interface CaseStudyPageContentProps {
 }
 
 export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContentProps) {
-  const { isNightMode } = useTheme()
-
   const colors = useMemo(
     () => ({
-      bg: isNightMode ? '#000000' : '#FAFAFA',
-      text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-      textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
+      bg: '#FAFAFA',
+      text: '#1A1A1A',
+      textMuted: '#6B6B6B',
       accent: 'var(--gold-primary)',
-      cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-      cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-      divider: isNightMode
-        ? 'linear-gradient(90deg, transparent, rgba(255,198,76,0.3), transparent)'
-        : 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+      cardBg: '#FFFFFF',
+      cardBorder: 'rgba(0,0,0,0.08)',
+      divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
     }),
-    [isNightMode],
+    [],
   )
 
   const metadataLine = formatCaseStudyMetadataLine(caseStudy.title, caseStudy.client, caseStudy.industry)
@@ -47,9 +42,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
-            background: isNightMode
-              ? 'radial-gradient(ellipse at top right, rgba(255,198,76,0.12), transparent 55%)'
-              : 'radial-gradient(ellipse at top right, rgba(255,198,76,0.18), transparent 55%)',
+            background: 'radial-gradient(ellipse at top right, rgba(255,198,76,0.18), transparent 55%)',
           }}
         />
         <div className="relative z-10 mx-auto max-w-5xl">
@@ -213,7 +206,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                     transition={{ duration: 0.3, delay: index * 0.03 }}
                     className="rounded-full border px-4 py-2 text-sm font-medium"
                     style={{
-                      background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                      background: 'rgba(0, 0, 0, 0.05)',
                       color: colors.textMuted,
                       borderColor: colors.cardBorder,
                     }}

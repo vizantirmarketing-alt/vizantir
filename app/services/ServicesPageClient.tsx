@@ -11,7 +11,6 @@ import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
 import { carePricing, projectPricing } from '@/data/pricing'
 import { cn } from '@/lib/utils'
-import { useTheme } from '@/contexts/ThemeContext'
 
 const WebIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
@@ -314,30 +313,23 @@ function PricingCard({
   includes,
   featured = false,
 }: PricingCardProps) {
-  const { isNightMode } = useTheme()
   const glassTransition = 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease'
 
   const defaultGlass = {
-    background: isNightMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
+    background: 'rgba(0, 0, 0, 0.02)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
-    border: isNightMode
-      ? '1px solid rgba(255, 255, 255, 0.08)'
-      : '1px solid rgba(0, 0, 0, 0.08)',
-    boxShadow: isNightMode ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.04)',
+    border: '1px solid rgba(0, 0, 0, 0.08)',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
     transition: glassTransition,
   }
 
   const featuredGlass = {
-    background: isNightMode ? 'rgba(255, 198, 76, 0.06)' : 'rgba(180, 132, 30, 0.04)',
+    background: 'rgba(180, 132, 30, 0.04)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
-    border: isNightMode
-      ? '1px solid rgba(255, 198, 76, 0.2)'
-      : '1px solid rgba(180, 132, 30, 0.15)',
-    boxShadow: isNightMode
-      ? '0 0 40px rgba(255, 198, 76, 0.08)'
-      : '0 4px 24px rgba(180, 132, 30, 0.08)',
+    border: '1px solid rgba(180, 132, 30, 0.15)',
+    boxShadow: '0 4px 24px rgba(180, 132, 30, 0.08)',
     transition: glassTransition,
   }
 
@@ -349,22 +341,12 @@ function PricingCard({
       style={baseGlass}
       onMouseEnter={(e) => {
         if (featured) {
-          e.currentTarget.style.background = isNightMode
-            ? 'rgba(255, 198, 76, 0.09)'
-            : 'rgba(180, 132, 30, 0.06)'
-          e.currentTarget.style.border = isNightMode
-            ? '1px solid rgba(255, 198, 76, 0.3)'
-            : '1px solid rgba(180, 132, 30, 0.25)'
-          e.currentTarget.style.boxShadow = isNightMode
-            ? '0 0 48px rgba(255, 198, 76, 0.12)'
-            : '0 4px 28px rgba(180, 132, 30, 0.12)'
+          e.currentTarget.style.background = 'rgba(180, 132, 30, 0.06)'
+          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.25)'
+          e.currentTarget.style.boxShadow = '0 4px 28px rgba(180, 132, 30, 0.12)'
         } else {
-          e.currentTarget.style.background = isNightMode
-            ? 'rgba(255, 255, 255, 0.07)'
-            : 'rgba(0, 0, 0, 0.04)'
-          e.currentTarget.style.border = isNightMode
-            ? '1px solid rgba(255, 198, 76, 0.2)'
-            : '1px solid rgba(180, 132, 30, 0.2)'
+          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)'
+          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.2)'
         }
       }}
       onMouseLeave={(e) => {

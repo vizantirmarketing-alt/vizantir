@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { useTheme } from '@/contexts/ThemeContext'
-
 /*
   ServicesHero - Architectural Grid
   
@@ -16,7 +14,6 @@ import { useTheme } from '@/contexts/ThemeContext'
 */
 
 export default function ServicesHero() {
-  const { isNightMode } = useTheme()
   const [loaded, setLoaded] = useState(false)
 
   // Scroll fade effect (matches homepage/about)
@@ -32,13 +29,13 @@ export default function ServicesHero() {
   // Theme colors - matching Vizantir standards
   // Always start with dark mode to match server-side rendering
   const colors = {
-    bg: isNightMode ? '#000000' : '#FAFAFA',
-    line: isNightMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-    accentLine: isNightMode ? 'rgba(255,198,76,0.3)' : 'rgba(180,83,9,0.2)',
-    accentLineBright: isNightMode ? 'rgba(255,198,76,0.5)' : 'rgba(180,83,9,0.35)',
-    text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-    textMuted: isNightMode ? '#888888' : '#6B7280',
-    textSubtle: isNightMode ? '#666666' : '#9CA3AF',
+    bg: '#FAFAFA',
+    line: 'rgba(0,0,0,0.06)',
+    accentLine: 'rgba(180,83,9,0.2)',
+    accentLineBright: 'rgba(180,83,9,0.35)',
+    text: '#1A1A1A',
+    textMuted: '#6B7280',
+    textSubtle: '#9CA3AF',
     accent: 'var(--gold-accent)',
     dotGreen: '#10B981',
   }
@@ -118,7 +115,7 @@ export default function ServicesHero() {
             background: colors.accent,
             opacity: loaded ? 0.6 : 0,
             transition: 'opacity 0.6s ease-out 0.4s',
-            boxShadow: isNightMode ? `0 0 20px ${colors.accent}` : 'none',
+            boxShadow: 'none',
           }}
         />
       </motion.div>

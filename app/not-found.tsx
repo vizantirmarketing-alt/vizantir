@@ -1,16 +1,13 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 export default function NotFound() {
-  const { isNightMode } = useTheme()
-
   return (
     <main 
       className="min-h-screen transition-colors duration-500 flex items-center justify-center px-4"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="text-center max-w-2xl">
         <motion.div
@@ -23,7 +20,7 @@ export default function NotFound() {
             className="text-[150px] md:text-[200px] font-bold leading-none mb-0"
             style={{ 
               color: 'var(--gold-primary)',
-              textShadow: isNightMode ? '0 0 100px rgba(255,198,76,0.3)' : 'none'
+              textShadow: 'none'
             }}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -40,13 +37,13 @@ export default function NotFound() {
           >
             <h2 
               className="text-2xl md:text-3xl font-bold mb-4"
-              style={{ color: isNightMode ? '#FFFFFF' : '#1A1A1A' }}
+              style={{ color: '#1A1A1A' }}
             >
               Page Not Found
             </h2>
             <p 
               className="text-lg mb-8 max-w-md mx-auto"
-              style={{ color: isNightMode ? 'rgba(255,255,255,0.6)' : '#6B6B6B' }}
+              style={{ color: '#6B6B6B' }}
             >
               Oops! The page you&apos;re looking for doesn&apos;t exist or has been moved.
             </p>
@@ -74,9 +71,9 @@ export default function NotFound() {
               className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80"
               style={{ 
                 background: 'transparent', 
-                color: isNightMode ? '#FFFFFF' : '#1A1A1A', 
+                color: '#1A1A1A', 
                 borderRadius: '8px',
-                border: `2px solid ${isNightMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}`
+                border: '2px solid rgba(0,0,0,0.2)'
               }}
             >
               Contact Us
@@ -89,11 +86,11 @@ export default function NotFound() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-12 pt-8 border-t"
-            style={{ borderColor: isNightMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}
+            style={{ borderColor: 'rgba(0,0,0,0.1)' }}
           >
             <p 
               className="text-sm mb-4"
-              style={{ color: isNightMode ? 'rgba(255,255,255,0.5)' : '#888888' }}
+              style={{ color: '#888888' }}
             >
               Here are some helpful links:
             </p>
@@ -121,16 +118,3 @@ export default function NotFound() {
     </main>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

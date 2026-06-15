@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
-import { useTheme } from '@/contexts/ThemeContext'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { shouldShowCaseStudyClient } from '@/lib/case-studies/metadata'
 import { trackCTAClick } from '@/lib/analytics'
@@ -24,19 +23,18 @@ function absoluteImageUrl(url: string) {
 }
 
 const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
-  const { isNightMode } = useTheme()
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
 
   const colors = useMemo(
     () => ({
-      bg: isNightMode ? '#000000' : '#FAFAFA',
-      text: isNightMode ? '#F8F8F8' : '#1A1A1A',
-      textMuted: isNightMode ? '#9CA3AF' : '#6B6B6B',
+      bg: '#FAFAFA',
+      text: '#1A1A1A',
+      textMuted: '#6B6B6B',
       accent: 'var(--gold-primary)',
-      cardBg: isNightMode ? '#0A0A0A' : '#FFFFFF',
-      cardBorder: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+      cardBg: '#FFFFFF',
+      cardBorder: 'rgba(0,0,0,0.08)',
     }),
-    [isNightMode],
+    [],
   )
 
   const categories = useMemo(() => {
@@ -110,21 +108,15 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                   background:
                     selectedCategory === category
                       ? colors.accent
-                      : isNightMode
-                        ? 'rgba(255, 255, 255, 0.05)'
-                        : 'rgba(0, 0, 0, 0.05)',
+                      : 'rgba(0, 0, 0, 0.05)',
                   color:
                     selectedCategory === category
                       ? '#1A1A1A'
-                      : isNightMode
-                        ? '#FFFFFF'
-                        : '#1A1A1A',
+                      : '#1A1A1A',
                   border:
                     selectedCategory === category
                       ? 'none'
-                      : isNightMode
-                        ? '1px solid rgba(255, 255, 255, 0.1)'
-                        : '1px solid rgba(0, 0, 0, 0.1)',
+                      : '1px solid rgba(0, 0, 0, 0.1)',
                 }}
               >
                 {category}
@@ -200,9 +192,9 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                           key={item}
                           className="rounded-full px-3 py-1 text-xs font-medium transition-colors duration-500"
                           style={{
-                            background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                            background: 'rgba(0, 0, 0, 0.05)',
                             color: colors.textMuted,
-                            border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+                            border: '1px solid rgba(0, 0, 0, 0.1)',
                           }}
                         >
                           {item}
