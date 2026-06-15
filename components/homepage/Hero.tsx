@@ -3,7 +3,6 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 
@@ -21,20 +20,13 @@ const TorusPlaceholder = () => (
 );
 
 const Hero = () => {
-  const { scrollY } = useScroll();
   const [isBelowLg, setIsBelowLg] = useState(false);
-  const [isBelowMd, setIsBelowMd] = useState(false);
-  const [viewportHeight, setViewportHeight] = useState(() =>
-    typeof window !== "undefined" ? window.innerHeight : 0
-  );
   const [show3D, setShow3D] = useState(false);
   
-  // Below-lg: centered glow (matches lg:grid-cols-2). Below-md: slower scroll fade.
+  // Below-lg: centered glow (matches lg:grid-cols-2).
   useEffect(() => {
     const handleViewportChange = () => {
       setIsBelowLg(window.innerWidth < 1024)
-      setIsBelowMd(window.innerWidth < 768)
-      setViewportHeight(window.innerHeight)
     }
     handleViewportChange()
     window.addEventListener('resize', handleViewportChange)
@@ -56,21 +48,6 @@ const Hero = () => {
       return () => clearTimeout(timer);
     }
   }, []);
-  
-  // Fade distance scales with viewport height. Short viewports (landscape phones)
-  // need a larger multiplier so the hero fully clears before the gap shows.
-  const fadeMultiplier = viewportHeight > 0 && viewportHeight < 600 ? 2 : 1.3;
-  const scrollEnd = viewportHeight > 0
-    ? Math.max(700, Math.round(viewportHeight * fadeMultiplier))
-    : (isBelowMd ? 1000 : 500);
-  const opacity = useTransform(scrollY, [0, scrollEnd], [1, 0]);
-  const contentOpacity = useTransform(
-    scrollY,
-    isBelowMd ? [0, scrollEnd * 0.6, scrollEnd] : [0, scrollEnd],
-    isBelowMd ? [1, 1, 0] : [1, 0],
-  );
-  const y = useTransform(scrollY, [0, scrollEnd], [0, 100]);
-  const scale = useTransform(scrollY, [0, scrollEnd], [1, 0.95]);
 
   const heroGlowBackground = isBelowLg
     ? 'radial-gradient(ellipse 120% 70% at 50% 45%, rgba(255, 198, 76, 0.1) 0%, rgba(180, 83, 9, 0.05) 35%, transparent 70%)'
@@ -81,27 +58,25 @@ const Hero = () => {
             `;
 
   return (
-    <motion.section 
+    <section
       className="hero-section relative min-h-screen short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
       style={{ 
         background: '#FAFAFA',
       }}
     >
       {/* Background gradient - purple/amber glow on LEFT side */}
-      <motion.div 
+      <div 
         className="absolute inset-0 pointer-events-none transition-opacity duration-700"
         style={{
-          opacity,
           background: heroGlowBackground,
         }}
       />
       
       {/* Flowing curved lines - SVG background */}
-      <motion.svg 
+      <svg 
         className="absolute inset-0 w-full h-full pointer-events-none"
         viewBox="0 0 1400 900"
         preserveAspectRatio="xMidYMid slice"
-        style={{ opacity }}
       >
         <defs>
           <linearGradient id="lineGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -156,10 +131,10 @@ const Hero = () => {
           stroke="url(#lineGradient2)" 
           strokeWidth="1.5"
         />
-      </motion.svg>
+      </svg>
       
       {/* Noise texture overlay */}
-      <motion.div 
+      <div 
         className="absolute inset-0 pointer-events-none"
         style={{
           opacity: 0.015,
@@ -167,9 +142,8 @@ const Hero = () => {
         }}
       />
 
-      <motion.div 
+      <div 
         className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-screen short-landscape:min-h-0 py-16 lg:py-16 short-landscape:py-10"
-        style={{ y, scale }}
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}
@@ -186,9 +160,8 @@ const Hero = () => {
         </div>
 
         {/* RIGHT SIDE - Content */}
-        <motion.div
+        <div
           className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left"
-          style={{ opacity: contentOpacity }}
         >
           <div className="mb-4">
             <Eyebrow align="start">Vizantir Design Studio · Las Vegas</Eyebrow>
@@ -276,10 +249,10 @@ const Hero = () => {
           >
             <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
           </Button>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
-    </motion.section>
+    </section>
   );
 };
 
