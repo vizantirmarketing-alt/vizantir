@@ -8,7 +8,7 @@ import { trackCTAClick } from '@/lib/analytics';
 const CTA = () => {
   return (
     <section 
-      className="py-16 md:py-20 relative overflow-hidden"
+      className="py-16 md:py-20 short-landscape:py-8 relative overflow-hidden"
       style={{
         background: '#FAFAFA',
       }}

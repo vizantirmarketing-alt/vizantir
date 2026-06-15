@@ -80,7 +80,7 @@ const Hero = () => {
 
   return (
     <motion.section 
-      className="hero-section relative min-h-screen w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
+      className="hero-section relative min-h-screen short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
       style={{ 
         background: '#FAFAFA',
       }}
@@ -166,7 +166,7 @@ const Hero = () => {
       />
 
       <motion.div 
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-screen py-16 lg:py-16"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-screen short-landscape:min-h-0 py-16 lg:py-16 short-landscape:py-10"
         style={{ y, scale }}
       >
         

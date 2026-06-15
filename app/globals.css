@@ -49,6 +49,9 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* Short landscape (rotated phones): tighten vertical rhythm without affecting portrait or desktop */
+@custom-variant short-landscape (@media (orientation: landscape) and (max-height: 600px));
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

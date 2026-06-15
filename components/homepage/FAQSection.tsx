@@ -37,7 +37,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
 
   return (
     <section 
-      className="py-16 md:py-20"
+      className="py-16 md:py-20 short-landscape:py-8"
       style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">

@@ -15,7 +15,7 @@ const Newsletter = () => {
 
   return (
     <section
-      className="py-16"
+      className="py-16 short-landscape:py-8"
       style={{
         background: '#FAFAFA',
         borderTop: '1px solid rgba(0,0,0,0.1)',

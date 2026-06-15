@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 const EditorialStatement = () => {
   return (
     <section
-      className="py-16 md:py-20 transition-colors duration-500"
+      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
       style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">

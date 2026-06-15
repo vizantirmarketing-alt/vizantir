@@ -44,7 +44,7 @@ const Marquee = () => {
   return (
     <section
       suppressHydrationWarning
-      className="py-10 md:py-12 overflow-hidden relative"
+      className="py-10 md:py-12 short-landscape:py-6 overflow-hidden relative"
       style={{ background: '#FAFAFA' }}
     >
       {/* Gradient fade on left */}

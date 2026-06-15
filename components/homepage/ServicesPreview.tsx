@@ -128,7 +128,7 @@ const ServicesPreview = () => {
 
   return (
     <section
-      className="relative min-h-screen py-16 md:py-20 overflow-hidden"
+      className="relative min-h-screen short-landscape:min-h-0 short-landscape:py-8 py-16 md:py-20 overflow-hidden"
       style={{ background: '#FAFAFA' }}
     >
       <canvas
