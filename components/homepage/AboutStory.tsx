@@ -23,7 +23,7 @@ const AboutStory = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <div className="mb-2">
+              <div className="mb-6">
                 <Eyebrow align="start">The Difference</Eyebrow>
               </div>
               <h2 
