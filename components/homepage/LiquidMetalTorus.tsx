@@ -3,11 +3,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-interface LiquidMetalTorusProps {
-  isNightMode?: boolean
-}
-
-export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalTorusProps) {
+export default function LiquidMetalTorus() {
   const containerRef = useRef<HTMLDivElement>(null)
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
@@ -346,7 +342,7 @@ export default function LiquidMetalTorus({ isNightMode = true }: LiquidMetalToru
       geometry.dispose()
       material.dispose()
     }
-  }, [isNightMode])
+  }, [])
 
   return (
     <div 

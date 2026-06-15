@@ -3,17 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from 'framer-motion';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 
 const AboutStory = () => {
-  const { isNightMode } = useTheme();
-
   return (
     <section 
       className="py-16 md:py-20 transition-colors duration-500"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-5 lg:gap-14 items-center">
@@ -31,13 +28,13 @@ const AboutStory = () => {
               </div>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
-                style={{ color: isNightMode ? '#F8F8F8' : '#1A1A1A' }}
+                style={{ color: '#1A1A1A' }}
               >
                 Your business has outgrown what you started with.
               </h2>
               <p 
                 className="text-sm md:text-base mb-8 font-medium"
-                style={{ color: isNightMode ? 'rgba(255, 198, 76, 0.8)' : 'var(--gold-accent)' }}
+                style={{ color: 'var(--gold-accent)' }}
               >
                 When the right person lands on your site, they should already trust you before they read a word.
               </p>
@@ -53,14 +50,14 @@ const AboutStory = () => {
             >
               <p 
                 className="text-base md:text-lg"
-                style={{ color: isNightMode ? '#C0C0C0' : '#4A4A4A', lineHeight: '1.7' }}
+                style={{ color: '#4A4A4A', lineHeight: '1.7' }}
               >
                 Most websites look fine on the surface. They just don&apos;t do anything. They don&apos;t rank. They don&apos;t convert. They don&apos;t reflect the business you&apos;ve actually become.
               </p>
               
               <p 
                 className="text-base md:text-lg"
-                style={{ color: isNightMode ? '#C0C0C0' : '#4A4A4A', lineHeight: '1.7' }}
+                style={{ color: '#4A4A4A', lineHeight: '1.7' }}
               >
                 We build from the ground up — considered, crafted, and coded for the way your business actually operates. Every decision is intentional. Every line of code earns its place.
               </p>
@@ -89,9 +86,7 @@ const AboutStory = () => {
             <div 
               className="rounded-2xl overflow-hidden"
               style={{
-                boxShadow: isNightMode 
-                  ? '0 25px 50px -12px rgba(0, 0, 0, 0.8)' 
-                  : '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
               }}
             >
               <Image
@@ -108,9 +103,7 @@ const AboutStory = () => {
             <div 
               className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-2xl"
               style={{
-                background: isNightMode 
-                  ? 'linear-gradient(135deg, rgba(255, 198, 76, 0.3), rgba(180, 83, 9, 0.2))' 
-                  : 'linear-gradient(135deg, rgba(255, 198, 76, 0.4), rgba(212, 197, 249, 0.4))'
+                background: 'linear-gradient(135deg, rgba(255, 198, 76, 0.4), rgba(212, 197, 249, 0.4))'
               }}
             />
           </motion.div>
@@ -121,4 +114,3 @@ const AboutStory = () => {
 };
 
 export default AboutStory;
-

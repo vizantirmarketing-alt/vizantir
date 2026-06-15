@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 
 interface Testimonial {
   id: number;
@@ -14,7 +13,6 @@ interface Testimonial {
 }
 
 const GlassTestimonials = () => {
-  const { isNightMode } = useTheme();
   const [activeIndex, setActiveIndex] = useState(1);
 
   const testimonials: Testimonial[] = [
@@ -96,31 +94,24 @@ const GlassTestimonials = () => {
     setActiveIndex(index);
   };
 
-  const dayBackground = `
+  const sectionBackground = `
     radial-gradient(ellipse 80% 50% at 20% 50%, rgba(255, 198, 76, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse 60% 40% at 80% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse 50% 30% at 50% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
     #FAFAFA
   `;
 
-  const nightBackground = `
-    radial-gradient(ellipse 80% 50% at 20% 50%, rgba(124, 58, 237, 0.2) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 30% at 50% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-    #000
-  `;
-
   return (
     <section
       className="relative min-h-screen w-full flex items-center overflow-hidden py-20 md:py-24"
-      style={{ background: isNightMode ? nightBackground : dayBackground }}
+      style={{ background: sectionBackground }}
     >
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(${isNightMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px),
-            linear-gradient(90deg, ${isNightMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px)
+            linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
           maskImage: 'radial-gradient(ellipse at center, black 0%, transparent 70%)',
@@ -133,8 +124,8 @@ const GlassTestimonials = () => {
           <div
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-8"
             style={{
-              background: isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.15)',
-              border: `1px solid ${isNightMode ? 'rgba(255, 198, 76, 0.2)' : 'rgba(255, 198, 76, 0.3)'}`,
+              background: 'rgba(255, 198, 76, 0.15)',
+              border: '1px solid rgba(255, 198, 76, 0.3)',
             }}
           >
             <div
@@ -143,7 +134,7 @@ const GlassTestimonials = () => {
             />
             <span
               className="text-xs font-semibold uppercase tracking-wider"
-              style={{ color: isNightMode ? 'var(--gold-primary)' : 'var(--gold-accent)' }}
+              style={{ color: 'var(--gold-accent)' }}
             >
               Trusted by Industry Leaders
             </span>
@@ -155,9 +146,7 @@ const GlassTestimonials = () => {
           >
             <span
               style={{
-                backgroundImage: isNightMode
-                  ? 'linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%)'
-                  : 'linear-gradient(135deg, #1a1a1a 0%, rgba(26,26,26,0.7) 100%)',
+                backgroundImage: 'linear-gradient(135deg, #1a1a1a 0%, rgba(26,26,26,0.7) 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -170,7 +159,7 @@ const GlassTestimonials = () => {
 
           <p
             className="text-lg max-w-2xl mx-auto"
-            style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)' }}
+            style={{ color: 'rgba(0, 0, 0, 0.5)' }}
           >
             Real stories from businesses that transformed their digital presence with Vizantir
           </p>
@@ -187,24 +176,20 @@ const GlassTestimonials = () => {
               <div
                 className="relative rounded-2xl p-12 transition-all duration-500"
                 style={{
-                  background: isNightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.7)',
+                  background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(10px)',
                   WebkitBackdropFilter: 'blur(10px)',
-                  border: isNightMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.08)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
                   boxShadow: index === activeIndex
-                    ? isNightMode
-                      ? '0 30px 80px rgba(0, 0, 0, 0.5)'
-                      : '0 30px 80px rgba(0, 0, 0, 0.15)'
-                    : isNightMode ? 'none' : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                    ? '0 30px 80px rgba(0, 0, 0, 0.15)'
+                    : '0 4px 24px rgba(0, 0, 0, 0.06)',
                 }}
               >
                 {index === activeIndex && (
                   <div
                     className="absolute inset-0 pointer-events-none rounded-2xl"
                     style={{
-                      background: `radial-gradient(circle at center, ${
-                        isNightMode ? 'rgba(255, 198, 76, 0.1)' : 'rgba(255, 198, 76, 0.05)'
-                      } 0%, transparent 70%)`,
+                      background: 'radial-gradient(circle at center, rgba(255, 198, 76, 0.05) 0%, transparent 70%)',
                     }}
                   />
                 )}
@@ -226,13 +211,13 @@ const GlassTestimonials = () => {
                   <div>
                     <h4
                       className="text-xl font-bold mb-1"
-                      style={{ color: isNightMode ? '#fff' : '#1a1a1a' }}
+                      style={{ color: '#1a1a1a' }}
                     >
                       {testimonial.company}
                     </h4>
                     <p
                       className="text-sm"
-                      style={{ color: isNightMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)' }}
+                      style={{ color: 'rgba(0, 0, 0, 0.5)' }}
                     >
                       {testimonial.role}
                     </p>
@@ -242,7 +227,7 @@ const GlassTestimonials = () => {
                 <p
                   className="text-lg md:text-xl"
                   style={{
-                    color: isNightMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.75)',
+                    color: 'rgba(0, 0, 0, 0.75)',
                     lineHeight: '1.7',
                   }}
                 >
@@ -265,9 +250,7 @@ const GlassTestimonials = () => {
                 borderRadius: '100px',
                 background: index === activeIndex
                   ? 'var(--gold-primary)'
-                  : isNightMode
-                    ? 'rgba(255, 255, 255, 0.2)'
-                    : 'rgba(0, 0, 0, 0.2)',
+                  : 'rgba(0, 0, 0, 0.2)',
                 boxShadow: index === activeIndex ? '0 0 20px rgba(255, 198, 76, 0.5)' : 'none',
                 border: 'none',
                 cursor: 'pointer',
@@ -282,4 +265,3 @@ const GlassTestimonials = () => {
 };
 
 export default GlassTestimonials;
-

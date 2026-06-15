@@ -1,10 +1,6 @@
 'use client'
 
-import { useTheme } from "@/contexts/ThemeContext";
-
 const Marquee = () => {
-  const { isNightMode } = useTheme();
-
   const items = [
     "WEBSITE DESIGN",
     "CUSTOM DEVELOPMENT",
@@ -26,7 +22,7 @@ const Marquee = () => {
             suppressHydrationWarning
             className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight whitespace-nowrap"
             style={{ 
-              color: isNightMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
+              color: 'rgba(0,0,0,0.1)',
             }}
           >
             {item}
@@ -35,7 +31,7 @@ const Marquee = () => {
           <span 
             className="text-2xl md:text-3xl mx-6 flex-shrink-0"
             style={{ 
-              color: isNightMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+              color: 'rgba(0,0,0,0.1)'
             }}
           >
             ❖
@@ -49,15 +45,13 @@ const Marquee = () => {
     <section
       suppressHydrationWarning
       className="py-10 md:py-12 overflow-hidden relative"
-      style={{ background: isNightMode ? '#000000' : '#FAFAFA' }}
+      style={{ background: '#FAFAFA' }}
     >
       {/* Gradient fade on left */}
       <div 
         className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
         style={{
-          background: isNightMode
-            ? 'linear-gradient(90deg, #000000 0%, transparent 100%)'
-            : 'linear-gradient(90deg, #FAFAFA 0%, transparent 100%)'
+          background: 'linear-gradient(90deg, #FAFAFA 0%, transparent 100%)'
         }}
       />
       
@@ -65,9 +59,7 @@ const Marquee = () => {
       <div 
         className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
         style={{
-          background: isNightMode
-            ? 'linear-gradient(270deg, #000000 0%, transparent 100%)'
-            : 'linear-gradient(270deg, #FAFAFA 0%, transparent 100%)'
+          background: 'linear-gradient(270deg, #FAFAFA 0%, transparent 100%)'
         }}
       />
 
@@ -98,4 +90,3 @@ const Marquee = () => {
 };
 
 export default Marquee;
-

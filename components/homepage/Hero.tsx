@@ -169,7 +169,7 @@ const Hero = () => {
           <div className="relative w-full h-full max-w-[700px] -mt-8 md:-mt-16 lg:-mt-24 scale-90 md:scale-100">
             {show3D ? (
               <Suspense fallback={<TorusPlaceholder />}>
-                <LiquidMetalTorus isNightMode={false} />
+                <LiquidMetalTorus />
               </Suspense>
             ) : (
               <TorusPlaceholder />
