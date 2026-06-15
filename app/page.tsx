@@ -24,15 +24,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSeo('home');
   
   return {
-    title: page?.seo?.metaTitle || 'Premium Web Design Studio in Las Vegas | Vizantir',
+    title: page?.seo?.metaTitle || 'Custom Websites for Established Brands | Vizantir',
     description:
       page?.seo?.metaDescription ||
-      'Discover custom, high-performance websites for hospitality, law and real estate brands across the U.S., created by our Las Vegas studio.',
+      'We build custom websites for established businesses that care how they\'re perceived. Hand-built in Next.js by a Las Vegas studio, for clients nationwide.',
     openGraph: {
-      title: page?.seo?.metaTitle || 'Premium Web Design Studio in Las Vegas | Vizantir',
+      title: page?.seo?.metaTitle || 'Custom Websites for Established Brands | Vizantir',
       description:
         page?.seo?.metaDescription ||
-        'Discover custom, high-performance websites for hospitality, law and real estate brands across the U.S., created by our Las Vegas studio.',
+        'We build custom websites for established businesses that care how they\'re perceived. Hand-built in Next.js by a Las Vegas studio, for clients nationwide.',
       ...(page?.seo?.ogImage && { images: [page.seo.ogImage] }),
     },
   };
