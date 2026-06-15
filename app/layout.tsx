@@ -229,36 +229,6 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function() {
-  try {
-    var stored = localStorage.getItem('vizantir-theme');
-    
-    // Migrate legacy 'theme' key if present and new key is not set
-    if (!stored) {
-      var legacy = localStorage.getItem('theme');
-      if (legacy === 'dark') {
-        stored = 'night';
-        localStorage.setItem('vizantir-theme', 'night');
-      } else if (legacy === 'light') {
-        stored = 'day';
-        localStorage.setItem('vizantir-theme', 'day');
-      }
-      if (legacy !== null) {
-        localStorage.removeItem('theme');
-      }
-    }
-    
-    if (stored === 'night') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  } catch (e) {}
-})();`,
-          }}
-        />
         <meta property="og:image" content="https://www.vizantir.com/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />

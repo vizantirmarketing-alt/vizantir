@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { X, Sun, Moon } from "lucide-react";
+import { X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { trackCTAClick } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const { isNightMode, toggleTheme } = useTheme();
+  const { isNightMode } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -137,41 +137,6 @@ const Navbar = () => {
             </div>
 
             <div className="hidden xl:flex items-center gap-4">
-              {/* Theme Toggle */}
-              {mounted && (
-                <button
-                  onClick={toggleTheme}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105"
-                  style={{
-                    background: isNightMode ? "rgba(30, 41, 59, 0.6)" : "rgba(255, 255, 255, 0.6)",
-                    border: isNightMode ? "1px solid rgba(148, 163, 184, 0.3)" : "1px solid rgba(0, 0, 0, 0.1)",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  {isNightMode ? (
-                    <Moon size={16} style={{ color: "#94a3b8" }} />
-                  ) : (
-                    <Sun size={16} style={{ color: "#1A1A1A" }} />
-                  )}
-                  <div
-                    className="relative w-8 h-4 rounded-full transition-all duration-300"
-                    style={{
-                      background: isNightMode
-                        ? "linear-gradient(135deg, #1e293b, #334155)"
-                        : 'var(--gold-gradient)',
-                    }}
-                  >
-                    <div
-                      className="absolute top-0.5 w-3 h-3 rounded-full transition-all duration-300 shadow-md"
-                      style={{
-                        left: isNightMode ? "1rem" : "0.125rem",
-                        background: isNightMode ? "#FAFAFA" : "#000000",
-                      }}
-                    />
-                  </div>
-                </button>
-              )}
-
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'navbar')}>
                 <button
                   className="px-6 py-2.5 rounded-xl text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
@@ -315,50 +280,6 @@ const Navbar = () => {
                 >
                   Book a Strategy Call
                 </Link>
-
-                <div className="flex items-center justify-center gap-3">
-                  <span className="text-sm font-medium text-muted-foreground">Theme</span>
-                  <button
-                    type="button"
-                    onClick={toggleTheme}
-                    className="flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-300"
-                    style={{
-                      background: isNightMode ? 'rgba(30, 41, 59, 0.6)' : 'rgba(0, 0, 0, 0.05)',
-                      border: isNightMode ? '1px solid rgba(148, 163, 184, 0.3)' : '1px solid rgba(0, 0, 0, 0.1)',
-                    }}
-                  >
-                    <Sun
-                      size={18}
-                      style={{
-                        color: !isNightMode ? 'var(--gold-primary)' : '#64748b',
-                        transition: 'color 0.3s ease',
-                      }}
-                    />
-                    <div
-                      className="relative w-10 h-5 rounded-full transition-all duration-300"
-                      style={{
-                        background: isNightMode
-                          ? 'linear-gradient(135deg, #1e293b, #334155)'
-                          : 'var(--gold-gradient)',
-                      }}
-                    >
-                      <div
-                        className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-300 shadow-md"
-                        style={{
-                          left: isNightMode ? '1.375rem' : '0.125rem',
-                          background: isNightMode ? '#FAFAFA' : '#1A1A1A',
-                        }}
-                      />
-                    </div>
-                    <Moon
-                      size={18}
-                      style={{
-                        color: isNightMode ? 'var(--gold-primary)' : '#64748b',
-                        transition: 'color 0.3s ease',
-                      }}
-                    />
-                  </button>
-                </div>
               </div>
             )}
           </nav>

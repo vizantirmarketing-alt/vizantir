@@ -46,10 +46,10 @@ export default function MadeInUSA() {
       className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5"
       style={{ borderColor: "var(--gold-muted-border)", background: "var(--gold-muted-subtle)" }}
     >
-      <span className="inline-flex overflow-hidden rounded-[1px] leading-none shadow-[0_0_0_1px_rgba(0,0,0,0.10)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14)]">
+      <span className="inline-flex overflow-hidden rounded-[1px] leading-none shadow-[0_0_0_1px_rgba(0,0,0,0.10)]">
         <USFlag width={26} />
       </span>
-      <span className="text-[11px] font-semibold uppercase tracking-[0.11em] text-neutral-800 dark:text-neutral-100">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.11em] text-neutral-800">
         Made in U.S.A.
       </span>
     </span>
