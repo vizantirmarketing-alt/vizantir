@@ -24,6 +24,7 @@ const Hero = () => {
   const { scrollY } = useScroll();
   const [isBelowLg, setIsBelowLg] = useState(false);
   const [isBelowMd, setIsBelowMd] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const [show3D, setShow3D] = useState(false);
   
   // Below-lg: centered glow (matches lg:grid-cols-2). Below-md: slower scroll fade.
@@ -31,6 +32,7 @@ const Hero = () => {
     const handleViewportChange = () => {
       setIsBelowLg(window.innerWidth < 1024)
       setIsBelowMd(window.innerWidth < 768)
+      setViewportHeight(window.innerHeight)
     }
     handleViewportChange()
     window.addEventListener('resize', handleViewportChange)
@@ -53,8 +55,12 @@ const Hero = () => {
     }
   }, []);
   
-  // Slower fade on mobile (0-1000px scroll), faster on desktop (0-500px)
-  const scrollEnd = isBelowMd ? 1000 : 500;
+  // Fade distance scales with viewport height. Short viewports (landscape phones)
+  // need a larger multiplier so the hero fully clears before the gap shows.
+  const fadeMultiplier = viewportHeight > 0 && viewportHeight < 600 ? 2 : 1.3;
+  const scrollEnd = viewportHeight > 0
+    ? Math.max(700, Math.round(viewportHeight * fadeMultiplier))
+    : (isBelowMd ? 1000 : 500);
   const opacity = useTransform(scrollY, [0, scrollEnd], [1, 0]);
   const contentOpacity = useTransform(
     scrollY,
