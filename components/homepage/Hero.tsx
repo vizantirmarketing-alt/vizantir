@@ -24,7 +24,9 @@ const Hero = () => {
   const { scrollY } = useScroll();
   const [isBelowLg, setIsBelowLg] = useState(false);
   const [isBelowMd, setIsBelowMd] = useState(false);
-  const [viewportHeight, setViewportHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(() =>
+    typeof window !== "undefined" ? window.innerHeight : 0
+  );
   const [show3D, setShow3D] = useState(false);
   
   // Below-lg: centered glow (matches lg:grid-cols-2). Below-md: slower scroll fade.
