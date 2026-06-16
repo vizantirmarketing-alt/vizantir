@@ -211,6 +211,54 @@ export const blogPricing: BlogTier[] = [
   },
 ]
 
+export type ChatbotTier = {
+  slug: 'chatbot-starter' | 'chatbot-growth' | 'chatbot-scale'
+  name: string
+  price: string
+  priceMin: number
+  conversations: string
+  tagline: string
+  popular?: boolean
+}
+
+export const CHATBOT_SETUP_FEE = {
+  amount: 500,
+  display: '$500',
+  description: 'One-time setup: deployment, training on your content, and brand-voice tuning.',
+} as const
+
+export const chatbotPricing: ChatbotTier[] = [
+  {
+    slug: 'chatbot-starter',
+    name: 'Starter',
+    price: '$150/month',
+    priceMin: 150,
+    conversations: 'Up to 500 conversations per month',
+    tagline: 'For low-volume sites that want a smart front door.',
+  },
+  {
+    slug: 'chatbot-growth',
+    name: 'Growth',
+    price: '$350/month',
+    priceMin: 350,
+    conversations: 'Up to 2,000 conversations per month',
+    tagline: 'A real customer-facing channel that handles repeat questions.',
+    popular: true,
+  },
+  {
+    slug: 'chatbot-scale',
+    name: 'Scale',
+    price: '$600/month',
+    priceMin: 600,
+    conversations: 'Up to 5,000 conversations per month',
+    tagline: 'High-traffic sites where the bot earns its keep daily.',
+  },
+]
+
+export function getChatbotTier(slug: ChatbotTier['slug']) {
+  return chatbotPricing.find((tier) => tier.slug === slug)
+}
+
 const essentialsTier = projectPricing[0]
 const growthTier = projectPricing[1]
 const enterpriseTier = projectPricing[2]

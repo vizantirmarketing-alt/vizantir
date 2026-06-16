@@ -13,9 +13,12 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import {
   blogPricing,
   carePricing,
+  chatbotPricing,
   projectPricing,
+  CHATBOT_SETUP_FEE,
   type BlogTier,
   type CareTier,
+  type ChatbotTier,
   type PricingTier,
 } from '@/data/pricing'
 import { cn } from '@/lib/utils'
@@ -37,6 +40,13 @@ const BLOG_ADDON = {
   intro:
     'Add ongoing content to any care plan. Human-written posts, researched and published live \u2014 attached to your retainer, not a separate engagement.',
 } as const
+
+const CHATBOT_ADDON = {
+  eyebrow: 'AI Chatbot',
+  heading: 'Always-on answers, trained on your content.',
+  intro:
+    'A custom chatbot trained on your site, services, and FAQs. Answers visitors instantly in your brand voice — no scripts, no canned responses.',
+}
 
 function getBlogCadenceLabel(tier: BlogTier): string {
   if (tier.slug === 'blog-single') return 'One-time engagement'
@@ -214,6 +224,41 @@ function BlogOptionCard({ tier }: { tier: BlogTier }) {
   )
 }
 
+function ChatbotOptionCard({ tier }: { tier: ChatbotTier }) {
+  return (
+    <article
+      className={cn(
+        'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
+        tier.popular
+          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted-border'
+          : 'border-border bg-muted/20 hover:border-gold-muted-border',
+      )}
+    >
+      {tier.popular ? (
+        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+          Popular
+        </span>
+      ) : null}
+      <div className="flex flex-1 flex-col">
+        <h3 className="mb-1 text-xl font-bold tracking-tight text-foreground md:text-[22px]">
+          {tier.name}
+        </h3>
+        <div className="mb-6 text-[13px] text-muted-foreground">{tier.conversations}</div>
+
+        <div className="mb-5 border-y border-border py-5">
+          <div className="text-[28px] font-bold leading-none text-gold-accent">
+            ${tier.priceMin.toLocaleString()}
+            <span className="ml-1 text-sm font-medium text-muted-foreground">/mo</span>
+          </div>
+        </div>
+
+        <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
+        <div className="text-xs font-semibold tracking-wide text-gold-accent">15% off for care clients</div>
+      </div>
+    </article>
+  )
+}
+
 const WebIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
     <rect x="3" y="4" width="18" height="14" rx="2" />
@@ -381,6 +426,42 @@ function StandalonePricingSection() {
             href="/contact"
             onClick={() => trackCTAClick('get_started', 'services')}
             className="inline-flex items-center gap-2 font-semibold text-gold-accent transition-opacity hover:opacity-80"
+          >
+            Book a Strategy Call
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="mt-16 md:mt-20 border-t border-border pt-16 md:pt-20"
+      >
+        <Eyebrow align="start">{CHATBOT_ADDON.eyebrow}</Eyebrow>
+        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+          {CHATBOT_ADDON.heading}
+        </h2>
+        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          {CHATBOT_ADDON.intro}
+        </p>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {chatbotPricing.map((tier) => (
+            <ChatbotOptionCard key={tier.slug} tier={tier} />
+          ))}
+        </div>
+
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted-foreground">
+            {CHATBOT_SETUP_FEE.display} one-time setup. Available as add-on to any Care plan.
+          </p>
+          <Link
+            href="/contact"
+            onClick={() => trackCTAClick('get_started', 'services')}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-gold-accent transition-opacity hover:opacity-80"
           >
             Book a Strategy Call
             <ArrowRight className="h-4 w-4" />
