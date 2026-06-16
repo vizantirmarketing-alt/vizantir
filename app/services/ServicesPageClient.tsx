@@ -9,8 +9,210 @@ import { trackCTAClick } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
-import { carePricing, projectPricing } from '@/data/pricing'
+import { Eyebrow } from '@/components/ui/Eyebrow'
+import {
+  blogPricing,
+  carePricing,
+  projectPricing,
+  type BlogTier,
+  type CareTier,
+  type PricingTier,
+} from '@/data/pricing'
 import { cn } from '@/lib/utils'
+
+const CARE_CLIENT_DISCOUNT = 0.15
+
+const CARE_REFRAME = {
+  eyebrow: 'Website Care',
+  heading: 'Care That Isn\u2019t Damage Control',
+  body: [
+    'Most maintenance plans charge you to patch a fragile platform \u2014 plugin updates, malware scans, whatever the CMS broke this week.',
+    'A hand-coded Next.js site doesn\u2019t have those failure points. Vizantir care isn\u2019t about recovery. It keeps an already-fast, already-secure site continuously improving.',
+  ],
+} as const
+
+const BLOG_ADDON = {
+  eyebrow: 'Blog Writing Add-On',
+  heading: 'Ongoing content, attached to your retainer.',
+  intro:
+    'Add ongoing content to any care plan. Human-written posts, researched and published live \u2014 attached to your retainer, not a separate engagement.',
+} as const
+
+function getBlogCadenceLabel(tier: BlogTier): string {
+  if (tier.slug === 'blog-single') return 'One-time engagement'
+  if (tier.slug === 'blog-essentials') return '2 posts per month'
+  if (tier.slug === 'blog-growth') return '4 posts per month'
+  return tier.cadence
+}
+
+function formatCareClientPrice(priceMin: number): string {
+  const discounted = Math.round(priceMin * (1 - CARE_CLIENT_DISCOUNT))
+  return `$${discounted.toLocaleString()}`
+}
+
+function ProjectPricingCard({ tier }: { tier: PricingTier }) {
+  const glassTransition = 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease'
+
+  const defaultGlass = {
+    background: 'rgba(0, 0, 0, 0.02)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    border: '1px solid rgba(0, 0, 0, 0.08)',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
+    transition: glassTransition,
+  }
+
+  const featuredGlass = {
+    background: 'rgba(180, 132, 30, 0.04)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    border: '1px solid rgba(180, 132, 30, 0.15)',
+    boxShadow: '0 4px 24px rgba(180, 132, 30, 0.08)',
+    transition: glassTransition,
+  }
+
+  const baseGlass = tier.featured ? featuredGlass : defaultGlass
+
+  return (
+    <div
+      className="relative flex h-full flex-col rounded-xl p-7 transition-all duration-300 md:p-8"
+      style={baseGlass}
+      onMouseEnter={(e) => {
+        if (tier.featured) {
+          e.currentTarget.style.background = 'rgba(180, 132, 30, 0.06)'
+          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.25)'
+          e.currentTarget.style.boxShadow = '0 4px 28px rgba(180, 132, 30, 0.12)'
+        } else {
+          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)'
+          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.2)'
+        }
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = baseGlass.background
+        e.currentTarget.style.border = baseGlass.border
+        if (tier.featured) {
+          e.currentTarget.style.boxShadow = featuredGlass.boxShadow
+        } else {
+          e.currentTarget.style.boxShadow = defaultGlass.boxShadow
+        }
+      }}
+    >
+      {tier.featured ? (
+        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+          Popular
+        </span>
+      ) : null}
+      <div className="mb-2 flex items-baseline justify-between gap-4">
+        <h3 className="text-xl font-bold tracking-tight text-foreground md:text-[22px]">{tier.name}</h3>
+        <p className="whitespace-nowrap text-xl font-bold text-gold-accent md:text-[22px]">{tier.price}</p>
+      </div>
+      <p className="mb-6 border-b border-border pb-6 text-sm leading-relaxed text-muted-foreground">
+        {tier.description}
+      </p>
+      <ul className="mb-7 flex-1 space-y-2.5">
+        {tier.includes.map((line) => (
+          <li key={line} className="flex items-start gap-2.5 text-sm text-foreground/80">
+            <CheckCircle2 className="mt-[2px] h-4 w-4 flex-shrink-0 text-gold-accent" aria-hidden />
+            {line}
+          </li>
+        ))}
+      </ul>
+      <Button
+        asChild
+        className={
+          tier.featured
+            ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02]'
+            : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-[#1A1A1A]'
+        }
+      >
+        <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
+          Book a Strategy Call
+          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </Link>
+      </Button>
+    </div>
+  )
+}
+
+function CarePricingCard({ tier }: { tier: CareTier }) {
+  const featured = tier.slug === 'growth-care'
+
+  return (
+    <div
+      className={cn(
+        'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
+        featured
+          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted-border'
+          : 'border-border bg-muted/30 hover:border-gold-muted-border',
+      )}
+    >
+      {featured ? (
+        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+          Popular
+        </span>
+      ) : null}
+      <div className="mb-2 flex items-baseline justify-between gap-4">
+        <h3 className="text-xl font-bold tracking-tight text-foreground md:text-[22px]">{tier.name}</h3>
+        <p className="whitespace-nowrap text-xl font-bold text-gold-accent md:text-[22px]">
+          ${tier.priceMin.toLocaleString()}
+          <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
+        </p>
+      </div>
+      <p className="mb-4 text-sm font-semibold text-gold-accent">{tier.tagline}</p>
+      <p className="mb-6 border-b border-border pb-6 text-sm leading-relaxed text-muted-foreground">
+        {tier.description}
+      </p>
+      <ul className="mb-7 flex-1 space-y-2.5">
+        {tier.includes.map((line) => (
+          <li key={line} className="flex items-start gap-2.5 text-sm text-foreground/80">
+            <CheckCircle2 className="mt-[2px] h-4 w-4 flex-shrink-0 text-gold-accent" aria-hidden />
+            {line}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function BlogOptionCard({ tier }: { tier: BlogTier }) {
+  const isOneTime = tier.slug === 'blog-single'
+
+  return (
+    <article
+      className={cn(
+        'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
+        tier.popular
+          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted-border'
+          : 'border-border bg-muted/20 hover:border-gold-muted-border',
+      )}
+    >
+      {tier.popular ? (
+        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+          Popular
+        </span>
+      ) : null}
+      <div className="flex flex-1 flex-col">
+        <h3 className="mb-1 text-xl font-bold tracking-tight text-foreground md:text-[22px]">
+          {tier.name}
+        </h3>
+        <div className="mb-6 text-[13px] text-muted-foreground">{getBlogCadenceLabel(tier)}</div>
+
+        <div className="mb-5 border-y border-border py-5">
+          <div className="mb-1 text-sm text-muted-foreground line-through">{tier.price}</div>
+          <div className="text-[28px] font-bold leading-none text-gold-accent">
+            {formatCareClientPrice(tier.priceMin)}
+            <span className="ml-1 text-sm font-medium text-muted-foreground">
+              {isOneTime ? 'one-time' : '/mo'}
+            </span>
+          </div>
+        </div>
+
+        <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
+        <div className="text-xs font-semibold tracking-wide text-gold-accent">15% off for care clients</div>
+      </div>
+    </article>
+  )
+}
 
 const WebIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
@@ -108,60 +310,84 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
 
 function StandalonePricingSection() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="mt-20 md:mt-24"
-    >
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-12">
-        <div>
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-foreground transition-colors duration-500">
-            Project Pricing
-          </h3>
-          <p className="text-sm md:text-base mb-6 text-muted-foreground transition-colors duration-500">
-            Fixed scope. Fixed price. No surprises.
-          </p>
-          <div className="space-y-3">
-            {projectPricing.map((tier) => (
-              <PricingCard
-                key={tier.slug}
-                title={tier.name}
-                price={tier.price}
-                description={tier.description}
-                includes={tier.includes}
-                featured={tier.featured}
-              />
-            ))}
-          </div>
+    <>
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0 }}
+        className="mt-20 md:mt-24"
+      >
+        <Eyebrow align="start">Project Pricing</Eyebrow>
+        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+          Fixed scope. Fixed price. No surprises.
+        </h2>
+        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          Three tiers built around how complex your site needs to be — not how much we think we can
+          charge.
+        </p>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {projectPricing.map((tier) => (
+            <ProjectPricingCard key={tier.slug} tier={tier} />
+          ))}
         </div>
-        <div>
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-foreground transition-colors duration-500">
-            Website Care
-          </h3>
-          <p className="text-sm md:text-base mb-6 text-muted-foreground transition-colors duration-500">
-            Monthly retainers after launch.
-          </p>
-          <div className="space-y-3">
-            {carePricing.map((tier) => (
-              <PricingCard
-                key={tier.slug}
-                title={tier.name}
-                tagline={tier.tagline}
-                price={tier.price}
-                description={tier.description}
-                includes={tier.includes}
-                featured={tier.slug === 'growth-care'}
-              />
-            ))}
-          </div>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="mt-16 border-t border-border pt-16 md:mt-20 md:pt-20"
+      >
+        <Eyebrow align="start">{CARE_REFRAME.eyebrow}</Eyebrow>
+        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+          {CARE_REFRAME.heading}
+        </h2>
+        <div className="mb-12 max-w-2xl space-y-3.5 text-base leading-relaxed text-muted-foreground">
+          {CARE_REFRAME.body.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
         </div>
-      </div>
-      <div className="flex justify-center mt-10">
-        <span className="inline-flex">{strategyCallLink()}</span>
-      </div>
-    </motion.div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {carePricing.map((tier) => (
+            <CarePricingCard key={tier.slug} tier={tier} />
+          ))}
+        </div>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="mt-16 border-t border-border pt-16 md:mt-20 md:pt-20"
+      >
+        <Eyebrow align="start">{BLOG_ADDON.eyebrow}</Eyebrow>
+        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+          {BLOG_ADDON.heading}
+        </h2>
+        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          {BLOG_ADDON.intro}
+        </p>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {blogPricing.map((tier) => (
+            <BlogOptionCard key={tier.slug} tier={tier} />
+          ))}
+        </div>
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-between">
+          <p className="text-sm text-muted-foreground">Available as add-on to any Care plan.</p>
+          <Link
+            href="/contact"
+            onClick={() => trackCTAClick('get_started', 'services')}
+            className="inline-flex items-center gap-2 font-semibold text-gold-accent transition-opacity hover:opacity-80"
+          >
+            Book a Strategy Call
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </motion.section>
+    </>
   )
 }
 
@@ -300,107 +526,3 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
   )
 }
 
-interface PricingCardProps {
-  title: string
-  tagline?: string
-  price: string
-  description: string
-  includes?: readonly string[]
-  featured?: boolean
-}
-
-function PricingCard({
-  title,
-  tagline,
-  price,
-  description,
-  includes,
-  featured = false,
-}: PricingCardProps) {
-  const glassTransition = 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease'
-
-  const defaultGlass = {
-    background: 'rgba(0, 0, 0, 0.02)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(0, 0, 0, 0.08)',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-    transition: glassTransition,
-  }
-
-  const featuredGlass = {
-    background: 'rgba(180, 132, 30, 0.04)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(180, 132, 30, 0.15)',
-    boxShadow: '0 4px 24px rgba(180, 132, 30, 0.08)',
-    transition: glassTransition,
-  }
-
-  const baseGlass = featured ? featuredGlass : defaultGlass
-
-  return (
-    <div
-      className="relative p-5 rounded-xl border transition-all duration-300"
-      style={baseGlass}
-      onMouseEnter={(e) => {
-        if (featured) {
-          e.currentTarget.style.background = 'rgba(180, 132, 30, 0.06)'
-          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.25)'
-          e.currentTarget.style.boxShadow = '0 4px 28px rgba(180, 132, 30, 0.12)'
-        } else {
-          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)'
-          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.2)'
-        }
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = baseGlass.background
-        e.currentTarget.style.border = baseGlass.border
-        if (featured) {
-          e.currentTarget.style.boxShadow = featuredGlass.boxShadow
-        } else {
-          e.currentTarget.style.boxShadow = defaultGlass.boxShadow
-        }
-      }}
-    >
-      {featured && (
-        <span className="absolute -top-2 right-4 text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-full font-medium bg-gold-gradient text-[#1A1A1A]">
-          Popular
-        </span>
-      )}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div>
-          <h4 className="font-medium text-sm text-foreground transition-colors duration-500">
-            {title}
-          </h4>
-          {tagline ? (
-            <p className="mt-0.5 text-xs font-medium text-gold-accent transition-colors duration-500">
-              {tagline}
-            </p>
-          ) : null}
-        </div>
-        <span className="text-sm font-semibold whitespace-nowrap text-gold-accent transition-colors duration-500">
-          {price}
-        </span>
-      </div>
-      <p
-        className={cn(
-          'text-xs leading-relaxed text-muted-foreground transition-colors duration-500',
-          includes?.length ? 'mb-4' : '',
-        )}
-      >
-        {description}
-      </p>
-      {includes && includes.length > 0 ? (
-        <ul className="space-y-3">
-          {includes.map((line, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
-              <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-gold-accent" aria-hidden />
-              {line}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </div>
-  )
-}

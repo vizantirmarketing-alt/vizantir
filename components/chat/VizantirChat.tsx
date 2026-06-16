@@ -209,6 +209,8 @@ export function VizantirChat() {
     }
   };
 
+  if (!mounted) return null;
+
   const showEmptyState = messages.length === 0;
 
   const panel = hasOpened && isOpen && (
@@ -357,8 +359,6 @@ export function VizantirChat() {
       document.body
     )
   );
-
-  if (!mounted) return null;
 
   return (
     <>
