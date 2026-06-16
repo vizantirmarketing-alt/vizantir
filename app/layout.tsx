@@ -15,7 +15,7 @@ import ScrollProgress from '@/components/ScrollProgress'
 
 import { ScrollToTop } from '@/components/ScrollToTop'
 
-import DeferredChatbase from '@/components/DeferredChatbase'
+import { VizantirChat } from '@/components/chat/VizantirChat'
 
 import { Analytics } from '@vercel/analytics/next'
 
@@ -238,9 +238,6 @@ export default async function RootLayout({
         />
         <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
-        
-        {/* Preconnect hints for third-party scripts */}
-        <link rel="dns-prefetch" href="https://www.chatbase.co" />
       </head>
       <body className={satoshi.variable}>
         <SmoothScroll>
@@ -250,7 +247,7 @@ export default async function RootLayout({
           <main>{children}</main>
           <Footer />
         </SmoothScroll>
-        <DeferredChatbase />
+        <VizantirChat />
         <Analytics />
       </body>
     </html>
