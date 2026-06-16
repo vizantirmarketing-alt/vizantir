@@ -16,14 +16,13 @@ import {
   chatbotPricing,
   projectPricing,
   CHATBOT_SETUP_FEE,
+  formatCareClientPrice,
   type BlogTier,
   type CareTier,
   type ChatbotTier,
   type PricingTier,
 } from '@/data/pricing'
 import { cn } from '@/lib/utils'
-
-const CARE_CLIENT_DISCOUNT = 0.15
 
 const CARE_REFRAME = {
   eyebrow: 'Website Care',
@@ -53,11 +52,6 @@ function getBlogCadenceLabel(tier: BlogTier): string {
   if (tier.slug === 'blog-essentials') return '2 posts per month'
   if (tier.slug === 'blog-growth') return '4 posts per month'
   return tier.cadence
-}
-
-function formatCareClientPrice(priceMin: number): string {
-  const discounted = Math.round(priceMin * (1 - CARE_CLIENT_DISCOUNT))
-  return `$${discounted.toLocaleString()}`
 }
 
 function ProjectPricingCard({ tier }: { tier: PricingTier }) {
