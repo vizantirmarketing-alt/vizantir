@@ -72,11 +72,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               <motion.div
                 key={faq._id}
                 variants={itemVariants}
-                className="rounded-lg overflow-hidden transition-all duration-300"
-                style={{
-                  border: '1px solid #E5E7EB',
-                  background: '#FFFFFF'
-                }}
+                className="rounded-xl overflow-hidden transition-all duration-300 border border-border bg-card"
               >
                 <button
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}

@@ -260,8 +260,8 @@ export default function CREWebDesignClient() {
                 {industryBullets.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2
-                      size={20}
-                      className="flex-shrink-0 mt-0.5 text-gold-accent"
+                      className="h-4 w-4 flex-shrink-0 text-gold-accent mt-[2px]"
+                      aria-hidden
                     />
                     <span className="text-muted-foreground">{item}</span>
                   </li>
@@ -282,8 +282,8 @@ export default function CREWebDesignClient() {
                 {organizationTypes.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2
-                      size={20}
-                      className="flex-shrink-0 mt-0.5 text-gold-accent"
+                      className="h-4 w-4 flex-shrink-0 text-gold-accent mt-[2px]"
+                      aria-hidden
                     />
                     <span className="text-sm text-muted-foreground">{item}</span>
                   </li>

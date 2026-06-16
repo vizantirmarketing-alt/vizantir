@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { howWeWorkFaqs, howWeWorkProcess } from '@/data/how-we-work'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { Check, X } from 'lucide-react'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 
@@ -335,19 +336,19 @@ export default function HowWeWorkPageClient() {
 
               <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Big teams, big overhead, big invoices</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Layers between you and the work</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Vague quotes, surprise invoices</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Account managers, not builders</span>
                 </li>
               </ul>
@@ -386,19 +387,19 @@ export default function HowWeWorkPageClient() {
 
               <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
-                  <span className="text-gold-accent mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>You buy hours, not outcomes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-gold-accent mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>100 hours in, project 60% done</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-gold-accent mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>No guaranteed deliverable</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-gold-accent mt-0.5">✗</span>
+                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>"Buy more hours to finish"</span>
                 </li>
               </ul>
@@ -410,21 +411,14 @@ export default function HowWeWorkPageClient() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="p-6 rounded-2xl border relative overflow-hidden"
+              className="p-6 rounded-2xl border relative"
               style={{
                 background: 'linear-gradient(135deg, rgba(180,83,9,0.1) 0%, rgba(180,83,9,0.02) 100%)',
                 borderColor: 'rgba(180,83,9,0.3)',
               }}
             >
-              {/* Popular badge */}
-              <span
-                className="absolute top-4 right-4 text-[10px] tracking-wider uppercase px-2 py-1 rounded-full font-semibold"
-                style={{
-                  background: colors.accent,
-                  color: '#FFFFFF',
-                }}
-              >
-                Better
+              <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+                Recommended
               </span>
 
               <div
@@ -447,19 +441,19 @@ export default function HowWeWorkPageClient() {
 
               <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Fixed scope, fixed price</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>You get a finished product</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Direct access to the builder</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>No surprise invoices</span>
                 </li>
               </ul>
@@ -522,7 +516,7 @@ export default function HowWeWorkPageClient() {
                   'Launch support',
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <span className="text-emerald-500">✓</span>
+                    <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -552,7 +546,7 @@ export default function HowWeWorkPageClient() {
                   'Hosting fees',
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <span className="transition-colors duration-500" style={{ color: colors.textSubtle }}>✗</span>
+                    <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -590,7 +584,7 @@ export default function HowWeWorkPageClient() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full text-left p-5 rounded-xl border transition-all duration-300"
+                  className="w-full text-left px-6 py-5 rounded-xl border transition-all duration-300"
                   style={{
                     background: colors.cardBg,
                     borderColor:

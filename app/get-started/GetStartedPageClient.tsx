@@ -65,7 +65,7 @@ export default function GetStartedPageClient() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex gap-6 p-6 rounded-xl"
+                className="flex gap-6 p-6 rounded-2xl"
                 style={{ 
                   background: '#FFFFFF',
                   border: '1px solid rgba(0,0,0,0.08)',

@@ -152,7 +152,7 @@ function CarePricingCard({ tier }: { tier: CareTier }) {
       className={cn(
         'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
         featured
-          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted-border'
+          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted'
           : 'border-border bg-muted/30 hover:border-gold-muted-border',
       )}
     >
@@ -192,7 +192,7 @@ function BlogOptionCard({ tier }: { tier: BlogTier }) {
       className={cn(
         'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
         tier.popular
-          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted-border'
+          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted'
           : 'border-border bg-muted/20 hover:border-gold-muted-border',
       )}
     >
@@ -230,7 +230,7 @@ function ChatbotOptionCard({ tier }: { tier: ChatbotTier }) {
       className={cn(
         'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
         tier.popular
-          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted-border'
+          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted'
           : 'border-border bg-muted/20 hover:border-gold-muted-border',
       )}
     >

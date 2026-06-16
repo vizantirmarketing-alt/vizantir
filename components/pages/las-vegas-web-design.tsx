@@ -223,17 +223,17 @@ export default function LasVegasWebDesignPage() {
               <motion.div
                 key={tier.name}
                 variants={itemVariants}
-                className={`p-8 rounded-2xl border flex flex-col bg-muted ${
+                className={`relative p-8 rounded-2xl border flex flex-col bg-muted ${
                   tier.featured
                     ? 'border-gold-muted-border shadow-[0_0_40px_rgba(255,198,76,0.08)]'
                     : 'border-border'
                 }`}
               >
-                {tier.featured && (
-                  <span className="text-xs font-semibold uppercase tracking-wider text-gold-accent mb-4">
-                    Most common
+                {tier.featured ? (
+                  <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+                    Popular
                   </span>
-                )}
+                ) : null}
                 <h3 className="text-xl font-bold mb-1 text-foreground">{tier.name}</h3>
                 <p className="text-3xl font-black text-gold-accent mb-1">{tier.price}</p>
                 <p className="text-sm text-muted-foreground mb-4">{tier.timeline}</p>
@@ -241,7 +241,7 @@ export default function LasVegasWebDesignPage() {
                 <ul className="space-y-3 mt-auto">
                   {tier.includes.map((line, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
-                      <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5 text-gold-accent" />
+                      <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-gold-accent mt-[2px]" aria-hidden />
                       {line}
                     </li>
                   ))}
@@ -286,7 +286,7 @@ export default function LasVegasWebDesignPage() {
                   variants={itemVariants}
                   className="flex items-center gap-3 p-4 rounded-xl border border-border bg-muted text-sm text-foreground/80"
                 >
-                  <CheckCircle2 size={18} className="flex-shrink-0 text-gold-accent" />
+                  <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-gold-accent mt-[2px]" aria-hidden />
                   {item}
                 </motion.li>
               ))}
