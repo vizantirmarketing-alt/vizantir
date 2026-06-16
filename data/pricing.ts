@@ -25,6 +25,7 @@ export type BlogTier = {
   price: string
   priceMin: number
   cadence: string
+  postsPerMonth: number
   tagline: string
   popular?: boolean
   includes: string[]
@@ -161,6 +162,7 @@ export const blogPricing: BlogTier[] = [
     price: '$350',
     priceMin: 350,
     cadence: 'one-time',
+    postsPerMonth: 0,
     tagline: 'Test the waters.',
     includes: [
       'One original, human-written post (1,500+ words)',
@@ -178,6 +180,7 @@ export const blogPricing: BlogTier[] = [
     price: '$650/month',
     priceMin: 650,
     cadence: 'per month',
+    postsPerMonth: 2,
     tagline: 'A steady content presence.',
     popular: true,
     includes: [
@@ -197,6 +200,7 @@ export const blogPricing: BlogTier[] = [
     price: '$1,200/month',
     priceMin: 1200,
     cadence: 'per month',
+    postsPerMonth: 4,
     tagline: 'A real content engine.',
     includes: [
       '4 original, human-written posts per month (1,500+ words each)',

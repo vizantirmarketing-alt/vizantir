@@ -61,10 +61,8 @@ const CHATBOT_ADDON = {
 }
 
 function getBlogCadenceLabel(tier: BlogTier): string {
-  if (tier.slug === 'blog-single') return 'One-time engagement'
-  if (tier.slug === 'blog-essentials') return '2 posts per month'
-  if (tier.slug === 'blog-growth') return '4 posts per month'
-  return tier.cadence
+  if (tier.postsPerMonth === 0) return 'One-time engagement'
+  return `${tier.postsPerMonth} posts per month`
 }
 
 function ProjectPricingCard({ tier }: { tier: PricingTier }) {

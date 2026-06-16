@@ -88,10 +88,14 @@ function buildPricing(): string {
       const carePrice = isOneTime
         ? `${formatCareClientPrice(t.priceMin)} (one-time, 15% off)`
         : `${formatCareClientPrice(t.priceMin)}/month (15% off)`
+      const cadenceLine = isOneTime
+        ? 'Cadence: one-time engagement'
+        : `Cadence: ${t.postsPerMonth} posts per month`
       return [
         `### ${t.name}`,
         `Standard price: ${standardPrice}`,
         `Care client price: ${carePrice}`,
+        cadenceLine,
         t.tagline,
       ].join('\n')
     })
