@@ -307,3 +307,65 @@ export const faqPageFaqsQuery = `*[_type == "faq" && (placement == "faqPage" || 
   answer
 }`
 
+// ============================================
+// Chat Knowledge (LLM context — Portable Text flattened via pt::text)
+// ============================================
+
+export const chatAllServicesQuery = groq`
+  *[_type == "service"] | order(order asc) {
+    title,
+    "slug": slug.current,
+    description,
+    heroHeadline,
+    heroSubheadline,
+    "overview": pt::text(overview),
+    benefits,
+    process[]{ step, title, description },
+    offerings[]{ name, description },
+    deliverables,
+    faqs[]{ question, answer }
+  }
+`
+
+export const chatAllCaseStudiesQuery = groq`
+  *[_type == "caseStudy"] | order(featured desc) {
+    title,
+    client,
+    industry,
+    summary,
+    stack,
+    siteUrl,
+    "challenge": pt::text(challenge),
+    "solution": pt::text(solution),
+    "results": pt::text(results)
+  }
+`
+
+export const chatAllFaqsQuery = groq`
+  *[_type == "faq"] | order(sortOrder asc) {
+    question,
+    answer,
+    placement
+  }
+`
+
+export const chatAllPostsQuery = groq`
+  *[_type == "post"] | order(publishedAt desc) {
+    title,
+    "slug": slug.current,
+    publishedAt,
+    category,
+    excerpt,
+    "body": pt::text(body)
+  }
+`
+
+export const chatAuthorQuery = groq`
+  *[_type == "author"][0] {
+    name,
+    role,
+    "bio": pt::text(bio),
+    credentials
+  }
+`
+

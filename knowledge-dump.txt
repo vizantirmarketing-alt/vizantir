@@ -1,0 +1,804 @@
+VIZANTIR DESIGN STUDIO — COMPLETE SITE KNOWLEDGE
+Use ONLY the information below to answer questions about Vizantir.
+
+## STUDIO OVERVIEW
+
+Studio: Vizantir
+About: Vizantir is a premium web design and development agency based in Las Vegas. We create stunning, high-performance websites built on Next.js that convert visitors into customers.
+Email: info@vizantir.com
+Phone: +1(702) 604-6177
+Price range: $$$
+Area served: Las Vegas, Nevada, United States
+Founded: 2024
+
+
+## ABOUT VIZANTIR
+
+A studio for brands that have outgrown their website
+
+Vizantir is a design and development studio based in Las Vegas. We build websites for brands whose business has moved past what their current site can carry.
+
+Most of our clients already have a website. The problem is that it was built for a version of their business they've outgrown.
+
+### New studio, not a first attempt
+Vizantir is new. The experience behind it is not.
+The studio was founded on more than ten years of hands-on web development — from custom WordPress themes to modern websites and applications built with Next.js, TypeScript, and Sanity.
+That background matters. We know why WordPress became the default, and we know where it starts to fall short for brands that care about speed, security, and design.
+Most agencies only know one side of that story. We've built on both.
+
+### What we build on
+Every Vizantir site is built on Next.js, TypeScript, Sanity, and Vercel.
+No page builders. No bloated plugin stacks. No fragile setup that needs constant patching just to stay stable.
+The result is a site that loads faster than most WordPress sites, is harder to compromise, and is easier for your team to update day-to-day. We put as much thought into the editing experience as we do the visitor experience, because the people maintaining your site shouldn't dread logging in.
+
+### Who we work with
+Vizantir works with premium brands and established businesses — luxury hospitality, boutique law firms, commercial real estate, and product companies that serve a discerning audience.
+The common thread isn't the industry. It's the standard.
+Our clients care about craft, notice when something is off, and want their website to hold up to the same scrutiny as the rest of their business.
+
+### Behind Vizantir
+Vizantir runs as a focused studio, not a traditional agency.
+The person you meet in a first call is the person doing the work — the design, the development, the decisions. There's no sales handoff and no account manager passing things along.
+The studio was started after years of watching good brands get handed generic websites by agencies that treat web as an add-on to a marketing retainer.
+Vizantir exists to do it differently, for clients who want it done well.
+
+
+## SERVICES
+
+### Website Strategy
+Before we design a single page, we figure out what your site actually needs to do — who it's for, what they care about, and what's going to make them reach out.
+Most websites fail before they're built. Not because of bad design or slow load times — because nobody stopped to ask what the site actually needs to do. Who is it for? What do they need to see before they'll reach out? What's the one thing the site needs to communicate above everything else? We answer those questions first. Every project at Vizantir starts with strategy — a clear map of your buyers, your goals, and the structure that gets them from landing to contacting you. It's not a deliverable you'll file away. It's the foundation everything else gets built on.
+Benefits:
+- A clear picture of who your buyers are and what they need to see
+- Site structure planned around conversion, not aesthetics
+- Content hierarchy that guides visitors without confusion
+- Fewer revisions because everyone agrees on direction before design starts
+- A strategy document you can use beyond the website
+- Alignment between your business goals and what the site actually does
+Deliverables:
+- Buyer persona documentation
+- Site architecture and URL structure
+- Page-by-page content briefs
+- Messaging hierarchy and positioning statement
+- Competitor analysis summary
+Process:
+  1. Business Discovery: We start by understanding your business, your revenue model, and who your best clients are. We ask the questions most agencies skip.
+  2. Buyer Research: We map out who is actually visiting your site, what they care about, and what's going to make them take action.
+  3. Competitor Analysis: We look at what your competitors are doing online — what's working, what's missing, and where you can position yourself more clearly.
+  4. Site Architecture: We plan the page structure, URL hierarchy, and content priorities so the site makes sense to both visitors and search engines.
+  5. Strategy Handoff: You get a clear strategy document covering goals, structure, messaging priorities, and next steps — whether you build with us or someone else.
+Offerings:
+  - New site strategy: Full discovery and planning for businesses starting from scratch or doing a complete rebuild.
+
+  - Redesign strategy: For businesses with an existing site that isn't performing. We audit what's there and plan what needs to change.
+
+  - Content strategy: Messaging hierarchy, page-by-page content briefs, and copy direction so every word earns its place.
+
+  - SEO strategy: Keyword research, content gap analysis, and site structure planning built around how your buyers actually search.
+
+Service FAQs:
+  Q: Do we have to do strategy before design?
+  A: Yes. Every Vizantir project starts with strategy. It's not an upsell—it's how we make sure the design and development work actually solves your problem instead of just looking good.
+
+  Q: How long does the strategy phase take?
+  A: Typically one to two weeks depending on the complexity of your business and how quickly we can get the information we need from your team.
+
+  Q: Can we hire you just for strategy without the full build?
+  A: Yes. If you want to work with your own developer or designer, we can deliver the strategy package as a standalone engagement.
+  Q: What if we already have a brand and content?
+  A: Great — that gives us more to work with. We'll audit what exists and build the strategy around your current assets rather than starting from zero.
+
+### Web Design
+Custom design built around your brand. No templates, no shortcuts. Every decision is made with your buyer in mind.
+Good design isn't about trends. It's about clarity. A well-designed website makes it immediately obvious who you are, who you serve, and why someone should trust you. It guides visitors without them noticing they're being guided.
+
+We design from the strategy up—not from a template out. Every layout, every section, every visual decision is made with your specific buyer in mind. We don't have a house style we apply to every project. We build something that fits your brand and your market.
+
+We design and build simultaneously in the browser using React components. What you see during review is exactly what ships—no handoff, no translation loss, no surprises.
+
+
+Benefits:
+- Custom design with no templates or recycled layouts
+- Visual hierarchy that guides visitors toward conversion
+- Mobile-first design that looks right on every screen
+- Brand-aligned aesthetics that build trust immediately
+- Designed for your specific buyer, not a generic audience
+- What you review in the browser is exactly what ships
+Deliverables:
+- Component architecture plan
+- High-fidelity design built directly in the browser
+- Mobile and desktop fully responsive
+- Reusable React component library
+- Clean codebase with documentation
+- Two rounds of revisions included
+Process:
+  1. Design Brief: We align on visual direction, brand guidelines, and the goals each page needs to hit before writing a line of code.
+  2. Component Planning: We map out the page structure and component hierarchy so we have a clear plan before building.
+  3.  Build and Design: We design and build simultaneously using React components and Tailwind CSS. You see real pages in the browser from day one — not static mockups that get thrown away.
+  4. Review and Revisions: You review the actual site in the browser and give feedback. What you see is exactly what ships.
+  5. Handoff: Clean, documented codebase ready for your team to manage content going forward.
+Offerings:
+  - Full site design: End-to-end design and build for new websites or complete redesigns, from homepage to interior pages.
+  - Landing page design: High-converting standalone pages for campaigns, services, or lead generation.
+  - Design system: A reusable component library built in React and Tailwind that your team can use to build new pages consistently.
+  - Redesign audit: A detailed review of your existing site with specific recommendations for what to change and why.
+Service FAQs:
+  Q: Do you do mockups before building?
+  A: No. We design and build simultaneously in the browser using React components. What you review is exactly what ships — no static files that look different once developed.
+
+  Q: How many revisions are included?
+  A: Two rounds of revisions are included in every design engagement. Additional rounds can be added if needed.
+  Q: Can you work with our existing brand guidelines?
+  A: Yes. If you have a brand identity we'll design within it. If your brand needs work we can address that as part of the project.
+
+  Q: Do you design and develop or just design?
+  A: Both happen at the same time. We don't separate design from development—they happen simultaneously in code.
+
+
+### Web Development
+We build on Next.js. Fast, clean code that your team can actually update without calling us every time something needs to change.
+A lot of agencies build sites that look great on launch day and become a maintenance headache six months later. Bloated plugins, unclear code, no documentation, a CMS nobody uses because it's too complicated.
+
+We build differently. Every site we develop is on Next.js — the same framework used by some of the largest sites on the web. It's fast, scalable, and built to grow with your business. We pair it with Sanity CMS so your team can manage content without calling a developer. And we deploy to Vercel so you get automatic previews, instant rollbacks, and a global edge network without managing any infrastructure.
+
+We design and build simultaneously — no handoff between a designer and a developer, no translation loss, no surprises on launch day.
+Benefits:
+- Next.js for speed, SEO, and long-term scalability
+- Sanity CMS so your team can update content without help
+- Vercel deployment with preview URLs and instant rollbacks
+- TypeScript throughout for reliable, maintainable code
+- Core Web Vitals optimized before launch
+- Clean codebase with documentation for future developers
+Deliverables:
+- Production Next.js codebase on GitHub
+- Vercel deployment with custom domain
+- Sanity Studio configured and ready for your team
+- SEO foundations — metadata, sitemap, structured data
+- Core Web Vitals passing on launch
+- Written documentation for developers and content editors
+Process:
+  1. Technical Planning: We plan the architecture, data sources, rendering strategy, and integrations before writing a line of code.
+  2. CMS Setup: We configure Sanity Studio with schemas matched to your content model so editors can work intuitively from day one.
+  3. Build: We design and build simultaneously using React components and Tailwind CSS with preview deployments on Vercel so you can review real pages at every stage.
+  4. QA and Performance: Before launch we test across devices, audit Core Web Vitals, and verify all SEO fundamentals are in place.
+  5. Launch and Handoff: We deploy to production, walk your team through the CMS, and document everything so you're not dependent on us for day-to-day changes.
+Offerings:
+  - Marketing website development : Full Next.js build for business websites, landing pages, and content-driven sites.
+  - Headless e-commerce: Product catalogs and storefronts built on Next.js with Sanity or Shopify on the backend.
+  - Web application development: Internal tools, client portals, and dashboards built on the App Router.
+  - Legacy site migration: Moving from WordPress, Webflow, or an outdated stack to a modern Next.js codebase.
+Service FAQs:
+  Q: Why Next.js and not WordPress?
+  A: WordPress works fine for simple sites. But if you care about performance, security, and a codebase that can grow without becoming a plugin nightmare, Next.js is the better foundation. We've seen too many WordPress sites become unmaintainable—we don't build that way.
+
+  Q: Will we be able to update the site ourselves after launch?
+  A: Yes. We pair every site with Sanity CMS and walk your team through it. Most clients are comfortable updating content on their own after one session.
+
+  Q: How long does development take?
+  A: A typical marketing site takes 4 to 8 weeks from kickoff to launch. More complex builds with e-commerce or custom integrations run 8 to 12 weeks.
+
+  Q: Do you offer support after launch?
+  A: Yes. We offer monthly Website Care retainers for ongoing updates, monitoring, and performance work.
+
+
+### Website Refreshes
+If your site is close but not quite there, we don't tear it down and start over. We fix what's holding it back without rebuilding what's already working.
+
+Not every site needs to be rebuilt from scratch. Some sites just need the right fixes—a clearer homepage, faster load times, and a better mobile experience. If that's you, we'll tell you and scope the work accordingly.
+
+But sometimes a refresh isn't enough. If your site is on WordPress and performance, security, or maintainability are holding your business back, a move to Next.js is worth the investment. We'll give you an honest assessment either way—not a recommendation based on what generates more work.
+
+We start every engagement with a full audit. We look at performance, design, content, SEO, and user experience and tell you exactly what's causing problems and what the right fix is—whether that's a targeted refresh or a full rebuild.
+Benefits:
+- Honest audit of what's actually causing problems
+- Faster and more affordable than a full rebuild
+- Performance fixes that improve search rankings immediately
+- Design updates that modernize without losing brand equity
+- Mobile experience fixed across all key pages
+- Lower cost than starting from scratch
+Deliverables:
+- Site audit report with prioritized recommendations
+- Updated design for key pages built directly in code
+- Performance improvements with before and after metrics
+- Technical SEO fixes
+- Updated content for revised pages
+- QA report and launch confirmation
+Process:
+  1. Site Audit: We do a full review of your current site — performance, design, content, SEO, and user experience — and document exactly what needs to change.
+  2. Priority Review: We present our findings and agree on which fixes will have the biggest impact. You decide the scope.
+  3. Design Updates: We update the visual design of key pages — homepage, service pages, contact — directly in code without redesigning everything from scratch.
+  4. Development Fixes: We implement performance improvements, fix broken elements, and address technical SEO issues.
+  5. QA and Launch: We test everything, verify Core Web Vitals improvements, and push the updates live.
+Offerings:
+  - Performance refresh: Speed optimization, Core Web Vitals fixes, and technical SEO improvements for sites that are slow or ranking poorly.
+
+  - Design refresh: Visual updates to modernize the look and feel without a full redesign.
+
+  - Content refresh: Rewriting and restructuring key pages to improve clarity, messaging, and conversion.
+
+  - Full refresh: Design, development, and content updates combined for sites that need work across the board.
+
+Service FAQs:
+  Q: How do you decide what needs to be fixed versus rebuilt?
+  A: We look at whether the existing structure and codebase can support the improvements you need. If fixing it costs more than rebuilding it cleanly, we'll tell you. We don't recommend rebuilds to generate more work.
+
+  Q: How long does a refresh take?
+  A: Depends on scope. A focused performance or design refresh can be done in 2 to 4 weeks. A broader refresh across design, development, and content runs 4 to 8 weeks.
+
+  Q: Can you refresh a WordPress site?
+  A: Yes. We can improve performance, design, and content on an existing WordPress site. If the site would benefit from moving to Next.js we'll recommend it, but it's not a requirement.
+
+  Q: Do we need to redo all the content?
+  A: Not necessarily. We'll tell you which pages need new content and which ones just need structural or visual updates. We don't rewrite things that don't need rewriting.
+
+
+### CMS Integrations
+We set up Sanity so your team can update content, add pages, and make changes without touching code or waiting on a developer.
+Most CMS setups are built for developers, not editors. The result is a system that gets abandoned or worked around because it doesn't match how the business actually thinks about content. Fields nobody uses. Document types that don't make sense to a non-technical person. No documentation. The team ends up emailing the developer for every change because it's faster than figuring out the CMS.
+
+We set up Sanity differently. We start by understanding how your team works — what they need to update, how often, and who's doing it. Then we build the schema and Studio configuration around that workflow. Every field has a purpose. Every document type makes sense to a non-technical editor. And we document everything so your team isn't dependent on us to keep things running.
+Benefits:
+- Schema designed around how your team thinks about content
+- Studio interface configured for non-technical editors
+- Real-time collaboration across your content team
+- Content that works across web, mobile, and any future channel
+- On-demand revalidation so changes go live immediately
+- Full documentation so your team can work independently
+Deliverables:
+- Custom schema matched to your content model
+- Configured Studio with structure, previews, and roles
+- sanityFetch and GROQ integration in Next.js
+- Webhook setup for on-demand revalidation
+- SEO fields on every document type
+- Written documentation for your content team
+Process:
+  1. Content Audit: We map out every type of content your site manages and how it needs to be structured for both editors and the frontend.
+  2.  Schema Design: We design the document types, field structures, and validation rules before touching any code.
+  3.  Studio Configuration: We configure the Studio interface with custom structure, field grouping, previews, and role-based access.
+  4. Frontend Integration: We connect Sanity to your Next.js frontend with sanityFetch, GROQ queries, and webhook-based revalidation.
+  5. Training and Handoff: We walk your team through the Studio and deliver written documentation so everyone can work without asking us first.
+Offerings:
+  - New CMS setup: Full schema design and Studio configuration for sites being built from scratch.
+  - CMS migration: Moving content from WordPress, Contentful, or another platform into a clean Sanity structure.
+
+  - Studio redesign: Rebuilding an existing Sanity setup that has become hard to use or maintain.
+
+  - Content modeling review: Schema and structure audit for teams already on Sanity who want to clean things up.
+
+Service FAQs:
+  Q: Why Sanity over WordPress?
+  A: Sanity gives you structured content instead of a blob of HTML. That means your content works everywhere—web, mobile, email—and is easier to maintain at scale. WordPress works fine for simple blogs. For business sites that need to grow, Sanity is a better foundation.
+
+  Q: How long does a CMS setup take?
+  A: A standard setup alongside a new site takes 2 to 4 weeks. Migrations from an existing CMS with a lot of content take longer depending on volume.
+  Q: Can our team use it without technical training?
+  A: Yes. We configure the Studio so it's straightforward for non-technical editors. Most teams are comfortable after a single walkthrough.
+
+  Q: Do you offer support after the setup is complete?
+  A: Yes. We offer retainer support for schema changes, new document types, and content migrations as your site evolves.
+
+
+### Next.js Development
+We build fast, scalable websites and web applications using Next.js. Every project we ship is optimized for performance, search visibility, and long-term maintainability.
+Next.js is the framework we use on every project. Not because it's trendy — because it's the right tool. It gives us server-side rendering, static generation, and edge capabilities in one framework, which means your site is fast for users and readable by search engines from day one. We've been building on Next.js long enough to know where projects go wrong. Bloated bundles, poor caching strategies, missing metadata, slow image handling—we've seen it all, and we build around it from the start. Every site we ship on Next.js is deployed to Vercel, giving you automatic preview deployments, instant rollbacks, and a global edge network without any infrastructure management on your end.
+
+Benefits:
+- Fast by default — server rendering and static generation out of the box
+- Built-in SEO — metadata API, sitemap generation, structured data
+- App Router architecture for clean, maintainable codebases
+- Vercel deployment with preview URLs on every change
+- TypeScript throughout for reliability and easier handoffs
+- Scales without rebuilding — add features without starting over
+Deliverables:
+- Production Next.js codebase on GitHub
+- Vercel deployment with custom domain
+- CMS integration and Studio setup
+- SEO foundations — metadata, sitemap, structured data
+- Core Web Vitals passing on launch
+- Documentation for content management
+Process:
+  1. Discovery: We start by understanding your business, your users, and what the site needs to do. No templates, no assumptions.
+  2. Architecture: We plan the routing structure, data sources, rendering strategy, and CMS integration before writing a line of code.
+  3. Development: We build in focused sprints with regular previews so you can see progress and give feedback early.
+  4. Performance & SEO: Before launch we audit Core Web Vitals, metadata, structured data, and sitemap. We don't treat these as afterthoughts.
+  5. Launch & Handoff: We deploy to Vercel, walk you through the CMS, and make sure your team can manage content without calling us for every change.
+Offerings:
+  - Marketing websites: Fast, conversion-focused sites for businesses that need to make a strong first impression.
+  - Headless e-commerce: Product catalogs and storefronts built on Next.js with Sanity or Shopify on the backend.
+  - Web applications: Internal tools, dashboards, and client portals built on the App Router.
+  - Site migrations: Moving from WordPress, Webflow, or a legacy stack to a modern Next.js codebase.
+Service FAQs:
+  Q: Why Next.js over WordPress or Webflow?
+  A: WordPress and Webflow are fine tools for certain use cases. But if you care about performance, SEO control, and a codebase that can grow with your business, Next.js is the better foundation. You're not fighting the framework to do custom things.
+  Q: Do I need a developer to update content after launch?
+  A: No. We pair every Next.js project with a CMS — usually Sanity — so your team can update content, add pages, and manage SEO without touching code.
+
+  Q: How long does a typical Next.js project take?
+  A: Most marketing sites take 4 to 8 weeks from kickoff to launch. More complex projects with e-commerce or custom integrations run 8 to 12 weeks. We'll give you a specific timeline after our first call.
+
+A: Most marketing sites take 4 to 8 weeks from kickoff to launch. More complex projects with e-commerce or custom integrations run 8 to 12 weeks. We'll give you a specific timeline after our first call.
+
+  Q: Do you work with clients outside Las Vegas?
+  A: Yes. Most of our work is remote. We've worked with clients across the U.S., and the process is the same regardless of location.
+
+
+### Sanity CMS Development
+We implement Sanity CMS so your team can manage content, update pages, and publish without touching code. Built right the first time so it actually gets used.
+Most CMS setups fail not because of the technology but because they were built for the developer, not the editor. Fields nobody uses, structures that don't match how the business thinks about content, no documentation. The result is a CMS that gets abandoned six months after launch.
+
+We build Sanity differently. We start with how your team thinks about content and work backwards to the schema. Every field has a purpose. Every document type maps to something real in your business. The Studio feels like it was made for you because it was.
+
+We've implemented Sanity for e-commerce platforms, marketing sites, and content-heavy applications. We know where the complexity lives and how to keep it from becoming a maintenance problem.
+Benefits:
+- Content your team can actually manage without developer help
+- Structured content that works across web, mobile, and any future channel
+- Real-time collaboration in Sanity Studio
+- Schema designed around your content model, not a generic template
+- Sanity Live API for instant content updates without rebuilds
+- Built-in image optimization and CDN delivery
+Deliverables:
+- Custom Sanity schema matched to your content model
+- Configured Studio with structure, previews, and roles
+- GROQ queries and sanityFetch integration in Next.js
+- Webhook setup for on-demand revalidation
+- SEO fields on every document type
+- Written documentation for your content team
+Process:
+  1. Content Audit: We map out every type of content your site needs — pages, products, posts, settings — and how they relate to each other.
+  2. Schema Design: We design the document types, field structures, and validation rules in Sanity before writing any frontend code.
+  3. Studio Configuration: We configure the Studio interface so it matches how your team thinks. Custom structure, field grouping, previews, and roles.
+  4. Frontend Integration: We connect Sanity to your Next.js frontend using sanityFetch, GROQ queries, and structured data for SEO.
+  5. Handoff and Training: We walk your team through the Studio, document the content model, and make sure everyone knows how to publish without asking a developer.
+Offerings:
+  - Full CMS implementation : Schema design, studio setup, and frontend integration for new projects.
+  - CMS migration : Moving content from WordPress, Contentful, or another CMS into a clean Sanity structure.
+  - Studio redesign : Rebuilding an existing Sanity setup that has become hard to use or maintain.
+  - Content modeling consulting : Schema and structure review for teams already on Sanity who want to clean things up.
+Service FAQs:
+  Q: Why Sanity over WordPress or other CMS platforms?
+  A: Sanity gives you a structured content model instead of a blob of HTML. That means your content works everywhere—web, mobile, email, wherever you need it. It's also faster, more reliable, and easier to maintain than WordPress at scale.
+
+  Q: How long does a Sanity implementation take?
+  A: A standard implementation alongside a Next.js site takes 4 to 8 weeks. If you're migrating from an existing CMS with a lot of content, add 2 to 4 weeks depending on volume.
+
+  Q: Can my team use Sanity without technical training?
+  A: Yes. That's the point. We configure the Studio so it's straightforward for non-technical editors. Most teams are comfortable after a single walkthrough session.
+
+  Q: Do you offer ongoing support after launch?
+  A: Yes. We offer retainer support for teams who want help with schema changes, new document types, or content migrations as the site evolves.
+
+
+### Website Care
+Your site needs attention after launch too. We handle updates, monitoring, and performance improvements on a monthly retainer so things don't quietly break.
+Most agencies disappear after launch. You get handed a site, maybe a brief walkthrough, and then you're on your own. Six months later something breaks, the site has slowed down, or you need to add something and don't know how.
+
+We stay involved. Our Website Care retainers cover everything that happens after launch—updates, monitoring, performance improvements, content changes, and anything else that comes up. You get a team that knows your site and can move quickly when things need attention.
+
+We don't do long-term contracts. You stay because the work is worth it, not because you're locked in.
+Benefits:
+- Regular performance monitoring so issues get caught before they affect users
+- Content updates handled quickly without waiting for a project quote
+- Security monitoring and updates so your site stays protected
+- Core Web Vitals maintained over time as the site grows
+- A team that already knows your codebase and can move fast
+- Monthly reporting so you always know what's been done
+Deliverables:
+- Monthly performance report
+- Uptime and security monitoring
+- Content updates as requested
+- Core Web Vitals maintenance
+- Bug fixes and technical support
+- Proactive improvement recommendations
+Process:
+  1. Site Onboarding: We do a full review of your site, document the codebase, and set up monitoring before the retainer starts.
+  2. Monthly Check-in: We review site performance, check for issues, and align on any updates or improvements for the month.
+  3. Ongoing Updates: We handle content changes, design tweaks, performance improvements, and any fixes that come up during the month.
+  4. Performance Review: Monthly report covering what was done, current performance metrics, and recommendations for the next month.
+  5. Continuous Improvement: Over time we identify opportunities to improve the site — new pages, better conversion paths, faster load times — and bring them to you proactively.
+Offerings:
+  - Care Essentials: Core maintenance including updates, monitoring, and prioritized fixes. Best for sites that are stable and need reliable upkeep.
+  - Care Growth: Everything in Essentials plus content changes, performance tuning, and proactive improvements. Best for sites that are actively growing.
+  - Care Enterprise: Hands-on support for larger sites with faster turnaround, deeper technical work, and ongoing optimization. Best for high-traffic or revenue-critical sites.
+
+Service FAQs:
+  Q: What's the difference between the three care plans?
+  A: Essentials covers the basics — monitoring, updates, and fixes when things break. Growth adds proactive content changes and performance work. Enterprise is for larger sites that need faster turnaround and deeper technical involvement.
+
+  Q: Do we have to be a Vizantir-built site to sign up?
+  A: Not necessarily. If your site is on Next.js and Sanity we can likely support it. We'll do a quick review first to make sure we can take it on properly.
+
+  Q: What happens if we need something that's outside the retainer scope?
+  A: We'll flag it before doing anything. Work outside the agreed scope gets handled as a separate project with a clear estimate upfront — no surprises on your invoice.
+
+  Q: Can we cancel if it's not working out?
+  A: Yes. We require 30 days notice to cancel. No long-term contracts, no cancellation fees.
+
+
+## PRICING
+
+PROJECT PRICING (one-time builds):
+
+### Essentials — $15,000
+Timeline: 6–8 weeks
+For a focused rebuild: core pages, contact flow, and CMS for a team that needs a credible presence fast.
+Includes:
+- Up to 8 custom pages
+- Mobile-first responsive design
+- Sanity CMS with editor training
+- Contact forms and basic analytics
+- Technical SEO setup
+- 1 SEO-optimized landing page (location or service)
+- Core Web Vitals optimization
+- 30 days post-launch support
+
+### Growth — $30,000
+Timeline: 8–12 weeks
+For growing companies with richer content: service lines, case studies, blog, and integrations that support lead flow.
+Includes:
+- Up to 20 custom pages
+- Blog or resources section
+- Advanced animations and interactions
+- Third-party integrations (CRM, booking, etc.)
+- Extended discovery and content strategy
+- Up to 3 SEO-optimized landing pages
+- Custom case study template + 2 case studies built
+- AEO/GEO optimization for AI search visibility
+- Google Business Profile optimization
+- 60 days post-launch support
+
+### Enterprise — $60,000+
+Timeline: 12–16+ weeks
+For complex builds: multi-location brands, custom data displays, member portals, or applications beyond a marketing site.
+Includes:
+- Unlimited pages within agreed scope
+- Custom functionality and API work
+- Multi-language or multi-location architecture
+- Dedicated project timeline and staging environments
+- Post-launch optimization sprint
+- Unlimited SEO-optimized landing pages
+- Custom integrations beyond standard CRMs
+- Performance monitoring dashboard
+- A/B testing infrastructure
+- 90 days post-launch support
+
+WEBSITE CARE (monthly retainers):
+
+### Essentials Care — $500/month
+Core maintenance: updates, backups, monitoring, and prioritized fixes so your site stays reliable.
+
+### Growth Care — $1,500/month
+More bandwidth for content changes, performance tuning, and proactive improvements.
+
+### Enterprise Care — $2,500/month
+Hands-on support for larger sites: faster turnaround, deeper technical work, and ongoing optimization.
+
+Project pricing starts at $15,000 for Essentials, $30,000 for Growth, and $60,000+ for Enterprise. Timelines are 6–8 weeks, 8–12 weeks, and 12–16+ weeks respectively.
+
+After launch, Website Care retainers start at $500/month for Essentials Care, $1,500/month for Growth Care, and $2,500/month for Enterprise Care.
+
+Essentials projects take 6–8 weeks from kickoff. Growth projects run 8–12 weeks. Enterprise builds can stretch 12–16+ weeks depending on scope.
+
+Projects start at $15,000 and scale to $60,000+ depending on scope. If budget is your primary concern, platforms like Squarespace, Webflow, and Wix will serve you well. Vizantir is for businesses where a mediocre website costs more than a great one.
+
+
+## WHO WE WORK WITH (FIT)
+
+Not every web design project is right for us. Not every studio is right for you.
+
+The honest answer to 'are we a fit for your business?' — so you can decide before you book a strategy call with Vizantir.
+
+### You're likely a fit if...
+- You run an established business in Las Vegas or nationwide — not a pre-launch idea or side project
+- Your current website is hurting your brand more than helping — and you already know it
+- You work in hospitality, law, real estate, luxury, or financial services
+- You want a custom website designed around your business — not a template with your logo pasted on it
+- You care about strategy, conversion, and search visibility — not just aesthetics
+- You're ready to invest $15,000 or more in a premium web design project
+
+### You're probably not a fit if...
+- You're looking for the cheapest web design agency in Las Vegas
+- You want unlimited revisions, hourly billing, or "just buy more hours to finish"
+- You want to build the site yourself and hire someone to push buttons
+- You need full-service marketing — we build websites; we don't run your Google Ads or manage your social media
+- You want a plugin-heavy WordPress template, not a custom Next.js build
+- You need the site live in two weeks
+
+### Let's talk web design pricing honestly.
+Custom website design projects at Vizantir start at $15,000 and scale up to $60,000+ depending on scope and complexity. That's not the cheapest option in the Las Vegas web design market — and it's not meant to be. If budget is your primary concern, there are excellent template-based solutions from platforms like Squarespace, Webflow, and Wix that will serve you well. Vizantir is for businesses where the cost of a mediocre website — lost trust, lost leads, lost deals — is higher than the investment in a premium one.
+
+### Still unsure?
+If you've read this page and you're still not sure whether Vizantir is the right web design partner for your business, that's exactly what the Strategy Call is for. It's a 30-minute conversation — no pitch deck, no pressure — where we'll tell you honestly whether our studio is the right fit for your project, or recommend someone better suited.
+
+
+## HOW WE WORK (PROCESS)
+
+01. Discovery: We start by learning your business — not just your goals, but your market, your competitors, and where the real opportunity is. Before any design work begins we map what the site needs to do, who it needs to reach, and what will make someone choose you over the next option they find.
+02. Proposal: You receive a clear scope document: what's included, what's not, the price, and the timeline. No hidden fees. No vague estimates.
+03. Deposit: 50% deposit to begin. This secures your spot and lets us start work immediately.
+04. Build: Design, development, and check-ins at key milestones. You're never left wondering where things stand.
+05. Launch: Final review, remaining balance, and we go live. You get a finished product — not 70% of one.
+
+Q: What if the scope changes?
+A: No problem. I'll send a change order with the additional cost. You approve it before any extra work begins.
+
+Q: How long does a project take?
+A: Depends on scope. WordPress sites: 3-5 weeks. Next.js builds: 5-8 weeks. Timeline is defined after scoping.
+
+Q: What if I need to pause the project?
+A: Projects paused 30+ days will be re-scoped. Remaining balance becomes due. This protects both of us.
+
+Q: Do you offer payment plans?
+A: Milestone payments are standard: 50% deposit, 25% at design approval, 25% before launch.
+
+Q: What happens after launch?
+A: Launch support is included. For ongoing maintenance, we offer monthly Website Care retainers starting at $500/month for Essentials Care, with Growth Care and Enterprise Care when you need more bandwidth.
+
+
+## CASE STUDIES
+
+### Essence of Watches (Essence of Watches)
+Industry: Luxury E-commerce
+A pre-owned luxury watch dealer needed a platform that could compete with established names in the space. We built them a full headless e-commerce site on Next.js and Sanity — fast, searchable, and easy for the team to manage without a developer on call.
+Challenge: People who buy pre-owned luxury watches don't impulse buy. They research for weeks. They know the reference numbers, the production years, what box and papers mean for resale value. When they land on a site that looks generic or loads slowly, they leave.
+
+The client was selling serious watches — Rolex Submariners, GMT-Masters, Daytonas — and needed a site that reflected that. Not a Shopify theme. Not a WordPress install with a WooCommerce plugin. Something built specifically for how their buyers think and shop.
+
+They also needed to manage the catalog themselves. Watches sell. New ones come in. Prices change. Waiting on a developer for every update wasn't going to work.
+Solution: We built the whole thing from scratch on Next.js with Sanity handling the product catalog. Every watch is its own document in Studio with fields that actually match how watches are described and sold—reference number, condition grade, year, box and papers status, market value, multiple images. The team can add a watch, update a price, or mark something as sold without touching code.
+
+The frontend is built around how watch buyers search. Each product page generates its own metadata, structured data, and Open Graph tags automatically from the Sanity document. The sitemap updates itself as the catalog changes. We built out a full Rolex reference guide as a content section—not because it was in the brief, but because it's exactly the kind of content that pulls in buyers who are still researching.
+
+We added multi-language support across English, French, Spanish, Portuguese, and Arabic so the platform could reach international buyers. A wishlist system lets visitors save watches across sessions. An inquiry form goes straight to the client's inbox via Resend. Condition filters, price range filters, image zoom, related watches, warranty pages, buyer protection pages, and authentication certificates round out the experience.
+
+Everything is deployed to Vercel. The client manages their entire catalog through Studio and hasn't needed to call us for a content change since launch.
+Results: Entire product catalog managed through Sanity Studio with no developer involvement
+
+Per-route SEO metadata and structured data generated automatically from content
+
+Dynamic sitemap that updates as watches are added or removed
+
+Multi-language support across 5 languages for international reach
+
+Core Web Vitals passing across all key pages on launch
+
+Wishlist, inquiry form, condition filters, image zoom, and authentication certificates all shipped at launch
+Stack: Next.js, Sanity CMS, Supabase, Resend, next-intl, Vercel, TypeScript, Tailwind CSS
+Live site: https://essenceofwatches.com
+
+### High Roller Legal (High Roller Legal)
+Industry: Legal Services
+A concept project showing what a serious personal injury law firm website looks like when it's built to convert — not just to look professional. Dark, direct, and designed around the moment someone needs a lawyer.
+
+Challenge: This was a concept project built to show what's possible for personal injury law firms in Las Vegas. Most law firm websites look the same — stock photos of courtrooms, generic headlines about "fighting for you," and contact forms buried at the bottom. They're designed to look credible but not to convert. 
+
+Personal injury clients are not browsing casually. They've just been in an accident, they're stressed, and they need to know immediately whether this firm can help them and how to reach someone. A site that buries the phone number or makes them click through five pages before they can book a consultation is losing cases. 
+
+The challenge was building something that felt authoritative and trustworthy while being relentlessly focused on getting that first call.
+Solution: We built a focused Next.js site that leads with the firm's strongest statement — not a tagline, but a direct declaration of what they do and why it matters. The hero is full-bleed with real photography, a clear headline, and two actions: call now or request a consultation. 
+
+Every section is designed around the client's mindset at the moment they're searching. Practice areas are clear and specific. Results are shown as real numbers. The approach section builds trust without being generic. Everything moves toward one outcome — getting someone to pick up the phone. 
+
+The design uses deep burgundy and white — serious without being cold. It feels like a firm that means business without making you feel like you're walking into a courtroom.
+Results: Concept site demonstrating what a high-converting personal injury law firm website can look like
+
+Clear headline and CTA structure designed around high-intent visitors
+
+Phone number and consultation request visible at every scroll position
+
+Practice areas and results presented clearly without legal jargon
+
+ Fully responsive and fast on every device
+Stack: Next.js, Tailwind CSS, Vercel,  TypeScript, Framer Motion
+Live site: https://www.highrollerlegal.com
+
+### Pink Salt Salon & Spa (Pink Salt Salon & Spa)
+Industry: Luxury Beauty & Wellness
+A luxury nail salon in Southwest Las Vegas was losing clients because their WordPress site kept getting hit with malware. Every time it happened, bookings went down and they had to pay to clean it up. We moved them off WordPress entirely and built something they haven't had to touch since.
+Challenge: Pink Salt was running their booking system through Booker on a WordPress site. The problem was the site kept getting infected with malware. Clients would try to book an appointment and get redirected somewhere else — or worse, their browser would throw a security warning. Every time it happened, the salon had to hire Sucuri to clean it up. That costs money, takes time, and in the meantime clients can't book. 
+
+WordPress is the most targeted CMS on the web for a reason. It's everywhere, it runs on plugins, and every plugin is a potential vulnerability. A small business shouldn't have to deal with that. Their site should just work. 
+
+The other issue was trust. A luxury nail salon charging premium prices can't afford to have clients land on a site that looks generic or triggers a security warning. The brand and the website weren't matching.
+Solution: We rebuilt the site from scratch on Next.js and moved away from WordPress entirely. Next.js doesn't have plugins, doesn't have a database exposed to the internet, and doesn't have the attack surface that makes WordPress a target. The site is deployed to Vercel's edge network — there's nothing to hack in the traditional sense. 
+
+The booking integration was rebuilt cleanly so it works reliably without redirect issues. The new site matches the actual feel of the salon — dark, elegant, and premium. It looks like somewhere you'd pay for a luxury experience, not a generic template. 
+
+We kept the migration straightforward. Content from the old site was moved over, the new site went live, and Pink Salt hasn't had a malware issue since.
+Results: No malware incidents since launch 
+
+Booking system working reliably with no redirect issues 
+
+Zero ongoing security costs—no more Sucuri cleanups 
+
+Site design now matches the premium positioning of the brand 
+
+Clients can book without friction or security warnings
+Stack: Next.js, Tailwind CSS, Vercel,  TypeScript
+Live site: https://pinksaltsalonandspa.com
+
+### Eloraé Nails (Eloraé Nails)
+Industry: Luxury Beauty & Wellness
+A private nail studio in Las Vegas was running on Wix and needed something that actually matched the experience they offer. We built a clean, single-page site that's as calm and intentional as the studio itself.
+Challenge: Eloraé Nails is an appointment-only private studio — not a walk-in salon. The experience is calm, clean, and deliberate. Their Wix site didn't reflect any of that. It looked like every other nail salon site, which was the wrong signal for a studio positioning itself around quality and exclusivity.
+
+The owner wanted something simple. Not a complicated multi-page site with endless navigation. Just everything a client needs to know — who they are, what they offer, how to book — on one clean page. No clutter, no distractions.
+
+The challenge was building something that felt premium and intentional while staying genuinely simple. Simple done badly looks cheap. Simple done right is harder than it looks.
+Solution: We built a single-page Next.js site with anchor navigation—About, Gallery, Services, and a Book link that connects to their existing booking system. Everything a client needs is one scroll away.
+
+The design matches the studio. Soft neutral tones, clean serif typography, plenty of white space. It feels like somewhere you'd go to relax, not a high-pressure sales page. The copy is direct and honest — it tells you exactly what to expect when you book, which is exactly what a private studio client wants to hear.
+
+Moving off Wix meant the site is now fast, secure, and fully in their control. No page builder limitations, no template constraints, no loading issues on mobile.
+Results: Clean single-page site that matches the studio's premium positioning 
+
+Faster load times and better mobile experience than the Wix predecessor 
+
+Direct booking integration working reliably 
+
+Design that communicates calm, private, and intention—matching the actual experience 
+
+No platform fees or Wix subscription ongoing
+Stack: Next.js, Tailwind CSS, Vercel,  TypeScript
+Live site: https://www.eloraenails.com
+
+### Fuji Omakase (Fuji Omakase)
+Industry: Fine Dining & Hospitality
+A concept project exploring what a high-end omakase restaurant website should feel like. Minimal, immersive, and as considered as the dining experience itself.
+
+Challenge: This was a concept project built to show what's possible for fine dining restaurants in Las Vegas. Most restaurant websites fall into one of two traps — either they're generic templates with stock food photos, or they're so overdesigned that they're hard to use. Neither works for an omakase experience. 
+
+Omakase is about trust. You're putting yourself entirely in the chef's hands. The website needs to communicate that level of care and craft before anyone sits down at the counter. It needs to feel like the restaurant — calm, precise, and intentional. A loud, cluttered site kills that before a guest even picks up the phone to reserve. 
+
+The challenge was building something that matched the weight of the experience without getting in the way of it.
+Solution: We built a dark, minimal single-page site on Next.js where the food and atmosphere do all the talking. Full-bleed photography leads every section. Typography is restrained — a refined serif for the brand, clean body copy that gets out of the way. The color palette is deep and warm, matching the low-light intimacy of an omakase counter.
+Results: Concept site demonstrating what premium fine dining web presence can look like
+
+Immersive design that communicates the intimacy and craft of omakase 
+
+Clear reservation flow with no friction
+
+Fully responsive and fast on every device 
+
+Built on Next.js deployed to Vercel
+Stack: Next.js, Tailwind CSS, Vercel,  TypeScript, Framer Motion
+Live site: https://www.fujiomakase.com/
+
+### Éclat Lounge (Éclat Lounge)
+Industry: Luxury Hospitality & Nightlife
+A concept project exploring what a premium Las Vegas cocktail lounge website could look like when the design matches the experience—dark, immersive, and built for a crowd that expects more than a basic bar site.
+
+Challenge: This was a concept project built to show what's possible for Las Vegas nightlife and hospitality venues. Most bar and lounge websites in Vegas are either generic templates or outdated Flash-era designs. They don't match the actual experience of the venue at all. You walk into a stunning space with mood lighting, craft cocktails, and a curated atmosphere—and then their website looks like it was built in 2012.
+
+The brief we set for ourselves was simple: build something that feels like the venue before you walk in. The site should set the mood, communicate the vibe, and make it easy to reserve a table or join the VIP list.
+Solution: We designed and built a dark, immersive single-page experience on Next.js. The hero leads with full-bleed atmospheric photography and the brand name in large elegant type—immediate mood setting. Navigation is minimal, and the whole site is built around one action: Reserve a Table. 
+
+The color palette is deep black with blush pink accents—premium but with personality. Typography mixes a refined serif for the brand with clean sans-serif for body copy. Every section — cocktails, events, gallery, VIP, about — is designed to feel like an extension of the physical space. 
+
+The site is fast, fully responsive, and built to handle the kind of traffic a busy Vegas venue would see on a Friday night.
+Results: Concept site demonstrating what premium nightlife web presence can look like 
+
+Immersive design that sets the mood before a guest walks in the door 
+
+Clear reservation and VIP flows designed around conversion 
+
+Fully responsive and fast on every device 
+
+Built on Next.js deployed to Vercel
+Stack: Next.js, Tailwind CSS, Vercel,  TypeScript, Framer Motion
+Live site: https://www.eclatloungelv.com/
+
+### Pétale & Fête (Pétale & Fête)
+Industry: Events & Celebrations
+A concept project for a Las Vegas event planner that needed a site as thoughtful and beautiful as the celebrations they create. Soft, elegant, and built around showing the work.
+
+Challenge: This was a concept project built to show what's possible for boutique event planners in Las Vegas. Event planning is a visual business — clients hire you based on what they see. Most event planner websites either look too corporate or too DIY. Neither builds the kind of trust that gets someone to hand over their wedding or their biggest birthday party. 
+
+The brief we set for ourselves was to build something that felt like the planner's aesthetic before a client even reads a word. Warm, feminine, elegant — but with enough substance to communicate professionalism. The portfolio needs to be front and center. The booking path needs to be frictionless.
+Solution: We built a soft, elegant single-page site on Next.js with a pink and cream palette that immediately signals the brand's aesthetic. The hero leads with the brand name in refined serif typography and a clear value proposition. Below it, the portfolio takes over — a clean gallery of real celebrations that lets the work speak. 
+
+Services are presented simply without overwhelming pricing grids. The site is designed to feel like a mood board for what a client's event could look like—which is exactly what converts a visitor into an inquiry. 
+
+The Hire Us and View Work CTAs are immediate and clear. Contact is frictionless. The whole experience is built around getting that first conversation started.
+Results: Concept site demonstrating what a premium boutique event planner website can look like 
+
+Portfolio-forward design that lets the work do the selling 
+
+Soft, brand-aligned aesthetic that builds trust immediately 
+
+Clear hire and contact flow with no friction 
+
+Fully responsive and fast on every device
+Stack: Next.js, Tailwind CSS, Vercel,  TypeScript, Framer Motion
+Live site: https://www.petaleandfete.com/
+
+### Golden Era Integra (Golden Era Integra)
+Industry: Automotive / Enthusiast
+An editorial platform for a 1995 Acura Integra GS-R restoration — documented build journal, parts archive, and garage sale system, all running on Sanity CMS. Designed for an audience that notices the details.
+Challenge: Enthusiast brands live or die on detail. A vintage car build documented properly needs more than a blog — it needs an editorial platform that respects the subject matter. Most car project sites are afterthoughts: a few photos, no structure, no longevity. The goal here was to build something that reads like a magazine, archives like a database, and operates like a real publication.
+Solution: We built Golden Era Integra as a Next.js site with Sanity CMS powering the entire content layer. Magazine-style hero treatment with chassis number, coordinates, and issue numbering. Custom typography. A documented build journal that updates as the work progresses, a searchable parts archive, and a garage sale system with inquiry forms for selling stripped components.
+
+SEO foundation set from day one — proper schema, sitemap, OG image inheritance, Google Search Console verified. The site is fast, responsive, and built to grow as the build does, without ever feeling like another car blog.
+Results: Editorial platform serving as both personal documentation and Vizantir portfolio piece
+
+Full Sanity CMS integration across build journal, parts archive, and garage sale inventory
+
+Custom magazine-style design system with bespoke typography and layout
+
+SEO foundation with sitemap, schema markup, GSC verification, and OG images configured
+
+Garage sale inquiry system with Resend email integration
+Stack: Next.js, TypeScript, Tailwind CSS, Sanity CMS, Resend, Vercel
+Live site: https://goldeneraintegra.com
+
+### Meridian Row (Meridian Row)
+Industry: Commercial Real Estate
+A premium retail and dining development in Las Vegas needed a site that could attract serious tenants. We built something clean and fast that leads with the property and makes it easy for prospects to get in touch.
+Challenge: This was a concept project to explore what a premium commercial real estate website could look like when it's built with the same care as a luxury brand site. Most commercial real estate sites are outdated, cluttered, and clearly built on templates. We wanted to show what's possible when you treat the property as the product and design around the prospect's experience.
+Solution: We built a focused Next.js site that leads with the property and gets out of the way. Large imagery, clean typography, and a straightforward flow from vision to availability to inquiry. Nothing competes with the property itself.
+
+The site is fully responsive and fast on every device. We kept the design confident and minimal—the kind of first impression that signals the development is serious before anyone reads a word.
+Results: Concept site demonstrating what premium commercial real estate web presence can look like
+
+Fast, responsive build on Next.js deployed to Vercel
+
+Clean inquiry flow designed around how brokers and tenants evaluate a property
+
+Core Web Vitals passing on launch
+Stack: Next.js, Tailwind CSS, Vercel,  TypeScript
+Live site: https://www.meridianrow.com
+
+
+## FREQUENTLY ASKED QUESTIONS
+
+Q: How much does a website project cost?
+A: Project pricing starts at $15,000 for Essentials, $30,000 for Growth, and $60,000+ for Enterprise. Timelines are 6–8 weeks, 8–12 weeks, and 12–16+ weeks respectively. Every project is scoped and priced clearly upfront — no vague starting-at numbers, no surprise invoices.
+
+Q: Why do clients choose Vizantir over larger agencies?
+A: Larger agencies charge for overhead — account managers, layers of approval, offices. We cut all of that. What you get is senior-level strategy and execution, faster turnaround, and direct communication from kickoff to launch. No handoffs, no junior teams running your account.
+
+Q: How does your engagement model work?
+A: We don't lock clients into long-term retainers before proving our value. We start with a strategy call to understand your goals, then propose a scoped engagement with clear deliverables and pricing. Ongoing retainers are available once we've earned them.
+
+Q: How long does a website project take?
+A: Essentials projects take 6–8 weeks from kickoff. Growth projects run 8–12 weeks. Enterprise builds can stretch 12–16+ weeks depending on scope. Timelines are set at scoping and held — we move as fast as your feedback allows.
+
+Q: Do you build in Next.js or WordPress?
+A: Both, depending on what fits the project. Next.js for performance-critical, custom builds. WordPress when the client needs a widely supported CMS and a familiar editing environment. We'll recommend the right platform based on your goals, team, and content needs — not our preference.
+
+Q: What does the timeline look like from kickoff to launch?
+A: Essentials projects take 6–8 weeks from kickoff. Growth projects run 8–12 weeks. Enterprise builds can stretch 12–16+ weeks depending on scope. SEO and paid media campaigns are typically live within 2 weeks.
+
+Q: Do you use templates or website builders?
+A: Every site we build is custom — scoped to your business, coded from scratch. Builders and templates have their place when budget is the only driver. When the goal is a site that performs, ranks, and holds up under real scrutiny, that approach does not get you there. We have never shipped a template.
+
+Q: Will my website work on all devices and screen sizes?
+A: Every site we build is tested across mobile, tablet, and desktop — portrait and landscape. Mobile is treated as the primary experience, not an afterthought. If it does not look and work correctly on every screen size and orientation, it does not ship.
+
+Q: Do you research my competitors before designing the site?
+A: Yes. Before any design work starts we look at how your competitors are positioning themselves online — what they are doing well and where the gaps are. That research shapes the strategy, the structure, and the direction of the site. You should not be guessing what makes you different. We find it.
+
+Q: Can you work with an existing site or brand?
+A: Yes. We audit what you have, identify what's working and what isn't, and improve from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.
+
+Q: Do you redesign existing websites?
+A: Yes. We audit what you have, identify what's working, and rebuild from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.
+
+Q: What happens after the site launches?
+A: After launch, Website Care retainers start at $500/month for Essentials Care, $1,500/month for Growth Care, and $2,500/month for Enterprise Care. Most clients stay on retainer after launch so the site keeps performing as the business evolves.
+
+Q: What industries do you specialize in?
+A: We focus on hospitality and restaurants, law firms, commercial real estate, and luxury lifestyle brands. These are competitive, high-stakes markets where design quality and search visibility directly impact revenue — which is exactly where we operate best.
+
+Q: Do you write copy for the website?
+A: We can guide the copy structure and messaging strategy as part of the project scope. For full copywriting, we work with trusted partners we can bring in — or we work with your existing content and sharpen it for the web.
+
+Q: What's your philosophy on design and results?
+A: Design without strategy is decoration. Every decision we make — layout, copy, structure, speed — is tied to a business outcome. We build sites that convert, run ads that track to revenue, and measure what actually moves your business forward.
+
+Q: After you build the site, will I need a developer for every change?
+A: No. Content changes — blog posts, case studies, service descriptions, images, team members, testimonials — are all handled through Sanity Studio, a clean editor we set up with your site. It works like a better version of the WordPress admin, without the maintenance headaches. You'll need a developer only for structural or design changes (new page types, layout overhauls, new integrations). Day-to-day content management is fully yours. Unlike WordPress, there are no plugins to update, no security patches to chase, and no compatibility testing to worry about. Edit content, publish, done.
+
+
+## FOUNDER
+
+Vizantir — Premium Website Design Studio
