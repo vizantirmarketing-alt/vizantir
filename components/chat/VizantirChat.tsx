@@ -51,10 +51,22 @@ export function VizantirChat() {
   }, []);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const mobileQuery = window.matchMedia(
+      '(max-width: 768px), (max-height: 600px) and (pointer: coarse)'
+    );
+
+    const checkMobile = () => setIsMobile(mobileQuery.matches);
+
     checkMobile();
+    mobileQuery.addEventListener('change', checkMobile);
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener('orientationchange', checkMobile);
+
+    return () => {
+      mobileQuery.removeEventListener('change', checkMobile);
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('orientationchange', checkMobile);
+    };
   }, []);
 
   useEffect(() => {
@@ -199,7 +211,7 @@ export function VizantirChat() {
 
   const showEmptyState = messages.length === 0;
 
-  const panel = hasOpened && isOpen && mounted && (
+  const panel = hasOpened && isOpen && (
     createPortal(
       <div
         className={cn(
@@ -346,6 +358,8 @@ export function VizantirChat() {
     )
   );
 
+  if (!mounted) return null;
+
   return (
     <>
       <div className="pointer-events-none fixed bottom-6 right-6 z-[9999]">
@@ -379,14 +393,16 @@ export function VizantirChat() {
           )}
         </AnimatePresence>
 
-        <button
-          type="button"
-          onClick={handleToggle}
-          className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-gold-primary text-[#1A1A1A] shadow-gold transition-all hover:scale-105 hover:brightness-105 active:scale-95"
-          aria-label={isOpen ? 'Close chat' : 'Open chat'}
-        >
-          {isOpen ? <X className="size-6" /> : <MessageCircle className="size-6" />}
-        </button>
+        {!isOpen && (
+          <button
+            type="button"
+            onClick={handleToggle}
+            className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-gold-primary text-[#1A1A1A] shadow-gold transition-all hover:scale-105 hover:brightness-105 active:scale-95"
+            aria-label="Open chat"
+          >
+            <MessageCircle className="size-6" />
+          </button>
+        )}
       </div>
 
       {panel}
