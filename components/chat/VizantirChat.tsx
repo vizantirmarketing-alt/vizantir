@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MessageCircle, RotateCcw, Send, X } from 'lucide-react';
+import { MessageCircle, Send, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type ChatMessage = {
@@ -249,28 +249,14 @@ export function VizantirChat() {
             <h2 className="text-sm font-semibold tracking-tight">Vizantir Concierge</h2>
             <p className="text-xs text-white/60">Premium web design studio</p>
           </div>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={handleClearConversation}
-              disabled={messages.length === 0}
-              className={cn(
-                'flex size-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white',
-                messages.length === 0 && 'pointer-events-none opacity-40'
-              )}
-              aria-label="Clear conversation"
-            >
-              <RotateCcw className="size-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="flex size-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Close chat"
-            >
-              <X className="size-5" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="flex size-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label="Close chat"
+          >
+            <X className="size-5" />
+          </button>
         </header>
 
         {/* Messages */}
@@ -372,6 +358,19 @@ export function VizantirChat() {
               aria-label="Send message"
             >
               <Send className="size-4" />
+            </button>
+          </div>
+          <div className="flex justify-center px-4 pb-2">
+            <button
+              type="button"
+              onClick={handleClearConversation}
+              disabled={messages.length === 0}
+              className={cn(
+                'text-xs text-muted-foreground transition-colors hover:text-foreground',
+                messages.length === 0 && 'pointer-events-none opacity-40'
+              )}
+            >
+              Clear chat
             </button>
           </div>
         </footer>
