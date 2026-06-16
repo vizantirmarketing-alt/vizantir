@@ -16,6 +16,7 @@
     "create:post": "tsx scripts/create-post.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.2",
     "@marsidev/react-turnstile": "^1.5.1",
     "@portabletext/react": "^5.0.0",
     "@radix-ui/react-slot": "^1.2.4",
