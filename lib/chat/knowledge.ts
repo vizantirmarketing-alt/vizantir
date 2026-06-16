@@ -82,13 +82,18 @@ function buildPricing(): string {
   const blogTiers = blogPricing
     .map((t) => {
       const isOneTime = t.cadence === 'one-time'
-      const priceLine = isOneTime
+      const standardPrice = isOneTime
         ? `$${t.priceMin.toLocaleString()} (one-time)`
         : `$${t.priceMin.toLocaleString()}/month`
-      const careLine = isOneTime
-        ? `Care clients: 15% off \u2192 ${formatCareClientPrice(t.priceMin)} (one-time)`
-        : `Care clients: 15% off \u2192 ${formatCareClientPrice(t.priceMin)}/month`
-      return `### ${t.name} — ${priceLine}\n${t.tagline}\n${careLine}`
+      const carePrice = isOneTime
+        ? `${formatCareClientPrice(t.priceMin)} (one-time, 15% off)`
+        : `${formatCareClientPrice(t.priceMin)}/month (15% off)`
+      return [
+        `### ${t.name}`,
+        `Standard price: ${standardPrice}`,
+        `Care client price: ${carePrice}`,
+        t.tagline,
+      ].join('\n')
     })
     .join('\n\n')
   const blogBlock = `${blogIntro}\n\n${blogTiers}`
@@ -99,9 +104,16 @@ function buildPricing(): string {
     'This is not a self-serve product: setup, training, and conversation metering are handled per client by the Vizantir team.',
   ].join(' ')
   const chatbotTiers = chatbotPricing
-    .map((t) =>
-      `### ${t.name} — $${t.priceMin.toLocaleString()}/month\n${t.conversations}\n${t.tagline}\nCare clients: 15% off \u2192 ${formatCareClientPrice(t.priceMin)}/month`,
-    )
+    .map((t) => {
+      const carePrice = formatCareClientPrice(t.priceMin)
+      return [
+        `### ${t.name}`,
+        `Standard price: $${t.priceMin.toLocaleString()}/month`,
+        `Care client price: ${carePrice}/month (15% off)`,
+        `Includes: ${t.conversations}`,
+        t.tagline,
+      ].join('\n')
+    })
     .join('\n\n')
   const chatbotBlock = `${chatbotIntro}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
