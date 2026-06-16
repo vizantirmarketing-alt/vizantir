@@ -148,8 +148,10 @@ function StandalonePricingSection() {
               <PricingCard
                 key={tier.slug}
                 title={tier.name}
+                tagline={tier.tagline}
                 price={tier.price}
                 description={tier.description}
+                includes={tier.includes}
                 featured={tier.slug === 'growth-care'}
               />
             ))}
@@ -300,6 +302,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
 
 interface PricingCardProps {
   title: string
+  tagline?: string
   price: string
   description: string
   includes?: readonly string[]
@@ -308,6 +311,7 @@ interface PricingCardProps {
 
 function PricingCard({
   title,
+  tagline,
   price,
   description,
   includes,
@@ -365,9 +369,16 @@ function PricingCard({
         </span>
       )}
       <div className="flex items-start justify-between gap-3 mb-3">
-        <h4 className="font-medium text-sm text-foreground transition-colors duration-500">
-          {title}
-        </h4>
+        <div>
+          <h4 className="font-medium text-sm text-foreground transition-colors duration-500">
+            {title}
+          </h4>
+          {tagline ? (
+            <p className="mt-0.5 text-xs font-medium text-gold-accent transition-colors duration-500">
+              {tagline}
+            </p>
+          ) : null}
+        </div>
         <span className="text-sm font-semibold whitespace-nowrap text-gold-accent transition-colors duration-500">
           {price}
         </span>

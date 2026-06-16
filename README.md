@@ -12,6 +12,7 @@ Premium website design studio based in Las Vegas. Built with Next.js, TypeScript
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **CMS:** Sanity v3 (Studio at `/studio`)
+- **AI chat:** Anthropic Claude via `@anthropic-ai/sdk` (custom concierge widget)
 - **Animations:** Framer Motion
 - **Hosting:** Vercel
 - **Database:** Supabase (Postgres) — form submissions, rate limiting
@@ -51,6 +52,9 @@ SANITY_REVALIDATE_SECRET=your_revalidate_secret
 # Site
 NEXT_PUBLIC_SITE_URL=https://www.vizantir.com
 
+# Anthropic (AI concierge chat)
+ANTHROPIC_API_KEY=your_anthropic_api_key
+
 # Supabase (form submissions, rate limiting)
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
@@ -69,13 +73,15 @@ RESEND_FROM_EMAIL=info@vizantir.com
 CONTACT_NOTIFICATION_EMAIL=info@vizantir.com
 ```
 
+The AI chat will return a 500 if `ANTHROPIC_API_KEY` is missing. The dev server only reads env vars on boot — restart after adding or changing any key.
+
 ### 4. Run the development server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site.
+Open [http://localhost:3000](http://localhost:3000) to view the site. If port 3000 is taken, Next.js will use the next available port (e.g. 3002) — check the terminal output for the actual URL.
 
 ### 5. Access Sanity Studio
 
@@ -87,12 +93,15 @@ Studio runs at [http://localhost:3000/studio](http://localhost:3000/studio). You
 
 ```
 app/                  # Next.js App Router pages
+  api/chat/           # AI concierge streaming endpoint
 components/           # Reusable UI components
+  chat/               # VizantirChat concierge widget
 content-updates/      # Drafts for batch content updates (gitignored)
 contexts/             # React contexts (theme, etc.)
 data/                 # Typed data exports (pricing, navigation, page content)
 docs/                 # Standards and reference implementations
 lib/                  # Utilities, schema types, Sanity queries
+  chat/               # AI chat knowledge assembly
 sanity/               # Sanity schema types and structure
 scripts/              # One-off and reusable operational scripts
 supabase/             # SQL migrations
@@ -104,6 +113,8 @@ public/               # Static assets
 ## Deployment
 
 Deployed automatically to Vercel on push to `main`. Environment variables must be configured in the Vercel project settings — `.env.local` is not committed to the repo.
+
+`ANTHROPIC_API_KEY` must be set in Vercel (all environments) for the AI chat to work in production. The local `.env.local` value is not deployed.
 
 ---
 
@@ -127,6 +138,77 @@ Representative routes only. Full route list: `/sitemap-page` (generated from app
 
 ---
 
+## AI Concierge Chat
+
+A custom Claude-powered chat widget (the "Vizantir Concierge") that answers visitor questions about the studio — services, pricing, process, fit, case studies, and FAQs. It replaces the previous third-party Chatbase widget with a fully in-house implementation.
+
+### Architecture
+
+| Piece | Path | Role |
+|-------|------|------|
+| Widget | `components/chat/VizantirChat.tsx` | Client component — floating bubble, panel, streaming UI. Mounted globally in `app/layout.tsx`. |
+| API route | `app/api/chat/route.ts` | Streaming POST endpoint. Validates input (Zod), rate-limits, calls Claude, streams plain text back. |
+| Knowledge | `lib/chat/knowledge.ts` | Assembles the full studio knowledge base into a single text blob injected into the system prompt. Cached in-module for 30 minutes. |
+| Queries | `lib/sanity/queries.ts` | GROQ queries (prefixed `chat*`) that flatten Sanity content for the knowledge blob. |
+
+### How it works
+
+1. Visitor opens the widget and sends a message.
+2. The route validates the payload, runs the rate-limit check (fails open if Supabase is unavailable, so a limiter outage never breaks chat), and assembles the knowledge blob.
+3. The knowledge blob is sent as a cached system prompt (Anthropic prompt caching via `cache_control: ephemeral`), with the conversation as messages.
+4. Claude (`claude-sonnet-4-6`) streams a response, which the route relays to the client as a plain-text stream. The widget types it out live.
+
+The system prompt constrains the bot to answer **only** from Vizantir knowledge, refuse off-topic questions, quote pricing exactly, be honest about what the studio does not do, and nudge toward booking a strategy call when it fits.
+
+### Knowledge sources — what updates automatically vs. what needs a deploy
+
+The knowledge blob is built from two kinds of source. This determines how you update the bot's answers.
+
+**Pulled live from Sanity — edit in Studio, no code change or redeploy:**
+
+| Content | Source |
+|---------|--------|
+| Services (all) | `service` documents |
+| Case studies | `caseStudy` documents |
+| FAQs | `faq` documents |
+| Founder / author bio | `author` document |
+| Studio overview | `siteSettings` document |
+
+Edits to these appear in the bot within ~30 minutes (the knowledge blob is cached in-module for 30 min; the next request after expiry rebuilds it with fresh Sanity data).
+
+**Hardcoded in `data/*.ts` — requires a code edit + deploy:**
+
+| Content | Source |
+|---------|--------|
+| Pricing (project + care tiers) | `data/pricing.ts` |
+| About page content | `data/about.ts` |
+| "Are we a fit" criteria | `data/are-we-a-fit.ts` |
+| How-we-work process + FAQs | `data/how-we-work.ts` |
+
+Changing any of these means editing the file, committing, and pushing. The bot won't reflect the change until Vercel rebuilds.
+
+> **Note on pricing:** Pricing is the highest-risk hardcoded value — it changes more often than the other static content and a stale quote costs leads. If pricing starts changing regularly, consider migrating it into Sanity as a singleton so it joins the auto-updating group.
+
+### Excluded content
+
+Blog posts are intentionally **not** included in the knowledge blob — the bot does not answer from or about blog content.
+
+### Verifying the knowledge blob
+
+`scripts/dump-knowledge.ts` writes the assembled blob to `knowledge-dump.txt` for inspection:
+
+```bash
+node --env-file=.env.local --import tsx scripts/dump-knowledge.ts
+```
+
+Use this to confirm pricing, fit criteria, and other facts are serialized correctly after a content change. `knowledge-dump.txt` is a generated artifact — keep it gitignored, not committed.
+
+### Rate limiting
+
+The chat route reuses the shared Supabase-backed limiter (`lib/forms/rate-limit.ts`) with `formKey: 'chat'` — 30 requests per IP per 60 minutes. The check is wrapped to **fail open**: if Supabase env vars are missing (e.g. locally) or Supabase is unavailable, the request is allowed through and a warning is logged, so a limiter failure never 500s the chat. Real rate limiting therefore applies only where Supabase is configured (production).
+
+---
+
 ## Pricing
 
 Single source of truth: `data/pricing.ts`.
@@ -139,6 +221,8 @@ Single source of truth: `data/pricing.ts`.
 - **Tier lookups**: `getProjectTier`, `getCareTier`
 
 Edit `data/pricing.ts` only. Consumers update automatically: `/services`, `/las-vegas-web-design`, `/are-we-a-fit`, industry landing pages, contact form, sitemap.
+
+The AI concierge also reads pricing from `data/pricing.ts` (see the AI Concierge Chat section) — a pricing edit reaches the bot on the next deploy.
 
 Sanity FAQ documents are not synced automatically. After pricing changes, run:
 
@@ -232,6 +316,12 @@ Operational scripts. Write-capable scripts require `SANITY_API_WRITE_TOKEN` in `
 | `npm run migrate:faqs:live` | Write FAQ seed documents to Sanity |
 | `npm run create:gei` | Create Golden Era Integra case study in Sanity (idempotent slug check) |
 
+To inspect the AI chat knowledge blob (not an npm script):
+
+```bash
+node --env-file=.env.local --import tsx scripts/dump-knowledge.ts
+```
+
 Standard Next.js scripts (`dev`, `build`, `start`, `lint`) are unchanged from the Next.js defaults.
 
 ---
@@ -247,6 +337,8 @@ This site uses on-demand ISR (Incremental Static Regeneration) so that content u
 3. The route validates the request signature using `SANITY_REVALIDATE_SECRET` and calls `revalidateTag(_type, 'max')` for the affected document type
 4. Next.js invalidates the cache for any `sanityFetch` queries tagged with that document type
 5. The next request to the live site fetches fresh content from Sanity
+
+> The AI concierge knowledge blob is **not** part of the ISR revalidation path. It has its own 30-minute in-module cache (see the AI Concierge Chat section), so Sanity-sourced content changes reach the bot within ~30 minutes rather than seconds.
 
 ### Cache tagging
 
@@ -293,6 +385,7 @@ Required setup for any new Supabase project hosting Vizantir forms:
 
 - Blog content lives in Sanity CMS; edit posts in Studio at `/studio`
 - Services display order on `/services` is controlled by the `order` field on each `service` document in Sanity Studio
+- AI concierge chat is mounted globally in `app/layout.tsx`; its knowledge sources and update model are documented in the AI Concierge Chat section
 - Schema markup lives in `lib/schema/index.ts` and `app/layout.tsx`
 - Blog posts render Portable Text via the shared component at `components/portable-text.tsx`
 - Blog categories are defined in `lib/blog-categories.ts`

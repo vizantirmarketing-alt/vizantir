@@ -14,7 +14,20 @@ export type CareTier = {
   name: string
   price: string
   priceMin: number
+  tagline: string
   description: string
+  includes: string[]
+}
+
+export type BlogTier = {
+  slug: 'blog-single' | 'blog-essentials' | 'blog-growth'
+  name: string
+  price: string
+  priceMin: number
+  cadence: string
+  tagline: string
+  popular?: boolean
+  includes: string[]
 }
 
 export const projectPricing: PricingTier[] = [
@@ -90,24 +103,111 @@ export const carePricing: CareTier[] = [
     name: 'Essentials Care',
     price: '$500/month',
     priceMin: 500,
+    tagline: 'We keep it running.',
     description:
-      'Core maintenance: updates, backups, monitoring, and prioritized fixes so your site stays reliable.',
+      'Managed hosting, security, and core upkeep so your site stays fast, safe, and online.',
+    includes: [
+      'Managed hosting on enterprise infrastructure ($40/mo value, included)',
+      'SSL, security monitoring, and patching',
+      'Weekly automated backups',
+      'Uptime monitoring',
+      'Up to 1 hour of content edits per month',
+      'Priority bug fixes',
+      'Monthly health summary',
+      '10% off additional hourly work',
+    ],
   },
   {
     slug: 'growth-care',
     name: 'Growth Care',
     price: '$1,500/month',
     priceMin: 1500,
+    tagline: 'We keep it sharp.',
     description:
-      'More bandwidth for content changes, performance tuning, and proactive improvements.',
+      'Everything in Essentials, plus active content updates and performance work to keep the site improving.',
+    includes: [
+      'Everything in Essentials Care',
+      'Up to 3 hours of content updates & changes per month',
+      'Quarterly performance check (speed, Core Web Vitals)',
+      'Monthly analytics summary',
+      '2-business-day turnaround',
+      '15% off additional hourly work',
+    ],
   },
   {
     slug: 'enterprise-care',
     name: 'Enterprise Care',
     price: '$2,500/month',
     priceMin: 2500,
+    tagline: 'We keep it winning.',
     description:
-      'Hands-on support for larger sites: faster turnaround, deeper technical work, and ongoing optimization.',
+      'Everything in Growth, plus hands-on development and proactive optimization for sites that drive real revenue.',
+    includes: [
+      'Everything in Growth Care',
+      'Up to 6 hours of development & changes per month',
+      'Proactive improvements & A/B testing',
+      'Conversion & funnel optimization',
+      'Same-day priority response',
+      'Quarterly strategy call',
+      '20% off additional hourly work',
+    ],
+  },
+]
+
+export const blogPricing: BlogTier[] = [
+  {
+    slug: 'blog-single',
+    name: 'Single Post',
+    price: '$350',
+    priceMin: 350,
+    cadence: 'one-time',
+    tagline: 'Test the waters.',
+    includes: [
+      'One original, human-written post (1,500+ words)',
+      'Topic & keyword research',
+      'SEO optimization (meta title, description, headings)',
+      'Internal links to your key pages',
+      'Custom featured image',
+      'Published directly into your blog',
+      '1 round of revisions',
+    ],
+  },
+  {
+    slug: 'blog-essentials',
+    name: 'Essentials',
+    price: '$650/month',
+    priceMin: 650,
+    cadence: 'per month',
+    tagline: 'A steady content presence.',
+    popular: true,
+    includes: [
+      '2 original, human-written posts per month (1,500+ words each)',
+      'Topic & keyword strategy',
+      'SEO optimization on every post',
+      'Internal links to your key pages',
+      'Custom featured image per post',
+      'Published directly into your blog',
+      '1 round of revisions per post',
+      'Monthly content summary',
+    ],
+  },
+  {
+    slug: 'blog-growth',
+    name: 'Growth',
+    price: '$1,200/month',
+    priceMin: 1200,
+    cadence: 'per month',
+    tagline: 'A real content engine.',
+    includes: [
+      '4 original, human-written posts per month (1,500+ words each)',
+      'Topic & keyword strategy',
+      'SEO optimization on every post',
+      'Internal links to your key pages',
+      'Custom featured image per post',
+      'Published directly into your blog',
+      '1 round of revisions per post',
+      'Monthly content & performance summary',
+    ],
   },
 ]
 
@@ -160,6 +260,14 @@ export function getCareTier(slug: CareTier['slug']): CareTier {
   const tier = carePricing.find((t) => t.slug === slug)
   if (!tier) {
     throw new Error(`Unknown care tier slug: ${slug}`)
+  }
+  return tier
+}
+
+export function getBlogTier(slug: BlogTier['slug']): BlogTier {
+  const tier = blogPricing.find((t) => t.slug === slug)
+  if (!tier) {
+    throw new Error(`Unknown blog tier slug: ${slug}`)
   }
   return tier
 }
