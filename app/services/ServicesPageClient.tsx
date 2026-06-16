@@ -36,14 +36,14 @@ const CARE_REFRAME = {
 
 const BLOG_ADDON = {
   eyebrow: 'Blog Writing Add-On',
-  heading: 'Ongoing content, attached to your retainer.',
+  heading: 'Ongoing content, attached to your retainer',
   intro:
     'Add ongoing content to any care plan. Human-written posts, researched and published live \u2014 attached to your retainer, not a separate engagement.',
 } as const
 
 const CHATBOT_ADDON = {
   eyebrow: 'AI Chatbot',
-  heading: 'Always-on answers, trained on your content.',
+  heading: 'Always-on answers, trained on your content',
   intro:
     'A custom chatbot trained on your site, services, and FAQs. Answers visitors instantly in your brand voice — no scripts, no canned responses.',
 }
