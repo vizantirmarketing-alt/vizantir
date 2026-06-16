@@ -79,7 +79,6 @@ export default function PrivacyPolicy() {
         {
           subtitle: "Marketing and Communications",
           list: [
-            "Send newsletters and marketing materials",
             "Provide information about our services",
             "Conduct promotional campaigns",
             "Personalize content and service-related communications"

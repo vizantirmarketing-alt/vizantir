@@ -18,7 +18,6 @@ const ResultsThatSpeak = dynamic(() => import('@/components/homepage/ResultsThat
 const FAQSection = dynamic(() => import('@/components/homepage/FAQSection'))
 const CTA = dynamic(() => import('@/components/homepage/CTA'))
 const WhatHappensNext = dynamic(() => import('@/components/homepage/WhatHappensNext'))
-const Newsletter = dynamic(() => import('@/components/homepage/Newsletter'))
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSeo('home');
@@ -58,7 +57,6 @@ export default async function Home() {
       <SectionDivider />
       <CTA />
       <WhatHappensNext />
-      <Newsletter />
     </>
   )
 }
