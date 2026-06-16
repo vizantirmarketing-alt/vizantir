@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MessageCircle, Send, X } from 'lucide-react';
+import { MessageCircle, RotateCcw, Send, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type ChatMessage = {
@@ -202,6 +202,12 @@ export function VizantirChat() {
 
   const handleSend = () => sendMessage(input);
 
+  const handleClearConversation = () => {
+    setMessages([]);
+    setInput('');
+    setIsStreaming(false);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -243,14 +249,28 @@ export function VizantirChat() {
             <h2 className="text-sm font-semibold tracking-tight">Vizantir Concierge</h2>
             <p className="text-xs text-white/60">Premium web design studio</p>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsOpen(false)}
-            className="flex size-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-            aria-label="Close chat"
-          >
-            <X className="size-5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handleClearConversation}
+              disabled={messages.length === 0}
+              className={cn(
+                'flex size-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white',
+                messages.length === 0 && 'pointer-events-none opacity-40'
+              )}
+              aria-label="Clear conversation"
+            >
+              <RotateCcw className="size-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="flex size-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label="Close chat"
+            >
+              <X className="size-5" />
+            </button>
+          </div>
         </header>
 
         {/* Messages */}
