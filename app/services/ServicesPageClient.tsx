@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import ServicesHero from './ServicesHero'
@@ -10,6 +10,19 @@ import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import {
+  Card,
+  CardBody,
+  CardCheckItem,
+  CardCheckList,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardPrice,
+  CardPriceBlock,
+  CardTagline,
+  CardTitle,
+} from '@/components/ui/Card'
 import {
   blogPricing,
   carePricing,
@@ -55,86 +68,37 @@ function getBlogCadenceLabel(tier: BlogTier): string {
 }
 
 function ProjectPricingCard({ tier }: { tier: PricingTier }) {
-  const glassTransition = 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease'
-
-  const defaultGlass = {
-    background: 'rgba(0, 0, 0, 0.02)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(0, 0, 0, 0.08)',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-    transition: glassTransition,
-  }
-
-  const featuredGlass = {
-    background: 'rgba(180, 132, 30, 0.04)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(180, 132, 30, 0.15)',
-    boxShadow: '0 4px 24px rgba(180, 132, 30, 0.08)',
-    transition: glassTransition,
-  }
-
-  const baseGlass = tier.featured ? featuredGlass : defaultGlass
-
   return (
-    <div
-      className="relative flex h-full flex-col rounded-xl p-7 transition-all duration-300 md:p-8"
-      style={baseGlass}
-      onMouseEnter={(e) => {
-        if (tier.featured) {
-          e.currentTarget.style.background = 'rgba(180, 132, 30, 0.06)'
-          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.25)'
-          e.currentTarget.style.boxShadow = '0 4px 28px rgba(180, 132, 30, 0.12)'
-        } else {
-          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)'
-          e.currentTarget.style.border = '1px solid rgba(180, 132, 30, 0.2)'
-        }
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = baseGlass.background
-        e.currentTarget.style.border = baseGlass.border
-        if (tier.featured) {
-          e.currentTarget.style.boxShadow = featuredGlass.boxShadow
-        } else {
-          e.currentTarget.style.boxShadow = defaultGlass.boxShadow
-        }
-      }}
-    >
-      {tier.featured ? (
-        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
-          Popular
-        </span>
-      ) : null}
-      <div className="mb-2 flex items-baseline justify-between gap-4">
-        <h3 className="text-xl font-bold tracking-tight text-foreground md:text-[22px]">{tier.name}</h3>
-        <p className="whitespace-nowrap text-xl font-bold text-gold-accent md:text-[22px]">{tier.price}</p>
-      </div>
-      <p className="mb-6 border-b border-border pb-6 text-sm leading-relaxed text-muted-foreground">
-        {tier.description}
-      </p>
-      <ul className="mb-7 flex-1 space-y-2.5">
+    <Card variant="glass" featured={tier.featured}>
+      <CardHeader>
+        <CardTitle>{tier.name}</CardTitle>
+        <CardPrice>{tier.price}</CardPrice>
+      </CardHeader>
+
+      <CardDescription bordered>{tier.description}</CardDescription>
+
+      <CardCheckList>
         {tier.includes.map((line) => (
-          <li key={line} className="flex items-start gap-2.5 text-sm text-foreground/80">
-            <CheckCircle2 className="mt-[2px] h-4 w-4 flex-shrink-0 text-gold-accent" aria-hidden />
-            {line}
-          </li>
+          <CardCheckItem key={line}>{line}</CardCheckItem>
         ))}
-      </ul>
-      <Button
-        asChild
-        className={
-          tier.featured
-            ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02]'
-            : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-[#1A1A1A]'
-        }
-      >
-        <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
-          Book a Strategy Call
-          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </Link>
-      </Button>
-    </div>
+      </CardCheckList>
+
+      <CardFooter>
+        <Button
+          asChild
+          className={
+            tier.featured
+              ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02]'
+              : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-[#1A1A1A]'
+          }
+        >
+          <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
+            Book a Strategy Call
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -142,39 +106,24 @@ function CarePricingCard({ tier }: { tier: CareTier }) {
   const featured = tier.slug === 'growth-care'
 
   return (
-    <div
-      className={cn(
-        'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
-        featured
-          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted'
-          : 'border-border bg-muted/30 hover:border-gold-muted-border',
-      )}
-    >
-      {featured ? (
-        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
-          Popular
-        </span>
-      ) : null}
-      <div className="mb-2 flex items-baseline justify-between gap-4">
-        <h3 className="text-xl font-bold tracking-tight text-foreground md:text-[22px]">{tier.name}</h3>
-        <p className="whitespace-nowrap text-xl font-bold text-gold-accent md:text-[22px]">
+    <Card variant="muted-30" featured={featured}>
+      <CardHeader>
+        <CardTitle>{tier.name}</CardTitle>
+        <CardPrice>
           ${tier.priceMin.toLocaleString()}
           <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
-        </p>
-      </div>
-      <p className="mb-4 text-sm font-semibold text-gold-accent">{tier.tagline}</p>
-      <p className="mb-6 border-b border-border pb-6 text-sm leading-relaxed text-muted-foreground">
-        {tier.description}
-      </p>
-      <ul className="mb-7 flex-1 space-y-2.5">
+        </CardPrice>
+      </CardHeader>
+
+      <CardTagline>{tier.tagline}</CardTagline>
+      <CardDescription bordered>{tier.description}</CardDescription>
+
+      <CardCheckList>
         {tier.includes.map((line) => (
-          <li key={line} className="flex items-start gap-2.5 text-sm text-foreground/80">
-            <CheckCircle2 className="mt-[2px] h-4 w-4 flex-shrink-0 text-gold-accent" aria-hidden />
-            {line}
-          </li>
+          <CardCheckItem key={line}>{line}</CardCheckItem>
         ))}
-      </ul>
-    </div>
+      </CardCheckList>
+    </Card>
   )
 }
 
@@ -182,77 +131,49 @@ function BlogOptionCard({ tier }: { tier: BlogTier }) {
   const isOneTime = tier.slug === 'blog-single'
 
   return (
-    <article
-      className={cn(
-        'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
-        tier.popular
-          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted'
-          : 'border-border bg-muted/20 hover:border-gold-muted-border',
-      )}
-    >
-      {tier.popular ? (
-        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
-          Popular
-        </span>
-      ) : null}
-      <div className="flex flex-1 flex-col">
-        <h3 className="mb-1 text-xl font-bold tracking-tight text-foreground md:text-[22px]">
-          {tier.name}
-        </h3>
-        <div className="mb-6 text-[13px] text-muted-foreground">{getBlogCadenceLabel(tier)}</div>
+    <Card as="article" variant="muted-20" featured={tier.popular}>
+      <CardBody>
+        <CardTitle className="mb-1">{tier.name}</CardTitle>
+        <CardDescription size="xs" className="mb-6">
+          {getBlogCadenceLabel(tier)}
+        </CardDescription>
 
-        <div className="mb-5 border-y border-border py-5">
-          <div className="mb-1 text-sm text-muted-foreground line-through">{tier.price}</div>
-          <div className="text-[28px] font-bold leading-none text-gold-accent">
-            {formatCareClientPrice(tier.priceMin)}
-            <span className="ml-1 text-sm font-medium text-muted-foreground">
-              {isOneTime ? 'one-time' : '/mo'}
-            </span>
-          </div>
-        </div>
+        <CardPriceBlock
+          compareAt={tier.price}
+          price={formatCareClientPrice(tier.priceMin)}
+          suffix={isOneTime ? 'one-time' : '/mo'}
+        />
 
         <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
-        <div className="text-xs font-semibold tracking-wide text-gold-accent">15% off for care clients</div>
-      </div>
-    </article>
+        <div className="text-xs font-semibold tracking-wide text-gold-accent">
+          15% off for care clients
+        </div>
+      </CardBody>
+    </Card>
   )
 }
 
 function ChatbotOptionCard({ tier }: { tier: ChatbotTier }) {
   return (
-    <article
-      className={cn(
-        'relative flex h-full flex-col rounded-xl border p-7 transition-colors duration-300 md:p-8',
-        tier.popular
-          ? 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted'
-          : 'border-border bg-muted/20 hover:border-gold-muted-border',
-      )}
-    >
-      {tier.popular ? (
-        <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
-          Popular
-        </span>
-      ) : null}
-      <div className="flex flex-1 flex-col">
-        <h3 className="mb-1 text-xl font-bold tracking-tight text-foreground md:text-[22px]">
-          {tier.name}
-        </h3>
-        <div className="mb-6 text-[13px] text-muted-foreground">{tier.conversations}</div>
+    <Card as="article" variant="muted-20" featured={tier.popular}>
+      <CardBody>
+        <CardTitle className="mb-1">{tier.name}</CardTitle>
+        <CardDescription size="xs" className="mb-6">
+          {tier.conversations}
+        </CardDescription>
 
-        <div className="mb-5 border-y border-border py-5">
-          <div className="mb-1 text-sm text-muted-foreground line-through">
-            ${tier.priceMin.toLocaleString()}/month
-          </div>
-          <div className="text-[28px] font-bold leading-none text-gold-accent">
-            {formatCareClientPrice(tier.priceMin)}
-            <span className="ml-1 text-sm font-medium text-muted-foreground">/mo</span>
-          </div>
-        </div>
+        <CardPriceBlock
+          compareAt={`$${tier.priceMin.toLocaleString()}/month`}
+          price={formatCareClientPrice(tier.priceMin)}
+          suffix="/mo"
+        />
 
         <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
-        <div className="text-xs font-semibold tracking-wide text-gold-accent">15% off for care clients</div>
-      </div>
-    </article>
+        <div className="text-xs font-semibold tracking-wide text-gold-accent">
+          15% off for care clients
+        </div>
+      </CardBody>
+    </Card>
   )
 }
 

@@ -105,6 +105,37 @@
   }
 }
 
+/* Card primitive — glass surface */
+.card-surface-glass {
+  --card-glass-bg: rgba(0, 0, 0, 0.02);
+  --card-glass-border: rgba(0, 0, 0, 0.08);
+  --card-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  background: var(--card-glass-bg);
+  border: 1px solid var(--card-glass-border);
+  box-shadow: var(--card-glass-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-surface-glass:hover {
+  --card-glass-bg: rgba(0, 0, 0, 0.04);
+  --card-glass-border: rgba(180, 132, 30, 0.2);
+}
+
+.card-surface-glass-featured {
+  --card-glass-bg: rgba(180, 132, 30, 0.04);
+  --card-glass-border: rgba(180, 132, 30, 0.15);
+  --card-glass-shadow: 0 4px 24px rgba(180, 132, 30, 0.08);
+}
+
+.card-surface-glass-featured:hover {
+  --card-glass-bg: rgba(180, 132, 30, 0.06);
+  --card-glass-border: rgba(180, 132, 30, 0.25);
+  --card-glass-shadow: 0 4px 28px rgba(180, 132, 30, 0.12);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
