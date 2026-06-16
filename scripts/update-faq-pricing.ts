@@ -10,15 +10,13 @@ import { fileURLToPath } from 'node:url'
 import { createClient, type SanityClient } from '@sanity/client'
 import { config as loadEnv } from 'dotenv'
 
-import { pricingFAQs, projectPricing } from '@/data/pricing'
+import { pricingFAQs } from '@/data/pricing'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const ROOT = join(__dirname, '..')
 
 const API_VERSION = '2025-12-05'
-
-const essentialsTier = projectPricing[0]
 
 type FaqDoc = {
   _id: string
@@ -47,20 +45,6 @@ type PortableTextBlock = {
 }
 
 const FAQ_UPDATE_RULES: FaqUpdateRule[] = [
-  {
-    id: 'las-vegas-cost',
-    label: 'Las Vegas web design cost',
-    phrase: 'how much does web design cost in las vegas',
-    getAnswer: () =>
-      `Template sites from local freelancers often run $3,000–$8,000. Custom WordPress builds typically land between $8,000 and $20,000. Vizantir projects start at ${essentialsTier.price} for a fixed-scope Next.js build. Price depends on page count, integrations, and content complexity. We quote after discovery, not before.`,
-  },
-  {
-    id: 'las-vegas-after-launch',
-    label: 'Las Vegas after launch',
-    phrase: 'what happens after launch',
-    getAnswer: () =>
-      `You own the site and the codebase. ${pricingFAQs.retainer} Many clients manage day-to-day edits themselves through Sanity and call us for larger work.`,
-  },
   {
     id: 'after-site-launches',
     label: 'After the site launches',

@@ -246,8 +246,11 @@ function ChatbotOptionCard({ tier }: { tier: ChatbotTier }) {
         <div className="mb-6 text-[13px] text-muted-foreground">{tier.conversations}</div>
 
         <div className="mb-5 border-y border-border py-5">
+          <div className="mb-1 text-sm text-muted-foreground line-through">
+            ${tier.priceMin.toLocaleString()}/month
+          </div>
           <div className="text-[28px] font-bold leading-none text-gold-accent">
-            ${tier.priceMin.toLocaleString()}
+            {formatCareClientPrice(tier.priceMin)}
             <span className="ml-1 text-sm font-medium text-muted-foreground">/mo</span>
           </div>
         </div>

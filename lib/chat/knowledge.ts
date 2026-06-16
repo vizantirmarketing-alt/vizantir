@@ -8,7 +8,15 @@ import {
 } from '@/lib/sanity/queries'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { aboutPageContent } from '@/data/about'
-import { projectPricing, carePricing, pricingFAQs } from '@/data/pricing'
+import {
+  projectPricing,
+  carePricing,
+  blogPricing,
+  chatbotPricing,
+  CHATBOT_SETUP_FEE,
+  formatCareClientPrice,
+  pricingFAQs,
+} from '@/data/pricing'
 import { areWeAFitPageContent } from '@/data/are-we-a-fit'
 import { howWeWorkProcess, howWeWorkFaqs } from '@/data/how-we-work'
 
@@ -66,8 +74,38 @@ function buildPricing(): string {
   const care = carePricing
     .map((c) => `### ${c.name} — ${c.price}\n${c.description}`)
     .join('\n\n')
+  const blogIntro = [
+    'Vizantir offers ongoing blog writing as an add-on to any Website Care plan.',
+    'Posts are human-written, researched against the client\u2019s industry and audience, and published live in Sanity \u2014 not a separate engagement, not AI-generated.',
+    'Available standalone as a single post; recurring tiers are care-attached only.',
+  ].join(' ')
+  const blogTiers = blogPricing
+    .map((t) => {
+      const isOneTime = t.cadence === 'one-time'
+      const priceLine = isOneTime
+        ? `$${t.priceMin.toLocaleString()} (one-time)`
+        : `$${t.priceMin.toLocaleString()}/month`
+      const careLine = isOneTime
+        ? `Care clients: 15% off \u2192 ${formatCareClientPrice(t.priceMin)} (one-time)`
+        : `Care clients: 15% off \u2192 ${formatCareClientPrice(t.priceMin)}/month`
+      return `### ${t.name} — ${priceLine}\n${t.tagline}\n${careLine}`
+    })
+    .join('\n\n')
+  const blogBlock = `${blogIntro}\n\n${blogTiers}`
+  const chatbotIntro = [
+    'Vizantir offers a custom AI chatbot trained on each client\u2019s site content, services, and FAQs.',
+    'It answers visitors in the client\u2019s brand voice \u2014 not canned scripts or generic widgets.',
+    'Primarily sold as an add-on to Website Care; also available standalone.',
+    'This is not a self-serve product: setup, training, and conversation metering are handled per client by the Vizantir team.',
+  ].join(' ')
+  const chatbotTiers = chatbotPricing
+    .map((t) =>
+      `### ${t.name} — $${t.priceMin.toLocaleString()}/month\n${t.conversations}\n${t.tagline}\nCare clients: 15% off \u2192 ${formatCareClientPrice(t.priceMin)}/month`,
+    )
+    .join('\n\n')
+  const chatbotBlock = `${chatbotIntro}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
-  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\n${faqBlock}`
+  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nBLOG WRITING (monthly add-on or one-time):\n\n${blogBlock}\n\nAI CHATBOT (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
   return section('PRICING', body)
 }
 

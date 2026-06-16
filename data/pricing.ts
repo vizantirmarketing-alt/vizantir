@@ -214,8 +214,7 @@ export const blogPricing: BlogTier[] = [
 export type ChatbotTier = {
   slug: 'chatbot-starter' | 'chatbot-growth' | 'chatbot-scale'
   name: string
-  price: string
-  priceMin: number
+  priceMin: number       // 150 — used to compute display + discount
   conversations: string
   tagline: string
   popular?: boolean
@@ -231,7 +230,6 @@ export const chatbotPricing: ChatbotTier[] = [
   {
     slug: 'chatbot-starter',
     name: 'Starter',
-    price: '$150/month',
     priceMin: 150,
     conversations: 'Up to 500 conversations per month',
     tagline: 'For low-volume sites that want a smart front door.',
@@ -239,7 +237,6 @@ export const chatbotPricing: ChatbotTier[] = [
   {
     slug: 'chatbot-growth',
     name: 'Growth',
-    price: '$350/month',
     priceMin: 350,
     conversations: 'Up to 2,000 conversations per month',
     tagline: 'A real customer-facing channel that handles repeat questions.',
@@ -248,7 +245,6 @@ export const chatbotPricing: ChatbotTier[] = [
   {
     slug: 'chatbot-scale',
     name: 'Scale',
-    price: '$600/month',
     priceMin: 600,
     conversations: 'Up to 5,000 conversations per month',
     tagline: 'High-traffic sites where the bot earns its keep daily.',
@@ -318,4 +314,11 @@ export function getBlogTier(slug: BlogTier['slug']): BlogTier {
     throw new Error(`Unknown blog tier slug: ${slug}`)
   }
   return tier
+}
+
+export const CARE_CLIENT_DISCOUNT = 0.15
+
+export function formatCareClientPrice(priceMin: number): string {
+  const discounted = Math.round(priceMin * (1 - CARE_CLIENT_DISCOUNT))
+  return `$${discounted.toLocaleString()}`
 }
