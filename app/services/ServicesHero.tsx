@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
 /*
   ServicesHero - Architectural Grid
   
@@ -9,17 +8,11 @@ import { motion, useScroll, useTransform } from 'framer-motion'
   - Animated grid lines on load
   - Corner accents
   - Content positioned on grid
-  - Scroll-fade matching homepage/about
   - Day/night theme support
 */
 
 export default function ServicesHero() {
   const [loaded, setLoaded] = useState(false)
-
-  // Scroll fade effect (matches homepage/about)
-  const { scrollY } = useScroll()
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0])
-  const heroY = useTransform(scrollY, [0, 500], [0, 100])
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 100)
@@ -41,18 +34,14 @@ export default function ServicesHero() {
   }
 
   return (
-    <motion.section
+    <section
       className="relative min-h-[60vh] lg:min-h-screen w-full overflow-hidden"
       style={{ 
         background: colors.bg,
-        opacity: heroOpacity,
       }}
     >
       {/* Animated Grid Lines */}
-      <motion.div 
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-        style={{ y: heroY }}
-      >
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Vertical lines */}
         {[1, 2, 3, 4, 5].map((i) => (
           <div
@@ -118,13 +107,10 @@ export default function ServicesHero() {
             boxShadow: 'none',
           }}
         />
-      </motion.div>
+      </div>
 
       {/* Content Grid */}
-      <motion.div 
-        className="relative z-10 min-h-[60vh] lg:h-screen flex flex-col lg:justify-between px-6 md:px-12 lg:px-20 py-20 lg:py-24"
-        style={{ opacity: heroOpacity }}
-      >
+      <div className="relative z-10 min-h-[60vh] lg:h-screen flex flex-col lg:justify-between px-6 md:px-12 lg:px-20 py-20 lg:py-24">
         {/* Top Row */}
         <div
           className="flex justify-between items-start"
@@ -229,8 +215,8 @@ export default function ServicesHero() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-    </motion.section>
+    </section>
   )
 }
