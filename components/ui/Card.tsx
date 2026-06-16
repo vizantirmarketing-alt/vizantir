@@ -23,22 +23,24 @@ const cardSurfaceVariants = cva(
       {
         variant: 'muted-30',
         featured: false,
-        class: 'border-border bg-muted/30 hover:border-gold-muted-border',
+        class: 'border-border bg-muted/30 hover:border-gold-muted-border hover:bg-muted/50',
       },
       {
         variant: 'muted-30',
         featured: true,
-        class: 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted',
+        class:
+          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(180,83,9,0.1)]',
       },
       {
         variant: 'muted-20',
         featured: false,
-        class: 'border-border bg-muted/20 hover:border-gold-muted-border',
+        class: 'border-border bg-muted/20 hover:border-gold-muted-border hover:bg-muted/40',
       },
       {
         variant: 'muted-20',
         featured: true,
-        class: 'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted',
+        class:
+          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(180,83,9,0.1)]',
       },
     ],
     defaultVariants: {
