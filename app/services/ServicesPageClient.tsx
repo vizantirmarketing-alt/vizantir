@@ -86,7 +86,7 @@ function ProjectPricingCard({ tier }: { tier: PricingTier }) {
           asChild
           className={
             tier.featured
-              ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-white shadow-gold transition-all duration-300 hover:scale-[1.02]'
+              ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-white shadow-gold'
               : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-white'
           }
         >
@@ -235,7 +235,7 @@ function strategyCallLink() {
     <Link
       href="/contact"
       onClick={() => trackCTAClick('get_started', 'services')}
-      className="inline-flex items-center gap-2 mt-4 font-semibold text-gold-accent hover:opacity-80 transition-opacity"
+      className="link-cobalt inline-flex items-center gap-2 mt-4 font-semibold text-gold-accent"
     >
       Book a Strategy Call
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -256,7 +256,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
       {service.slug ? (
         <Link
           href={`/services/${service.slug}`}
-          className="inline-flex items-center gap-2 font-semibold text-gold-accent hover:opacity-80 transition-opacity"
+          className="link-cobalt inline-flex items-center gap-2 font-semibold text-gold-accent"
         >
           Learn more
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -341,7 +341,7 @@ function StandalonePricingSection() {
           <Link
             href="/contact"
             onClick={() => trackCTAClick('get_started', 'services')}
-            className="inline-flex items-center gap-2 font-semibold text-gold-accent transition-opacity hover:opacity-80"
+            className="link-cobalt inline-flex items-center gap-2 font-semibold text-gold-accent"
           >
             Book a Strategy Call
             <ArrowRight className="h-4 w-4" />
@@ -377,7 +377,7 @@ function StandalonePricingSection() {
           <Link
             href="/contact"
             onClick={() => trackCTAClick('get_started', 'services')}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-gold-accent transition-opacity hover:opacity-80"
+            className="link-cobalt inline-flex items-center gap-2 text-sm font-semibold text-gold-accent"
           >
             Book a Strategy Call
             <ArrowRight className="h-4 w-4" />
@@ -509,7 +509,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
             >
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
                 Book a Strategy Call

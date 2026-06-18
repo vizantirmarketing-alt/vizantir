@@ -178,21 +178,13 @@ const ServicesPreview = () => {
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="group relative min-w-0 rounded-2xl p-10 md:p-12 cursor-pointer transition-all duration-500 overflow-hidden"
+                className="card-interactive group relative min-w-0 rounded-2xl p-10 md:p-12 cursor-pointer overflow-hidden"
                 style={{
                   background: 'rgba(0, 0, 0, 0.02)',
                   backdropFilter: 'blur(10px)',
                   WebkitBackdropFilter: 'blur(10px)',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
                   boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-                  e.currentTarget.style.borderColor = 'rgba(0, 112, 243, 0.12)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
-                  e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)';
                 }}
               >
                 {/* Muted number - glows on hover */}
@@ -272,7 +264,7 @@ const ServicesPreview = () => {
         <div className="text-center">
           <Link
             href="/services"
-            className="group inline-flex items-center gap-2 font-semibold transition-opacity duration-300 hover:opacity-85"
+            className="link-cobalt group inline-flex items-center gap-2 font-semibold"
             style={{ color: 'var(--gold-accent)' }}
           >
             <span>View All Services</span>

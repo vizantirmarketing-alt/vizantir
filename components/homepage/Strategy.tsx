@@ -291,13 +291,7 @@ const Strategy = () => {
               <Button
                 size="lg"
                 asChild
-                className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
-                style={{
-                  background: 'var(--gold-primary)',
-                  color: "#FFFFFF",
-                  borderRadius: "12px",
-                  boxShadow: "0 8px 30px rgba(0, 112, 243, 0.4)",
-                }}
+                className="bg-gold-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-gold group"
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'strategy')}>
                   Book a Strategy Call

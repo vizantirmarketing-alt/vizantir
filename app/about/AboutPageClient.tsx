@@ -136,13 +136,7 @@ export default function AboutPageClient() {
             <Button
               size="lg"
               asChild
-              className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
-              style={{
-                background: 'var(--gold-primary)',
-                color: '#FFFFFF',
-                borderRadius: '12px',
-                boxShadow: '0 8px 30px rgba(0, 112, 243, 0.4)',
-              }}
+              className="bg-gold-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-gold group"
             >
               <Link href="/contact" onClick={() => trackCTAClick('work_with_us', 'about')}>
                 Work With Us
@@ -227,13 +221,7 @@ export default function AboutPageClient() {
                 <Button
                   size="lg"
                   asChild
-                  className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
-                  style={{
-                    background: 'var(--gold-primary)',
-                    color: '#FFFFFF',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 30px rgba(0, 112, 243, 0.4)',
-                  }}
+                  className="bg-gold-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-gold group"
                 >
                   <Link href="/services">
                     Explore Our Services
@@ -345,7 +333,7 @@ export default function AboutPageClient() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="group relative p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+                className="card-interactive group relative p-8 rounded-2xl overflow-hidden"
                 style={{
                   background: 'rgba(255, 255, 255, 0.8)',
                   backdropFilter: 'blur(10px)',
@@ -447,13 +435,7 @@ export default function AboutPageClient() {
               <Button
                 size="lg"
                 asChild
-                className="text-lg px-10 py-7 font-bold border-0 transition-all duration-300 hover:scale-105 group"
-                style={{
-                  background: 'var(--gold-primary)',
-                  color: '#FFFFFF',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 40px rgba(0, 112, 243, 0.5)',
-                }}
+                className="bg-gold-gradient text-lg px-10 py-7 font-bold border-0 rounded-xl shadow-gold group"
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'about')}>
                   Book a Strategy Call

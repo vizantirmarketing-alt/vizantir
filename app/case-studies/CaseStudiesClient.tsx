@@ -136,7 +136,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
               <motion.div
                 key={study._id}
                 variants={itemVariants}
-                className="group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1"
+                className="card-interactive group flex h-full flex-col rounded-2xl border p-6"
                 style={{
                   background: colors.cardBg,
                   borderColor: colors.cardBorder,
@@ -213,7 +213,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                       href={study.siteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-85 md:text-base"
+                      className="link-cobalt inline-flex items-center gap-2 text-sm font-semibold md:text-base"
                       style={{ color: colors.accent }}
                     >
                       Visit live site
@@ -222,7 +222,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                   ) : null}
                   <Link
                     href={`/case-studies/${study.slug}`}
-                    className="inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-85 md:text-base"
+                    className="link-cobalt inline-flex items-center gap-2 text-sm font-semibold md:text-base"
                     style={{ color: colors.accent }}
                   >
                     Read case study
@@ -247,10 +247,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             <Link
               href="/contact"
               onClick={() => trackCTAClick('start_your_project', 'case_studies')}
-              className="group inline-flex items-center gap-2 rounded-xl bg-gold-primary px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-105"
-              style={{
-                boxShadow: 'var(--gold-shadow)',
-              }}
+              className="bg-gold-gradient group inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
             >
               Start Your Project
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />

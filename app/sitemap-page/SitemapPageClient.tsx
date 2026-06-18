@@ -30,7 +30,7 @@ function LinkList({ links }: { links: SitemapLink[] }) {
         <li key={link.href}>
           <Link
             href={link.href}
-            className="text-muted-foreground transition-colors hover:text-gold-accent"
+            className="link-cobalt text-muted-foreground"
           >
             {link.name}
           </Link>
@@ -101,7 +101,7 @@ export default function SitemapPageClient({
                   <li key={service.slug}>
                     <Link
                       href={`/services/${service.slug}`}
-                      className="text-muted-foreground transition-colors hover:text-gold-accent"
+                      className="link-cobalt text-muted-foreground"
                     >
                       {service.title}
                     </Link>
@@ -121,7 +121,7 @@ export default function SitemapPageClient({
                   <li key={study.slug}>
                     <Link
                       href={`/case-studies/${study.slug}`}
-                      className="text-muted-foreground transition-colors hover:text-gold-accent"
+                      className="link-cobalt text-muted-foreground"
                     >
                       {study.title}
                     </Link>
@@ -149,7 +149,7 @@ export default function SitemapPageClient({
                     <li key={post.slug}>
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="text-sm text-muted-foreground transition-colors hover:text-gold-accent"
+                        className="link-cobalt text-sm text-muted-foreground"
                       >
                         {post.title}
                       </Link>
@@ -160,7 +160,7 @@ export default function SitemapPageClient({
               <p className="mt-3 text-sm">
                 <Link
                   href="/blog"
-                  className="text-muted-foreground transition-colors hover:text-gold-accent"
+                  className="link-cobalt text-muted-foreground"
                 >
                   View blog index →
                 </Link>

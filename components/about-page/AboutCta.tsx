@@ -13,11 +13,7 @@ export default function AboutCta({ content }: AboutCtaProps) {
         <p className="mb-6 text-base text-muted-foreground md:text-lg">Think we might be the studio for you?</p>
         <Link
           href={content.href}
-          className="inline-block rounded-xl px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
-          style={{
-            background: 'var(--gold-gradient)',
-            boxShadow: 'var(--gold-shadow)',
-          }}
+          className="bg-gold-gradient inline-block rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
         >
           {content.label}
         </Link>

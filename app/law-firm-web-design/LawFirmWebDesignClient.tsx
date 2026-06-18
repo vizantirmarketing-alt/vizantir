@@ -157,7 +157,7 @@ export default function LawFirmWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
             >
               <Link href="/contact">
                 Book a Strategy Call
@@ -226,7 +226,7 @@ export default function LawFirmWebDesignClient() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl border border-border bg-muted transition-all duration-300 hover:-translate-y-1 hover:border-gold-muted-border"
+                className="card-interactive p-6 rounded-2xl border border-border bg-muted"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
                   <card.icon size={24} className="text-gold-accent" />
@@ -326,7 +326,7 @@ export default function LawFirmWebDesignClient() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl border border-border bg-muted transition-all duration-300 hover:-translate-y-1 hover:border-gold-muted-border"
+                className="card-interactive p-6 rounded-2xl border border-border bg-muted"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
                   <CheckCircle2 size={24} className="text-gold-accent" />
@@ -398,7 +398,7 @@ export default function LawFirmWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
             >
               <Link href="/contact">
                 Book a Strategy Call
@@ -410,7 +410,7 @@ export default function LawFirmWebDesignClient() {
               <Link
                 href="tel:+17022890758"
                 onClick={trackPhoneClick}
-                className="text-gold-accent hover:opacity-80 transition-opacity"
+                className="link-cobalt text-gold-accent"
               >
                 (702) 289-0758
               </Link>

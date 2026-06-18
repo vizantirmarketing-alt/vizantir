@@ -52,7 +52,7 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group relative p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              className="card-interactive group relative p-8 rounded-2xl overflow-hidden"
               style={{
                 background: 'rgba(255, 255, 255, 0.7)',
                 backdropFilter: 'blur(10px)',

@@ -218,12 +218,10 @@ export default function BlogPageClient({ posts }: Props) {
                 >
                   <Link href={`/blog/${post.slug}`}>
                     <div
-                      className="group h-full p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-1"
+                      className="card-interactive group h-full p-6 rounded-2xl border"
                       style={{
                         backgroundColor: colors.cardBg,
                         borderColor: colors.cardBorder,
-                        transition:
-                          'background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease',
                       }}
                     >
                       {/* Category & Read Time */}
@@ -352,12 +350,7 @@ export default function BlogPageClient({ posts }: Props) {
           >
             <Link
               href="/contact"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-bold transition-all duration-300 hover:scale-105 group"
-              style={{
-                backgroundColor: '#1A1A1A',
-                color: '#FFFFFF',
-                transition: themeBgColorTransition,
-              }}
+              className="btn-dark inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-bold group"
             >
               <span>Book a Strategy Call</span>
               <svg

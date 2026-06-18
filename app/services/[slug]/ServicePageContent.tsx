@@ -250,7 +250,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="rounded-2xl border p-6 transition-transform duration-300 hover:-translate-y-0.5"
+                    className="card-interactive rounded-2xl border p-6"
                     style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
                   >
                     <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
@@ -352,7 +352,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <button
                       type="button"
                       onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                      className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors"
+                      className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[#F9FAFB]"
                       style={{ color: '#1A1A1A' }}
                     >
                       <span className="pr-4 text-lg font-semibold">{faq.question}</span>
@@ -424,7 +424,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   >
                     <Link
                       href={`/services/${rel.slug}`}
-                      className="group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1"
+                      className="card-interactive group flex h-full flex-col rounded-2xl border p-6"
                       style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
                     >
                       <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
@@ -470,8 +470,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             <Button
               size="lg"
               asChild
-              className="text-base font-semibold transition-all duration-300 hover:scale-105"
-              style={{ background: 'var(--gold-primary)', color: '#FFFFFF', borderRadius: '8px' }}
+              className="bg-gold-gradient text-base font-semibold rounded-lg"
             >
               <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4">
                 Book a strategy call

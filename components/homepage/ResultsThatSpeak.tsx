@@ -109,7 +109,7 @@ const ResultsThatSpeak = () => {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-85"
+                  className="link-cobalt group inline-flex items-center gap-2 text-sm font-semibold"
                   style={{ color: 'var(--gold-accent)' }}
                 >
                   <span>View live site</span>
@@ -122,11 +122,7 @@ const ResultsThatSpeak = () => {
           <div className="text-center mt-10 md:mt-12">
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
-              style={{
-                background: 'var(--gold-gradient)',
-                boxShadow: 'var(--gold-shadow)',
-              }}
+              className="bg-gold-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
             >
               View all work
               <ArrowRight className="w-5 h-5" />

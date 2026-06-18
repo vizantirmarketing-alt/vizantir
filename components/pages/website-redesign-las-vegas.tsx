@@ -76,7 +76,7 @@ export default function WebsiteRedesignLasVegasPage() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
             >
               <Link href={hero.primaryCta.href}>
                 {hero.primaryCta.label}
@@ -142,7 +142,7 @@ export default function WebsiteRedesignLasVegasPage() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl border border-border bg-muted transition-all duration-300 hover:-translate-y-1 hover:border-gold-muted-border"
+                className="card-interactive p-6 rounded-2xl border border-border bg-muted"
               >
                 <h3 className="text-lg font-bold mb-3 text-foreground">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
@@ -353,7 +353,7 @@ export default function WebsiteRedesignLasVegasPage() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
             >
               <Link href={closingCta.cta.href}>
                 {closingCta.cta.label}
@@ -365,7 +365,7 @@ export default function WebsiteRedesignLasVegasPage() {
               <Link
                 href="tel:+17022890758"
                 onClick={trackPhoneClick}
-                className="text-gold-accent hover:opacity-80 transition-opacity"
+                className="link-cobalt text-gold-accent"
               >
                 (702) 289-0758
               </Link>

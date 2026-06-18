@@ -190,11 +190,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             <Link
               href={content.closingCta.href}
               onClick={() => trackCTAClick('book_strategy_call', 'are_we_a_fit')}
-              className="inline-block rounded-xl px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
-              style={{
-                background: 'var(--gold-gradient)',
-                boxShadow: 'var(--gold-shadow)',
-              }}
+              className="bg-gold-gradient inline-block rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
             >
               {content.closingCta.label}
             </Link>

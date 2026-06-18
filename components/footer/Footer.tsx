@@ -101,7 +101,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
-                    className="transition-colors hover:opacity-80"
+                    className="link-cobalt"
                     style={{ color: '#6B6B6B' }}
                   >
                     {link.name}
@@ -129,7 +129,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
-                    className="transition-colors hover:opacity-80"
+                    className="link-cobalt"
                     style={{ color: '#6B6B6B' }}
                   >
                     {link.name}
@@ -157,7 +157,7 @@ const Footer = () => {
                   <Link
                     href="/contact"
                     onClick={() => trackEvent('contact_click', { event_category: 'contact', event_label: 'footer_contact' })}
-                    className="hover:opacity-80 transition-opacity"
+                    className="link-cobalt"
                     style={{ color: '#6B6B6B' }}
                   >
                     Contact
@@ -169,7 +169,7 @@ const Footer = () => {
                 style={{ color: '#6B6B6B' }}
               >
                 <Phone size={18} className="mt-1 flex-shrink-0" />
-                <a href="tel:+17022890758" onClick={() => trackPhoneClick()} className="hover:opacity-80 transition-opacity">
+                <a href="tel:+17022890758" onClick={() => trackPhoneClick()} className="link-cobalt">
                   +1 (702) 289-0758
                 </a>
               </li>
@@ -209,7 +209,7 @@ const Footer = () => {
                 <Link 
                   key={link.href}
                   href={link.href} 
-                  className="text-sm transition-colors hover:opacity-80"
+                  className="link-cobalt text-sm"
                   style={{ color: '#6B6B6B' }}
                 >
                   {link.name}

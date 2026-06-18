@@ -119,7 +119,7 @@ const PortfolioPreview = () => {
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 hover:text-gold-primary transition-colors duration-300 mt-2"
+                    className="link-cobalt inline-flex items-center gap-2 mt-2"
                     style={{ color: '#1A1A1A' }}
                   >
                     View Live Site
@@ -145,10 +145,7 @@ const PortfolioPreview = () => {
             
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-gold-primary text-white"
-              style={{
-                boxShadow: 'var(--gold-shadow)',
-              }}
+              className="bg-gold-gradient inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base shadow-gold group"
             >
               View All Work
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />

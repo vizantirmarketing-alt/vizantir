@@ -81,7 +81,7 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center cursor-pointer transition-opacity duration-300 hover:opacity-80">
+            <Link href="/" className="link-cobalt flex items-center cursor-pointer">
               {!mounted ? (
                 <div className="h-5 md:h-7 w-24" />
               ) : (
@@ -103,11 +103,9 @@ const Navbar = () => {
                   key={link.path}
                   href={link.path}
                   title={link.description}
-                  className="relative text-sm font-medium transition-all duration-300 hover:opacity-80"
+                  className="relative text-sm font-semibold text-[#1F1E1B] transition-colors duration-200 hover:text-[#0070F3]"
                   style={{
-                    color: pathname === link.path 
-                      ? 'var(--gold-primary)'
-                      : '#1A1A1A',
+                    color: pathname === link.path ? 'var(--gold-primary)' : undefined,
                   }}
                 >
                   {link.name}
@@ -121,12 +119,7 @@ const Navbar = () => {
             <div className="hidden xl:flex items-center gap-4">
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'navbar')}>
                 <button
-                  className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
-                  style={{
-                    background: 'var(--gold-gradient)',
-                    color: '#FFFFFF',
-                    boxShadow: 'var(--gold-shadow)',
-                  }}
+                  className="bg-gold-gradient px-6 py-2.5 rounded-xl text-sm font-semibold text-white shadow-gold"
                 >
                   Book a Strategy Call
                 </button>
@@ -221,7 +214,7 @@ const Navbar = () => {
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block py-3 sm:py-4 transition-all duration-300 ${
+                  className={`link-cobalt block py-3 sm:py-4 ${
                     idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
                   } ${mounted && pathname === link.path ? 'text-gold-primary' : 'text-foreground'}`}
                 >

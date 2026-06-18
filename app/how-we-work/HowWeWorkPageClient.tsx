@@ -584,7 +584,9 @@ export default function HowWeWorkPageClient() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full text-left px-6 py-5 rounded-xl border transition-all duration-300"
+                  className={`w-full text-left px-6 py-5 rounded-xl border transition-all duration-300 ${
+                    openFaq !== index ? 'hover:bg-[#F9FAFB]' : ''
+                  }`}
                   style={{
                     background: colors.cardBg,
                     borderColor:
@@ -658,11 +660,7 @@ export default function HowWeWorkPageClient() {
           >
             <Link
               href="/contact"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:scale-105 group"
-              style={{
-                background: '#1A1A1A',
-                color: '#FFFFFF',
-              }}
+              className="btn-dark inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-semibold group"
             >
               <span>Get in Touch</span>
               <svg

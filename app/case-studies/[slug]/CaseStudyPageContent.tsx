@@ -48,7 +48,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         <div className="relative z-10 mx-auto max-w-5xl">
           <Link
             href="/case-studies"
-            className="mb-8 inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-80"
+            className="link-cobalt mb-8 inline-flex items-center gap-2 text-sm font-medium"
             style={{ color: colors.textMuted }}
           >
             <span aria-hidden>←</span>
@@ -77,7 +77,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                   href={caseStudy.siteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-80"
+                  className="link-cobalt inline-flex items-center gap-2 text-sm font-semibold"
                   style={{ color: colors.accent }}
                 >
                   Visit live site

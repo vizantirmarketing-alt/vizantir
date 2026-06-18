@@ -76,14 +76,8 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               >
                 <button
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200"
+                  className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200 hover:bg-[#F9FAFB]"
                   style={{ background: '#FFFFFF' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#F9FAFB';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = '#FFFFFF';
-                  }}
                 >
                   <span 
                     className="text-lg font-semibold pr-8"

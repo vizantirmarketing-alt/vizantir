@@ -123,8 +123,7 @@ export default function ContactPageClient() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 font-semibold transition-all duration-300 hover:scale-105"
-            style={{ background: 'var(--gold-primary)', color: '#FFFFFF', borderRadius: '8px' }}
+            className="bg-gold-gradient inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-lg"
           >
             Back to Home
           </Link>
@@ -192,7 +191,7 @@ export default function ContactPageClient() {
                     </div>
                     <div>
                       <p className="font-semibold mb-1" style={{ color: '#1A1A1A' }}>Email</p>
-                      <a href="mailto:info@vizantir.com" className="transition-colors hover:opacity-80" style={{ color: 'var(--gold-primary)' }}>
+                      <a href="mailto:info@vizantir.com" className="link-cobalt" style={{ color: 'var(--gold-primary)' }}>
                         info@vizantir.com
                       </a>
                     </div>
@@ -208,7 +207,7 @@ export default function ContactPageClient() {
                       <a 
                         href="tel:+17022890758" 
                         onClick={trackPhoneClick}
-                        className="transition-colors hover:opacity-80" 
+                        className="link-cobalt"
                         style={{ color: '#4A4A4A' }}
                       >
                         +1 (702) 289-0758
@@ -392,8 +391,7 @@ export default function ContactPageClient() {
                   <button
                     type="submit"
                     disabled={isSubmitting || turnstileToken === null}
-                    className="w-full rounded-xl px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    style={{ background: 'var(--gold-gradient)', color: '#FFFFFF', boxShadow: 'var(--gold-shadow)' }}
+                    className="bg-gold-gradient w-full rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -414,9 +412,9 @@ export default function ContactPageClient() {
                   </button>
                   <p className="text-xs text-center" style={{ color: '#888888' }}>
                     By submitting this form, you agree to our{' '}
-                    <Link href="/privacy" className="underline hover:opacity-80">Privacy Policy</Link>
+                    <Link href="/privacy" className="link-cobalt">Privacy Policy</Link>
                     {' '}and{' '}
-                    <Link href="/terms" className="underline hover:opacity-80">Terms of Service</Link>.
+                    <Link href="/terms" className="link-cobalt">Terms of Service</Link>.
                   </p>
                 </form>
               </div>

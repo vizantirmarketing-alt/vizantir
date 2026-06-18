@@ -261,12 +261,7 @@ const Solutions = () => {
           <Button
             size="lg"
             asChild
-            className="text-base px-10 py-7 font-semibold border-0 transition-transform hover:scale-105"
-            style={{
-              background: 'var(--gold-primary)',
-              color: '#FFFFFF',
-              borderRadius: '12px',
-            }}
+            className="bg-gold-gradient text-base px-10 py-7 font-semibold border-0 rounded-xl"
           >
             <Link href="/services">
               SEE ALL SERVICES

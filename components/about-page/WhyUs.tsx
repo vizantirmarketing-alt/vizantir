@@ -179,7 +179,7 @@ const WhyUs = () => {
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="group p-8 rounded-2xl transition-all duration-300 hover:scale-[1.02]"
+                className="card-interactive group p-8 rounded-2xl"
                 style={{
                   background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(10px)',

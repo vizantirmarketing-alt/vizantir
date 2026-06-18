@@ -77,21 +77,13 @@ const WhatTheWorkShouldDo = () => {
             <motion.div
               key={index}
               variants={cardVariants}
-              className="group relative p-8 lg:p-10 rounded-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              className="card-interactive group relative p-8 lg:p-10 rounded-2xl overflow-hidden"
               style={{
                 background: 'rgba(255, 255, 255, 0.7)',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
                 border: '1px solid rgba(0, 0, 0, 0.08)',
                 boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.85)'
-                e.currentTarget.style.borderColor = 'rgba(0, 112, 243, 0.4)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)'
-                e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)'
               }}
             >
               <h3

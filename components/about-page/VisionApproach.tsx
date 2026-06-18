@@ -117,7 +117,7 @@ const VisionApproach = () => {
               {approaches.map((item, index) => (
                 <div
                   key={item.number}
-                  className="flex gap-5 p-6 rounded-2xl border cursor-pointer transition-all duration-400 hover:-translate-y-1.5"
+                  className="card-interactive flex gap-5 p-6 rounded-2xl border cursor-pointer transition-all duration-400"
                   style={{
                     background: 'rgba(255, 255, 255, 0.7)',
                     backdropFilter: 'blur(10px)',
@@ -131,30 +131,6 @@ const VisionApproach = () => {
                     WebkitBackfaceVisibility: 'hidden',
                     backfaceVisibility: 'hidden',
                     willChange: 'transform, opacity',
-                  }}
-                  onMouseEnter={(e) => {
-                    const badgeColor = getBadgeColor(index);
-                    const rgb = index === 0 ? '59, 130, 246' : index === 1 ? '192, 132, 252' : '0, 217, 255';
-                    e.currentTarget.style.boxShadow = `0 20px 40px rgba(${rgb}, 0.15)`;
-                    e.currentTarget.style.borderColor = badgeColor;
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.85)';
-                    const numEl = e.currentTarget.querySelector('.approach-num') as HTMLElement;
-                    if (numEl) {
-                      numEl.style.background = badgeColor;
-                      numEl.style.color = '#FFFFFF';
-                      numEl.style.transform = 'scale(1.1)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.06)';
-                    e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)';
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
-                    const numEl = e.currentTarget.querySelector('.approach-num') as HTMLElement;
-                    if (numEl) {
-                      numEl.style.background = getBadgeBg(index);
-                      numEl.style.color = getBadgeColor(index);
-                      numEl.style.transform = 'scale(1)';
-                    }
                   }}
                 >
                   <div

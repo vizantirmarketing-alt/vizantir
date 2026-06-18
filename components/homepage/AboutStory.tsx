@@ -66,7 +66,7 @@ const AboutStory = () => {
             <div className="mt-5">
               <Link
                 href="/about"
-                className="group inline-flex items-center gap-2 font-medium transition-opacity duration-300 hover:opacity-85"
+                className="link-cobalt group inline-flex items-center gap-2 font-medium"
                 style={{ color: 'var(--gold-accent)' }}
               >
                 <span>How We Work</span>

@@ -109,7 +109,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                   >
                     <button
                       onClick={() => toggleFAQ(faq._id)}
-                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors"
+                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors hover:bg-[#F9FAFB]"
                       style={{ color: '#1A1A1A' }}
                     >
                       <span className="text-lg font-semibold pr-8">{faq.question}</span>
@@ -161,8 +161,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:scale-105"
-              style={{ background: 'var(--gold-primary)', color: '#FFFFFF', borderRadius: '8px' }}
+              className="bg-gold-gradient inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-lg"
             >
               Book a Strategy Call
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
