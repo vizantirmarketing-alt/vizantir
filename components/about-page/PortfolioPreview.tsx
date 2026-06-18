@@ -57,7 +57,7 @@ const PortfolioPreview = () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <p className="text-sm tracking-[0.3em] uppercase text-gold-primary mb-4">
+            <p className="text-sm tracking-[0.3em] uppercase text-cobalt-primary mb-4">
               Our Work
             </p>
             <h2 
@@ -97,11 +97,11 @@ const PortfolioPreview = () => {
 
                 {/* Project Info */}
                 <div className="space-y-3">
-                  <p className="text-sm tracking-[0.2em] uppercase text-gold-primary">
+                  <p className="text-sm tracking-[0.2em] uppercase text-cobalt-primary">
                     {item.category}
                   </p>
                   <h3 
-                    className="text-2xl md:text-3xl font-bold group-hover:text-gold-primary transition-colors duration-300 text-foreground"
+                    className="text-2xl md:text-3xl font-bold group-hover:text-cobalt-primary transition-colors duration-300 text-foreground"
                   >
                     {item.title}
                   </h3>
@@ -139,7 +139,7 @@ const PortfolioPreview = () => {
             
             <Link
               href="/case-studies"
-              className="bg-gold-gradient inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base shadow-gold group"
+              className="bg-cobalt-gradient inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base shadow-cobalt group"
             >
               View All Work
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />

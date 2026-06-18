@@ -33,7 +33,7 @@ const AboutStory = () => {
               </h2>
               <p 
                 className="text-sm md:text-base mb-8 font-medium"
-                style={{ color: 'var(--gold-accent)' }}
+                style={{ color: 'var(--cobalt-accent)' }}
               >
                 When the right person lands on your site, they should already trust you before they read a word.
               </p>
@@ -64,7 +64,7 @@ const AboutStory = () => {
               <Link
                 href="/about"
                 className="link-cobalt group inline-flex items-center gap-2 font-medium"
-                style={{ color: 'var(--gold-accent)' }}
+                style={{ color: 'var(--cobalt-accent)' }}
               >
                 <span>How We Work</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

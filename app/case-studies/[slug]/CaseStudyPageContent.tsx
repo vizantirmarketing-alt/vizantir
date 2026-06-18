@@ -21,7 +21,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
       bg: '#FAF9F5',
       text: 'var(--foreground)',
       textMuted: 'var(--muted-foreground)',
-      accent: 'var(--gold-primary)',
+      accent: 'var(--cobalt-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
       divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',

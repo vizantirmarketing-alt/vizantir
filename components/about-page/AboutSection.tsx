@@ -10,7 +10,7 @@ export default function AboutSection({ section }: AboutSectionProps) {
   const colors = {
     text: 'var(--foreground)',
     textMuted: '#6B7280',
-    accentSolid: 'var(--gold-primary)',
+    accentSolid: 'var(--cobalt-primary)',
     cardBorder: 'rgba(0,0,0,0.08)',
     budgetAsideBg: 'rgba(0, 112, 243,0.06)',
   }

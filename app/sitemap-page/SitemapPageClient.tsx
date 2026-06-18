@@ -138,7 +138,7 @@ export default function SitemapPageClient({
             >
               <SectionHeading label="Blog" />
               <details className="group rounded-lg border border-border bg-card/50 p-4">
-                <summary className="cursor-pointer list-none text-muted-foreground transition-colors hover:text-gold-accent [&::-webkit-details-marker]:hidden">
+                <summary className="cursor-pointer list-none text-muted-foreground transition-colors hover:text-cobalt-accent [&::-webkit-details-marker]:hidden">
                   <span className="font-medium text-foreground">
                     Show all {postCount} posts
                   </span>

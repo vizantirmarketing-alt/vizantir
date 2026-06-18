@@ -15,7 +15,7 @@ export default function HowWeWorkPageClient() {
     text: 'var(--foreground)',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',
-    accent: 'var(--gold-accent)',
+    accent: 'var(--cobalt-accent)',
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
     divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
@@ -372,7 +372,7 @@ export default function HowWeWorkPageClient() {
                   background: 'rgba(0, 112, 243,0.1)',
                 }}
               >
-                <svg className="w-5 h-5 text-gold-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-5 h-5 text-cobalt-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
@@ -417,7 +417,7 @@ export default function HowWeWorkPageClient() {
                 borderColor: 'rgba(0, 112, 243,0.3)',
               }}
             >
-              <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
+              <span className="absolute -top-2 right-4 rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
                 Recommended
               </span>
 
@@ -441,19 +441,19 @@ export default function HowWeWorkPageClient() {
 
               <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
+                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Fixed scope, fixed price</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
+                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>You get a finished product</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
+                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Direct access to the builder</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
+                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>No surprise invoices</span>
                 </li>
               </ul>
@@ -516,7 +516,7 @@ export default function HowWeWorkPageClient() {
                   'Launch support',
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <Check className="h-4 w-4 text-gold-accent flex-shrink-0 mt-[2px]" aria-hidden />
+                    <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -605,7 +605,7 @@ export default function HowWeWorkPageClient() {
                     <AccordionIndicator
                       isOpen={openFaq === index}
                       className="w-5 h-5 flex-shrink-0"
-                      style={{ color: 'var(--gold-accent)' }}
+                      style={{ color: 'var(--cobalt-accent)' }}
                     />
                   </div>
 

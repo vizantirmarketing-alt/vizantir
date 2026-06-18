@@ -75,7 +75,7 @@ const Services = () => {
               <div className="relative z-10">
                 <service.icon 
                   className="w-12 h-12 mb-4" 
-                  style={{ color: 'var(--gold-primary)' }}
+                  style={{ color: 'var(--cobalt-primary)' }}
                 />
                 <h3 
                   className="text-xl font-bold mb-3 text-foreground"
@@ -90,7 +90,7 @@ const Services = () => {
                 <Link
                   href="/services"
                   className="inline-flex items-center font-medium hover:underline"
-                  style={{ color: 'var(--gold-primary)' }}
+                  style={{ color: 'var(--cobalt-primary)' }}
                 >
                   Learn More <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>

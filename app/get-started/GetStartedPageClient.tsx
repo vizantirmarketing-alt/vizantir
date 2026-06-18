@@ -74,7 +74,7 @@ export default function GetStartedPageClient() {
               >
                 <div 
                   className="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg"
-                  style={{ background: 'var(--gold-primary)', color: '#FFFFFF' }}
+                  style={{ background: 'var(--cobalt-primary)', color: '#FFFFFF' }}
                 >
                   {step.number}
                 </div>
@@ -115,7 +115,7 @@ export default function GetStartedPageClient() {
               <Link
                 href="/contact"
                 onClick={() => trackCTAClick('schedule_a_call', 'get_started')}
-                className="bg-gold-gradient inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-lg"
+                className="bg-cobalt-gradient inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-lg"
               >
                 Book a Strategy Call
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

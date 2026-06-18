@@ -112,7 +112,7 @@ export default function LawFirmWebDesignClient() {
     <main className="bg-background text-foreground transition-colors duration-500">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-6 md:px-12 lg:px-20 pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--gold-muted-subtle)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]" />
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <motion.div
@@ -121,7 +121,7 @@ export default function LawFirmWebDesignClient() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-muted/50 mb-8"
           >
-            <Gavel size={16} className="text-gold-accent" />
+            <Gavel size={16} className="text-cobalt-accent" />
             <span className="text-sm text-muted-foreground">
               Law Firms · Legal Practices · Attorneys
             </span>
@@ -135,7 +135,7 @@ export default function LawFirmWebDesignClient() {
           >
             Law Firm Web Design
             <br />
-            <span className="text-gold-accent">That Builds Trust</span>
+            <span className="text-cobalt-accent">That Builds Trust</span>
           </motion.h1>
 
           <motion.p
@@ -157,7 +157,7 @@ export default function LawFirmWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt group"
             >
               <Link href="/contact">
                 Book a Strategy Call
@@ -166,7 +166,7 @@ export default function LawFirmWebDesignClient() {
             </Button>
             <Link
               href="/case-studies"
-              className="inline-flex items-center justify-center gap-2 text-base font-semibold text-gold-accent transition-colors duration-300 hover:opacity-80 group"
+              className="inline-flex items-center justify-center gap-2 text-base font-semibold text-cobalt-accent transition-colors duration-300 hover:opacity-80 group"
             >
               View Our Work
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -185,7 +185,7 @@ export default function LawFirmWebDesignClient() {
               { value: '10+', label: 'Years Experience' },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-gold-accent">{stat.value}</div>
+                <div className="text-2xl md:text-3xl font-bold text-cobalt-accent">{stat.value}</div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
@@ -229,7 +229,7 @@ export default function LawFirmWebDesignClient() {
                 className="card-interactive p-6 rounded-2xl border border-border bg-muted"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
-                  <card.icon size={24} className="text-gold-accent" />
+                  <card.icon size={24} className="text-cobalt-accent" />
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-foreground">{card.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
@@ -264,7 +264,7 @@ export default function LawFirmWebDesignClient() {
                 {industryBullets.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="h-4 w-4 flex-shrink-0 text-gold-accent mt-[2px]"
+                      className="h-4 w-4 flex-shrink-0 text-cobalt-accent mt-[2px]"
                       aria-hidden
                     />
                     <span className="text-muted-foreground">{item}</span>
@@ -286,7 +286,7 @@ export default function LawFirmWebDesignClient() {
                 {firmTypes.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="h-4 w-4 flex-shrink-0 text-gold-accent mt-[2px]"
+                      className="h-4 w-4 flex-shrink-0 text-cobalt-accent mt-[2px]"
                       aria-hidden
                     />
                     <span className="text-sm text-muted-foreground">{item}</span>
@@ -329,7 +329,7 @@ export default function LawFirmWebDesignClient() {
                 className="card-interactive p-6 rounded-2xl border border-border bg-muted"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
-                  <CheckCircle2 size={24} className="text-gold-accent" />
+                  <CheckCircle2 size={24} className="text-cobalt-accent" />
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-foreground">{line}</p>
               </motion.div>
@@ -398,7 +398,7 @@ export default function LawFirmWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt group"
             >
               <Link href="/contact">
                 Book a Strategy Call
@@ -410,7 +410,7 @@ export default function LawFirmWebDesignClient() {
               <Link
                 href="tel:+17022890758"
                 onClick={trackPhoneClick}
-                className="link-cobalt text-gold-accent"
+                className="link-cobalt text-cobalt-accent"
               >
                 (702) 289-0758
               </Link>

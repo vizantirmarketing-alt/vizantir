@@ -106,7 +106,7 @@ const Solutions = () => {
           viewport={{ once: true, margin: '-100px' }}
         >
           {features.map((feature, index) => {
-            const badgeColors = ['var(--gold-primary)', '#3B82F6', '#C084FC', '#00D9FF']
+            const badgeColors = ['var(--cobalt-primary)', '#3B82F6', '#C084FC', '#00D9FF']
             const badgeColor = badgeColors[index]
             const rgb = index === 0 ? '0, 112, 243' : 
                        index === 1 ? '59, 130, 246' :
@@ -256,7 +256,7 @@ const Solutions = () => {
           <Button
             size="lg"
             asChild
-            className="bg-gold-gradient text-base px-10 py-7 font-semibold border-0 rounded-xl"
+            className="bg-cobalt-gradient text-base px-10 py-7 font-semibold border-0 rounded-xl"
           >
             <Link href="/services">
               SEE ALL SERVICES

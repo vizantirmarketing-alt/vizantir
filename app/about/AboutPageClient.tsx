@@ -29,25 +29,25 @@ export default function AboutPageClient() {
       title: 'Results-Driven',
       description:
         'Every decision is made with the business outcome in mind — not vanity metrics.',
-      color: 'var(--gold-primary)',
+      color: 'var(--cobalt-primary)',
     },
     {
       icon: Zap,
       title: 'Lean & Fast',
       description: 'No bloated teams or endless meetings. We move quickly and execute with precision.',
-      color: 'var(--gold-primary)',
+      color: 'var(--cobalt-primary)',
     },
     {
       icon: Users,
       title: 'Partner Mindset',
       description: "We treat your business like our own. Your success is our success.",
-      color: 'var(--gold-primary)',
+      color: 'var(--cobalt-primary)',
     },
     {
       icon: Globe,
       title: 'Remote-First',
       description: 'Global talent and async-first collaboration — more focus on the build, less bureaucracy slowing decisions.',
-      color: 'var(--gold-primary)',
+      color: 'var(--cobalt-primary)',
     },
   ]
 
@@ -134,7 +134,7 @@ export default function AboutPageClient() {
             <Button
               size="lg"
               asChild
-              className="bg-gold-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-gold group"
+              className="bg-cobalt-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-cobalt group"
             >
               <Link href="/contact" onClick={() => trackCTAClick('work_with_us', 'about')}>
                 Work With Us
@@ -215,7 +215,7 @@ export default function AboutPageClient() {
                 <Button
                   size="lg"
                   asChild
-                  className="bg-gold-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-gold group"
+                  className="bg-cobalt-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-cobalt group"
                 >
                   <Link href="/services">
                     Explore Our Services
@@ -424,7 +424,7 @@ export default function AboutPageClient() {
               <Button
                 size="lg"
                 asChild
-                className="bg-gold-gradient text-lg px-10 py-7 font-bold border-0 rounded-xl shadow-gold group"
+                className="bg-cobalt-gradient text-lg px-10 py-7 font-bold border-0 rounded-xl shadow-cobalt group"
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'about')}>
                   Book a Strategy Call

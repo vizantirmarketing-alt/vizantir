@@ -106,7 +106,7 @@ const Strategy = () => {
 
     const primaryColor = "0, 112, 243";
     const secondaryColor = "0, 112, 243";
-    const accentColor = 'var(--gold-primary)';
+    const accentColor = 'var(--cobalt-primary)';
 
     const dataPoints = [
       { lat: 0.5, lon: 0, color: accentColor },
@@ -289,7 +289,7 @@ const Strategy = () => {
               <Button
                 size="lg"
                 asChild
-                className="bg-gold-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-gold group"
+                className="bg-cobalt-gradient text-base px-8 py-6 font-semibold border-0 rounded-xl shadow-cobalt group"
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'strategy')}>
                   Book a Strategy Call

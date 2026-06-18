@@ -45,7 +45,7 @@ const Footer = () => {
                 aria-label="Visit our LinkedIn"
                 className="transition-all duration-300 hover:scale-110 text-muted-foreground"
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--gold-primary)'
+                  e.currentTarget.style.color = 'var(--cobalt-primary)'
                   e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(0, 112, 243, 0.8))'
                 }}
                 onMouseLeave={(e) => {
@@ -62,7 +62,7 @@ const Footer = () => {
                 aria-label="Visit our Instagram"
                 className="transition-all duration-300 hover:scale-110 text-muted-foreground"
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--gold-primary)'
+                  e.currentTarget.style.color = 'var(--cobalt-primary)'
                   e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(0, 112, 243, 0.8))'
                 }}
                 onMouseLeave={(e) => {

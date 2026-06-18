@@ -15,12 +15,12 @@ export interface EyebrowProps {
 }
 
 /**
- * Canonical hero kicker: gold/amber label with thin horizontal rules above and below.
+ * Canonical hero kicker: cobalt label with thin horizontal rules above and below.
  * Matches /how-we-work and /are-we-a-fit hero treatment.
  */
 export function Eyebrow({ children, className, align = 'center', uppercase = true }: EyebrowProps) {
-  const accent = 'var(--gold-accent)'
-  const lineColor = 'var(--gold-primary)'
+  const accent = 'var(--cobalt-accent)'
+  const lineColor = 'var(--cobalt-primary)'
 
   return (
     <div

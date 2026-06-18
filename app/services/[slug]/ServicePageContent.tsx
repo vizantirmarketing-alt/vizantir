@@ -24,7 +24,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       bg: '#FAF9F5',
       text: 'var(--foreground)',
       textMuted: 'var(--muted-foreground)',
-      accent: 'var(--gold-primary)',
+      accent: 'var(--cobalt-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
       divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
@@ -358,7 +358,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                       <AccordionIndicator
                         isOpen={openFaqIndex === index}
                         className="w-5 h-5 flex-shrink-0"
-                        style={{ color: 'var(--gold-accent)' }}
+                        style={{ color: 'var(--cobalt-accent)' }}
                       />
                     </button>
                     <AnimatePresence>
@@ -468,7 +468,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             <Button
               size="lg"
               asChild
-              className="bg-gold-gradient text-base font-semibold rounded-lg"
+              className="bg-cobalt-gradient text-base font-semibold rounded-lg"
             >
               <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4">
                 Book a strategy call

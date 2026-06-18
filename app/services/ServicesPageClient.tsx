@@ -86,8 +86,8 @@ function ProjectPricingCard({ tier }: { tier: PricingTier }) {
           asChild
           className={
             tier.featured
-              ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-white shadow-gold'
-              : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-white'
+              ? 'group w-full rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt'
+              : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-cobalt-gradient hover:text-white'
           }
         >
           <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
@@ -143,7 +143,7 @@ function BlogOptionCard({ tier }: { tier: BlogTier }) {
         />
 
         <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
-        <div className="text-xs font-semibold tracking-wide text-gold-accent">
+        <div className="text-xs font-semibold tracking-wide text-cobalt-accent">
           15% off for care clients
         </div>
       </CardBody>
@@ -167,7 +167,7 @@ function ChatbotOptionCard({ tier }: { tier: ChatbotTier }) {
         />
 
         <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
-        <div className="text-xs font-semibold tracking-wide text-gold-accent">
+        <div className="text-xs font-semibold tracking-wide text-cobalt-accent">
           15% off for care clients
         </div>
       </CardBody>
@@ -235,7 +235,7 @@ function strategyCallLink() {
     <Link
       href="/contact"
       onClick={() => trackCTAClick('get_started', 'services')}
-      className="link-cobalt inline-flex items-center gap-2 mt-4 font-semibold text-gold-accent"
+      className="link-cobalt inline-flex items-center gap-2 mt-4 font-semibold text-cobalt-accent"
     >
       Book a Strategy Call
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -256,7 +256,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
       {service.slug ? (
         <Link
           href={`/services/${service.slug}`}
-          className="link-cobalt inline-flex items-center gap-2 font-semibold text-gold-accent"
+          className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
         >
           Learn more
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -341,7 +341,7 @@ function StandalonePricingSection() {
           <Link
             href="/contact"
             onClick={() => trackCTAClick('get_started', 'services')}
-            className="link-cobalt inline-flex items-center gap-2 font-semibold text-gold-accent"
+            className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
           >
             Book a Strategy Call
             <ArrowRight className="h-4 w-4" />
@@ -377,7 +377,7 @@ function StandalonePricingSection() {
           <Link
             href="/contact"
             onClick={() => trackCTAClick('get_started', 'services')}
-            className="link-cobalt inline-flex items-center gap-2 text-sm font-semibold text-gold-accent"
+            className="link-cobalt inline-flex items-center gap-2 text-sm font-semibold text-cobalt-accent"
           >
             Book a Strategy Call
             <ArrowRight className="h-4 w-4" />
@@ -438,7 +438,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                     onClick={() => handleToggle(service._id)}
                     className={cn(
                       'group w-full text-left rounded-2xl p-6 md:p-8 border transition-all duration-500 bg-muted hover:bg-muted/80',
-                      isOpen ? 'border-gold-muted-border' : 'border-border',
+                      isOpen ? 'border-cobalt-muted-border' : 'border-border',
                     )}
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -447,7 +447,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                           className={cn(
                             'flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500',
                             isOpen
-                              ? 'bg-gold-gradient text-white shadow-gold'
+                              ? 'bg-cobalt-gradient text-white shadow-cobalt'
                               : 'bg-background text-muted-foreground',
                           )}
                         >
@@ -468,7 +468,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
 
                       <AccordionIndicator
                         isOpen={isOpen}
-                        className="w-5 h-5 flex-shrink-0 text-gold-accent"
+                        className="w-5 h-5 flex-shrink-0 text-cobalt-accent"
                       />
                     </div>
 
@@ -509,7 +509,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt group"
             >
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
                 Book a Strategy Call

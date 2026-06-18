@@ -41,7 +41,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
     text: 'var(--foreground)',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',
-    accent: 'var(--gold-accent)',
+    accent: 'var(--cobalt-accent)',
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
   }

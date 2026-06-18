@@ -30,7 +30,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
       bg: '#FAF9F5',
       text: 'var(--foreground)',
       textMuted: 'var(--muted-foreground)',
-      accent: 'var(--gold-primary)',
+      accent: 'var(--cobalt-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
     }),
@@ -170,7 +170,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     </p>
                   ) : null}
                   <h3
-                    className="text-2xl font-bold transition-colors duration-300 group-hover:text-gold-primary md:text-3xl"
+                    className="text-2xl font-bold transition-colors duration-300 group-hover:text-cobalt-primary md:text-3xl"
                     style={{ color: colors.text }}
                   >
                     {study.title}
@@ -247,7 +247,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             <Link
               href="/contact"
               onClick={() => trackCTAClick('start_your_project', 'case_studies')}
-              className="bg-gold-gradient group inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
+              className="bg-cobalt-gradient group inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
             >
               Start Your Project
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />

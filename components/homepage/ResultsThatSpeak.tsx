@@ -88,11 +88,11 @@ const ResultsThatSpeak = () => {
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </a>
-                <p className="text-xs font-semibold uppercase tracking-wider text-gold-primary mb-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-primary mb-1">
                   {item.category}
                 </p>
                 <h3 
-                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-gold-primary transition-colors text-foreground"
+                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-cobalt-primary transition-colors text-foreground"
                 >
                   {item.title}
                 </h3>
@@ -106,7 +106,7 @@ const ResultsThatSpeak = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="link-cobalt group inline-flex items-center gap-2 text-sm font-semibold"
-                  style={{ color: 'var(--gold-accent)' }}
+                  style={{ color: 'var(--cobalt-accent)' }}
                 >
                   <span>View live site</span>
                   <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -118,7 +118,7 @@ const ResultsThatSpeak = () => {
           <div className="text-center mt-10 md:mt-12">
             <Link
               href="/case-studies"
-              className="bg-gold-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
+              className="bg-cobalt-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
             >
               View all work
               <ArrowRight className="w-5 h-5" />

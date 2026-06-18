@@ -24,7 +24,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
     bg: '#FAF9F5',
     text: 'var(--foreground)',
     textMuted: '#6B7280',
-    accentSolid: 'var(--gold-primary)',
+    accentSolid: 'var(--cobalt-primary)',
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
     divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
@@ -190,7 +190,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             <Link
               href={content.closingCta.href}
               onClick={() => trackCTAClick('book_strategy_call', 'are_we_a_fit')}
-              className="bg-gold-gradient inline-block rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
+              className="bg-cobalt-gradient inline-block rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
             >
               {content.closingCta.label}
             </Link>

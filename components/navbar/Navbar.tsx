@@ -105,7 +105,7 @@ const Navbar = () => {
                   title={link.description}
                   className="relative text-sm font-semibold text-foreground transition-colors duration-200 hover:text-[#0070F3]"
                   style={{
-                    color: pathname === link.path ? 'var(--gold-primary)' : undefined,
+                    color: pathname === link.path ? 'var(--cobalt-primary)' : undefined,
                   }}
                 >
                   {link.name}
@@ -119,7 +119,7 @@ const Navbar = () => {
             <div className="hidden xl:flex items-center gap-4">
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'navbar')}>
                 <button
-                  className="bg-gold-gradient px-6 py-2.5 rounded-xl text-sm font-semibold text-white shadow-gold"
+                  className="bg-cobalt-gradient px-6 py-2.5 rounded-xl text-sm font-semibold text-white shadow-cobalt"
                 >
                   Book a Strategy Call
                 </button>
@@ -214,7 +214,7 @@ const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`link-cobalt block py-3 sm:py-4 ${
                     idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
-                  } ${mounted && pathname === link.path ? 'text-gold-primary' : 'text-foreground'}`}
+                  } ${mounted && pathname === link.path ? 'text-cobalt-primary' : 'text-foreground'}`}
                 >
                   <span className="text-xl sm:text-2xl font-medium">{link.name}</span>
                 </Link>
@@ -230,7 +230,7 @@ const Navbar = () => {
                   trackCTAClick('get_started', 'navbar');
                   setIsMobileMenuOpen(false);
                 }}
-                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 active:scale-[0.98]"
+                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt transition-all duration-300 active:scale-[0.98]"
               >
                 Book a Strategy Call
               </Link>

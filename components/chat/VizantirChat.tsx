@@ -275,7 +275,7 @@ export function VizantirChat() {
                     type="button"
                     disabled={isStreaming}
                     onClick={() => sendMessage(prompt)}
-                    className="rounded-full border border-gold-muted-border bg-gold-muted-subtle px-4 py-2 text-left text-sm text-foreground transition-colors hover:border-gold-primary hover:bg-gold-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-full border border-cobalt-muted-border bg-cobalt-muted-subtle px-4 py-2 text-left text-sm text-foreground transition-colors hover:border-cobalt-primary hover:bg-cobalt-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {prompt}
                   </button>
@@ -301,7 +301,7 @@ export function VizantirChat() {
                   className={cn(
                     'max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap',
                     message.role === 'user'
-                      ? 'rounded-br-md bg-gold-primary text-white'
+                      ? 'rounded-br-md bg-cobalt-primary text-white'
                       : 'rounded-bl-md bg-muted text-foreground'
                   )}
                 >
@@ -321,7 +321,7 @@ export function VizantirChat() {
                     {[0, 150, 300].map((delay) => (
                       <div
                         key={delay}
-                        className="size-1.5 animate-bounce rounded-full bg-gold-primary"
+                        className="size-1.5 animate-bounce rounded-full bg-cobalt-primary"
                         style={{ animationDelay: `${delay}ms` }}
                       />
                     ))}
@@ -348,13 +348,13 @@ export function VizantirChat() {
               placeholder="Ask a question…"
               rows={1}
               disabled={isStreaming}
-              className="max-h-32 min-h-10 flex-1 resize-none rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold-primary focus:outline-none focus:ring-2 focus:ring-gold-focus disabled:cursor-not-allowed disabled:opacity-50"
+              className="max-h-32 min-h-10 flex-1 resize-none rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-cobalt-primary focus:outline-none focus:ring-2 focus:ring-cobalt-focus disabled:cursor-not-allowed disabled:opacity-50"
             />
             <button
               type="button"
               onClick={handleSend}
               disabled={!input.trim() || isStreaming}
-              className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gold-primary text-white shadow-gold transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-cobalt-primary text-white shadow-cobalt transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Send message"
             >
               <Send className="size-4" />
@@ -392,8 +392,8 @@ export function VizantirChat() {
               className="pointer-events-auto absolute bottom-[calc(100%+0.75rem)] right-0 w-max max-w-[min(240px,calc(100vw-5rem))]"
               role="status"
             >
-              <div className="relative rounded-xl border border-gold-muted-border bg-background px-3.5 py-2.5 pr-8 text-sm text-foreground shadow-lg">
-                <span className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full bg-gold-primary" aria-hidden />
+              <div className="relative rounded-xl border border-cobalt-muted-border bg-background px-3.5 py-2.5 pr-8 text-sm text-foreground shadow-lg">
+                <span className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full bg-cobalt-primary" aria-hidden />
                 <p className="pl-2 leading-snug">Hi! How can I help?</p>
                 <button
                   type="button"
@@ -404,7 +404,7 @@ export function VizantirChat() {
                   <X className="size-3" />
                 </button>
                 <span
-                  className="absolute -bottom-1.5 right-5 size-3 rotate-45 border-r border-b border-gold-muted-border bg-background"
+                  className="absolute -bottom-1.5 right-5 size-3 rotate-45 border-r border-b border-cobalt-muted-border bg-background"
                   aria-hidden
                 />
               </div>
@@ -416,7 +416,7 @@ export function VizantirChat() {
           <button
             type="button"
             onClick={handleToggle}
-            className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-gold-primary text-white shadow-gold transition-all hover:scale-105 hover:brightness-105 active:scale-95"
+            className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-cobalt-primary text-white shadow-cobalt transition-all hover:scale-105 hover:brightness-105 active:scale-95"
             aria-label="Open chat"
           >
             <MessageCircle className="size-6" />

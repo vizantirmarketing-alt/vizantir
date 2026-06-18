@@ -122,7 +122,7 @@ const WhatHappensNext = () => {
           <Button
             size="lg"
             asChild
-            className="bg-gold-gradient mb-4 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
+            className="bg-cobalt-gradient mb-4 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
           >
             <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'what_happens_next')}>Book a Strategy Call</Link>
           </Button>

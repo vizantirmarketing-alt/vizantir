@@ -23,7 +23,7 @@ const GlassTestimonials = () => {
       company: 'Golden Era Integra',
       quote: 'Vizantir built the editorial platform exactly right — build journal, parts archive, garage sale system, all running on Sanity CMS. It presents the restoration the way it deserves.',
       avatar: 'GEI',
-      gradient: 'var(--gold-gradient)',
+      gradient: 'var(--cobalt-gradient)',
     },
     {
       id: 2,
@@ -130,11 +130,11 @@ const GlassTestimonials = () => {
           >
             <div
               className="w-2 h-2 rounded-full animate-pulse"
-              style={{ background: 'var(--gold-primary)' }}
+              style={{ background: 'var(--cobalt-primary)' }}
             />
             <span
               className="text-xs font-semibold uppercase tracking-wider"
-              style={{ color: 'var(--gold-accent)' }}
+              style={{ color: 'var(--cobalt-accent)' }}
             >
               Trusted by Industry Leaders
             </span>
@@ -248,7 +248,7 @@ const GlassTestimonials = () => {
                 height: '12px',
                 borderRadius: '100px',
                 background: index === activeIndex
-                  ? 'var(--gold-primary)'
+                  ? 'var(--cobalt-primary)'
                   : 'rgba(0, 0, 0, 0.2)',
                 boxShadow: index === activeIndex ? '0 0 20px rgba(0, 112, 243, 0.5)' : 'none',
                 border: 'none',

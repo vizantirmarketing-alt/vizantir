@@ -239,8 +239,8 @@ Reuse these instead of re-implementing:
 | Component | Path | Use |
 |-----------|------|-----|
 | AccordionIndicator | `components/ui/AccordionIndicator.tsx` | Animated +/− for expandable surfaces |
-| Eyebrow | `components/ui/Eyebrow.tsx` | Gold uppercase label above section headings |
-| SectionDivider | `components/ui/SectionDivider.tsx` | Gold gradient divider between sections |
+| Eyebrow | `components/ui/Eyebrow.tsx` | Cobalt uppercase label above section headings |
+| SectionDivider | `components/ui/SectionDivider.tsx` | Cobalt gradient divider between sections |
 
 ---
 

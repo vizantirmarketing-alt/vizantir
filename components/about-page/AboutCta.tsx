@@ -13,7 +13,7 @@ export default function AboutCta({ content }: AboutCtaProps) {
         <p className="mb-6 text-base text-muted-foreground md:text-lg">Think we might be the studio for you?</p>
         <Link
           href={content.href}
-          className="bg-gold-gradient inline-block rounded-xl px-8 py-4 text-base font-semibold text-white shadow-gold"
+          className="bg-cobalt-gradient inline-block rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
         >
           {content.label}
         </Link>

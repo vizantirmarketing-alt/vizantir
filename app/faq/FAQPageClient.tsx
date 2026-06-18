@@ -53,7 +53,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 placeholder="Search FAQs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
+                className="w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all"
                 style={{ 
                   background: '#FFFFFF',
                   border: `1px solid ${'rgba(0,0,0,0.1)'}`,
@@ -85,7 +85,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 <button
                   onClick={() => setSearchQuery('')}
                   className="mt-4 text-sm font-medium hover:opacity-80 transition-opacity"
-                  style={{ color: 'var(--gold-primary)' }}
+                  style={{ color: 'var(--cobalt-primary)' }}
                 >
                   Clear search
                 </button>
@@ -112,7 +112,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                       <AccordionIndicator
                         isOpen={openId === faq._id}
                         className="w-5 h-5"
-                        style={{ color: 'var(--gold-accent)' }}
+                        style={{ color: 'var(--cobalt-accent)' }}
                       />
                     </button>
                     <AnimatePresence>
@@ -157,7 +157,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             </p>
             <Link
               href="/contact"
-              className="bg-gold-gradient inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-lg"
+              className="bg-cobalt-gradient inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-lg"
             >
               Book a Strategy Call
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

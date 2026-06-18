@@ -23,24 +23,24 @@ const cardSurfaceVariants = cva(
       {
         variant: 'muted-30',
         featured: false,
-        class: 'border-border bg-muted/30 hover:border-gold-muted-border hover:bg-muted/50',
+        class: 'border-border bg-muted/30 hover:border-cobalt-muted-border hover:bg-muted/50',
       },
       {
         variant: 'muted-30',
         featured: true,
         class:
-          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(0,112,243,0.1)]',
+          'border-cobalt-muted-border bg-cobalt-muted-subtle hover:border-cobalt-muted hover:bg-[rgba(0,112,243,0.1)]',
       },
       {
         variant: 'muted-20',
         featured: false,
-        class: 'border-border bg-muted/20 hover:border-gold-muted-border hover:bg-muted/40',
+        class: 'border-border bg-muted/20 hover:border-cobalt-muted-border hover:bg-muted/40',
       },
       {
         variant: 'muted-20',
         featured: true,
         class:
-          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(0,112,243,0.1)]',
+          'border-cobalt-muted-border bg-cobalt-muted-subtle hover:border-cobalt-muted hover:bg-[rgba(0,112,243,0.1)]',
       },
     ],
     defaultVariants: {
@@ -55,7 +55,7 @@ type CardElement = 'div' | 'article'
 interface CardProps extends React.ComponentPropsWithoutRef<'div'> {
   /** Surface treatment — not page/business context */
   variant?: 'glass' | 'muted-30' | 'muted-20'
-  /** Applies featured surface (gold tint). Default badge: "Popular" */
+  /** Applies featured surface (cobalt tint). Default badge: "Popular" */
   featured?: boolean
   /**
    * Badge override. Omit + featured → "Popular".
@@ -100,7 +100,7 @@ function CardBadge({ className, children }: CardBadgeProps) {
   return (
     <span
       className={cn(
-        'absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white',
+        'absolute -top-2 right-4 rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white',
         className,
       )}
     >
@@ -149,7 +149,7 @@ function CardPrice({ className, children }: CardPriceProps) {
   return (
     <p
       className={cn(
-        'whitespace-nowrap text-xl font-bold text-gold-accent md:text-[22px]',
+        'whitespace-nowrap text-xl font-bold text-cobalt-accent md:text-[22px]',
         className,
       )}
     >
@@ -198,7 +198,7 @@ interface CardTaglineProps {
 
 function CardTagline({ className, children }: CardTaglineProps) {
   return (
-    <p className={cn('mb-4 text-sm font-semibold text-gold-accent', className)}>
+    <p className={cn('mb-4 text-sm font-semibold text-cobalt-accent', className)}>
       {children}
     </p>
   )
@@ -215,7 +215,7 @@ function CardPriceBlock({ compareAt, price, suffix, className }: CardPriceBlockP
   return (
     <div className={cn('mb-5 border-y border-border py-5', className)}>
       <div className="mb-1 text-sm text-muted-foreground line-through">{compareAt}</div>
-      <div className="text-[28px] font-bold leading-none text-gold-accent">
+      <div className="text-[28px] font-bold leading-none text-cobalt-accent">
         {price}
         {suffix ? (
           <span className="ml-1 text-sm font-medium text-muted-foreground">{suffix}</span>
@@ -242,7 +242,7 @@ function CardCheckItem({ children }: CardCheckItemProps) {
   return (
     <li className="flex items-start gap-2.5 text-sm text-foreground/80">
       <CheckCircle2
-        className="mt-[2px] h-4 w-4 flex-shrink-0 text-gold-accent"
+        className="mt-[2px] h-4 w-4 flex-shrink-0 text-cobalt-accent"
         aria-hidden
       />
       {children}

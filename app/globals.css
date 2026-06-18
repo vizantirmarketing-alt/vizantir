@@ -35,16 +35,16 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --color-gold-primary: var(--gold-primary);
-  --color-gold-accent: var(--gold-accent);
-  --color-gold-gradient-end: var(--gold-gradient-end);
-  --color-gold-muted: var(--gold-muted);
-  --color-gold-muted-subtle: var(--gold-muted-subtle);
-  --color-gold-muted-border: var(--gold-muted-border);
-  --color-gold-focus: var(--gold-focus);
+  --color-cobalt-primary: var(--cobalt-primary);
+  --color-cobalt-accent: var(--cobalt-accent);
+  --color-cobalt-gradient-end: var(--cobalt-gradient-end);
+  --color-cobalt-muted: var(--cobalt-muted);
+  --color-cobalt-muted-subtle: var(--cobalt-muted-subtle);
+  --color-cobalt-muted-border: var(--cobalt-muted-border);
+  --color-cobalt-focus: var(--cobalt-focus);
   --color-body: var(--text-body);
   --color-meta: var(--text-meta);
-  --shadow-gold: var(--gold-shadow);
+  --shadow-cobalt: var(--cobalt-shadow);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -88,17 +88,17 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Vizantir brand gold */
-  --gold-primary: #0070F3;
-  --gold-accent: #0070F3;
-  --gold-gradient: linear-gradient(135deg, #0070F3 0%, #0070F3 100%);
-  --gold-gradient-end: #0070F3;
-  --gold-muted: rgba(0, 112, 243, 0.3);
-  --gold-muted-subtle: rgba(0, 112, 243, 0.06);
-  --gold-muted-border: rgba(0, 112, 243, 0.2);
-  --gold-shadow: 0 8px 30px rgba(0, 112, 243, 0.12);
-  --gold-glow: rgba(0, 112, 243, 0.3);
-  --gold-focus: rgba(0, 112, 243, 0.4);
+  /* Vizantir brand cobalt */
+  --cobalt-primary: #0070F3;
+  --cobalt-accent: #0070F3;
+  --cobalt-gradient: linear-gradient(135deg, #0070F3 0%, #0070F3 100%);
+  --cobalt-gradient-end: #0070F3;
+  --cobalt-muted: rgba(0, 112, 243, 0.3);
+  --cobalt-muted-subtle: rgba(0, 112, 243, 0.06);
+  --cobalt-muted-border: rgba(0, 112, 243, 0.2);
+  --cobalt-shadow: 0 8px 30px rgba(0, 112, 243, 0.12);
+  --cobalt-glow: rgba(0, 112, 243, 0.3);
+  --cobalt-focus: rgba(0, 112, 243, 0.4);
 
   /* Warm text hierarchy — Phase 4 */
   --text-body: oklch(0.32 0.0045 80);
@@ -106,8 +106,8 @@
 }
 
 @layer utilities {
-  .bg-gold-gradient {
-    background: var(--gold-gradient);
+  .bg-cobalt-gradient {
+    background: var(--cobalt-gradient);
     color: #FFFFFF;
     position: relative;
     overflow: hidden;
@@ -118,7 +118,7 @@
     will-change: transform, box-shadow;
   }
 
-  .bg-gold-gradient::before {
+  .bg-cobalt-gradient::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -136,41 +136,41 @@
     z-index: 1;
   }
 
-  .bg-gold-gradient > * {
+  .bg-cobalt-gradient > * {
     position: relative;
     z-index: 2;
   }
 
-  .bg-gold-gradient:hover {
+  .bg-cobalt-gradient:hover {
     background: linear-gradient(135deg, #1E85FF 0%, #1E85FF 100%);
     transform: translateY(-2px);
     box-shadow: 0 14px 32px rgba(0, 112, 243, 0.28);
   }
 
-  .bg-gold-gradient:hover::before {
+  .bg-cobalt-gradient:hover::before {
     transform: translateX(100%);
   }
 
-  .bg-gold-gradient:active {
+  .bg-cobalt-gradient:active {
     transform: translateY(0);
     box-shadow: 0 4px 12px rgba(0, 112, 243, 0.18);
     transition-duration: 100ms;
   }
 
-  .bg-gold-gradient:focus-visible {
+  .bg-cobalt-gradient:focus-visible {
     outline: 2px solid #0070F3;
     outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bg-gold-gradient,
-    .bg-gold-gradient::before {
+    .bg-cobalt-gradient,
+    .bg-cobalt-gradient::before {
       transition: none;
     }
-    .bg-gold-gradient:hover {
+    .bg-cobalt-gradient:hover {
       transform: none;
     }
-    .bg-gold-gradient:hover::before {
+    .bg-cobalt-gradient:hover::before {
       transform: translateX(-100%);
     }
   }
