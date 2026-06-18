@@ -86,14 +86,12 @@ const VisionApproach = () => {
               Our Vision
             </p>
             <h2
-              className="text-3xl md:text-4xl lg:text-[42px] font-bold mb-6 leading-tight transition-colors duration-500"
-              style={{ color: '#1A1A1A' }}
+              className="text-3xl md:text-4xl lg:text-[42px] font-bold mb-6 leading-tight transition-colors duration-500 text-foreground"
             >
               Building websites that reflect the level of the business
             </h2>
             <p
-              className="text-lg leading-relaxed transition-colors duration-500"
-              style={{ color: '#6B6B6B' }}
+              className="text-lg leading-relaxed transition-colors duration-500 text-muted-foreground"
             >
               Every project starts with understanding what the business needs to communicate, who it is speaking to, and what the website needs to do beyond looking current.
             </p>
@@ -144,14 +142,12 @@ const VisionApproach = () => {
                   </div>
                   <div>
                     <h4
-                      className="text-lg font-semibold mb-2 transition-colors duration-500"
-                      style={{ color: '#1A1A1A' }}
+                      className="text-lg font-semibold mb-2 transition-colors duration-500 text-foreground"
                     >
                       {item.title}
                     </h4>
                     <p
-                      className="text-sm leading-relaxed transition-colors duration-500"
-                      style={{ color: '#6B6B6B' }}
+                      className="text-sm leading-relaxed transition-colors duration-500 text-muted-foreground"
                     >
                       {item.description}
                     </p>

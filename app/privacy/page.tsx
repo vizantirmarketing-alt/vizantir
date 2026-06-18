@@ -258,15 +258,15 @@ export default function PrivacyPolicy() {
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>Privacy Policy</h1>
-            <p className="text-lg" style={{ color: '#6B6B6B' }}>Effective Date: January 1, 2025</p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Privacy Policy</h1>
+            <p className="text-lg text-muted-foreground">Effective Date: January 1, 2025</p>
           </motion.div>
         </div>
       </section>
 
       <section className="px-4 pb-8">
         <div className="max-w-4xl mx-auto">
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed" style={{ color: '#4A4A4A' }}>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed text-body">
             Vizantir.com (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
           </motion.p>
         </div>
@@ -276,15 +276,15 @@ export default function PrivacyPolicy() {
         <div className="max-w-4xl mx-auto">
           {sections.map((section, sectionIndex) => (
             <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>{section.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">{section.title}</h2>
               {section.subsections.map((subsection, subIndex) => (
                 <div key={subIndex} className="mb-6">
-                  {subsection.subtitle && <h3 className="text-xl font-semibold mb-3" style={{ color: '#2A2A2A' }}>{subsection.subtitle}</h3>}
-                  {subsection.content && <p className="leading-relaxed mb-3" style={{ color: '#4A4A4A' }}>{subsection.content}</p>}
+                  {subsection.subtitle && <h3 className="text-xl font-semibold mb-3 text-foreground">{subsection.subtitle}</h3>}
+                  {subsection.content && <p className="leading-relaxed mb-3 text-body">{subsection.content}</p>}
                   {subsection.list && (
                     <ul className="space-y-2 ml-6">
                       {subsection.list.map((item, itemIndex) => (
-                        <li key={itemIndex} className="flex items-start gap-3" style={{ color: '#4A4A4A' }}>
+                        <li key={itemIndex} className="flex items-start gap-3 text-body">
                           <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--gold-primary)' }} />
                           {item}
                         </li>
@@ -297,7 +297,7 @@ export default function PrivacyPolicy() {
             </motion.div>
           ))}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
-            <p className="text-sm" style={{ color: '#888888' }}>Last Updated: January 1, 2025</p>
+            <p className="text-sm text-meta">Last Updated: January 1, 2025</p>
           </motion.div>
         </div>
       </section>

@@ -265,8 +265,7 @@ const Strategy = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight"
-              style={{ color: "#1A1A1A" }}
+              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight text-foreground"
             >
               DESIGN + STRATEGY = RESULTS
             </motion.h2>
@@ -276,8 +275,7 @@ const Strategy = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-base md:text-lg mb-10"
-              style={{ color: "#4A4A4A", lineHeight: '1.7' }}
+              className="text-base md:text-lg mb-10 text-body leading-[1.7]"
             >
               Most websites look fine and do nothing. We build sites around a specific outcome — more calls, more bookings, more qualified leads walking through the door.
             </motion.p>

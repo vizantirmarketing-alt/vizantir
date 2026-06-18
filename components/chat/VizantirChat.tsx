@@ -275,7 +275,7 @@ export function VizantirChat() {
                     type="button"
                     disabled={isStreaming}
                     onClick={() => sendMessage(prompt)}
-                    className="rounded-full border border-gold-muted-border bg-gold-muted-subtle px-4 py-2 text-left text-sm text-[#1A1A1A] transition-colors hover:border-gold-primary hover:bg-gold-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-full border border-gold-muted-border bg-gold-muted-subtle px-4 py-2 text-left text-sm text-foreground transition-colors hover:border-gold-primary hover:bg-gold-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {prompt}
                   </button>

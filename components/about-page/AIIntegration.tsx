@@ -74,29 +74,25 @@ const AIIntegration = () => {
               }`}
             >
               <h3
-                className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500"
-                style={{ color: '#6B6B6B' }}
+                className="text-lg md:text-xl font-medium mb-3 transition-colors duration-500 text-muted-foreground"
               >
                 AI Website Integration
               </h3>
               <h2
-                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight transition-colors duration-500 leading-tight"
-                style={{ color: '#1A1A1A' }}
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight transition-colors duration-500 leading-tight text-foreground"
               >
                 Turn Your Website Into an{' '}
                 <span style={{ color: '#00D9FF' }}>Interactive Assistant</span>
               </h2>
               <p
-                className="text-base leading-relaxed mb-6 transition-colors duration-500"
-                style={{ color: '#4A4A4A' }}
+                className="text-base leading-relaxed mb-6 transition-colors duration-500 text-body"
               >
                 We integrate AI directly into your site so customers can ask real questions 
                 and get instant, accurate answers. The AI doesn't guess — it learns your website. 
                 Every page, menu item, policy, and service detail becomes part of its training.
               </p>
               <p
-                className="text-base leading-relaxed mb-8 transition-colors duration-500"
-                style={{ color: '#4A4A4A' }}
+                className="text-base leading-relaxed mb-8 transition-colors duration-500 text-body"
               >
               Instead of digging through menus or calling for details, your visitors get clear, 
               reliable responses in seconds — turning your website into a true customer assistant.
@@ -139,7 +135,7 @@ const AIIntegration = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-bold transition-colors duration-500" style={{ color: '#1A1A1A' }}>
+                  <p className="font-bold transition-colors duration-500 text-foreground">
                     Website Assistant
                   </p>
                   <p className="text-xs" style={{ color: '#22C55E' }}>● Online</p>
@@ -164,7 +160,6 @@ const AIIntegration = () => {
                     className="px-4 py-3 rounded-2xl rounded-tl-sm max-w-[80%] transition-all duration-500"
                     style={{
                       background: 'rgba(0, 0, 0, 0.05)',
-                      color: '#1A1A1A',
                     }}
                   >
                     <p className="text-sm">{demoMessages[currentMessage].answer}</p>

@@ -25,15 +25,13 @@ const WhoWeWorkWith = () => {
           className="max-w-4xl mx-auto text-center"
         >
           <h2 
-            className="text-4xl md:text-5xl font-black mb-6 tracking-tight"
-            style={{ color: '#1A1A1A' }}
+            className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-foreground"
           >
             Built for businesses where trust matters before the sale
           </h2>
           
           <p 
-            className="text-lg md:text-xl leading-relaxed mb-8"
-            style={{ color: '#6B6B6B' }}
+            className="text-lg md:text-xl leading-relaxed mb-8 text-muted-foreground"
           >
             We work best with businesses where the first impression directly affects whether someone picks up the phone. If your site isn&apos;t doing that job, that&apos;s where we come in.
           </p>
@@ -57,7 +55,6 @@ const WhoWeWorkWith = () => {
                 style={{
                   background: 'rgba(255, 255, 255, 0.8)',
                   border: '1px solid rgba(0, 0, 0, 0.1)',
-                  color: '#4A4A4A',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
                 }}
               >

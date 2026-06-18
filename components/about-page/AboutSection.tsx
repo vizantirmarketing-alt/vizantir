@@ -8,7 +8,7 @@ interface AboutSectionProps {
 
 export default function AboutSection({ section }: AboutSectionProps) {
   const colors = {
-    text: '#1A1A1A',
+    text: 'var(--foreground)',
     textMuted: '#6B7280',
     accentSolid: 'var(--gold-primary)',
     cardBorder: 'rgba(0,0,0,0.08)',

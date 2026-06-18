@@ -33,8 +33,7 @@ const Footer = () => {
               />
             </Link>
             <p 
-              className="mb-4"
-              style={{ color: '#6B6B6B' }}
+              className="mb-4 text-muted-foreground"
             >
               Premium website design studio for established businesses.
             </p>
@@ -44,16 +43,13 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit our LinkedIn"
-                className="transition-all duration-300 hover:scale-110"
-                style={{ 
-                  color: '#6B6B6B',
-                }}
+                className="transition-all duration-300 hover:scale-110 text-muted-foreground"
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'var(--gold-primary)'
                   e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(0, 112, 243, 0.8))'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#6B6B6B'
+                  e.currentTarget.style.color = ''
                   e.currentTarget.style.filter = 'none'
                 }}
               >
@@ -64,16 +60,13 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit our Instagram"
-                className="transition-all duration-300 hover:scale-110"
-                style={{ 
-                  color: '#6B6B6B',
-                }}
+                className="transition-all duration-300 hover:scale-110 text-muted-foreground"
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'var(--gold-primary)'
                   e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(0, 112, 243, 0.8))'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#6B6B6B'
+                  e.currentTarget.style.color = ''
                   e.currentTarget.style.filter = 'none'
                 }}
               >
@@ -85,8 +78,7 @@ const Footer = () => {
           {/* Quick Links */}
           <div>
             <h4 
-              className="font-bold mb-4"
-              style={{ color: '#1A1A1A' }}
+              className="font-bold mb-4 text-foreground"
             >
               Quick Links
             </h4>
@@ -101,8 +93,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
-                    className="link-cobalt"
-                    style={{ color: '#6B6B6B' }}
+                    className="link-cobalt text-muted-foreground"
                   >
                     {link.name}
                   </Link>
@@ -114,8 +105,7 @@ const Footer = () => {
           {/* Resources */}
           <div>
             <h4 
-              className="font-bold mb-4"
-              style={{ color: '#1A1A1A' }}
+              className="font-bold mb-4 text-foreground"
             >
               Resources
             </h4>
@@ -129,8 +119,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
-                    className="link-cobalt"
-                    style={{ color: '#6B6B6B' }}
+                    className="link-cobalt text-muted-foreground"
                   >
                     {link.name}
                   </Link>
@@ -142,31 +131,27 @@ const Footer = () => {
           {/* Contact Info */}
           <div>
             <h4 
-              className="font-bold mb-4"
-              style={{ color: '#1A1A1A' }}
+              className="font-bold mb-4 text-foreground"
             >
               Contact Us
             </h4>
             <ul className="space-y-3">
               <li 
-                className="flex items-start gap-2"
-                style={{ color: '#6B6B6B' }}
+                className="flex items-start gap-2 text-muted-foreground"
               >
                 <Mail size={18} className="mt-1 flex-shrink-0" />
                 <span>
                   <Link
                     href="/contact"
                     onClick={() => trackEvent('contact_click', { event_category: 'contact', event_label: 'footer_contact' })}
-                    className="link-cobalt"
-                    style={{ color: '#6B6B6B' }}
+                    className="link-cobalt text-muted-foreground"
                   >
                     Contact
                   </Link>
                 </span>
               </li>
               <li 
-                className="flex items-start gap-2"
-                style={{ color: '#6B6B6B' }}
+                className="flex items-start gap-2 text-muted-foreground"
               >
                 <Phone size={18} className="mt-1 flex-shrink-0" />
                 <a href="tel:+17022890758" onClick={() => trackPhoneClick()} className="link-cobalt">
@@ -174,8 +159,7 @@ const Footer = () => {
                 </a>
               </li>
               <li 
-                className="flex items-start gap-2"
-                style={{ color: '#6B6B6B' }}
+                className="flex items-start gap-2 text-muted-foreground"
               >
                 <MapPin size={18} className="mt-1 flex-shrink-0" />
                 <span>Las Vegas, NV 89139</span>
@@ -192,8 +176,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex flex-wrap items-center gap-4">
               <p 
-                className="text-sm"
-                style={{ color: '#6B6B6B' }}
+                className="text-sm text-meta"
               >
                 © {currentYear} Vizantir. All rights reserved.
               </p>
@@ -209,8 +192,7 @@ const Footer = () => {
                 <Link 
                   key={link.href}
                   href={link.href} 
-                  className="link-cobalt text-sm"
-                  style={{ color: '#6B6B6B' }}
+                  className="link-cobalt text-sm text-muted-foreground"
                 >
                   {link.name}
                 </Link>

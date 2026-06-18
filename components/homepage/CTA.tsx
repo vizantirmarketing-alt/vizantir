@@ -26,8 +26,7 @@ const CTA = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-4xl md:text-5xl font-black mb-6"
-            style={{ color: '#1A1A1A' }}
+            className="text-4xl md:text-5xl font-black mb-6 text-foreground"
           >
             If the website needs to do more than just look better, let&apos;s talk.
           </motion.h2>
@@ -36,8 +35,7 @@ const CTA = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-xl mb-8"
-            style={{ color: '#6B6B6B' }}
+            className="text-xl mb-8 text-muted-foreground"
           >
             We&apos;ll look at what&apos;s holding your site back and tell you honestly what it needs.
           </motion.p>

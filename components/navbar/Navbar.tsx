@@ -103,7 +103,7 @@ const Navbar = () => {
                   key={link.path}
                   href={link.path}
                   title={link.description}
-                  className="relative text-sm font-semibold text-[#1F1E1B] transition-colors duration-200 hover:text-[#0070F3]"
+                  className="relative text-sm font-semibold text-foreground transition-colors duration-200 hover:text-[#0070F3]"
                   style={{
                     color: pathname === link.path ? 'var(--gold-primary)' : undefined,
                   }}
@@ -129,11 +129,10 @@ const Navbar = () => {
             {/* Mobile Menu Button */}
             {!isMobileMenuOpen && (
               <button
-                className="xl:hidden z-50 relative"
+                className="xl:hidden z-50 relative text-foreground"
                 aria-label="Open menu"
                 aria-expanded={false}
                 onClick={() => setIsMobileMenuOpen(true)}
-                style={{ color: '#1A1A1A' }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M4 8h16" />
@@ -199,7 +198,6 @@ const Navbar = () => {
               style={{
                 background: 'rgba(0, 0, 0, 0.04)',
                 border: '1px solid rgba(0, 0, 0, 0.06)',
-                color: '#1A1A1A',
               }}
             >
               <X size={18} />

@@ -60,8 +60,7 @@ const WhatHappensNext = () => {
           className="text-center mb-12"
         >
           <h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
-            style={{ color: '#1A1A1A' }}
+            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
           >
             What Happens Next
           </h2>
@@ -99,14 +98,12 @@ const WhatHappensNext = () => {
               </div>
 
               <h3 
-                className="text-xl md:text-2xl font-bold mb-3"
-                style={{ color: '#1A1A1A' }}
+                className="text-xl md:text-2xl font-bold mb-3 text-foreground"
               >
                 {step.title}
               </h3>
               <p 
-                className="text-base md:text-lg leading-relaxed"
-                style={{ color: '#6B6B6B' }}
+                className="text-base md:text-lg leading-relaxed text-muted-foreground"
               >
                 {step.description}
               </p>
@@ -130,8 +127,7 @@ const WhatHappensNext = () => {
             <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'what_happens_next')}>Book a Strategy Call</Link>
           </Button>
           <p 
-            className="text-sm md:text-base"
-            style={{ color: '#888888' }}
+            className="text-sm md:text-base text-meta"
           >
             No commitment. No pitch deck. Just a conversation.
           </p>

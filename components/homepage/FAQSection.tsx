@@ -48,14 +48,12 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="text-4xl md:text-5xl font-bold mb-4"
-              style={{ color: '#1A1A1A' }}
+              className="text-4xl md:text-5xl font-bold mb-4 text-foreground"
             >
               Questions? <span style={{ color: 'var(--gold-accent)' }}>Answered.</span>
             </motion.h2>
             <p 
-              className="text-xl"
-              style={{ color: '#6B6B6B' }}
+              className="text-xl text-muted-foreground"
             >
               Real questions we get before projects start.
             </p>
@@ -80,8 +78,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                   style={{ background: '#FFFFFF' }}
                 >
                   <span 
-                    className="text-lg font-semibold pr-8"
-                    style={{ color: '#1A1A1A' }}
+                    className="text-lg font-semibold pr-8 text-foreground"
                   >
                     {faq.question}
                   </span>
@@ -94,8 +91,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                 
                 {openIndex === index && (
                   <div 
-                    className="px-6 pb-5 leading-relaxed"
-                    style={{ color: '#4B5563' }}
+                    className="px-6 pb-5 leading-relaxed text-body"
                   >
                     {faq.answer}
                   </div>
@@ -106,8 +102,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
 
           <div className="text-center mt-10">
             <p 
-              className="mb-4"
-              style={{ color: '#6B6B6B' }}
+              className="mb-4 text-muted-foreground"
             >
               Still have questions?
             </p>

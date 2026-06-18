@@ -237,15 +237,15 @@ export default function CookiePolicy() {
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>Cookie Policy</h1>
-            <p className="text-lg" style={{ color: '#6B6B6B' }}>Effective Date: January 1, 2025</p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Cookie Policy</h1>
+            <p className="text-lg text-muted-foreground">Effective Date: January 1, 2025</p>
           </motion.div>
         </div>
       </section>
 
       <section className="px-4 pb-8">
         <div className="max-w-4xl mx-auto">
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed" style={{ color: '#4A4A4A' }}>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed text-body">
             This Cookie Policy explains how Vizantir.com (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) uses cookies and similar tracking technologies when you visit our website.
           </motion.p>
         </div>
@@ -255,15 +255,15 @@ export default function CookiePolicy() {
         <div className="max-w-4xl mx-auto">
           {sections.map((section, sectionIndex) => (
             <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>{section.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">{section.title}</h2>
               {section.subsections.map((subsection, subIndex) => (
                 <div key={subIndex} className="mb-6">
-                  {subsection.subtitle && <h3 className="text-xl font-semibold mb-3" style={{ color: '#2A2A2A' }}>{subsection.subtitle}</h3>}
-                  {subsection.content && <p className="leading-relaxed mb-3" style={{ color: '#4A4A4A' }}>{subsection.content}</p>}
+                  {subsection.subtitle && <h3 className="text-xl font-semibold mb-3 text-foreground">{subsection.subtitle}</h3>}
+                  {subsection.content && <p className="leading-relaxed mb-3 text-body">{subsection.content}</p>}
                   {subsection.list && (
                     <ul className="space-y-2 ml-6">
                       {subsection.list.map((item, itemIndex) => (
-                        <li key={itemIndex} className="flex items-start gap-3" style={{ color: '#4A4A4A' }}>
+                        <li key={itemIndex} className="flex items-start gap-3 text-body">
                           <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--gold-primary)' }} />
                           {item}
                         </li>
@@ -273,7 +273,7 @@ export default function CookiePolicy() {
                   {subsection.contactEmail && (
                     <div className="mt-3">
                       <a href={`mailto:${subsection.contactEmail}`} className="font-medium transition-colors hover:opacity-80 block" style={{ color: 'var(--gold-primary)' }}>{subsection.contactEmail}</a>
-                      {subsection.phone && <p className="mt-1" style={{ color: '#4A4A4A' }}>{subsection.phone}</p>}
+                      {subsection.phone && <p className="mt-1 text-body">{subsection.phone}</p>}
                     </div>
                   )}
                 </div>
@@ -281,7 +281,7 @@ export default function CookiePolicy() {
             </motion.div>
           ))}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
-            <p className="text-sm" style={{ color: '#888888' }}>Last Updated: January 1, 2025</p>
+            <p className="text-sm text-meta">Last Updated: January 1, 2025</p>
           </motion.div>
         </div>
       </section>

@@ -35,14 +35,12 @@ const Services = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 
-            className="text-4xl md:text-5xl font-black mb-4"
-            style={{ color: '#1A1A1A' }}
+            className="text-4xl md:text-5xl font-black mb-4 text-foreground"
           >
             Our Services
           </h2>
           <p 
-            className="text-xl max-w-2xl mx-auto"
-            style={{ color: '#6B6B6B' }}
+            className="text-xl max-w-2xl mx-auto text-muted-foreground"
           >
             Comprehensive website design and development solutions tailored to your business goals
           </p>
@@ -80,14 +78,12 @@ const Services = () => {
                   style={{ color: 'var(--gold-primary)' }}
                 />
                 <h3 
-                  className="text-xl font-bold mb-3"
-                  style={{ color: '#1A1A1A' }}
+                  className="text-xl font-bold mb-3 text-foreground"
                 >
                   {service.title}
                 </h3>
                 <p 
-                  className="mb-4"
-                  style={{ color: '#6B6B6B' }}
+                  className="mb-4 text-muted-foreground"
                 >
                   {service.description}
                 </p>

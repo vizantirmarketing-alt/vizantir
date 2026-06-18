@@ -38,7 +38,7 @@ interface BlogPostContentProps {
 export default function BlogPostContent({ post }: BlogPostContentProps) {
   const colors = {
     bg: '#FAF9F5',
-    text: '#1A1A1A',
+    text: 'var(--foreground)',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',
     accent: 'var(--gold-accent)',

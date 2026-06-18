@@ -45,10 +45,10 @@ export default function GetStartedPageClient() {
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Ready to start?
             </h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto" style={{ color: '#6B6B6B' }}>
+            <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
               Fixed scope, fixed price, direct access to the builder. From first call to launch — here's how every project runs.
             </p>
           </motion.div>
@@ -79,10 +79,10 @@ export default function GetStartedPageClient() {
                   {step.number}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                  <h3 className="text-xl font-bold mb-2 text-foreground">
                     {step.title}
                   </h3>
-                  <p style={{ color: '#6B6B6B' }}>
+                  <p className="text-muted-foreground">
                     {step.description}
                   </p>
                 </div>
@@ -105,10 +105,10 @@ export default function GetStartedPageClient() {
               border: '1px solid rgba(0, 112, 243,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Next step: a real conversation
             </h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: '#6B6B6B' }}>
+            <p className="text-lg mb-8 max-w-xl mx-auto text-muted-foreground">
               Book a discovery call. We'll see if the project and timeline line up — no pressure, no hard sell.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -125,10 +125,9 @@ export default function GetStartedPageClient() {
               <Link
                 href="/services"
                 onClick={() => trackCTAClick('view_services', 'get_started')}
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80 text-foreground"
                 style={{ 
                   background: 'transparent', 
-                  color: '#1A1A1A', 
                   borderRadius: '8px',
                   border: '2px solid rgba(0,0,0,0.2)'
                 }}

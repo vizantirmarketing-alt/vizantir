@@ -26,7 +26,7 @@ export default function ServicesHero() {
     line: 'rgba(0,0,0,0.06)',
     accentLine: 'rgba(0, 112, 243,0.2)',
     accentLineBright: 'rgba(0, 112, 243,0.35)',
-    text: '#1A1A1A',
+    text: 'var(--foreground)',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',
     accent: 'var(--gold-accent)',

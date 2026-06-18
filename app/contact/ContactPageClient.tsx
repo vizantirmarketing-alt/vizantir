@@ -89,11 +89,6 @@ export default function ContactPageClient() {
   const inputStyle = {
     background: '#FFFFFF',
     border: `1px solid rgba(0,0,0,0.08)`,
-    color: '#1A1A1A',
-  }
-
-  const labelStyle = {
-    color: '#4A4A4A'
   }
 
   if (isSubmitted) {
@@ -115,10 +110,10 @@ export default function ContactPageClient() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </motion.div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
             Message Sent!
           </h1>
-          <p className="text-lg mb-8" style={{ color: '#6B6B6B' }}>
+          <p className="text-lg mb-8 text-muted-foreground">
             Thank you for reaching out. We&apos;ll get back to you within 24 hours.
           </p>
           <Link
@@ -154,10 +149,10 @@ export default function ContactPageClient() {
             <div className="mb-6">
               <Eyebrow>Contact</Eyebrow>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Start the Conversation
             </h1>
-            <p className="text-lg md:text-xl" style={{ color: '#6B6B6B' }}>
+            <p className="text-lg md:text-xl text-muted-foreground">
               Tell us what you&apos;re working on. We&apos;ll let you know if we&apos;re a good fit and what the next step looks like
             </p>
           </motion.div>
@@ -179,7 +174,7 @@ export default function ContactPageClient() {
               className="lg:col-span-2 space-y-8"
             >
               <div>
-                <h2 className="text-2xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                <h2 className="text-2xl font-bold mb-6 text-foreground">
                   Contact Information
                 </h2>
                 <div className="space-y-6">
@@ -190,7 +185,7 @@ export default function ContactPageClient() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold mb-1" style={{ color: '#1A1A1A' }}>Email</p>
+                      <p className="font-semibold mb-1 text-foreground">Email</p>
                       <a href="mailto:info@vizantir.com" className="link-cobalt" style={{ color: 'var(--gold-primary)' }}>
                         info@vizantir.com
                       </a>
@@ -203,12 +198,11 @@ export default function ContactPageClient() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold mb-1" style={{ color: '#1A1A1A' }}>Phone</p>
+                      <p className="font-semibold mb-1 text-foreground">Phone</p>
                       <a 
                         href="tel:+17022890758" 
                         onClick={trackPhoneClick}
-                        className="link-cobalt"
-                        style={{ color: '#4A4A4A' }}
+                        className="link-cobalt text-body"
                       >
                         +1 (702) 289-0758
                       </a>
@@ -222,11 +216,11 @@ export default function ContactPageClient() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold mb-1" style={{ color: '#1A1A1A' }}>Location</p>
-                      <p style={{ color: '#4A4A4A' }}>
+                      <p className="font-semibold mb-1 text-foreground">Location</p>
+                      <p className="text-body">
                         Las Vegas, NV 89139
                       </p>
-                      <p className="text-sm mt-1" style={{ color: '#888888' }}>
+                      <p className="text-sm mt-1 text-meta">
                         Remote-first studio serving clients nationwide
                       </p>
                     </div>
@@ -236,8 +230,8 @@ export default function ContactPageClient() {
 
               {/* Business Hours */}
               <div className="p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
-                <h3 className="font-semibold mb-4" style={{ color: '#1A1A1A' }}>Business Hours</h3>
-                <div className="space-y-2 text-sm" style={{ color: '#4A4A4A' }}>
+                <h3 className="font-semibold mb-4 text-foreground">Business Hours</h3>
+                <div className="space-y-2 text-sm text-body">
                   <div className="flex justify-between">
                     <span>Monday - Friday</span>
                     <span>9:00 AM - 6:00 PM PST</span>
@@ -256,7 +250,7 @@ export default function ContactPageClient() {
               {/* Response Time */}
               <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <p className="text-sm" style={{ color: '#4A4A4A' }}>
+                <p className="text-sm text-body">
                   Average response time: <strong>Under 24 hours</strong>
                 </p>
               </div>
@@ -270,34 +264,34 @@ export default function ContactPageClient() {
               className="lg:col-span-3"
             >
               <div className="p-6 md:p-8 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-                <h2 className="text-2xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                <h2 className="text-2xl font-bold mb-6 text-foreground">
                   Start Your Project
                 </h2>
                 
                 <form onSubmit={handleSubmit} className="relative space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Full Name *</label>
+                      <label className="block text-sm font-medium mb-2 text-body">Full Name *</label>
                       <input
                         type="text"
                         name="name"
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all text-foreground"
                         style={inputStyle}
                         placeholder="John Smith"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Email Address *</label>
+                      <label className="block text-sm font-medium mb-2 text-body">Email Address *</label>
                       <input
                         type="email"
                         name="email"
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all text-foreground"
                         style={inputStyle}
                         placeholder="john@company.com"
                       />
@@ -305,25 +299,25 @@ export default function ContactPageClient() {
                   </div>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Phone Number</label>
+                      <label className="block text-sm font-medium mb-2 text-body">Phone Number</label>
                       <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all text-foreground"
                         style={inputStyle}
                         placeholder="(555) 123-4567"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Company Name</label>
+                      <label className="block text-sm font-medium mb-2 text-body">Company Name</label>
                       <input
                         type="text"
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all text-foreground"
                         style={inputStyle}
                         placeholder="Your Company"
                       />
@@ -331,13 +325,13 @@ export default function ContactPageClient() {
                   </div>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Service Interested In *</label>
+                      <label className="block text-sm font-medium mb-2 text-body">Service Interested In *</label>
                       <select
                         name="service"
                         required
                         value={formData.service}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all appearance-none cursor-pointer text-foreground"
                         style={inputStyle}
                       >
                         <option value="">Select a service</option>
@@ -347,12 +341,12 @@ export default function ContactPageClient() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2" style={labelStyle}>Project Budget</label>
+                      <label className="block text-sm font-medium mb-2 text-body">Project Budget</label>
                       <select
                         name="budget"
                         value={formData.budget}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all appearance-none cursor-pointer text-foreground"
                         style={inputStyle}
                       >
                         <option value="">Select your budget</option>
@@ -363,14 +357,14 @@ export default function ContactPageClient() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" style={labelStyle}>Tell Us About Your Project *</label>
+                    <label className="block text-sm font-medium mb-2 text-body">Tell Us About Your Project *</label>
                     <textarea
                       name="message"
                       required
                       rows={5}
                       value={formData.message}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-focus transition-all resize-none text-foreground"
                       style={inputStyle}
                       placeholder="What are your goals? What challenges are you facing? Any specific requirements?"
                     />
@@ -384,7 +378,7 @@ export default function ContactPageClient() {
                     />
                   </div>
                   {submitError ? (
-                    <p className="text-sm mt-2" style={labelStyle}>
+                    <p className="text-sm mt-2 text-body">
                       {submitError}
                     </p>
                   ) : null}
@@ -410,7 +404,7 @@ export default function ContactPageClient() {
                       </>
                     )}
                   </button>
-                  <p className="text-xs text-center" style={{ color: '#888888' }}>
+                  <p className="text-xs text-center text-meta">
                     By submitting this form, you agree to our{' '}
                     <Link href="/privacy" className="link-cobalt">Privacy Policy</Link>
                     {' '}and{' '}

@@ -19,8 +19,8 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
   const colors = useMemo(
     () => ({
       bg: '#FAF9F5',
-      text: '#1A1A1A',
-      textMuted: '#6B6B6B',
+      text: 'var(--foreground)',
+      textMuted: 'var(--muted-foreground)',
       accent: 'var(--gold-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',

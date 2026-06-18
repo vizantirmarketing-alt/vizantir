@@ -146,7 +146,6 @@ const ServicesPreview = () => {
           style={{
             letterSpacing: '-6px',
             lineHeight: '0.9',
-            color: '#1A1A1A',
           }}
         >
           SERVICES
@@ -198,8 +197,7 @@ const ServicesPreview = () => {
                 </span>
 
                 <h3
-                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-gold-primary"
-                  style={{ color: '#1a1a1a', lineHeight: '1.2' }}
+                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-gold-primary text-foreground" style={{ lineHeight: '1.2' }}
                 >
                   {service.title}
                 </h3>

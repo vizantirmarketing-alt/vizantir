@@ -36,14 +36,12 @@ export default function NotFound() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <h2 
-              className="text-2xl md:text-3xl font-bold mb-4"
-              style={{ color: '#1A1A1A' }}
+              className="text-2xl md:text-3xl font-bold mb-4 text-foreground"
             >
               Page Not Found
             </h2>
             <p 
-              className="text-lg mb-8 max-w-md mx-auto"
-              style={{ color: '#6B6B6B' }}
+              className="text-lg mb-8 max-w-md mx-auto text-muted-foreground"
             >
               Oops! The page you&apos;re looking for doesn&apos;t exist or has been moved.
             </p>
@@ -67,10 +65,9 @@ export default function NotFound() {
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:opacity-80 text-foreground"
               style={{ 
                 background: 'transparent', 
-                color: '#1A1A1A', 
                 borderRadius: '8px',
                 border: '2px solid rgba(0,0,0,0.2)'
               }}
@@ -88,8 +85,7 @@ export default function NotFound() {
             style={{ borderColor: 'rgba(0,0,0,0.1)' }}
           >
             <p 
-              className="text-sm mb-4"
-              style={{ color: '#888888' }}
+              className="text-sm mb-4 text-meta"
             >
               Here are some helpful links:
             </p>

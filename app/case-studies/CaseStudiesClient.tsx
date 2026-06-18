@@ -28,8 +28,8 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   const colors = useMemo(
     () => ({
       bg: '#FAF9F5',
-      text: '#1A1A1A',
-      textMuted: '#6B6B6B',
+      text: 'var(--foreground)',
+      textMuted: 'var(--muted-foreground)',
       accent: 'var(--gold-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
@@ -111,8 +111,8 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                       : 'rgba(0, 0, 0, 0.05)',
                   color:
                     selectedCategory === category
-                      ? '#1A1A1A'
-                      : '#1A1A1A',
+                      ? 'var(--foreground)'
+                      : 'var(--foreground)',
                   border:
                     selectedCategory === category
                       ? 'none'

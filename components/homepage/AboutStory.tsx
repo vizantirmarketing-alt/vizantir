@@ -27,8 +27,7 @@ const AboutStory = () => {
                 <Eyebrow align="start">The Difference</Eyebrow>
               </div>
               <h2 
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
-                style={{ color: '#1A1A1A' }}
+                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
               >
                 Your business has outgrown what you started with.
               </h2>
@@ -49,15 +48,13 @@ const AboutStory = () => {
               className="space-y-6"
             >
               <p 
-                className="text-base md:text-lg"
-                style={{ color: '#4A4A4A', lineHeight: '1.7' }}
+                className="text-base md:text-lg text-body" style={{ lineHeight: '1.7' }}
               >
                 Most websites look fine on the surface. They just don&apos;t do anything. They don&apos;t rank. They don&apos;t convert. They don&apos;t reflect the business you&apos;ve actually become.
               </p>
               
               <p 
-                className="text-base md:text-lg"
-                style={{ color: '#4A4A4A', lineHeight: '1.7' }}
+                className="text-base md:text-lg text-body" style={{ lineHeight: '1.7' }}
               >
                 We build from the ground up — considered, crafted, and coded for the way your business actually operates. Every decision is intentional. Every line of code earns its place.
               </p>

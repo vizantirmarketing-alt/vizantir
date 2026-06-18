@@ -199,7 +199,7 @@ const GlassTestimonials = () => {
                     className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-xl transition-all duration-300"
                     style={{
                       background: testimonial.gradient,
-                      color: testimonial.id === 1 ? '#1a1a1a' : '#fff',
+                      color: testimonial.id === 1 ? 'var(--foreground)' : '#fff',
                       boxShadow: index === activeIndex
                         ? `0 8px 30px ${testimonial.gradient.match(/\#[A-F0-9]{6}/i)?.[0]}40`
                         : 'none',
@@ -210,8 +210,7 @@ const GlassTestimonials = () => {
 
                   <div>
                     <h4
-                      className="text-xl font-bold mb-1"
-                      style={{ color: '#1a1a1a' }}
+                      className="text-xl font-bold mb-1 text-foreground"
                     >
                       {testimonial.company}
                     </h4>

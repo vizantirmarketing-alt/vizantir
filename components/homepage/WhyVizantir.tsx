@@ -58,8 +58,7 @@ const WhyVizantir = () => {
           className="text-center mb-12"
         >
           <h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight"
-            style={{ color: '#1A1A1A' }}
+            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
           >
             Why businesses choose Vizantir
           </h2>
@@ -87,14 +86,12 @@ const WhyVizantir = () => {
               }}
             >
               <h3 
-                className="text-xl md:text-2xl font-bold mb-3 transition-colors duration-300"
-                style={{ color: '#1A1A1A' }}
+                className="text-xl md:text-2xl font-bold mb-3 transition-colors duration-300 text-foreground"
               >
                 {point.title}
               </h3>
               <p 
-                className="text-base md:text-lg leading-relaxed"
-                style={{ color: '#6B6B6B' }}
+                className="text-base md:text-lg leading-relaxed text-muted-foreground"
               >
                 {point.description}
               </p>

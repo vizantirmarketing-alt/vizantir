@@ -28,10 +28,10 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Frequently Asked Questions
             </h1>
-            <p className="text-lg md:text-xl" style={{ color: '#6B6B6B' }}>
+            <p className="text-lg md:text-xl text-muted-foreground">
               Get answers to common questions about web design, development, and how we can help you plan, build, and maintain a stronger website.
             </p>
           </motion.div>
@@ -40,8 +40,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
           <div className="mt-8 max-w-xl mx-auto">
             <div className="relative">
               <svg 
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" 
-                style={{ color: '#888888' }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-meta"
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 
@@ -58,14 +57,12 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 style={{ 
                   background: '#FFFFFF',
                   border: `1px solid ${'rgba(0,0,0,0.1)'}`,
-                  color: '#1A1A1A'
                 }}
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:opacity-70 transition-opacity"
-                  style={{ color: '#888888' }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:opacity-70 transition-opacity text-meta"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -82,7 +79,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
           <div className="space-y-4">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-12">
-                <p style={{ color: '#888888' }}>
+                <p className="text-meta">
                   No FAQs found matching &quot;{searchQuery}&quot;
                 </p>
                 <button
@@ -109,8 +106,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                   >
                     <button
                       onClick={() => toggleFAQ(faq._id)}
-                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors hover:bg-[#F9FAFB]"
-                      style={{ color: '#1A1A1A' }}
+                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
                     >
                       <span className="text-lg font-semibold pr-8">{faq.question}</span>
                       <AccordionIndicator
@@ -129,7 +125,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                           className="overflow-hidden"
                         >
                           <div className="px-6 pb-6">
-                            <p className="leading-relaxed" style={{ color: '#4A4A4A' }}>
+                            <p className="leading-relaxed text-body">
                               {faq.answer}
                             </p>
                           </div>
@@ -153,10 +149,10 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
               border: '1px solid rgba(0, 112, 243,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Still have questions?
             </h2>
-            <p className="text-lg mb-6" style={{ color: '#6B6B6B' }}>
+            <p className="text-lg mb-6 text-muted-foreground">
               We&apos;re here to help. Book a strategy call to walk through your goals, scope, and fit for your next website build—no pitch deck required.
             </p>
             <Link

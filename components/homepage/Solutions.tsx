@@ -58,7 +58,7 @@ const Solutions = () => {
     keywords.forEach(keyword => {
       result = result.replace(
         keyword,
-        `<strong style="color: #1A1A1A">${keyword}</strong>`
+        `<strong style="color: var(--foreground)">${keyword}</strong>`
       )
     })
     return <span dangerouslySetInnerHTML={{ __html: result }} />
@@ -150,8 +150,7 @@ const Solutions = () => {
                   </div>
 
                   <p 
-                    className="text-base md:text-lg flex-1"
-                    style={{ color: '#6B6B6B', lineHeight: '1.7' }}
+                    className="text-base md:text-lg flex-1 text-muted-foreground" style={{ lineHeight: '1.7' }}
                   >
                     {feature.description}
                   </p>
@@ -170,14 +169,12 @@ const Solutions = () => {
           transition={{ duration: 0.6 }}
         >
           <h3 
-            className="text-lg md:text-xl font-medium mb-3 tracking-wide"
-            style={{ color: '#6B6B6B' }}
+            className="text-lg md:text-xl font-medium mb-3 tracking-wide text-muted-foreground"
           >
             Discover Our
           </h3>
           <h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight relative inline-block"
-            style={{ color: '#1A1A1A' }}
+            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight relative inline-block text-foreground"
           >
             DIGITAL SOLUTIONS
             {/* Animated gradient underline */}
@@ -233,14 +230,12 @@ const Solutions = () => {
 
                 <div className="p-6 flex-1 flex flex-col">
                   <h4 
-                    className="text-2xl md:text-3xl font-bold mb-4"
-                    style={{ color: '#1A1A1A' }}
+                    className="text-2xl md:text-3xl font-bold mb-4 text-foreground"
                   >
                     {service.title}
                   </h4>
                   <p 
-                    className="text-base"
-                    style={{ color: '#6B6B6B', lineHeight: '1.7' }}
+                    className="text-base text-muted-foreground" style={{ lineHeight: '1.7' }}
                   >
                     {renderDescription(service.description, service.keywords)}
                   </p>

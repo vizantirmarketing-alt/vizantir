@@ -168,56 +168,32 @@ const Hero = () => {
           </div>
 
           <h1 
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500"
-            style={{ 
-              color: '#1A1A1A',
-              textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)'
-            }}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500 text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
           >
             <span
-              className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em]"
-              style={{
-                color: '#5C5C5C',
-                textShadow: 'none',
-              }}
+              className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
             >
               We build websites
             </span>
             <span
-              className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] mt-1"
-              style={{
-                color: '#5C5C5C',
-                textShadow: 'none',
-              }}
+              className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] mt-1 text-muted-foreground" style={{ textShadow: 'none' }}
             >
               that make people stop and say
             </span>
             <span className="block mt-3 sm:mt-4">
               <span
-                className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em]"
-                style={{
-                  color: '#5C5C5C',
-                  textShadow: 'none',
-                }}
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
               >
                 —
               </span>
               <span className="block lg:whitespace-nowrap">
                 <span
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em]"
-                  style={{
-                    color: '#1A1A1A',
-                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)',
-                  }}
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
                 >
                   who did this?
                 </span>
                 <span
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em]"
-                  style={{
-                    color: '#5C5C5C',
-                    textShadow: 'none',
-                  }}
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
                 >
                 </span>
               </span>
@@ -225,15 +201,13 @@ const Hero = () => {
           </h1>
 
           <p 
-            className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500"
-            style={{ color: '#6B6B6B' }}
+            className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500 text-muted-foreground"
           >
             Not generated overnight.
           </p>
 
           <p 
-            className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg italic transition-colors duration-500"
-            style={{ color: '#888888' }}
+            className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg italic transition-colors duration-500 text-meta"
           >
             Built to last, perform, and represent you at your best.
           </p>

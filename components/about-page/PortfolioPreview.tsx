@@ -61,14 +61,12 @@ const PortfolioPreview = () => {
               Our Work
             </p>
             <h2 
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500"
-              style={{ color: '#1A1A1A' }}
+              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight transition-colors duration-500 text-foreground"
             >
               Selected Work
             </h2>
             <p 
-              className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500"
-              style={{ color: '#6B6B6B' }}
+              className="text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-500 text-muted-foreground"
             >
               A selection of custom builds for established businesses.
             </p>
@@ -103,14 +101,12 @@ const PortfolioPreview = () => {
                     {item.category}
                   </p>
                   <h3 
-                    className="text-2xl md:text-3xl font-bold group-hover:text-gold-primary transition-colors duration-300"
-                    style={{ color: '#1A1A1A' }}
+                    className="text-2xl md:text-3xl font-bold group-hover:text-gold-primary transition-colors duration-300 text-foreground"
                   >
                     {item.title}
                   </h3>
                   <p 
-                    className="leading-relaxed transition-colors duration-500"
-                    style={{ color: '#6B6B6B' }}
+                    className="leading-relaxed transition-colors duration-500 text-muted-foreground"
                   >
                     {item.description}
                   </p>
@@ -119,8 +115,7 @@ const PortfolioPreview = () => {
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="link-cobalt inline-flex items-center gap-2 mt-2"
-                    style={{ color: '#1A1A1A' }}
+                    className="link-cobalt inline-flex items-center gap-2 mt-2 text-foreground"
                   >
                     View Live Site
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -137,8 +132,7 @@ const PortfolioPreview = () => {
             }`}
           >
             <p 
-              className="text-xl mb-8 transition-colors duration-500"
-              style={{ color: '#6B6B6B' }}
+              className="text-xl mb-8 transition-colors duration-500 text-muted-foreground"
             >
               Work with a studio that understands what a website needs to do.
             </p>

@@ -72,8 +72,7 @@ const WhyUs = () => {
               Our Advantage
             </span>
             <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
-              style={{ color: '#1A1A1A' }}
+              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-foreground"
             >
               Why the studio model works
             </h2>
@@ -100,8 +99,7 @@ const WhyUs = () => {
                 OUR APPROACH
               </span>
               <h2
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
-                style={{ color: '#1A1A1A' }}
+                className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-foreground"
               >
                 Choosing the right build, not forcing the wrong one
               </h2>
@@ -132,8 +130,7 @@ const WhyUs = () => {
                       <div className="flex-1">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                           <h3
-                            className="text-4xl md:text-5xl font-black transition-colors duration-300 group-hover:[color:var(--approach-accent)]"
-                            style={{ color: '#1A1A1A' }}
+                            className="text-4xl md:text-5xl font-black transition-colors duration-300 group-hover:[color:var(--approach-accent)] text-foreground"
                           >
                             {approach.title}
                           </h3>
@@ -197,8 +194,7 @@ const WhyUs = () => {
                   <benefit.icon size={28} style={{ color: benefit.color }} />
                 </div>
                 <h3
-                  className="text-xl font-bold mb-3"
-                  style={{ color: '#1A1A1A' }}
+                  className="text-xl font-bold mb-3 text-foreground"
                 >
                   {benefit.title}
                 </h3>

@@ -22,8 +22,8 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
   const colors = useMemo(
     () => ({
       bg: '#FAF9F5',
-      text: '#1A1A1A',
-      textMuted: '#6B6B6B',
+      text: 'var(--foreground)',
+      textMuted: 'var(--muted-foreground)',
       accent: 'var(--gold-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
@@ -352,8 +352,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <button
                       type="button"
                       onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                      className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[#F9FAFB]"
-                      style={{ color: '#1A1A1A' }}
+                      className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
                     >
                       <span className="pr-4 text-lg font-semibold">{faq.question}</span>
                       <AccordionIndicator
@@ -373,8 +372,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                         >
                           <div className="px-6 pb-6">
                             <p
-                              className="leading-relaxed whitespace-pre-wrap"
-                              style={{ color: '#4A4A4A' }}
+                              className="leading-relaxed whitespace-pre-wrap text-body"
                             >
                               {faq.answer}
                             </p>

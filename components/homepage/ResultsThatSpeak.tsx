@@ -49,14 +49,12 @@ const ResultsThatSpeak = () => {
               <Eyebrow>Our Work</Eyebrow>
             </div>
             <h2 
-              className="text-4xl md:text-5xl font-black mb-4 tracking-tight"
-              style={{ color: '#1A1A1A' }}
+              className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-foreground"
             >
               Selected Work
             </h2>
             <p 
-              className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-              style={{ color: '#6B6B6B' }}
+              className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-muted-foreground"
             >
               A better website should do more than look updated. It should present the business more clearly, support trust faster, and create a stronger experience from the first click.
             </p>
@@ -94,14 +92,12 @@ const ResultsThatSpeak = () => {
                   {item.category}
                 </p>
                 <h3 
-                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-gold-primary transition-colors"
-                  style={{ color: '#1A1A1A' }}
+                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-gold-primary transition-colors text-foreground"
                 >
                   {item.title}
                 </h3>
                 <p 
-                  className="text-sm md:text-base leading-relaxed flex-1 mb-4"
-                  style={{ color: '#6B6B6B' }}
+                  className="text-sm md:text-base leading-relaxed flex-1 mb-4 text-muted-foreground"
                 >
                   {item.outcome}
                 </p>
