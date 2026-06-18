@@ -21,16 +21,16 @@ const notIdealHeading = "You're not a fit if..."
 
 export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProps) {
   const colors = {
-    bg: '#FAFAFA',
+    bg: '#FAF9F5',
     text: '#1A1A1A',
     textMuted: '#6B7280',
     accentSolid: 'var(--gold-primary)',
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
-    divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
-    budgetAsideBg: 'rgba(180,83,9,0.06)',
-    heroWash: 'radial-gradient(ellipse 85% 60% at 50% -5%, rgba(255,198,76,0.14), transparent 55%)',
-    fitBulletIcon: 'rgba(180, 83, 9, 0.88)',
+    divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
+    budgetAsideBg: 'rgba(0, 112, 243,0.06)',
+    heroWash: 'radial-gradient(ellipse 85% 60% at 50% -5%, rgba(0, 112, 243,0.14), transparent 55%)',
+    fitBulletIcon: 'rgba(0, 112, 243, 0.88)',
   }
 
   const sectionMotion = {
@@ -190,7 +190,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             <Link
               href={content.closingCta.href}
               onClick={() => trackCTAClick('book_strategy_call', 'are_we_a_fit')}
-              className="inline-block rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+              className="inline-block rounded-xl px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
               style={{
                 background: 'var(--gold-gradient)',
                 boxShadow: 'var(--gold-shadow)',

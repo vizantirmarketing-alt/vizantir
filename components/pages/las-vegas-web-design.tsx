@@ -76,7 +76,7 @@ export default function LasVegasWebDesignPage() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
             >
               <Link href={hero.primaryCta.href}>
                 {hero.primaryCta.label}
@@ -225,12 +225,12 @@ export default function LasVegasWebDesignPage() {
                 variants={itemVariants}
                 className={`relative p-8 rounded-2xl border flex flex-col bg-muted ${
                   tier.featured
-                    ? 'border-gold-muted-border shadow-[0_0_40px_rgba(255,198,76,0.08)]'
+                    ? 'border-gold-muted-border shadow-[0_0_40px_rgba(0,112,243,0.08)]'
                     : 'border-border'
                 }`}
               >
                 {tier.featured ? (
-                  <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+                  <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
                     Popular
                   </span>
                 ) : null}
@@ -348,7 +348,7 @@ export default function LasVegasWebDesignPage() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
             >
               <Link href={closingCta.cta.href}>
                 {closingCta.cta.label}

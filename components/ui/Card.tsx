@@ -29,7 +29,7 @@ const cardSurfaceVariants = cva(
         variant: 'muted-30',
         featured: true,
         class:
-          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(180,83,9,0.1)]',
+          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(0,112,243,0.1)]',
       },
       {
         variant: 'muted-20',
@@ -40,7 +40,7 @@ const cardSurfaceVariants = cva(
         variant: 'muted-20',
         featured: true,
         class:
-          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(180,83,9,0.1)]',
+          'border-gold-muted-border bg-gold-muted-subtle hover:border-gold-muted hover:bg-[rgba(0,112,243,0.1)]',
       },
     ],
     defaultVariants: {
@@ -100,7 +100,7 @@ function CardBadge({ className, children }: CardBadgeProps) {
   return (
     <span
       className={cn(
-        'absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]',
+        'absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white',
         className,
       )}
     >

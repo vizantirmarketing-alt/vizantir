@@ -86,8 +86,8 @@ function ProjectPricingCard({ tier }: { tier: PricingTier }) {
           asChild
           className={
             tier.featured
-              ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02]'
-              : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-[#1A1A1A]'
+              ? 'group w-full rounded-xl bg-gold-gradient px-6 py-3 text-sm font-semibold text-white shadow-gold transition-all duration-300 hover:scale-[1.02]'
+              : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-white'
           }
         >
           <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
@@ -400,7 +400,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
   }
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-500">
+    <div className="min-h-screen transition-colors duration-500" style={{ background: '#FAF9F5' }}>
       <ServicesHero />
 
       <section
@@ -509,7 +509,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
             >
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
                 Book a Strategy Call

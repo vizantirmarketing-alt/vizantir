@@ -95,10 +95,10 @@ const GlassTestimonials = () => {
   };
 
   const sectionBackground = `
-    radial-gradient(ellipse 80% 50% at 20% 50%, rgba(255, 198, 76, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 50% at 20% 50%, rgba(0, 112, 243, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse 60% 40% at 80% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse 50% 30% at 50% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
-    #FAFAFA
+    #FAF9F5
   `;
 
   return (
@@ -124,8 +124,8 @@ const GlassTestimonials = () => {
           <div
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-8"
             style={{
-              background: 'rgba(255, 198, 76, 0.15)',
-              border: '1px solid rgba(255, 198, 76, 0.3)',
+              background: 'rgba(0, 112, 243, 0.15)',
+              border: '1px solid rgba(0, 112, 243, 0.3)',
             }}
           >
             <div
@@ -189,7 +189,7 @@ const GlassTestimonials = () => {
                   <div
                     className="absolute inset-0 pointer-events-none rounded-2xl"
                     style={{
-                      background: 'radial-gradient(circle at center, rgba(255, 198, 76, 0.05) 0%, transparent 70%)',
+                      background: 'radial-gradient(circle at center, rgba(0, 112, 243, 0.05) 0%, transparent 70%)',
                     }}
                   />
                 )}
@@ -251,7 +251,7 @@ const GlassTestimonials = () => {
                 background: index === activeIndex
                   ? 'var(--gold-primary)'
                   : 'rgba(0, 0, 0, 0.2)',
-                boxShadow: index === activeIndex ? '0 0 20px rgba(255, 198, 76, 0.5)' : 'none',
+                boxShadow: index === activeIndex ? '0 0 20px rgba(0, 112, 243, 0.5)' : 'none',
                 border: 'none',
                 cursor: 'pointer',
               }}

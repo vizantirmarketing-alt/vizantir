@@ -59,7 +59,7 @@ const WhyUs = () => {
     <section
       className="py-20 md:py-28 transition-all duration-700"
       style={{
-        background: '#FAFAFA',
+        background: '#FAF9F5',
       }}
     >
       <div className="container mx-auto px-4">

@@ -14,7 +14,7 @@ const Footer = () => {
     <footer 
       className="border-t"
       style={{
-        background: '#FAFAFA',
+        background: '#FAF9F5',
         borderColor: 'rgba(0,0,0,0.1)',
       }}
     >
@@ -50,7 +50,7 @@ const Footer = () => {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'var(--gold-primary)'
-                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
+                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(0, 112, 243, 0.8))'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = '#6B6B6B'
@@ -70,7 +70,7 @@ const Footer = () => {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'var(--gold-primary)'
-                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(255, 198, 76, 0.8))'
+                  e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(0, 112, 243, 0.8))'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = '#6B6B6B'

@@ -6,13 +6,13 @@ const OperatorStatement = () => {
   return (
     <section
       className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         <div
           className="w-full max-w-5xl mx-auto h-px mb-12 md:mb-14"
           style={{
-            background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.4), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.4), transparent)',
           }}
           aria-hidden
         />

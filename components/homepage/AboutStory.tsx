@@ -10,7 +10,7 @@ const AboutStory = () => {
   return (
     <section 
       className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-5 lg:gap-14 items-center">
@@ -103,7 +103,7 @@ const AboutStory = () => {
             <div 
               className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-2xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(255, 198, 76, 0.4), rgba(212, 197, 249, 0.4))'
+                background: 'linear-gradient(135deg, rgba(0, 112, 243, 0.4), rgba(212, 197, 249, 0.4))'
               }}
             />
           </motion.div>

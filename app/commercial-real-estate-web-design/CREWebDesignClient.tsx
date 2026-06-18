@@ -154,7 +154,7 @@ export default function CREWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
             >
               <Link href="/contact">
                 Book a Strategy Call
@@ -393,7 +393,7 @@ export default function CREWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 hover:scale-[1.02] group"
+              className="rounded-xl px-8 py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 hover:scale-[1.02] group"
             >
               <Link href="/contact">
                 Book a Strategy Call

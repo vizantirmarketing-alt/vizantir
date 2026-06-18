@@ -18,13 +18,13 @@ interface CaseStudyPageContentProps {
 export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContentProps) {
   const colors = useMemo(
     () => ({
-      bg: '#FAFAFA',
+      bg: '#FAF9F5',
       text: '#1A1A1A',
       textMuted: '#6B6B6B',
       accent: 'var(--gold-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
-      divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+      divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
     }),
     [],
   )
@@ -42,7 +42,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
-            background: 'radial-gradient(ellipse at top right, rgba(255,198,76,0.18), transparent 55%)',
+            background: 'radial-gradient(ellipse at top right, rgba(0, 112, 243,0.18), transparent 55%)',
           }}
         />
         <div className="relative z-10 mx-auto max-w-5xl">

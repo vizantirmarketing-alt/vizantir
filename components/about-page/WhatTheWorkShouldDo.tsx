@@ -48,7 +48,7 @@ const WhatTheWorkShouldDo = () => {
   return (
     <section
       className="py-20 md:py-24 transition-colors duration-500"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         <motion.div
@@ -87,7 +87,7 @@ const WhatTheWorkShouldDo = () => {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.85)'
-                e.currentTarget.style.borderColor = 'rgba(255, 198, 76, 0.4)'
+                e.currentTarget.style.borderColor = 'rgba(0, 112, 243, 0.4)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)'

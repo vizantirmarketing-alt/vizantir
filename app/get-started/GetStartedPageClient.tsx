@@ -39,7 +39,7 @@ export default function GetStartedPageClient() {
   ]
 
   return (
-    <main className="min-h-screen" style={{ background: '#FAFAFA', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: '#FAF9F5', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
@@ -74,7 +74,7 @@ export default function GetStartedPageClient() {
               >
                 <div 
                   className="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg"
-                  style={{ background: 'var(--gold-primary)', color: '#1A1A1A' }}
+                  style={{ background: 'var(--gold-primary)', color: '#FFFFFF' }}
                 >
                   {step.number}
                 </div>
@@ -101,8 +101,8 @@ export default function GetStartedPageClient() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-center p-8 md:p-12 rounded-2xl"
             style={{ 
-              background: 'rgba(255,198,76,0.15)',
-              border: '1px solid rgba(255,198,76,0.3)'
+              background: 'rgba(0, 112, 243,0.15)',
+              border: '1px solid rgba(0, 112, 243,0.3)'
             }}
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
@@ -116,7 +116,7 @@ export default function GetStartedPageClient() {
                 href="/contact"
                 onClick={() => trackCTAClick('schedule_a_call', 'get_started')}
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:scale-105"
-                style={{ background: 'var(--gold-primary)', color: '#1A1A1A', borderRadius: '8px' }}
+                style={{ background: 'var(--gold-primary)', color: '#FFFFFF', borderRadius: '8px' }}
               >
                 Book a Strategy Call
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

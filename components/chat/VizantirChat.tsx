@@ -301,7 +301,7 @@ export function VizantirChat() {
                   className={cn(
                     'max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap',
                     message.role === 'user'
-                      ? 'rounded-br-md bg-gold-primary text-[#1A1A1A]'
+                      ? 'rounded-br-md bg-gold-primary text-white'
                       : 'rounded-bl-md bg-muted text-foreground'
                   )}
                 >
@@ -354,7 +354,7 @@ export function VizantirChat() {
               type="button"
               onClick={handleSend}
               disabled={!input.trim() || isStreaming}
-              className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gold-primary text-[#1A1A1A] shadow-gold transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gold-primary text-white shadow-gold transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Send message"
             >
               <Send className="size-4" />
@@ -416,7 +416,7 @@ export function VizantirChat() {
           <button
             type="button"
             onClick={handleToggle}
-            className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-gold-primary text-[#1A1A1A] shadow-gold transition-all hover:scale-105 hover:brightness-105 active:scale-95"
+            className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-gold-primary text-white shadow-gold transition-all hover:scale-105 hover:brightness-105 active:scale-95"
             aria-label="Open chat"
           >
             <MessageCircle className="size-6" />

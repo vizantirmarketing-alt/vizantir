@@ -34,7 +34,7 @@ export default function BlogPageClient({ posts }: Props) {
   const [activeCategory, setActiveCategory] = useState('All')
 
   const colors = {
-    bg: '#FAFAFA',
+    bg: '#FAF9F5',
     text: '#1A1A1A',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',
@@ -42,7 +42,7 @@ export default function BlogPageClient({ posts }: Props) {
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
     inputBg: '#FFFFFF',
-    divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+    divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
   }
 
   // Filter posts based on search and category
@@ -231,7 +231,7 @@ export default function BlogPageClient({ posts }: Props) {
                         <span
                           className="text-xs font-medium px-3 py-1 rounded-full transition-colors duration-500"
                           style={{
-                            background: 'rgba(180,83,9,0.1)',
+                            background: 'rgba(0, 112, 243,0.1)',
                             color: colors.accent,
                             transition: themeBgColorTransition,
                           }}

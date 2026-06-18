@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <main 
       className="min-h-screen transition-colors duration-500 flex items-center justify-center px-4"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="text-center max-w-2xl">
         <motion.div
@@ -59,7 +59,7 @@ export default function NotFound() {
             <Link
               href="/"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all duration-300 hover:scale-105"
-              style={{ background: 'var(--gold-primary)', color: '#1A1A1A', borderRadius: '8px' }}
+              style={{ background: 'var(--gold-primary)', color: '#FFFFFF', borderRadius: '8px' }}
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />

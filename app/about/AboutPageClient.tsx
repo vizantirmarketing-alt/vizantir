@@ -76,7 +76,7 @@ export default function AboutPageClient() {
       {/* Hero Section with Ribbons */}
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
-        style={{ background: '#FAFAFA' }}
+        style={{ background: '#FAF9F5' }}
       >
         {/* Ribbons Animation Background */}
         <motion.div 
@@ -139,9 +139,9 @@ export default function AboutPageClient() {
               className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
               style={{
                 background: 'var(--gold-primary)',
-                color: '#1A1A1A',
+                color: '#FFFFFF',
                 borderRadius: '12px',
-                boxShadow: '0 8px 30px rgba(255, 198, 76, 0.4)',
+                boxShadow: '0 8px 30px rgba(0, 112, 243, 0.4)',
               }}
             >
               <Link href="/contact" onClick={() => trackCTAClick('work_with_us', 'about')}>
@@ -157,7 +157,7 @@ export default function AboutPageClient() {
       {/* Story Section */}
       <section
         className="py-20 md:py-24"
-        style={{ background: '#FAFAFA' }}
+        style={{ background: '#FAF9F5' }}
       >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -230,9 +230,9 @@ export default function AboutPageClient() {
                   className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
                   style={{
                     background: 'var(--gold-primary)',
-                    color: '#1A1A1A',
+                    color: '#FFFFFF',
                     borderRadius: '12px',
-                    boxShadow: '0 8px 30px rgba(255, 198, 76, 0.4)',
+                    boxShadow: '0 8px 30px rgba(0, 112, 243, 0.4)',
                   }}
                 >
                   <Link href="/services">
@@ -250,7 +250,7 @@ export default function AboutPageClient() {
       <div 
         className="w-full h-px"
         style={{ 
-          background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
         }}
       />
 
@@ -261,7 +261,7 @@ export default function AboutPageClient() {
       <div 
         className="w-full h-px"
         style={{ 
-          background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
         }}
       />
 
@@ -272,7 +272,7 @@ export default function AboutPageClient() {
       <div 
         className="w-full h-px"
         style={{ 
-          background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
         }}
       />
 
@@ -282,7 +282,7 @@ export default function AboutPageClient() {
       <div 
         className="w-full h-px"
         style={{ 
-          background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
         }}
       />
 
@@ -293,7 +293,7 @@ export default function AboutPageClient() {
       <div 
         className="w-full h-px"
         style={{ 
-          background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
         }}
       />
 
@@ -304,14 +304,14 @@ export default function AboutPageClient() {
       <div 
         className="w-full h-px"
         style={{ 
-          background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
         }}
       />
 
       {/* Values Section */}
       <section
         className="py-20 md:py-24"
-        style={{ background: '#FAFAFA' }}
+        style={{ background: '#FAF9F5' }}
       >
         <div className="container mx-auto px-4">
           {/* Section Header */}
@@ -369,7 +369,7 @@ export default function AboutPageClient() {
                 <div
                   className="relative z-10 w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110"
                   style={{
-                    background: 'rgba(255, 198, 76, 0.15)',
+                    background: 'rgba(0, 112, 243, 0.15)',
                     border: `1px solid ${value.color}30`,
                   }}
                 >
@@ -399,14 +399,14 @@ export default function AboutPageClient() {
       <div 
         className="w-full h-px"
         style={{ 
-          background: 'linear-gradient(90deg, transparent, rgba(255,198,76,0.5), transparent)' 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
         }}
       />
 
       {/* Final CTA Section */}
       <section
         className="relative py-20 md:py-28 overflow-hidden"
-        style={{ background: '#FAFAFA' }}
+        style={{ background: '#FAF9F5' }}
       >
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -450,9 +450,9 @@ export default function AboutPageClient() {
                 className="text-lg px-10 py-7 font-bold border-0 transition-all duration-300 hover:scale-105 group"
                 style={{
                   background: 'var(--gold-primary)',
-                  color: '#1A1A1A',
+                  color: '#FFFFFF',
                   borderRadius: '12px',
-                  boxShadow: '0 8px 40px rgba(255, 198, 76, 0.5)',
+                  boxShadow: '0 8px 40px rgba(0, 112, 243, 0.5)',
                 }}
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'about')}>

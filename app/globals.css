@@ -54,7 +54,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.974 0.0035 85);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -87,21 +87,22 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   /* Vizantir brand gold */
-  --gold-primary: #ffc64c;
-  --gold-accent: #b45309;
-  --gold-gradient: linear-gradient(135deg, #ffc64c 0%, #ffb84d 100%);
-  --gold-gradient-end: #ffb84d;
-  --gold-muted: rgba(180, 83, 9, 0.3);
-  --gold-muted-subtle: rgba(180, 83, 9, 0.06);
-  --gold-muted-border: rgba(180, 83, 9, 0.2);
-  --gold-shadow: 0 8px 30px rgba(255, 198, 76, 0.3);
-  --gold-glow: rgba(255, 198, 76, 0.3);
-  --gold-focus: rgba(255, 198, 76, 0.5);
+  --gold-primary: #0070F3;
+  --gold-accent: #0070F3;
+  --gold-gradient: linear-gradient(135deg, #0070F3 0%, #0070F3 100%);
+  --gold-gradient-end: #0070F3;
+  --gold-muted: rgba(0, 112, 243, 0.3);
+  --gold-muted-subtle: rgba(0, 112, 243, 0.06);
+  --gold-muted-border: rgba(0, 112, 243, 0.2);
+  --gold-shadow: 0 8px 30px rgba(0, 112, 243, 0.12);
+  --gold-glow: rgba(0, 112, 243, 0.3);
+  --gold-focus: rgba(0, 112, 243, 0.4);
 }
 
 @layer utilities {
   .bg-gold-gradient {
     background: var(--gold-gradient);
+    color: #FFFFFF;
   }
 }
 
@@ -121,19 +122,19 @@
 
 .card-surface-glass:hover {
   --card-glass-bg: rgba(0, 0, 0, 0.04);
-  --card-glass-border: rgba(180, 132, 30, 0.2);
+  --card-glass-border: rgba(0, 112, 243, 0.2);
 }
 
 .card-surface-glass-featured {
-  --card-glass-bg: rgba(180, 132, 30, 0.04);
-  --card-glass-border: rgba(180, 132, 30, 0.15);
-  --card-glass-shadow: 0 4px 24px rgba(180, 132, 30, 0.08);
+  --card-glass-bg: rgba(0, 112, 243, 0.04);
+  --card-glass-border: rgba(0, 112, 243, 0.15);
+  --card-glass-shadow: 0 4px 24px rgba(0, 112, 243, 0.08);
 }
 
 .card-surface-glass-featured:hover {
-  --card-glass-bg: rgba(180, 132, 30, 0.06);
-  --card-glass-border: rgba(180, 132, 30, 0.25);
-  --card-glass-shadow: 0 4px 28px rgba(180, 132, 30, 0.12);
+  --card-glass-bg: rgba(0, 112, 243, 0.06);
+  --card-glass-border: rgba(0, 112, 243, 0.25);
+  --card-glass-shadow: 0 4px 28px rgba(0, 112, 243, 0.12);
 }
 
 @layer base {

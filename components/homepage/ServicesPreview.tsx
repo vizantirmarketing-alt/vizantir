@@ -39,9 +39,9 @@ const ServicesPreview = () => {
   };
 
   const numberStyles = [
-    { color: 'var(--gold-primary)', rgb: '255, 198, 76', class: 'number-glow-teal' },
-    { color: 'var(--gold-primary)', rgb: '255, 198, 76', class: 'number-glow-purple' },
-    { color: 'var(--gold-primary)', rgb: '255, 198, 76', class: 'number-glow-blue' },
+    { color: 'var(--gold-primary)', rgb: '0, 112, 243', class: 'number-glow-teal' },
+    { color: 'var(--gold-primary)', rgb: '0, 112, 243', class: 'number-glow-purple' },
+    { color: 'var(--gold-primary)', rgb: '0, 112, 243', class: 'number-glow-blue' },
   ];
 
   const services = [
@@ -129,7 +129,7 @@ const ServicesPreview = () => {
   return (
     <section
       className="relative short-landscape:py-8 py-16 md:py-20 overflow-hidden"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <canvas
         ref={canvasRef}
@@ -188,7 +188,7 @@ const ServicesPreview = () => {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-                  e.currentTarget.style.borderColor = 'rgba(180, 83, 9, 0.12)';
+                  e.currentTarget.style.borderColor = 'rgba(0, 112, 243, 0.12)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';

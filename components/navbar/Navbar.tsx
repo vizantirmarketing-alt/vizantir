@@ -43,14 +43,14 @@ const Navbar = () => {
       <style>{`
         @keyframes pulse-glow {
           0%, 100% {
-            box-shadow: 0 0 20px rgba(255, 198, 76, 0.4),
-                        0 0 40px rgba(255, 198, 76, 0.2),
-                        0 0 60px rgba(255, 198, 76, 0.1);
+            box-shadow: 0 0 20px rgba(0, 112, 243, 0.4),
+                        0 0 40px rgba(0, 112, 243, 0.2),
+                        0 0 60px rgba(0, 112, 243, 0.1);
           }
           50% {
-            box-shadow: 0 0 30px rgba(255, 198, 76, 0.6),
-                        0 0 60px rgba(255, 198, 76, 0.3),
-                        0 0 80px rgba(255, 198, 76, 0.15);
+            box-shadow: 0 0 30px rgba(0, 112, 243, 0.6),
+                        0 0 60px rgba(0, 112, 243, 0.3),
+                        0 0 80px rgba(0, 112, 243, 0.15);
           }
         }
         
@@ -61,16 +61,16 @@ const Navbar = () => {
         
         .glow-button:hover {
           transform: translateY(-2px);
-          box-shadow: 0 0 35px rgba(255, 198, 76, 0.7),
-                      0 0 70px rgba(255, 198, 76, 0.4),
-                      0 0 100px rgba(255, 198, 76, 0.2) !important;
+          box-shadow: 0 0 35px rgba(0, 112, 243, 0.7),
+                      0 0 70px rgba(0, 112, 243, 0.4),
+                      0 0 100px rgba(0, 112, 243, 0.2) !important;
         }
       `}</style>
 
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: isScrolled ? 'rgba(250, 250, 250, 0.18)' : 'transparent',
+          background: isScrolled ? 'rgba(250, 249, 245, 0.18)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           borderBottom: isScrolled ? '1px solid rgba(0, 0, 0, 0.03)' : 'none',
@@ -121,10 +121,10 @@ const Navbar = () => {
             <div className="hidden xl:flex items-center gap-4">
               <Link href="/contact" onClick={() => trackCTAClick('get_started', 'navbar')}>
                 <button
-                  className="px-6 py-2.5 rounded-xl text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+                  className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
                   style={{
                     background: 'var(--gold-gradient)',
-                    color: '#1A1A1A',
+                    color: '#FFFFFF',
                     boxShadow: 'var(--gold-shadow)',
                   }}
                 >
@@ -239,7 +239,7 @@ const Navbar = () => {
                   trackCTAClick('get_started', 'navbar');
                   setIsMobileMenuOpen(false);
                 }}
-                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-gold-gradient text-[#1A1A1A] shadow-gold transition-all duration-300 active:scale-[0.98]"
+                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-gold-gradient text-white shadow-gold transition-all duration-300 active:scale-[0.98]"
               >
                 Book a Strategy Call
               </Link>

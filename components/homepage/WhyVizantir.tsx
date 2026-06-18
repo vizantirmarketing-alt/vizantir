@@ -46,7 +46,7 @@ const WhyVizantir = () => {
   return (
     <section 
       className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         {/* Header */}
@@ -87,7 +87,7 @@ const WhyVizantir = () => {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-                e.currentTarget.style.borderColor = 'rgba(180, 83, 9, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(0, 112, 243, 0.12)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';

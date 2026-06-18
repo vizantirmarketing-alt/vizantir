@@ -11,14 +11,14 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 export default function HowWeWorkPageClient() {
   // Colors matching Vizantir design system
   const colors = {
-    bg: '#FAFAFA',
+    bg: '#FAF9F5',
     text: '#1A1A1A',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',
     accent: 'var(--gold-accent)',
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
-    divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+    divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
   }
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -96,7 +96,7 @@ export default function HowWeWorkPageClient() {
                 <div
                   className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center text-lg font-bold"
                   style={{
-                    background: 'rgba(180,83,9,0.1)',
+                    background: 'rgba(0, 112, 243,0.1)',
                     color: colors.accent,
                   }}
                 >
@@ -167,7 +167,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
                 style={{
-                  background: 'rgba(180,83,9,0.1)',
+                  background: 'rgba(0, 112, 243,0.1)',
                 }}
               >
                 <svg
@@ -221,7 +221,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
                 style={{
-                  background: 'rgba(180,83,9,0.1)',
+                  background: 'rgba(0, 112, 243,0.1)',
                 }}
               >
                 <svg
@@ -369,7 +369,7 @@ export default function HowWeWorkPageClient() {
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
                 style={{
-                  background: 'rgba(255, 198, 76,0.1)',
+                  background: 'rgba(0, 112, 243,0.1)',
                 }}
               >
                 <svg className="w-5 h-5 text-gold-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -413,11 +413,11 @@ export default function HowWeWorkPageClient() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="p-6 rounded-2xl border relative"
               style={{
-                background: 'linear-gradient(135deg, rgba(180,83,9,0.1) 0%, rgba(180,83,9,0.02) 100%)',
-                borderColor: 'rgba(180,83,9,0.3)',
+                background: 'linear-gradient(135deg, rgba(0, 112, 243,0.1) 0%, rgba(0, 112, 243,0.02) 100%)',
+                borderColor: 'rgba(0, 112, 243,0.3)',
               }}
             >
-              <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#1A1A1A]">
+              <span className="absolute -top-2 right-4 rounded-full bg-gold-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
                 Recommended
               </span>
 
@@ -589,7 +589,7 @@ export default function HowWeWorkPageClient() {
                     background: colors.cardBg,
                     borderColor:
                       openFaq === index
-                        ? 'rgba(180,83,9,0.3)'
+                        ? 'rgba(0, 112, 243,0.3)'
                         : colors.cardBorder,
                   }}
                 >

@@ -30,7 +30,7 @@ const Services = () => {
   return (
     <section 
       className="py-20 md:py-24"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
@@ -65,7 +65,7 @@ const Services = () => {
               <span 
                 className="absolute right-4 bottom-4 text-[80px] md:text-[100px] font-black pointer-events-none select-none leading-none transition-all duration-500 group-hover:scale-105"
                 style={{ 
-                  color: 'rgba(255, 198, 76, 0.25)',
+                  color: 'rgba(0, 112, 243, 0.25)',
                   textShadow: 'none',
                   zIndex: 0,
                 }}

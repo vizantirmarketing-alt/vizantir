@@ -21,13 +21,13 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
 
   const colors = useMemo(
     () => ({
-      bg: '#FAFAFA',
+      bg: '#FAF9F5',
       text: '#1A1A1A',
       textMuted: '#6B6B6B',
       accent: 'var(--gold-primary)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
-      divider: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+      divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
     }),
     []
   )
@@ -52,7 +52,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
-            background: 'radial-gradient(ellipse at top right, rgba(255,198,76,0.18), transparent 55%)',
+            background: 'radial-gradient(ellipse at top right, rgba(0, 112, 243,0.18), transparent 55%)',
           }}
         />
         <div className="relative z-10 mx-auto max-w-4xl">
@@ -457,8 +457,8 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             transition={{ duration: 0.5 }}
             className="rounded-2xl p-8 md:p-12"
             style={{
-              background: 'rgba(255,198,76,0.15)',
-              border: '1px solid rgba(255,198,76,0.3)',
+              background: 'rgba(0, 112, 243,0.15)',
+              border: '1px solid rgba(0, 112, 243,0.3)',
             }}
           >
             <h2 className="mb-4 text-2xl font-bold md:text-3xl" style={{ color: colors.text }}>
@@ -471,7 +471,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
               size="lg"
               asChild
               className="text-base font-semibold transition-all duration-300 hover:scale-105"
-              style={{ background: 'var(--gold-primary)', color: '#1A1A1A', borderRadius: '8px' }}
+              style={{ background: 'var(--gold-primary)', color: '#FFFFFF', borderRadius: '8px' }}
             >
               <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4">
                 Book a strategy call

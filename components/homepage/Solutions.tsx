@@ -93,7 +93,7 @@ const Solutions = () => {
   return (
     <section
       className="py-20 md:py-24 transition-colors duration-500 overflow-hidden"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         
@@ -108,7 +108,7 @@ const Solutions = () => {
           {features.map((feature, index) => {
             const badgeColors = ['var(--gold-primary)', '#3B82F6', '#C084FC', '#00D9FF']
             const badgeColor = badgeColors[index]
-            const rgb = index === 0 ? '255, 198, 76' : 
+            const rgb = index === 0 ? '0, 112, 243' : 
                        index === 1 ? '59, 130, 246' :
                        index === 2 ? '192, 132, 252' : '0, 217, 255'
             
@@ -264,7 +264,7 @@ const Solutions = () => {
             className="text-base px-10 py-7 font-semibold border-0 transition-transform hover:scale-105"
             style={{
               background: 'var(--gold-primary)',
-              color: '#1A1A1A',
+              color: '#FFFFFF',
               borderRadius: '12px',
             }}
           >

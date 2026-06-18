@@ -12,7 +12,7 @@ export default function AboutSection({ section }: AboutSectionProps) {
     textMuted: '#6B7280',
     accentSolid: 'var(--gold-primary)',
     cardBorder: 'rgba(0,0,0,0.08)',
-    budgetAsideBg: 'rgba(180,83,9,0.06)',
+    budgetAsideBg: 'rgba(0, 112, 243,0.06)',
   }
 
   if (section.id === 'whatWeBuildOn') {

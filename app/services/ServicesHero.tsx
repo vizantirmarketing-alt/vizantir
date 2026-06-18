@@ -22,10 +22,10 @@ export default function ServicesHero() {
   // Theme colors - matching Vizantir standards
   // Always start with dark mode to match server-side rendering
   const colors = {
-    bg: '#FAFAFA',
+    bg: '#FAF9F5',
     line: 'rgba(0,0,0,0.06)',
-    accentLine: 'rgba(180,83,9,0.2)',
-    accentLineBright: 'rgba(180,83,9,0.35)',
+    accentLine: 'rgba(0, 112, 243,0.2)',
+    accentLineBright: 'rgba(0, 112, 243,0.35)',
     text: '#1A1A1A',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',

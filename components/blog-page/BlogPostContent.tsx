@@ -37,7 +37,7 @@ interface BlogPostContentProps {
 
 export default function BlogPostContent({ post }: BlogPostContentProps) {
   const colors = {
-    bg: '#FAFAFA',
+    bg: '#FAF9F5',
     text: '#1A1A1A',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',
@@ -72,7 +72,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               <span
                 className="inline-block text-xs tracking-[0.25em] uppercase font-medium px-3 py-1 rounded-full transition-colors duration-500"
                 style={{
-                  background: 'rgba(180,83,9,0.1)',
+                  background: 'rgba(0, 112, 243,0.1)',
                   color: colors.accent,
                 }}
               >
@@ -139,7 +139,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
       <div
         className="w-full h-px"
         style={{
-          background: 'linear-gradient(90deg, transparent, rgba(180,83,9,0.3), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
         }}
       />
 

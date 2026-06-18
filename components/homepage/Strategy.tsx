@@ -51,8 +51,8 @@ const Strategy = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const primaryColor = "255, 198, 76";
-      const secondaryColor = "255, 184, 77";
+      const primaryColor = "0, 112, 243";
+      const secondaryColor = "0, 112, 243";
 
       particles.forEach((p, i) => {
         p.x += p.vx;
@@ -104,8 +104,8 @@ const Strategy = () => {
     const centerY = height / 2;
     const radius = Math.min(width, height) / 2 - 10;
 
-    const primaryColor = "255, 198, 76";
-    const secondaryColor = "255, 184, 77";
+    const primaryColor = "0, 112, 243";
+    const secondaryColor = "0, 112, 243";
     const accentColor = 'var(--gold-primary)';
 
     const dataPoints = [
@@ -227,7 +227,7 @@ const Strategy = () => {
     <section
       className="relative min-h-screen flex items-center overflow-hidden py-20 md:py-24"
       style={{
-        background: "radial-gradient(ellipse at 70% 50%, #FFF9E6 0%, #FAFAFA 60%)",
+        background: "radial-gradient(ellipse at 70% 50%, #FFF9E6 0%, #FAF9F5 60%)",
       }}
     >
       <canvas
@@ -294,9 +294,9 @@ const Strategy = () => {
                 className="text-base px-8 py-6 font-semibold border-0 transition-all duration-300 hover:scale-105 group"
                 style={{
                   background: 'var(--gold-primary)',
-                  color: "#1A1A1A",
+                  color: "#FFFFFF",
                   borderRadius: "12px",
-                  boxShadow: "0 8px 30px rgba(255, 198, 76, 0.4)",
+                  boxShadow: "0 8px 30px rgba(0, 112, 243, 0.4)",
                 }}
               >
                 <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'strategy')}>
@@ -321,7 +321,7 @@ const Strategy = () => {
               style={{
                 width: "240px",
                 height: "240px",
-                background: "radial-gradient(circle, rgba(255, 198, 76, 0.3) 0%, transparent 70%)",
+                background: "radial-gradient(circle, rgba(0, 112, 243, 0.3) 0%, transparent 70%)",
                 animation: "pulseGlow 3s ease-in-out infinite",
               }}
             />
@@ -334,7 +334,7 @@ const Strategy = () => {
                 style={{
                   width: `${300 + ring * 50}px`,
                   height: `${300 + ring * 50}px`,
-                  border: `1px solid rgba(255, 198, 76, 0.5)`,
+                  border: `1px solid rgba(0, 112, 243, 0.5)`,
                   animation: `pulseOut 3s ease-out infinite ${ring * 0.7}s`,
                 }}
               />
@@ -347,7 +347,7 @@ const Strategy = () => {
               height={250}
               className="relative z-10 rounded-full w-[200px] h-[200px] md:w-[300px] md:h-[300px]"
               style={{
-                boxShadow: "0 0 60px rgba(255, 198, 76, 0.5), 0 0 120px rgba(255, 184, 77, 0.3)",
+                boxShadow: "0 0 60px rgba(0, 112, 243, 0.5), 0 0 120px rgba(0, 112, 243, 0.3)",
               }}
             />
           </motion.div>

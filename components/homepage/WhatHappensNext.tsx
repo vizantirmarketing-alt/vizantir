@@ -48,7 +48,7 @@ const WhatHappensNext = () => {
   return (
     <section 
       className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         {/* Header */}
@@ -92,7 +92,7 @@ const WhatHappensNext = () => {
               <div 
                 className="text-6xl md:text-7xl font-black mb-4 leading-none"
                 style={{ 
-                  color: 'rgba(255, 198, 76, 0.2)',
+                  color: 'rgba(0, 112, 243, 0.2)',
                 }}
               >
                 {step.number}
@@ -125,7 +125,7 @@ const WhatHappensNext = () => {
           <Button
             size="lg"
             asChild
-            className="mb-4 rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+            className="mb-4 rounded-xl px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
             style={{
               background: 'var(--gold-gradient)',
               boxShadow: 'var(--gold-shadow)',

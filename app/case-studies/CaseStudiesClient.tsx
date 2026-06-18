@@ -27,7 +27,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
 
   const colors = useMemo(
     () => ({
-      bg: '#FAFAFA',
+      bg: '#FAF9F5',
       text: '#1A1A1A',
       textMuted: '#6B6B6B',
       accent: 'var(--gold-primary)',
@@ -247,7 +247,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             <Link
               href="/contact"
               onClick={() => trackCTAClick('start_your_project', 'case_studies')}
-              className="group inline-flex items-center gap-2 rounded-xl bg-gold-primary px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-105"
+              className="group inline-flex items-center gap-2 rounded-xl bg-gold-primary px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-105"
               style={{
                 boxShadow: 'var(--gold-shadow)',
               }}

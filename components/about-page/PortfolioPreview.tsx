@@ -47,7 +47,7 @@ const PortfolioPreview = () => {
     <section
       ref={sectionRef}
       className="py-24 md:py-32 transition-colors duration-500"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
@@ -145,7 +145,7 @@ const PortfolioPreview = () => {
             
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-gold-primary text-[#1A1A1A]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 group bg-gold-primary text-white"
               style={{
                 boxShadow: 'var(--gold-shadow)',
               }}

@@ -55,13 +55,13 @@ const AIIntegration = () => {
       ref={sectionRef}
       className="py-20 md:py-24 transition-colors duration-500 relative overflow-hidden"
       style={{
-        background: '#FAFAFA',
+        background: '#FAF9F5',
       }}
     >
       <div 
         className="absolute inset-0 opacity-30"
         style={{
-          background: `radial-gradient(ellipse at center, rgba(255, 198, 76, 0.15) 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse at center, rgba(0, 112, 243, 0.15) 0%, transparent 70%)`,
         }}
       />
 
@@ -106,7 +106,7 @@ const AIIntegration = () => {
               className="px-8 py-6 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105"
               style={{
                 background: 'var(--gold-primary)',
-                color: '#1A1A1A',
+                color: '#FFFFFF',
                 borderRadius: '12px',
                 boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)',
               }}
@@ -123,7 +123,7 @@ const AIIntegration = () => {
             <div
               className="rounded-2xl p-6 border shadow-2xl"
               style={{
-                background: '#FAFAFA',
+                background: '#FAF9F5',
                 borderColor: 'rgba(0, 0, 0, 0.1)',
               }}
             >
@@ -152,7 +152,7 @@ const AIIntegration = () => {
                     className="px-4 py-3 rounded-2xl rounded-tr-sm max-w-[80%] transition-all duration-500"
                     style={{
                       background: 'var(--gold-primary)',
-                      color: '#000000',
+                      color: '#FFFFFF',
                     }}
                   >
                     <p className="text-sm font-medium">{demoMessages[currentMessage].question}</p>

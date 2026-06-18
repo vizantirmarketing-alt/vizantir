@@ -14,7 +14,7 @@ const TorusPlaceholder = () => (
   <div 
     className="w-full h-full flex items-center justify-center"
     style={{
-      background: 'radial-gradient(circle, rgba(255, 198, 76, 0.15) 0%, transparent 70%)'
+      background: 'radial-gradient(circle, rgba(0, 112, 243, 0.15) 0%, transparent 70%)'
     }}
   />
 );
@@ -50,18 +50,18 @@ const Hero = () => {
   }, []);
 
   const heroGlowBackground = isBelowLg
-    ? 'radial-gradient(ellipse 120% 70% at 50% 45%, rgba(255, 198, 76, 0.1) 0%, rgba(180, 83, 9, 0.05) 35%, transparent 70%)'
+    ? 'radial-gradient(ellipse 120% 70% at 50% 45%, rgba(0, 112, 243, 0.1) 0%, rgba(0, 112, 243, 0.05) 35%, transparent 70%)'
     : `
-              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(255, 198, 76, 0.1) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
-              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 198, 76, 0.08) 0%, transparent 40%)
+              radial-gradient(ellipse 80% 80% at 25% 50%, rgba(0, 112, 243, 0.1) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 60% at 10% 65%, rgba(0, 112, 243, 0.06) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 50% at 20% 30%, rgba(0, 112, 243, 0.08) 0%, transparent 40%)
             `;
 
   return (
     <section
       className="hero-section relative min-h-screen short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
       style={{ 
-        background: '#FAFAFA',
+        background: '#FAF9F5',
       }}
     >
       {/* Background gradient - purple/amber glow on LEFT side */}
@@ -88,9 +88,9 @@ const Hero = () => {
           </linearGradient>
           <linearGradient id="lineGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-            <stop offset="30%" stopColor="rgba(255,198,76,0.3)" />
-            <stop offset="50%" stopColor="rgba(180,83,9,0.2)" />
-            <stop offset="70%" stopColor="rgba(255,198,76,0.16)" />
+            <stop offset="30%" stopColor="rgba(0, 112, 243,0.3)" />
+            <stop offset="50%" stopColor="rgba(0, 112, 243,0.2)" />
+            <stop offset="70%" stopColor="rgba(0, 112, 243,0.16)" />
             <stop offset="100%" stopColor="rgba(255,255,255,0)" />
           </linearGradient>
         </defs>
@@ -241,7 +241,7 @@ const Hero = () => {
           <Button
             size="lg"
             asChild
-            className="rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+            className="rounded-xl px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
             style={{
               background: 'var(--gold-gradient)',
               boxShadow: 'var(--gold-shadow)',

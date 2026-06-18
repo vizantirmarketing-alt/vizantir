@@ -34,7 +34,7 @@ const ResultsThatSpeak = () => {
   return (
     <section 
       className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: '#FAFAFA' }}
+      style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
         <motion.div
@@ -122,7 +122,7 @@ const ResultsThatSpeak = () => {
           <div className="text-center mt-10 md:mt-12">
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-[#1A1A1A] transition-all duration-300 hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
               style={{
                 background: 'var(--gold-gradient)',
                 boxShadow: 'var(--gold-shadow)',

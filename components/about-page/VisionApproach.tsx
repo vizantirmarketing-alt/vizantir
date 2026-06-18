@@ -57,7 +57,7 @@ const VisionApproach = () => {
       ref={sectionRef}
       className="py-20 md:py-24 px-4 transition-colors duration-500 relative overflow-hidden"
       style={{
-        background: '#FAFAFA',
+        background: '#FAF9F5',
       }}
     >
       {/* Pulsing background shape - centered vertically */}
