@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.2.9",
+    "@portabletext/types": "^4.0.2",
     "@sanity/block-tools": "^3.70.0",
     "@sanity/client": "^7.21.0",
     "@sanity/schema": "^5.21.0",
