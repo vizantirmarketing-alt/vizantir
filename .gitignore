@@ -50,3 +50,4 @@ next-env.d.ts
 .cursorrules
 .cursor-*
 .env*.local
+.pnpm-store/
