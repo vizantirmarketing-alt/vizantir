@@ -14,6 +14,15 @@ export default function LiquidMetalTorus() {
     if (!containerRef.current) return
 
     const container = containerRef.current
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const getPixelRatio = () => {
+      const isMobile = container.clientWidth < 640
+      return isMobile ? 1 : Math.min(window.devicePixelRatio, 2)
+    }
+
+    const isVisibleRef = { current: false }
+    let isAnimating = false
 
     // Scene
     const scene = new THREE.Scene()
@@ -38,14 +47,14 @@ export default function LiquidMetalTorus() {
       powerPreference: 'high-performance'
     })
     renderer.setSize(container.clientWidth, container.clientHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(getPixelRatio())
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.5
     container.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
     // Torus Knot geometry - more interesting twisted shape
-    const geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 256, 64, 2, 3)
+    const geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 128, 32, 2, 3)
 
     // Glossy iridescent chrome shader
     const material = new THREE.ShaderMaterial({
@@ -256,16 +265,49 @@ export default function LiquidMetalTorus() {
     torus.rotation.y = Math.PI * 0.1
     scene.add(torus)
 
-    // Mouse tracking with smoothing
+    // Mouse tracking with smoothing (throttled to once per frame)
+    const latestMouseRef = { clientX: 0, clientY: 0 }
+    let pendingMouseRaf = 0
+
+    const applyMouseTargets = () => {
+      mouseRef.current.targetX = (latestMouseRef.clientX / window.innerWidth) * 2 - 1
+      mouseRef.current.targetY = -(latestMouseRef.clientY / window.innerHeight) * 2 + 1
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.targetX = (e.clientX / window.innerWidth) * 2 - 1
-      mouseRef.current.targetY = -(e.clientY / window.innerHeight) * 2 + 1
+      latestMouseRef.clientX = e.clientX
+      latestMouseRef.clientY = e.clientY
+
+      if (pendingMouseRaf) return
+
+      pendingMouseRaf = requestAnimationFrame(() => {
+        pendingMouseRaf = 0
+        applyMouseTargets()
+      })
     }
     window.addEventListener('mousemove', handleMouseMove)
+
+    const stopAnimation = () => {
+      isAnimating = false
+      cancelAnimationFrame(frameRef.current)
+      frameRef.current = 0
+    }
+
+    const startAnimation = () => {
+      if (prefersReducedMotion || isAnimating) return
+      if (!isVisibleRef.current || document.visibilityState === 'hidden') return
+      isAnimating = true
+      animate()
+    }
 
     // Animation
     let time = 0
     const animate = () => {
+      if (!isVisibleRef.current || document.visibilityState === 'hidden') {
+        isAnimating = false
+        return
+      }
+
       frameRef.current = requestAnimationFrame(animate)
       time += 0.016
 
@@ -283,7 +325,32 @@ export default function LiquidMetalTorus() {
 
       renderer.render(scene, cameraRef.current || camera)
     }
-    animate()
+
+    if (prefersReducedMotion) {
+      renderer.render(scene, cameraRef.current || camera)
+    }
+
+    let intersectionObserver: IntersectionObserver | null = null
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        stopAnimation()
+      } else if (isVisibleRef.current) {
+        startAnimation()
+      }
+    }
+
+    if (!prefersReducedMotion) {
+      intersectionObserver = new IntersectionObserver((entries) => {
+        isVisibleRef.current = entries[0].isIntersecting
+        if (isVisibleRef.current && document.visibilityState === 'visible') {
+          startAnimation()
+        } else {
+          stopAnimation()
+        }
+      })
+      intersectionObserver.observe(container)
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+    }
 
     // Sync canvas + camera when the container laid-out size changes (preferred:
     // fires after orientation / layout settles; window resize alone can race on iOS Safari).
@@ -307,7 +374,7 @@ export default function LiquidMetalTorus() {
       cam.position.z = isMobileNow ? 7 : 6.5
 
       rendererRef.current.setSize(width, height)
-      rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      rendererRef.current.setPixelRatio(getPixelRatio())
       if (material.uniforms?.uResolution) {
         material.uniforms.uResolution.value.set(width, height)
       }
@@ -330,6 +397,11 @@ export default function LiquidMetalTorus() {
 
     // Cleanup
     return () => {
+      intersectionObserver?.disconnect()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      if (pendingMouseRaf) {
+        cancelAnimationFrame(pendingMouseRaf)
+      }
       resizeObserver.disconnect()
       window.removeEventListener('resize', handleWindowResize)
       window.removeEventListener('orientationchange', handleOrientationChange)
