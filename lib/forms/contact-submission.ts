@@ -28,7 +28,7 @@ function contactNotificationHtml(row: ContactSubmissionRow, submittedAtIso: stri
   const budget = row.budget?.trim() ? escapeHtml(row.budget) : dash;
 
   return `
-    <div style="font-family: 'Satoshi', system-ui, -apple-system, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
+    <div style="font-family: 'Satoshi', system-ui, -apple-system, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 24px; color: #1F1E1B;">
       <h1 style="font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin: 0 0 28px;">
         New contact submission
       </h1>
@@ -44,7 +44,7 @@ function contactNotificationHtml(row: ContactSubmissionRow, submittedAtIso: stri
           ${rowLine('Submitted at', escapeHtml(submittedAtIso))}
         </tbody>
       </table>
-      <p style="font-size: 13px; color: #666; line-height: 1.6; margin: 28px 0 0;">
+      <p style="font-size: 13px; color: #6F6D66; line-height: 1.6; margin: 28px 0 0;">
         Reply to this email to respond directly to the submitter.
       </p>
     </div>
@@ -54,8 +54,8 @@ function contactNotificationHtml(row: ContactSubmissionRow, submittedAtIso: stri
 function rowLine(label: string, value: string): string {
   return `
     <tr>
-      <td style="vertical-align: top; padding: 10px 16px 10px 0; color: #666; width: 140px; font-weight: 500;">${escapeHtml(label)}</td>
-      <td style="vertical-align: top; padding: 10px 0; color: #1a1a1a;">${value}</td>
+      <td style="vertical-align: top; padding: 10px 16px 10px 0; color: #6F6D66; width: 140px; font-weight: 500;">${escapeHtml(label)}</td>
+      <td style="vertical-align: top; padding: 10px 0; color: #1F1E1B;">${value}</td>
     </tr>
   `;
 }
@@ -63,10 +63,10 @@ function rowLine(label: string, value: string): string {
 function rowLineBlock(label: string, value: string): string {
   return `
     <tr>
-      <td colspan="2" style="padding: 16px 0 8px; color: #666; font-weight: 500;">${escapeHtml(label)}</td>
+      <td colspan="2" style="padding: 16px 0 8px; color: #6F6D66; font-weight: 500;">${escapeHtml(label)}</td>
     </tr>
     <tr>
-      <td colspan="2" style="padding: 0 0 16px; color: #1a1a1a; white-space: pre-wrap;">${value}</td>
+      <td colspan="2" style="padding: 0 0 16px; color: #1F1E1B; white-space: pre-wrap;">${value}</td>
     </tr>
   `;
 }
