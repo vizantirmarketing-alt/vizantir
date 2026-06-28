@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "analyze": "ANALYZE=true next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "update:posts": "tsx scripts/update-blog-posts.ts",
@@ -44,6 +45,7 @@
     "zod": "^4.4.1"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.9",
     "@sanity/block-tools": "^3.70.0",
     "@sanity/client": "^7.21.0",
     "@sanity/schema": "^5.21.0",
