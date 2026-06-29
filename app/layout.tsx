@@ -21,89 +21,6 @@ import { Analytics } from '@vercel/analytics/next'
 
 import './globals.css'
 
-const organizationLocalBusinessJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': ['Organization', 'LocalBusiness'],
-  name: 'Vizantir',
-  url: 'https://www.vizantir.com',
-  logo: 'https://www.vizantir.com/logo/logo-light.svg',
-  image: 'https://www.vizantir.com/assets/aboutstory.jpeg',
-  description:
-    'Premium website design studio based in Las Vegas building custom websites for hospitality groups, law firms, commercial real estate firms, and established businesses nationwide.',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Las Vegas',
-    addressRegion: 'NV',
-    postalCode: '89139',
-    addressCountry: 'US',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 36.1699,
-    longitude: -115.1398,
-  },
-  telephone: '+17022890758',
-  email: 'info@vizantir.com',
-  priceRange: '$$$',
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '5.0',
-    reviewCount: '2',
-    bestRating: '5',
-    worstRating: '1',
-  },
-  review: [
-    {
-      '@type': 'Review',
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: '5',
-        bestRating: '5',
-      },
-      author: {
-        '@type': 'Person',
-        name: 'Eloraé Nails',
-      },
-      reviewBody: 'Highly recommend if you want a stress free, high quality website.',
-    },
-    {
-      '@type': 'Review',
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: '5',
-        bestRating: '5',
-      },
-      author: {
-        '@type': 'Person',
-        name: 'Elorae',
-      },
-      reviewBody:
-        'I previously had a WordPress website and was constantly dealing with malware issues, slow performance, and maintenance headaches. Working with Vizantir completely changed that. They rebuilt my site and now it\'s clean, fast, secure, and actually reflects my brand. The process was easy and professional from start to finish. Highly recommend if you want a stress free, high quality website.',
-    },
-  ],
-  serviceArea: {
-    '@type': 'Country',
-    name: 'United States',
-  },
-  sameAs: [
-    'https://www.linkedin.com/company/vizantir/',
-    'https://www.instagram.com/vizantirdesignstudio',
-    'https://maps.google.com/?cid=7927126809305841776',
-  ],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Website Design Services',
-    itemListElement: [
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Strategy' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Design' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Development' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Refreshes' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'CMS Integrations' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Care' } },
-    ],
-  },
-}
-
 // Load Satoshi font family
 const satoshi = localFont({
   src: [
@@ -136,13 +53,15 @@ const satoshi = localFont({
 function BusinessJsonLd() {
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
+    '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
     '@id': 'https://www.vizantir.com/#business',
     name: 'Vizantir Design Studio',
     alternateName: 'Vizantir',
     url: 'https://www.vizantir.com',
+    logo: 'https://www.vizantir.com/logo/logo-light.svg',
     image: 'https://www.vizantir.com/og-image.png',
     telephone: '+17022890758',
+    email: 'info@vizantir.com',
     priceRange: '$$$',
     description:
       'Custom Next.js web design studio based in Las Vegas, Nevada. Fixed-scope website projects for established businesses in Southern Nevada and nationwide.',
@@ -166,9 +85,14 @@ function BusinessJsonLd() {
       { '@type': 'State', name: 'Nevada' },
       { '@type': 'Country', name: 'United States' },
     ],
+    serviceArea: {
+      '@type': 'Country',
+      name: 'United States',
+    },
     sameAs: [
       'https://www.linkedin.com/company/vizantir/',
       'https://www.instagram.com/vizantirdesignstudio',
+      'https://maps.google.com/?cid=7927126809305841776',
     ],
     founder: {
       '@type': 'Person',
@@ -177,6 +101,18 @@ function BusinessJsonLd() {
     parentOrganization: {
       '@type': 'Organization',
       name: 'JT Holdings Corp',
+    },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Website Design Services',
+      itemListElement: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Strategy' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Design' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Development' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Refreshes' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'CMS Integrations' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Care' } },
+      ],
     },
   }
 
@@ -285,12 +221,6 @@ export default async function RootLayout({
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:image" content="https://www.vizantir.com/og-image.png" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationLocalBusinessJsonLd),
-          }}
-        />
         <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
       </head>
