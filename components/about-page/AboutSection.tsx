@@ -17,7 +17,7 @@ export default function AboutSection({ section }: AboutSectionProps) {
 
   if (section.id === 'whatWeBuildOn') {
     return (
-      <section className="px-6 py-10 md:px-12 md:py-14 lg:px-20">
+      <section className="px-6 py-10 md:px-12 md:py-14 lg:px-20" style={{ background: '#FAF9F5' }}>
         <div className="mx-auto max-w-4xl">
           <div
             className="rounded-2xl border-l-4 py-6 pl-10 pr-5 md:pl-12 md:pr-9"
