@@ -133,6 +133,62 @@ const satoshi = localFont({
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
 })
 
+function BusinessJsonLd() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': 'https://www.vizantir.com/#business',
+    name: 'Vizantir Design Studio',
+    alternateName: 'Vizantir',
+    url: 'https://www.vizantir.com',
+    telephone: '+17022890758',
+    priceRange: '$$$',
+    description:
+      'Custom Next.js web design studio based in Las Vegas, Nevada. Fixed-scope website projects for established businesses in Southern Nevada and nationwide.',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Las Vegas',
+      addressRegion: 'NV',
+      postalCode: '89139',
+      addressCountry: 'US',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 36.0395,
+      longitude: -115.2511,
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Las Vegas' },
+      { '@type': 'City', name: 'Henderson' },
+      { '@type': 'City', name: 'Summerlin' },
+      { '@type': 'City', name: 'Paradise' },
+      { '@type': 'State', name: 'Nevada' },
+      { '@type': 'Country', name: 'United States' },
+    ],
+    sameAs: [
+      'https://www.linkedin.com/company/vizantir/',
+      'https://www.instagram.com/vizantirdesignstudio',
+      '[PASTE_GOOGLE_BUSINESS_PROFILE_URL_HERE]',
+      '[PASTE_CLUTCH_PROFILE_URL_HERE]',
+    ],
+    founder: {
+      '@type': 'Person',
+      name: 'James Tram',
+    },
+    parentOrganization: {
+      '@type': 'Organization',
+      name: 'JT Holdings Corp',
+    },
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
 async function getSettings(): Promise<SiteSettings | null> {
   return sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
 }
@@ -240,6 +296,7 @@ export default async function RootLayout({
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
       </head>
       <body className={satoshi.variable}>
+        <BusinessJsonLd />
         <SmoothScroll>
           <ScrollToTop />
           <ScrollProgress />

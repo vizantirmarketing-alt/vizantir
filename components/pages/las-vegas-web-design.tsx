@@ -8,6 +8,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { lasVegasPageData } from '@/data/las-vegas-web-design'
 import { trackPhoneClick } from '@/lib/analytics'
+import type { FaqItem } from '@/app/las-vegas-web-design/_schema'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -26,7 +27,11 @@ const itemVariants = {
   },
 }
 
-export default function LasVegasWebDesignPage() {
+interface LasVegasWebDesignPageProps {
+  faqItems: readonly FaqItem[]
+}
+
+export default function LasVegasWebDesignPage({ faqItems }: LasVegasWebDesignPageProps) {
   const { hero, intro, whatYouGet, process, pricing, industries, faqs, closingCta } =
     lasVegasPageData
 
@@ -318,7 +323,7 @@ export default function LasVegasWebDesignPage() {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            {faqs.items.map((faq, index) => (
+            {faqItems.map((faq, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
@@ -343,6 +348,15 @@ export default function LasVegasWebDesignPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
+            <address className="not-italic text-sm text-muted-foreground mb-10 space-y-1">
+              <p className="font-medium text-foreground">Vizantir Design Studio</p>
+              <p>Las Vegas, Nevada 89139</p>
+              <p>
+                <a href="tel:+17022890758" className="link-cobalt text-cobalt-accent">
+                  (702) 289-0758
+                </a>
+              </p>
+            </address>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">{closingCta.heading}</h2>
             <p className="text-lg mb-10 max-w-2xl mx-auto text-muted-foreground">{closingCta.body}</p>
             <Button

@@ -1,72 +1,54 @@
 import { Metadata } from 'next'
-import { JsonLd } from '@/components/seo/JsonLd'
 import LasVegasWebDesignPage from '@/components/pages/las-vegas-web-design'
-import { lasVegasPageData } from '@/data/las-vegas-web-design'
-
-const canonicalUrl = 'https://www.vizantir.com/las-vegas-web-design'
+import { FAQ_ITEMS, LasVegasPageSchema } from './_schema'
 
 export const metadata: Metadata = {
-  title: 'Las Vegas Web Design Studio | Vizantir Design Studio',
+  title: {
+    absolute: 'Las Vegas Web Design Studio — Custom Next.js Websites | Vizantir',
+  },
   description:
-    'Custom web design and Next.js development for Las Vegas businesses. Fixed-scope projects from a local studio serving Henderson, Summerlin, Paradise, and clients nationwide.',
+    'Custom Next.js web design for Las Vegas, Henderson, Summerlin, and Paradise businesses. Fixed-scope projects from $15,000. Built by a local studio, no templates.',
   alternates: {
-    canonical: canonicalUrl,
+    canonical: 'https://www.vizantir.com/las-vegas-web-design',
   },
   openGraph: {
-    title: 'Las Vegas Web Design Studio | Vizantir Design Studio',
-    description:
-      'Custom web design and Next.js development for Las Vegas businesses. Fixed-scope projects from a local studio serving Henderson, Summerlin, Paradise, and clients nationwide.',
-    url: canonicalUrl,
+    type: 'website',
+    url: 'https://www.vizantir.com/las-vegas-web-design',
     siteName: 'Vizantir',
+    locale: 'en_US',
+    title: 'Las Vegas Web Design Studio — Custom Next.js Websites',
+    description:
+      'Custom Next.js web design for Las Vegas businesses. Fixed-scope builds from a local studio serving Henderson, Summerlin, and Paradise.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Vizantir - Las Vegas Web Design Studio',
+        alt: 'Vizantir — Las Vegas Web Design Studio',
       },
     ],
-    locale: 'en_US',
-    type: 'website',
   },
-}
-
-const professionalServiceSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'ProfessionalService',
-  name: 'Las Vegas Web Design',
-  description:
-    'Custom web design and Next.js development for established businesses in Las Vegas and Southern Nevada.',
-  url: canonicalUrl,
-  areaServed: [
-    { '@type': 'City', name: 'Las Vegas' },
-    { '@type': 'City', name: 'Henderson' },
-    { '@type': 'City', name: 'Summerlin' },
-    { '@type': 'City', name: 'Paradise' },
-    { '@type': 'State', name: 'Nevada' },
-  ],
-  serviceType: 'Web design and development',
-}
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: lasVegasPageData.faqs.items.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
+  other: {
+    'og:locality': 'Las Vegas',
+    'og:region': 'Nevada',
+    'og:postal_code': '89139',
+    'og:street_address': 'Las Vegas, NV',
+    'og:country_name': 'United States',
+    'og:phone_number': '+17022890758',
+    'place:location:latitude': '36.0395',
+    'place:location:longitude': '-115.2511',
+    'geo.region': 'US-NV',
+    'geo.placename': 'Las Vegas',
+    'geo.position': '36.0395;-115.2511',
+    ICBM: '36.0395, -115.2511',
+  },
 }
 
 export default function Page() {
   return (
     <>
-      <JsonLd id="ld-professional-service" data={professionalServiceSchema} />
-      <JsonLd id="ld-faq" data={faqSchema} />
-      <LasVegasWebDesignPage />
+      <LasVegasPageSchema />
+      <LasVegasWebDesignPage faqItems={FAQ_ITEMS} />
     </>
   )
 }
