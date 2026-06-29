@@ -91,9 +91,9 @@ const AboutStory = () => {
                 alt="Vizantir team collaboration"
                 width={800}
                 height={600}
-                sizes="(max-width: 768px) 380px, (max-width: 1200px) 50vw, 600px"
+                sizes="(max-width: 640px) 320px, (max-width: 1024px) 50vw, 600px"
                 className="w-full h-auto object-cover"
-                quality={80}
+                quality={75}
               />
             </div>
             
