@@ -22,7 +22,7 @@ const Marquee = () => {
             suppressHydrationWarning
             className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight whitespace-nowrap"
             style={{ 
-              color: 'rgba(0,0,0,0.1)',
+              color: 'rgba(0,0,0,0.35)',
             }}
           >
             {item}
@@ -31,7 +31,7 @@ const Marquee = () => {
           <span 
             className="text-2xl md:text-3xl mx-6 flex-shrink-0"
             style={{ 
-              color: 'rgba(0,0,0,0.1)'
+              color: 'rgba(0,0,0,0.35)'
             }}
           >
             ❖
