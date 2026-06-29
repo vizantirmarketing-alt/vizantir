@@ -141,6 +141,7 @@ function BusinessJsonLd() {
     name: 'Vizantir Design Studio',
     alternateName: 'Vizantir',
     url: 'https://www.vizantir.com',
+    image: 'https://www.vizantir.com/og-image.png',
     telephone: '+17022890758',
     priceRange: '$$$',
     description:
@@ -168,8 +169,6 @@ function BusinessJsonLd() {
     sameAs: [
       'https://www.linkedin.com/company/vizantir/',
       'https://www.instagram.com/vizantirdesignstudio',
-      '[PASTE_GOOGLE_BUSINESS_PROFILE_URL_HERE]',
-      '[PASTE_CLUTCH_PROFILE_URL_HERE]',
     ],
     founder: {
       '@type': 'Person',

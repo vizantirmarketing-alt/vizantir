@@ -73,8 +73,6 @@ const PAGE_URL = 'https://www.vizantir.com/las-vegas-web-design'
 const SAME_AS = [
   'https://www.linkedin.com/company/vizantir/',
   'https://www.instagram.com/vizantirdesignstudio',
-  '[PASTE_GOOGLE_BUSINESS_PROFILE_URL_HERE]',
-  '[PASTE_CLUTCH_PROFILE_URL_HERE]',
 ] as const
 
 function buildBusinessEntity() {
@@ -84,6 +82,7 @@ function buildBusinessEntity() {
     name: 'Vizantir Design Studio',
     alternateName: 'Vizantir',
     url: SITE_URL,
+    image: 'https://www.vizantir.com/og-image.png',
     telephone: '+17022890758',
     priceRange: '$$$',
     description:
