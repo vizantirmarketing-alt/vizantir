@@ -223,6 +223,12 @@ export default async function RootLayout({
         <meta name="twitter:image" content="https://www.vizantir.com/og-image.png" />
         <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
+        <meta name="dcterms.creator" content="Vizantir Design Studio" />
+        <meta name="dcterms.publisher" content="JT Holdings Corp" />
+        <meta name="dcterms.title" content="Vizantir" />
+        <meta name="dcterms.rights" content="Copyright © Vizantir Design Studio" />
+        <meta name="dcterms.type" content="Service" />
+        <meta name="dcterms.language" content="en-US" />
       </head>
       <body className={satoshi.variable}>
         <BusinessJsonLd />
