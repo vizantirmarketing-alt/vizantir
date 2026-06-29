@@ -17,6 +17,8 @@ import { ScrollToTop } from '@/components/ScrollToTop'
 
 import { VizantirChat } from '@/components/chat/VizantirChat'
 
+import { MotionProvider } from '@/components/providers/MotionProvider'
+
 import { Analytics } from '@vercel/analytics/next'
 
 import './globals.css'
@@ -240,15 +242,17 @@ export default async function RootLayout({
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
       </head>
       <body className={satoshi.variable}>
-        <SmoothScroll>
-          <ScrollToTop />
-          <ScrollProgress />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </SmoothScroll>
-        <VizantirChat />
-        <Analytics />
+        <MotionProvider>
+          <SmoothScroll>
+            <ScrollToTop />
+            <ScrollProgress />
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
+          <VizantirChat />
+          <Analytics />
+        </MotionProvider>
       </body>
     </html>
   )

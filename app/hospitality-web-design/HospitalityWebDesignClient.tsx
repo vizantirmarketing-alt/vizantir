@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -114,7 +114,7 @@ export default function HospitalityWebDesignClient() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]" />
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -124,9 +124,9 @@ export default function HospitalityWebDesignClient() {
             <span className="text-sm text-muted-foreground">
               Restaurants · Hotels · Lounges
             </span>
-          </motion.div>
+          </m.div>
 
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -135,9 +135,9 @@ export default function HospitalityWebDesignClient() {
             Hospitality Web Design
             <br />
             <span className="text-cobalt-accent">That Fills Tables</span>
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -145,9 +145,9 @@ export default function HospitalityWebDesignClient() {
           >
             We build custom websites for restaurants, hotels, and hospitality groups — designed to
             drive reservations, build brand presence, and convert visitors into guests.
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -170,9 +170,9 @@ export default function HospitalityWebDesignClient() {
               View Our Work
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -188,7 +188,7 @@ export default function HospitalityWebDesignClient() {
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -197,7 +197,7 @@ export default function HospitalityWebDesignClient() {
       {/* Why Choose Us */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -212,9 +212,9 @@ export default function HospitalityWebDesignClient() {
               From fine dining to boutique hotels, we build websites that reflect the experience guests
               can expect before they ever walk through the door.
             </p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -222,7 +222,7 @@ export default function HospitalityWebDesignClient() {
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {whyCards.map((card, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 variants={itemVariants}
                 className="card-interactive p-6 rounded-2xl border border-border bg-muted"
@@ -232,9 +232,9 @@ export default function HospitalityWebDesignClient() {
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-foreground">{card.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -244,7 +244,7 @@ export default function HospitalityWebDesignClient() {
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -269,9 +269,9 @@ export default function HospitalityWebDesignClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -291,7 +291,7 @@ export default function HospitalityWebDesignClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -301,7 +301,7 @@ export default function HospitalityWebDesignClient() {
       {/* What the work includes */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -311,9 +311,9 @@ export default function HospitalityWebDesignClient() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
               Everything Your Hospitality Site Needs
             </h2>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -321,7 +321,7 @@ export default function HospitalityWebDesignClient() {
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {workIncludes.map((line, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 variants={itemVariants}
                 className="card-interactive p-6 rounded-2xl border border-border bg-muted"
@@ -330,9 +330,9 @@ export default function HospitalityWebDesignClient() {
                   <CheckCircle2 size={24} className="text-cobalt-accent" />
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-foreground">{line}</p>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -341,7 +341,7 @@ export default function HospitalityWebDesignClient() {
       {/* FAQ Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -352,9 +352,9 @@ export default function HospitalityWebDesignClient() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
               Hospitality Web Design Questions
             </h2>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -362,16 +362,16 @@ export default function HospitalityWebDesignClient() {
             className="space-y-4"
           >
             {faqs.map((faq, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 variants={itemVariants}
                 className="p-6 rounded-2xl border border-border bg-muted"
               >
                 <h3 className="text-lg font-semibold mb-3 text-foreground">{faq.question}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -380,7 +380,7 @@ export default function HospitalityWebDesignClient() {
       {/* CTA Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -413,7 +413,7 @@ export default function HospitalityWebDesignClient() {
                 (702) 289-0758
               </Link>
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

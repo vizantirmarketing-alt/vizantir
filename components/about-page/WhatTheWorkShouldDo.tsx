@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 
 const cards = [
   {
@@ -51,7 +51,7 @@ const WhatTheWorkShouldDo = () => {
       style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
@@ -63,9 +63,9 @@ const WhatTheWorkShouldDo = () => {
           >
             What the work should do
           </h2>
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -73,7 +73,7 @@ const WhatTheWorkShouldDo = () => {
           className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto"
         >
           {cards.map((card, index) => (
-            <motion.div
+            <m.div
               key={index}
               variants={cardVariants}
               className="card-interactive group relative p-8 lg:p-10 rounded-2xl overflow-hidden"
@@ -95,9 +95,9 @@ const WhatTheWorkShouldDo = () => {
               >
                 {card.description}
               </p>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )

@@ -2,7 +2,7 @@
 
 import type { Faq } from '@/components/homepage/FAQSection'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 
@@ -27,14 +27,14 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
     <main className="min-h-screen" style={{ background: '#FAF9F5', transition: 'background-color 0.5s ease' }}>
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Frequently Asked Questions
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
               Get answers to common questions about web design, development, and how we can help you plan, build, and maintain a stronger website.
             </p>
-          </motion.div>
+          </m.div>
           
           {/* Search Bar */}
           <div className="mt-8 max-w-xl mx-auto">
@@ -93,7 +93,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             ) : (
               filteredFaqs.map((faq, index) => {
                 return (
-                  <motion.div
+                  <m.div
                     key={faq._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -117,7 +117,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                     </button>
                     <AnimatePresence>
                       {openId === faq._id && (
-                        <motion.div
+                        <m.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -129,17 +129,17 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                               {faq.answer}
                             </p>
                           </div>
-                        </motion.div>
+                        </m.div>
                       )}
                     </AnimatePresence>
-                  </motion.div>
+                  </m.div>
                 )
               })
             )}
           </div>
 
           {/* CTA Section */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
@@ -164,7 +164,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

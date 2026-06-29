@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 
@@ -50,15 +50,15 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           aria-hidden
         />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="mb-5"
           >
             <Eyebrow>{heroEyebrow}</Eyebrow>
-          </motion.div>
-          <motion.h1
+          </m.div>
+          <m.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.06 }}
@@ -66,8 +66,8 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             style={{ color: colors.text }}
           >
             {heroHeading}
-          </motion.h1>
-          <motion.p
+          </m.h1>
+          <m.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.12 }}
@@ -75,7 +75,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             style={{ color: colors.textMuted }}
           >
             {heroSubheading}
-          </motion.p>
+          </m.p>
         </div>
       </section>
 
@@ -84,7 +84,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
       {/* Ideal fit */}
       <section className="px-6 py-14 md:px-12 md:py-16 lg:px-20" aria-labelledby="ideal-fit-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionMotion}>
+          <m.div {...sectionMotion}>
             <h2
               id="ideal-fit-heading"
               className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
@@ -107,14 +107,14 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
       {/* Not a fit — same surface treatment as ideal section */}
       <section className="px-6 py-14 md:px-12 md:py-16 lg:px-20" aria-labelledby="not-fit-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionMotion}>
+          <m.div {...sectionMotion}>
             <h2
               id="not-fit-heading"
               className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
@@ -137,14 +137,14 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
       {/* Budget — candid aside */}
       <section className="px-6 py-14 md:px-12 md:py-16 lg:px-20" aria-labelledby="budget-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div
+          <m.div
             {...sectionMotion}
             className="rounded-2xl border-l-4 py-6 pl-10 pr-5 md:pl-12 md:pr-9"
             style={{
@@ -167,7 +167,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             <p className="text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
               {content.budgetSection.body}
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -176,7 +176,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
       {/* Closing CTA */}
       <section className="px-6 py-14 md:px-12 md:pb-20 lg:px-20" aria-labelledby="closing-heading">
         <div className="mx-auto max-w-3xl text-center">
-          <motion.div {...sectionMotion}>
+          <m.div {...sectionMotion}>
             <h2
               id="closing-heading"
               className="mb-6 text-2xl font-bold tracking-tight md:text-3xl"
@@ -194,7 +194,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             >
               {content.closingCta.label}
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

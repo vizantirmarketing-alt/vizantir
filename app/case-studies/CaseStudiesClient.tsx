@@ -3,7 +3,7 @@
 import { memo, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -73,7 +73,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-7xl">
           {/* Header */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -89,10 +89,10 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             <p className="mx-auto max-w-2xl text-lg transition-colors duration-500 md:text-xl" style={{ color: colors.textMuted }}>
               Modern websites built to load fast, rank well, and convert visitors
             </p>
-          </motion.div>
+          </m.div>
 
           {/* Filter Pills */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -122,10 +122,10 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                 {category}
               </button>
             ))}
-          </motion.div>
+          </m.div>
 
           {/* Case Studies Grid */}
-          <motion.div
+          <m.div
             key={selectedCategory}
             variants={containerVariants}
             initial="hidden"
@@ -133,7 +133,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16"
           >
             {filteredStudies.map((study, index) => (
-              <motion.div
+              <m.div
                 key={study._id}
                 variants={itemVariants}
                 className="card-interactive group flex h-full flex-col rounded-2xl border p-6"
@@ -229,12 +229,12 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
                   </Link>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
 
           {/* Bottom CTA */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -252,7 +252,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
               Start Your Project
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </main>

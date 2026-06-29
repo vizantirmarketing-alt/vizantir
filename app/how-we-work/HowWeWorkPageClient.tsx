@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { howWeWorkFaqs, howWeWorkProcess } from '@/data/how-we-work'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
@@ -31,16 +31,16 @@ export default function HowWeWorkPageClient() {
       {/* Hero Section */}
       <section className="relative px-6 md:px-12 lg:px-20 pt-32 pb-20">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="mb-6"
           >
             <Eyebrow>How We Work</Eyebrow>
-          </motion.div>
+          </m.div>
 
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -50,9 +50,9 @@ export default function HowWeWorkPageClient() {
             From first call to launch —
             <br />
             <span className="transition-colors duration-500" style={{ color: colors.textMuted }}>no surprises.</span>
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -61,7 +61,7 @@ export default function HowWeWorkPageClient() {
           >
             A clear process with defined scope, fixed pricing, and milestone check-ins.
             You know exactly what you're getting before we start.
-          </motion.p>
+          </m.p>
         </div>
       </section>
 
@@ -71,7 +71,7 @@ export default function HowWeWorkPageClient() {
       {/* Process Steps Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto">
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -80,11 +80,11 @@ export default function HowWeWorkPageClient() {
             style={{ color: colors.text }}
           >
             The Process
-          </motion.h2>
+          </m.h2>
 
           <div className="space-y-8">
             {howWeWorkProcess.map((step, index) => (
-              <motion.div
+              <m.div
                 key={step.number}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -118,7 +118,7 @@ export default function HowWeWorkPageClient() {
                     {step.description}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -130,7 +130,7 @@ export default function HowWeWorkPageClient() {
       {/* Choosing the Right Platform */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -149,11 +149,11 @@ export default function HowWeWorkPageClient() {
             >
               Choosing the Right Fit
             </h2>
-          </motion.div>
+          </m.div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* WordPress Card */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -204,10 +204,10 @@ export default function HowWeWorkPageClient() {
                 </svg>
                 <span>Timeline: 3-5 weeks</span>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Next.js Card */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -259,10 +259,10 @@ export default function HowWeWorkPageClient() {
                 </svg>
                 <span>Timeline: 5-8 weeks</span>
               </div>
-            </motion.div>
+            </m.div>
           </div>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -271,7 +271,7 @@ export default function HowWeWorkPageClient() {
             style={{ color: colors.textSubtle }}
           >
             Not sure which fits? We'll figure that out in Discovery.
-          </motion.p>
+          </m.p>
         </div>
       </section>
 
@@ -281,7 +281,7 @@ export default function HowWeWorkPageClient() {
       {/* Why Vizantir Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-5xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -300,12 +300,12 @@ export default function HowWeWorkPageClient() {
             >
               Why Vizantir
             </h2>
-          </motion.div>
+          </m.div>
 
           {/* Comparison Cards */}
           <div className="grid md:grid-cols-3 gap-6">
             {/* Traditional Agencies */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -352,10 +352,10 @@ export default function HowWeWorkPageClient() {
                   <span>Account managers, not builders</span>
                 </li>
               </ul>
-            </motion.div>
+            </m.div>
 
             {/* Hourly Dev Shops */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -403,10 +403,10 @@ export default function HowWeWorkPageClient() {
                   <span>"Buy more hours to finish"</span>
                 </li>
               </ul>
-            </motion.div>
+            </m.div>
 
             {/* Vizantir */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -457,11 +457,11 @@ export default function HowWeWorkPageClient() {
                   <span>No surprise invoices</span>
                 </li>
               </ul>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* One-liner */}
-          <motion.p
+          <m.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -471,7 +471,7 @@ export default function HowWeWorkPageClient() {
           >
             "We don't sell hours.{' '}
             <span className="transition-colors duration-500" style={{ color: colors.accent }}>We deliver finished products.</span>"
-          </motion.p>
+          </m.p>
         </div>
       </section>
 
@@ -481,7 +481,7 @@ export default function HowWeWorkPageClient() {
       {/* What's Included Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto">
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -490,11 +490,11 @@ export default function HowWeWorkPageClient() {
             style={{ color: colors.text }}
           >
             What to Expect
-          </motion.h2>
+          </m.h2>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Included */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -521,10 +521,10 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </m.div>
 
             {/* Not Included */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -551,7 +551,7 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -562,7 +562,7 @@ export default function HowWeWorkPageClient() {
       {/* FAQ Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-3xl mx-auto">
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -571,11 +571,11 @@ export default function HowWeWorkPageClient() {
             style={{ color: colors.text }}
           >
             Questions
-          </motion.h2>
+          </m.h2>
 
           <div className="space-y-3">
             {howWeWorkFaqs.map((faq, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -618,7 +618,7 @@ export default function HowWeWorkPageClient() {
                     </p>
                   )}
                 </button>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -630,7 +630,7 @@ export default function HowWeWorkPageClient() {
       {/* CTA Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20 md:py-24">
         <div className="max-w-2xl mx-auto text-center">
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -639,9 +639,9 @@ export default function HowWeWorkPageClient() {
             style={{ color: colors.text }}
           >
             Ready to start?
-          </motion.h2>
+          </m.h2>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -650,9 +650,9 @@ export default function HowWeWorkPageClient() {
             style={{ color: colors.textMuted }}
           >
             Let's talk about your project. No commitment, no pressure.
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -673,7 +673,7 @@ export default function HowWeWorkPageClient() {
                 <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import ServicesHero from './ServicesHero'
 import { trackCTAClick } from '@/lib/analytics'
@@ -272,7 +272,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
 function StandalonePricingSection() {
   return (
     <>
-      <motion.section
+      <m.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -292,9 +292,9 @@ function StandalonePricingSection() {
             <ProjectPricingCard key={tier.slug} tier={tier} />
           ))}
         </div>
-      </motion.section>
+      </m.section>
 
-      <motion.section
+      <m.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -315,9 +315,9 @@ function StandalonePricingSection() {
             <CarePricingCard key={tier.slug} tier={tier} />
           ))}
         </div>
-      </motion.section>
+      </m.section>
 
-      <motion.section
+      <m.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -347,9 +347,9 @@ function StandalonePricingSection() {
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-      </motion.section>
+      </m.section>
 
-      <motion.section
+      <m.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -383,7 +383,7 @@ function StandalonePricingSection() {
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-      </motion.section>
+      </m.section>
     </>
   )
 }
@@ -408,7 +408,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
         className="relative px-6 md:px-12 lg:px-20 py-20 md:py-24 bg-background transition-colors duration-500"
       >
         <div className="max-w-5xl mx-auto">
-          <motion.div
+          <m.div
             className="mb-16 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -418,7 +418,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             <h2 className="text-3xl md:text-4xl font-bold text-foreground transition-colors duration-500">
               What We Build
             </h2>
-          </motion.div>
+          </m.div>
 
           <div className="space-y-3">
             {services.map((service, index) => {
@@ -426,7 +426,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
               const Icon = SERVICE_ICONS[index % SERVICE_ICONS.length]
 
               return (
-                <motion.div
+                <m.div
                   key={service._id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -474,7 +474,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
 
                     <AnimatePresence initial={false}>
                       {isOpen && (
-                        <motion.div
+                        <m.div
                           key={`${service._id}-content`}
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
@@ -485,18 +485,18 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                           <div className="pt-8 mt-8 border-t border-border transition-colors duration-500">
                             <SanityServiceExpandedBody service={service} />
                           </div>
-                        </motion.div>
+                        </m.div>
                       )}
                     </AnimatePresence>
                   </button>
-                </motion.div>
+                </m.div>
               )
             })}
           </div>
 
           <StandalonePricingSection />
 
-          <motion.div
+          <m.div
             className="mt-24 text-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -516,7 +516,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </div>

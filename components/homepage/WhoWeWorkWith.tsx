@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 const WhoWeWorkWith = () => {
   const industries = [
@@ -17,7 +17,7 @@ const WhoWeWorkWith = () => {
       style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -37,7 +37,7 @@ const WhoWeWorkWith = () => {
           </p>
 
           {/* Industries Grid */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -45,7 +45,7 @@ const WhoWeWorkWith = () => {
             className="flex flex-wrap justify-center gap-4 md:gap-6"
           >
             {industries.map((industry, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -59,10 +59,10 @@ const WhoWeWorkWith = () => {
                 }}
               >
                 {industry}
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </div>
     </section>
   );

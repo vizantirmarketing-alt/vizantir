@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Link from 'next/link'
 import { trackCTAClick } from '@/lib/analytics'
 
@@ -44,14 +44,14 @@ export default function GetStartedPageClient() {
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Ready to start?
             </h1>
             <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
               Fixed scope, fixed price, direct access to the builder. From first call to launch — here's how every project runs.
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -60,7 +60,7 @@ export default function GetStartedPageClient() {
         <div className="max-w-4xl mx-auto">
           <div className="space-y-8">
             {steps.map((step, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -86,7 +86,7 @@ export default function GetStartedPageClient() {
                     {step.description}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function GetStartedPageClient() {
       {/* CTA Section */}
       <section className="px-4 pb-24">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
@@ -135,7 +135,7 @@ export default function GetStartedPageClient() {
                 View Services
               </Link>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

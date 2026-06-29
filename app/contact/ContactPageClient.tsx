@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 import { trackFormSubmission, trackPhoneClick } from '@/lib/analytics'
@@ -94,12 +94,12 @@ export default function ContactPageClient() {
   if (isSubmitted) {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ background: '#FAF9F5', transition: 'background-color 0.5s ease' }}>
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center px-4 max-w-lg"
         >
-          <motion.div
+          <m.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
@@ -109,7 +109,7 @@ export default function ContactPageClient() {
             <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-          </motion.div>
+          </m.div>
           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
             Message Sent!
           </h1>
@@ -122,7 +122,7 @@ export default function ContactPageClient() {
           >
             Back to Home
           </Link>
-        </motion.div>
+        </m.div>
       </main>
     )
   }
@@ -140,7 +140,7 @@ export default function ContactPageClient() {
           aria-hidden
         />
         <div className="relative z-10 max-w-6xl mx-auto">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6 }}
@@ -155,7 +155,7 @@ export default function ContactPageClient() {
             <p className="text-lg md:text-xl text-muted-foreground">
               Tell us what you&apos;re working on. We&apos;ll let you know if we&apos;re a good fit and what the next step looks like
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -167,7 +167,7 @@ export default function ContactPageClient() {
           <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
             
             {/* Contact Info */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -254,10 +254,10 @@ export default function ContactPageClient() {
                   Average response time: <strong>Under 24 hours</strong>
                 </p>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Contact Form */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -412,7 +412,7 @@ export default function ContactPageClient() {
                   </p>
                 </form>
               </div>
-            </motion.div>
+            </m.div>
       </div>
     </div>
       </section>

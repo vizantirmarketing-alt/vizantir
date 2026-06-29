@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 
 import type { PortableTextBlock } from '@portabletext/types'
 
@@ -82,7 +82,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           ) : null}
 
           {/* Title */}
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -90,7 +90,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
             style={{ color: colors.text }}
           >
             {post.title}
-          </motion.h1>
+          </m.h1>
 
           {/* Meta Info */}
           <div

@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 
 const OperatorStatement = () => {
   return (
@@ -16,7 +16,7 @@ const OperatorStatement = () => {
           }}
           aria-hidden
         />
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
@@ -33,7 +33,7 @@ const OperatorStatement = () => {
           >
             Vizantir was founded in Las Vegas by someone with 25 years of business ownership and over a decade building websites. That perspective changes the work. Every decision is made with the business in mind: what matters, what is unnecessary, and what actually improves the final result.
           </p>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )

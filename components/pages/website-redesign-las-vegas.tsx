@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -37,7 +37,7 @@ export default function WebsiteRedesignLasVegasPage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]" />
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -45,9 +45,9 @@ export default function WebsiteRedesignLasVegasPage() {
           >
             <MapPin size={16} className="text-cobalt-accent" />
             <span className="text-sm text-muted-foreground">{hero.eyebrow}</span>
-          </motion.div>
+          </m.div>
 
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -56,18 +56,18 @@ export default function WebsiteRedesignLasVegasPage() {
             {hero.heading}
             <br />
             <span className="text-cobalt-accent">{hero.headingAccent}</span>
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg md:text-xl max-w-3xl mx-auto mb-10 text-muted-foreground leading-relaxed"
           >
             {hero.subheading}
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -90,7 +90,7 @@ export default function WebsiteRedesignLasVegasPage() {
               {hero.secondaryCta.label}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -99,7 +99,7 @@ export default function WebsiteRedesignLasVegasPage() {
       {/* Intro */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -111,7 +111,7 @@ export default function WebsiteRedesignLasVegasPage() {
                 <p key={index}>{paragraph}</p>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -120,7 +120,7 @@ export default function WebsiteRedesignLasVegasPage() {
       {/* What You Get */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -129,9 +129,9 @@ export default function WebsiteRedesignLasVegasPage() {
           >
             <Eyebrow>{whatYouGet.heading}</Eyebrow>
             <p className="text-lg max-w-2xl mx-auto text-muted-foreground">{whatYouGet.subheading}</p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -139,16 +139,16 @@ export default function WebsiteRedesignLasVegasPage() {
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {whatYouGet.items.map((item, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 variants={itemVariants}
                 className="card-interactive p-6 rounded-2xl border border-border bg-muted"
               >
                 <h3 className="text-lg font-bold mb-3 text-foreground">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -157,7 +157,7 @@ export default function WebsiteRedesignLasVegasPage() {
       {/* Process */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -167,9 +167,9 @@ export default function WebsiteRedesignLasVegasPage() {
             <Eyebrow>Process</Eyebrow>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">{process.heading}</h2>
             <p className="text-lg text-muted-foreground">{process.subheading}</p>
-          </motion.div>
+          </m.div>
 
-          <motion.ol
+          <m.ol
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -177,7 +177,7 @@ export default function WebsiteRedesignLasVegasPage() {
             className="space-y-6"
           >
             {process.steps.map((step) => (
-              <motion.li
+              <m.li
                 key={step.step}
                 variants={itemVariants}
                 className="flex gap-6 p-6 rounded-2xl border border-border bg-muted"
@@ -189,9 +189,9 @@ export default function WebsiteRedesignLasVegasPage() {
                   <h3 className="text-lg font-bold mb-2 text-foreground">{step.title}</h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
                 </div>
-              </motion.li>
+              </m.li>
             ))}
-          </motion.ol>
+          </m.ol>
         </div>
       </section>
 
@@ -200,7 +200,7 @@ export default function WebsiteRedesignLasVegasPage() {
       {/* Pricing */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -210,9 +210,9 @@ export default function WebsiteRedesignLasVegasPage() {
             <Eyebrow>Pricing</Eyebrow>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">{pricing.heading}</h2>
             <p className="text-lg max-w-2xl mx-auto text-muted-foreground">{pricing.subheading}</p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -220,7 +220,7 @@ export default function WebsiteRedesignLasVegasPage() {
             className="grid md:grid-cols-3 gap-6 mb-10"
           >
             {pricing.tiers.map((tier) => (
-              <motion.div
+              <m.div
                 key={tier.name}
                 variants={itemVariants}
                 className={`relative p-8 rounded-2xl border flex flex-col bg-muted ${
@@ -246,9 +246,9 @@ export default function WebsiteRedesignLasVegasPage() {
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
 
           <p className="text-center text-sm text-muted-foreground max-w-2xl mx-auto">
             {pricing.retainerNote}
@@ -262,7 +262,7 @@ export default function WebsiteRedesignLasVegasPage() {
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -271,9 +271,9 @@ export default function WebsiteRedesignLasVegasPage() {
               <Eyebrow align="start">Signs</Eyebrow>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">{signs.heading}</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">{signs.subheading}</p>
-            </motion.div>
+            </m.div>
 
-            <motion.ul
+            <m.ul
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -281,7 +281,7 @@ export default function WebsiteRedesignLasVegasPage() {
               className="grid sm:grid-cols-2 gap-3"
             >
               {signs.items.map((item, index) => (
-                <motion.li
+                <m.li
                   key={index}
                   variants={itemVariants}
                   className="p-4 rounded-xl border border-border bg-muted"
@@ -293,9 +293,9 @@ export default function WebsiteRedesignLasVegasPage() {
                       <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
                     </div>
                   </div>
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
+            </m.ul>
           </div>
         </div>
       </section>
@@ -305,7 +305,7 @@ export default function WebsiteRedesignLasVegasPage() {
       {/* FAQs */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -314,9 +314,9 @@ export default function WebsiteRedesignLasVegasPage() {
           >
             <Eyebrow>FAQ</Eyebrow>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">{faqs.heading}</h2>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -324,16 +324,16 @@ export default function WebsiteRedesignLasVegasPage() {
             className="space-y-4"
           >
             {faqs.items.map((faq, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 variants={itemVariants}
                 className="p-6 rounded-2xl border border-border bg-muted"
               >
                 <h3 className="text-lg font-semibold mb-3 text-foreground">{faq.question}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -342,7 +342,7 @@ export default function WebsiteRedesignLasVegasPage() {
       {/* Closing CTA */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -370,7 +370,7 @@ export default function WebsiteRedesignLasVegasPage() {
                 (702) 289-0758
               </Link>
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 
 const ResultsThatSpeak = () => {
@@ -37,7 +37,7 @@ const ResultsThatSpeak = () => {
       style={{ background: '#FAF9F5' }}
     >
       <div className="container mx-auto px-4">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -62,7 +62,7 @@ const ResultsThatSpeak = () => {
 
           <div className="grid md:grid-cols-3 gap-8 lg:gap-10">
             {projects.map((item, index) => (
-              <motion.article
+              <m.article
                 key={item.title}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -111,7 +111,7 @@ const ResultsThatSpeak = () => {
                   <span>View live site</span>
                   <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </a>
-              </motion.article>
+              </m.article>
             ))}
           </div>
 
@@ -124,7 +124,7 @@ const ResultsThatSpeak = () => {
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 interface Particle {
@@ -137,7 +137,7 @@ const ServicesPreview = () => {
       />
 
       <div className="relative z-10 container mx-auto px-4">
-        <motion.h2
+        <m.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -149,9 +149,9 @@ const ServicesPreview = () => {
           }}
         >
           SERVICES
-        </motion.h2>
+        </m.h2>
 
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -163,9 +163,9 @@ const ServicesPreview = () => {
           }}
         >
           Every site is built around what your business actually needs — not what looks good in a proposal.
-        </motion.p>
+        </m.p>
 
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -174,7 +174,7 @@ const ServicesPreview = () => {
         >
           {services.map((service, index) => {
             return (
-              <motion.div
+              <m.div
                 key={index}
                 variants={cardVariants}
                 className="card-interactive group relative min-w-0 rounded-2xl p-10 md:p-12 cursor-pointer overflow-hidden"
@@ -254,10 +254,10 @@ const ServicesPreview = () => {
                     {service.outcome}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
 
         <div className="text-center">
           <Link

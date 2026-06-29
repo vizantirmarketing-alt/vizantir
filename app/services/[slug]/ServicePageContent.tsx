@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { PortableText } from '@portabletext/react'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
@@ -64,7 +64,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             <span aria-hidden>←</span>
             All services
           </Link>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+          <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
             <Eyebrow align="start" className="mb-4">
               Service
             </Eyebrow>
@@ -87,7 +87,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 {service.description}
               </p>
             ) : null}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -98,7 +98,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-3xl">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -114,7 +114,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   How we approach this
                 </h2>
                 <PortableText value={service.overview!} components={vizantirPortableTextComponents} />
-              </motion.div>
+              </m.div>
             </div>
           </section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
@@ -126,7 +126,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-4xl">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -142,10 +142,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   What you get
                 </h2>
-              </motion.div>
+              </m.div>
               <ul className="mx-auto max-w-2xl space-y-4">
                 {service.benefits!.map((item, index) => (
-                  <motion.li
+                  <m.li
                     key={index}
                     initial={{ opacity: 0, x: -12 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -157,7 +157,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <span className="text-lg leading-relaxed" style={{ color: colors.textMuted }}>
                       {item}
                     </span>
-                  </motion.li>
+                  </m.li>
                 ))}
               </ul>
             </div>
@@ -171,7 +171,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-6xl">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -187,10 +187,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   How it works
                 </h2>
-              </motion.div>
+              </m.div>
               <div className="grid gap-6 md:grid-cols-2">
                 {sortedProcess.map((step, index) => (
-                  <motion.div
+                  <m.div
                     key={`${step.step}-${index}`}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -211,7 +211,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <p className="leading-relaxed" style={{ color: colors.textMuted }}>
                       {step.description}
                     </p>
-                  </motion.div>
+                  </m.div>
                 ))}
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-6xl">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -241,10 +241,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   What&apos;s included
                 </h2>
-              </motion.div>
+              </m.div>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {service.offerings!.map((offering, index) => (
-                  <motion.div
+                  <m.div
                     key={index}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -259,7 +259,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <p className="text-sm leading-relaxed" style={{ color: colors.textMuted }}>
                       {offering.description}
                     </p>
-                  </motion.div>
+                  </m.div>
                 ))}
               </div>
             </div>
@@ -273,7 +273,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-4xl">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -289,10 +289,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   Tangible outputs
                 </h2>
-              </motion.div>
+              </m.div>
               <ul className="mx-auto max-w-2xl space-y-3">
                 {service.deliverables!.map((item, index) => (
-                  <motion.li
+                  <m.li
                     key={index}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -304,7 +304,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <span className="leading-relaxed" style={{ color: colors.textMuted }}>
                       {item}
                     </span>
-                  </motion.li>
+                  </m.li>
                 ))}
               </ul>
             </div>
@@ -318,7 +318,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-4xl">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -334,10 +334,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   Common questions
                 </h2>
-              </motion.div>
+              </m.div>
               <div className="space-y-4">
                 {service.faqs!.map((faq, index) => (
-                  <motion.div
+                  <m.div
                     key={index}
                     initial={{ opacity: 0, y: 12 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -363,7 +363,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     </button>
                     <AnimatePresence>
                       {openFaqIndex === index ? (
-                        <motion.div
+                        <m.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -377,10 +377,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                               {faq.answer}
                             </p>
                           </div>
-                        </motion.div>
+                        </m.div>
                       ) : null}
                     </AnimatePresence>
-                  </motion.div>
+                  </m.div>
                 ))}
               </div>
             </div>
@@ -394,7 +394,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-6xl">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -410,10 +410,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   More services
                 </h2>
-              </motion.div>
+              </m.div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {service.relatedServices!.map((rel, index) => (
-                  <motion.div
+                  <m.div
                     key={rel.slug}
                     initial={{ opacity: 0, y: 14 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -436,7 +436,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                       </span>
                     </Link>
-                  </motion.div>
+                  </m.div>
                 ))}
               </div>
             </div>
@@ -448,7 +448,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* CTA */}
       <section className="px-6 py-16 md:px-12 md:pb-24 lg:px-20">
         <div className="mx-auto max-w-3xl text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -475,7 +475,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

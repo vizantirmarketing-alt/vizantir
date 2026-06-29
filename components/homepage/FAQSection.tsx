@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
 export type Faq = { _id: string; question: string; answer: string }
@@ -43,7 +43,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -51,7 +51,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               className="text-4xl md:text-5xl font-bold mb-4 text-foreground"
             >
               Questions? <span style={{ color: 'var(--cobalt-accent)' }}>Answered.</span>
-            </motion.h2>
+            </m.h2>
             <p 
               className="text-xl text-muted-foreground"
             >
@@ -59,7 +59,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
             </p>
           </div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -67,7 +67,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
             className="space-y-4"
           >
             {faqs.map((faq, index) => (
-              <motion.div
+              <m.div
                 key={faq._id}
                 variants={itemVariants}
                 className="rounded-xl overflow-hidden transition-all duration-300 border border-border bg-card"
@@ -96,9 +96,9 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                     {faq.answer}
                   </div>
                 )}
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
 
           <div className="text-center mt-10">
             <p 
