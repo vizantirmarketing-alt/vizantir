@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Users, Target, Zap, Globe } from 'lucide-react'
@@ -371,6 +372,73 @@ export default function AboutPageClient() {
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* Section Divider */}
+      <div 
+        className="w-full h-px"
+        style={{ 
+          background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.5), transparent)' 
+        }}
+      />
+
+      {/* Built On */}
+      <section className="py-16 md:py-20 short-landscape:py-8" style={{ background: '#FAF9F5' }}>
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="mb-12 text-center">
+              <Eyebrow align="center">Built On</Eyebrow>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-foreground mt-4 mb-3">
+                The stack behind every Vizantir build
+              </h2>
+              <p className="text-base md:text-lg text-body max-w-2xl mx-auto" style={{ lineHeight: '1.7' }}>
+                We standardize on a small, modern, well-supported set of technologies — so every project compounds rather than starts from scratch.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
+              {[
+                { name: 'Next.js', slug: 'nextjs', file: 'nextjs.svg' },
+                { name: 'Sanity', slug: 'sanity', file: 'sanity.svg' },
+                { name: 'Vercel', slug: 'vercel', file: 'vercel.svg' },
+                { name: 'Tailwind CSS', slug: 'tailwind', file: 'tailwind.svg' },
+                { name: 'TypeScript', slug: 'typescript', file: 'typescript.svg' },
+                { name: 'React', slug: 'react', file: 'react.svg' },
+              ].map((tech) => (
+                <Link
+                  key={tech.slug}
+                  href={`/technology/${tech.slug}`}
+                  className="group flex flex-col items-center justify-center gap-3 p-4 rounded-xl transition-all duration-300 hover:bg-white/50"
+                  aria-label={`Learn more about how Vizantir uses ${tech.name}`}
+                >
+                  <div className="relative h-10 w-10 md:h-12 md:w-12 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                    <Image
+                      src={`/logos/${tech.file}`}
+                      alt={`${tech.name} logo`}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 40px, 48px"
+                    />
+                  </div>
+                  <span className="text-xs md:text-sm font-medium text-meta group-hover:text-foreground transition-colors duration-300 text-center">
+                    {tech.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-10 text-center">
+              <Link
+                href="/technology"
+                className="link-cobalt inline-flex items-center gap-2 font-medium text-sm md:text-base"
+                style={{ color: 'var(--cobalt-accent)' }}
+              >
+                <span>See the full stack</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
