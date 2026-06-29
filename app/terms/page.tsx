@@ -1,6 +1,6 @@
 'use client'
 
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState } from 'react'
 
 interface Subsection {
@@ -177,25 +177,25 @@ export default function TermsAndConditions() {
     <main className="min-h-screen" style={{ background: '#FAF9F5', transition: 'background-color 0.5s ease' }}>
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Terms and Conditions</h1>
             <p className="text-lg text-muted-foreground">Effective Date: January 1, 2025</p>
-          </m.div>
+          </motion.div>
         </div>
       </section>
 
       <section className="px-4 pb-8">
         <div className="max-w-4xl mx-auto">
-          <m.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed text-body">
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed text-body">
             Welcome to Vizantir.com. These Terms and Conditions (&quot;Terms&quot;) govern your use of our website and services. By accessing our website or engaging our services, you agree to be bound by these Terms.
-          </m.p>
+          </motion.p>
         </div>
       </section>
 
       <section className="px-4 pb-24">
         <div className="max-w-4xl mx-auto">
           {sections.map((section, sectionIndex) => (
-            <m.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
+            <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
               <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">{section.title}</h2>
               {section.subsections.map((subsection, subIndex) => (
                 <div key={subIndex} className="mb-6">
@@ -214,11 +214,11 @@ export default function TermsAndConditions() {
                   {subsection.contactEmail && <a href={`mailto:${subsection.contactEmail}`} className="inline-block mt-2 font-medium transition-colors hover:opacity-80" style={{ color: 'var(--cobalt-primary)' }}>{subsection.contactEmail}</a>}
                 </div>
               ))}
-            </m.div>
+            </motion.div>
           ))}
-          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
             <p className="text-sm text-meta">Last Updated: January 1, 2025</p>
-          </m.div>
+          </motion.div>
         </div>
       </section>
     </main>

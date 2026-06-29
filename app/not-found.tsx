@@ -1,6 +1,6 @@
 'use client'
 
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 export default function NotFound() {
@@ -10,13 +10,13 @@ export default function NotFound() {
       style={{ background: '#FAF9F5' }}
     >
       <div className="text-center max-w-2xl">
-        <m.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           {/* 404 Number */}
-          <m.h1 
+          <motion.h1 
             className="text-[150px] md:text-[200px] font-bold leading-none mb-0"
             style={{ 
               color: 'var(--cobalt-primary)',
@@ -27,10 +27,10 @@ export default function NotFound() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             404
-          </m.h1>
+          </motion.h1>
 
           {/* Message */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -45,10 +45,10 @@ export default function NotFound() {
             >
               Oops! The page you&apos;re looking for doesn&apos;t exist or has been moved.
             </p>
-          </m.div>
+          </motion.div>
 
           {/* CTAs */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -74,10 +74,10 @@ export default function NotFound() {
             >
               Contact Us
             </Link>
-          </m.div>
+          </motion.div>
 
           {/* Helpful Links */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
@@ -106,9 +106,9 @@ export default function NotFound() {
                 </Link>
               ))}
             </div>
-          </m.div>
+          </motion.div>
 
-        </m.div>
+        </motion.div>
       </div>
     </main>
   )

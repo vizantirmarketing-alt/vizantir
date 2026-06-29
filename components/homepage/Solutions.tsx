@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Search, Pencil, FileText, Target } from 'lucide-react'
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const Solutions = () => {
   const features = [
@@ -98,7 +98,7 @@ const Solutions = () => {
       <div className="container mx-auto px-4">
         
         {/* Features Row */}
-        <m.div 
+        <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-32"
           variants={featureContainerVariants}
           initial="hidden"
@@ -113,7 +113,7 @@ const Solutions = () => {
                        index === 2 ? '192, 132, 252' : '0, 217, 255'
             
             return (
-              <m.div 
+              <motion.div 
                 key={index}
                 className="relative group flex"
                 variants={featureCardVariants}
@@ -155,13 +155,13 @@ const Solutions = () => {
                     {feature.description}
                   </p>
                 </div>
-              </m.div>
+              </motion.div>
             )
           })}
-        </m.div>
+        </motion.div>
 
         {/* Digital Solutions Header */}
-        <m.div 
+        <motion.div 
           className="text-center mb-20"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -178,7 +178,7 @@ const Solutions = () => {
           >
             DIGITAL SOLUTIONS
             {/* Animated gradient underline */}
-            <m.span 
+            <motion.span 
               className="absolute -bottom-4 left-1/2 h-1.5 rounded-full"
               initial={{ width: 0, x: '-50%' }}
               whileInView={{ width: 200, x: '-50%' }}
@@ -191,10 +191,10 @@ const Solutions = () => {
               }}
             />
           </h2>
-        </m.div>
+        </motion.div>
 
         {/* Services Grid */}
-        <m.div 
+        <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
           variants={serviceContainerVariants}
           initial="hidden"
@@ -202,7 +202,7 @@ const Solutions = () => {
           viewport={{ once: true, margin: '-50px' }}
         >
           {services.map((service, index) => (
-            <m.div 
+            <motion.div 
               key={index}
               className="group relative"
               variants={serviceCardVariants}
@@ -241,12 +241,12 @@ const Solutions = () => {
                   </p>
                 </div>
               </div>
-            </m.div>
+            </motion.div>
           ))}
-        </m.div>
+        </motion.div>
 
         {/* CTA Button */}
-        <m.div 
+        <motion.div 
           className="text-center"
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -263,7 +263,7 @@ const Solutions = () => {
               <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </Button>
-        </m.div>
+        </motion.div>
 
       </div>
     </section>

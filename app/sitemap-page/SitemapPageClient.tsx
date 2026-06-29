@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import type { SitemapLink } from '@/data/sitemap-page'
 import type { SitemapPageItem } from '@/lib/sanity/types'
@@ -54,7 +54,7 @@ export default function SitemapPageClient({
     <main className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <section className="px-4 pb-8 pt-32">
         <div className="mx-auto max-w-5xl">
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -65,32 +65,32 @@ export default function SitemapPageClient({
               services, case studies, blog posts, and legal resources. This list stays in sync
               with our XML sitemap.
             </p>
-          </m.div>
+          </motion.div>
         </div>
       </section>
 
       <section className="px-4 pb-24">
         <div className="mx-auto max-w-5xl">
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               <SectionHeading label="Main Pages" />
               <LinkList links={mainPages} />
-            </m.div>
+            </motion.div>
 
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
             >
               <SectionHeading label="Industries" />
               <LinkList links={industryPages} />
-            </m.div>
+            </motion.div>
 
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -108,9 +108,9 @@ export default function SitemapPageClient({
                   </li>
                 ))}
               </ul>
-            </m.div>
+            </motion.div>
 
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
@@ -128,9 +128,9 @@ export default function SitemapPageClient({
                   </li>
                 ))}
               </ul>
-            </m.div>
+            </motion.div>
 
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -165,16 +165,16 @@ export default function SitemapPageClient({
                   View blog index →
                 </Link>
               </p>
-            </m.div>
+            </motion.div>
 
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35 }}
             >
               <SectionHeading label="Legal" />
               <LinkList links={legalPages} />
-            </m.div>
+            </motion.div>
           </div>
         </div>
       </section>

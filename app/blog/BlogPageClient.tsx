@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { blogCategories } from '@/lib/blog-categories'
@@ -75,7 +75,7 @@ export default function BlogPageClient({ posts }: Props) {
       {/* Hero Section */}
       <section className="relative px-6 md:px-12 lg:px-20 pt-32 pb-16">
         <div className="max-w-6xl mx-auto">
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -95,10 +95,10 @@ export default function BlogPageClient({ posts }: Props) {
               Practical answers to the questions business owners ask most about
               websites, SEO, performance, and choosing the right platform.
             </p>
-          </m.div>
+          </motion.div>
 
           {/* Search Bar */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -142,10 +142,10 @@ export default function BlogPageClient({ posts }: Props) {
                 </button>
               )}
             </div>
-          </m.div>
+          </motion.div>
 
           {/* Category Filters */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -171,7 +171,7 @@ export default function BlogPageClient({ posts }: Props) {
                 {category}
               </button>
             ))}
-          </m.div>
+          </motion.div>
         </div>
       </section>
 
@@ -185,7 +185,7 @@ export default function BlogPageClient({ posts }: Props) {
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-6xl mx-auto">
           {filteredPosts.length === 0 ? (
-            <m.div
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-center py-20"
@@ -206,11 +206,11 @@ export default function BlogPageClient({ posts }: Props) {
               >
                 Clear filters
               </button>
-            </m.div>
+            </motion.div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post, index) => (
-                <m.article
+                <motion.article
                   key={post._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -304,7 +304,7 @@ export default function BlogPageClient({ posts }: Props) {
                       </div>
                     </div>
                   </Link>
-                </m.article>
+                </motion.article>
               ))}
             </div>
           )}
@@ -320,7 +320,7 @@ export default function BlogPageClient({ posts }: Props) {
       {/* CTA Section */}
       <section className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-2xl mx-auto text-center">
-          <m.h2
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -329,9 +329,9 @@ export default function BlogPageClient({ posts }: Props) {
             style={{ color: colors.text }}
           >
             Want to talk through your project?
-          </m.h2>
+          </motion.h2>
 
-          <m.p
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -340,9 +340,9 @@ export default function BlogPageClient({ posts }: Props) {
             style={{ color: colors.textMuted }}
           >
             No commitment, no pressure — just honest advice.
-          </m.p>
+          </motion.p>
 
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -363,7 +363,7 @@ export default function BlogPageClient({ posts }: Props) {
                 <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
-          </m.div>
+          </motion.div>
         </div>
       </section>
     </main>

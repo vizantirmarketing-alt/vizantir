@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
 const CTA = () => {
@@ -14,14 +14,14 @@ const CTA = () => {
       }}
     >
       <div className="container mx-auto px-4 relative z-10">
-        <m.div
+        <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="max-w-3xl mx-auto text-center"
         >
-          <m.h2
+          <motion.h2
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -29,8 +29,8 @@ const CTA = () => {
             className="text-4xl md:text-5xl font-black mb-6 text-foreground"
           >
             If the website needs to do more than just look better, let&apos;s talk.
-          </m.h2>
-          <m.p
+          </motion.h2>
+          <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -38,8 +38,8 @@ const CTA = () => {
             className="text-xl mb-8 text-muted-foreground"
           >
             We&apos;ll look at what&apos;s holding your site back and tell you honestly what it needs.
-          </m.p>
-          <m.div
+          </motion.p>
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -52,8 +52,8 @@ const CTA = () => {
             >
               <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'cta_section')}>Book a Strategy Call</Link>
             </Button>
-          </m.div>
-        </m.div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

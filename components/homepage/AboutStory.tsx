@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 
 const AboutStory = () => {
@@ -17,7 +17,7 @@ const AboutStory = () => {
           {/* Left Content */}
           <div className="max-w-xl">
             {/* Fade up for the heading area */}
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -37,10 +37,10 @@ const AboutStory = () => {
               >
                 When the right person lands on your site, they should already trust you before they read a word.
               </p>
-            </m.div>
+            </motion.div>
             
             {/* Staggered fade for paragraphs */}
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -58,7 +58,7 @@ const AboutStory = () => {
               >
                 We build from the ground up — considered, crafted, and coded for the way your business actually operates. Every decision is intentional. Every line of code earns its place.
               </p>
-            </m.div>
+            </motion.div>
 
             <div className="mt-5">
               <Link
@@ -73,7 +73,7 @@ const AboutStory = () => {
           </div>
 
           {/* Right Image */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -103,7 +103,7 @@ const AboutStory = () => {
                 background: 'linear-gradient(135deg, rgba(0, 112, 243, 0.4), rgba(212, 197, 249, 0.4))'
               }}
             />
-          </m.div>
+          </motion.div>
         </div>
       </div>
     </section>

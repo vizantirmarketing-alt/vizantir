@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
 const WhatHappensNext = () => {
@@ -52,7 +52,7 @@ const WhatHappensNext = () => {
     >
       <div className="container mx-auto px-4">
         {/* Header */}
-        <m.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -64,10 +64,10 @@ const WhatHappensNext = () => {
           >
             What Happens Next
           </h2>
-        </m.div>
+        </motion.div>
 
         {/* Steps Grid */}
-        <m.div
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -75,7 +75,7 @@ const WhatHappensNext = () => {
           className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-10"
         >
           {steps.map((step, index) => (
-            <m.div
+            <motion.div
               key={index}
               variants={cardVariants}
               className="relative p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1"
@@ -107,12 +107,12 @@ const WhatHappensNext = () => {
               >
                 {step.description}
               </p>
-            </m.div>
+            </motion.div>
           ))}
-        </m.div>
+        </motion.div>
 
         {/* CTA Button */}
-        <m.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -131,7 +131,7 @@ const WhatHappensNext = () => {
           >
             No commitment. No pitch deck. Just a conversation.
           </p>
-        </m.div>
+        </motion.div>
       </div>
     </section>
   );

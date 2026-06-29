@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import Link from 'next/link'
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { PortableText } from '@portabletext/react'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
@@ -54,7 +54,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             <span aria-hidden>←</span>
             All case studies
           </Link>
-          <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
             <Eyebrow align="start" className="mb-4">
               Case Study
             </Eyebrow>
@@ -85,9 +85,9 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 </a>
               ) : null}
             </div>
-          </m.div>
+          </motion.div>
           {caseStudy.heroImage?.asset?.url ? (
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.08 }}
@@ -99,7 +99,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 alt={caseStudy.heroImage.alt || caseStudy.title}
                 className="w-full object-cover"
               />
-            </m.div>
+            </motion.div>
           ) : null}
         </div>
       </section>
@@ -110,7 +110,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-3xl">
-              <m.div
+              <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -123,7 +123,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                   The problem to solve
                 </h2>
                 <PortableText value={caseStudy.challenge!} components={vizantirPortableTextComponents} />
-              </m.div>
+              </motion.div>
             </div>
           </section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
@@ -134,7 +134,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-3xl">
-              <m.div
+              <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -147,7 +147,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                   What we built
                 </h2>
                 <PortableText value={caseStudy.solution!} components={vizantirPortableTextComponents} />
-              </m.div>
+              </motion.div>
             </div>
           </section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
@@ -158,7 +158,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-3xl">
-              <m.div
+              <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -171,7 +171,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                   Impact and outcomes
                 </h2>
                 <PortableText value={caseStudy.results!} components={vizantirPortableTextComponents} />
-              </m.div>
+              </motion.div>
             </div>
           </section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
@@ -182,7 +182,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
         <>
           <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
             <div className="mx-auto max-w-4xl">
-              <m.div
+              <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -195,10 +195,10 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   Technologies used
                 </h2>
-              </m.div>
+              </motion.div>
               <div className="flex flex-wrap gap-3">
                 {caseStudy.stack!.map((item, index) => (
-                  <m.span
+                  <motion.span
                     key={item}
                     initial={{ opacity: 0, y: 8 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -212,7 +212,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                     }}
                   >
                     {item}
-                  </m.span>
+                  </motion.span>
                 ))}
               </div>
             </div>

@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { trackCTAClick } from '@/lib/analytics';
 
 const Strategy = () => {
@@ -239,14 +239,14 @@ const Strategy = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Content */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="max-w-xl"
           >
-            <m.h3
+            <motion.h3
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -258,9 +258,9 @@ const Strategy = () => {
               }}
             >
               We Believe
-            </m.h3>
+            </motion.h3>
 
-            <m.h2
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -268,9 +268,9 @@ const Strategy = () => {
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight text-foreground"
             >
               DESIGN + STRATEGY = RESULTS
-            </m.h2>
+            </motion.h2>
 
-            <m.p
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -278,9 +278,9 @@ const Strategy = () => {
               className="text-base md:text-lg mb-10 text-body leading-[1.7]"
             >
               Most websites look fine and do nothing. We build sites around a specific outcome — more calls, more bookings, more qualified leads walking through the door.
-            </m.p>
+            </motion.p>
 
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -296,11 +296,11 @@ const Strategy = () => {
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </Button>
-            </m.div>
-          </m.div>
+            </motion.div>
+          </motion.div>
 
           {/* Right - Globe (now visible on all screens) */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -342,7 +342,7 @@ const Strategy = () => {
                 boxShadow: "0 0 60px rgba(0, 112, 243, 0.5), 0 0 120px rgba(0, 112, 243, 0.3)",
               }}
             />
-          </m.div>
+          </motion.div>
         </div>
       </div>
 

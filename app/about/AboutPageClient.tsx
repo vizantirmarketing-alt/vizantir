@@ -1,6 +1,6 @@
 'use client'
 
-import { m, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
@@ -79,7 +79,7 @@ export default function AboutPageClient() {
         style={{ background: '#FAF9F5' }}
       >
         {/* Ribbons Animation Background */}
-        <m.div 
+        <motion.div 
           className="absolute inset-0"
           style={{ 
             opacity: heroOpacity, 
@@ -88,45 +88,45 @@ export default function AboutPageClient() {
           }}
         >
           <RibbonsAnimation />
-        </m.div>
+        </motion.div>
 
         {/* Content */}
-        <m.div 
+        <motion.div 
           className="relative z-10 text-center max-w-4xl mx-auto px-4 pt-24"
           style={{ opacity: heroOpacity }}
         >
           {/* Hero kicker */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="mb-6"
           >
             <Eyebrow uppercase={false}>✦ Who We Are</Eyebrow>
-          </m.div>
+          </motion.div>
 
           {/* Title */}
-          <m.h1
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-[0.95] text-foreground"
           >
             Built by an operator, not just a designer.
-          </m.h1>
+          </motion.h1>
 
           {/* Subtitle */}
-          <m.p
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-muted-foreground" style={{ lineHeight: 1.7 }}
           >
             Vizantir is a Las Vegas–based premium website design studio for established businesses that need a stronger digital presence, cleaner execution, and a site that reflects the level of the business behind it.
-          </m.p>
+          </motion.p>
 
           {/* CTA Button */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -141,8 +141,8 @@ export default function AboutPageClient() {
                 <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Button>
-          </m.div>
-        </m.div>
+          </motion.div>
+        </motion.div>
 
       </section>
 
@@ -154,13 +154,13 @@ export default function AboutPageClient() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Text Content */}
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.7, ease: 'easeOut' }}
             >
-              <m.h3
+              <motion.h3
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -168,9 +168,9 @@ export default function AboutPageClient() {
                 className="text-3xl md:text-4xl lg:text-5xl font-black mb-8 leading-tight text-foreground"
               >
                 Why Vizantir exists
-              </m.h3>
+              </motion.h3>
 
-              <m.div
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -183,9 +183,9 @@ export default function AboutPageClient() {
                 <p>
                   Most agencies hand your project to a junior team, run it through a template, and call it done. We build everything custom — and because I've sat on the client side of this equation for decades, I know exactly what actually matters when the site goes live.
                 </p>
-              </m.div>
+              </motion.div>
 
-              <m.h3
+              <motion.h3
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -193,9 +193,9 @@ export default function AboutPageClient() {
                 className="text-3xl md:text-4xl lg:text-5xl font-black mt-12 mb-8 leading-tight text-foreground"
               >
                 What makes the approach different
-              </m.h3>
+              </motion.h3>
 
-              <m.p
+              <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -203,9 +203,9 @@ export default function AboutPageClient() {
                 className="text-base md:text-lg mb-0 text-muted-foreground" style={{ lineHeight: 1.8 }}
               >
                 25 years running businesses and 10+ years building websites means I approach every project with two lenses at once: what looks right and what actually works. Design decisions, copy decisions, structure decisions — all of it gets filtered through the question of what the business actually needs the site to do.
-              </m.p>
+              </motion.p>
 
-              <m.div
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -222,8 +222,8 @@ export default function AboutPageClient() {
                     <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                 </Button>
-              </m.div>
-            </m.div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -297,7 +297,7 @@ export default function AboutPageClient() {
       >
         <div className="container mx-auto px-4">
           {/* Section Header */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -312,10 +312,10 @@ export default function AboutPageClient() {
             >
               OUR VALUES
             </h3>
-          </m.div>
+          </motion.div>
 
           {/* Values Cards */}
-          <m.div
+          <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -323,7 +323,7 @@ export default function AboutPageClient() {
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {values.map((value, index) => (
-              <m.div
+              <motion.div
                 key={index}
                 variants={itemVariants}
                 className="card-interactive group relative p-8 rounded-2xl overflow-hidden"
@@ -368,9 +368,9 @@ export default function AboutPageClient() {
                 >
                   {value.description}
                 </p>
-              </m.div>
+              </motion.div>
             ))}
-          </m.div>
+          </motion.div>
         </div>
       </section>
 
@@ -388,14 +388,14 @@ export default function AboutPageClient() {
         style={{ background: '#FAF9F5' }}
       >
         <div className="container mx-auto px-4 relative z-10">
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
             className="text-center max-w-3xl mx-auto"
           >
-            <m.h2
+            <motion.h2
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -403,9 +403,9 @@ export default function AboutPageClient() {
               className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-foreground"
             >
               The goal is simple
-            </m.h2>
+            </motion.h2>
 
-            <m.p
+            <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -413,9 +413,9 @@ export default function AboutPageClient() {
               className="text-lg md:text-xl mb-10 text-muted-foreground" style={{ lineHeight: 1.7 }}
             >
               Every business we work with has already put in the work to build something real. The website should reflect that — not undercut it.
-            </m.p>
+            </motion.p>
 
-            <m.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -431,8 +431,8 @@ export default function AboutPageClient() {
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </Button>
-            </m.div>
-          </m.div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </main>

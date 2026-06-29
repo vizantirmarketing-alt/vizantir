@@ -1,6 +1,6 @@
 'use client'
 
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const EditorialStatement = () => {
   return (
@@ -10,7 +10,7 @@ const EditorialStatement = () => {
     >
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 lg:items-start max-w-6xl mx-auto">
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -21,8 +21,8 @@ const EditorialStatement = () => {
             >
               A stronger website changes how the business is perceived
             </h2>
-          </m.div>
-          <m.div
+          </motion.div>
+          <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -43,7 +43,7 @@ const EditorialStatement = () => {
             >
               Some websites are built. Most are assembled. You can tell the difference — and so can Google.
             </p>
-          </m.div>
+          </motion.div>
         </div>
       </div>
     </section>

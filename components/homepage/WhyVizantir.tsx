@@ -1,6 +1,6 @@
 'use client'
 
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const WhyVizantir = () => {
   const trustPoints = [
@@ -50,7 +50,7 @@ const WhyVizantir = () => {
     >
       <div className="container mx-auto px-4">
         {/* Header */}
-        <m.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -62,10 +62,10 @@ const WhyVizantir = () => {
           >
             Why businesses choose Vizantir
           </h2>
-        </m.div>
+        </motion.div>
 
         {/* Trust Points Grid */}
-        <m.div
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -73,7 +73,7 @@ const WhyVizantir = () => {
           className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto"
         >
           {trustPoints.map((point, index) => (
-            <m.div
+            <motion.div
               key={index}
               variants={cardVariants}
               className="card-interactive group relative p-8 lg:p-10 rounded-2xl overflow-hidden"
@@ -95,9 +95,9 @@ const WhyVizantir = () => {
               >
                 {point.description}
               </p>
-            </m.div>
+            </motion.div>
           ))}
-        </m.div>
+        </motion.div>
       </div>
     </section>
   );
