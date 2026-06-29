@@ -9,7 +9,7 @@ import {
   AREA_SERVED,
   BUSINESS_ID,
   SITE_URL,
-  TECHNOLOGIES,
+  ALL_TECHNOLOGIES,
   getTechnologyBySlug,
 } from '../_data'
 
@@ -18,7 +18,7 @@ interface PageProps {
 }
 
 export function generateStaticParams() {
-  return TECHNOLOGIES.map((tech) => ({ slug: tech.slug }))
+  return ALL_TECHNOLOGIES.map((tech) => ({ slug: tech.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

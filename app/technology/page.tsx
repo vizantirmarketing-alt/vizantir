@@ -4,16 +4,18 @@ import { ArrowRight } from 'lucide-react'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
-import { SITE_URL, TECHNOLOGIES } from './_data'
+import { CORE_STACK, SITE_URL, SPECIALIZED_TOOLS, type Technology } from './_data'
 
 const PAGE_URL = `${SITE_URL}/technology`
+
+const PAGE_DESCRIPTION =
+  'Vizantir builds on Next.js, Sanity, Vercel, Tailwind, and TypeScript. We bring in tools like Supabase, Stripe, Resend, Cloudflare, GSAP, and Framer Motion when the project needs them.'
 
 export const metadata: Metadata = {
   title: {
     absolute: 'Our Technology Stack | Vizantir Design Studio',
   },
-  description:
-    'Vizantir builds on Next.js, Sanity, Vercel, Supabase, Stripe, and Tailwind. The technology stack behind every custom website we build.',
+  description: PAGE_DESCRIPTION,
   alternates: {
     canonical: PAGE_URL,
   },
@@ -23,8 +25,7 @@ export const metadata: Metadata = {
     siteName: 'Vizantir',
     locale: 'en_US',
     title: 'Our Technology Stack | Vizantir Design Studio',
-    description:
-      'Vizantir builds on Next.js, Sanity, Vercel, Supabase, Stripe, and Tailwind. The technology stack behind every custom website we build.',
+    description: PAGE_DESCRIPTION,
     images: [
       {
         url: '/og-image.png',
@@ -40,8 +41,7 @@ const pageGraph = graphSchema([
   webPageSchema({
     url: PAGE_URL,
     name: 'Our Technology Stack',
-    description:
-      'Vizantir builds on Next.js, Sanity, Vercel, Supabase, Stripe, and Tailwind. The technology stack behind every custom website we build.',
+    description: PAGE_DESCRIPTION,
     siteUrl: SITE_URL,
   }),
   breadcrumbSchema([
@@ -49,6 +49,41 @@ const pageGraph = graphSchema([
     { name: 'Technology', url: PAGE_URL },
   ]),
 ])
+
+function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
+  return (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {technologies.map((tech) => (
+        <article
+          key={tech.slug}
+          className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
+        >
+          <h3 className="text-2xl font-bold text-foreground mb-3">{tech.name}</h3>
+          <p className="text-cobalt-accent font-medium mb-4">{tech.tagline}</p>
+          <ul className="mb-6 space-y-3 flex-1">
+            {tech.whyWeUseIt.slice(0, 2).map((item) => (
+              <li key={item} className="flex gap-3 text-sm text-body leading-relaxed">
+                <span
+                  className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                  style={{ background: 'var(--cobalt-accent)' }}
+                  aria-hidden
+                />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href={`/technology/${tech.slug}`}
+            className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-accent"
+          >
+            Learn more
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </article>
+      ))}
+    </div>
+  )
+}
 
 export default function TechnologyHubPage() {
   return (
@@ -70,35 +105,26 @@ export default function TechnologyHubPage() {
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-16 md:mb-20">
-              {TECHNOLOGIES.map((tech) => (
-                <article
-                  key={tech.slug}
-                  className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
-                >
-                  <h2 className="text-2xl font-bold text-foreground mb-3">{tech.name}</h2>
-                  <p className="text-cobalt-accent font-medium mb-4">{tech.tagline}</p>
-                  <ul className="mb-6 space-y-3 flex-1">
-                    {tech.whyWeUseIt.slice(0, 2).map((item) => (
-                      <li key={item} className="flex gap-3 text-sm text-body leading-relaxed">
-                        <span
-                          className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
-                          style={{ background: 'var(--cobalt-accent)' }}
-                          aria-hidden
-                        />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={`/technology/${tech.slug}`}
-                    className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-accent"
-                  >
-                    Learn more
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </article>
-              ))}
+            <div className="mb-16 md:mb-20">
+              <div className="max-w-3xl mb-10">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Core Stack</h2>
+                <p className="text-base md:text-lg text-body leading-relaxed">
+                  The foundation under every Vizantir build.
+                </p>
+              </div>
+              <TechnologyGrid technologies={CORE_STACK} />
+            </div>
+
+            <div className="mb-16 md:mb-20">
+              <div className="max-w-3xl mb-10">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  When the Project Calls for It
+                </h2>
+                <p className="text-base md:text-lg text-body leading-relaxed">
+                  Tools we bring in based on what your build actually needs.
+                </p>
+              </div>
+              <TechnologyGrid technologies={SPECIALIZED_TOOLS} />
             </div>
 
             <div className="max-w-3xl mx-auto text-center mb-16">
