@@ -95,11 +95,11 @@ export function PricingCards({
             <div className="flex-1" />
             <Button
               asChild
-              variant={tier.featured ? 'default' : 'outline'}
+              variant={tier.featured ? 'default' : 'cobaltOutline'}
               className={
                 tier.featured
                   ? 'group w-full rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt'
-                  : 'group w-full rounded-xl bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-cobalt-gradient hover:text-white'
+                  : 'group w-full rounded-xl px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:[background:var(--cobalt-gradient)] hover:text-white hover:shadow-cobalt'
               }
             >
               <Link href={ctaHref}>
