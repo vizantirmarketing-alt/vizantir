@@ -81,7 +81,7 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="link-cobalt flex items-center cursor-pointer">
+            <Link href="/" className="flex items-center cursor-pointer">
               {!mounted ? (
                 <div className="h-5 md:h-7 w-24" />
               ) : (
