@@ -16,24 +16,22 @@ import {
   CardCheckItem,
   CardCheckList,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardPrice,
   CardPriceBlock,
   CardTagline,
   CardTitle,
 } from '@/components/ui/Card'
+import { PricingCards } from '@/components/pricing/PricingCards'
 import {
   blogPricing,
   carePricing,
   chatbotPricing,
-  projectPricing,
   CHATBOT_SETUP_FEE,
   formatCareClientPrice,
   type BlogTier,
   type CareTier,
   type ChatbotTier,
-  type PricingTier,
 } from '@/data/pricing'
 import { cn } from '@/lib/utils'
 
@@ -63,41 +61,6 @@ const CHATBOT_ADDON = {
 function getBlogCadenceLabel(tier: BlogTier): string {
   if (tier.postsPerMonth === 0) return 'One-time engagement'
   return `${tier.postsPerMonth} posts per month`
-}
-
-function ProjectPricingCard({ tier }: { tier: PricingTier }) {
-  return (
-    <Card variant="glass" featured={tier.featured}>
-      <CardHeader>
-        <CardTitle>{tier.name}</CardTitle>
-        <CardPrice>{tier.price}</CardPrice>
-      </CardHeader>
-
-      <CardDescription bordered>{tier.description}</CardDescription>
-
-      <CardCheckList>
-        {tier.includes.map((line) => (
-          <CardCheckItem key={line}>{line}</CardCheckItem>
-        ))}
-      </CardCheckList>
-
-      <CardFooter>
-        <Button
-          asChild
-          className={
-            tier.featured
-              ? 'group w-full rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt'
-              : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-cobalt-gradient hover:text-white'
-          }
-        >
-          <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
-            Book a Strategy Call
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
-  )
 }
 
 function CarePricingCard({ tier }: { tier: CareTier }) {
@@ -280,18 +243,12 @@ function StandalonePricingSection() {
         className="mt-20 md:mt-24"
       >
         <Eyebrow align="start">Project Pricing</Eyebrow>
-        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
-          Fixed scope. Fixed price. No surprises.
-        </h2>
-        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Three tiers built around how complex your site needs to be — not how much we think we can
-          charge.
-        </p>
-        <div className="grid gap-6 lg:grid-cols-3">
-          {projectPricing.map((tier) => (
-            <ProjectPricingCard key={tier.slug} tier={tier} />
-          ))}
-        </div>
+        <PricingCards
+          align="start"
+          heading="Fixed scope. Fixed price. No surprises."
+          intro="Three tiers built around how complex your site needs to be — not how much we think we can charge."
+          ctaHref="/contact"
+        />
       </motion.section>
 
       <motion.section

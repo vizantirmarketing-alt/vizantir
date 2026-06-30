@@ -6,6 +6,7 @@ import { ArrowRight, CheckCircle2, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
+import { PricingCards } from '@/components/pricing/PricingCards'
 import { lasVegasPageData } from '@/data/las-vegas-web-design'
 import { trackPhoneClick } from '@/lib/analytics'
 import type { FaqItem } from '@/app/las-vegas-web-design/_schema'
@@ -217,47 +218,7 @@ export default function LasVegasWebDesignPage({ faqItems }: LasVegasWebDesignPag
             <p className="text-lg max-w-2xl mx-auto text-muted-foreground">{pricing.subheading}</p>
           </motion.div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-3 gap-6 mb-10"
-          >
-            {pricing.tiers.map((tier) => (
-              <motion.div
-                key={tier.name}
-                variants={itemVariants}
-                className={`relative p-8 rounded-2xl border flex flex-col bg-muted ${
-                  tier.featured
-                    ? 'border-cobalt-muted-border shadow-[0_0_40px_rgba(0,112,243,0.08)]'
-                    : 'border-border'
-                }`}
-              >
-                {tier.featured ? (
-                  <span className="absolute -top-2 right-4 rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
-                    Popular
-                  </span>
-                ) : null}
-                <h3 className="text-xl font-bold mb-1 text-foreground">{tier.name}</h3>
-                <p className="text-3xl font-black text-cobalt-accent mb-1">{tier.price}</p>
-                <p className="text-sm text-muted-foreground mb-4">{tier.timeline}</p>
-                <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{tier.description}</p>
-                <ul className="space-y-3 mt-auto">
-                  {tier.includes.map((line, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
-                      <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-cobalt-accent mt-[2px]" aria-hidden />
-                      {line}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <p className="text-center text-sm text-muted-foreground max-w-2xl mx-auto">
-            {pricing.retainerNote}
-          </p>
+          <PricingCards />
         </div>
       </section>
 
