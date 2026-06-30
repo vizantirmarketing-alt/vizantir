@@ -81,7 +81,7 @@ export function PricingCards({
             <p className="mb-1 text-3xl font-black text-cobalt-accent">{tier.price}</p>
             <p className="mb-4 text-sm text-muted-foreground">{tier.timeline}</p>
             <p className="mb-6 text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
-            <ul className="mb-6 mt-auto space-y-3">
+            <ul className="mb-6 mt-2 space-y-3">
               {tier.includes.map((line) => (
                 <li key={line} className="flex items-start gap-2 text-sm text-foreground/80">
                   <CheckCircle2
@@ -92,12 +92,14 @@ export function PricingCards({
                 </li>
               ))}
             </ul>
+            <div className="flex-1" />
             <Button
               asChild
+              variant={tier.featured ? 'default' : 'outline'}
               className={
                 tier.featured
                   ? 'group w-full rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt'
-                  : 'group w-full rounded-xl border border-border bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-cobalt-gradient hover:text-white'
+                  : 'group w-full rounded-xl bg-transparent px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:bg-cobalt-gradient hover:text-white'
               }
             >
               <Link href={ctaHref}>
