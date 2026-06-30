@@ -45,6 +45,9 @@ content-updates/*
 *.tsbuildinfo
 next-env.d.ts
 
+# generated artifacts
+knowledge-dump.txt
+
 # cursor / local AI IDE
 .cursor/
 .cursorrules

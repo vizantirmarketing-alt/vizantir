@@ -1,394 +1,184 @@
-# Vizantir Design Studio
+# Vizantir Design Studio — Web Property
 
-Premium website design studio based in Las Vegas. Built with Next.js, TypeScript, Tailwind CSS, and Sanity CMS.
+Source code for [vizantir.com](https://www.vizantir.com), a premium web design studio based in Las Vegas. Built with Next.js, TypeScript, Tailwind CSS, and Sanity CMS.
 
-**Live site:** https://www.vizantir.com
+This repository is published for portfolio and reference purposes. See [LICENSE](./LICENSE) for usage terms.
 
 ---
 
-## Tech Stack
+## Stack
 
-- **Framework:** Next.js 16 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **CMS:** Sanity v3 (Studio at `/studio`)
-- **AI chat:** Anthropic Claude via `@anthropic-ai/sdk` (custom concierge widget)
-- **Animations:** Framer Motion
-- **Hosting:** Vercel
-- **Database:** Supabase (Postgres) — form submissions, rate limiting
-- **Bot protection:** Cloudflare Turnstile
-- **Transactional email:** Resend
-- **Analytics:** Vercel Analytics
+| Category | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| CMS | Sanity v4 (Studio at `/studio`) |
+| Hosting | Vercel |
+| Database | Supabase (Postgres) |
+| Transactional email | Resend |
+| Bot protection | Cloudflare Turnstile |
+| Analytics | Vercel Analytics |
+| AI concierge | Anthropic Claude (via SDK) |
+| Animation | Framer Motion |
 
 ---
 
 ## Getting Started
 
-### 1. Clone the repo
+### Prerequisites
+
+- Node.js 20+
+- pnpm (pinned via `corepack`)
+
+### Install
 
 ```bash
 git clone https://github.com/vizantirmarketing-alt/vizantir.git
 cd vizantir
+pnpm install
 ```
 
-### 2. Install dependencies
+### Environment
+
+Copy `.env.example` to `.env.local` and fill in all required values. The dev server reads env vars only on boot — restart after any change.
 
 ```bash
-npm install
+cp .env.example .env.local
 ```
 
-### 3. Set up environment variables
-
-Create a `.env.local` file in the project root:
-
-```env
-# Sanity
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SANITY_API_VERSION=2025-12-05
-SANITY_API_WRITE_TOKEN=your_write_token
-SANITY_REVALIDATE_SECRET=your_revalidate_secret
-
-# Site
-NEXT_PUBLIC_SITE_URL=https://www.vizantir.com
-
-# Anthropic (AI concierge chat)
-ANTHROPIC_API_KEY=your_anthropic_api_key
-
-# Supabase (form submissions, rate limiting)
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-
-# Cloudflare Turnstile (bot protection on public forms)
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=
-TURNSTILE_SECRET_KEY=
-
-# Rate limiting (generate with: openssl rand -hex 32)
-RATE_LIMIT_SALT=
-
-# Resend (contact form notifications)
-RESEND_API_KEY=
-RESEND_FROM_EMAIL=info@vizantir.com
-CONTACT_NOTIFICATION_EMAIL=info@vizantir.com
-```
-
-The AI chat will return a 500 if `ANTHROPIC_API_KEY` is missing. The dev server only reads env vars on boot — restart after adding or changing any key.
-
-### 4. Run the development server
+### Run
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site. If port 3000 is taken, Next.js will use the next available port (e.g. 3002) — check the terminal output for the actual URL.
-
-### 5. Access Sanity Studio
-
-Studio runs at [http://localhost:3000/studio](http://localhost:3000/studio). You will need to be logged into the correct Sanity account with access to the project.
+The site runs at [http://localhost:3000](http://localhost:3000). Sanity Studio runs at [http://localhost:3000/studio](http://localhost:3000/studio) and requires authentication.
 
 ---
 
 ## Project Structure
 
 ```
-app/                  # Next.js App Router pages
-  api/chat/           # AI concierge streaming endpoint
+app/                  # Next.js App Router pages and API routes
 components/           # Reusable UI components
-  chat/               # VizantirChat concierge widget
-content-updates/      # Drafts for batch content updates (gitignored)
-contexts/             # React contexts (theme, etc.)
 data/                 # Typed data exports (pricing, navigation, page content)
 docs/                 # Standards and reference implementations
-lib/                  # Utilities, schema types, Sanity queries
-  chat/               # AI chat knowledge assembly
-sanity/               # Sanity schema types and structure
-scripts/              # One-off and reusable operational scripts
-supabase/             # SQL migrations
+lib/                  # Utilities, schema, Sanity queries, chat knowledge
 public/               # Static assets
+sanity/               # Sanity schema types and structure
+scripts/              # Operational scripts
+supabase/             # SQL migrations
 ```
 
 ---
 
-## Deployment
+## Architecture
 
-Deployed automatically to Vercel on push to `main`. Environment variables must be configured in the Vercel project settings — `.env.local` is not committed to the repo.
+### Content management
 
-`ANTHROPIC_API_KEY` must be set in Vercel (all environments) for the AI chat to work in production. The local `.env.local` value is not deployed.
+The site is fully ISR-driven. Sanity changes appear on the live site within seconds via on-demand revalidation:
 
----
+1. Editor publishes a change in Sanity Studio
+2. Sanity fires a webhook to `POST /api/revalidate`
+3. The route validates the signature and calls `revalidateTag` for the affected document type
+4. Next.js invalidates cached `sanityFetch` queries tagged with that type
+5. Next request fetches fresh content
 
-## Highlighted Pages
+Cache tags match Sanity document types (e.g., `tags: ['faq']`, `tags: ['post', 'author']`). Webhook receiver: `app/api/revalidate/route.ts`.
 
-Representative routes only. Full route list: `/sitemap-page` (generated from app routes and Sanity content).
+### AI Concierge
 
-| Route | Description |
-|-------|-------------|
-| `/` | Homepage |
-| `/about` | About page |
-| `/services` | Services and pricing |
-| `/case-studies` | Portfolio / case studies |
-| `/blog` | Blog listing and posts |
-| `/contact` | Contact form (protected) |
-| `/las-vegas-web-design` | Local SEO landing page |
-| `/hospitality-web-design` | Vertical landing page |
-| `/law-firm-web-design` | Vertical landing page |
-| `/commercial-real-estate-web-design` | Vertical landing page |
-| `/studio` | Sanity Studio (authenticated) |
-
----
-
-## AI Concierge Chat
-
-A custom Claude-powered chat widget (the "Vizantir Concierge") that answers visitor questions about the studio — services, pricing, process, fit, case studies, and FAQs. It replaces the previous third-party Chatbase widget with a fully in-house implementation.
-
-### Architecture
+A Claude-powered chat widget answers visitor questions about the studio — services, pricing, process, and fit. Implementation:
 
 | Piece | Path | Role |
-|-------|------|------|
-| Widget | `components/chat/VizantirChat.tsx` | Client component — floating bubble, panel, streaming UI. Mounted globally in `app/layout.tsx`. |
-| API route | `app/api/chat/route.ts` | Streaming POST endpoint. Validates input (Zod), rate-limits, calls Claude, streams plain text back. |
-| Knowledge | `lib/chat/knowledge.ts` | Assembles the full studio knowledge base into a single text blob injected into the system prompt. Cached in-module for 30 minutes. |
-| Queries | `lib/sanity/queries.ts` | GROQ queries (prefixed `chat*`) that flatten Sanity content for the knowledge blob. |
+|---|---|---|
+| Widget | `components/chat/VizantirChat.tsx` | Client component, mounted globally |
+| API route | `app/api/chat/route.ts` | Streaming POST endpoint, rate-limited |
+| Knowledge | `lib/chat/knowledge.ts` | Assembles knowledge base, cached 30 min |
+| Queries | `lib/sanity/queries.ts` | GROQ queries for chat content |
 
-### How it works
+**Knowledge sources:**
+- **Sanity-driven** (services, case studies, FAQs, founder bio, studio overview) — edit in Studio, no deploy
+- **Code-driven** (pricing, about, fit criteria, how-we-work) — edit `data/*.ts`, commit, deploy
 
-1. Visitor opens the widget and sends a message.
-2. The route validates the payload, runs the rate-limit check (fails open if Supabase is unavailable, so a limiter outage never breaks chat), and assembles the knowledge blob.
-3. The knowledge blob is sent as a cached system prompt (Anthropic prompt caching via `cache_control: ephemeral`), with the conversation as messages.
-4. Claude (`claude-sonnet-4-6`) streams a response, which the route relays to the client as a plain-text stream. The widget types it out live.
+The 30-minute knowledge cache means Sanity edits reach the bot within half an hour; code edits require a redeploy.
 
-The system prompt constrains the bot to answer **only** from Vizantir knowledge, refuse off-topic questions, quote pricing exactly, be honest about what the studio does not do, and nudge toward booking a strategy call when it fits.
+### Pricing
 
-### Knowledge sources — what updates automatically vs. what needs a deploy
+Single source of truth: `data/pricing.ts`. All consumers (services page, industry pages, contact form, AI concierge, sitemap) read from this file. Sanity FAQ pricing references are synced separately via `pnpm update:faq-pricing -- --execute` after pricing changes.
 
-The knowledge blob is built from two kinds of source. This determines how you update the bot's answers.
+### Form protection
 
-**Pulled live from Sanity — edit in Studio, no code change or redeploy:**
+All public forms follow the protection standard documented at `docs/standards/form-protection.md`. The standard includes honeypot, Cloudflare Turnstile, IP-hashed rate limiting, email validation, Supabase storage, and Resend notifications. Reference implementations live in `docs/standards/form-protection-reference/`.
 
-| Content | Source |
-|---------|--------|
-| Services (all) | `service` documents |
-| Case studies | `caseStudy` documents |
-| FAQs | `faq` documents |
-| Founder / author bio | `author` document |
-| Studio overview | `siteSettings` document |
+### Database
 
-Edits to these appear in the bot within ~30 minutes (the knowledge blob is cached in-module for 30 min; the next request after expiry rebuilds it with fresh Sanity data).
-
-**Hardcoded in `data/*.ts` — requires a code edit + deploy:**
-
-| Content | Source |
-|---------|--------|
-| Pricing (project + care tiers) | `data/pricing.ts` |
-| About page content | `data/about.ts` |
-| "Are we a fit" criteria | `data/are-we-a-fit.ts` |
-| How-we-work process + FAQs | `data/how-we-work.ts` |
-
-Changing any of these means editing the file, committing, and pushing. The bot won't reflect the change until Vercel rebuilds.
-
-> **Note on pricing:** Pricing is the highest-risk hardcoded value — it changes more often than the other static content and a stale quote costs leads. If pricing starts changing regularly, consider migrating it into Sanity as a singleton so it joins the auto-updating group.
-
-### Excluded content
-
-Blog posts are intentionally **not** included in the knowledge blob — the bot does not answer from or about blog content.
-
-### Verifying the knowledge blob
-
-`scripts/dump-knowledge.ts` writes the assembled blob to `knowledge-dump.txt` for inspection:
-
-```bash
-node --env-file=.env.local --import tsx scripts/dump-knowledge.ts
-```
-
-Use this to confirm pricing, fit criteria, and other facts are serialized correctly after a content change. `knowledge-dump.txt` is a generated artifact — keep it gitignored, not committed.
-
-### Rate limiting
-
-The chat route reuses the shared Supabase-backed limiter (`lib/forms/rate-limit.ts`) with `formKey: 'chat'` — 30 requests per IP per 60 minutes. The check is wrapped to **fail open**: if Supabase env vars are missing (e.g. locally) or Supabase is unavailable, the request is allowed through and a warning is logged, so a limiter failure never 500s the chat. Real rate limiting therefore applies only where Supabase is configured (production).
-
----
-
-## Pricing
-
-Single source of truth: `data/pricing.ts`.
-
-- **Project tiers** (Essentials, Growth, Enterprise): `projectPricing` array
-- **Care tiers** (Essentials Care, Growth Care, Enterprise Care): `carePricing` array
-- **Shared FAQ strings**: `pricingFAQs` object — used by Sanity migration scripts
-- **Industry page helpers**: `industryProjectCostAnswer`, `industryProjectTimelineAnswer`
-- **Contact form budget options**: `CONTACT_BUDGET_FROM_PRICING`
-- **Tier lookups**: `getProjectTier`, `getCareTier`
-
-Edit `data/pricing.ts` only. Consumers update automatically: `/services`, `/las-vegas-web-design`, `/are-we-a-fit`, industry landing pages, contact form, sitemap.
-
-The AI concierge also reads pricing from `data/pricing.ts` (see the AI Concierge Chat section) — a pricing edit reaches the bot on the next deploy.
-
-Sanity FAQ documents are not synced automatically. After pricing changes, run:
-
-```bash
-npm run update:faq-pricing -- --execute
-```
-
----
-
-## Shared UI Components
-
-Reuse these instead of re-implementing:
-
-| Component | Path | Use |
-|-----------|------|-----|
-| AccordionIndicator | `components/ui/AccordionIndicator.tsx` | Animated +/− for expandable surfaces |
-| Eyebrow | `components/ui/Eyebrow.tsx` | Cobalt uppercase label above section headings |
-| SectionDivider | `components/ui/SectionDivider.tsx` | Cobalt gradient divider between sections |
-
----
-
-## Copy Conventions
-
-Client-facing copy must read as human-written. Avoid:
-
-- Em-dash overuse
-- "It's worth noting"
-- "Dive into"
-- "Seamless", "robust", "elevate", "empower", "unlock", "cutting-edge"
-- "In today's fast-paced world"
-- Parallel three-item lists with identical length/structure
-- "Not just X — but Y" constructions
-
-Repo documentation (including this file) follows standard developer README structure. No marketing filler.
-
----
-
-## Content Updates (Blog Posts)
-
-Blog content lives entirely in Sanity. Most edits should be done directly in Studio at `/studio`.
-
-For batch updates (rewriting multiple posts at once, or updating the same field across many documents), use the `update-blog-posts` script.
-
-### How it works
-
-Drop files into `content-updates/` named after the post slug:
-
-- `content-updates/<slug>.html` — replaces the `body` field (Portable Text) with HTML converted to Sanity's block format. Preserves `<pre><code>` blocks with language detection.
-- `content-updates/<slug>.json` — updates one or more simple fields without touching the body. Supported fields: `excerpt`, `title`, `readTime`, `metaTitle`, `metaDescription`.
-
-Example `content-updates/my-post.json`:
-
-```json
-{
-  "excerpt": "Updated excerpt text that will overwrite the current one."
-}
-```
-
-### Running the script
-
-```bash
-# Dry run — shows what would change without writing
-npm run update:posts
-
-# Live — writes changes to Sanity
-npm run update:posts:live
-```
-
-Requires `SANITY_API_WRITE_TOKEN` in `.env.local`.
-
-The `content-updates/` folder is gitignored. Clean up drafts after a successful live run:
-
-```bash
-rm content-updates/*.html
-rm content-updates/*.json
-```
+Schema lives in `supabase/migrations/`. Apply to a new Supabase project by pasting SQL into the SQL Editor in order.
 
 ---
 
 ## Scripts
 
-Operational scripts. Write-capable scripts require `SANITY_API_WRITE_TOKEN` in `.env.local`.
+Write-capable scripts require `SANITY_API_WRITE_TOKEN` in `.env.local`.
 
 | Command | Description |
-|---------|-------------|
-| `npm run update:posts` | Dry run: blog post updates from `content-updates/` (see above) |
-| `npm run update:posts:live` | Write blog post updates to Sanity |
-| `npm run update:faq-pricing` | Dry run: update Sanity FAQ documents from `data/pricing.ts` |
-| `npm run update:faq-pricing -- --execute` | Write FAQ pricing copy to Sanity |
-| `npm run migrate:faqs` | Dry run: one-time FAQ document seed migration |
-| `npm run migrate:faqs:live` | Write FAQ seed documents to Sanity |
-| `npm run create:gei` | Create Golden Era Integra case study in Sanity (idempotent slug check) |
+|---|---|
+| `pnpm dev` | Dev server |
+| `pnpm build` | Production build |
+| `pnpm start` | Run production build locally |
+| `pnpm lint` | Lint check |
+| `pnpm analyze` | Build with bundle analyzer |
+| `pnpm update:posts` | Dry run: blog post updates from `content-updates/` |
+| `pnpm update:posts:live` | Apply blog post updates to Sanity |
+| `pnpm update:faq-pricing` | Dry run: sync Sanity FAQ pricing from `data/pricing.ts` |
+| `pnpm update:faq-pricing -- --execute` | Apply pricing sync to Sanity |
+| `pnpm update-faq-industries` | Dry run: update Sanity FAQ industry copy |
+| `pnpm update-faq-industries -- --execute` | Apply industry copy update |
+| `pnpm migrate:faqs` | Dry run: one-time FAQ document seed migration |
+| `pnpm migrate:faqs:live` | Apply FAQ seed migration |
+| `pnpm create:gei` | Create Golden Era Integra case study (idempotent) |
+| `pnpm create:post` | Create a new blog post in Sanity |
 
-To inspect the AI chat knowledge blob (not an npm script):
+Inspect the AI chat knowledge blob:
 
 ```bash
 node --env-file=.env.local --import tsx scripts/dump-knowledge.ts
 ```
 
-Standard Next.js scripts (`dev`, `build`, `start`, `lint`) are unchanged from the Next.js defaults.
+---
+
+## Content Updates
+
+### Blog posts
+
+Drop files in `content-updates/` named by post slug:
+- `<slug>.html` — replaces the `body` field (Portable Text) with HTML converted to block format
+- `<slug>.json` — updates simple fields (`excerpt`, `title`, `readTime`, `metaTitle`, `metaDescription`)
+
+Run `pnpm update:posts` for a dry run, then `pnpm update:posts:live` to apply. The `content-updates/` folder is gitignored. Clean up after a successful run.
+
+### Other Sanity content
+
+Edit directly in Studio at `/studio`. Changes propagate via the revalidation webhook within seconds.
 
 ---
 
-## Content Revalidation
+## Deployment
 
-This site uses on-demand ISR (Incremental Static Regeneration) so that content updates in Sanity Studio appear on the live site within seconds — no redeploy required.
-
-### How it works
-
-1. Editor publishes a change in Sanity Studio (`/studio`)
-2. Sanity fires a webhook to `POST /api/revalidate`
-3. The route validates the request signature using `SANITY_REVALIDATE_SECRET` and calls `revalidateTag(_type, 'max')` for the affected document type
-4. Next.js invalidates the cache for any `sanityFetch` queries tagged with that document type
-5. The next request to the live site fetches fresh content from Sanity
-
-> The AI concierge knowledge blob is **not** part of the ISR revalidation path. It has its own 30-minute in-module cache (see the AI Concierge Chat section), so Sanity-sourced content changes reach the bot within ~30 minutes rather than seconds.
-
-### Cache tagging
-
-All `sanityFetch` calls in the codebase pass cache tags matching the Sanity `_type` they query (e.g. `tags: ['faq']`, `tags: ['post', 'author']`). This is what enables targeted invalidation on publish.
-
-### Configuration
-
-- **Webhook receiver:** `app/api/revalidate/route.ts`
-- **Secret:** `SANITY_REVALIDATE_SECRET` (must match the `Secret` field in the Sanity webhook config at sanity.io/manage)
-- **Webhook URL:** `https://www.vizantir.com/api/revalidate`
-- **Sanity webhook projection:** `{ _type, "slug": slug.current }`
-
-### When to redeploy
-
-Code changes still require a redeploy. Only Sanity content changes use the revalidation path. Adding new env vars, schema changes, or component updates → push to `main` and let Vercel rebuild.
+Deployed automatically to Vercel on push to `main`. Environment variables must be configured in the Vercel project settings — `.env.local` is not deployed. Code changes require a redeploy; Sanity content changes use the revalidation path.
 
 ---
 
-## Form Protection
+## Conventions
 
-All public forms on this site follow the Vizantir form protection standard. The contact form at `/contact` implements honeypot, Cloudflare Turnstile, IP-hashed rate limiting, and email validation, with submissions stored in Supabase and notifications sent via Resend.
-
-For the full standard and reference implementations of other form types, see:
-
-- `docs/standards/form-protection.md` — the standard
-- `docs/standards/form-protection-reference/` — working reference implementations
-
-When applying form protection to a new project (Vizantir client work, etc.), copy from the reference and adapt — do not write protection from scratch.
+- Commit per file: `git add <file>` then commit. Never `git add .` for shared work.
+- Never chain git commands with `&&`.
+- Client-facing copy must read as human-written — see internal style guidance in `docs/`.
+- Form protection standard at `docs/standards/form-protection.md` applies to every public-facing form added to the codebase.
 
 ---
 
-## Database (Supabase)
+## License
 
-Database schema lives in `supabase/migrations/`. To apply migrations to a new Supabase project, paste the SQL into the Supabase SQL Editor and run.
-
-Required setup for any new Supabase project hosting Vizantir forms:
-- Run all files in `supabase/migrations/` in order
-- Verify tables exist via Table Editor
-- Confirm `service_role` has explicit GRANTs on form tables (some Supabase projects require this if "Automatically expose new tables" was disabled at project creation — see `docs/standards/form-protection.md` for details)
-
----
-
-## Notes
-
-- Blog content lives in Sanity CMS; edit posts in Studio at `/studio`
-- Services display order on `/services` is controlled by the `order` field on each `service` document in Sanity Studio
-- AI concierge chat is mounted globally in `app/layout.tsx`; its knowledge sources and update model are documented in the AI Concierge Chat section
-- Schema markup lives in `lib/schema/index.ts` and `app/layout.tsx`
-- Blog posts render Portable Text via the shared component at `components/portable-text.tsx`
-- Blog categories are defined in `lib/blog-categories.ts`
-- Commit workflow: `git add .` → `git commit -m "..."` → `git push`
-- Never chain git commands with `&&`
-- Form protection standard documented at `docs/standards/form-protection.md`. Apply when adding any public-facing form.
+This source code is provided for portfolio review and reference only. See [LICENSE](./LICENSE) for full terms.

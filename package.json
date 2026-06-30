@@ -2,6 +2,7 @@
   "name": "vizantir",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.9.0",
   "browserslist": [
     "Chrome >= 100",
     "Safari >= 15",
