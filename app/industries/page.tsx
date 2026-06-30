@@ -5,14 +5,14 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
-import { INDUSTRIES, type Industry } from './_data'
+import { INDUSTRIES, SECONDARY_INDUSTRIES, type Industry } from './_data'
 
 const SITE_URL = 'https://www.vizantir.com'
 const PAGE_URL = `${SITE_URL}/industries`
 const BUSINESS_ID = `${SITE_URL}/#business`
 
 const PAGE_DESCRIPTION =
-  'Custom web design for hospitality, law firms, commercial real estate, and established businesses where presentation directly affects revenue. Built by a Las Vegas studio.'
+  'Vizantir builds custom websites for established businesses across all sectors. Dedicated landing pages for hospitality, law firms, and commercial real estate. Premium custom builds across many more.'
 
 export const metadata: Metadata = {
   title: {
@@ -89,26 +89,54 @@ export default function IndustriesHubPage() {
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
               <Eyebrow className="mb-8">Industries</Eyebrow>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
-                Industries We Build For
+                Who We Build For
               </h1>
               <p className="text-base md:text-lg text-body leading-relaxed">
-                Vizantir works across multiple sectors where presentation directly affects revenue.
-                Hospitality, law, commercial real estate — different industries, same underlying
-                challenge: established businesses where the website is the first serious test of the
-                business.
+                Vizantir builds custom websites for established businesses across all sectors —
+                wherever the website is a serious touchpoint between you and the people who decide
+                whether to work with you.
               </p>
             </div>
 
             <div className="mb-16 md:mb-20">
+              <div className="max-w-3xl mx-auto text-center mb-10 md:mb-12">
+                <p className="text-xs md:text-sm font-semibold uppercase tracking-widest text-meta mb-3">
+                  Industries With Dedicated Pages
+                </p>
+                <p className="text-base md:text-lg text-body leading-relaxed">
+                  We&apos;ve built deep SEO-focused landing pages for three industries where the buyer
+                  signals are strongest. The site work itself looks the same across every sector —
+                  premium, fast, custom.
+                </p>
+              </div>
               <IndustryGrid industries={INDUSTRIES} />
+            </div>
+
+            <div className="mb-16 md:mb-20">
+              <div className="max-w-3xl mx-auto text-center mb-8 md:mb-10">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
+                <p className="text-base md:text-lg text-body leading-relaxed">
+                  Vizantir takes projects across the broader market — any established business that
+                  wants a premium, custom-built site over a templated solution.
+                </p>
+              </div>
+              <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-2 md:gap-3">
+                {SECONDARY_INDUSTRIES.map((industry) => (
+                  <span
+                    key={industry}
+                    className="rounded-full bg-black/[0.04] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-black/[0.07]"
+                  >
+                    {industry}
+                  </span>
+                ))}
+              </div>
             </div>
 
             <div className="max-w-3xl mx-auto text-center mb-16">
               <p className="text-base md:text-lg text-body leading-relaxed">
-                These three industries are where Vizantir has built dedicated landing pages — but the
-                studio works with any established business where presentation affects revenue. If your
-                sector is not listed here, the same principles apply: a custom site that earns trust,
-                loads fast, and converts the visitors who matter.
+                Industry isn&apos;t the qualifier — established business and premium budget are. If you
+                operate in a sector that isn&apos;t listed here, the work looks the same: a custom site
+                built to be fast, durable, and uniquely yours.
               </p>
             </div>
 

@@ -32,3 +32,14 @@ export const INDUSTRIES: Industry[] = [
       'Vizantir designs custom websites for commercial real estate operators — property developers, brokerages, and portfolio firms — where the site has to communicate scale, quality, and pipeline to tenants and investors.',
   },
 ]
+
+export const SECONDARY_INDUSTRIES: string[] = [
+  'Professional Services',
+  'Beauty & Wellness',
+  'Retail & Consumer Brands',
+  'Home Services & Trades',
+  'Financial Advisors',
+  'Education & Coaching',
+  'Studios & Creative Spaces',
+  'Boutique Agencies',
+]
