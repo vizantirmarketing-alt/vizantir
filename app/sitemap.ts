@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { CORE_STACK, SPECIALIZED_TOOLS } from '@/app/technology/_data'
 import { sanityFetch } from '@/lib/sanity/client'
 import { sitemapQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import type { SitemapData, SiteSettings } from '@/lib/sanity/types'
@@ -27,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/hospitality-web-design`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/law-firm-web-design`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/commercial-real-estate-web-design`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/website-redesign-las-vegas`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/case-studies`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/how-we-work`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/are-we-a-fit`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.75 },
@@ -35,7 +37,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${baseUrl}/cookies`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${baseUrl}/copyright`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/industries`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/technology`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
   ]
+
+  const technologyPages: MetadataRoute.Sitemap = [...CORE_STACK, ...SPECIALIZED_TOOLS].map(
+    (tech) => ({
+      url: `${baseUrl}/technology/${tech.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }),
+  )
 
   // Dynamic pages from Sanity
   const postPages: MetadataRoute.Sitemap = (data?.posts || []).map((p) => ({
@@ -66,5 +79,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  return [...staticPages, ...postPages, ...servicePages, ...caseStudyPages, ...locationPages]
+  return [
+    ...staticPages,
+    ...technologyPages,
+    ...postPages,
+    ...servicePages,
+    ...caseStudyPages,
+    ...locationPages,
+  ]
 }

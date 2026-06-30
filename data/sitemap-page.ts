@@ -1,4 +1,39 @@
+import { CORE_STACK, SPECIALIZED_TOOLS, type Technology } from '@/app/technology/_data'
+
 export type SitemapLink = { name: string; href: string }
+
+const TECHNOLOGY_LABEL_OVERRIDES: Record<string, string> = {
+  nextjs: 'Next.js Development',
+  sanity: 'Sanity CMS Development',
+  vercel: 'Vercel Hosting and Deployment',
+  tailwind: 'Tailwind CSS Custom Design',
+  typescript: 'TypeScript Development',
+  react: 'React Development',
+  supabase: 'Supabase Development',
+  stripe: 'Stripe Integration',
+  resend: 'Resend Email Integration',
+  cloudflare: 'Cloudflare CDN and Security',
+  gsap: 'GSAP Animation Development',
+  'framer-motion': 'Framer Motion React Animation',
+  analytics: 'Website Analytics Implementation',
+  'microsoft-clarity': 'Microsoft Clarity Heatmap Analytics',
+}
+
+function technologySitemapLabel(tech: Technology): string {
+  return TECHNOLOGY_LABEL_OVERRIDES[tech.slug] ?? tech.name
+}
+
+export const sitemapTechnologyPages: SitemapLink[] = [
+  { name: 'Our Technology Stack', href: '/technology' },
+  ...CORE_STACK.map((tech) => ({
+    name: technologySitemapLabel(tech),
+    href: `/technology/${tech.slug}`,
+  })),
+  ...SPECIALIZED_TOOLS.map((tech) => ({
+    name: technologySitemapLabel(tech),
+    href: `/technology/${tech.slug}`,
+  })),
+]
 
 export const sitemapMainPages: SitemapLink[] = [
   { name: 'Home', href: '/' },
@@ -15,6 +50,7 @@ export const sitemapMainPages: SitemapLink[] = [
 ]
 
 export const sitemapIndustryPages: SitemapLink[] = [
+  { name: 'Industries We Build For', href: '/industries' },
   { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
   { name: 'Website Redesign Las Vegas', href: '/website-redesign-las-vegas' },
   { name: 'Law Firm Web Design', href: '/law-firm-web-design' },

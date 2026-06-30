@@ -9,10 +9,12 @@ import type { SitemapPageItem } from '@/lib/sanity/types'
 type Props = {
   mainPages: SitemapLink[]
   industryPages: SitemapLink[]
+  technologyPages: SitemapLink[]
   legalPages: SitemapLink[]
   services: SitemapPageItem[]
   caseStudies: SitemapPageItem[]
   posts: SitemapPageItem[]
+  locations: SitemapPageItem[]
 }
 
 function SectionHeading({ label }: { label: string }) {
@@ -43,10 +45,12 @@ function LinkList({ links }: { links: SitemapLink[] }) {
 export default function SitemapPageClient({
   mainPages,
   industryPages,
+  technologyPages,
   legalPages,
   services,
   caseStudies,
   posts,
+  locations,
 }: Props) {
   const postCount = posts.length
 
@@ -61,9 +65,9 @@ export default function SitemapPageClient({
           >
             <h1 className="mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">Sitemap</h1>
             <p className="max-w-2xl text-lg text-muted-foreground">
-              Browse every public page on Vizantir — marketing pages, industry landings,
-              services, case studies, blog posts, and legal resources. This list stays in sync
-              with our XML sitemap.
+              This page lists every public page on Vizantir&apos;s site, organized by section —
+              marketing pages, industries, technology, services, case studies, blog posts,
+              locations, and legal resources.
             </p>
           </motion.div>
         </div>
@@ -88,6 +92,15 @@ export default function SitemapPageClient({
             >
               <SectionHeading label="Industries" />
               <LinkList links={industryPages} />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.17 }}
+            >
+              <SectionHeading label="Technology" />
+              <LinkList links={technologyPages} />
             </motion.div>
 
             <motion.div
@@ -129,6 +142,28 @@ export default function SitemapPageClient({
                 ))}
               </ul>
             </motion.div>
+
+            {locations.length > 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.32 }}
+              >
+                <SectionHeading label="Locations" />
+                <ul className="space-y-3">
+                  {locations.map((location) => (
+                    <li key={location.slug}>
+                      <Link
+                        href={`/locations/${location.slug}`}
+                        className="link-cobalt text-muted-foreground"
+                      >
+                        {location.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ) : null}
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}

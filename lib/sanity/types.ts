@@ -240,6 +240,7 @@ export interface SitemapPageData {
   posts: SitemapPageItem[]
   services: SitemapPageItem[]
   caseStudies: SitemapPageItem[]
+  locations: SitemapPageItem[]
 }
 
 

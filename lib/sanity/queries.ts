@@ -292,6 +292,11 @@ export const sitemapPageQuery = groq`{
     "slug": slug.current,
     title,
     _updatedAt
+  },
+  "locations": *[_type == "location" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(name asc) {
+    "slug": slug.current,
+    "title": name,
+    _updatedAt
   }
 }`
 
