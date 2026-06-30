@@ -9,14 +9,14 @@ const canonicalUrl = 'https://www.vizantir.com/are-we-a-fit'
 export const areWeAFitMetadata: Metadata = {
   title: 'Are We a Fit? Premium Web Design for Established Businesses | Vizantir',
   description:
-    "Vizantir is a premium web design studio in Las Vegas for established businesses in hospitality, law, real estate, and luxury. Learn if we're the right fit for your project.",
+    "Vizantir is a premium Las Vegas web design studio for established businesses whose website no longer reflects their brand. Learn if we're the right fit for your project.",
   alternates: {
     canonical: canonicalUrl,
   },
   openGraph: {
     title: 'Are We a Fit? Premium Web Design for Established Businesses | Vizantir',
     description:
-      "Vizantir is a premium web design studio in Las Vegas for established businesses in hospitality, law, real estate, and luxury. Learn if we're the right fit for your project.",
+      "Vizantir is a premium Las Vegas web design studio for established businesses whose website no longer reflects their brand. Learn if we're the right fit for your project.",
     url: canonicalUrl,
     type: 'website',
   },
@@ -24,7 +24,7 @@ export const areWeAFitMetadata: Metadata = {
     card: 'summary_large_image',
     title: 'Are We a Fit? Premium Web Design for Established Businesses | Vizantir',
     description:
-      "Vizantir is a premium web design studio in Las Vegas for established businesses in hospitality, law, real estate, and luxury. Learn if we're the right fit for your project.",
+      "Vizantir is a premium Las Vegas web design studio for established businesses whose website no longer reflects their brand. Learn if we're the right fit for your project.",
   },
 }
 
@@ -63,7 +63,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
     bullets: [
       'You run an established business in Las Vegas or nationwide — not a pre-launch idea or side project',
       'Your current website is hurting your brand more than helping — and you already know it',
-      'You work in hospitality, law, real estate, luxury, or financial services',
+      'You run an established business where presentation and trust affect revenue — beauty, wellness, creative studios, professional services, retail, luxury, or financial services',
       'You want a custom website designed around your business — not a template with your logo pasted on it',
       'You care about strategy, conversion, and search visibility — not just aesthetics',
       `You're ready to invest ${essentialsProjectTier.price} or more in a premium web design project`,

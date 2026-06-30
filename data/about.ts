@@ -62,9 +62,9 @@ export const aboutPageContent: AboutPageContent = {
     paragraph:
       'Vizantir is a design and development studio based in Las Vegas. We build websites for brands whose business has moved past what their current site can carry.',
     examples: [
-      'A restaurant still running on a stock WordPress theme.',
-      'A law firm with a site that no longer reflects the quality of its work.',
-      'A real estate group whose portfolio looks like every other listing page.',
+      'A dance studio still running on a stock WordPress theme.',
+      "A nail salon whose Wix site doesn't match the in-studio experience.",
+      'A local brand whose site keeps getting compromised by outdated plugins.',
     ],
     closing:
       "Most of our clients already have a website. The problem is that it was built for a version of their business they've outgrown.",
@@ -93,7 +93,7 @@ export const aboutPageContent: AboutPageContent = {
       id: 'whoWeWorkWith',
       heading: 'Who we work with',
       paragraphs: [
-        'Vizantir works with premium brands and established businesses — luxury hospitality, boutique law firms, commercial real estate, and product companies that serve a discerning audience.',
+        'Vizantir works with premium brands and established businesses — beauty and wellness studios, creative spaces, professional services, and product companies that serve a discerning audience.',
         "The common thread isn't the industry. It's the standard.",
         'Our clients care about craft, notice when something is off, and want their website to hold up to the same scrutiny as the rest of their business.',
       ],

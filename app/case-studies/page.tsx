@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
       title: 'Website Case Studies & Success Stories | Vizantir',
       description:
-        'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
+        'See how Vizantir builds custom Next.js websites for established brands — from beauty and wellness to creative studios and retail.',
     }
   }
 
@@ -31,12 +31,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Website Case Studies & Success Stories | Vizantir',
     description:
-      'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
+      'See how Vizantir builds custom Next.js websites for established brands — from beauty and wellness to creative studios and retail.',
     alternates: { canonical: url },
     openGraph: {
       title: 'Website Case Studies & Success Stories | Vizantir',
       description:
-        'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
+        'See how Vizantir builds custom Next.js websites for established brands — from beauty and wellness to creative studios and retail.',
       url,
       type: 'website',
       images: settings.ogImageUrl ? [{ url: settings.ogImageUrl }] : undefined,
@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: 'Website Case Studies & Success Stories | Vizantir',
       description:
-        'See how we transform restaurant, legal and real estate brands with custom Next.js websites that deliver results and elevate their digital presence.',
+        'See how Vizantir builds custom Next.js websites for established brands — from beauty and wellness to creative studios and retail.',
       images: settings.ogImageUrl ? [settings.ogImageUrl] : undefined,
     },
   }

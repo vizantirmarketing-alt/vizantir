@@ -57,7 +57,7 @@ const FAQS: FaqSeed[] = [
   {
     question: 'What industries do you specialize in?',
     answer:
-      'We focus on hospitality and restaurants, law firms, commercial real estate, and luxury lifestyle brands. These are competitive, high-stakes markets where design quality and search visibility directly impact revenue — which is exactly where we operate best.',
+      'We work with established businesses across many sectors — beauty and wellness, creative studios, professional services, retail, luxury, and financial services. The common thread is established businesses where presentation and trust affect revenue.',
     placement: 'homepage',
     sortOrder: 50,
   },

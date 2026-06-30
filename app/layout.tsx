@@ -181,7 +181,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: settingsWithFallback.siteUrl || 'https://www.vizantir.com',
       siteName: settingsWithFallback.siteName,
       title: 'Vizantir | Custom Website Design Studio in Las Vegas',
-      description: 'Custom Next.js websites for hospitality, law, and real estate brands. Built by hand, not assembled from templates.',
+      description: 'Custom Next.js websites for established Las Vegas businesses. Hand-built, not assembled from templates.',
       images: [
         {
           url: 'https://www.vizantir.com/og-image.png',
@@ -194,7 +194,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: 'Vizantir | Custom Website Design Studio in Las Vegas',
-      description: 'Custom Next.js websites for hospitality, law, and real estate brands. Built by hand, not assembled from templates.',
+      description: 'Custom Next.js websites for established Las Vegas businesses. Hand-built, not assembled from templates.',
       images: ['https://www.vizantir.com/og-image.png'],
     },
     icons: {

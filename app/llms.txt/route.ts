@@ -17,7 +17,7 @@ Vizantir is a design and development studio founded by an operator with 25 years
 - [Website Care](https://www.vizantir.com/services): Post-launch updates, monitoring, and performance improvements on a monthly retainer.
 
 ## Who we work with
-Established businesses where trust, presentation, and user experience affect revenue: hospitality and restaurants, law firms, commercial real estate, luxury and lifestyle brands, and financial services. Best fit for companies whose current website is holding the brand back, who want a custom site over a template, and who are ready to invest $15,000 or more. Not a fit for pre-launch ideas, lowest-bid shoppers, hourly or unlimited-revision arrangements, full-service marketing needs (Vizantir does not run Google Ads or manage social media), or two-week timelines.
+Established businesses where trust and presentation affect revenue — beauty and wellness, creative studios, professional services, retail, luxury brands, and financial services. Dedicated SEO landing pages exist for hospitality, law firms, and commercial real estate, though active client work spans broader sectors. Best fit for companies whose current website is holding the brand back, who want a custom site over a template, and who are ready to invest $15,000 or more. Not a fit for pre-launch ideas, lowest-bid shoppers, hourly or unlimited-revision arrangements, full-service marketing needs (Vizantir does not run Google Ads or manage social media), or two-week timelines.
 
 ## Pricing
 Custom website projects start at $15,000 and scale to $60,000+ depending on scope and complexity. Not the cheapest option in the Las Vegas market, by design.

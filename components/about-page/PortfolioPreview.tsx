@@ -36,8 +36,8 @@ const PortfolioPreview = () => {
     },
     {
       title: 'Fuji Omakase',
-      category: 'HOSPITALITY',
-      description: 'Michelin-starred omakase restaurant website with immersive animations, editorial design, and premium booking experience.',
+      category: 'HOSPITALITY (CONCEPT)',
+      description: 'Michelin-starred omakase restaurant website with immersive animations, editorial design, and premium booking experience. (Concept work)',
       image: '/fuji-omakase.png',
       link: 'https://fujiomakase.com',
     },

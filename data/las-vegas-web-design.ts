@@ -189,7 +189,7 @@ export const lasVegasPageData: LasVegasPageData = {
   industries: {
     heading: 'Who we build for',
     body:
-      'Vizantir works with established businesses across Southern Nevada and the U.S. Recent projects have included a salon group recovering from a hacked WordPress install, a commercial property developer pitching tenants, and a private studio that migrated off Wix. We also take on medical practices, financial advisors, contractors, and franchise operators. If presentation affects revenue, we can probably help.',
+      'Vizantir works with established businesses across Southern Nevada and the U.S. Recent projects have included a Las Vegas salon group recovering from a hacked WordPress install, a private nail studio that migrated off Wix, and a dance studio that outgrew its template. We also take on medical practices, financial advisors, contractors, and franchise operators. If presentation affects revenue, we can probably help.',
     items: [
       'Professional services and B2B',
       'Retail and consumer brands',

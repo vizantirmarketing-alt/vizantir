@@ -5,14 +5,14 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
-import { INDUSTRIES, SECONDARY_INDUSTRIES, type Industry } from './_data'
+import { SECONDARY_INDUSTRIES } from './_data'
 
 const SITE_URL = 'https://www.vizantir.com'
 const PAGE_URL = `${SITE_URL}/industries`
 const BUSINESS_ID = `${SITE_URL}/#business`
 
 const PAGE_DESCRIPTION =
-  'Vizantir builds custom websites for established businesses across all sectors. Dedicated landing pages for hospitality, law firms, and commercial real estate. Premium custom builds across many more.'
+  'Vizantir builds custom websites for established businesses across all sectors. Premium custom builds for any business where presentation affects revenue.'
 
 export const metadata: Metadata = {
   title: {
@@ -54,30 +54,6 @@ const pageGraph = graphSchema([
   ]),
 ])
 
-function IndustryGrid({ industries }: { industries: Industry[] }) {
-  return (
-    <div className="grid gap-6 lg:grid-cols-3">
-      {industries.map((industry) => (
-        <article
-          key={industry.slug}
-          className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
-        >
-          <h3 className="text-2xl font-bold text-foreground mb-3">{industry.name}</h3>
-          <p className="text-cobalt-accent font-medium mb-4">{industry.tagline}</p>
-          <p className="mb-6 flex-1 text-sm text-body leading-relaxed">{industry.description}</p>
-          <Link
-            href={`/${industry.slug}`}
-            className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-accent"
-          >
-            Learn more
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </article>
-      ))}
-    </div>
-  )
-}
-
 export default function IndustriesHubPage() {
   return (
     <>
@@ -98,22 +74,8 @@ export default function IndustriesHubPage() {
               </p>
             </div>
 
-            <div className="mb-16 md:mb-20">
-              <div className="max-w-3xl mx-auto text-center mb-10 md:mb-12">
-                <p className="text-xs md:text-sm font-semibold uppercase tracking-widest text-meta mb-3">
-                  Industries With Dedicated Pages
-                </p>
-                <p className="text-base md:text-lg text-body leading-relaxed">
-                  We&apos;ve built deep SEO-focused landing pages for three industries where the buyer
-                  signals are strongest. The site work itself looks the same across every sector —
-                  premium, fast, custom.
-                </p>
-              </div>
-              <IndustryGrid industries={INDUSTRIES} />
-            </div>
-
-            <div className="mb-16 md:mb-20">
-              <div className="max-w-3xl mx-auto text-center mb-8 md:mb-10">
+            <div className="mb-20 md:mb-28">
+              <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
                   Vizantir takes projects across the broader market — any established business that

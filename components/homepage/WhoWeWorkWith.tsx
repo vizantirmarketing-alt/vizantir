@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 
 const WhoWeWorkWith = () => {
   const industries = [
-    'Hospitality & Restaurants',
-    'Law Firms',
-    'Commercial Real Estate',
-    'Luxury & Lifestyle Brands',
+    'Beauty & Wellness',
+    'Studios & Creative Spaces',
+    'Retail & Consumer Brands',
+    'Professional Services',
     'Financial Services',
+    'Education & Coaching',
   ];
 
   return (
