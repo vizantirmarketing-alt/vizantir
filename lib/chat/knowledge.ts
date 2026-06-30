@@ -19,6 +19,9 @@ import {
 } from '@/data/pricing'
 import { areWeAFitPageContent } from '@/data/are-we-a-fit'
 import { howWeWorkProcess, howWeWorkFaqs } from '@/data/how-we-work'
+import { CORE_STACK, SPECIALIZED_TOOLS } from '@/app/technology/_data'
+import type { Technology } from '@/app/technology/_data'
+import { SECONDARY_INDUSTRIES } from '@/app/industries/_data'
 
 // ---- Types (loose; we only read these for serialization) ----
 type AnyRec = Record<string, unknown>
@@ -214,6 +217,72 @@ function buildAuthor(a: AnyRec | null): string {
   return section('FOUNDER', body)
 }
 
+function techSummary(tech: Technology): string {
+  if (tech.description) return tech.description
+  const match = tech.intro.match(/^[^.!?]+[.!?]/)
+  return match ? match[0] : tech.intro
+}
+
+function formatTechItem(tech: Technology): string {
+  return [
+    `- ${tech.name}: vizantir.com/technology/${tech.slug}`,
+    `  Tagline: ${tech.tagline}`,
+    `  Summary: ${techSummary(tech)}`,
+  ].join('\n')
+}
+
+function buildTechnology(): string {
+  const coreItems = CORE_STACK.map(formatTechItem).join('\n\n')
+  const specializedItems = SPECIALIZED_TOOLS.map(formatTechItem).join('\n\n')
+  const body = [
+    'Vizantir has a dedicated /technology hub at vizantir.com/technology that explains every technology used in our builds.',
+    '### Core Stack — used on every Vizantir site',
+    coreItems,
+    '### Specialized Tools — used when the project calls for it',
+    specializedItems,
+  ].join('\n\n')
+  return section('Technology Pages', body)
+}
+
+function buildIndustries(): string {
+  const body = [
+    'Vizantir builds custom websites for established businesses across all sectors. The /industries hub is at vizantir.com/industries.',
+    '',
+    `We work with clients in: ${SECONDARY_INDUSTRIES.join(', ')}`,
+    '',
+    'We also have dedicated SEO landing pages for these three industries:',
+    '- Hospitality: vizantir.com/hospitality-web-design',
+    '- Law Firms: vizantir.com/law-firm-web-design',
+    '- Commercial Real Estate: vizantir.com/commercial-real-estate-web-design',
+    '',
+    'These three landing pages are SEO entry points, not specialty claims — Vizantir\'s work spans all the sectors listed above.',
+  ].join('\n')
+  return section('Industries', body)
+}
+
+function buildSiteRoutes(): string {
+  const body = [
+    'Main pages:',
+    '- Home: vizantir.com',
+    '- About: vizantir.com/about',
+    '- Services: vizantir.com/services',
+    '- Case Studies: vizantir.com/case-studies',
+    '- Blog: vizantir.com/blog',
+    '- FAQ: vizantir.com/faq',
+    '- Contact: vizantir.com/contact',
+    '- How We Work: vizantir.com/how-we-work',
+    '- Are We a Fit: vizantir.com/are-we-a-fit',
+    '- Get Started: vizantir.com/get-started',
+    '',
+    'Specialty pages:',
+    '- Las Vegas Web Design: vizantir.com/las-vegas-web-design',
+    '- Website Redesign Las Vegas: vizantir.com/website-redesign-las-vegas',
+    '- Industries Hub: vizantir.com/industries',
+    '- Technology Hub: vizantir.com/technology',
+  ].join('\n')
+  return section('Site Routes', body)
+}
+
 // ---- Main assembly (cached per request via React cache) ----
 let _cachedBlob: string | null = null
 let _cachedAt = 0
@@ -240,6 +309,9 @@ export async function getKnowledgeBlob(): Promise<string> {
     buildPricing(),
     buildFit(),
     buildProcess(),
+    buildTechnology(),
+    buildIndustries(),
+    buildSiteRoutes(),
     buildCaseStudies(caseStudies ?? []),
     buildFaqs(faqs ?? []),
     buildAuthor(author),
