@@ -5,7 +5,7 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-12-05'
 
 // Standard client (uses CDN in production)
-export const client = createClient({
+const client = createClient({
   projectId,
   dataset,
   apiVersion,
@@ -13,7 +13,7 @@ export const client = createClient({
 })
 
 // Fresh client (bypasses CDN — use for sitemap, critical paths)
-export const freshClient = createClient({
+const freshClient = createClient({
   projectId,
   dataset,
   apiVersion,
@@ -45,21 +45,6 @@ export async function sanityFetch<T>(
     },
   })
 }
-
-/**
- * Always-fresh fetch (bypasses all caching)
- * Use for sitemap, robots.txt, and dev debugging
- */
-export async function sanityFetchFresh<T>(
-  query: string,
-  params: Record<string, unknown> = {}
-): Promise<T> {
-  return freshClient.fetch<T>(query, params, {
-    next: { revalidate: 0 },
-  })
-}
-
-
 
 
 

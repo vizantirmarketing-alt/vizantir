@@ -1,10 +1,7 @@
 import type { 
-  SiteSettings, 
   Service, 
   Post, 
-  Author, 
   Location, 
-  Category,
   FAQ 
 } from '@/lib/sanity/types'
 
@@ -15,7 +12,6 @@ import {
   articleId,
   personId,
   locationId,
-  categoryId,
   refOrganization,
   refWebsite,
   refWebPage,
@@ -54,22 +50,6 @@ export function graphSchema(nodes: (Record<string, unknown> | null | undefined)[
   return {
     '@context': 'https://schema.org',
     '@graph': cleanedNodes,
-  }
-}
-
-// ============================================
-// WebSite Schema
-// ============================================
-
-export function websiteSchema(settings: SiteSettings) {
-  return {
-    '@type': 'WebSite',
-    '@id': websiteId(settings.siteUrl),
-    url: settings.siteUrl,
-    name: settings.siteName,
-    description: settings.organizationDescription,
-    publisher: refOrganization(settings.siteUrl),
-    inLanguage: 'en-US',
   }
 }
 
@@ -229,32 +209,6 @@ export function blogPostSchema(post: Post, siteUrl: string) {
 }
 
 // ============================================
-// Person Schema (Authors/Team)
-// ============================================
-
-export function personSchema(author: Author, siteUrl: string) {
-  const url = `${siteUrl}/about/${author.slug}`
-
-  const sameAs = [author.linkedin, author.twitter].filter(
-    (u): u is string => Boolean(u)
-  )
-
-  return {
-    '@type': 'Person',
-    '@id': personId(siteUrl, author.slug),
-    name: author.name,
-    url,
-    ...(author.role && { jobTitle: author.role }),
-    ...(author.imageUrl && { image: author.imageUrl }),
-    worksFor: refOrganization(siteUrl),
-    ...(sameAs.length > 0 && { sameAs }),
-    ...(author.credentials && author.credentials.length > 0 && { 
-      knowsAbout: author.credentials 
-    }),
-  }
-}
-
-// ============================================
 // Location Schema
 // ============================================
 
@@ -311,22 +265,6 @@ export function locationSchema(location: Location, siteUrl: string) {
 }
 
 // ============================================
-// Category Schema
-// ============================================
-
-export function categorySchema(category: Category, siteUrl: string) {
-  const url = `${siteUrl}/categories/${category.slug}`
-
-  return {
-    '@type': 'Thing', // Or 'Service', 'Product', etc. based on your use
-    '@id': categoryId(siteUrl, category.slug),
-    name: category.name,
-    description: category.description,
-    url,
-  }
-}
-
-// ============================================
 // CollectionPage Schema (for index pages)
 // ============================================
 
@@ -361,45 +299,6 @@ export function collectionPageSchema({
         url: item.url,
       })),
     },
-    inLanguage: 'en-US',
-  }
-}
-
-// ============================================
-// AboutPage Schema
-// ============================================
-
-export function aboutPageSchema(siteUrl: string, ogImageUrl?: string) {
-  const url = `${siteUrl}/about`
-  
-  return {
-    '@type': 'AboutPage',
-    '@id': webPageId(url),
-    url,
-    name: 'About',
-    isPartOf: refWebsite(siteUrl),
-    about: refOrganization(siteUrl),
-    mainEntity: refOrganization(siteUrl),
-    ...(ogImageUrl && {
-      primaryImageOfPage: { '@type': 'ImageObject', url: ogImageUrl },
-    }),
-    inLanguage: 'en-US',
-  }
-}
-
-// ============================================
-// ContactPage Schema
-// ============================================
-
-export function contactPageSchema(siteUrl: string) {
-  const url = `${siteUrl}/contact`
-  
-  return {
-    '@type': 'ContactPage',
-    '@id': webPageId(url),
-    url,
-    name: 'Contact',
-    isPartOf: refWebsite(siteUrl),
     inLanguage: 'en-US',
   }
 }

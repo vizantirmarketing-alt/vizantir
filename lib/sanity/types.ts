@@ -48,7 +48,7 @@ export interface FAQ {
   answer: string
 }
 
-export interface SEOFields {
+interface SEOFields {
   metaTitle?: string
   metaDescription?: string
   ogImageUrl?: string
@@ -58,20 +58,20 @@ export interface SEOFields {
 // Page/Post Types (Customize for your site)
 // ============================================
 
-export interface PageListItem {
+interface PageListItem {
   _id: string
   _updatedAt: string
   title: string
   slug: string
 }
 
-export interface Page extends PageListItem, SEOFields {
+interface Page extends PageListItem, SEOFields {
   description?: string
   content?: any[] // PortableText
   faqs?: FAQ[]
 }
 
-export interface PostListItem {
+interface PostListItem {
   _id: string
   _updatedAt: string
   title: string
@@ -89,7 +89,7 @@ export interface Post extends PostListItem, SEOFields {
   author?: Author
 }
 
-export interface Author {
+interface Author {
   _id: string
   name: string
   slug: string
@@ -134,7 +134,7 @@ export interface Service extends ServiceListItem, SEOFields {
   relatedServices?: { title: string; slug: string }[]
 }
 
-export interface CaseStudyImage {
+interface CaseStudyImage {
   alt?: string
   asset?: {
     _id: string
@@ -167,7 +167,7 @@ export interface CaseStudy extends CaseStudyListItem, SEOFields {
 // Location Types (for multi-location businesses)
 // ============================================
 
-export interface LocationListItem {
+interface LocationListItem {
   _id: string
   _updatedAt: string
   name: string
@@ -198,23 +198,6 @@ export interface Location extends LocationListItem, SEOFields {
     name: string
     company: string
   }[]
-  faqs?: FAQ[]
-}
-
-// ============================================
-// Category/Industry Types
-// ============================================
-
-export interface CategoryListItem {
-  _id: string
-  _updatedAt: string
-  name: string
-  slug: string
-}
-
-export interface Category extends CategoryListItem, SEOFields {
-  description?: string
-  content?: any[] // PortableText
   faqs?: FAQ[]
 }
 

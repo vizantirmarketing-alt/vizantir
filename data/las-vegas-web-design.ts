@@ -2,7 +2,7 @@ import { projectPricing, pricingFAQs } from './pricing'
 
 const essentialsProjectTier = projectPricing[0]
 
-export interface LasVegasHeroContent {
+interface LasVegasHeroContent {
   eyebrow: string
   heading: string
   headingAccent: string
@@ -11,23 +11,23 @@ export interface LasVegasHeroContent {
   secondaryCta: { label: string; href: string }
 }
 
-export interface LasVegasIntroContent {
+interface LasVegasIntroContent {
   heading: string
   paragraphs: readonly string[]
 }
 
-export interface LasVegasWhatYouGetItem {
+interface LasVegasWhatYouGetItem {
   title: string
   description: string
 }
 
-export interface LasVegasProcessStep {
+interface LasVegasProcessStep {
   step: number
   title: string
   description: string
 }
 
-export interface LasVegasPricingTier {
+interface LasVegasPricingTier {
   name: string
   price: string
   timeline: string
@@ -36,18 +36,18 @@ export interface LasVegasPricingTier {
   featured?: boolean
 }
 
-export interface LasVegasIndustriesContent {
+interface LasVegasIndustriesContent {
   heading: string
   body: string
   items: readonly string[]
 }
 
-export interface LasVegasFaqItem {
+interface LasVegasFaqItem {
   question: string
   answer: string
 }
 
-export interface LasVegasClosingCtaContent {
+interface LasVegasClosingCtaContent {
   heading: string
   body: string
   cta: { label: string; href: string }

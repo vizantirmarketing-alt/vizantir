@@ -221,52 +221,6 @@ export const locationBySlugQuery = groq`
 `
 
 // ============================================
-// Categories/Industries
-// ============================================
-
-export const allCategoriesQuery = groq`
-  *[_type == "category"] | order(name asc) {
-    _id,
-    _updatedAt,
-    name,
-    "slug": slug.current
-  }
-`
-
-export const categoryBySlugQuery = groq`
-  *[_type == "category" && slug.current == $slug][0] {
-    _id,
-    _updatedAt,
-    name,
-    "slug": slug.current,
-    description,
-    content,
-    faqs,
-    "metaTitle": seo.metaTitle,
-    "metaDescription": seo.metaDescription,
-    "ogImageUrl": seo.ogImage.asset->url
-  }
-`
-
-// ============================================
-// Authors
-// ============================================
-
-export const authorBySlugQuery = groq`
-  *[_type == "author" && slug.current == $slug][0] {
-    _id,
-    name,
-    "slug": slug.current,
-    role,
-    bio,
-    "imageUrl": image.asset->url,
-    linkedin,
-    twitter,
-    credentials
-  }
-`
-
-// ============================================
 // Sitemap
 // ============================================
 
@@ -351,17 +305,6 @@ export const chatAllFaqsQuery = groq`
     question,
     answer,
     placement
-  }
-`
-
-export const chatAllPostsQuery = groq`
-  *[_type == "post"] | order(publishedAt desc) {
-    title,
-    "slug": slug.current,
-    publishedAt,
-    category,
-    excerpt,
-    "body": pt::text(body)
   }
 `
 

@@ -11,5 +11,3 @@ export const blogCategories = [
   'Philosophy',
   'Strategy',
 ] as const
-
-export type BlogCategory = typeof blogCategories[number]

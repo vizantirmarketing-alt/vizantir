@@ -270,7 +270,6 @@ function CardFooter({ className, children }: CardFooterProps) {
 
 export {
   Card,
-  CardBadge,
   CardHeader,
   CardTitle,
   CardPrice,
@@ -280,5 +279,4 @@ export {
   CardCheckList,
   CardCheckItem,
   CardBody,
-  CardFooter,
 }

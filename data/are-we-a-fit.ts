@@ -28,7 +28,7 @@ export const areWeAFitMetadata: Metadata = {
   },
 }
 
-export interface AreWeAFitBulletSection {
+interface AreWeAFitBulletSection {
   id: 'ideal' | 'notIdeal' | 'budget' | 'closing'
   heading: string
   /** Present for prose sections (budget, closing); omit for bullet-only sections */
@@ -36,7 +36,7 @@ export interface AreWeAFitBulletSection {
   bullets?: readonly string[]
 }
 
-export interface AreWeAFitCta {
+interface AreWeAFitCta {
   label: string
   href: string
 }

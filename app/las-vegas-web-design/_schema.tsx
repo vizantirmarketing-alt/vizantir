@@ -7,7 +7,7 @@ export interface FaqItem {
   answer: string
 }
 
-export interface PricingTierSchema {
+interface PricingTierSchema {
   name: string
   price: number
   description: string
@@ -48,7 +48,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   },
 ] as const
 
-export const PRICING_TIERS: readonly PricingTierSchema[] = [
+const PRICING_TIERS: readonly PricingTierSchema[] = [
   {
     name: projectPricing[0].name,
     price: projectPricing[0].priceNumeric,

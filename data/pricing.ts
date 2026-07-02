@@ -255,10 +255,6 @@ export const chatbotPricing: ChatbotTier[] = [
   },
 ]
 
-export function getChatbotTier(slug: ChatbotTier['slug']) {
-  return chatbotPricing.find((tier) => tier.slug === slug)
-}
-
 const essentialsTier = projectPricing[0]
 const growthTier = projectPricing[1]
 const enterpriseTier = projectPricing[2]
@@ -296,33 +292,7 @@ export const CONTACT_BUDGET_FROM_PRICING = [
   'Not Sure Yet',
 ] as const
 
-export function getProjectTier(slug: PricingTier['slug']): PricingTier {
-  const tier = projectPricing.find((t) => t.slug === slug)
-  if (!tier) {
-    throw new Error(`Unknown project tier slug: ${slug}`)
-  }
-  return tier
-}
-
-export function getCareTier(slug: CareTier['slug']): CareTier {
-  const tier = carePricing.find((t) => t.slug === slug)
-  if (!tier) {
-    throw new Error(`Unknown care tier slug: ${slug}`)
-  }
-  return tier
-}
-
-export function getBlogTier(slug: BlogTier['slug']): BlogTier {
-  const tier = blogPricing.find((t) => t.slug === slug)
-  if (!tier) {
-    throw new Error(`Unknown blog tier slug: ${slug}`)
-  }
-  return tier
-}
-
-export const CARE_CLIENT_DISCOUNT = 0.15
-
 export function formatCareClientPrice(priceMin: number): string {
-  const discounted = Math.round(priceMin * (1 - CARE_CLIENT_DISCOUNT))
+  const discounted = Math.round(priceMin * (1 - 0.15))
   return `$${discounted.toLocaleString()}`
 }

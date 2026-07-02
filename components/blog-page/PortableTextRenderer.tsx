@@ -1,3 +1,3 @@
 'use client'
 
-export { PortableTextRenderer, vizantirPortableTextComponents } from '@/components/portable-text'
+export { PortableTextRenderer } from '@/components/portable-text'
