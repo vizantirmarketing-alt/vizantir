@@ -1,13 +1,23 @@
 import { Metadata } from 'next'
-import LasVegasWebDesignPage from '@/components/pages/las-vegas-web-design'
-import { FAQ_ITEMS, LasVegasPageSchema } from './_schema'
+import LasVegasWebDesignClient from './LasVegasWebDesignClient'
+import { LasVegasPageSchema } from './_schema'
+
+const META_TITLE = 'Las Vegas Web Design Studio — Custom Next.js Websites | Vizantir'
+const META_DESCRIPTION =
+  'Custom Next.js web design for Las Vegas, Henderson, Summerlin, and Paradise businesses. Fixed-scope projects from $15,000. Built by a local studio, no templates.'
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Las Vegas Web Design Studio — Custom Next.js Websites | Vizantir',
+    absolute: META_TITLE,
   },
-  description:
-    'Custom Next.js web design for Las Vegas, Henderson, Summerlin, and Paradise businesses. Fixed-scope projects from $15,000. Built by a local studio, no templates.',
+  description: META_DESCRIPTION,
+  keywords: [
+    'las vegas web design',
+    'henderson web design',
+    'summerlin web design',
+    'southern nevada web design',
+    'next.js las vegas',
+  ],
   alternates: {
     canonical: 'https://www.vizantir.com/las-vegas-web-design',
   },
@@ -28,6 +38,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    images: ['/og-image.png'],
+  },
   other: {
     'og:locality': 'Las Vegas',
     'og:region': 'Nevada',
@@ -44,11 +60,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Page() {
+export default function LasVegasWebDesignPage() {
   return (
     <>
       <LasVegasPageSchema />
-      <LasVegasWebDesignPage faqItems={FAQ_ITEMS} />
+      <LasVegasWebDesignClient />
     </>
   )
 }

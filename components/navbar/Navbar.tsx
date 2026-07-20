@@ -13,6 +13,7 @@ const MINIMAL_NAV_PATHS = new Set([
   "/law-firm-web-design",
   "/hospitality-web-design",
   "/commercial-real-estate-web-design",
+  "/las-vegas-web-design",
 ]);
 
 type NavbarProps = {

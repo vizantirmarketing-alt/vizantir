@@ -1,5 +1,17 @@
 import { industryProjectCostAnswer, industryProjectTimelineAnswer } from './pricing'
 
+export const lasVegasPricingFaqs = {
+  cost: 'Custom Las Vegas websites at Vizantir start at $15,000. That covers strategy, design, development, and a Sanity CMS so your team owns the content system. Fixed-scope pricing — no surprise invoices.',
+  localVsNational:
+    "Out-of-town agencies don't know the difference between Summerlin and Henderson, don't understand how local search actually works for a Las Vegas business, and disappear after launch. Overseas freelancers build template sites that look like every other business in the valley. A local custom studio knows the market, builds the site right the first time, and stays reachable when you need us.",
+  timeline:
+    'Most projects take 6–8 weeks from kickoff to launch, depending on scope and content readiness. Larger projects with multiple locations or advanced integrations take longer — we scope timelines in discovery.',
+  stackAndOwnership:
+    'We build every site on Next.js with Sanity CMS. You own everything — the code, the content, the domain, the analytics. No proprietary lock-in, no monthly software rent for basic content edits. If you ever decide to move on, we hand off the repository cleanly.',
+  postLaunch:
+    'We offer optional care plans starting at $650/month — hosting oversight, security updates, monthly change hours, and preferred rates on future work. Existing site clients also get an existing-site page rate on landing pages and new sections.',
+} as const
+
 export const commercialRealEstatePricingFaqs = {
   cost: industryProjectCostAnswer(
     'CRE',

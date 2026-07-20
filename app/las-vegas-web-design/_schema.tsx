@@ -1,11 +1,5 @@
-import { pricingFAQs, projectPricing } from '@/data/pricing'
-
-const essentialsProjectTier = projectPricing[0]
-
-export interface FaqItem {
-  question: string
-  answer: string
-}
+import { projectPricing } from '@/data/pricing'
+import { lasVegasPricingFaqs } from '@/data/industry-pricing-faqs'
 
 interface PricingTierSchema {
   name: string
@@ -13,38 +7,26 @@ interface PricingTierSchema {
   description: string
 }
 
-export const FAQ_ITEMS: readonly FaqItem[] = [
+export const FAQ_ITEMS = [
   {
-    question: 'How much does web design cost in Las Vegas?',
-    answer: `Template sites from local freelancers often run $3,000–$8,000. Custom WordPress builds typically land between $8,000 and $20,000. Vizantir projects start at ${essentialsProjectTier.price} for a fixed-scope Next.js build. Price depends on page count, integrations, and content complexity. We quote after discovery, not before.`,
+    question: 'How much does a Las Vegas web design project cost?',
+    answer: lasVegasPricingFaqs.cost,
   },
   {
-    question: 'Why hire a Las Vegas web design studio instead of a national agency?',
-    answer:
-      'Timezone alignment matters when you want same-day feedback. We can meet in person when a walkthrough helps. You also get a team that knows the local market without treating every business like a casino or a law firm. National agencies can be excellent; we compete on direct access and custom builds, not headcount.',
+    question: 'Why hire a local studio vs a national agency or overseas freelancer?',
+    answer: lasVegasPricingFaqs.localVsNational,
   },
   {
-    question: 'Do you only work with Las Vegas businesses?',
-    answer:
-      'No. We are based in Las Vegas and serve clients across Henderson, Summerlin, Paradise, and the wider valley, but roughly half our work is with companies outside Nevada. Remote collaboration is standard for us.',
+    question: 'How long does a Las Vegas web design project take?',
+    answer: lasVegasPricingFaqs.timeline,
   },
   {
-    question: 'What stack do you build on?',
-    answer:
-      'Next.js 16, React, TypeScript, and Tailwind CSS on the front end. Sanity for content management. Hosted on Vercel for speed and reliability. We chose this stack because it performs well, scales cleanly, and does not require monthly plugin maintenance.',
+    question: 'What technology do you use, and do we own it?',
+    answer: lasVegasPricingFaqs.stackAndOwnership,
   },
   {
-    question: 'How long does a website project take?',
-    answer: `${pricingFAQs.timeline} Timelines assume you can provide content and feedback on schedule.`,
-  },
-  {
-    question: 'Can you redesign an existing site without starting from zero?',
-    answer:
-      'Sometimes a refresh is enough. More often, businesses come to us because the current platform (WordPress, Wix, Squarespace) is the bottleneck. We assess during the strategy call and recommend a full rebuild only when it saves money long term.',
-  },
-  {
-    question: 'What happens after launch?',
-    answer: `You own the site and the codebase. ${pricingFAQs.retainer} if you want us handling updates, content changes, and small improvements. Many clients manage day-to-day edits themselves through Sanity and call us for larger work.`,
+    question: 'What happens after the site launches?',
+    answer: lasVegasPricingFaqs.postLaunch,
   },
 ] as const
 
