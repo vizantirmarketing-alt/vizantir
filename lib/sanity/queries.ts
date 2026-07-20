@@ -146,11 +146,10 @@ export const allCaseStudiesQuery = groq`
   }
 `
 
-/** Proof Band verification for /landing-pages family — includes both Pink Salt slug candidates. */
+/** Proof Band verification for /landing-pages family. */
 export const landingPagesProofBandQuery = groq`
   *[_type == "caseStudy" && slug.current in [
     "elorae-nails",
-    "pink-salt-salon-and-spa",
     "pink-salt-salon",
     "meridian-row"
   ]]{
