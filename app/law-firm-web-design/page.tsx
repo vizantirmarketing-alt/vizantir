@@ -51,6 +51,11 @@ const lawFirmServiceSchema = {
   description:
     'Custom websites for law firms and legal practices. Built to establish credibility, generate consultations, and present firms at the highest level.',
   url: 'https://www.vizantir.com/law-firm-web-design',
+  provider: {
+    '@type': 'LocalBusiness',
+    '@id': 'https://www.vizantir.com/#business',
+    name: 'Vizantir Design Studio',
+  },
   areaServed: {
     '@type': 'Country',
     name: 'United States',
@@ -83,7 +88,7 @@ const faqSchema = {
       name: 'Do you build practice area pages?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. We structure practice area pages to clearly communicate expertise and improve search visibility for relevant legal queries.',
+        text: lawFirmPricingFaqs.practiceAreas,
       },
     },
     {
@@ -91,7 +96,7 @@ const faqSchema = {
       name: 'Can you work with an existing brand or logo?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. We can build around an existing brand identity or help refine it as part of the project.',
+        text: lawFirmPricingFaqs.existingBrand,
       },
     },
   ],

@@ -29,6 +29,10 @@ export const lawFirmPricingFaqs = {
   ),
   timeline: industryProjectTimelineAnswer(
     'law firm projects',
-    ' depending on the number of practice areas and attorneys.',
+    ', depending on the number of practice areas and attorneys.',
   ),
+  practiceAreas:
+    'Yes. We build dedicated practice area pages structured for local search — clear expertise signaling, location-relevant keywords, and internal linking so high-intent queries can find the right attorney and practice.',
+  existingBrand:
+    'Yes. We can build around your existing brand and logo, or refine the visual system as part of the engagement so the site matches the caliber of your practice.',
 } as const

@@ -5,14 +5,23 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
-import { trackCTAClick } from "@/lib/analytics";
+import { trackBookStrategyCallIntent, trackCTAClick } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
 
-const Navbar = () => {
+/** Paths that use logo + CTA only (no menu links). */
+const MINIMAL_NAV_PATHS = new Set(["/law-firm-web-design"]);
+
+type NavbarProps = {
+  /** When true, hide all nav links; logo + Book a Strategy Call only. */
+  minimal?: boolean;
+};
+
+const Navbar = ({ minimal }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const isMinimal = minimal ?? MINIMAL_NAV_PATHS.has(pathname);
 
   useEffect(() => {
     setMounted(true);
@@ -37,6 +46,21 @@ const Navbar = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMobileMenuOpen]);
+
+  // Close mobile menu when switching into minimal mode
+  useEffect(() => {
+    if (isMinimal) {
+      setIsMobileMenuOpen(false);
+    }
+  }, [isMinimal]);
+
+  const handleStrategyCallClick = (location: string) => {
+    if (isMinimal) {
+      trackBookStrategyCallIntent(location);
+    } else {
+      trackCTAClick('get_started', location);
+    }
+  };
 
   return (
     <>
@@ -96,38 +120,50 @@ const Navbar = () => {
               )}
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden xl:flex items-center gap-8">
-              {mainNavLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  title={link.description}
-                  className="relative text-sm font-semibold text-foreground transition-colors duration-200 hover:text-[#0070F3]"
-                  style={{
-                    color: pathname === link.path ? 'var(--cobalt-primary)' : undefined,
-                  }}
-                >
-                  {link.name}
-                  {pathname === link.path && (
-                    <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary rounded-full" />
-                  )}
-                </Link>
-              ))}
-            </div>
+            {/* Desktop Navigation — hidden in minimal mode */}
+            {!isMinimal && (
+              <div className="hidden xl:flex items-center gap-8">
+                {mainNavLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    href={link.path}
+                    title={link.description}
+                    className="relative text-sm font-semibold text-foreground transition-colors duration-200 hover:text-[#0070F3]"
+                    style={{
+                      color: pathname === link.path ? 'var(--cobalt-primary)' : undefined,
+                    }}
+                  >
+                    {link.name}
+                    {pathname === link.path && (
+                      <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary rounded-full" />
+                    )}
+                  </Link>
+                ))}
+              </div>
+            )}
 
-            <div className="hidden xl:flex items-center gap-4">
-              <Link href="/contact" onClick={() => trackCTAClick('get_started', 'navbar')}>
+            <div
+              className={
+                isMinimal
+                  ? 'flex items-center gap-4'
+                  : 'hidden xl:flex items-center gap-4'
+              }
+            >
+              <Link
+                href="/contact"
+                onClick={() => handleStrategyCallClick(isMinimal ? 'navbar_minimal' : 'navbar')}
+              >
                 <button
-                  className="bg-cobalt-gradient px-6 py-2.5 rounded-xl text-sm font-semibold text-white shadow-cobalt"
+                  type="button"
+                  className="bg-cobalt-gradient px-5 py-2.5 sm:px-6 rounded-xl text-sm font-semibold text-white shadow-cobalt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                 >
                   Book a Strategy Call
                 </button>
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
-            {!isMobileMenuOpen && (
+            {/* Mobile Menu Button — full nav only */}
+            {!isMinimal && !isMobileMenuOpen && (
               <button
                 className="xl:hidden z-50 relative text-foreground"
                 aria-label="Open menu"
@@ -144,7 +180,8 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Bottom Sheet */}
+      {/* Mobile Bottom Sheet — full nav only */}
+      {!isMinimal && (
       <div
         className={`xl:hidden fixed top-0 left-0 right-0 z-[60] h-[100dvh] max-h-[100dvh] min-h-0 ${
           isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
@@ -230,7 +267,7 @@ const Navbar = () => {
                   trackCTAClick('get_started', 'navbar');
                   setIsMobileMenuOpen(false);
                 }}
-                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt transition-all duration-300 active:scale-[0.98]"
+                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt transition-all duration-300 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
               >
                 Book a Strategy Call
               </Link>
@@ -238,6 +275,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      )}
     </>
   );
 };

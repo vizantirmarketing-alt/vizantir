@@ -8,130 +8,212 @@ import SectionDivider from '@/components/ui/SectionDivider'
 import {
   ArrowRight,
   Scale,
-  MousePointerClick,
-  LayoutList,
+  MapPin,
+  UserRound,
   ShieldCheck,
+  CalendarCheck,
+  Smartphone,
+  FilePenLine,
   CheckCircle2,
+  X,
   Gavel,
+  Search,
+  Palette,
+  Code2,
+  Rocket,
 } from 'lucide-react'
 import { lawFirmPricingFaqs } from '@/data/industry-pricing-faqs'
-import { trackPhoneClick } from '@/lib/analytics'
+import { trackBookStrategyCallIntent, trackPhoneClick } from '@/lib/analytics'
+
+const STRATEGY_CALL_HREF = '/contact'
+
+const offeringBlocks = [
+  {
+    icon: MapPin,
+    title: 'Practice Area Pages Built for Local SEO',
+    description:
+      "Dedicated pages for DUI, personal injury, family law, criminal defense, and other practice lines — structured so local, high-intent searches can find the right attorney. Configurable to your firm's actual practice mix, not a generic template list.",
+  },
+  {
+    icon: UserRound,
+    title: 'Attorney Bios with Schema',
+    description:
+      'Bio pages that present credentials, bar admissions, and experience with Person and attorney-relevant schema. Built to support E-E-A-T signals search engines and prospective clients both evaluate.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Trust Architecture',
+    description:
+      'Layout and content hierarchy for bar admissions, recognitions, and case results within ethical advertising bounds. The site should feel like the firm — not a stock legal template.',
+  },
+  {
+    icon: CalendarCheck,
+    title: 'Consultation Intake Flow',
+    description:
+      'A real path from visitor to consultation request — not a buried “info” form. Clear CTAs, focused intake fields, and a flow that respects how high-value legal clients decide.',
+  },
+  {
+    icon: Smartphone,
+    title: 'Mobile-First Performance',
+    description:
+      'Most legal searches start on a phone. We build for Core Web Vitals and sub-two-second loads so local SEO and first impressions are not undermined by a slow site.',
+  },
+  {
+    icon: FilePenLine,
+    title: 'CMS the Firm Actually Owns',
+    description:
+      'Sanity-powered content so your team can add practice area pages, update bios, and publish without waiting on a developer. You own the content system — not a locked theme.',
+  },
+] as const
+
+const agencyCompare = [
+  'WordPress + Elementor (or a lookalike theme)',
+  'Template layouts that mirror every other firm',
+  'Slow loads that hurt local rankings',
+  'Generic stock photography',
+  'Contact forms with no conversion tracking',
+] as const
+
+const vizantirCompare = [
+  'Custom Next.js builds matched to your brand',
+  'Brand-directed design — not a legal theme skin',
+  'Performance tuned for Core Web Vitals',
+  'Photography direction when the practice needs it',
+  'Conversion events wired from day one',
+  'Sanity CMS your team can run without a developer',
+] as const
+
+const vizantirProofPoints = [
+  { value: 'Next.js', label: 'Custom builds' },
+  { value: 'Mobile', label: 'First by default' },
+  { value: '10+', label: 'Years experience' },
+] as const
+
+const methodologyItems = [
+  {
+    title: 'Local SEO structure',
+    detail:
+      'Location-aware IA, practice page templates, and internal linking built for queries like “Las Vegas DUI attorney” — not blog filler.',
+  },
+  {
+    title: 'Practice area pages',
+    detail:
+      'One clear page per practice line, written and structured so expertise and locality are obvious to both clients and crawlers.',
+  },
+  {
+    title: 'Attorney bios with schema',
+    detail:
+      'Credentialed bios with structured data so experience and authority are machine-readable, not just decorative.',
+  },
+  {
+    title: 'Consultation intake flow',
+    detail:
+      'A guided path to book a consultation — fields, copy, and placement designed for intent, not vanity form fills.',
+  },
+] as const
+
+const processSteps = [
+  {
+    icon: Search,
+    step: '01',
+    title: 'Discovery',
+    description:
+      'Practice area audit, competitor teardown, and keyword mapping so the site targets the searches that actually drive consultations.',
+  },
+  {
+    icon: Palette,
+    step: '02',
+    title: 'Design',
+    description:
+      'Custom brand direction — not templates. Photography guidance when the practice needs visuals that match its standing.',
+  },
+  {
+    icon: Code2,
+    step: '03',
+    title: 'Build',
+    description:
+      'Next.js + Sanity: practice pages, attorney bios, schema markup, and an intake flow ready for real traffic.',
+  },
+  {
+    icon: Rocket,
+    step: '04',
+    title: 'Launch',
+    description:
+      'Conversion tracking wired, analytics baseline set, and a clear handoff so your team can publish without calling a developer.',
+  },
+] as const
+
+const faqs = [
+  {
+    question: 'How much does a law firm website cost?',
+    answer: lawFirmPricingFaqs.cost,
+  },
+  {
+    question: 'How long does it take to build a law firm website?',
+    answer: lawFirmPricingFaqs.timeline,
+  },
+  {
+    question: 'Do you build practice area pages?',
+    answer: lawFirmPricingFaqs.practiceAreas,
+  },
+  {
+    question: 'Can you work with an existing brand or logo?',
+    answer: lawFirmPricingFaqs.existingBrand,
+  },
+] as const
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08 },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: 'easeOut' as const },
+  },
+}
+
+const sectionReveal = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-40px' },
+  transition: { duration: 0.5, ease: 'easeOut' as const },
+}
 
 export default function LawFirmWebDesignClient() {
-  const whyCards = [
-    {
-      icon: Scale,
-      title: 'Trust-First Design',
-      description:
-        'Layouts that establish credibility before a single word is read',
-    },
-    {
-      icon: MousePointerClick,
-      title: 'Consultation-Driven UX',
-      description:
-        'Clear calls to action that guide visitors to book a consultation',
-    },
-    {
-      icon: LayoutList,
-      title: 'Practice Area Clarity',
-      description:
-        'Structured content that communicates expertise without confusion',
-    },
-    {
-      icon: ShieldCheck,
-      title: 'Fast, Secure Builds',
-      description:
-        'Next.js performance and security standards appropriate for legal sites',
-    },
-  ]
-
-  const industryBullets = [
-    'Experience with solo practices, boutique firms, and multi-practice groups',
-    'Understanding of legal client decision-making and trust signals',
-    'Designs that present attorneys professionally and approachably',
-    'Builds structured for practice area pages and attorney bios',
-  ]
-
-  const firmTypes = [
-    'Solo practices & individual attorneys',
-    'Boutique law firms',
-    'Multi-practice groups',
-    'Growing firms scaling digital presence',
-  ]
-
-  const workIncludes = [
-    'Custom visual design aligned to firm positioning and practice areas',
-    'Attorney bio and team pages',
-    'Practice area pages optimized for search',
-    'Consultation request forms and contact integration',
-    'Local SEO optimization for legal searches',
-    'Post-launch care and content updates',
-  ]
-
-  const faqs = [
-    {
-      question: 'How much does a law firm website cost?',
-      answer: lawFirmPricingFaqs.cost,
-    },
-    {
-      question: 'How long does it take to build a law firm website?',
-      answer: lawFirmPricingFaqs.timeline,
-    },
-    {
-      question: 'Do you build practice area pages?',
-      answer:
-        'Yes. We structure practice area pages to clearly communicate expertise and improve search visibility for relevant legal queries.',
-    },
-    {
-      question: 'Can you work with an existing brand or logo?',
-      answer:
-        'Yes. We can build around an existing brand identity or help refine it as part of the project.',
-    },
-  ]
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' as const },
-    },
-  }
-
   return (
     <main className="bg-background text-foreground transition-colors duration-500">
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-6 md:px-12 lg:px-20 pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]" />
+      {/* 1 — Hero */}
+      <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
+          aria-hidden
+        />
 
-        <div className="relative z-10 max-w-6xl mx-auto text-center">
+        <div className="relative z-10 mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-muted/50 mb-8"
+            transition={{ duration: 0.45 }}
+            className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2"
           >
-            <Gavel size={16} className="text-cobalt-accent" />
+            <Gavel size={16} className="text-cobalt-accent" aria-hidden />
             <span className="text-sm text-muted-foreground">
               Law Firms · Legal Practices · Attorneys
             </span>
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.05] text-foreground"
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
           >
             Law Firm Web Design
             <br />
@@ -139,79 +221,93 @@ export default function LawFirmWebDesignClient() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl max-w-3xl mx-auto mb-10 text-muted-foreground leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.16 }}
+            className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            We build custom websites for law firms and legal practices — designed to establish
-            credibility, communicate expertise, and convert visitors into consultation requests.
+            Too many firms lose high-value clients to competitors with a stronger digital presence —
+            stuck on generic-agency sites that look interchangeable and convert poorly.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ duration: 0.5, delay: 0.24 }}
+            className="flex flex-col items-center gap-4"
           >
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt group"
+              className="group rounded-xl bg-cobalt-gradient px-8 py-4 text-base font-semibold text-white shadow-cobalt focus-visible:ring-2 focus-visible:ring-[#0070F3]/50 focus-visible:ring-offset-2"
             >
-              <Link href="/contact">
+              <Link
+                href={STRATEGY_CALL_HREF}
+                onClick={() => trackBookStrategyCallIntent('hero')}
+              >
                 Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <Link
-              href="/case-studies"
-              className="inline-flex items-center justify-center gap-2 text-base font-semibold text-cobalt-accent transition-colors duration-300 hover:opacity-80 group"
-            >
-              View Our Work
-              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-12 flex flex-wrap justify-center gap-8"
-          >
-            {[
-              { value: 'Next.js', label: 'Built' },
-              { value: 'Mobile', label: 'First' },
-              { value: '10+', label: 'Years Experience' },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-cobalt-accent">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+            <p className="text-sm text-muted-foreground">
+              Vizantir Design Studio · Built for firms that need a site matching their practice
+            </p>
           </motion.div>
         </div>
       </section>
 
       <SectionDivider />
 
-      {/* Why Choose Us */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-16"
-          >
-            <Eyebrow>Why Choose Us</Eyebrow>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
-              Web Design Built for Law Firms
+      {/* 2 — The Problem */}
+      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="problem-heading">
+        <div className="mx-auto max-w-3xl">
+          <motion.div {...sectionReveal}>
+            <Eyebrow>The Problem</Eyebrow>
+            <h2
+              id="problem-heading"
+              className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+            >
+              Your site may be costing you the clients you want most
             </h2>
-            <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
-              A law firm&apos;s website is often the first impression a potential client gets. It needs
-              to communicate authority, build trust, and make it easy to take the next step.
+            <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
+              <p>
+                Most law firm websites still look like every other firm on the block — a stock hero,
+                a stock practice grid, and a contact form that could belong to anyone. Prospective
+                clients notice. When the site feels generic, so does the practice.
+              </p>
+              <p>
+                Local, high-intent searches — “Las Vegas DUI attorney,” “personal injury lawyer
+                Henderson,” “family law attorney Summerlin” — reward sites structured for those
+                queries. Template builds rarely are. They rank for brand vanity terms and miss the
+                consultations that pay for the firm.
+              </p>
+              <p>
+                And when the only conversion path is a vague “info” form, serious clients stall.
+                They want a clear next step to a consultation — not another black hole inbox. A weak
+                site does not just underperform; it undercuts the caliber of the work your attorneys
+                already do.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* 3 — What We Build */}
+      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="what-we-build-heading">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...sectionReveal} className="mb-14 text-center">
+            <Eyebrow>What We Build</Eyebrow>
+            <h2
+              id="what-we-build-heading"
+              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+            >
+              Built for How Legal Clients Decide
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+              Every piece of the site earns its place — practice visibility, attorney credibility,
+              and a path to a consultation.
             </p>
           </motion.div>
 
@@ -219,20 +315,20 @@ export default function LawFirmWebDesignClient() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+            viewport={{ once: true, margin: '-40px' }}
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
-            {whyCards.map((card, index) => (
+            {offeringBlocks.map((block) => (
               <motion.div
-                key={index}
+                key={block.title}
                 variants={itemVariants}
-                className="card-interactive p-6 rounded-2xl border border-border bg-muted"
+                className="card-interactive rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
-                  <card.icon size={24} className="text-cobalt-accent" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
+                  <block.icon size={24} className="text-cobalt-accent" aria-hidden />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-foreground">{card.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+                <h3 className="mb-2 text-lg font-bold text-foreground">{block.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{block.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -241,58 +337,69 @@ export default function LawFirmWebDesignClient() {
 
       <SectionDivider />
 
-      {/* Industry Expertise */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+      {/* 4 — Differentiation */}
+      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="differentiation-heading">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...sectionReveal} className="mb-14 text-center">
+            <Eyebrow>Differentiation</Eyebrow>
+            <h2
+              id="differentiation-heading"
+              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
             >
-              <Eyebrow align="start">Industry Expertise</Eyebrow>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
-                We Understand Law Firm Positioning
-              </h2>
-              <p className="text-lg mb-6 text-muted-foreground leading-relaxed">
-                Law firm websites require a different approach than most. The design needs to signal
-                authority without feeling cold, and the content needs to answer the questions clients
-                are already asking.
-              </p>
+              How Most Agencies Build vs. How Vizantir Builds
+            </h2>
+          </motion.div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <motion.div
+              {...sectionReveal}
+              className="rounded-2xl border border-border bg-muted/60 p-8"
+            >
+              <h3 className="mb-6 text-xl font-bold text-foreground">
+                How most agencies build law firm sites
+              </h3>
               <ul className="space-y-3">
-                {industryBullets.map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle2
-                      className="h-4 w-4 flex-shrink-0 text-cobalt-accent mt-[2px]"
+                {agencyCompare.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <X
+                      className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70"
                       aria-hidden
                     />
-                    <span className="text-muted-foreground">{item}</span>
+                    <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="p-8 rounded-2xl border border-border bg-muted"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+              className="rounded-2xl border border-cobalt-accent/25 bg-muted p-8 shadow-[0_0_0_1px_rgba(0,112,243,0.06)]"
             >
-              <h3 className="text-xl font-bold mb-4 text-foreground">Firm types</h3>
-              <p className="text-sm mb-6 text-muted-foreground">Legal practices we support:</p>
-              <ul className="space-y-3">
-                {firmTypes.map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
+              <h3 className="mb-6 text-xl font-bold text-foreground">How Vizantir builds them</h3>
+              <ul className="mb-8 space-y-3">
+                {vizantirCompare.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="h-4 w-4 flex-shrink-0 text-cobalt-accent mt-[2px]"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent"
                       aria-hidden
                     />
-                    <span className="text-sm text-muted-foreground">{item}</span>
+                    <span className="text-sm leading-relaxed text-foreground/90">{item}</span>
                   </li>
                 ))}
               </ul>
+              <div className="grid grid-cols-3 gap-4 border-t border-border pt-6">
+                {vizantirProofPoints.map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <div className="text-xl font-bold text-cobalt-accent md:text-2xl">
+                      {stat.value}
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground md:text-sm">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>
@@ -300,38 +407,102 @@ export default function LawFirmWebDesignClient() {
 
       <SectionDivider />
 
-      {/* What the work includes */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-              Everything Your Law Firm Site Needs
+      {/* 5 — Proof (methodology + credential band) */}
+      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="proof-heading">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...sectionReveal} className="mb-14 text-center">
+            <Eyebrow>Proof</Eyebrow>
+            <h2
+              id="proof-heading"
+              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+            >
+              Process-Driven Proof — Not Invented Case Studies
             </h2>
+            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+              We do not pad this page with fabricated results. What we show is how the work is
+              structured — the same methodology every law firm engagement follows.
+            </p>
           </motion.div>
 
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+            viewport={{ once: true, margin: '-40px' }}
+            className="mb-12 grid gap-6 md:grid-cols-2"
           >
-            {workIncludes.map((line, index) => (
+            {methodologyItems.map((item) => (
               <motion.div
-                key={index}
+                key={item.title}
                 variants={itemVariants}
-                className="card-interactive p-6 rounded-2xl border border-border bg-muted"
+                className="rounded-2xl border border-border bg-muted p-6"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-black/[0.02]">
-                  <CheckCircle2 size={24} className="text-cobalt-accent" />
+                <div className="mb-3 flex items-center gap-3">
+                  <Scale size={20} className="text-cobalt-accent" aria-hidden />
+                  <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed font-medium text-foreground">{line}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            {...sectionReveal}
+            className="rounded-2xl border border-border bg-muted/80 px-6 py-8 text-center md:px-10"
+          >
+            <p className="text-base font-semibold tracking-wide text-foreground md:text-lg">
+              Vizantir Design Studio · Las Vegas
+            </p>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              Custom Next.js websites for established practices. Fixed-scope engagements, local SEO
+              structure, and consultation-focused builds — from Southern Nevada and nationwide.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* 6 — Process */}
+      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="process-heading">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...sectionReveal} className="mb-14 text-center">
+            <Eyebrow>Process</Eyebrow>
+            <h2
+              id="process-heading"
+              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+            >
+              What Happens When We Build Your Site
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+              A clear sequence — Discovery through Launch — so you know exactly what the engagement
+              looks like.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {processSteps.map((step) => (
+              <motion.div
+                key={step.title}
+                variants={itemVariants}
+                className="rounded-2xl border border-border bg-muted p-6"
+              >
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
+                    <step.icon size={22} className="text-cobalt-accent" aria-hidden />
+                  </div>
+                  <span className="text-xs font-semibold tracking-wider text-cobalt-accent">
+                    {step.step}
+                  </span>
+                </div>
+                <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -340,18 +511,15 @@ export default function LawFirmWebDesignClient() {
 
       <SectionDivider />
 
-      {/* FAQ Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12"
-          >
+      {/* 8 — FAQ (after Process, before closing CTA) */}
+      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
+        <div className="mx-auto max-w-4xl">
+          <motion.div {...sectionReveal} className="mb-12 text-center">
             <Eyebrow>FAQ</Eyebrow>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+            <h2
+              id="faq-heading"
+              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+            >
               Law Firm Web Design Questions
             </h2>
           </motion.div>
@@ -360,16 +528,16 @@ export default function LawFirmWebDesignClient() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-40px' }}
             className="space-y-4"
           >
-            {faqs.map((faq, index) => (
+            {faqs.map((faq) => (
               <motion.div
-                key={index}
+                key={faq.question}
                 variants={itemVariants}
-                className="p-6 rounded-2xl border border-border bg-muted"
+                className="rounded-2xl border border-border bg-muted p-6"
               >
-                <h3 className="text-lg font-semibold mb-3 text-foreground">{faq.question}</h3>
+                <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
               </motion.div>
             ))}
@@ -377,40 +545,42 @@ export default function LawFirmWebDesignClient() {
         </div>
       </section>
 
-      <SectionDivider />
-
-      {/* CTA Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
-              Ready to Present Your Firm at a Higher Level?
+      {/* 7 — Closing CTA band */}
+      <section
+        className="relative overflow-hidden bg-cobalt-primary px-6 py-24 md:px-12 lg:px-20"
+        aria-labelledby="closing-cta-heading"
+      >
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal}>
+            <h2
+              id="closing-cta-heading"
+              className="mb-5 text-3xl font-bold text-white md:text-4xl lg:text-5xl"
+            >
+              Ready to build a site that reflects the caliber of your firm?
             </h2>
-            <p className="text-lg mb-10 max-w-2xl mx-auto text-muted-foreground">
-              Let&apos;s talk about what your site needs to do and whether Vizantir is the right fit
-              to build it.
+            <p className="mb-10 text-lg text-white/80">
+              Strategy calls are 30 minutes, no pitch, just fit.
             </p>
             <Button
               size="lg"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt group"
+              className="group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-primary shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
             >
-              <Link href="/contact">
+              <Link
+                href={STRATEGY_CALL_HREF}
+                onClick={() => trackBookStrategyCallIntent('closing_cta')}
+              >
                 Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <p className="mt-6 text-sm text-muted-foreground">
-              Or call us:{' '}
+            <p className="mt-6 text-sm text-white/70">
+              Vizantir Design Studio · Las Vegas
+              <span className="mx-2 text-white/40">·</span>
               <Link
                 href="tel:+17022890758"
                 onClick={trackPhoneClick}
-                className="link-cobalt text-cobalt-accent"
+                className="text-white/90 underline-offset-2 transition-colors hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
               >
                 (702) 289-0758
               </Link>
