@@ -54,3 +54,4 @@ knowledge-dump.txt
 .cursor-*
 .env*.local
 .pnpm-store/
+data/seed/
