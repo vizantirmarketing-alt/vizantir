@@ -54,7 +54,7 @@ export const service = defineType({
       title: 'Sort order',
       type: 'number',
       description:
-        'Controls order on /services (lower = first). Target: Website Strategy 1, Web Design 2, Web Development 3, Website Refreshes 4, CMS Integrations 5, Next.js Development 6, Sanity CMS Development 7, Website Care 8. Leave empty to sort after numbered items (then by title).',
+        'Controls order on /services (lower = first). Target: Website Strategy 1, Web Design 2, Web Development 3, Landing Pages 4, Website Refreshes 5, CMS Integrations 6, Next.js Development 7, Sanity CMS Development 8, Website Care 9. Leave empty to sort after numbered items (then by title).',
     }),
     defineField({
       name: 'description',

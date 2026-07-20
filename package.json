@@ -26,7 +26,13 @@
     "migrate:faqs": "tsx scripts/migrate-faqs.ts",
     "migrate:faqs:live": "tsx scripts/migrate-faqs.ts --live",
     "create:gei": "tsx scripts/create-gei-case-study.ts",
-    "create:post": "tsx scripts/create-post.ts"
+    "create:post": "tsx scripts/create-post.ts",
+    "seed:elementor-posts": "tsx scripts/seed-elementor-posts.ts",
+    "seed:landing-pages-service": "tsx scripts/seed-landing-pages-service.ts",
+    "migrate:landing-pages-id": "tsx scripts/migrate-landing-pages-id.ts",
+    "retire:old-elementor-posts": "tsx scripts/retire-old-elementor-posts.ts",
+    "patch:elementor-isnt-alone": "tsx scripts/patch-elementor-isnt-alone.ts",
+    "patch:website-care-service": "tsx scripts/patch-website-care-service.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",
