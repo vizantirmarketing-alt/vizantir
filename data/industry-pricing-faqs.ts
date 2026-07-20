@@ -20,6 +20,10 @@ export const hospitalityPricingFaqs = {
     'hospitality projects',
     ', depending on scope and content readiness.',
   ),
+  bookingIntegrations:
+    'OpenTable, Resy, SevenRooms, Tock, direct booking widgets, and hotel PMS platforms. We can also build a custom reservation flow if your venue requires it. The right choice depends on your operational setup — we sort that out during discovery.',
+  menuUpdates:
+    'Yes. We build every hospitality site on Sanity CMS so your team can update menus, add specials, publish events, and manage gallery content without waiting on a developer. Seasonal changes take minutes, not project fees.',
 } as const
 
 export const lawFirmPricingFaqs = {

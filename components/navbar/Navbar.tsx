@@ -9,7 +9,10 @@ import { trackBookStrategyCallIntent, trackCTAClick } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
 
 /** Paths that use logo + CTA only (no menu links). */
-const MINIMAL_NAV_PATHS = new Set(["/law-firm-web-design"]);
+const MINIMAL_NAV_PATHS = new Set([
+  "/law-firm-web-design",
+  "/hospitality-web-design",
+]);
 
 type NavbarProps = {
   /** When true, hide all nav links; logo + Book a Strategy Call only. */

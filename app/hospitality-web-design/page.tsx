@@ -3,10 +3,12 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import HospitalityWebDesignClient from './HospitalityWebDesignClient'
 import { hospitalityPricingFaqs } from '@/data/industry-pricing-faqs'
 
+const META_DESCRIPTION =
+  'Custom websites for restaurants, hotels, and lounges. Built on Next.js for mobile speed, bookings that convert, and a first impression that matches the venue.'
+
 export const metadata: Metadata = {
   title: 'Hospitality Web Design for Restaurants & Hotels | Vizantir',
-  description:
-    'Custom websites for restaurants, hotels, lounges and hospitality groups. Built on Next.js for speed, bookings, and a stronger first impression.',
+  description: META_DESCRIPTION,
   keywords: [
     'hospitality web design',
     'restaurant website design',
@@ -20,8 +22,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Hospitality Web Design for Restaurants & Hotels | Vizantir',
-    description:
-      'Custom websites for restaurants, hotels, lounges and hospitality groups. Built on Next.js for speed, bookings, and a stronger first impression.',
+    description: META_DESCRIPTION,
     url: 'https://www.vizantir.com/hospitality-web-design',
     siteName: 'Vizantir',
     images: [
@@ -38,8 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Hospitality Web Design for Restaurants & Hotels | Vizantir',
-    description:
-      'Custom websites for restaurants, hotels, lounges and hospitality groups. Built on Next.js for speed, bookings, and a stronger first impression.',
+    description: META_DESCRIPTION,
     images: ['/og-image.png'],
   },
 }
@@ -49,8 +49,13 @@ const hospitalityServiceSchema = {
   '@type': 'Service',
   name: 'Hospitality Web Design',
   description:
-    'Custom websites for restaurants, hotels, lounges and hospitality groups. Built on Next.js for speed, reservations, and brand presence.',
+    'Custom websites for restaurants, hotels, and lounges. Built on Next.js for mobile speed, bookings that convert, and a first impression that matches the venue.',
   url: 'https://www.vizantir.com/hospitality-web-design',
+  provider: {
+    '@type': 'LocalBusiness',
+    '@id': 'https://www.vizantir.com/#business',
+    name: 'Vizantir Design Studio',
+  },
   areaServed: {
     '@type': 'Country',
     name: 'United States',
@@ -72,14 +77,6 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'Can you integrate with OpenTable or Resy?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes. We build reservation integrations directly into the site so guests can book without leaving your page.',
-      },
-    },
-    {
-      '@type': 'Question',
       name: 'How long does it take to build a restaurant website?',
       acceptedAnswer: {
         '@type': 'Answer',
@@ -88,10 +85,18 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'Do you work with hotels as well as restaurants?',
+      name: 'Which booking systems do you integrate with?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. We work with restaurants, hotels, lounges, event venues, and other hospitality businesses across the US.',
+        text: hospitalityPricingFaqs.bookingIntegrations,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can our team update menus without a developer?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: hospitalityPricingFaqs.menuUpdates,
       },
     },
   ],
