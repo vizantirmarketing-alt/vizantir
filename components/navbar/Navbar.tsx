@@ -12,6 +12,7 @@ import { mainNavLinks } from "@/data/navigation";
 const MINIMAL_NAV_PATHS = new Set([
   "/law-firm-web-design",
   "/hospitality-web-design",
+  "/commercial-real-estate-web-design",
 ]);
 
 type NavbarProps = {

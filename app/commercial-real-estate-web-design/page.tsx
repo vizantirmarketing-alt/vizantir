@@ -3,10 +3,12 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import CREWebDesignClient from './CREWebDesignClient'
 import { commercialRealEstatePricingFaqs } from '@/data/industry-pricing-faqs'
 
+const META_DESCRIPTION =
+  'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.'
+
 export const metadata: Metadata = {
-  title: 'Commercial Real Estate Web Design | Vizantir',
-  description:
-    'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.',
+  title: 'Commercial Real Estate Web Design That Converts | Vizantir',
+  description: META_DESCRIPTION,
   keywords: [
     'commercial real estate web design',
     'CRE website design',
@@ -19,9 +21,8 @@ export const metadata: Metadata = {
     canonical: 'https://www.vizantir.com/commercial-real-estate-web-design',
   },
   openGraph: {
-    title: 'Commercial Real Estate Web Design | Vizantir',
-    description:
-      'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.',
+    title: 'Commercial Real Estate Web Design That Converts | Vizantir',
+    description: META_DESCRIPTION,
     url: 'https://www.vizantir.com/commercial-real-estate-web-design',
     siteName: 'Vizantir',
     images: [
@@ -37,9 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Commercial Real Estate Web Design | Vizantir',
-    description:
-      'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.',
+    title: 'Commercial Real Estate Web Design That Converts | Vizantir',
+    description: META_DESCRIPTION,
     images: ['/og-image.png'],
   },
 }
@@ -51,6 +51,11 @@ const creServiceSchema = {
   description:
     'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.',
   url: 'https://www.vizantir.com/commercial-real-estate-web-design',
+  provider: {
+    '@type': 'LocalBusiness',
+    '@id': 'https://www.vizantir.com/#business',
+    name: 'Vizantir Design Studio',
+  },
   areaServed: {
     '@type': 'Country',
     name: 'United States',
@@ -72,14 +77,6 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'Can you integrate property listings into the site?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes. We build CMS-driven listing pages so your team can add, update, and remove properties without touching code.',
-      },
-    },
-    {
-      '@type': 'Question',
       name: 'How long does it take to build a CRE website?',
       acceptedAnswer: {
         '@type': 'Answer',
@@ -88,10 +85,18 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'Do you work with developers and property management firms as well as brokerages?',
+      name: 'How does the listings CMS work?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. We work with brokerages, developers, property management groups, and investment firms across the US.',
+        text: commercialRealEstatePricingFaqs.listingsCms,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do you handle broker and team pages?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: commercialRealEstatePricingFaqs.brokerTeamPages,
       },
     },
   ],

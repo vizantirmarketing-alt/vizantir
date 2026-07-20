@@ -9,6 +9,10 @@ export const commercialRealEstatePricingFaqs = {
     'commercial real estate projects',
     ' depending on the number of listings and pages required.',
   ),
+  listingsCms:
+    'We build every CRE site on Sanity so your team can publish listings, update statuses, add photography, and manage market reports without waiting on a developer. Listings render fast, filter cleanly, and route inquiries to the right broker automatically.',
+  brokerTeamPages:
+    'Broker bios are built as first-class pages with Person schema, headshots, credentials, and direct inquiry routing — so contacts reach the right person the first time. Your team can update bios, add new hires, and manage credentials through the CMS.',
 } as const
 
 export const hospitalityPricingFaqs = {
