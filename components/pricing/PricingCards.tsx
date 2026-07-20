@@ -21,7 +21,7 @@ export interface PricingCardsProps {
 
 const [essentialsCare, growthCare, enterpriseCare] = carePricing
 
-const careFooterText = `After launch, Website Care retainers start at ${essentialsCare.price} for Essentials Care, ${growthCare.price} for Growth Care, and ${enterpriseCare.price} for Enterprise Care.`
+const careFooterText = `After launch, Website Care retainers start at ${essentialsCare.price} for ${essentialsCare.name}, ${growthCare.price} for ${growthCare.name}, and ${enterpriseCare.price} for ${enterpriseCare.name}.`
 
 export function PricingCards({
   heading,

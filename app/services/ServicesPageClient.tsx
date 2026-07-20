@@ -29,9 +29,11 @@ import {
   chatbotPricing,
   CHATBOT_SETUP_FEE,
   formatCareClientPrice,
+  landingPagePricing,
   type BlogTier,
   type CareTier,
   type ChatbotTier,
+  type LandingPageTier,
 } from '@/data/pricing'
 import { cn } from '@/lib/utils'
 
@@ -42,6 +44,13 @@ const CARE_REFRAME = {
     'Most maintenance plans charge you to patch a fragile platform \u2014 plugin updates, malware scans, whatever the CMS broke this week.',
     'A hand-coded Next.js site doesn\u2019t have those failure points. Vizantir care isn\u2019t about recovery. It keeps an already-fast, already-secure site continuously improving.',
   ],
+} as const
+
+const LANDING_PAGE_PRICING = {
+  eyebrow: 'Landing Pages',
+  heading: 'Pages built to convert traffic',
+  intro:
+    'Single-purpose pages for campaigns, offers, and paid traffic — custom-designed, tracked, and ready to plug into your ads.',
 } as const
 
 const BLOG_ADDON = {
@@ -64,16 +73,34 @@ function getBlogCadenceLabel(tier: BlogTier): string {
 }
 
 function CarePricingCard({ tier }: { tier: CareTier }) {
-  const featured = tier.slug === 'growth-care'
-
   return (
-    <Card variant="muted-30" featured={featured}>
+    <Card variant="muted-30" featured={Boolean(tier.featured)}>
       <CardHeader>
         <CardTitle>{tier.name}</CardTitle>
         <CardPrice>
           ${tier.priceMin.toLocaleString()}
           <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
         </CardPrice>
+      </CardHeader>
+
+      <CardTagline>{tier.tagline}</CardTagline>
+      <CardDescription bordered>{tier.description}</CardDescription>
+
+      <CardCheckList>
+        {tier.includes.map((line) => (
+          <CardCheckItem key={line}>{line}</CardCheckItem>
+        ))}
+      </CardCheckList>
+    </Card>
+  )
+}
+
+function LandingPagePricingCard({ tier }: { tier: LandingPageTier }) {
+  return (
+    <Card variant="muted-30" featured={Boolean(tier.featured)}>
+      <CardHeader>
+        <CardTitle>{tier.name}</CardTitle>
+        <CardPrice>{tier.price}</CardPrice>
       </CardHeader>
 
       <CardTagline>{tier.tagline}</CardTagline>
@@ -270,6 +297,27 @@ function StandalonePricingSection() {
         <div className="grid gap-6 lg:grid-cols-3">
           {carePricing.map((tier) => (
             <CarePricingCard key={tier.slug} tier={tier} />
+          ))}
+        </div>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className="mt-16 border-t border-border pt-16 md:mt-20 md:pt-20"
+      >
+        <Eyebrow align="start">{LANDING_PAGE_PRICING.eyebrow}</Eyebrow>
+        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+          {LANDING_PAGE_PRICING.heading}
+        </h2>
+        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          {LANDING_PAGE_PRICING.intro}
+        </p>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {landingPagePricing.map((tier) => (
+            <LandingPagePricingCard key={tier.slug} tier={tier} />
           ))}
         </div>
       </motion.section>

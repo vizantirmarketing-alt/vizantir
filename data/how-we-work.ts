@@ -57,6 +57,6 @@ export const howWeWorkFaqs = [
   {
     question: 'What happens after launch?',
     answer:
-      `Launch support is included. For ongoing maintenance, we offer monthly Website Care retainers starting at ${carePricing[0].price} for Essentials Care, with Growth Care and Enterprise Care when you need more bandwidth.`,
+      `Launch support is included. For ongoing maintenance, we offer monthly Website Care retainers starting at ${carePricing[0].price} for ${carePricing[0].name}, with ${carePricing[1].name} and ${carePricing[2].name} when you need more bandwidth.`,
   },
 ] as const

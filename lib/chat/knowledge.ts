@@ -11,6 +11,7 @@ import { aboutPageContent } from '@/data/about'
 import {
   projectPricing,
   carePricing,
+  landingPagePricing,
   blogPricing,
   chatbotPricing,
   CHATBOT_SETUP_FEE,
@@ -75,7 +76,10 @@ function buildPricing(): string {
     )
     .join('\n\n')
   const care = carePricing
-    .map((c) => `### ${c.name} — ${c.price}\n${c.description}`)
+    .map((c) => `### ${c.name} — ${c.price}\n${c.description}\nIncludes:\n${bullets(c.includes)}`)
+    .join('\n\n')
+  const landingPages = landingPagePricing
+    .map((t) => `### ${t.name} — ${t.price}\n${t.description}\nIncludes:\n${bullets(t.includes)}`)
     .join('\n\n')
   const blogIntro = [
     'Vizantir offers ongoing blog writing as an add-on to any Website Care plan.',
@@ -124,7 +128,7 @@ function buildPricing(): string {
     .join('\n\n')
   const chatbotBlock = `${chatbotIntro}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
-  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nBLOG WRITING (monthly add-on or one-time):\n\n${blogBlock}\n\nAI CHATBOT (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
+  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\nBLOG WRITING (monthly add-on or one-time):\n\n${blogBlock}\n\nAI CHATBOT (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
   return section('PRICING', body)
 }
 

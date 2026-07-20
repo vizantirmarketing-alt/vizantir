@@ -17,6 +17,18 @@ export type CareTier = {
   tagline: string
   description: string
   includes: string[]
+  featured?: boolean
+}
+
+export type LandingPageTier = {
+  slug: 'campaign-lp' | 'conversion-lp' | 'campaign-system'
+  name: string
+  price: string
+  priceMin: number
+  tagline: string
+  description: string
+  includes: string[]
+  featured?: boolean
 }
 
 export type BlogTier = {
@@ -101,56 +113,119 @@ export const projectPricing: PricingTier[] = [
 export const carePricing: CareTier[] = [
   {
     slug: 'essentials-care',
-    name: 'Essentials Care',
-    price: '$500/month',
-    priceMin: 500,
+    name: 'Website Care',
+    price: '$650/month',
+    priceMin: 650,
     tagline: 'We keep it running.',
     description:
-      'Managed hosting, security, and core upkeep so your site stays fast, safe, and online.',
+      'Hosting oversight, monitoring, and light monthly changes so your site stays fast, secure, and current.',
     includes: [
-      'Managed hosting on enterprise infrastructure ($40/mo value, included)',
-      'SSL, security monitoring, and patching',
-      'Weekly automated backups',
-      'Uptime monitoring',
-      'Up to 1 hour of content edits per month',
-      'Priority bug fixes',
-      'Monthly health summary',
-      '10% off additional hourly work',
+      'Hosting oversight and deployment support',
+      'Uptime and broken-link monitoring',
+      'Dependency and security updates',
+      'Up to 2 hours per month of content or layout changes',
+      'Priority email response (24–48 hr)',
+      '15% preferred rate on landing pages and new work',
     ],
   },
   {
     slug: 'growth-care',
-    name: 'Growth Care',
+    name: 'Growth Partner',
     price: '$1,500/month',
     priceMin: 1500,
-    tagline: 'We keep it sharp.',
+    tagline: 'We keep it growing.',
     description:
-      'Everything in Essentials, plus active content updates and performance work to keep the site improving.',
+      'Everything in Website Care, plus more monthly bandwidth, a quarterly landing page, and preferred rates on campaign work.',
+    featured: true,
     includes: [
-      'Everything in Essentials Care',
-      'Up to 3 hours of content updates & changes per month',
-      'Quarterly performance check (speed, Core Web Vitals)',
-      'Monthly analytics summary',
-      '2-business-day turnaround',
-      '15% off additional hourly work',
+      'Everything in Website Care',
+      'Up to 4 hours per month of improvements or new sections',
+      '1 Campaign Landing Page per quarter included',
+      'Quarterly analytics and performance review',
+      'Priority scheduling on new work',
+      '20% preferred rate on additional landing pages',
     ],
   },
   {
     slug: 'enterprise-care',
-    name: 'Enterprise Care',
-    price: '$2,500/month',
-    priceMin: 2500,
-    tagline: 'We keep it winning.',
+    name: 'Campaign Partner',
+    price: '$3,000/month',
+    priceMin: 3000,
+    tagline: 'We keep campaigns converting.',
     description:
-      'Everything in Growth, plus hands-on development and proactive optimization for sites that drive real revenue.',
+      'Everything in Growth Partner, plus a landing page every month, messaging support, and ongoing iteration.',
     includes: [
-      'Everything in Growth Care',
-      'Up to 6 hours of development & changes per month',
-      'Proactive improvements & A/B testing',
-      'Conversion & funnel optimization',
-      'Same-day priority response',
-      'Quarterly strategy call',
-      '20% off additional hourly work',
+      'Everything in Growth Partner',
+      '1 custom landing page per month included (or 2 smaller campaign variants)',
+      'Messaging and conversion coaching',
+      'Ongoing analytics and iteration',
+      'Monthly strategy review',
+      '30% preferred rate on additional landing pages',
+    ],
+  },
+]
+
+export const landingPagePricing: LandingPageTier[] = [
+  {
+    slug: 'campaign-lp',
+    name: 'Campaign Landing Page',
+    price: 'from $3,000',
+    priceMin: 3000,
+    tagline: 'One page. One goal.',
+    description:
+      'For a specific service, promotion, event, or paid campaign.',
+    includes: [
+      '1 focused strategy session',
+      'Up to 7 primary sections',
+      'Custom responsive design',
+      'Custom Next.js development',
+      'Client-supplied copy with light editing',
+      '1 form, booking tool, or email integration',
+      'Analytics and conversion event setup',
+      'Metadata and technical SEO fundamentals',
+      '2 consolidated revision rounds',
+      '14 days of post-launch support',
+    ],
+  },
+  {
+    slug: 'conversion-lp',
+    name: 'Conversion Landing Page',
+    price: 'from $4,500',
+    priceMin: 4500,
+    tagline: 'Built for paid traffic.',
+    description:
+      'For a business spending on traffic or launching a meaningful new offer.',
+    featured: true,
+    includes: [
+      'Everything in Campaign Landing Page',
+      'Audience and competitor research',
+      'Offer and messaging workshop',
+      'Copy structure and substantial refinement',
+      '8 to 12 sections',
+      'Custom interactions or motion',
+      'CRM, booking, or lead routing integration',
+      'Behavior tracking (Microsoft Clarity or equivalent)',
+      'Detailed conversion event tracking',
+      '30 days of post-launch support',
+    ],
+  },
+  {
+    slug: 'campaign-system',
+    name: 'Campaign System',
+    price: 'from $7,500',
+    priceMin: 7500,
+    tagline: 'One system. Multiple variants.',
+    description:
+      'For businesses running multiple audiences, locations, or paid campaigns.',
+    includes: [
+      '1 primary landing page',
+      '2 audience, location, headline, or offer variants',
+      'Reusable landing page component system',
+      'Testing-ready structure',
+      'Advanced analytics events',
+      'Up to 2 business integrations',
+      'Campaign handoff documentation',
+      '45 days of support',
     ],
   },
 ]
@@ -262,7 +337,7 @@ const essentialsCareTier = carePricing[0]
 
 export const pricingFAQs = {
   cost: `Project pricing starts at ${essentialsTier.price} for Essentials, ${growthTier.price} for Growth, and ${enterpriseTier.price} for Enterprise. Timelines are ${essentialsTier.timeline}, ${growthTier.timeline}, and ${enterpriseTier.timeline} respectively.`,
-  retainer: `After launch, Website Care retainers start at ${essentialsCareTier.price} for Essentials Care, ${carePricing[1].price} for Growth Care, and ${carePricing[2].price} for Enterprise Care.`,
+  retainer: `After launch, Website Care retainers start at ${essentialsCareTier.price} for ${essentialsCareTier.name}, ${carePricing[1].price} for ${carePricing[1].name}, and ${carePricing[2].price} for ${carePricing[2].name}.`,
   timeline: `${essentialsTier.name} projects take ${essentialsTier.timeline} from kickoff. ${growthTier.name} projects run ${growthTier.timeline}. ${enterpriseTier.name} builds can stretch ${enterpriseTier.timeline} depending on scope.`,
   budgetPositioning: `Projects start at ${essentialsTier.price} and scale to ${enterpriseTier.price} depending on scope. If budget is your primary concern, platforms like Squarespace, Webflow, and Wix will serve you well. Vizantir is for businesses where a mediocre website costs more than a great one.`,
 } as const
