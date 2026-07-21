@@ -4,6 +4,7 @@ export const CONTACT_SERVICES = [
   'Website Redesign',
   'Platform Migration',
   'Custom Development',
+  'Landing Page',
   'Website Refresh',
   'Website Care / Retainer',
   'Not Sure Yet',
