@@ -8,7 +8,11 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { Honeypot } from '@/components/forms/Honeypot'
 import { TurnstileWidget } from '@/components/forms/TurnstileWidget'
-import { CONTACT_BUDGETS, CONTACT_SERVICES } from '@/lib/forms/contact-fields'
+import {
+  CONTACT_BUDGETS,
+  CONTACT_LANDING_PAGE_BUDGETS,
+  CONTACT_SERVICES,
+} from '@/lib/forms/contact-fields'
 
 export default function ContactPageClient() {
   const [formData, setFormData] = useState({
@@ -29,8 +33,32 @@ export default function ContactPageClient() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+
+    if (name === 'service') {
+      const previousService = formData.service
+      const nextService = value
+      const wasLandingPage = previousService === 'Landing Page'
+      const isLandingPage = nextService === 'Landing Page'
+      // Clear budget only when crossing the Landing Page boundary (Cases A/B).
+      // Same-scale transitions keep the selection (Cases C/D).
+      const shouldClearBudget = wasLandingPage !== isLandingPage
+
+      setFormData({
+        ...formData,
+        service: nextService,
+        ...(shouldClearBudget ? { budget: '' } : {}),
+      })
+      return
+    }
+
+    setFormData({ ...formData, [name]: value })
   }
+
+  const budgetOptions =
+    formData.service === 'Landing Page'
+      ? CONTACT_LANDING_PAGE_BUDGETS
+      : CONTACT_BUDGETS
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -350,7 +378,7 @@ export default function ContactPageClient() {
                         style={inputStyle}
                       >
                         <option value="">Select your budget</option>
-                        {CONTACT_BUDGETS.map((budget, index) => (
+                        {budgetOptions.map((budget, index) => (
                           <option key={index} value={budget}>{budget}</option>
                         ))}
                       </select>

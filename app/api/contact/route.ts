@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { CONTACT_BUDGETS, CONTACT_SERVICES } from '@/lib/forms/contact-fields';
+import {
+  CONTACT_BUDGETS,
+  CONTACT_LANDING_PAGE_BUDGETS,
+  CONTACT_SERVICES,
+} from '@/lib/forms/contact-fields';
 import { submitContactForm } from '@/lib/forms/contact-submission';
 import {
   emailSchema,
@@ -10,31 +14,53 @@ import { checkRateLimit, getClientIp, hashIp } from '@/lib/forms/rate-limit';
 import { verifyTurnstile } from '@/lib/forms/turnstile';
 
 const serviceEnum = z.enum(CONTACT_SERVICES);
-const budgetEnum = z.enum(CONTACT_BUDGETS);
+const websiteBudgetEnum = z.enum(CONTACT_BUDGETS);
+const landingPageBudgetEnum = z.enum(CONTACT_LANDING_PAGE_BUDGETS);
+const budgetEnum = z.union([websiteBudgetEnum, landingPageBudgetEnum]);
 
-const bodySchema = z.object({
-  name: z.string().trim().min(1).max(100),
-  email: emailSchema,
-  phone: z
-    .string()
-    .max(50)
-    .transform((s) => {
-      const t = s.trim();
-      return t === '' ? null : t;
-    }),
-  company: z
-    .string()
-    .max(200)
-    .transform((s) => {
-      const t = s.trim();
-      return t === '' ? null : t;
-    }),
-  service: serviceEnum,
-  budget: z.union([z.literal(''), budgetEnum]).transform((v) => (v === '' ? null : v)),
-  message: z.string().trim().min(10).max(5000),
-  website: z.string().optional(),
-  turnstileToken: z.string().min(1),
-});
+const bodySchema = z
+  .object({
+    name: z.string().trim().min(1).max(100),
+    email: emailSchema,
+    phone: z
+      .string()
+      .max(50)
+      .transform((s) => {
+        const t = s.trim();
+        return t === '' ? null : t;
+      }),
+    company: z
+      .string()
+      .max(200)
+      .transform((s) => {
+        const t = s.trim();
+        return t === '' ? null : t;
+      }),
+    service: serviceEnum,
+    budget: z
+      .union([z.literal(''), budgetEnum])
+      .transform((v) => (v === '' ? null : v)),
+    message: z.string().trim().min(10).max(5000),
+    website: z.string().optional(),
+    turnstileToken: z.string().min(1),
+  })
+  .superRefine((data, ctx) => {
+    // Optional budget: null always allowed (no cross-check).
+    if (data.budget === null) return;
+
+    const isLandingPage = data.service === 'Landing Page';
+    const allowedBudgets = isLandingPage
+      ? CONTACT_LANDING_PAGE_BUDGETS
+      : CONTACT_BUDGETS;
+
+    if (!(allowedBudgets as readonly string[]).includes(data.budget)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Budget selection does not match the chosen service.',
+        path: ['budget'],
+      });
+    }
+  });
 
 const FORM_KEY = 'contact';
 const WINDOW_MINUTES = 60;

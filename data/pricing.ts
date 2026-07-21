@@ -367,6 +367,14 @@ export const CONTACT_BUDGET_FROM_PRICING = [
   'Not Sure Yet',
 ] as const
 
+export const CONTACT_BUDGET_FROM_LANDING_PAGES = [
+  '$3,000 – $5,000',
+  '$4,500 – $7,500',
+  '$7,500 – $15,000',
+  '$15,000+',
+  'Not Sure Yet',
+] as const
+
 export function formatCareClientPrice(priceMin: number): string {
   const discounted = Math.round(priceMin * (1 - 0.15))
   return `$${discounted.toLocaleString()}`

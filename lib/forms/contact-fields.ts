@@ -10,6 +10,11 @@ export const CONTACT_SERVICES = [
   'Not Sure Yet',
 ] as const;
 
-import { CONTACT_BUDGET_FROM_PRICING } from '@/data/pricing'
+import {
+  CONTACT_BUDGET_FROM_LANDING_PAGES,
+  CONTACT_BUDGET_FROM_PRICING,
+} from '@/data/pricing'
 
 export const CONTACT_BUDGETS = CONTACT_BUDGET_FROM_PRICING
+
+export const CONTACT_LANDING_PAGE_BUDGETS = CONTACT_BUDGET_FROM_LANDING_PAGES
