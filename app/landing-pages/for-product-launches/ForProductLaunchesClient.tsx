@@ -10,7 +10,7 @@ import { ProductDefinition } from '../_components/ProductDefinition'
 import { ProofBand } from '../_components/ProofBand'
 import { QualifierBand } from '../_components/QualifierBand'
 import { RelatedServices } from '../_components/RelatedServices'
-import { TierComparison } from '../_components/TierComparison'
+import { TierComparison } from '@/components/landing-pages/TierComparison'
 import { variants } from '../_data/variants'
 import type { ProofClient } from '../_lib/get-proof-clients'
 

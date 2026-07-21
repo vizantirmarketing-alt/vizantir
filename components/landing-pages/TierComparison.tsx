@@ -8,7 +8,11 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { landingPagePricing, type LandingPageTier } from '@/data/pricing'
 import { trackBookStrategyCallIntent } from '@/lib/analytics'
-import { containerVariants, itemVariants, sectionReveal } from './motion'
+import {
+  containerVariants,
+  itemVariants,
+  sectionReveal,
+} from '@/app/landing-pages/_components/motion'
 
 const LIVE_EXAMPLE_HREF: Record<LandingPageTier['slug'], string> = {
   'campaign-lp': '/campaigns/website-care',
@@ -22,9 +26,17 @@ const SEE_LIVE_TRACKING: Record<LandingPageTier['slug'], string> = {
   'campaign-system': 'landing_pages_tier_system_see_live',
 }
 
-function TierCard({ tier, isSystemLive }: { tier: LandingPageTier; isSystemLive: boolean }) {
+type TierCardProps = {
+  tier: LandingPageTier
+  isSystemLive: boolean
+  showLiveExampleLinks: boolean
+}
+
+function TierCard({ tier, isSystemLive, showLiveExampleLinks }: TierCardProps) {
   const includes = tier.includes.slice(0, 6)
   const isSystem = tier.slug === 'campaign-system'
+  const showLiveText = isSystem && isSystemLive
+  const showLiveLink = showLiveExampleLinks && !showLiveText
 
   return (
     <motion.div
@@ -54,30 +66,40 @@ function TierCard({ tier, isSystemLive }: { tier: LandingPageTier; isSystemLive:
         ))}
       </ul>
 
-      <div className="mt-8 border-t border-border pt-5">
-        {isSystem && isSystemLive ? (
-          <p className="text-sm font-medium text-foreground">
-            You&apos;re viewing a live Campaign System
-          </p>
-        ) : (
-          <Link
-            // Live example demo. Campaign / Conversion tier builds pending at /campaigns/*
-            href={LIVE_EXAMPLE_HREF[tier.slug]}
-            onClick={() => trackBookStrategyCallIntent(SEE_LIVE_TRACKING[tier.slug])}
-            className="group inline-flex items-center text-sm font-semibold text-cobalt-accent underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
-          >
-            See a live example
-            <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-        )}
-      </div>
+      {showLiveText || showLiveLink ? (
+        <div className="mt-8 border-t border-border pt-5">
+          {showLiveText ? (
+            <p className="text-sm font-medium text-foreground">
+              You&apos;re viewing a live Campaign System
+            </p>
+          ) : (
+            <Link
+              // Live example demo. Campaign / Conversion tier builds pending at /campaigns/*
+              href={LIVE_EXAMPLE_HREF[tier.slug]}
+              onClick={() => trackBookStrategyCallIntent(SEE_LIVE_TRACKING[tier.slug])}
+              className="group inline-flex items-center text-sm font-semibold text-cobalt-accent underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+            >
+              See a live example
+              <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          )}
+        </div>
+      ) : null}
     </motion.div>
   )
 }
 
-export function TierComparison() {
+type TierComparisonProps = {
+  showLiveExampleLinks?: boolean
+  isPrimaryDemo?: boolean
+}
+
+export function TierComparison({
+  showLiveExampleLinks = true,
+  isPrimaryDemo,
+}: TierComparisonProps) {
   const pathname = usePathname()
-  const isSystemLive = pathname === '/landing-pages'
+  const isSystemLive = isPrimaryDemo ?? pathname === '/landing-pages'
 
   return (
     <>
@@ -102,7 +124,12 @@ export function TierComparison() {
             className="grid gap-6 lg:grid-cols-3"
           >
             {landingPagePricing.map((tier) => (
-              <TierCard key={tier.slug} tier={tier} isSystemLive={isSystemLive} />
+              <TierCard
+                key={tier.slug}
+                tier={tier}
+                isSystemLive={isSystemLive}
+                showLiveExampleLinks={showLiveExampleLinks}
+              />
             ))}
           </motion.div>
         </div>
