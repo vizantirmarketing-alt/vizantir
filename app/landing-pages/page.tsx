@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Vizantir — Landing Page Design & Development',
+        alt: 'Vizantir. Landing Page Design & Development',
       },
     ],
   },

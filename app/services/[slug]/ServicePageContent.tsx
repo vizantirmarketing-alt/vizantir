@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PortableText } from '@portabletext/react'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
+import { TierComparison } from '@/components/landing-pages/TierComparison'
 import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
@@ -267,6 +268,10 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
+
+      {service.slug === 'landing-pages' && (
+        <TierComparison showLiveExampleLinks={false} isPrimaryDemo={false} />
+      )}
 
       {/* Deliverables */}
       {hasDeliverables ? (
