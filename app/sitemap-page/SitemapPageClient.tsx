@@ -9,6 +9,7 @@ import type { SitemapPageItem } from '@/lib/sanity/types'
 type Props = {
   mainPages: SitemapLink[]
   industryPages: SitemapLink[]
+  landingPages: SitemapLink[]
   technologyPages: SitemapLink[]
   legalPages: SitemapLink[]
   services: SitemapPageItem[]
@@ -45,6 +46,7 @@ function LinkList({ links }: { links: SitemapLink[] }) {
 export default function SitemapPageClient({
   mainPages,
   industryPages,
+  landingPages,
   technologyPages,
   legalPages,
   services,
@@ -92,6 +94,15 @@ export default function SitemapPageClient({
             >
               <SectionHeading label="Industries" />
               <LinkList links={industryPages} />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.16 }}
+            >
+              <SectionHeading label="Landing Pages" />
+              <LinkList links={landingPages} />
             </motion.div>
 
             <motion.div

@@ -3,6 +3,7 @@ import { sitemapPageQuery } from '@/lib/sanity/queries'
 import type { SitemapPageData } from '@/lib/sanity/types'
 import {
   sitemapIndustryPages,
+  sitemapLandingPages,
   sitemapLegalPages,
   sitemapMainPages,
   sitemapTechnologyPages,
@@ -20,6 +21,7 @@ export default async function SitemapPage() {
     <SitemapPageClient
       mainPages={sitemapMainPages}
       industryPages={sitemapIndustryPages}
+      landingPages={sitemapLandingPages}
       technologyPages={sitemapTechnologyPages}
       legalPages={sitemapLegalPages}
       services={data.services ?? []}

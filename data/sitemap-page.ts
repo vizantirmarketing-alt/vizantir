@@ -58,6 +58,12 @@ export const sitemapIndustryPages: SitemapLink[] = [
   { name: 'Commercial Real Estate Web Design', href: '/commercial-real-estate-web-design' },
 ]
 
+export const sitemapLandingPages: SitemapLink[] = [
+  { name: 'Landing Pages', href: '/landing-pages' },
+  { name: 'Landing Pages for Google Ads', href: '/landing-pages/for-google-ads' },
+  { name: 'Landing Pages for Product Launches', href: '/landing-pages/for-product-launches' },
+]
+
 export const sitemapLegalPages: SitemapLink[] = [
   { name: 'Privacy Policy', href: '/privacy' },
   { name: 'Terms and Conditions', href: '/terms' },
