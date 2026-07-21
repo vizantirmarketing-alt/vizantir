@@ -17,9 +17,10 @@ function formatClientList(names: string[]): string {
 
 type ProofBandProps = {
   clients: ProofClient[]
+  callout?: string
 }
 
-export function ProofBand({ clients }: ProofBandProps) {
+export function ProofBand({ clients, callout }: ProofBandProps) {
   const names = clients.map((client) => client.title)
   const namedClause =
     names.length > 0
@@ -31,6 +32,16 @@ export function ProofBand({ clients }: ProofBandProps) {
       <SectionDivider />
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="proof-heading">
         <div className="mx-auto max-w-6xl">
+          {callout ? (
+            <motion.div {...sectionReveal} className="mb-10">
+              <div className="mx-auto max-w-3xl rounded-2xl border border-cobalt-accent/30 bg-cobalt-muted-subtle px-6 py-5 text-center">
+                <p className="text-base font-semibold leading-relaxed text-foreground md:text-lg">
+                  {callout}
+                </p>
+              </div>
+            </motion.div>
+          ) : null}
+
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
             <Eyebrow>Proof</Eyebrow>
             <h2

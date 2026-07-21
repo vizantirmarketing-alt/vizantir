@@ -7,14 +7,14 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
 
-const fitItems = [
+const sharedFitItems = [
   "You're running paid traffic or planning to",
   'You have a specific offer, promotion, or launch to sell',
   'You want the page to actually convert, not just exist',
   'You care that the code is yours to keep',
 ] as const
 
-const notFitItems = [
+const sharedNotFitItems = [
   {
     before: 'You need a full multi-page website (',
     link: { href: '/services/web-design', label: 'see Web Design instead' },
@@ -37,7 +37,32 @@ const notFitItems = [
   },
 ] as const
 
-export function QualifierBand() {
+type QualifierOverrides = {
+  fit?: string[]
+  notFit?: string[]
+}
+
+type QualifierBandProps = {
+  overrides?: QualifierOverrides
+}
+
+export function QualifierBand({ overrides }: QualifierBandProps) {
+  const fitItems = [...sharedFitItems, ...(overrides?.fit ?? [])]
+  const notFitItems = [
+    ...sharedNotFitItems.map((item) => ({
+      key: item.before,
+      before: item.before,
+      link: item.link,
+      after: item.after,
+    })),
+    ...(overrides?.notFit ?? []).map((text) => ({
+      key: text,
+      before: text,
+      link: null as { href: string; label: string } | null,
+      after: '',
+    })),
+  ]
+
   return (
     <>
       <SectionDivider />
@@ -85,7 +110,7 @@ export function QualifierBand() {
               <h3 className="mb-6 text-xl font-bold text-foreground">You&apos;re not a fit if:</h3>
               <ul className="space-y-3">
                 {notFitItems.map((item) => (
-                  <li key={item.before} className="flex items-start gap-3">
+                  <li key={item.key} className="flex items-start gap-3">
                     <X
                       className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70"
                       aria-hidden
