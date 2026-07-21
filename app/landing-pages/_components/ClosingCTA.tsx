@@ -50,12 +50,14 @@ export function ClosingCTA({
             </Link>
           </Button>
           <p className="mt-6 text-sm text-white/70">
-            Vizantir Design Studio · Las Vegas, NV 89139
-            <span className="mx-2 text-white/40">·</span>
+            <span className="block md:inline">
+              Vizantir Design Studio · Las Vegas, NV 89139
+            </span>
+            <span className="mx-2 hidden text-white/40 md:inline">·</span>
             <Link
               href="tel:+17022890758"
               onClick={trackPhoneClick}
-              className="text-white/90 underline-offset-2 transition-colors hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
+              className="block text-white/90 underline-offset-2 transition-colors hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary md:inline"
             >
               (702) 289-0758
             </Link>
