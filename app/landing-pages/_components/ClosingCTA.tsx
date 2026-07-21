@@ -24,7 +24,7 @@ export function ClosingCTA({
 }: ClosingCTAProps) {
   return (
     <section
-      className="relative overflow-hidden bg-cobalt-primary px-6 py-24 md:px-12 lg:px-20"
+      className="relative overflow-hidden bg-cobalt-primary px-6 py-16 md:px-12 md:py-24 lg:px-20"
       aria-labelledby="closing-cta-heading"
     >
       <div className="relative z-10 mx-auto max-w-3xl text-center">
