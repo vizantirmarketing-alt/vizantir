@@ -94,7 +94,7 @@ const vizantirCompare = [
 
 const vizantirProofPoints = [
   { value: 'Next.js', label: 'Custom builds' },
-  { value: 'SEO-Safe', label: 'Migration first' },
+  { value: '0', label: 'Downtime at launch' },
   { value: '10+', label: 'Years experience' },
 ] as const
 
