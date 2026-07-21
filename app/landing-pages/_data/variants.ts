@@ -149,7 +149,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
     },
     homepageProblem: {
       heading: 'The math of a homepage for paid traffic.',
-      body: "Google Ads at $5 CPC, 100 clicks per day, means $500 daily spend. If your homepage converts at 2% because it's a lobby routing traffic to services and blog posts, that's 2 conversions for $500. A landing page built for one specific offer routinely converts at 5-15% for the same audience. Same spend, 2.5x to 7.5x more leads. The landing page pays for itself inside the first month of ad spend. Layer on Quality Score: when the landing page language matches the ad and the mobile load stays under 2.5 seconds, you stop paying a tax on every click for a page Google already knows is a weak match.",
+      body: "Google Ads at $5 CPC, 100 clicks per day, means $500 daily spend. If your homepage converts at 2% because it's a lobby routing traffic to services and blog posts, that's 2 conversions for $500. That's the math of paid traffic to a page that isn't built for the offer.",
       bullets: [
         'Every unmatched ad-to-page transition costs Quality Score.',
         'Homepages carry navigation that gives visitors 8 ways to leave without converting.',
@@ -220,7 +220,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
     route: '/landing-pages/for-product-launches',
     metaTitle: 'Product Launch Landing Pages | Custom Next.js Builds | Vizantir',
     metaDescription:
-      'Custom landing pages for product launches. Built to convert launch traffic. Campaign, Conversion, and Campaign System tiers from $3,000.',
+      'Custom landing pages for product launches. Built to convert launch traffic on day one. Campaign, Conversion, and Campaign System tiers from $3,000.',
     hero: {
       eyebrow: 'Landing pages for product launches',
       headline: 'Your launch deserves a page built for launch day.',

@@ -25,11 +25,11 @@ export default function ForGoogleAdsClient({ proofClients }: ForGoogleAdsClientP
 
   return (
     <main className="bg-background text-foreground transition-colors duration-500">
-      {/* Atmosphere image slot — Google Ads / paid traffic conversion context to be added in follow-up */}
+      {/* Atmosphere image slot: Google Ads / paid traffic conversion context to be added in follow-up */}
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
       <ProductDefinition />
-      <TierComparison />
+      <TierComparison showLiveExampleLinks={false} />
       <VariantComparisonTable currentSlug={v.slug} />
       <DeliverablesBlock />
       <Process emphasis={v.processEmphasis} />

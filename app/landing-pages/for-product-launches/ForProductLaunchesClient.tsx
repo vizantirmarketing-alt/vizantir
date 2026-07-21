@@ -27,11 +27,11 @@ export default function ForProductLaunchesClient({
 
   return (
     <main className="bg-background text-foreground transition-colors duration-500">
-      {/* Atmosphere image slot — product launch day / offer-focused visual to be added in follow-up */}
+      {/* Atmosphere image slot: product launch day / offer-focused visual to be added in follow-up */}
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
       <ProductDefinition />
-      <TierComparison />
+      <TierComparison showLiveExampleLinks={false} />
       <VariantComparisonTable currentSlug={v.slug} />
       <DeliverablesBlock />
       <Process emphasis={v.processEmphasis} />

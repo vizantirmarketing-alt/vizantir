@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { trackBookStrategyCallIntent } from '@/lib/analytics'
-import { sectionReveal } from './motion'
+import { itemVariants } from './motion'
 
 const STRATEGY_CALL_HREF = '/contact'
 
@@ -34,25 +34,27 @@ export function LandingPagesHero({
       />
 
       <div className="relative z-10 mx-auto max-w-4xl text-center">
-        <motion.div {...sectionReveal} className="mb-8">
+        <motion.div variants={itemVariants} initial="visible" className="mb-8">
           <Eyebrow>{eyebrow}</Eyebrow>
         </motion.div>
 
         <motion.h1
-          {...sectionReveal}
+          variants={itemVariants}
+          initial="visible"
           className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
         >
           {headline}
         </motion.h1>
 
         <motion.p
-          {...sectionReveal}
+          variants={itemVariants}
+          initial="visible"
           className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
         >
           {subheadline}
         </motion.p>
 
-        <motion.div {...sectionReveal} className="flex flex-col items-center gap-4">
+        <motion.div variants={itemVariants} initial="visible" className="flex flex-col items-center gap-4">
           <Button
             size="lg"
             asChild

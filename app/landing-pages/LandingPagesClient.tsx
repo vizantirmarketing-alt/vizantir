@@ -26,11 +26,11 @@ export default function LandingPagesClient({ proofClients }: LandingPagesClientP
 
   return (
     <main className="bg-background text-foreground transition-colors duration-500">
-      {/* Atmosphere image slot — focused campaign landing page / conversion surface visual to be added in follow-up */}
+      {/* Atmosphere image slot: focused campaign landing page / conversion surface visual to be added in follow-up */}
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
       <ProductDefinition />
-      <TierComparison />
+      <TierComparison showLiveExampleLinks={false} />
       <VariantSystemDemo />
       <VariantComparisonTable currentSlug={v.slug} />
       <DeliverablesBlock />
