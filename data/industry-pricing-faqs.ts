@@ -56,3 +56,16 @@ export const lawFirmPricingFaqs = {
   existingBrand:
     'Yes. We can build around your existing brand and logo, or refine the visual system as part of the engagement so the site matches the caliber of your practice.',
 } as const
+
+export const redesignPricingFaqs = {
+  seoRankings:
+    "Not if it's done right. Every URL gets mapped, every 301 redirect gets audited, every schema element gets preserved. We audit your ranking pages in discovery and structure the entire migration to protect them. Most redesigns lose rankings because the agency treats SEO as an afterthought — ours are scoped around SEO preservation from day one.",
+  contentMigration:
+    "Every page gets audited before migration. Ranking pages get preserved. Outdated pages get consolidated or rewritten. Nothing important gets lost. You'll know exactly what's moving, what's being rewritten, and what's being retired before we start building.",
+  downtime:
+    'No. The new site is built on a staged environment while your current site stays live. When the new site launches, it goes public in a single DNS change — no downtime, no gap where visitors see a broken site. Redirects are verified before the switch.',
+  timeline:
+    'Most redesigns take 6–10 weeks from kickoff to launch, depending on content volume, custom features, and existing site complexity. Larger sites with hundreds of ranking pages take longer — we scope timelines in discovery based on your actual site.',
+  existingPlatform:
+    "We've migrated sites off all four. Content gets exported, audited, and rebuilt in Sanity CMS. Redirects get mapped from your existing URLs to the new site structure. Rankings and referral traffic survive because we plan the migration before we touch the design.",
+} as const
