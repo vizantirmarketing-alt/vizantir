@@ -55,12 +55,12 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'How is this different from a website?',
         answer:
-          "A website answers 'what does this business do?' — a landing page answers 'why should I take this specific action right now?' Different job, different scope, different price. Landing pages start at $3,000 and ship in 2-3 weeks. Full custom websites start at $15,000 and ship in 6-8 weeks.",
+          "A website answers 'what does this business do?' A landing page answers 'why should I take this specific action right now?' Different job, different scope, different price. Landing pages start at $3,000 and ship in 2-3 weeks. Full custom websites start at $15,000 and ship in 6-8 weeks.",
       },
       {
         question: 'Which tier should I pick?',
         answer:
-          "If you have a specific offer and clear copy, Campaign at $3,000 is likely right. If you're running paid traffic and need messaging refinement plus behavior tracking, Conversion at $4,500 earns the premium. If you're running multiple audiences or campaigns and want variant testing, Campaign System at $7,500 is built for that. If you're not sure, book a strategy call — 20 minutes is usually enough to scope which tier fits.",
+          "If you have a specific offer and clear copy, Campaign at $3,000 is likely right. If you're running paid traffic and need messaging refinement plus behavior tracking, Conversion at $4,500 earns the premium. If you're running multiple audiences or campaigns and want variant testing, Campaign System at $7,500 is built for that. If you're not sure, book a strategy call. 30 minutes is usually enough to scope which tier fits.",
       },
       {
         question: 'Do you write the copy?',
@@ -86,7 +86,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
     closingCta: {
       heading: 'One page. One goal. Book a call.',
       subheading:
-        '20 minutes to scope which tier fits your campaign and what the timeline looks like.',
+        '30 minutes to scope which tier fits your campaign and what the timeline looks like.',
       ctaLabel: 'Book a strategy call',
       trackingLocation: 'landing_pages_primary_closing',
     },
@@ -111,7 +111,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       bullets: [
         'Every unmatched ad-to-page transition costs Quality Score.',
         'Homepages carry navigation that gives visitors 8 ways to leave without converting.',
-        'Ad copy promises specifics — homepages describe the business.',
+        'Ad copy promises specifics. Homepages describe the business.',
         'Landing pages are the standard in every paid traffic playbook for a reason.',
       ],
     },
@@ -129,7 +129,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'How do you handle Quality Score?',
         answer:
-          "Landing page relevance is one of three Quality Score factors. Vizantir builds pages that match your ad copy language, load under 2.5 seconds on mobile, and use clear conversion-focused messaging — all of which support relevance scoring. We don't manage the ad account itself, but our page builds are optimized for the signals Google measures.",
+          "Landing page relevance is one of three Quality Score factors. Vizantir builds pages that match your ad copy language, load under 2.5 seconds on mobile, and use clear conversion-focused messaging, all of which support relevance scoring. We don't manage the ad account itself, but our page builds are optimized for the signals Google measures.",
       },
       {
         question: 'What conversion events do you track?',
@@ -165,7 +165,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
     },
     homepageProblem: {
       heading: "A launch buried in the nav isn't a launch.",
-      body: 'You spent months on the product. Weeks on the launch plan. Days on the email sequence. Then the traffic arrives at your homepage and has to find the launch from a nav dropdown. Every extra click before the offer costs conversions. Launch traffic behaves differently from evergreen traffic — it\'s intent-loaded, time-boxed, and audience-specific. It needs a page built for that behavior.',
+      body: 'You spent months on the product. Weeks on the launch plan. Days on the email sequence. Then the traffic arrives at your homepage and has to find the launch from a nav dropdown. Every extra click before the offer costs conversions. Launch traffic behaves differently from evergreen traffic. It\'s intent-loaded, time-boxed, and audience-specific. It needs a page built for that behavior.',
       bullets: [
         'Launch traffic is time-boxed. The page has to convert during the window.',
         'Launch audiences come from specific channels. The page has to match the channel promise.',
@@ -177,7 +177,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'How fast can you build a launch page?',
         answer:
-          'Campaign tier ships in 2-3 weeks. Conversion tier in 3-4 weeks. Campaign System in 4-5 weeks. If you have a launch date, we scope backward from it during the strategy session. Rush timelines are possible on Campaign tier for a fee — book a call to check availability.',
+          'Campaign tier ships in 2-3 weeks. Conversion tier in 3-4 weeks. Campaign System in 4-5 weeks. If you have a launch date, we scope backward from it during the strategy session. Rush timelines are possible on Campaign tier for a fee. Book a call to check availability.',
       },
       {
         question: 'What if the product changes before launch?',
@@ -192,12 +192,12 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'What happens to the page after the launch is over?',
         answer:
-          'That depends on the product. Time-boxed launches (a course cohort, an event, a limited edition) get archived or redirected after the window closes. Evergreen products (a new SaaS, a permanent service line) keep the page as the ongoing sales asset — often the highest-converting page on the site because it was built around one specific action.',
+          'That depends on the product. Time-boxed launches (a course cohort, an event, a limited edition) get archived or redirected after the window closes. Evergreen products (a new SaaS, a permanent service line) keep the page as the ongoing sales asset, often the highest-converting page on the site because it was built around one specific action.',
       },
       {
         question: 'Should I get Campaign or Campaign System for a launch?',
         answer:
-          "If it's one product launched to one audience, Campaign at $3,000 or Conversion at $4,500 fits. If you're launching to multiple audiences (waitlist vs. cold, existing customers vs. new, region-specific), Campaign System at $7,500 gives you variant landing pages built on a shared system — right-sized messaging per audience without three separate builds.",
+          "If it's one product launched to one audience, Campaign at $3,000 or Conversion at $4,500 fits. If you're launching to multiple audiences (waitlist vs. cold, existing customers vs. new, region-specific), Campaign System at $7,500 gives you variant landing pages built on a shared system. Right-sized messaging per audience without three separate builds.",
       },
     ],
     closingCta: {

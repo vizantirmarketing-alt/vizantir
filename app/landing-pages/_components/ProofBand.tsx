@@ -23,8 +23,8 @@ export function ProofBand({ clients }: ProofBandProps) {
   const names = clients.map((client) => client.title)
   const namedClause =
     names.length > 0
-      ? ` including ${formatClientList(names)} — all live, all owned by the client, all built on the same stack that powers these landing pages.`
-      : ' — all live work is owned by the client and built on the same stack that powers these landing pages.'
+      ? ` including ${formatClientList(names)}. All live, all owned by the client, all built on the same stack that powers these landing pages.`
+      : '. All live work is owned by the client and built on the same stack that powers these landing pages.'
 
   return (
     <>

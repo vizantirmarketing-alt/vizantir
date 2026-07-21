@@ -61,7 +61,7 @@ function TierCard({ tier, isSystemLive }: { tier: LandingPageTier; isSystemLive:
           </p>
         ) : (
           <Link
-            // Live example demo — Campaign / Conversion tier builds pending at /campaigns/*
+            // Live example demo. Campaign / Conversion tier builds pending at /campaigns/*
             href={LIVE_EXAMPLE_HREF[tier.slug]}
             onClick={() => trackBookStrategyCallIntent(SEE_LIVE_TRACKING[tier.slug])}
             className="group inline-flex items-center text-sm font-semibold text-cobalt-accent underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
