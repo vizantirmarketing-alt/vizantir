@@ -8,7 +8,6 @@ import { LandingPagesFAQ } from '../_components/LandingPagesFAQ'
 import { LandingPagesHero } from '../_components/LandingPagesHero'
 import { Process } from '../_components/Process'
 import { ProductDefinition } from '../_components/ProductDefinition'
-import { ProofBand } from '../_components/ProofBand'
 import { QualifierBand } from '../_components/QualifierBand'
 import { RelatedServices } from '../_components/RelatedServices'
 import { VariantComparisonTable } from '../_components/VariantComparisonTable'
@@ -21,7 +20,7 @@ type ForProductLaunchesClientProps = {
 }
 
 export default function ForProductLaunchesClient({
-  proofClients,
+  proofClients: _proofClients,
 }: ForProductLaunchesClientProps) {
   const v = variants.productLaunches
 
@@ -35,7 +34,6 @@ export default function ForProductLaunchesClient({
       <VariantComparisonTable currentSlug={v.slug} />
       <DeliverablesBlock />
       <Process emphasis={v.processEmphasis} />
-      <ProofBand clients={proofClients} callout={v.proofPointsCallout} />
       <HandoffPreview trackingLocation="landing_pages_product_launches_handoff" />
       <QualifierBand overrides={v.qualifierOverrides} />
       <LandingPagesFAQ faqs={v.faqs} />

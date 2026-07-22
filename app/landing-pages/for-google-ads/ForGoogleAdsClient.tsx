@@ -8,7 +8,6 @@ import { LandingPagesFAQ } from '../_components/LandingPagesFAQ'
 import { LandingPagesHero } from '../_components/LandingPagesHero'
 import { Process } from '../_components/Process'
 import { ProductDefinition } from '../_components/ProductDefinition'
-import { ProofBand } from '../_components/ProofBand'
 import { QualifierBand } from '../_components/QualifierBand'
 import { RelatedServices } from '../_components/RelatedServices'
 import { VariantComparisonTable } from '../_components/VariantComparisonTable'
@@ -20,7 +19,9 @@ type ForGoogleAdsClientProps = {
   proofClients: ProofClient[]
 }
 
-export default function ForGoogleAdsClient({ proofClients }: ForGoogleAdsClientProps) {
+export default function ForGoogleAdsClient({
+  proofClients: _proofClients,
+}: ForGoogleAdsClientProps) {
   const v = variants.googleAds
 
   return (
@@ -33,7 +34,6 @@ export default function ForGoogleAdsClient({ proofClients }: ForGoogleAdsClientP
       <VariantComparisonTable currentSlug={v.slug} />
       <DeliverablesBlock />
       <Process emphasis={v.processEmphasis} />
-      <ProofBand clients={proofClients} callout={v.proofPointsCallout} />
       <HandoffPreview trackingLocation="landing_pages_google_ads_handoff" />
       <QualifierBand overrides={v.qualifierOverrides} />
       <LandingPagesFAQ faqs={v.faqs} />
