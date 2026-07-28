@@ -7,7 +7,7 @@ const META_DESCRIPTION =
   'Custom websites for restaurants, hotels, and lounges. Built on Next.js for mobile speed, bookings that convert, and a first impression that matches the venue.'
 
 export const metadata: Metadata = {
-  title: 'Hospitality Web Design for Restaurants & Hotels | Vizantir',
+  title: 'Hospitality Web Design for Restaurants & Hotels',
   description: META_DESCRIPTION,
   keywords: [
     'hospitality web design',

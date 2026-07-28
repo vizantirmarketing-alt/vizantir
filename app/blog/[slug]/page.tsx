@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!post) {
     return {
-      title: 'Post Not Found | Vizantir Blog',
+      title: 'Post Not Found',
     }
   }
 
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const url = getCanonicalUrl(settings, `/blog/${post.slug}`)
 
   return {
-    title: post.metaTitle || `${post.title} | Vizantir Blog`,
+    title: post.metaTitle || post.title,
     description,
     alternates: settings ? { canonical: url } : undefined,
     openGraph: {

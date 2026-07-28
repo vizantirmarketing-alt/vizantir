@@ -7,7 +7,7 @@ const META_DESCRIPTION =
   'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.'
 
 export const metadata: Metadata = {
-  title: 'Commercial Real Estate Web Design That Converts | Vizantir',
+  title: 'Commercial Real Estate Web Design That Converts',
   description: META_DESCRIPTION,
   keywords: [
     'commercial real estate web design',

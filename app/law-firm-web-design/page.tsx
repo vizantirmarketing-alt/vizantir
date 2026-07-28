@@ -4,7 +4,7 @@ import LawFirmWebDesignClient from './LawFirmWebDesignClient'
 import { lawFirmPricingFaqs } from '@/data/industry-pricing-faqs'
 
 export const metadata: Metadata = {
-  title: 'Law Firm Web Design That Builds Trust | Vizantir',
+  title: 'Law Firm Web Design That Builds Trust',
   description:
     'Custom websites for law firms and legal practices. Built to establish credibility, generate consultations, and present your firm at the highest level.',
   keywords: [

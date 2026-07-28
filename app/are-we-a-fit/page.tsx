@@ -11,7 +11,7 @@ const areWeAFitDescription =
 
 export const metadata: Metadata = {
   ...areWeAFitMetadata,
-  title: 'Are We a Fit? | Vizantir',
+  title: 'Are We a Fit?',
   description: areWeAFitDescription,
   openGraph: {
     ...(typeof areWeAFitMetadata.openGraph === 'object' && areWeAFitMetadata.openGraph !== null

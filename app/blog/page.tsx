@@ -11,14 +11,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!settings) {
     return {
-      title: 'Insights & Guides | Vizantir Blog',
+      title: 'Insights & Guides',
       description:
         'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.',
     }
   }
 
   return {
-    title: 'Insights & Guides | Vizantir Blog',
+    title: 'Insights & Guides',
     description:
       'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.',
     alternates: { canonical: `${settings.siteUrl}/blog` },

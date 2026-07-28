@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   
   if (!settings) {
     return {
-      title: 'Website Case Studies & Success Stories | Vizantir',
+      title: 'Website Case Studies & Success Stories',
       description:
         'See how Vizantir builds custom Next.js websites for established brands — from beauty and wellness to creative studios and retail.',
     }
@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const url = getCanonicalUrl(settings, '/case-studies')
 
   return {
-    title: 'Website Case Studies & Success Stories | Vizantir',
+    title: 'Website Case Studies & Success Stories',
     description:
       'See how Vizantir builds custom Next.js websites for established brands — from beauty and wellness to creative studios and retail.',
     alternates: { canonical: url },

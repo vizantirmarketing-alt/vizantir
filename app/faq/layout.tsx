@@ -5,7 +5,7 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { faqPageFaqsQuery } from '@/lib/sanity/queries'
 
 export const metadata: Metadata = {
-  title: 'Web Design FAQs & Answers | Vizantir Studio',
+  title: 'Web Design FAQs & Answers',
   description:
     'Find answers to common questions about timelines, pricing and our approach to premium website design and development, all in one place.',
 }
