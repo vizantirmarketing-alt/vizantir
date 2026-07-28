@@ -44,13 +44,6 @@ const nextConfig: NextConfig = {
         destination: '/case-studies',
         permanent: true,
       },
-      // Redirect old WordPress page_id URLs to homepage
-      {
-        source: '/',
-        has: [{ type: 'query', key: 'page_id' }],
-        destination: '/',
-        permanent: true,
-      },
     ];
   },
 
