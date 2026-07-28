@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 const canonicalUrl = 'https://www.vizantir.com/about'
 
 export const aboutMetadata: Metadata = {
-  title: 'About Vizantir | Premium Web Design Studio Las Vegas',
+  title: { absolute: 'About Vizantir | Premium Web Design Studio Las Vegas' },
   description:
     'Vizantir is a Las Vegas web design and development studio building custom Next.js websites for established brands that have outgrown their current site.',
   alternates: {

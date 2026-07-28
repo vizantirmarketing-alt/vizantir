@@ -13,7 +13,7 @@ const PAGE_DESCRIPTION =
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Our Technology Stack | Vizantir Design Studio',
+    absolute: 'Our Technology Stack | Vizantir',
   },
   description: PAGE_DESCRIPTION,
   alternates: {
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: PAGE_URL,
     siteName: 'Vizantir',
     locale: 'en_US',
-    title: 'Our Technology Stack | Vizantir Design Studio',
+    title: 'Our Technology Stack | Vizantir',
     description: PAGE_DESCRIPTION,
     images: [
       {

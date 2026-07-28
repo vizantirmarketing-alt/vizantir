@@ -15,7 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSeo('contact');
   
   return {
-    title: page?.seo?.metaTitle || 'Contact Vizantir Web Design Studio Las Vegas | Start Your Project',
+    title: {
+      absolute: page?.seo?.metaTitle || 'Contact Vizantir Web Design Studio Las Vegas | Start Your Project',
+    },
     description:
       page?.seo?.metaDescription ||
       'Get in touch to discuss your custom website project, book a consultation or learn how our Las Vegas studio can elevate your online presence.',
