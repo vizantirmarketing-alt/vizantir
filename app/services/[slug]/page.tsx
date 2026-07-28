@@ -40,13 +40,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!service || !settings) return {}
 
   const url = getCanonicalUrl(settings, `/services/${service.slug}`)
+  const baseTitle = service.metaTitle || service.title
+  const siteName = settings.siteName || 'Vizantir'
+  const socialTitle = baseTitle.endsWith(siteName)
+    ? baseTitle
+    : `${baseTitle} | ${siteName}`
 
   return {
-    title: service.metaTitle || service.title,
+    title: baseTitle,
     description: service.metaDescription || service.description,
     alternates: { canonical: url },
     openGraph: {
-      title: service.metaTitle || service.title,
+      title: socialTitle,
       description: service.metaDescription || service.description,
       url,
       type: 'website',
@@ -54,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: service.metaTitle || service.title,
+      title: socialTitle,
       description: service.metaDescription || service.description,
       images: getOgImage({ pageImage: service.ogImageUrl, settings, alt: service.title }),
     },
