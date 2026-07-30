@@ -63,7 +63,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
               Documentation you can run the campaign with.
             </h2>
             <p className="text-lg leading-relaxed text-muted-foreground">
-              Campaign System delivery includes a handoff document your team actually uses after
+              Conversion System delivery includes a handoff document your team actually uses after
               launch. Below is a sample table of contents from that pack.
             </p>
           </motion.div>
@@ -84,7 +84,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
               </p>
               <div className="mb-6 border-b border-border pb-4">
                 <p className="font-mono text-sm font-semibold text-foreground">
-                  vizantir-campaign-system-handoff.md
+                  vizantir-conversion-system-handoff.md
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Delivered at launch with your source code and analytics verification notes.

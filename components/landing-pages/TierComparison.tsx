@@ -15,15 +15,13 @@ import {
 } from '@/app/landing-pages/_components/motion'
 
 const LIVE_EXAMPLE_HREF: Record<LandingPageTier['slug'], string> = {
-  'campaign-lp': '/campaigns/website-care',
-  'conversion-lp': '/campaigns/blog-service',
-  'campaign-system': '/landing-pages',
+  'campaign-landing-page': '/campaigns/website-care',
+  'conversion-system': '/landing-pages',
 }
 
 const SEE_LIVE_TRACKING: Record<LandingPageTier['slug'], string> = {
-  'campaign-lp': 'landing_pages_tier_campaign_see_live',
-  'conversion-lp': 'landing_pages_tier_conversion_see_live',
-  'campaign-system': 'landing_pages_tier_system_see_live',
+  'campaign-landing-page': 'landing_pages_tier_campaign_see_live',
+  'conversion-system': 'landing_pages_tier_system_see_live',
 }
 
 type TierCardProps = {
@@ -34,7 +32,7 @@ type TierCardProps = {
 
 function TierCard({ tier, isSystemLive, showLiveExampleLinks }: TierCardProps) {
   const includes = tier.includes.slice(0, 6)
-  const isSystem = tier.slug === 'campaign-system'
+  const isSystem = tier.slug === 'conversion-system'
   const showLiveText = isSystem && isSystemLive
   const showLiveLink = showLiveExampleLinks && !showLiveText
 
@@ -70,11 +68,11 @@ function TierCard({ tier, isSystemLive, showLiveExampleLinks }: TierCardProps) {
         <div className="mt-8 border-t border-border pt-5">
           {showLiveText ? (
             <p className="text-sm font-medium text-foreground">
-              You&apos;re viewing a live Campaign System
+              You&apos;re viewing a live Conversion System
             </p>
           ) : (
             <Link
-              // Live example demo. Campaign / Conversion tier builds pending at /campaigns/*
+              // Live example demo. Campaign Landing Page build pending at /campaigns/*
               href={LIVE_EXAMPLE_HREF[tier.slug]}
               onClick={() => trackBookStrategyCallIntent(SEE_LIVE_TRACKING[tier.slug])}
               className="group inline-flex items-center text-sm font-semibold text-cobalt-accent underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
@@ -112,7 +110,7 @@ export function TierComparison({
               id="tier-comparison-heading"
               className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
             >
-              Three tiers. One craft standard.
+              Two tiers. One craft standard.
             </h2>
           </motion.div>
 
@@ -121,7 +119,7 @@ export function TierComparison({
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 lg:grid-cols-3"
+            className="grid gap-6 lg:grid-cols-2"
           >
             {landingPagePricing.map((tier) => (
               <TierCard

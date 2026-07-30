@@ -4,7 +4,12 @@ import { carePricing, landingPagePricing, projectPricing } from './pricing'
 
 const [essentialsProjectTier, , enterpriseProjectTier] = projectPricing
 const [essentialCareTier] = carePricing
-const [campaignLandingPageTier] = landingPagePricing
+const campaignLandingPageTier = landingPagePricing.find(
+  (tier) => tier.slug === 'campaign-landing-page',
+)
+if (!campaignLandingPageTier) {
+  throw new Error('landingPagePricing is missing campaign-landing-page')
+}
 const campaignLandingPageFloor = `$${campaignLandingPageTier.priceMin.toLocaleString('en-US')}`
 
 const canonicalUrl = 'https://www.vizantir.com/are-we-a-fit'

@@ -8,8 +8,6 @@ const PROVIDER = {
   alternateName: 'Vizantir Design Studio',
 }
 
-const OFFER_NAMES = ['Campaign', 'Conversion', 'Campaign System'] as const
-
 type FaqItem = {
   question: string
   answer: string
@@ -49,9 +47,9 @@ export function buildLandingPagesSchema({
           { '@type': 'City', name: 'Las Vegas' },
           { '@type': 'State', name: 'Nevada' },
         ],
-        offers: landingPagePricing.map((tier, index) => ({
+        offers: landingPagePricing.map((tier) => ({
           '@type': 'PriceSpecification',
-          name: OFFER_NAMES[index] ?? tier.name,
+          name: tier.name,
           price: tier.priceMin,
           priceCurrency: 'USD',
           description: tier.description,

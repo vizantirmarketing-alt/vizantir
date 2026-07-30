@@ -61,7 +61,7 @@ export function VariantSystemDemo() {
               One system. Three audiences. Shared infrastructure.
             </h2>
             <p className="text-lg leading-relaxed text-muted-foreground">
-              Campaign System lets you test messaging per audience without three separate builds.
+              Conversion System lets you test messaging per audience without three separate builds.
               Same components, same analytics schema, different copy and proof for each traffic
               source.
             </p>

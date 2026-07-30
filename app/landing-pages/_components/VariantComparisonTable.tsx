@@ -57,7 +57,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
             </h2>
             <p className="text-lg leading-relaxed text-muted-foreground">
               The current URL is highlighted below. The other two stay visible so you can see how
-              Campaign System shifts messaging without rebuilding from scratch.
+              Conversion System shifts messaging without rebuilding from scratch.
             </p>
           </motion.div>
 

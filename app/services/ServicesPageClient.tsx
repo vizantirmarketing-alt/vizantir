@@ -315,7 +315,7 @@ function StandalonePricingSection() {
         <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
           {LANDING_PAGE_PRICING.intro}
         </p>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-2">
           {landingPagePricing.map((tier) => (
             <LandingPagePricingCard key={tier.slug} tier={tier} />
           ))}
