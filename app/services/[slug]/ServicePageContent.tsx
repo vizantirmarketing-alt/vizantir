@@ -270,7 +270,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       ) : null}
 
       {service.slug === 'landing-pages' && (
-        <TierComparison showLiveExampleLinks={false} isPrimaryDemo={false} />
+        <TierComparison isPrimaryDemo={false} />
       )}
 
       {/* Deliverables */}
