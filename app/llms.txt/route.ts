@@ -1,4 +1,21 @@
 import { NextResponse } from "next/server";
+import { landingPagePricing, projectPricing } from "@/data/pricing";
+
+const essentialsProjectTier = projectPricing[0];
+const enterpriseProjectTier = projectPricing[2];
+const campaignLandingPageTier = landingPagePricing.find(
+  (tier) => tier.slug === "campaign-landing-page",
+);
+if (!essentialsProjectTier || !enterpriseProjectTier) {
+  throw new Error("projectPricing is missing expected tiers");
+}
+if (!campaignLandingPageTier) {
+  throw new Error("landingPagePricing is missing campaign-landing-page");
+}
+
+const customWebsiteFloor = essentialsProjectTier.price;
+const enterpriseCeiling = enterpriseProjectTier.price;
+const campaignLandingPageFloor = `$${campaignLandingPageTier.priceMin.toLocaleString("en-US")}`;
 
 const content = `# Vizantir
 
@@ -17,10 +34,10 @@ Vizantir is a design and development studio founded by an operator with 25 years
 - [Website Care](https://www.vizantir.com/services): Post-launch updates, monitoring, and performance improvements on a monthly retainer.
 
 ## Who we work with
-Established businesses where trust and presentation affect revenue — beauty and wellness, creative studios, professional services, retail, luxury brands, and financial services. Dedicated SEO landing pages exist for hospitality, law firms, and commercial real estate, though active client work spans broader sectors. Best fit for companies whose current website is holding the brand back, who want a custom site over a template, and who are ready to invest $15,000 or more. Not a fit for pre-launch ideas, lowest-bid shoppers, hourly or unlimited-revision arrangements, full-service marketing needs (Vizantir does not run Google Ads or manage social media), or two-week timelines.
+Established businesses where trust and presentation affect revenue — beauty and wellness, creative studios, professional services, retail, luxury brands, and financial services. Dedicated SEO entry pages exist for several verticals, though active client work spans broader sectors. Best fit for companies whose current website is holding the brand back, who want a custom site over a template, and who are ready to invest ${customWebsiteFloor} or more in a custom website build, or ${campaignLandingPageFloor} or more for a campaign landing page. Not a fit for pre-launch ideas, lowest-bid shoppers, hourly or unlimited-revision arrangements, full-service marketing needs (Vizantir does not run Google Ads or manage social media), or two-week timelines.
 
 ## Pricing
-Custom website projects start at $15,000 and scale to $60,000+ depending on scope and complexity. Not the cheapest option in the Las Vegas market, by design.
+Custom website projects start at ${customWebsiteFloor} and scale to ${enterpriseCeiling} depending on scope and complexity. Not the cheapest option in the Las Vegas market, by design.
 
 ## How we work
 A five-step process with defined scope and fixed pricing: Discovery (goals, timeline, fit), Proposal (clear scope document — what's included, price, timeline), 50% deposit to begin, Build (design and development with milestone check-ins), and Launch (final review, remaining balance, go live). No hourly billing — finished products, not hours.
