@@ -19,9 +19,9 @@ export interface PricingCardsProps {
   align?: 'start' | 'center'
 }
 
-const [essentialsCare, growthCare, enterpriseCare] = carePricing
+const [essentialCare, websiteCare, growthCare] = carePricing
 
-const careFooterText = `After launch, Website Care retainers start at ${essentialsCare.price} for ${essentialsCare.name}, ${growthCare.price} for ${growthCare.name}, and ${enterpriseCare.price} for ${enterpriseCare.name}.`
+const careFooterText = `After launch, care retainers start at ${essentialCare.price} for ${essentialCare.name}, ${websiteCare.price} for ${websiteCare.name}, and ${growthCare.price} for ${growthCare.name}.`
 
 export function PricingCards({
   heading,

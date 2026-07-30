@@ -10,7 +10,7 @@ export type PricingTier = {
 }
 
 export type CareTier = {
-  slug: 'essentials-care' | 'growth-care' | 'enterprise-care'
+  slug: 'essential-care' | 'website-care' | 'growth-partner'
   name: string
   price: string
   priceMin: number
@@ -112,55 +112,55 @@ export const projectPricing: PricingTier[] = [
 
 export const carePricing: CareTier[] = [
   {
-    slug: 'essentials-care',
+    slug: 'essential-care',
+    name: 'Essential Care',
+    price: '$295/month',
+    priceMin: 295,
+    tagline: 'We keep it healthy.',
+    description:
+      "Hosting, monitoring, and security updates for a site that's stable and doesn't change often.",
+    includes: [
+      'Hosting oversight and deployment support',
+      'Uptime and broken-link monitoring',
+      'Dependency and security updates',
+      'Up to 1 hour per month of content changes',
+      'Email response within 2 business days',
+      '10% preferred rate on all landing pages and campaign work',
+    ],
+  },
+  {
+    slug: 'website-care',
     name: 'Website Care',
     price: '$650/month',
     priceMin: 650,
     tagline: 'We keep it running.',
     description:
-      'Hosting oversight, monitoring, and light monthly changes so your site stays fast, secure, and current.',
+      'Everything in Essential Care, plus more monthly bandwidth and faster response.',
+    featured: true,
     includes: [
-      'Hosting oversight and deployment support',
-      'Uptime and broken-link monitoring',
-      'Dependency and security updates',
+      'Everything in Essential Care',
       'Up to 2 hours per month of content or layout changes',
+      'Performance and Core Web Vitals monitoring',
       'Priority email response (24–48 hr)',
-      '15% preferred rate on landing pages and new work',
+      '15% preferred rate on all landing pages and campaign work',
     ],
   },
   {
-    slug: 'growth-care',
+    slug: 'growth-partner',
     name: 'Growth Partner',
     price: '$1,500/month',
     priceMin: 1500,
     tagline: 'We keep it growing.',
     description:
-      'Everything in Website Care, plus more monthly bandwidth, a quarterly landing page, and preferred rates on campaign work.',
-    featured: true,
+      'Everything in Website Care, plus more monthly bandwidth, quarterly optimization on the pages you already have, and preferred rates on campaign work.',
     includes: [
       'Everything in Website Care',
       'Up to 4 hours per month of improvements or new sections',
-      '1 Campaign Landing Page per quarter included',
+      'Quarterly conversion and performance pass on existing pages',
       'Quarterly analytics and performance review',
+      'Technical SEO and schema maintenance',
       'Priority scheduling on new work',
-      '20% preferred rate on additional landing pages',
-    ],
-  },
-  {
-    slug: 'enterprise-care',
-    name: 'Campaign Partner',
-    price: '$3,000/month',
-    priceMin: 3000,
-    tagline: 'We keep campaigns converting.',
-    description:
-      'Everything in Growth Partner, plus a landing page every month, messaging support, and ongoing iteration.',
-    includes: [
-      'Everything in Growth Partner',
-      '1 custom landing page per month included (or 2 smaller campaign variants)',
-      'Messaging and conversion coaching',
-      'Ongoing analytics and iteration',
-      'Monthly strategy review',
-      '30% preferred rate on additional landing pages',
+      '20% preferred rate on all landing pages and campaign work',
     ],
   },
 ]
@@ -333,11 +333,13 @@ export const chatbotPricing: ChatbotTier[] = [
 const essentialsTier = projectPricing[0]
 const growthTier = projectPricing[1]
 const enterpriseTier = projectPricing[2]
-const essentialsCareTier = carePricing[0]
+const essentialCareTier = carePricing[0]
+const websiteCareTier = carePricing[1]
+const growthCareTier = carePricing[2]
 
 export const pricingFAQs = {
   cost: `Project pricing starts at ${essentialsTier.price} for Essentials, ${growthTier.price} for Growth, and ${enterpriseTier.price} for Enterprise. Timelines are ${essentialsTier.timeline}, ${growthTier.timeline}, and ${enterpriseTier.timeline} respectively.`,
-  retainer: `After launch, Website Care retainers start at ${essentialsCareTier.price} for ${essentialsCareTier.name}, ${carePricing[1].price} for ${carePricing[1].name}, and ${carePricing[2].price} for ${carePricing[2].name}.`,
+  retainer: `After launch, care retainers start at ${essentialCareTier.price} for ${essentialCareTier.name}, ${websiteCareTier.price} for ${websiteCareTier.name}, and ${growthCareTier.price} for ${growthCareTier.name}.`,
   timeline: `${essentialsTier.name} projects take ${essentialsTier.timeline} from kickoff. ${growthTier.name} projects run ${growthTier.timeline}. ${enterpriseTier.name} builds can stretch ${enterpriseTier.timeline} depending on scope.`,
   budgetPositioning: `Projects start at ${essentialsTier.price} and scale to ${enterpriseTier.price} depending on scope. If budget is your primary concern, platforms like Squarespace, Webflow, and Wix will serve you well. Vizantir is for businesses where a mediocre website costs more than a great one.`,
 } as const

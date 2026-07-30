@@ -96,50 +96,49 @@ async function main() {
     .set({
       overview: [
         textBlock(
-          'Your website is live — now it needs to stay fast, secure, and current. Website Care keeps the infrastructure healthy: hosting oversight, monitoring, dependency updates, and quick turnarounds on small changes.'
+          "Your website is live — now it needs to stay fast, secure, and current. Essential Care covers hosting oversight, monitoring, and security updates for a site that doesn't change often."
         ),
         textBlock(
-          'For teams treating their site as a growth engine, Growth Partner and Campaign Partner tiers add reserved design and development capacity — including included landing pages, quarterly reviews, and priority scheduling.'
+          'Website Care adds more monthly change hours and faster response. Growth Partner adds reserved bandwidth, quarterly optimization on pages you already have, and the highest preferred rates on campaign work. Landing pages are purchase-only at every tier.'
         ),
       ],
       offerings: [
         {
           _type: 'serviceOffering' as const,
           _key: key(),
+          name: 'Essential Care',
+          description:
+            "Hosting, monitoring, and security updates for a site that's stable and doesn't change often. Up to 1 hour of content changes per month.",
+        },
+        {
+          _type: 'serviceOffering' as const,
+          _key: key(),
           name: 'Website Care',
           description:
-            'Hosting, monitoring, and up to 2 hours of monthly changes. For teams whose site is stable and just needs to stay that way.',
+            'Everything in Essential Care, plus more monthly bandwidth and faster response. Up to 2 hours of content or layout changes per month.',
         },
         {
           _type: 'serviceOffering' as const,
           _key: key(),
           name: 'Growth Partner',
           description:
-            'Everything in Website Care plus 4 hours of monthly improvements and 1 Campaign Landing Page per quarter.',
-        },
-        {
-          _type: 'serviceOffering' as const,
-          _key: key(),
-          name: 'Campaign Partner',
-          description:
-            'Everything in Growth Partner plus 1 custom landing page per month and ongoing conversion strategy support.',
+            'Everything in Website Care, plus more monthly bandwidth, quarterly optimization on the pages you already have, and preferred rates on campaign work.',
         },
       ],
       benefits: [
         'Predictable monthly cost with reserved design and development time',
         'Faster response than one-off project work',
         'Security patches, dependency updates, and uptime monitoring included',
-        'Preferred rates on landing pages and new project work',
-        'Optional included landing pages at higher tiers',
+        'Preferred rates on landing pages and new project work (10%, 15%, or 20% by tier)',
         'No surprise invoices — everything scoped monthly',
       ],
       deliverables: [
         'Hosting and deployment oversight',
         'Uptime and broken-link monitoring',
         'Dependency and security updates',
-        'Monthly change hours (2–6 depending on tier)',
-        'Included landing pages at Growth Partner and Campaign Partner',
-        'Quarterly or monthly performance and analytics review at higher tiers',
+        'Monthly change hours (1–4 depending on tier)',
+        'Quarterly conversion, performance, and analytics review at Growth Partner',
+        'Technical SEO and schema maintenance at Growth Partner',
       ],
       faqs: [
         {
@@ -147,7 +146,7 @@ async function main() {
           _key: key(),
           question: "What's the difference between the three tiers?",
           answer:
-            'Website Care ($650/mo) is maintenance-only with 2 hours of monthly changes. Growth Partner ($1,500/mo) adds 4 hours of improvements and 1 landing page per quarter. Campaign Partner ($3,000/mo) includes 1 landing page per month and ongoing conversion strategy.',
+            'Essential Care ($295/mo) covers hosting, monitoring, security updates, and up to 1 hour of content changes with a 10% preferred rate. Website Care ($650/mo) adds more monthly bandwidth, Core Web Vitals monitoring, faster response, and a 15% preferred rate. Growth Partner ($1,500/mo) adds 4 hours of improvements, quarterly optimization on existing pages, and a 20% preferred rate. Landing pages are purchase-only at every tier.',
         },
         {
           _type: 'serviceFaqItem' as const,
@@ -161,7 +160,7 @@ async function main() {
           _key: key(),
           question: 'What happens if I need more work than my hours cover?',
           answer:
-            "Additional hours are billed at your preferred client rate (15–30% off standard project pricing depending on your tier). No surprises — you'll always get an estimate before work starts.",
+            "Additional hours are billed at your preferred client rate (10–20% off standard project pricing depending on your tier). No surprises — you'll always get an estimate before work starts.",
         },
         {
           _type: 'serviceFaqItem' as const,
@@ -175,7 +174,7 @@ async function main() {
         _type: 'seo' as const,
         metaTitle: 'Website Care & Growth Retainers | Vizantir',
         metaDescription:
-          'Ongoing website care starting at $650/mo. Growth Partner and Campaign Partner tiers include monthly design and development capacity plus landing pages.',
+          'Ongoing website care starting at $295/mo. Essential Care, Website Care, and Growth Partner cover hosting, monthly change hours, and preferred rates on campaign work.',
         noIndex: false,
       },
     })
