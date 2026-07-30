@@ -9,7 +9,7 @@ export const lasVegasPricingFaqs = {
   stackAndOwnership:
     'We build every site on Next.js with Sanity CMS. You own everything — the code, the content, the domain, the analytics. No proprietary lock-in, no monthly software rent for basic content edits. If you ever decide to move on, we hand off the repository cleanly.',
   postLaunch:
-    'We offer optional care plans starting at $295/month — hosting oversight, security updates, monthly change hours, and preferred rates on future work. Existing site clients also get an existing-site page rate on landing pages and new sections.',
+    'We offer optional care plans starting at $295/month — hosting oversight, security updates, monthly change hours, and preferred rates on future work. Existing site clients also get an existing-site page rate on landing pages and new sections, which applies in place of care preferred rates rather than in addition to them.',
 } as const
 
 export const commercialRealEstatePricingFaqs = {

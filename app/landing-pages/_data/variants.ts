@@ -1,3 +1,5 @@
+import { EXISTING_SITE_PAGE_RATE_DISPLAY } from '@/data/pricing'
+
 export type VariantSlug = 'primary' | 'googleAds' | 'productLaunches'
 
 export type ProcessEmphasisStep = 'strategy' | 'design' | 'build' | 'launch'
@@ -51,7 +53,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
     route: '/landing-pages',
     metaTitle: 'Landing Page Design & Development | Vizantir',
     metaDescription:
-      'Custom landing pages built on Next.js. Strategy, design, and conversion-focused development. Campaign ($3K), Conversion ($4.5K), and Campaign System ($7.5K) tiers.',
+      'Custom landing pages built on Next.js. Strategy, design, and conversion-focused development. Campaign Landing Page ($3.5K) and Conversion System ($8K) tiers.',
     hero: {
       eyebrow: 'Landing pages by Vizantir',
       headline: 'Your homepage is doing too much.',
@@ -74,22 +76,22 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'How is this different from a website?',
         answer:
-          "A website answers 'what does this business do?' A landing page answers 'why should I take this specific action right now?' Different job, different scope, different price. Landing pages start at $3,000 and ship in 2-3 weeks. Full custom websites start at $15,000 and ship in 6-8 weeks. If you need both, we often scope a Campaign or Conversion landing page first so paid traffic has a conversion surface while the broader site is still in progress.",
+          "A website answers 'what does this business do?' A landing page answers 'why should I take this specific action right now?' Different job, different scope, different price. Landing pages start at $3,500 and ship in 2-3 weeks. Full custom websites start at $15,000 and ship in 6-8 weeks. If you need both, we often scope a Campaign Landing Page or Conversion System first so paid traffic has a conversion surface while the broader site is still in progress.",
       },
       {
         question: 'Which tier should I pick?',
         answer:
-          "If you have a specific offer and clear copy, Campaign at $3,000 is likely right. If you're running paid traffic and need messaging refinement plus behavior tracking, Conversion at $4,500 earns the premium. If you're running multiple audiences or campaigns and want variant testing, Campaign System at $7,500 is built for that. A common pattern: one Campaign System covering a primary offer page plus two audience variants beats three separate Campaign builds in both cost and consistency. If you're not sure, book a strategy call. 30 minutes is usually enough to scope which tier fits.",
+          "If you have a specific offer and clear copy, Campaign Landing Page at $3,500 is likely right. If you're spending on paid traffic, need messaging refinement and behavior tracking, or want variant testing across audiences, Conversion System at $8,000 is built for that. A common pattern: one Conversion System covering a primary offer page plus two audience variants beats three separate Campaign builds in both cost and consistency. If you're not sure, book a strategy call. 30 minutes is usually enough to scope which tier fits.",
       },
       {
         question: 'Do you write the copy?',
         answer:
-          'Copy collaboration is included at every tier. Campaign tier uses your copy with light editing for clarity and CTA strength. Conversion tier includes substantial copy refinement and a messaging workshop where we pressure-test offer framing, objections, and proof order before design starts. Campaign System applies that workshop across all variants so each audience gets right-sized messaging without three separate copy projects.',
+          'Copy collaboration is included at every tier. Campaign Landing Page uses your copy with light editing for clarity and CTA strength. Conversion System includes substantial copy refinement and a messaging workshop where we pressure-test offer framing, objections, and proof order before design starts, then applies that workshop across all variants so each audience gets right-sized messaging without three separate copy projects.',
       },
       {
         question: 'Can I add a landing page to an existing Vizantir website?',
         answer:
-          'Yes. Existing Vizantir website clients get an existing-site page rate starting at $1,500 because the design system, components, and brand infrastructure are already built. That rate covers a single Campaign-scope page on the existing stack. Conversion or Campaign System scope on an existing site is quoted from the standard tier prices with credit for shared infrastructure where it applies.',
+          `Yes. Existing Vizantir website clients get an existing-site page rate starting at ${EXISTING_SITE_PAGE_RATE_DISPLAY} because the design system, components, and brand infrastructure are already built. That rate covers a single Campaign Landing Page-scope page on the existing stack. Conversion System scope on an existing site is quoted from the standard tier price with credit for shared infrastructure where it applies. The existing-site rate applies in place of care plan preferred rates rather than on top of them.`,
       },
       {
         question: 'Can you run the ad campaigns too?',
@@ -99,7 +101,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'What analytics do you set up?',
         answer:
-          'Vercel Analytics for pageviews and event tracking on every tier. Microsoft Clarity for behavior tracking on Conversion and above. Conversion events are configured per your specific goals during the strategy session: form submits, CTA clicks, phone taps, scroll depth, and any custom events your optimization loop needs. Before handoff, we verify events fire cleanly so you are not debugging tracking in week one of spend.',
+          'Vercel Analytics for pageviews and event tracking on every tier. Microsoft Clarity for behavior tracking on Conversion System. Conversion events are configured per your specific goals during the strategy session: form submits, CTA clicks, phone taps, scroll depth, and any custom events your optimization loop needs. Before handoff, we verify events fire cleanly so you are not debugging tracking in week one of spend.',
       },
     ],
     closingCta: {
@@ -138,7 +140,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
     route: '/landing-pages/for-google-ads',
     metaTitle: 'Google Ads Landing Pages | Custom Built on Next.js | Vizantir',
     metaDescription:
-      'Custom landing pages for Google Ads campaigns. Built for conversion, not templates. Campaign, Conversion, and Campaign System tiers from $3,000.',
+      'Custom landing pages for Google Ads campaigns. Built for conversion, not templates. Campaign Landing Page and Conversion System tiers from $3,500.',
     hero: {
       eyebrow: 'Landing pages for Google Ads',
       headline: "You're paying for clicks. Your homepage isn't paying you back.",
@@ -166,7 +168,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'Which tier fits Google Ads best?',
         answer:
-          "For most paid traffic, Conversion at $4,500 is the right tier because it includes offer and messaging workshop, substantial copy refinement, Microsoft Clarity behavior tracking, and detailed conversion event tracking. If you're running multiple ad groups targeting different audiences, Campaign System at $7,500 lets you match landing page variants to ad group intent. Example: one primary page for brand search, plus variants for a high-intent service keyword and a competitor-conquest group, sharing one component system instead of three disconnected builds.",
+          "For most paid traffic, Conversion System at $8,000 is the right tier because it includes offer and messaging workshop, substantial copy refinement, behavior tracking, detailed conversion event tracking, and 2 audience variants. If you're running multiple ad groups targeting different audiences, that variant structure lets you match landing pages to ad group intent. Example: one primary page for brand search, plus variants for a high-intent service keyword and a competitor-conquest group, sharing one component system instead of three disconnected builds. If the offer is locked and you only need one focused page, Campaign Landing Page at $3,500 fits.",
       },
       {
         question: 'How do you handle Quality Score?',
@@ -181,7 +183,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'Can you build multiple landing pages for different ad groups?',
         answer:
-          "That's Campaign System tier. One primary landing page plus 2 variants (audience, offer, headline, or location-based) built on a shared component system. Additional variants beyond the included 2 are quoted as smaller add-ons because the infrastructure is already built. Most Google Ads clients use the included variants to mirror their top two non-brand ad groups while the primary catches brand and high-intent search.",
+          "That's Conversion System tier. One primary landing page plus 2 variants (audience, offer, headline, or location-based) built on a shared component system. Additional variants beyond the included 2 are quoted as smaller add-ons because the infrastructure is already built. Most Google Ads clients use the included variants to mirror their top two non-brand ad groups while the primary catches brand and high-intent search.",
       },
     ],
     closingCta: {
@@ -220,7 +222,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
     route: '/landing-pages/for-product-launches',
     metaTitle: 'Product Launch Landing Pages | Custom Next.js Builds | Vizantir',
     metaDescription:
-      'Custom landing pages for product launches. Built to convert launch traffic on day one. Campaign, Conversion, and Campaign System tiers from $3,000.',
+      'Custom landing pages for product launches. Built to convert launch traffic on day one. Campaign Landing Page and Conversion System tiers from $3,500.',
     hero: {
       eyebrow: 'Landing pages for product launches',
       headline: 'Your launch deserves a page built for launch day.',
@@ -243,7 +245,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'How fast can you build a launch page?',
         answer:
-          'Campaign tier ships in 2-3 weeks. Conversion tier in 3-4 weeks. Campaign System in 4-5 weeks. If you have a launch date, we scope backward from it during the strategy session. Rush timelines are possible on Campaign tier for a fee when the offer and copy are already locked. Example: a June 15 cohort open with copy approved by May 20 can still fit Conversion scope if strategy happens the first week of May. Book a call to check availability against your date.',
+          'Campaign Landing Page ships in 2-3 weeks. Conversion System in 4-5 weeks. If you have a launch date, we scope backward from it during the strategy session. Rush timelines are possible on Campaign Landing Page for a fee when the offer and copy are already locked. Example: a June 15 cohort open with copy approved by May 20 can still fit Conversion System scope if strategy happens the first week of May. Book a call to check availability against your date.',
       },
       {
         question: 'What if the product changes before launch?',
@@ -261,9 +263,9 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
           'That depends on the product. Time-boxed launches (a course cohort, an event, a limited edition) get archived or redirected after the window closes. Evergreen products (a new SaaS, a permanent service line) keep the page as the ongoing sales asset, often the highest-converting page on the site because it was built around one specific action. We document both paths in the handoff so your team is not guessing on day 15.',
       },
       {
-        question: 'Should I get Campaign or Campaign System for a launch?',
+        question: 'Should I get Campaign Landing Page or Conversion System for a launch?',
         answer:
-          "If it's one product launched to one audience, Campaign at $3,000 or Conversion at $4,500 fits. If you're launching to multiple audiences (waitlist vs. cold, existing customers vs. new, region-specific), Campaign System at $7,500 gives you variant landing pages built on a shared system. Right-sized messaging per audience without three separate builds. A typical Campaign System launch uses the primary for cold traffic, one variant for waitlist warm-up, and one for existing customers with different proof and CTA language.",
+          "If it's one product launched to one audience with clear copy, Campaign Landing Page at $3,500 fits. If you're launching to multiple audiences (waitlist vs. cold, existing customers vs. new, region-specific), or need messaging workshop and deeper tracking, Conversion System at $8,000 gives you variant landing pages built on a shared system. Right-sized messaging per audience without three separate builds. A typical Conversion System launch uses the primary for cold traffic, one variant for waitlist warm-up, and one for existing customers with different proof and CTA language.",
       },
     ],
     closingCta: {

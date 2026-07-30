@@ -21,7 +21,7 @@ export type CareTier = {
 }
 
 export type LandingPageTier = {
-  slug: 'campaign-lp' | 'conversion-lp' | 'campaign-system'
+  slug: 'campaign-landing-page' | 'conversion-system'
   name: string
   price: string
   priceMin: number
@@ -167,10 +167,10 @@ export const carePricing: CareTier[] = [
 
 export const landingPagePricing: LandingPageTier[] = [
   {
-    slug: 'campaign-lp',
+    slug: 'campaign-landing-page',
     name: 'Campaign Landing Page',
-    price: 'from $3,000',
-    priceMin: 3000,
+    price: 'from $3,500',
+    priceMin: 3500,
     tagline: 'One page. One goal.',
     description:
       'For a specific service, promotion, event, or paid campaign.',
@@ -188,44 +188,27 @@ export const landingPagePricing: LandingPageTier[] = [
     ],
   },
   {
-    slug: 'conversion-lp',
-    name: 'Conversion Landing Page',
-    price: 'from $4,500',
-    priceMin: 4500,
+    slug: 'conversion-system',
+    name: 'Conversion System',
+    price: 'from $8,000',
+    priceMin: 8000,
     tagline: 'Built for paid traffic.',
     description:
-      'For a business spending on traffic or launching a meaningful new offer.',
-    featured: true,
+      'For businesses spending $5,000 or more per month on paid traffic, or launching an offer that has to work across multiple audiences.',
     includes: [
       'Everything in Campaign Landing Page',
       'Audience and competitor research',
       'Offer and messaging workshop',
       'Copy structure and substantial refinement',
       '8 to 12 sections',
+      'Reusable landing page component system',
+      '2 audience, location, headline, or offer variants',
+      'Testing-ready structure',
       'Custom interactions or motion',
       'CRM, booking, or lead routing integration',
-      'Behavior tracking (Microsoft Clarity or equivalent)',
-      'Detailed conversion event tracking',
-      '30 days of post-launch support',
-    ],
-  },
-  {
-    slug: 'campaign-system',
-    name: 'Campaign System',
-    price: 'from $7,500',
-    priceMin: 7500,
-    tagline: 'One system. Multiple variants.',
-    description:
-      'For businesses running multiple audiences, locations, or paid campaigns.',
-    includes: [
-      '1 primary landing page',
-      '2 audience, location, headline, or offer variants',
-      'Reusable landing page component system',
-      'Testing-ready structure',
-      'Advanced analytics events',
-      'Up to 2 business integrations',
+      'Behavior tracking and detailed conversion event tracking',
       'Campaign handoff documentation',
-      '45 days of support',
+      '45 days of post-launch support',
     ],
   },
 ]
@@ -370,12 +353,22 @@ export const CONTACT_BUDGET_FROM_PRICING = [
 ] as const
 
 export const CONTACT_BUDGET_FROM_LANDING_PAGES = [
-  '$3,000 – $5,000',
-  '$4,500 – $7,500',
-  '$7,500 – $15,000',
+  '$3,500 – $8,000',
+  '$8,000 – $15,000',
   '$15,000+',
   'Not Sure Yet',
 ] as const
+
+const campaignLandingPageTier = landingPagePricing.find(
+  (tier) => tier.slug === 'campaign-landing-page',
+)
+if (!campaignLandingPageTier) {
+  throw new Error('landingPagePricing is missing campaign-landing-page')
+}
+
+/** 50% of Campaign Landing Page list — Vizantir-built sites only. Does not stack with care preferred rates. */
+export const EXISTING_SITE_PAGE_RATE = campaignLandingPageTier.priceMin * 0.5
+export const EXISTING_SITE_PAGE_RATE_DISPLAY = `$${EXISTING_SITE_PAGE_RATE.toLocaleString('en-US')}`
 
 export function formatCareClientPrice(priceMin: number): string {
   const discounted = Math.round(priceMin * (1 - 0.15))

@@ -164,9 +164,38 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             >
               {content.budgetSection.heading}
             </h2>
-            <p className="text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
-              {content.budgetSection.body}
-            </p>
+            <div className="space-y-4">
+              {content.budgetSection.paragraphs?.map((paragraph) => {
+                if (typeof paragraph === 'string') {
+                  return (
+                    <p
+                      key={paragraph}
+                      className="text-base leading-relaxed md:text-lg"
+                      style={{ color: colors.textMuted }}
+                    >
+                      {paragraph}
+                    </p>
+                  )
+                }
+
+                return (
+                  <p
+                    key={`${paragraph.before}${paragraph.link.href}${paragraph.after}`}
+                    className="text-base leading-relaxed md:text-lg"
+                    style={{ color: colors.textMuted }}
+                  >
+                    {paragraph.before}
+                    <Link
+                      href={paragraph.link.href}
+                      className="font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                    >
+                      {paragraph.link.label}
+                    </Link>
+                    {paragraph.after}
+                  </p>
+                )
+              })}
+            </div>
           </motion.div>
         </div>
       </section>

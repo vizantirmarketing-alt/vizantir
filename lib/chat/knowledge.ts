@@ -15,10 +15,11 @@ import {
   blogPricing,
   chatbotPricing,
   CHATBOT_SETUP_FEE,
+  EXISTING_SITE_PAGE_RATE_DISPLAY,
   formatCareClientPrice,
   pricingFAQs,
 } from '@/data/pricing'
-import { areWeAFitPageContent } from '@/data/are-we-a-fit'
+import { areWeAFitPageContent, flattenAreWeAFitParagraph } from '@/data/are-we-a-fit'
 import { howWeWorkProcess, howWeWorkFaqs } from '@/data/how-we-work'
 import { CORE_STACK, SPECIALIZED_TOOLS } from '@/app/technology/_data'
 import type { Technology } from '@/app/technology/_data'
@@ -128,7 +129,8 @@ function buildPricing(): string {
     .join('\n\n')
   const chatbotBlock = `${chatbotIntro}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
-  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\nBLOG WRITING (monthly add-on or one-time):\n\n${blogBlock}\n\nAI CHATBOT (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
+  const existingSiteRate = `Existing Vizantir website clients get an existing-site page rate starting at ${EXISTING_SITE_PAGE_RATE_DISPLAY} for a single Campaign Landing Page-scope page on the existing stack. That rate applies in place of care preferred rates rather than on top of them.`
+  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nBLOG WRITING (monthly add-on or one-time):\n\n${blogBlock}\n\nAI CHATBOT (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
   return section('PRICING', body)
 }
 
@@ -139,7 +141,11 @@ function buildFit(): string {
     f.heroSubheading,
     `### ${f.idealSection.heading}\n${bullets(f.idealSection.bullets)}`,
     `### ${f.notIdealSection.heading}\n${bullets(f.notIdealSection.bullets)}`,
-    `### ${f.budgetSection.heading}\n${f.budgetSection.body}`,
+    `### ${f.budgetSection.heading}\n${
+      f.budgetSection.paragraphs
+        ?.map(flattenAreWeAFitParagraph)
+        .join('\n\n') ?? f.budgetSection.body
+    }`,
     `### ${f.closingSection.heading}\n${f.closingSection.body}`,
   ].filter(Boolean).join('\n\n')
   return section('WHO WE WORK WITH (FIT)', body)

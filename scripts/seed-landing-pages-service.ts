@@ -14,6 +14,8 @@ import { fileURLToPath } from 'node:url'
 import { createClient, type SanityClient } from '@sanity/client'
 import { config as loadEnv } from 'dotenv'
 
+import { EXISTING_SITE_PAGE_RATE_DISPLAY } from '@/data/pricing'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const ROOT = join(__dirname, '..')
@@ -210,14 +212,9 @@ async function main() {
       {
         _type: 'serviceOffering' as const,
         _key: key(),
-        name: 'Conversion Landing Page',
-        description: 'Deeper strategy and copy work for paid traffic or major offers.',
-      },
-      {
-        _type: 'serviceOffering' as const,
-        _key: key(),
-        name: 'Campaign System',
-        description: 'One page plus variants and testing infrastructure for larger campaigns.',
+        name: 'Conversion System',
+        description:
+          'Paid-traffic builds with messaging workshop, variants, and campaign handoff documentation.',
       },
     ],
     deliverables: [
@@ -234,14 +231,14 @@ async function main() {
         _key: key(),
         question: 'How long does a landing page take?',
         answer:
-          '2 to 3 weeks from kickoff for Campaign Landing Page; 3 to 4 weeks for Conversion Landing Page; 4 to 5 weeks for a Campaign System.',
+          '2 to 3 weeks from kickoff for Campaign Landing Page; 4 to 5 weeks for a Conversion System.',
       },
       {
         _type: 'serviceFaqItem' as const,
         _key: key(),
         question: 'Do you write the copy?',
         answer:
-          'Copy collaboration is included at every tier — you provide the story and offer, we shape it into conversion copy. Substantial copy refinement is included at the Conversion tier and above.',
+          'Copy collaboration is included at every tier — you provide the story and offer, we shape it into conversion copy. Substantial copy refinement is included at the Conversion System tier.',
       },
       {
         _type: 'serviceFaqItem' as const,
@@ -255,14 +252,14 @@ async function main() {
         _key: key(),
         question: 'What if I already have a website with Vizantir?',
         answer:
-          'Existing Vizantir website clients get an existing-site page rate starting at $1,500, since we can reuse your design system, components, and brand infrastructure.',
+          `Yes. Existing Vizantir website clients get an existing-site page rate starting at ${EXISTING_SITE_PAGE_RATE_DISPLAY} because the design system, components, and brand infrastructure are already built. That rate covers a single Campaign Landing Page-scope page on the existing stack. Conversion System scope on an existing site is quoted from the standard tier price with credit for shared infrastructure where it applies. The existing-site rate applies in place of care plan preferred rates rather than on top of them.`,
       },
     ],
     seo: {
       _type: 'seo' as const,
       metaTitle: 'Landing Page Design & Development | Vizantir',
       metaDescription:
-        'Custom landing pages built on Next.js. Strategy, design, and conversion-focused development starting at $3,000.',
+        'Custom landing pages built on Next.js. Strategy, design, and conversion-focused development starting at $3,500.',
       noIndex: false,
     },
     relatedServices,
