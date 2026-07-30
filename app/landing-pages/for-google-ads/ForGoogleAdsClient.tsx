@@ -30,7 +30,7 @@ export default function ForGoogleAdsClient({
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
       <ProductDefinition />
-      <TierComparison showLiveExampleLinks={false} />
+      <TierComparison />
       <VariantComparisonTable currentSlug={v.slug} />
       <DeliverablesBlock />
       <Process emphasis={v.processEmphasis} />

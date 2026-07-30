@@ -31,7 +31,7 @@ export default function LandingPagesClient({
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
       <ProductDefinition />
-      <TierComparison showLiveExampleLinks={false} />
+      <TierComparison />
       <VariantSystemDemo />
       <VariantComparisonTable currentSlug={v.slug} />
       <DeliverablesBlock />
