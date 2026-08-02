@@ -42,7 +42,7 @@ export const howWeWorkFaqs = [
   {
     question: 'How long does a project take?',
     answer:
-      'Depends on scope. WordPress sites: 3-5 weeks. Next.js builds: 5-8 weeks. Timeline is defined after scoping.',
+      'Depends on scope. Most builds run 6 to 12 weeks. Timeline is defined after scoping.',
   },
   {
     question: 'What if I need to pause the project?',
