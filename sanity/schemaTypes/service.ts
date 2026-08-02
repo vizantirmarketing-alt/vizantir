@@ -63,6 +63,15 @@ export const service = defineType({
       rows: 3,
     }),
     defineField({
+      name: 'included',
+      title: 'What This Covers',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Three to five short phrases describing what this service actually includes. Sentence fragments, not sentences. No trailing periods.',
+      validation: (Rule) => Rule.max(6),
+    }),
+    defineField({
       name: 'heroHeadline',
       title: 'Hero headline',
       type: 'string',

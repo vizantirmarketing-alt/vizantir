@@ -236,12 +236,18 @@ function strategyCallLink() {
 }
 
 function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
+  const included = service.included?.filter(Boolean) ?? []
+
   return (
     <div className="space-y-8">
-      {service.description ? (
-        <p className="leading-relaxed text-muted-foreground transition-colors duration-500">
-          {service.description}
-        </p>
+      {included.length > 0 ? (
+        <ul className="m-0 list-none space-y-2 p-0">
+          {included.map((item) => (
+            <li key={item} className="text-sm text-muted-foreground">
+              {item}
+            </li>
+          ))}
+        </ul>
       ) : null}
       {service.slug ? (
         <Link

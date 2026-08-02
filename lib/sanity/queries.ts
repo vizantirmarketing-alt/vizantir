@@ -88,6 +88,7 @@ export const allServicesQuery = groq`
     title,
     "slug": slug.current,
     description,
+    included,
     order
   }
 `
@@ -99,6 +100,7 @@ export const serviceBySlugQuery = groq`
     title,
     "slug": slug.current,
     description,
+    included,
     heroHeadline,
     heroSubheadline,
     overview,
