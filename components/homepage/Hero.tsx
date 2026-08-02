@@ -217,7 +217,7 @@ const Hero = () => {
             asChild
             className="bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
           >
-            <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
+            <Link href="/case-studies" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
           </Button>
         </div>
       </div>
