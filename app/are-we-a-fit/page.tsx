@@ -19,6 +19,18 @@ export const metadata: Metadata = {
       : {}),
     title: 'Are We a Fit? | Vizantir',
     description: areWeAFitDescription,
+    url: 'https://www.vizantir.com/are-we-a-fit',
+    siteName: 'Vizantir',
+    locale: 'en_US',
+    type: 'website',
+    images: [
+      {
+        url: 'https://www.vizantir.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Vizantir Design Studio - Premium Web Design Las Vegas',
+      },
+    ],
   },
   twitter:
     typeof areWeAFitMetadata.twitter === 'object' && areWeAFitMetadata.twitter !== null

@@ -26,7 +26,17 @@ export const areWeAFitMetadata: Metadata = {
     description:
       "Vizantir is a premium Las Vegas web design studio for established businesses whose website no longer reflects their brand. Learn if we're the right fit for your project.",
     url: canonicalUrl,
+    siteName: 'Vizantir',
+    locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'https://www.vizantir.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Vizantir Design Studio - Premium Web Design Las Vegas',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

@@ -14,7 +14,17 @@ export const aboutMetadata: Metadata = {
     description:
       'Vizantir is a Las Vegas web design and development studio building custom Next.js websites for established brands that have outgrown their current site.',
     url: canonicalUrl,
+    siteName: 'Vizantir',
+    locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'https://www.vizantir.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Vizantir Design Studio - Premium Web Design Las Vegas',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

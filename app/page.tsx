@@ -19,20 +19,38 @@ const FAQSection = dynamic(() => import('@/components/homepage/FAQSection'))
 const CTA = dynamic(() => import('@/components/homepage/CTA'))
 const WhatHappensNext = dynamic(() => import('@/components/homepage/WhatHappensNext'))
 
+const HOME_URL = 'https://www.vizantir.com'
+const HOME_TITLE = 'Custom Websites for Established Brands | Vizantir'
+const HOME_DESCRIPTION =
+  'We build custom websites for established businesses that care how they\'re perceived. Hand-built in Next.js by a Las Vegas studio, for clients nationwide.'
+const ROOT_OG_IMAGES = [
+  {
+    url: 'https://www.vizantir.com/og-image.png',
+    width: 1200,
+    height: 630,
+    alt: 'Vizantir Design Studio - Premium Web Design Las Vegas',
+  },
+]
+
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSeo('home');
+  const title = page?.seo?.metaTitle || HOME_TITLE
+  const description = page?.seo?.metaDescription || HOME_DESCRIPTION
   
   return {
-    title: page?.seo?.metaTitle || 'Custom Websites for Established Brands | Vizantir',
-    description:
-      page?.seo?.metaDescription ||
-      'We build custom websites for established businesses that care how they\'re perceived. Hand-built in Next.js by a Las Vegas studio, for clients nationwide.',
+    title,
+    description,
+    alternates: {
+      canonical: HOME_URL,
+    },
     openGraph: {
-      title: page?.seo?.metaTitle || 'Custom Websites for Established Brands | Vizantir',
-      description:
-        page?.seo?.metaDescription ||
-        'We build custom websites for established businesses that care how they\'re perceived. Hand-built in Next.js by a Las Vegas studio, for clients nationwide.',
-      ...(page?.seo?.ogImage && { images: [page.seo.ogImage] }),
+      title,
+      description,
+      url: HOME_URL,
+      siteName: 'Vizantir',
+      locale: 'en_US',
+      type: 'website',
+      images: page?.seo?.ogImage ? [page.seo.ogImage] : ROOT_OG_IMAGES,
     },
   };
 }
