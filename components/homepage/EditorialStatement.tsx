@@ -6,7 +6,7 @@ const EditorialStatement = () => {
   return (
     <section
       className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: '#FAF9F5' }}
+      style={{ background: 'var(--background)' }}
     >
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 lg:items-start max-w-6xl mx-auto">

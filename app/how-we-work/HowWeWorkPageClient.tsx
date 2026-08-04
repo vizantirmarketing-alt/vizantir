@@ -11,7 +11,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 export default function HowWeWorkPageClient() {
   // Colors matching Vizantir design system
   const colors = {
-    bg: '#FAF9F5',
+    bg: 'var(--background)',
     text: 'var(--foreground)',
     textMuted: '#6B7280',
     textSubtle: '#9CA3AF',

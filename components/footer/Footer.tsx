@@ -14,7 +14,7 @@ const Footer = () => {
     <footer 
       className="border-t"
       style={{
-        background: '#FAF9F5',
+        background: 'var(--background)',
         borderColor: 'rgba(0,0,0,0.1)',
       }}
     >

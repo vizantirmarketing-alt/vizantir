@@ -21,7 +21,7 @@ const notIdealHeading = "You're not a fit if..."
 
 export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProps) {
   const colors = {
-    bg: '#FAF9F5',
+    bg: 'var(--background)',
     text: 'var(--foreground)',
     textMuted: '#6B7280',
     accentSolid: 'var(--cobalt-primary)',

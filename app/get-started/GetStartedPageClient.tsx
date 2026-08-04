@@ -39,7 +39,7 @@ export default function GetStartedPageClient() {
   ]
 
   return (
-    <main className="min-h-screen" style={{ background: '#FAF9F5', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">

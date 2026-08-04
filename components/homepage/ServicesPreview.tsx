@@ -129,7 +129,7 @@ const ServicesPreview = () => {
   return (
     <section
       className="relative short-landscape:py-8 py-16 md:py-20 overflow-hidden"
-      style={{ background: '#FAF9F5' }}
+      style={{ background: 'var(--background)' }}
     >
       <canvas
         ref={canvasRef}

@@ -38,7 +38,7 @@ export default function AboutPage() {
             <div key={section.id}>
               <AboutSection section={section} />
               {isBuildOnSection ? (
-                <section className="pt-2 pb-16 md:pb-20 -mt-px" style={{ background: '#FAF9F5' }}>
+                <section className="pt-2 pb-16 md:pb-20 -mt-px" style={{ background: 'var(--background)' }}>
                   <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto">
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">

@@ -61,7 +61,7 @@ const Hero = () => {
     <section
       className="hero-section relative min-h-screen short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
       style={{ 
-        background: '#FAF9F5',
+        background: 'var(--background)',
       }}
     >
       {/* Background gradient - purple/amber glow on LEFT side */}

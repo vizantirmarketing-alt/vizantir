@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <main 
       className="min-h-screen transition-colors duration-500 flex items-center justify-center px-4"
-      style={{ background: '#FAF9F5' }}
+      style={{ background: 'var(--background)' }}
     >
       <div className="text-center max-w-2xl">
         <motion.div

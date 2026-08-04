@@ -45,13 +45,13 @@ const Marquee = () => {
     <section
       suppressHydrationWarning
       className="py-10 md:py-12 short-landscape:py-6 overflow-hidden relative"
-      style={{ background: '#FAF9F5' }}
+      style={{ background: 'var(--background)' }}
     >
       {/* Gradient fade on left */}
       <div 
         className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
         style={{
-          background: 'linear-gradient(90deg, #FAF9F5 0%, transparent 100%)'
+          background: 'linear-gradient(90deg, var(--background) 0%, transparent 100%)'
         }}
       />
       
@@ -59,7 +59,7 @@ const Marquee = () => {
       <div 
         className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
         style={{
-          background: 'linear-gradient(270deg, #FAF9F5 0%, transparent 100%)'
+          background: 'linear-gradient(270deg, var(--background) 0%, transparent 100%)'
         }}
       />
 

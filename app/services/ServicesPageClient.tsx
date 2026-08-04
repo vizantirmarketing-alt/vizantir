@@ -411,7 +411,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
   }
 
   return (
-    <div className="min-h-screen transition-colors duration-500" style={{ background: '#FAF9F5' }}>
+    <div className="min-h-screen bg-background transition-colors duration-500">
       <ServicesHero />
 
       <section

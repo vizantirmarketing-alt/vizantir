@@ -121,7 +121,7 @@ export default function ContactPageClient() {
 
   if (isSubmitted) {
     return (
-      <main className="min-h-screen flex items-center justify-center" style={{ background: '#FAF9F5', transition: 'background-color 0.5s ease' }}>
+      <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -156,7 +156,7 @@ export default function ContactPageClient() {
   }
 
   return (
-    <main className="min-h-screen" style={{ background: '#FAF9F5', transition: 'background-color 0.5s ease' }}>
+    <main className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-32 pb-16 px-4">

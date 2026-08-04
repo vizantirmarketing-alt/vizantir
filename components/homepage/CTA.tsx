@@ -10,7 +10,7 @@ const CTA = () => {
     <section 
       className="py-16 md:py-20 short-landscape:py-8 relative overflow-hidden"
       style={{
-        background: '#FAF9F5',
+        background: 'var(--background)',
       }}
     >
       <div className="container mx-auto px-4 relative z-10">
