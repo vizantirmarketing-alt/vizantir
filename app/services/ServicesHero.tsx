@@ -4,7 +4,7 @@ const INCLUDED_ITEMS = [
   'Custom design, no templates',
   'Mobile-first development',
   'CMS integration included',
-  'URL structure and page hierarchy planned from the start — not added after the fact',
+  'URL structure and page hierarchy planned from the start — not added after the fact',
   'Post-launch support available',
 ] as const
 
