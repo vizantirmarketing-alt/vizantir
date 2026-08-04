@@ -161,7 +161,7 @@ async function main() {
     featured: false,
     seo: {
       _type: 'seo' as const,
-      metaTitle: 'Golden Era Integra Case Study — Vizantir Design Studio',
+      metaTitle: 'Golden Era Integra Case Study',
       metaDescription:
         'How Vizantir built an editorial platform for a 1995 Acura Integra GS-R restoration, with documented build journal, parts archive, and full Sanity CMS integration.',
       noIndex: false,

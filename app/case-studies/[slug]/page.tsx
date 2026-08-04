@@ -31,16 +31,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!caseStudy) return {}
 
-  const title = caseStudy.metaTitle || caseStudy.title
+  const rawTitle = caseStudy.metaTitle || caseStudy.title
+  const baseTitle = rawTitle
+    .replace(/\s*[—–-]\s*Vizantir Design Studio\s*$/i, '')
+    .replace(/\s*\|\s*Vizantir(?: Design Studio)?\s*$/i, '')
+    .trim() || rawTitle
   const description = caseStudy.metaDescription || caseStudy.summary || undefined
   const url = getCanonicalUrl(settings, `/case-studies/${caseStudy.slug}`)
+  const siteName = settings?.siteName || 'Vizantir'
+  const socialTitle = baseTitle.endsWith(siteName)
+    ? baseTitle
+    : `${baseTitle} | ${siteName}`
 
   return {
-    title,
+    title: baseTitle,
     description,
     alternates: { canonical: url },
     openGraph: {
-      title,
+      title: socialTitle,
       description,
       url,
       type: 'website',
@@ -48,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: socialTitle,
       description,
       images: getOgImage({ pageImage: caseStudy.ogImageUrl, settings, alt: caseStudy.title }),
     },
