@@ -1,14 +1,15 @@
 /*
-  ServicesHero — left-aligned stacked composition.
-  Height follows content plus breathing room; no grid, no viewport sizing.
+  ServicesHero — site-wide centered hero pattern (Eyebrow + headline + subhead),
+  with left-aligned “what’s included” content centered as a block below.
 */
+
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 export default function ServicesHero() {
   const colors = {
     bg: 'var(--background)',
     text: 'var(--foreground)',
     textMuted: '#6B7280',
-    textSubtle: '#9CA3AF',
     accent: 'var(--cobalt-accent)',
   }
 
@@ -17,44 +18,35 @@ export default function ServicesHero() {
       className="relative w-full px-6 pt-28 pb-16 md:px-12 md:pt-32 md:pb-20 lg:px-20 lg:pt-36 lg:pb-24"
       style={{ background: colors.bg }}
     >
-      <div className="mx-auto w-full max-w-5xl">
-        <div className="flex items-baseline justify-between">
-          <span
-            className="text-xs font-medium uppercase tracking-[0.25em]"
-            style={{ color: colors.accent }}
-          >
-            Services
-          </span>
-          <span
-            className="text-xs tracking-wider"
-            style={{ color: colors.textSubtle }}
-          >
-            Las Vegas / Remote
-          </span>
+      <div className="mx-auto w-full max-w-4xl text-center">
+        <div className="mb-6">
+          <Eyebrow>Services</Eyebrow>
         </div>
 
         <h1
-          className="mt-6 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+          className="mb-6 text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl"
           style={{ color: colors.text }}
         >
           What We Build
         </h1>
 
         <p
-          className="mt-6 max-w-xl text-xl leading-relaxed"
+          className="mx-auto max-w-2xl text-lg leading-relaxed md:text-xl"
           style={{ color: colors.textMuted }}
         >
           Our Las Vegas studio builds custom websites for established businesses. We figure out what the site needs to do before we design a single page.
         </p>
+      </div>
 
+      <div className="mx-auto mt-10 w-full max-w-xl text-left md:mt-12">
         <p
-          className="mt-8 mb-3 text-xs font-medium uppercase tracking-[0.25em]"
+          className="mb-3 text-xs font-medium uppercase tracking-[0.25em]"
           style={{ color: colors.accent }}
         >
           What&apos;s included in every build
         </p>
 
-        <ul className="mb-6 list-none space-y-2 p-0 m-0 max-w-xl">
+        <ul className="mb-6 list-none space-y-2 p-0 m-0">
           {[
             'Custom design, no templates',
             'Mobile-first development',

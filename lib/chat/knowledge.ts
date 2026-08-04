@@ -63,7 +63,7 @@ function buildAbout(): string {
     .join('\n\n')
   const body = [
     a.hero?.heading,
-    a.intro?.paragraph,
+    a.hero?.body,
     a.intro?.closing,
     secs,
   ].filter(Boolean).join('\n\n')

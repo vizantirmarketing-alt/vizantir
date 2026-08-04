@@ -36,10 +36,10 @@ export const aboutMetadata: Metadata = {
 
 export interface AboutHeroContent {
   heading: string
+  body: string
 }
 
 export interface AboutIntroContent {
-  paragraph: string
   examples: readonly string[]
   closing: string
 }
@@ -67,10 +67,9 @@ export const aboutPageContent: AboutPageContent = {
   eyebrow: 'Our History',
   hero: {
     heading: 'A studio for brands that have outgrown their website',
+    body: 'Vizantir is a design and development studio based in Las Vegas. We build websites for brands whose business has moved past what their current site can carry.',
   },
   intro: {
-    paragraph:
-      'Vizantir is a design and development studio based in Las Vegas. We build websites for brands whose business has moved past what their current site can carry.',
     examples: [
       'A dance studio still running on a stock WordPress theme.',
       "A nail salon whose Wix site doesn't match the in-studio experience.",

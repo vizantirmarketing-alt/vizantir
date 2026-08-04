@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
 import AboutCta from '@/components/about-page/AboutCta'
-import AboutHero from '@/components/about-page/AboutHero'
 import AboutIntroExamples from '@/components/about-page/AboutIntroExamples'
 import AboutSection from '@/components/about-page/AboutSection'
+import { AmbientHero } from '@/components/hero/AmbientHero'
 import { JsonLd } from '@/components/seo/JsonLd'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { aboutMetadata, aboutPageContent } from '@/data/about'
@@ -26,7 +26,11 @@ export default function AboutPage() {
     <>
       <JsonLd id="ld-breadcrumb" data={breadcrumbGraph} />
       <main className="min-h-screen bg-background text-foreground">
-        <AboutHero eyebrow={aboutPageContent.eyebrow} content={aboutPageContent.hero} />
+        <AmbientHero
+          eyebrow="Our History"
+          headline="A studio for brands that have outgrown their website"
+          subhead={aboutPageContent.hero.body}
+        />
         <SectionDivider />
         <AboutIntroExamples content={aboutPageContent.intro} />
         <SectionDivider />
