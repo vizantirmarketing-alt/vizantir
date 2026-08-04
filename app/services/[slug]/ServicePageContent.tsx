@@ -22,7 +22,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
 
   const colors = useMemo(
     () => ({
-      bg: '#FAF9F5',
+      bg: 'var(--background)',
       text: 'var(--foreground)',
       textMuted: 'var(--muted-foreground)',
       accent: 'var(--cobalt-primary)',
