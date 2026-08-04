@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
-import { Eyebrow } from '@/components/ui/Eyebrow'
+import { AmbientHero } from '@/components/hero/AmbientHero'
 
 export default function HowWeWorkPageClient() {
   // Colors matching Vizantir design system
@@ -28,42 +28,17 @@ export default function HowWeWorkPageClient() {
       className="min-h-screen transition-colors duration-500"
       style={{ background: colors.bg }}
     >
-      {/* Hero Section */}
-      <section className="relative px-6 md:px-12 lg:px-20 pt-32 pb-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-6"
-          >
-            <Eyebrow>How We Work</Eyebrow>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 transition-colors duration-500"
-            style={{ color: colors.text }}
-          >
-            From first call to launch —
-            <br />
-            <span className="transition-colors duration-500" style={{ color: colors.textMuted }}>no surprises.</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg max-w-2xl mx-auto leading-relaxed transition-colors duration-500"
-            style={{ color: colors.textMuted }}
-          >
-            A clear process with defined scope, fixed pricing, and milestone check-ins.
-            You know exactly what you're getting before we start.
-          </motion.p>
-        </div>
-      </section>
+      <AmbientHero
+        variant="helix"
+        eyebrow="How We Work"
+        headline={
+          <>
+            From first call to launch{' '}
+            <span className="text-muted-foreground">— no surprises.</span>
+          </>
+        }
+        subhead="A clear process with defined scope, fixed pricing, and milestone check-ins. You know exactly what you're getting before we start."
+      />
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />

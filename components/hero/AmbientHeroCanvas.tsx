@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-export type AmbientVariant = 'plane' | 'contour'
+export type AmbientVariant = 'plane' | 'contour' | 'helix'
 
 interface AmbientHeroCanvasProps {
   variant?: AmbientVariant
@@ -23,6 +23,13 @@ const CONTOUR_RING_COUNT = 26
 const CONTOUR_SEGMENTS = 140
 const CONTOUR_BASE_Y = -0.4
 const CONTOUR_SCROLL_DRIFT = 2.4
+
+const HELIX_STRAND_COUNT = 14
+const HELIX_SEGMENTS = 420
+const HELIX_LEN = 34
+const HELIX_TURNS = 9
+const HELIX_BASE_Y = -0.4
+const HELIX_SCROLL_DRIFT = 2.4
 
 function createPlaneScene(scene: THREE.Scene, cobalt: string): AmbientScene {
   const geometry = new THREE.PlaneGeometry(26, 16, 90, 60)
@@ -166,6 +173,103 @@ function createContourScene(scene: THREE.Scene, cobalt: string): AmbientScene {
   }
 }
 
+function createHelixScene(scene: THREE.Scene, cobalt: string): AmbientScene {
+  const group = new THREE.Group()
+  group.rotation.z = -0.06
+  group.rotation.y = 0.16
+  group.position.set(0, HELIX_BASE_Y, -2)
+  scene.add(group)
+
+  const color = new THREE.Color(cobalt)
+  const strands: {
+    geometry: THREE.BufferGeometry
+    material: THREE.LineBasicMaterial
+    positions: Float32Array
+    radius: number
+    phase: number
+    baseOpacity: number
+  }[] = []
+
+  for (let i = 0; i < HELIX_STRAND_COUNT; i++) {
+    const radius = 1.3 + i * 0.3
+    const phase = (i / HELIX_STRAND_COUNT) * Math.PI * 2 * 0.6
+    const baseOpacity = 0.18 - (i / HELIX_STRAND_COUNT) * 0.1
+    const positions = new Float32Array((HELIX_SEGMENTS + 1) * 3)
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: baseOpacity,
+    })
+
+    const line = new THREE.Line(geometry, material)
+    group.add(line)
+
+    strands.push({ geometry, material, positions, radius, phase, baseOpacity })
+  }
+
+  const writeStrand = (strandIndex: number, time: number) => {
+    const strand = strands[strandIndex]
+    const { positions, radius, phase } = strand
+
+    for (let s = 0; s <= HELIX_SEGMENTS; s++) {
+      const u = s / HELIX_SEGMENTS
+      const x = -HELIX_LEN / 2 + u * HELIX_LEN
+      const a = u * Math.PI * 2 * HELIX_TURNS + phase - time * 1.1
+      const y = Math.sin(a) * radius
+      const z = Math.cos(a) * radius
+
+      const idx = s * 3
+      positions[idx] = x
+      positions[idx + 1] = y
+      positions[idx + 2] = z
+    }
+
+    strand.geometry.attributes.position.needsUpdate = true
+  }
+
+  for (let i = 0; i < HELIX_STRAND_COUNT; i++) {
+    writeStrand(i, 0)
+  }
+
+  return {
+    update: (elapsed) => {
+      const time = elapsed * 0.00026
+      for (let i = 0; i < HELIX_STRAND_COUNT; i++) {
+        writeStrand(i, time)
+      }
+      group.rotation.x = time * 0.22
+    },
+    applyScroll: (progress) => {
+      group.position.y = HELIX_BASE_Y - progress * HELIX_SCROLL_DRIFT
+      for (const strand of strands) {
+        strand.material.opacity = strand.baseOpacity * (1 - progress)
+      }
+    },
+    dispose: () => {
+      scene.remove(group)
+      for (const strand of strands) {
+        strand.geometry.dispose()
+        strand.material.dispose()
+      }
+    },
+  }
+}
+
+function createAmbientScene(variant: AmbientVariant, scene: THREE.Scene, cobalt: string): AmbientScene {
+  if (variant === 'helix') return createHelixScene(scene, cobalt)
+  if (variant === 'contour') return createContourScene(scene, cobalt)
+  return createPlaneScene(scene, cobalt)
+}
+
+function getCameraConfig(variant: AmbientVariant) {
+  if (variant === 'helix') return { fov: 44, z: 10 }
+  if (variant === 'contour') return { fov: 42, z: 9 }
+  return { fov: 40, z: 7 }
+}
+
 export default function AmbientHeroCanvas({ variant = 'plane' }: AmbientHeroCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef(0)
@@ -180,15 +284,15 @@ export default function AmbientHeroCanvas({ variant = 'plane' }: AmbientHeroCanv
       '#0070F3'
 
     const scene = new THREE.Scene()
+    const { fov, z: cameraZ } = getCameraConfig(variant)
 
-    const fov = variant === 'contour' ? 42 : 40
     const camera = new THREE.PerspectiveCamera(
       fov,
       container.clientWidth / Math.max(container.clientHeight, 1),
       0.1,
       1000
     )
-    camera.position.set(0, 0, variant === 'contour' ? 9 : 7)
+    camera.position.set(0, 0, cameraZ)
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -199,8 +303,7 @@ export default function AmbientHeroCanvas({ variant = 'plane' }: AmbientHeroCanv
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     container.appendChild(renderer.domElement)
 
-    const ambientScene =
-      variant === 'contour' ? createContourScene(scene, cobalt) : createPlaneScene(scene, cobalt)
+    const ambientScene = createAmbientScene(variant, scene, cobalt)
 
     if (prefersReducedMotion) {
       renderer.render(scene, camera)

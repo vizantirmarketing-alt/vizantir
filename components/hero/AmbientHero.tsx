@@ -5,7 +5,7 @@ import type { AmbientVariant } from './AmbientHeroCanvas'
 
 export interface AmbientHeroProps {
   eyebrow: string
-  headline: string
+  headline: ReactNode
   subhead?: string
   variant?: AmbientVariant
   children?: ReactNode
@@ -40,7 +40,11 @@ export function AmbientHero({
     <section className="relative min-h-screen overflow-hidden">
       <div
         className={`pointer-events-none absolute inset-0 z-0 ${
-          variant === 'contour' ? 'opacity-[0.75]' : 'opacity-[0.55]'
+          variant === 'helix'
+            ? 'opacity-[0.8]'
+            : variant === 'contour'
+              ? 'opacity-[0.75]'
+              : 'opacity-[0.55]'
         }`}
         aria-hidden
       >
