@@ -3,11 +3,170 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-const BASE_OPACITY = 0.16
-const BASE_Y = -1.2
-const SCROLL_DRIFT = 2.4
+export type AmbientVariant = 'plane' | 'contour'
 
-export default function AmbientHeroCanvas() {
+interface AmbientHeroCanvasProps {
+  variant?: AmbientVariant
+}
+
+interface AmbientScene {
+  update: (elapsed: number) => void
+  applyScroll: (progress: number) => void
+  dispose: () => void
+}
+
+const PLANE_BASE_OPACITY = 0.16
+const PLANE_BASE_Y = -1.2
+const PLANE_SCROLL_DRIFT = 2.4
+
+const CONTOUR_RING_COUNT = 26
+const CONTOUR_SEGMENTS = 140
+const CONTOUR_BASE_Y = -0.4
+const CONTOUR_SCROLL_DRIFT = 2.4
+
+function createPlaneScene(scene: THREE.Scene, cobalt: string): AmbientScene {
+  const geometry = new THREE.PlaneGeometry(26, 16, 90, 60)
+  const material = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(cobalt),
+    wireframe: true,
+    transparent: true,
+    opacity: PLANE_BASE_OPACITY,
+  })
+
+  const mesh = new THREE.Mesh(geometry, material)
+  mesh.rotation.x = -0.85
+  mesh.rotation.z = 0.22
+  mesh.position.set(2.2, PLANE_BASE_Y, 0)
+  scene.add(mesh)
+
+  const positions = geometry.attributes.position
+  const vertexCount = positions.count
+  const baseX = new Float32Array(vertexCount)
+  const baseY = new Float32Array(vertexCount)
+
+  for (let i = 0; i < vertexCount; i++) {
+    baseX[i] = positions.getX(i)
+    baseY[i] = positions.getY(i)
+  }
+
+  const displace = (elapsed: number) => {
+    const t = elapsed * 0.00022
+    for (let i = 0; i < vertexCount; i++) {
+      const x = baseX[i]
+      const y = baseY[i]
+      const z = Math.sin(x * 0.34 + t) * 0.5 + Math.cos(y * 0.42 + t * 0.8) * 0.42
+      positions.setZ(i, z)
+    }
+    positions.needsUpdate = true
+  }
+
+  displace(0)
+
+  return {
+    update: (elapsed) => {
+      displace(elapsed)
+    },
+    applyScroll: (progress) => {
+      mesh.position.y = PLANE_BASE_Y - progress * PLANE_SCROLL_DRIFT
+      material.opacity = PLANE_BASE_OPACITY * (1 - progress)
+    },
+    dispose: () => {
+      scene.remove(mesh)
+      geometry.dispose()
+      material.dispose()
+    },
+  }
+}
+
+function createContourScene(scene: THREE.Scene, cobalt: string): AmbientScene {
+  const group = new THREE.Group()
+  group.rotation.x = -1.02
+  group.position.set(2.2, CONTOUR_BASE_Y, 0)
+  scene.add(group)
+
+  const color = new THREE.Color(cobalt)
+  const rings: {
+    line: THREE.Line
+    geometry: THREE.BufferGeometry
+    material: THREE.LineBasicMaterial
+    baseRadius: number
+    baseOpacity: number
+    positions: Float32Array
+  }[] = []
+
+  for (let i = 0; i < CONTOUR_RING_COUNT; i++) {
+    const baseRadius = 0.7 + i * 0.36
+    const baseOpacity = 0.3 * (1 - i / CONTOUR_RING_COUNT) + 0.1
+    const positions = new Float32Array((CONTOUR_SEGMENTS + 1) * 3)
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: baseOpacity,
+    })
+
+    const line = new THREE.Line(geometry, material)
+    line.position.z = -i * 0.12
+    group.add(line)
+
+    rings.push({ line, geometry, material, baseRadius, baseOpacity, positions })
+  }
+
+  const writeRing = (ringIndex: number, time: number, withWobble: boolean) => {
+    const ring = rings[ringIndex]
+    const { positions, baseRadius } = ring
+
+    for (let s = 0; s <= CONTOUR_SEGMENTS; s++) {
+      const a = (s / CONTOUR_SEGMENTS) * Math.PI * 2
+      let radius = baseRadius
+
+      if (withWobble) {
+        const wob =
+          Math.sin(a * 3 + time * 1.6 + ringIndex * 0.35) * 0.09 +
+          Math.cos(a * 5 - time * 1.1 + ringIndex * 0.2) * 0.05
+        radius = baseRadius + wob
+      }
+
+      const idx = s * 3
+      positions[idx] = Math.cos(a) * radius
+      positions[idx + 1] = Math.sin(a) * radius
+      positions[idx + 2] = 0
+    }
+
+    ring.geometry.attributes.position.needsUpdate = true
+  }
+
+  for (let i = 0; i < CONTOUR_RING_COUNT; i++) {
+    writeRing(i, 0, false)
+  }
+
+  return {
+    update: (elapsed) => {
+      const time = elapsed * 0.00028
+      for (let i = 0; i < CONTOUR_RING_COUNT; i++) {
+        writeRing(i, time, true)
+      }
+      group.rotation.z = time * 0.16
+    },
+    applyScroll: (progress) => {
+      group.position.y = CONTOUR_BASE_Y - progress * CONTOUR_SCROLL_DRIFT
+      for (const ring of rings) {
+        ring.material.opacity = ring.baseOpacity * (1 - progress)
+      }
+    },
+    dispose: () => {
+      scene.remove(group)
+      for (const ring of rings) {
+        ring.geometry.dispose()
+        ring.material.dispose()
+      }
+    },
+  }
+}
+
+export default function AmbientHeroCanvas({ variant = 'plane' }: AmbientHeroCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef(0)
 
@@ -22,13 +181,14 @@ export default function AmbientHeroCanvas() {
 
     const scene = new THREE.Scene()
 
+    const fov = variant === 'contour' ? 42 : 40
     const camera = new THREE.PerspectiveCamera(
-      40,
+      fov,
       container.clientWidth / Math.max(container.clientHeight, 1),
       0.1,
       1000
     )
-    camera.position.z = 7
+    camera.position.set(0, 0, variant === 'contour' ? 9 : 7)
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -39,48 +199,8 @@ export default function AmbientHeroCanvas() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     container.appendChild(renderer.domElement)
 
-    const geometry = new THREE.PlaneGeometry(26, 16, 90, 60)
-    const material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(cobalt),
-      wireframe: true,
-      transparent: true,
-      opacity: BASE_OPACITY,
-    })
-
-    const mesh = new THREE.Mesh(geometry, material)
-    mesh.rotation.x = -0.85
-    mesh.rotation.z = 0.22
-    mesh.position.set(2.2, BASE_Y, 0)
-    scene.add(mesh)
-
-    const positions = geometry.attributes.position
-    const vertexCount = positions.count
-    const baseX = new Float32Array(vertexCount)
-    const baseY = new Float32Array(vertexCount)
-
-    for (let i = 0; i < vertexCount; i++) {
-      baseX[i] = positions.getX(i)
-      baseY[i] = positions.getY(i)
-    }
-
-    const displace = (elapsed: number) => {
-      const t = elapsed * 0.00022
-      for (let i = 0; i < vertexCount; i++) {
-        const x = baseX[i]
-        const y = baseY[i]
-        const z = Math.sin(x * 0.34 + t) * 0.5 + Math.cos(y * 0.42 + t * 0.8) * 0.42
-        positions.setZ(i, z)
-      }
-      positions.needsUpdate = true
-    }
-
-    const applyScroll = () => {
-      const progress = Math.min(1, Math.max(0, window.scrollY / window.innerHeight))
-      mesh.position.y = BASE_Y - progress * SCROLL_DRIFT
-      material.opacity = BASE_OPACITY * (1 - progress)
-    }
-
-    displace(0)
+    const ambientScene =
+      variant === 'contour' ? createContourScene(scene, cobalt) : createPlaneScene(scene, cobalt)
 
     if (prefersReducedMotion) {
       renderer.render(scene, camera)
@@ -105,8 +225,9 @@ export default function AmbientHeroCanvas() {
       frameRef.current = requestAnimationFrame(animate)
 
       const elapsed = performance.now() - startTime
-      displace(elapsed)
-      applyScroll()
+      const progress = Math.min(1, Math.max(0, window.scrollY / window.innerHeight))
+      ambientScene.update(elapsed)
+      ambientScene.applyScroll(progress)
       renderer.render(scene, camera)
     }
 
@@ -171,11 +292,10 @@ export default function AmbientHeroCanvas() {
       if (renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement)
       }
-      geometry.dispose()
-      material.dispose()
+      ambientScene.dispose()
       renderer.dispose()
     }
-  }, [])
+  }, [variant])
 
   return <div ref={containerRef} className="h-full w-full" />
 }

@@ -1,67 +1,34 @@
-/*
-  ServicesHero — site-wide centered hero pattern (Eyebrow + headline + subhead),
-  with left-aligned “what’s included” content centered as a block below.
-*/
+import { AmbientHero } from '@/components/hero/AmbientHero'
 
-import { Eyebrow } from '@/components/ui/Eyebrow'
+const INCLUDED_ITEMS = [
+  'Custom design, no templates',
+  'Mobile-first development',
+  'CMS integration included',
+  'URL structure and page hierarchy planned from the start — not added after the fact',
+  'Post-launch support available',
+] as const
 
 export default function ServicesHero() {
-  const colors = {
-    bg: 'var(--background)',
-    text: 'var(--foreground)',
-    textMuted: '#6B7280',
-    accent: 'var(--cobalt-accent)',
-  }
-
   return (
-    <section
-      className="relative w-full px-6 pt-28 pb-16 md:px-12 md:pt-32 md:pb-20 lg:px-20 lg:pt-36 lg:pb-24"
-      style={{ background: colors.bg }}
+    <AmbientHero
+      variant="contour"
+      eyebrow="Services"
+      headline="What We Build"
+      subhead="Our Las Vegas studio builds custom websites for established businesses. We figure out what the site needs to do before we design a single page."
     >
-      <div className="mx-auto w-full max-w-4xl text-center">
-        <div className="mb-6">
-          <Eyebrow>Services</Eyebrow>
-        </div>
-
-        <h1
-          className="mb-6 text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl"
-          style={{ color: colors.text }}
-        >
-          What We Build
-        </h1>
-
-        <p
-          className="mx-auto max-w-2xl text-lg leading-relaxed md:text-xl"
-          style={{ color: colors.textMuted }}
-        >
-          Our Las Vegas studio builds custom websites for established businesses. We figure out what the site needs to do before we design a single page.
-        </p>
-      </div>
-
-      <div className="mx-auto mt-10 w-full max-w-xl text-left md:mt-12">
-        <p
-          className="mb-3 text-xs font-medium uppercase tracking-[0.25em]"
-          style={{ color: colors.accent }}
-        >
+      <div className="mt-10 max-w-xl md:mt-12">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-cobalt-accent">
           What&apos;s included in every build
         </p>
 
         <ul className="mb-6 list-none space-y-2 p-0 m-0">
-          {[
-            'Custom design, no templates',
-            'Mobile-first development',
-            'CMS integration included',
-            'URL structure and page hierarchy planned from the start — not added after the fact',
-            'Post-launch support available',
-          ].map((line) => (
+          {INCLUDED_ITEMS.map((line) => (
             <li
               key={line}
-              className="flex items-start gap-2.5 text-base leading-relaxed"
-              style={{ color: colors.textMuted }}
+              className="flex items-start gap-2.5 text-base leading-relaxed text-muted-foreground"
             >
               <span
-                className="mt-2 h-1 w-1 shrink-0 rounded-full"
-                style={{ background: colors.accent }}
+                className="mt-2 h-1 w-1 shrink-0 rounded-full bg-cobalt-accent"
                 aria-hidden
               />
               <span>{line}</span>
@@ -69,9 +36,9 @@ export default function ServicesHero() {
           ))}
         </ul>
 
-        <p
-          className="inline-flex items-center gap-2 text-sm font-medium group"
-          style={{ color: colors.text }}
+        <a
+          href="#services"
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground group"
         >
           <span>View all services</span>
           <svg
@@ -83,8 +50,8 @@ export default function ServicesHero() {
           >
             <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
-        </p>
+        </a>
       </div>
-    </section>
+    </AmbientHero>
   )
 }

@@ -1,11 +1,14 @@
 'use client'
 
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import type { AmbientVariant } from './AmbientHeroCanvas'
 
 export interface AmbientHeroProps {
   eyebrow: string
   headline: string
   subhead?: string
+  variant?: AmbientVariant
+  children?: ReactNode
 }
 
 const AmbientHeroCanvas = lazy(() => import('./AmbientHeroCanvas'))
@@ -14,7 +17,13 @@ function CanvasPlaceholder() {
   return <div className="h-full w-full" aria-hidden />
 }
 
-export function AmbientHero({ eyebrow, headline, subhead }: AmbientHeroProps) {
+export function AmbientHero({
+  eyebrow,
+  headline,
+  subhead,
+  variant = 'plane',
+  children,
+}: AmbientHeroProps) {
   const [showCanvas, setShowCanvas] = useState(false)
 
   useEffect(() => {
@@ -30,12 +39,14 @@ export function AmbientHero({ eyebrow, headline, subhead }: AmbientHeroProps) {
   return (
     <section className="relative min-h-screen overflow-hidden">
       <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.55]"
+        className={`pointer-events-none absolute inset-0 z-0 ${
+          variant === 'contour' ? 'opacity-[0.75]' : 'opacity-[0.55]'
+        }`}
         aria-hidden
       >
         {showCanvas ? (
           <Suspense fallback={<CanvasPlaceholder />}>
-            <AmbientHeroCanvas />
+            <AmbientHeroCanvas variant={variant} />
           </Suspense>
         ) : (
           <CanvasPlaceholder />
@@ -55,6 +66,7 @@ export function AmbientHero({ eyebrow, headline, subhead }: AmbientHeroProps) {
               {subhead}
             </p>
           ) : null}
+          {children}
         </div>
       </div>
     </section>
