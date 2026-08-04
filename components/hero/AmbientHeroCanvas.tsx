@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-export type AmbientVariant = 'plane' | 'contour' | 'helix'
+export type AmbientVariant = 'plane' | 'contour' | 'helix' | 'strata' | 'polygons'
 
 interface AmbientHeroCanvasProps {
   variant?: AmbientVariant
@@ -30,6 +30,16 @@ const HELIX_LEN = 34
 const HELIX_TURNS = 9
 const HELIX_BASE_Y = -0.4
 const HELIX_SCROLL_DRIFT = 2.4
+
+const STRATA_COUNT = 80
+const STRATA_SEGMENTS = 260
+const STRATA_BASE_OPACITY = 0.22
+const STRATA_BASE_Y = -0.4
+const STRATA_SCROLL_DRIFT = 2.4
+
+const POLYGONS_RING_COUNT = 26
+const POLYGONS_BASE_Y = -0.4
+const POLYGONS_SCROLL_DRIFT = 2.4
 
 function createPlaneScene(scene: THREE.Scene, cobalt: string): AmbientScene {
   const geometry = new THREE.PlaneGeometry(26, 16, 90, 60)
@@ -258,7 +268,166 @@ function createHelixScene(scene: THREE.Scene, cobalt: string): AmbientScene {
   }
 }
 
+function createStrataScene(scene: THREE.Scene, cobalt: string): AmbientScene {
+  const group = new THREE.Group()
+  group.rotation.z = -0.05
+  group.position.set(0, STRATA_BASE_Y, 0)
+  scene.add(group)
+
+  const color = new THREE.Color(cobalt)
+  const strata: {
+    geometry: THREE.BufferGeometry
+    material: THREE.LineBasicMaterial
+    positions: Float32Array
+    stratumY: number
+    freq: number
+    rate: number
+    amp: number
+  }[] = []
+
+  for (let i = 0; i < STRATA_COUNT; i++) {
+    const stratumY = (i / 79 - 0.5) * 13
+    const freq = 0.22 + (i % 7) * 0.055
+    const rate = 0.55 + (i % 5) * 0.16
+    const amp = 0.18 + (i % 3) * 0.07
+    const positions = new Float32Array((STRATA_SEGMENTS + 1) * 3)
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: STRATA_BASE_OPACITY,
+    })
+
+    const line = new THREE.Line(geometry, material)
+    group.add(line)
+
+    strata.push({ geometry, material, positions, stratumY, freq, rate, amp })
+  }
+
+  const writeStratum = (stratumIndex: number, time: number, withWave: boolean) => {
+    const stratum = strata[stratumIndex]
+    const { positions, stratumY, freq, rate, amp } = stratum
+
+    for (let s = 0; s <= STRATA_SEGMENTS; s++) {
+      const x = -15 + (s / STRATA_SEGMENTS) * 30
+      let y = stratumY
+
+      if (withWave) {
+        y =
+          stratumY +
+          Math.sin(x * freq - time * rate + stratumIndex * 0.22) * amp +
+          Math.sin(x * freq * 0.41 + time * rate * 0.6) * amp * 0.28
+      }
+
+      const idx = s * 3
+      positions[idx] = x
+      positions[idx + 1] = y
+      positions[idx + 2] = 0
+    }
+
+    stratum.geometry.attributes.position.needsUpdate = true
+  }
+
+  for (let i = 0; i < STRATA_COUNT; i++) {
+    writeStratum(i, 0, false)
+  }
+
+  return {
+    update: (elapsed) => {
+      const time = elapsed * 0.00024
+      for (let i = 0; i < STRATA_COUNT; i++) {
+        writeStratum(i, time, true)
+      }
+    },
+    applyScroll: (progress) => {
+      group.position.y = STRATA_BASE_Y - progress * STRATA_SCROLL_DRIFT
+      for (const stratum of strata) {
+        stratum.material.opacity = STRATA_BASE_OPACITY * (1 - progress)
+      }
+    },
+    dispose: () => {
+      scene.remove(group)
+      for (const stratum of strata) {
+        stratum.geometry.dispose()
+        stratum.material.dispose()
+      }
+    },
+  }
+}
+
+function createPolygonsScene(scene: THREE.Scene, cobalt: string): AmbientScene {
+  const group = new THREE.Group()
+  group.rotation.x = -0.22
+  group.position.set(3.4, POLYGONS_BASE_Y, 0)
+  scene.add(group)
+
+  const color = new THREE.Color(cobalt)
+  const rings: {
+    line: THREE.Line
+    geometry: THREE.BufferGeometry
+    material: THREE.LineBasicMaterial
+    baseOpacity: number
+  }[] = []
+
+  for (let i = 0; i < POLYGONS_RING_COUNT; i++) {
+    const sides = 3 + Math.floor(i * 0.28)
+    const radius = 0.7 + i * 0.42
+    const baseOpacity = 0.30 - (i / POLYGONS_RING_COUNT) * 0.16
+    const positions = new Float32Array((sides + 1) * 3)
+
+    for (let s = 0; s <= sides; s++) {
+      const a = (s / sides) * Math.PI * 2
+      const idx = s * 3
+      positions[idx] = Math.cos(a) * radius
+      positions[idx + 1] = Math.sin(a) * radius * 0.68
+      positions[idx + 2] = 0
+    }
+
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: baseOpacity,
+    })
+
+    const line = new THREE.Line(geometry, material)
+    line.position.z = -i * 0.09
+    group.add(line)
+
+    rings.push({ line, geometry, material, baseOpacity })
+  }
+
+  return {
+    update: (elapsed) => {
+      const time = elapsed * 0.00020
+      for (let i = 0; i < POLYGONS_RING_COUNT; i++) {
+        const direction = i % 2 === 1 ? 1 : -1
+        rings[i].line.rotation.z = time * 0.30 * direction * (0.4 + i * 0.035)
+      }
+    },
+    applyScroll: (progress) => {
+      group.position.y = POLYGONS_BASE_Y - progress * POLYGONS_SCROLL_DRIFT
+      for (const ring of rings) {
+        ring.material.opacity = ring.baseOpacity * (1 - progress)
+      }
+    },
+    dispose: () => {
+      scene.remove(group)
+      for (const ring of rings) {
+        ring.geometry.dispose()
+        ring.material.dispose()
+      }
+    },
+  }
+}
+
 function createAmbientScene(variant: AmbientVariant, scene: THREE.Scene, cobalt: string): AmbientScene {
+  if (variant === 'polygons') return createPolygonsScene(scene, cobalt)
+  if (variant === 'strata') return createStrataScene(scene, cobalt)
   if (variant === 'helix') return createHelixScene(scene, cobalt)
   if (variant === 'contour') return createContourScene(scene, cobalt)
   return createPlaneScene(scene, cobalt)
@@ -266,6 +435,8 @@ function createAmbientScene(variant: AmbientVariant, scene: THREE.Scene, cobalt:
 
 function getCameraConfig(variant: AmbientVariant) {
   if (variant === 'helix') return { fov: 44, z: 10 }
+  if (variant === 'polygons') return { fov: 42, z: 9 }
+  if (variant === 'strata') return { fov: 40, z: 9 }
   if (variant === 'contour') return { fov: 42, z: 9 }
   return { fov: 40, z: 7 }
 }

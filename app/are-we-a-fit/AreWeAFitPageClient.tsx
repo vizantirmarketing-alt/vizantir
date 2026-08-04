@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 
-import { Eyebrow } from '@/components/ui/Eyebrow'
+import { AmbientHero } from '@/components/hero/AmbientHero'
 import { trackCTAClick } from '@/lib/analytics'
 import type { AreWeAFitPageContent } from '@/data/are-we-a-fit'
 
@@ -12,10 +12,6 @@ interface AreWeAFitPageClientProps {
   content: AreWeAFitPageContent
 }
 
-const heroEyebrow = 'Before you book'
-const heroHeading = "We're not for everyone."
-const heroSubheading =
-  'Honest criteria to help you decide before you book a Strategy Call.'
 const idealHeading = "You're a fit if..."
 const notIdealHeading = "You're not a fit if..."
 
@@ -29,7 +25,6 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
     cardBorder: 'rgba(0,0,0,0.08)',
     divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
     budgetAsideBg: 'rgba(0, 112, 243,0.06)',
-    heroWash: 'radial-gradient(ellipse 85% 60% at 50% -5%, rgba(0, 112, 243,0.14), transparent 55%)',
     fitBulletIcon: 'rgba(0, 112, 243, 0.88)',
   }
 
@@ -42,42 +37,12 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
 
   return (
     <main className="min-h-screen transition-colors duration-500" style={{ background: colors.bg }}>
-      {/* Hero */}
-      <section className="relative overflow-hidden px-6 pt-28 pb-14 md:px-12 md:pb-16 lg:px-20">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: colors.heroWash }}
-          aria-hidden
-        />
-        <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-5"
-          >
-            <Eyebrow>{heroEyebrow}</Eyebrow>
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.06 }}
-            className="text-3xl font-bold leading-tight tracking-tight transition-colors duration-500 sm:text-4xl md:text-5xl lg:text-[2.75rem] lg:leading-[1.12]"
-            style={{ color: colors.text }}
-          >
-            {heroHeading}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.12 }}
-            className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed md:text-xl"
-            style={{ color: colors.textMuted }}
-          >
-            {heroSubheading}
-          </motion.p>
-        </div>
-      </section>
+      <AmbientHero
+        variant="polygons"
+        eyebrow="Before You Book"
+        headline="We're not for everyone."
+        subhead="Honest criteria to help you decide before you book a Strategy Call."
+      />
 
       <div className="h-px w-full" style={{ background: colors.divider }} />
 

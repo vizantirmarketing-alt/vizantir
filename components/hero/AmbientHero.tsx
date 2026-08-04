@@ -40,11 +40,15 @@ export function AmbientHero({
     <section className="relative min-h-screen overflow-hidden">
       <div
         className={`pointer-events-none absolute inset-0 z-0 ${
-          variant === 'helix'
-            ? 'opacity-[0.8]'
-            : variant === 'contour'
-              ? 'opacity-[0.75]'
-              : 'opacity-[0.55]'
+          variant === 'polygons'
+            ? 'opacity-[0.85]'
+            : variant === 'strata'
+              ? 'opacity-[0.9]'
+              : variant === 'helix'
+                ? 'opacity-[0.8]'
+                : variant === 'contour'
+                  ? 'opacity-[0.75]'
+                  : 'opacity-[0.55]'
         }`}
         aria-hidden
       >
