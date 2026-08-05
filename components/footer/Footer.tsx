@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 import MadeInUSA from "@/components/ui/MadeInUSA"
+import { America250 } from "@/components/footer/America250"
 
 const Footer = () => {
   const calendarYear = new Date().getFullYear()
@@ -176,13 +177,14 @@ const Footer = () => {
           style={{ borderColor: 'rgba(0,0,0,0.1)' }}
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
               <p 
                 className="text-sm text-meta"
               >
                 © {currentYear} Vizantir. All rights reserved.
               </p>
               <MadeInUSA />
+              <America250 />
             </div>
             <div className="flex gap-6">
               {[
