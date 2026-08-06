@@ -32,7 +32,7 @@ const STATS = [
 ] as const
 
 const SHIPPED_MODULES = [
-  'Square, QuickBooks, and Stripe ingestion',
+  'Square ingestion, with QuickBooks and Stripe connectors built',
   'Background job queue with retry',
   'HMAC webhook verification',
   'Encrypted token storage with revoked-credential detection',
