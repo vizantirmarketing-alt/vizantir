@@ -25,7 +25,7 @@ const AnalytirSection = () => {
               In house
             </Eyebrow>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-5 tracking-tight text-foreground">
-              We built an analytics product to find out how far we could take it.
+              We built software to find out how far we could take it.
             </h2>
             <p
               className="text-base md:text-lg text-body"
@@ -61,7 +61,14 @@ const AnalytirSection = () => {
             >
               <div
                 className="min-w-0 overflow-hidden"
-                style={{ width: '100%', maxWidth: 560, margin: '0 auto' }}
+                style={{
+                  width: '100%',
+                  maxWidth: 560,
+                  margin: '0 auto',
+                  borderRadius: 10,
+                  boxShadow:
+                    '0 1px 2px rgba(0,0,0,.05), 0 24px 60px rgba(0,0,0,.10)',
+                }}
               >
                 <ReportPageScreen />
               </div>
