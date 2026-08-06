@@ -21,7 +21,10 @@ export function Section({
   children,
 }: SectionProps) {
   return (
-    <section className="py-12 md:py-20" style={{ background: 'var(--background)' }}>
+    <section
+      className="overflow-x-hidden py-12 md:py-20"
+      style={{ background: 'var(--background)' }}
+    >
       <div className="container mx-auto grid items-center gap-10 px-4 lg:grid-cols-12 lg:gap-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

@@ -25,8 +25,7 @@ export function Stage({ children, className, background }: StageProps) {
   return (
     <div
       className={cn(
-        'relative rounded-[20px] p-6 md:p-14',
-        background && 'overflow-hidden',
+        'relative max-w-full overflow-hidden rounded-[20px] p-6 md:p-14',
         className,
       )}
       style={
