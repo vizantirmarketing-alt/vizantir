@@ -233,6 +233,72 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             ))}
           </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.6 }}
+            className="mt-20 rounded-2xl border p-8 md:p-12"
+            style={{
+              background: colors.cardBg,
+              borderColor: colors.cardBorder,
+            }}
+          >
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
+              <div>
+                <p className="text-sm uppercase tracking-[0.2em]" style={{ color: colors.accent }}>
+                  In-house
+                </p>
+                <h2
+                  className="mt-3 text-3xl font-black tracking-tight md:text-4xl"
+                  style={{ color: colors.text }}
+                >
+                  Analytir
+                </h2>
+                <p className="mt-4 leading-relaxed" style={{ color: colors.textMuted }}>
+                  Not client work. A production analytics platform we built and operate ourselves, from
+                  Square ingestion through merchant-timezone reconciliation to natural-language SQL. The
+                  same engineering goes into every site on this page.
+                </p>
+                <Link
+                  href="/analytir"
+                  className="link-cobalt mt-6 inline-flex items-center gap-2 text-sm font-semibold md:text-base"
+                  style={{ color: colors.accent }}
+                >
+                  See what we built
+                  <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+                </Link>
+              </div>
+
+              <dl className="grid grid-cols-2 gap-x-8 gap-y-8">
+                {[
+                  { value: '79', label: 'API routes' },
+                  { value: '27', label: 'Database tables' },
+                  { value: '11', label: 'Report archetypes' },
+                  { value: '9', label: 'Alert types' },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <dt className="sr-only">{stat.label}</dt>
+                    <dd>
+                      <p
+                        className="text-4xl font-black tracking-tight md:text-5xl"
+                        style={{ color: colors.text }}
+                      >
+                        {stat.value}
+                      </p>
+                      <p
+                        className="mt-1 text-sm uppercase tracking-[0.15em]"
+                        style={{ color: colors.textMuted }}
+                      >
+                        {stat.label}
+                      </p>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </motion.div>
+
           {/* Bottom CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

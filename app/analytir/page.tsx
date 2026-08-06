@@ -33,15 +33,15 @@ const STATS = [
 
 const SHIPPED_MODULES = [
   'Square ingestion, with QuickBooks and Stripe connectors built',
+  'Merchant-timezone reconciliation views',
+  'Natural-language SQL with pre-execution validation',
   'Background job queue with retry',
   'HMAC webhook verification',
   'Encrypted token storage with revoked-credential detection',
-  'Merchant-timezone reconciliation views',
   'LLM narrative reports across eleven archetypes',
   'Weekly and monthly PDF generation',
   'Magic-link shared reports',
   'Nine alert types with severity escalation',
-  'Natural-language SQL with pre-execution validation',
   'Per-tier quota enforcement',
   'Stripe Checkout, trials, and webhook handling',
   'Two-factor authentication with recovery codes',

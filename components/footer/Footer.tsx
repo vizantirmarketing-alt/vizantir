@@ -89,9 +89,9 @@ const Footer = () => {
                 { name: 'Industries', href: '/industries' },
                 { name: 'Technology', href: '/technology' },
                 { name: 'About Us', href: '/about' },
+                { name: 'Case Studies', href: '/case-studies' },
+                { name: 'Analytir', href: '/analytir' },
                 { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
-                // { name: 'Case Studies', href: '/case-studies' }, // Temporarily hidden
-                // { name: 'Portfolio', href: '/portfolio' }, // Temporarily hidden
               ].map((link) => (
                 <li key={link.href}>
                   <Link 
