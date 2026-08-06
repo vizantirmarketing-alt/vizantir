@@ -13,6 +13,15 @@ type StageProps = {
 export function Stage({ children, className, background }: StageProps) {
   const [revealed, setRevealed] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
+  const [isFinePointer, setIsFinePointer] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    setIsFinePointer(mq.matches)
+    const onChange = (e: MediaQueryListEvent) => setIsFinePointer(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -30,37 +39,21 @@ export function Stage({ children, className, background }: StageProps) {
       )}
       style={
         background
-          ? { touchAction: 'manipulation', userSelect: 'none' }
+          ? {
+              touchAction: 'manipulation',
+              userSelect: 'none',
+              WebkitTouchCallout: 'none',
+            }
           : { background: 'var(--secondary)' }
       }
-      onPointerDown={
-        background
-          ? (e) => {
-              if (e.pointerType === 'mouse') setRevealed(true)
-            }
-          : undefined
-      }
-      onPointerUp={
-        background
-          ? (e) => {
-              if (e.pointerType === 'mouse') setRevealed(false)
-            }
-          : undefined
-      }
-      onPointerLeave={
-        background
-          ? (e) => {
-              if (e.pointerType === 'mouse') setRevealed(false)
-            }
-          : undefined
-      }
-      onPointerCancel={
-        background
-          ? (e) => {
-              if (e.pointerType === 'mouse') setRevealed(false)
-            }
-          : undefined
-      }
+      {...(background && isFinePointer
+        ? {
+            onPointerDown: () => setRevealed(true),
+            onPointerUp: () => setRevealed(false),
+            onPointerLeave: () => setRevealed(false),
+            onPointerCancel: () => setRevealed(false),
+          }
+        : {})}
       onContextMenu={background ? (e) => e.preventDefault() : undefined}
     >
       {background ? (
