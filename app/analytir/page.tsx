@@ -35,7 +35,7 @@ export default function AnalytirPage() {
         headline="The number your processor reports is not the number that reaches your bank."
         body="Fees, tips, and financing withholdings all move between the sale and the deposit. Analytir accounts for every one of them, line by line."
       >
-        <Stage>
+        <Stage background="bg-01.jpg">
           <Window title="Cash Flow" className="w-full">
             <LedgerScreen />
           </Window>
@@ -48,7 +48,7 @@ export default function AnalytirPage() {
         headline="Every payout, traced back to the day it was earned."
         body="Payouts arrive in batches that match no sales period. Analytir groups them by the week they settle and shows exactly what each batch contains."
       >
-        <Stage>
+        <Stage background="bg-02.jpg">
           <Window title="Deposits" className="w-full">
             <DepositsScreen />
           </Window>
@@ -60,7 +60,7 @@ export default function AnalytirPage() {
         headline="It noticed the register had gone quiet before the owner did."
         body="Forty-eight hours without a transaction is either a closed shop or a broken payment terminal. Analytir cannot tell which, so it does not guess. It reports the silence, ranks it against the last three months, and lists what to check first."
       >
-        <Stage>
+        <Stage background="bg-03.jpg">
           <div className="flex justify-center">
             <AlertEmailScreen />
           </div>
@@ -73,7 +73,7 @@ export default function AnalytirPage() {
         headline="The answer, in the language the owner actually uses."
         body="Not a chart to interpret. A sentence that says where the money went, and why the deposit is smaller than the sale."
       >
-        <Stage>
+        <Stage background="bg-04.jpg">
           <div className="flex justify-center">
             <AnalystScreen />
           </div>
@@ -85,7 +85,7 @@ export default function AnalytirPage() {
         headline="A gap that widened tenfold in three months, and nobody noticed."
         body="Thursday was quietly losing money against every other day of the week. No dashboard surfaces that, because no dashboard is looking for it. Analytir found the pattern, priced it, and prescribed the fix with a deadline attached."
       >
-        <Stage>
+        <Stage background="bg-05.jpg">
           <div className="flex justify-center">
             <ReportPageScreen />
           </div>

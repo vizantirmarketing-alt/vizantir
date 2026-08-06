@@ -29,8 +29,8 @@ export function AlertEmailScreen() {
       }}
     >
       <div
+        className="px-5 pt-[30px] pb-6 md:px-8"
         style={{
-          padding: '30px 32px 24px',
           background: '#fef2f2',
           borderBottom: '1px solid #e5e5e5',
         }}
@@ -60,7 +60,7 @@ export function AlertEmailScreen() {
         </p>
       </div>
 
-      <div style={{ padding: '24px 32px 0' }}>
+      <div className="px-5 pt-6 md:px-8">
         <div
           style={{
             background: '#fef2f2',
@@ -112,15 +112,20 @@ export function AlertEmailScreen() {
                 margin: 0,
               }}
             >
-              {NEXT_STEPS.map((step) => (
-                <li key={step}>{step}</li>
+              {NEXT_STEPS.map((step, index) => (
+                <li
+                  key={step}
+                  className={index >= 2 ? 'hidden md:list-item' : undefined}
+                >
+                  {step}
+                </li>
               ))}
             </ol>
           </div>
         </div>
       </div>
 
-      <div style={{ padding: '20px 32px 0' }}>
+      <div className="px-5 pt-5 md:px-8">
         <div
           style={{
             background: '#f9f9fa',
@@ -160,7 +165,7 @@ export function AlertEmailScreen() {
         </div>
       </div>
 
-      <div style={{ padding: '24px 32px 0' }}>
+      <div className="px-5 pt-6 pb-[26px] md:px-8 md:pb-0">
         <span
           style={{
             display: 'inline-block',
@@ -189,6 +194,7 @@ export function AlertEmailScreen() {
       </div>
 
       <div
+        className="hidden md:block"
         style={{
           marginTop: 26,
           borderTop: '1px solid #e5e5e5',

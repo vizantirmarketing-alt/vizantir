@@ -14,7 +14,7 @@ type RowProps = {
 function Row({ label, value, first, labelBold, valueColor }: RowProps) {
   return (
     <div
-      className="flex items-baseline justify-between py-3.5"
+      className="flex items-baseline justify-between py-3 md:py-3.5"
       style={{
         fontSize: 16,
         borderTop: first ? undefined : '1px solid #e8e8ea',
@@ -40,7 +40,7 @@ function Row({ label, value, first, labelBold, valueColor }: RowProps) {
 
 export function LedgerScreen() {
   return (
-    <div style={{ width: '100%', padding: '28px 32px', boxSizing: 'border-box' }}>
+    <div className="box-border w-full px-5 py-[22px] md:px-8 md:py-7">
       <div className="flex items-baseline justify-between">
         <span
           className="uppercase tracking-[0.16em]"

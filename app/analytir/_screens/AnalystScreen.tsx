@@ -38,7 +38,7 @@ export function AnalystScreen() {
         fontFamily: 'var(--font-analytir-sans)',
       }}
     >
-      <div className="flex items-start gap-3" style={{ padding: '20px 20px 16px' }}>
+      <div className="flex items-start gap-3 px-[15px] pt-[15px] pb-3 md:px-5 md:pt-5 md:pb-4">
         <div
           className="flex shrink-0 items-center justify-center rounded-[10px]"
           style={{ width: 36, height: 36, background: '#f4f4f5' }}
@@ -56,13 +56,21 @@ export function AnalystScreen() {
         <X size={16} style={{ color: '#a1a1aa' }} aria-hidden />
       </div>
 
-      <div className="flex flex-col gap-4" style={{ padding: '4px 20px 8px' }}>
-        {MESSAGES.map((message) => {
+      <div className="flex flex-col gap-4 px-[15px] pt-[3px] pb-1.5 md:px-5 md:pt-1 md:pb-2">
+        {MESSAGES.map((message, index) => {
           const isMe = message.role === 'me'
           return (
             <div
               key={message.text}
-              className={isMe ? 'self-end' : 'self-start'}
+              className={
+                index >= 3
+                  ? isMe
+                    ? 'hidden self-end md:block'
+                    : 'hidden self-start md:block'
+                  : isMe
+                    ? 'self-end'
+                    : 'self-start'
+              }
               style={{
                 background: isMe ? '#8b5cf6' : '#f4f4f5',
                 color: isMe ? '#fff' : '#18181b',
@@ -82,7 +90,7 @@ export function AnalystScreen() {
         })}
       </div>
 
-      <div style={{ padding: '8px 20px 20px' }}>
+      <div className="px-[15px] pt-1.5 pb-[15px] md:px-5 md:pt-2 md:pb-5">
         <div className="flex items-center gap-2">
           <div
             className="flex flex-1 items-center"

@@ -1,17 +1,85 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
 type StageProps = {
   children: React.ReactNode
   className?: string
+  background?: string
 }
 
-export function Stage({ children, className }: StageProps) {
+export function Stage({ children, className, background }: StageProps) {
+  const [revealed, setRevealed] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReducedMotion(mq.matches)
+    const onChange = (event: MediaQueryListEvent) => setReducedMotion(event.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
   return (
     <div
-      className={cn('relative rounded-[20px] p-10 md:p-14', className)}
-      style={{ background: 'var(--secondary)' }}
+      className={cn(
+        'relative rounded-[20px] p-6 md:p-14',
+        background && 'overflow-hidden',
+        className,
+      )}
+      style={
+        background
+          ? { touchAction: 'manipulation', userSelect: 'none' }
+          : { background: 'var(--secondary)' }
+      }
+      onPointerDown={background ? () => setRevealed(true) : undefined}
+      onPointerUp={background ? () => setRevealed(false) : undefined}
+      onPointerLeave={background ? () => setRevealed(false) : undefined}
+      onPointerCancel={background ? () => setRevealed(false) : undefined}
+      onContextMenu={background ? (e) => e.preventDefault() : undefined}
     >
-      {children}
+      {background ? (
+        <>
+          <Image
+            src={`/analytir/${background}`}
+            alt=""
+            fill
+            sizes="(max-width: 1024px) 100vw, 60vw"
+            priority={false}
+            className="z-0"
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'center 25%',
+              ...(reducedMotion
+                ? {}
+                : {
+                    transform: revealed ? 'scale(1.04)' : 'scale(1)',
+                    transition: 'transform 520ms cubic-bezier(.2,.7,.3,1)',
+                  }),
+            }}
+          />
+          <div
+            className="relative z-[2]"
+            style={{
+              opacity: revealed ? 0 : 1,
+              pointerEvents: revealed ? 'none' : 'auto',
+              ...(reducedMotion
+                ? {}
+                : {
+                    transform: revealed ? 'scale(0.97)' : 'scale(1)',
+                    transition:
+                      'opacity 320ms cubic-bezier(.2,.7,.3,1), transform 320ms cubic-bezier(.2,.7,.3,1)',
+                  }),
+            }}
+          >
+            {children}
+          </div>
+        </>
+      ) : (
+        children
+      )}
     </div>
   )
 }

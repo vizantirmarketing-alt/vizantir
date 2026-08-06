@@ -23,11 +23,11 @@ const numericCell: React.CSSProperties = {
 export function ReportPageScreen() {
   return (
     <div
+      className="px-[22px] pt-7 pb-6 md:px-12 md:pt-11 md:pb-9"
       style={{
         maxWidth: 620,
         margin: '0 auto',
         background: '#ffffff',
-        padding: '44px 48px 36px',
         boxShadow: '0 1px 2px rgba(0,0,0,.05), 0 20px 50px rgba(0,0,0,.10)',
         fontFamily: 'var(--font-analytir-sans)',
       }}
@@ -98,27 +98,52 @@ export function ReportPageScreen() {
       >
         <thead>
           <tr>
-            {(
-              [
-                { label: 'Month', align: 'left' as const },
-                { label: 'Thursday Avg', align: 'right' as const },
-                { label: 'Other Days Avg', align: 'right' as const },
-                { label: 'Weekly Gap', align: 'right' as const },
-              ]
-            ).map((col) => (
-              <th
-                key={col.label}
-                style={{
-                  ...monoLabel,
-                  textAlign: col.align,
-                  paddingBottom: 10,
-                  borderBottom: '1px solid #e8e8ea',
-                  fontWeight: 400,
-                }}
-              >
-                {col.label}
-              </th>
-            ))}
+            <th
+              style={{
+                ...monoLabel,
+                textAlign: 'left',
+                paddingBottom: 10,
+                borderBottom: '1px solid #e8e8ea',
+                fontWeight: 400,
+              }}
+            >
+              Month
+            </th>
+            <th
+              className="hidden md:table-cell"
+              style={{
+                ...monoLabel,
+                textAlign: 'right',
+                paddingBottom: 10,
+                borderBottom: '1px solid #e8e8ea',
+                fontWeight: 400,
+              }}
+            >
+              Thursday Avg
+            </th>
+            <th
+              className="hidden md:table-cell"
+              style={{
+                ...monoLabel,
+                textAlign: 'right',
+                paddingBottom: 10,
+                borderBottom: '1px solid #e8e8ea',
+                fontWeight: 400,
+              }}
+            >
+              Other Days Avg
+            </th>
+            <th
+              style={{
+                ...monoLabel,
+                textAlign: 'right',
+                paddingBottom: 10,
+                borderBottom: '1px solid #e8e8ea',
+                fontWeight: 400,
+              }}
+            >
+              Weekly Gap
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -134,8 +159,12 @@ export function ReportPageScreen() {
               >
                 {row.month}
               </td>
-              <td style={numericCell}>{row.thursday}</td>
-              <td style={numericCell}>{row.other}</td>
+              <td className="hidden md:table-cell" style={numericCell}>
+                {row.thursday}
+              </td>
+              <td className="hidden md:table-cell" style={numericCell}>
+                {row.other}
+              </td>
               <td style={{ ...numericCell, color: '#b91c1c' }}>{row.gap}</td>
             </tr>
           ))}
@@ -155,9 +184,9 @@ export function ReportPageScreen() {
         That is $223/month in lost revenue, and it is widening.
       </p>
 
-      <div style={{ borderTop: '1px solid #e8e8ea', margin: '30px 0 24px' }} />
+      <div className="hidden md:block" style={{ borderTop: '1px solid #e8e8ea', margin: '30px 0 24px' }} />
 
-      <div>
+      <div className="hidden md:block">
         <div
           style={{
             fontSize: 15,
