@@ -28,7 +28,7 @@ export function AnalystScreen() {
   return (
     <div
       style={{
-        width: 400,
+        width: '100%',
         maxWidth: 400,
         flexShrink: 0,
         background: '#fff',

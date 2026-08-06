@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const mono: React.CSSProperties = {
   fontFamily: 'var(--font-analytir-mono)',
   fontVariantNumeric: 'tabular-nums',
@@ -35,16 +37,14 @@ export function AlertEmailScreen() {
           borderBottom: '1px solid #e5e5e5',
         }}
       >
-        <div
-          style={{
-            fontSize: 17,
-            fontWeight: 600,
-            color: '#0a0a0a',
-            marginBottom: 18,
-          }}
-        >
-          analytir
-        </div>
+        <Image
+          src="/analytir/logo-light.svg"
+          alt="Analytir"
+          width={100}
+          height={25}
+          unoptimized
+          style={{ marginBottom: 18, width: 100, height: 'auto', display: 'block' }}
+        />
         <div
           style={{
             fontSize: 20,

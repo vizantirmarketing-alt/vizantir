@@ -33,10 +33,34 @@ export function Stage({ children, className, background }: StageProps) {
           ? { touchAction: 'manipulation', userSelect: 'none' }
           : { background: 'var(--secondary)' }
       }
-      onPointerDown={background ? () => setRevealed(true) : undefined}
-      onPointerUp={background ? () => setRevealed(false) : undefined}
-      onPointerLeave={background ? () => setRevealed(false) : undefined}
-      onPointerCancel={background ? () => setRevealed(false) : undefined}
+      onPointerDown={
+        background
+          ? (e) => {
+              if (e.pointerType === 'mouse') setRevealed(true)
+            }
+          : undefined
+      }
+      onPointerUp={
+        background
+          ? (e) => {
+              if (e.pointerType === 'mouse') setRevealed(false)
+            }
+          : undefined
+      }
+      onPointerLeave={
+        background
+          ? (e) => {
+              if (e.pointerType === 'mouse') setRevealed(false)
+            }
+          : undefined
+      }
+      onPointerCancel={
+        background
+          ? (e) => {
+              if (e.pointerType === 'mouse') setRevealed(false)
+            }
+          : undefined
+      }
       onContextMenu={background ? (e) => e.preventDefault() : undefined}
     >
       {background ? (

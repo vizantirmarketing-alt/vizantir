@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const rows = [
   { month: 'April', thursday: '$85.39', other: '$90.35', gap: '-$4.96' },
   { month: 'May', thursday: '$81.09', other: '$102.43', gap: '-$21.34' },
@@ -24,6 +26,7 @@ export function ReportPageScreen() {
   return (
     <div
       className="px-[22px] pt-7 pb-6 md:px-12 md:pt-11 md:pb-9"
+      spellCheck={false}
       style={{
         maxWidth: 620,
         margin: '0 auto',
@@ -33,25 +36,23 @@ export function ReportPageScreen() {
       }}
     >
       <div
-        className="flex items-baseline justify-between"
+        className="flex items-center justify-between"
         style={{
           borderBottom: '1px solid #e8e8ea',
           paddingBottom: 14,
           marginBottom: 28,
         }}
       >
-        <div>
-          <span
-            style={{
-              fontFamily: 'var(--font-analytir-mono)',
-              fontSize: 12,
-              letterSpacing: '0.18em',
-              color: '#0a0a0a',
-            }}
-          >
-            ANALYTIR
-          </span>
-          <span style={{ fontSize: 13, color: '#71717a' }}> Willow & Vine</span>
+        <div className="flex items-center gap-2">
+          <Image
+            src="/analytir/logo-light.svg"
+            alt="Analytir"
+            width={80}
+            height={20}
+            unoptimized
+            style={{ width: 80, height: 'auto', display: 'block' }}
+          />
+          <span style={{ fontSize: 13, color: '#71717a' }}>Willow & Vine</span>
         </div>
         <span
           style={{
