@@ -43,6 +43,7 @@ export const sitemapMainPages: SitemapLink[] = [
   { name: 'Blog', href: '/blog' },
   { name: 'FAQ', href: '/faq' },
   { name: 'Case Studies', href: '/case-studies' },
+  { name: 'Analytir', href: '/analytir' },
   { name: 'How We Work', href: '/how-we-work' },
   { name: 'Are We a Fit?', href: '/are-we-a-fit' },
   { name: 'Get Started', href: '/get-started' },

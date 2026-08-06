@@ -32,6 +32,7 @@ const STATIC_PAGE_DATES: Record<string, string> = {
   '/landing-pages/for-google-ads': '2026-07-10',
   '/landing-pages/for-product-launches': '2026-07-10',
   '/case-studies': '2026-07-10',
+  '/analytir': '2026-08-06',
   '/how-we-work': '2026-07-10',
   '/are-we-a-fit': '2026-07-10',
   '/get-started': '2026-07-10',
@@ -87,6 +88,7 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: '/how-we-work', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/industries', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/technology', changeFrequency: 'monthly', priority: 0.7 },
+  { path: '/analytir', changeFrequency: 'yearly', priority: 0.7 },
   { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
 ]
 
