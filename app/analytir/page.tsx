@@ -180,7 +180,7 @@ export default function AnalytirPage() {
                 <div key={stat.label}>
                   <p
                     style={{
-                      fontFamily: 'var(--font-mono, monospace)',
+                      fontFamily: 'var(--font-analytir-mono)',
                       fontSize: 30,
                       color: 'var(--foreground)',
                       fontVariantNumeric: 'tabular-nums',
@@ -190,7 +190,7 @@ export default function AnalytirPage() {
                   </p>
                   <p
                     style={{
-                      fontFamily: 'var(--font-mono, monospace)',
+                      fontFamily: 'var(--font-analytir-mono)',
                       fontSize: 11,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
@@ -206,7 +206,7 @@ export default function AnalytirPage() {
 
             <p
               style={{
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-analytir-mono)',
                 fontSize: 11,
                 letterSpacing: '0.16em',
                 textTransform: 'uppercase',

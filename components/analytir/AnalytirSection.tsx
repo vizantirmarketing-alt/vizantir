@@ -31,7 +31,7 @@ const AnalytirSection = () => {
               className="text-base md:text-lg text-body"
               style={{ lineHeight: 1.7 }}
             >
-              Analytir reconciles what a merchant sold against what actually reached their bank. On one salon it found $223 a month walking out the door on Thursdays, a pattern the merchant&apos;s own reports had never surfaced. No client asked us to build it.
+              Analytir reconciles what a merchant sold against what actually reached their bank. On one merchant it found $223 a month walking out the door on Thursdays, a pattern their own reports had never surfaced. No client asked us to build it.
             </p>
             <Link
               href="/analytir"
