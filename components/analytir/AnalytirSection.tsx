@@ -31,9 +31,7 @@ const AnalytirSection = () => {
               className="text-base md:text-lg text-body"
               style={{ lineHeight: 1.7 }}
             >
-              Analytir reconciles what a merchant sold against what actually reached their
-              bank. Seventy-nine API routes, twenty-seven database tables, and a reporting
-              engine that writes in sentences. No client asked for it.
+              Analytir reconciles what a merchant sold against what actually reached their bank. On one salon it found $223 a month walking out the door on Thursdays, a pattern the merchant&apos;s own reports had never surfaced. No client asked us to build it.
             </p>
             <Link
               href="/analytir"
