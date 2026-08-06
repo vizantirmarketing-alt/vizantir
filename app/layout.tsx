@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import { sanityFetch } from '@/lib/sanity/client'
@@ -48,6 +49,18 @@ const satoshi = localFont({
   variable: '--font-satoshi',
   display: 'swap',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
+})
+
+const analytirSans = Inter({
+  subsets: ['latin'],
+  variable: '--font-analytir-sans',
+  display: 'swap',
+})
+
+const analytirMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-analytir-mono',
+  display: 'swap',
 })
 
 function BusinessJsonLd() {
@@ -215,7 +228,10 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${satoshi.variable} ${analytirSans.variable} ${analytirMono.variable}`}
+    >
       <head>
         <meta property="og:image" content="https://www.vizantir.com/og-image.png" />
         <meta property="og:image:width" content="1200" />
@@ -230,7 +246,7 @@ export default async function RootLayout({
         <meta name="dcterms.type" content="Service" />
         <meta name="dcterms.language" content="en-US" />
       </head>
-      <body className={satoshi.variable}>
+      <body>
         <BusinessJsonLd />
         <SmoothScroll>
           <ScrollToTop />
