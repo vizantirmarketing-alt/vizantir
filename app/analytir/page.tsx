@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 
 import { Eyebrow } from '@/components/ui/Eyebrow'
 
@@ -24,6 +23,32 @@ export const metadata: Metadata = {
     canonical: '/analytir',
   },
 }
+
+const STATS = [
+  { value: '79', label: 'API routes' },
+  { value: '27', label: 'Database tables' },
+  { value: '11', label: 'Report archetypes' },
+  { value: '9', label: 'Alert types' },
+] as const
+
+const SHIPPED_MODULES = [
+  'Square, QuickBooks, and Stripe ingestion',
+  'Background job queue with retry',
+  'HMAC webhook verification',
+  'Encrypted token storage with revoked-credential detection',
+  'Merchant-timezone reconciliation views',
+  'LLM narrative reports across eleven archetypes',
+  'Weekly and monthly PDF generation',
+  'Magic-link shared reports',
+  'Nine alert types with severity escalation',
+  'Natural-language SQL with pre-execution validation',
+  'Per-tier quota enforcement',
+  'Stripe Checkout, trials, and webhook handling',
+  'Two-factor authentication with recovery codes',
+  'Session revocation and login history',
+  'Account deletion with grace period',
+  'Full user data export',
+] as const
 
 export default function AnalytirPage() {
   return (
@@ -93,38 +118,121 @@ export default function AnalytirPage() {
       </Section>
 
       <section className="py-20 md:py-28" style={{ background: 'var(--secondary)' }}>
-        <div className="container mx-auto max-w-3xl px-4">
-          <Eyebrow align="start">Why this is here</Eyebrow>
-          <h2 className="mt-6 text-4xl font-black tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            This is what we build when there is no client to answer to.
-          </h2>
-          <p
-            className="mt-5 text-base md:text-lg"
-            style={{ color: 'var(--text-body)', lineHeight: 1.7 }}
-          >
-            Analytir is not client work. It is what the studio does when the only
-            constraint is getting it right. If that is the standard you want applied to
-            your business, start with a conversation.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 font-medium text-white"
-            style={{ background: 'var(--cobalt-accent)' }}
-          >
-            Book a Strategy Call
-            <ArrowRight size={18} aria-hidden />
-          </Link>
-          <p className="mt-4" style={{ fontSize: 13, color: 'var(--text-meta)' }}>
-            Analytir is a separate product. You can see it at{' '}
-            <a
-              href="https://analytir.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'var(--cobalt-accent)' }}
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl">
+            <Eyebrow align="start">Why this is here</Eyebrow>
+            <h2 className="mt-6 text-4xl font-black tracking-tight text-foreground md:text-5xl lg:text-6xl">
+              We built this because we wanted to know how far we could take it.
+            </h2>
+            <p
+              className="mt-5 text-base md:text-lg"
+              style={{ color: 'var(--text-body)', lineHeight: 1.7 }}
             >
-              analytir.com
-            </a>.
-          </p>
+              Analytir is not client work. It is what the studio does when the only
+              constraint is getting it right.
+            </p>
+            <p
+              className="text-[17px] md:text-[20px]"
+              style={{
+                marginTop: 32,
+                fontWeight: 500,
+                color: 'var(--foreground)',
+              }}
+            >
+              See Analytir live at{' '}
+              <a
+                href="https://analytir.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: 'var(--cobalt-accent)',
+                  borderBottom: '1px solid color-mix(in srgb, currentColor 30%, transparent)',
+                  paddingBottom: 2,
+                }}
+              >
+                analytir.com
+              </a>
+              <ArrowUpRight
+                size={18}
+                aria-hidden
+                style={{
+                  display: 'inline',
+                  marginLeft: 6,
+                  verticalAlign: 'middle',
+                  color: 'var(--cobalt-accent)',
+                }}
+              />
+            </p>
+          </div>
+
+          <div
+            style={{
+              borderTop: '1px solid rgba(0, 0, 0, 0.14)',
+              marginTop: 40,
+              paddingTop: 40,
+            }}
+          >
+            <div
+              className="flex flex-wrap"
+              style={{ gap: 48, marginBottom: 40 }}
+            >
+              {STATS.map((stat) => (
+                <div key={stat.label}>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontSize: 30,
+                      color: 'var(--foreground)',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {stat.value}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontSize: 11,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: 'var(--text-meta)',
+                      marginTop: 6,
+                    }}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: 11,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                color: 'var(--text-meta)',
+                marginBottom: 14,
+              }}
+            >
+              What shipped
+            </p>
+            <p
+              style={{
+                fontSize: 16,
+                lineHeight: 2.0,
+                color: 'var(--foreground)',
+              }}
+            >
+              {SHIPPED_MODULES.map((module, index) => (
+                <span key={module}>
+                  {index > 0 && (
+                    <span style={{ color: 'var(--text-meta)' }}> · </span>
+                  )}
+                  {module}
+                </span>
+              ))}
+            </p>
+          </div>
         </div>
       </section>
     </>

@@ -15,6 +15,7 @@ const WhoWeWorkWith = dynamic(() => import('@/components/homepage/WhoWeWorkWith'
 const OperatorStatement = dynamic(() => import('@/components/homepage/OperatorStatement'))
 const WhyVizantir = dynamic(() => import('@/components/homepage/WhyVizantir'))
 const ResultsThatSpeak = dynamic(() => import('@/components/homepage/ResultsThatSpeak'))
+const AnalytirSection = dynamic(() => import('@/components/analytir/AnalytirSection'))
 const FAQSection = dynamic(() => import('@/components/homepage/FAQSection'))
 const CTA = dynamic(() => import('@/components/homepage/CTA'))
 const WhatHappensNext = dynamic(() => import('@/components/homepage/WhatHappensNext'))
@@ -71,7 +72,9 @@ export default async function Home() {
       <WhyVizantir />
       <SectionDivider />
       <ResultsThatSpeak />
+      <AnalytirSection />
       <FAQSection faqs={faqs} />
+
       <SectionDivider />
       <CTA />
       <WhatHappensNext />
