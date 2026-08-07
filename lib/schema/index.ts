@@ -11,6 +11,7 @@ import {
   serviceId,
   articleId,
   personId,
+  founderId,
   locationId,
   refOrganization,
   refWebsite,
@@ -300,6 +301,40 @@ export function collectionPageSchema({
       })),
     },
     inLanguage: 'en-US',
+  }
+}
+
+// ============================================
+// Person Schema
+// ============================================
+
+interface PersonSchemaParams {
+  siteUrl: string
+  name: string
+  jobTitle: string
+  description: string
+  sameAs?: string[]
+  imageUrl?: string
+}
+
+export function personSchema({
+  siteUrl,
+  name,
+  jobTitle,
+  description,
+  sameAs,
+  imageUrl,
+}: PersonSchemaParams) {
+  return {
+    '@type': 'Person',
+    '@id': founderId(siteUrl),
+    name,
+    jobTitle,
+    description,
+    url: `${siteUrl}/about`,
+    worksFor: refOrganization(siteUrl),
+    ...(sameAs && sameAs.length > 0 && { sameAs }),
+    ...(imageUrl && { image: { '@type': 'ImageObject', url: imageUrl } }),
   }
 }
 

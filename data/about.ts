@@ -111,9 +111,10 @@ export const aboutPageContent: AboutPageContent = {
       id: 'behindVizantir',
       heading: 'Behind Vizantir',
       paragraphs: [
-        'Vizantir runs as a focused studio, not a traditional agency.',
-        "The person you meet in a first call is the person doing the work — the design, the development, the decisions. There's no sales handoff and no account manager passing things along.",
-        'The studio was started after years of watching good brands get handed generic websites by agencies that treat web as an add-on to a marketing retainer.',
+        'Vizantir was founded by James Tram and runs as a focused studio, not a traditional agency.',
+        'James spent 25 years operating businesses before moving into engineering, the last decade of it building for the web. That order matters. He looks at a website the way an owner does, as something that has to earn its cost, then builds it the way an engineer does.',
+        "The person you meet in a first call is the person doing the work. The design, the development, the decisions. There's no sales handoff and no account manager passing things along.",
+        'He started the studio after years of watching good brands get handed generic websites by agencies that treat web as an add-on to a marketing retainer.',
         'Vizantir exists to do it differently, for clients who want it done well.',
       ],
     },

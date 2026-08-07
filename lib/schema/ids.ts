@@ -17,7 +17,7 @@ export function websiteId(siteUrl: string) {
 }
 
 function organizationId(siteUrl: string) {
-  return `${siteUrl}/#organization`
+  return `${siteUrl}/#business`
 }
 
 // ============================================
@@ -55,6 +55,10 @@ export function personId(siteUrl: string, slug: string) {
   return `${siteUrl}/about/${slug}#person`
 }
 
+export function founderId(siteUrl: string) {
+  return `${siteUrl}/about#person`
+}
+
 // ============================================
 // Reference Helpers
 // Use these when linking between entities
@@ -74,6 +78,10 @@ export function refWebPage(pageUrl: string) {
 
 export function refPerson(siteUrl: string, slug: string) {
   return { '@id': personId(siteUrl, slug) }
+}
+
+export function refFounder(siteUrl: string) {
+  return { '@id': founderId(siteUrl) }
 }
 
 

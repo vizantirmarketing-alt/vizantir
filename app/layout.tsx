@@ -109,6 +109,7 @@ function BusinessJsonLd() {
     ],
     founder: {
       '@type': 'Person',
+      '@id': 'https://www.vizantir.com/about#person',
       name: 'James Tram',
     },
     parentOrganization: {

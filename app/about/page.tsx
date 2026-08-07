@@ -10,13 +10,28 @@ import { AmbientHero } from '@/components/hero/AmbientHero'
 import { JsonLd } from '@/components/seo/JsonLd'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { aboutMetadata, aboutPageContent } from '@/data/about'
-import { breadcrumbSchema, graphSchema } from '@/lib/schema'
+import { breadcrumbSchema, graphSchema, personSchema } from '@/lib/schema'
 
-const breadcrumbGraph = graphSchema([
+const SITE_URL = 'https://www.vizantir.com'
+
+const aboutGraph = graphSchema([
   breadcrumbSchema([
-    { name: 'Home', url: 'https://www.vizantir.com' },
-    { name: 'About', url: 'https://www.vizantir.com/about' },
+    { name: 'Home', url: SITE_URL },
+    { name: 'About', url: `${SITE_URL}/about` },
   ]),
+  personSchema({
+    siteUrl: SITE_URL,
+    name: 'James Tram',
+    jobTitle: 'Founder',
+    description:
+      'Founder of Vizantir Design Studio, a Las Vegas web design and development studio building custom Next.js websites for established businesses. James spent 25 years operating businesses before moving into engineering.',
+    sameAs: [
+      'https://www.linkedin.com/in/james-tram-vizantir',
+      'https://clutch.co/profile/vizantir-design-studio-0',
+      'https://maps.google.com/?cid=7927126809305841776',
+      'https://github.com/vizantirmarketing-alt',
+    ],
+  }),
 ])
 
 export const metadata: Metadata = aboutMetadata
@@ -24,7 +39,7 @@ export const metadata: Metadata = aboutMetadata
 export default function AboutPage() {
   return (
     <>
-      <JsonLd id="ld-breadcrumb" data={breadcrumbGraph} />
+      <JsonLd id="ld-about" data={aboutGraph} />
       <main className="min-h-screen bg-background text-foreground">
         <AmbientHero
           eyebrow="Our History"
