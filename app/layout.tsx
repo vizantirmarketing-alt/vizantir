@@ -138,6 +138,29 @@ function BusinessJsonLd() {
   )
 }
 
+function WebSiteJsonLd() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': 'https://www.vizantir.com/#website',
+    url: 'https://www.vizantir.com',
+    name: 'Vizantir Design Studio',
+    description:
+      'Custom Next.js web design studio based in Las Vegas, Nevada. Fixed-scope website projects for established businesses in Southern Nevada and nationwide.',
+    publisher: {
+      '@id': 'https://www.vizantir.com/#business',
+    },
+    inLanguage: 'en-US',
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
 async function getSettings(): Promise<SiteSettings | null> {
   return sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
 }
@@ -249,6 +272,7 @@ export default async function RootLayout({
       </head>
       <body>
         <BusinessJsonLd />
+        <WebSiteJsonLd />
         <SmoothScroll>
           <ScrollToTop />
           <ScrollProgress />
