@@ -169,6 +169,8 @@ export function serviceSchema(service: Service, siteUrl: string) {
 // BlogPosting Schema
 // ============================================
 
+const FOUNDER_AUTHOR_SLUG = 'james-tram'
+
 export function blogPostSchema(post: Post, siteUrl: string) {
   const url = `${siteUrl}/blog/${post.slug}`
   const authorSlug = post.author?.slug
@@ -192,17 +194,24 @@ export function blogPostSchema(post: Post, siteUrl: string) {
 
     // Author with canonical @id reference
     ...(post.author && {
-      author: authorSlug
+      author: authorSlug === FOUNDER_AUTHOR_SLUG
         ? {
             '@type': 'Person',
-            '@id': personId(siteUrl, authorSlug),
+            '@id': founderId(siteUrl),
             name: post.author.name,
-            url: `${siteUrl}/about/${authorSlug}`,
+            url: `${siteUrl}/about`,
           }
-        : {
-            '@type': 'Person',
-            name: post.author.name,
-          },
+        : authorSlug
+          ? {
+              '@type': 'Person',
+              '@id': personId(siteUrl, authorSlug),
+              name: post.author.name,
+              url: `${siteUrl}/about/${authorSlug}`,
+            }
+          : {
+              '@type': 'Person',
+              name: post.author.name,
+            },
     }),
 
     publisher: refOrganization(siteUrl),
