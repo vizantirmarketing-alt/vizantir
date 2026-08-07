@@ -41,6 +41,10 @@ export function articleId(siteUrl: string, slug: string) {
   return `${siteUrl}/blog/${slug}#article`
 }
 
+export function caseStudyId(siteUrl: string, slug: string) {
+  return `${siteUrl}/case-studies/${slug}#casestudy`
+}
+
 export function locationId(siteUrl: string, slug: string, hasPhysicalPresence: boolean) {
   return hasPhysicalPresence
     ? `${siteUrl}/locations/${slug}#localbusiness`

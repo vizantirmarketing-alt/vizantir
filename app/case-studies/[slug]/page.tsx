@@ -4,6 +4,8 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { allCaseStudiesQuery, caseStudyBySlugQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { getCanonicalUrl, getOgImage } from '@/lib/utils/metadata'
 import type { CaseStudy, SiteSettings } from '@/lib/sanity/types'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { breadcrumbSchema, caseStudySchema, graphSchema, webPageSchema } from '@/lib/schema'
 
 import CaseStudyPageContent from './CaseStudyPageContent'
 
@@ -65,13 +67,39 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params
-  const caseStudy = await sanityFetch<CaseStudy | null>(
-    caseStudyBySlugQuery,
-    { slug },
-    { tags: ['caseStudy'] }
-  )
+
+  const [caseStudy, settings] = await Promise.all([
+    sanityFetch<CaseStudy | null>(caseStudyBySlugQuery, { slug }, { tags: ['caseStudy'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
+  ])
 
   if (!caseStudy) notFound()
 
-  return <CaseStudyPageContent caseStudy={caseStudy} />
+  const caseStudyUrl = getCanonicalUrl(settings, `/case-studies/${caseStudy.slug}`)
+  const siteUrl = getCanonicalUrl(settings, '')
+
+  const caseStudyGraph = graphSchema([
+    webPageSchema({
+      url: caseStudyUrl,
+      name: caseStudy.title,
+      description: caseStudy.metaDescription || caseStudy.summary,
+      siteUrl,
+      mainEntity: { '@id': `${caseStudyUrl}#casestudy` },
+      imageUrl: caseStudy.ogImageUrl,
+      dateModified: caseStudy._updatedAt,
+    }),
+    caseStudySchema(caseStudy, siteUrl),
+    breadcrumbSchema([
+      { name: 'Home', url: siteUrl },
+      { name: 'Case Studies', url: `${siteUrl}/case-studies` },
+      { name: caseStudy.title, url: caseStudyUrl },
+    ]),
+  ])
+
+  return (
+    <>
+      <JsonLd id="ld-case-study" data={caseStudyGraph} />
+      <CaseStudyPageContent caseStudy={caseStudy} />
+    </>
+  )
 }

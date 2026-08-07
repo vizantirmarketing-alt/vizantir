@@ -2,7 +2,8 @@ import type {
   Service, 
   Post, 
   Location, 
-  FAQ 
+  FAQ,
+  CaseStudy,
 } from '@/lib/sanity/types'
 
 import {
@@ -10,6 +11,7 @@ import {
   webPageId,
   serviceId,
   articleId,
+  caseStudyId,
   personId,
   founderId,
   locationId,
@@ -344,6 +346,46 @@ export function personSchema({
     worksFor: refOrganization(siteUrl),
     ...(sameAs && sameAs.length > 0 && { sameAs }),
     ...(imageUrl && { image: { '@type': 'ImageObject', url: imageUrl } }),
+  }
+}
+
+// ============================================
+// Case Study Schema
+// ============================================
+
+export function caseStudySchema(caseStudy: CaseStudy, siteUrl: string) {
+  const url = `${siteUrl}/case-studies/${caseStudy.slug}`
+
+  return {
+    '@type': 'CreativeWork',
+    '@id': caseStudyId(siteUrl, caseStudy.slug),
+    name: caseStudy.title,
+    ...(caseStudy.summary && { description: caseStudy.summary }),
+    url,
+    inLanguage: 'en-US',
+    dateModified: caseStudy._updatedAt,
+    isPartOf: refWebsite(siteUrl),
+    mainEntityOfPage: refWebPage(url),
+    creator: {
+      '@type': 'Person',
+      '@id': founderId(siteUrl),
+      name: 'James Tram',
+      url: `${siteUrl}/about`,
+    },
+    publisher: refOrganization(siteUrl),
+    ...(caseStudy.heroImage?.asset?.url && {
+      image: { '@type': 'ImageObject', url: caseStudy.heroImage.asset.url },
+    }),
+    ...(caseStudy.client && {
+      about: {
+        '@type': 'Organization',
+        name: caseStudy.client,
+        ...(caseStudy.siteUrl && { url: caseStudy.siteUrl }),
+      },
+    }),
+    ...(caseStudy.stack && caseStudy.stack.length > 0 && {
+      keywords: caseStudy.stack.join(', '),
+    }),
   }
 }
 
