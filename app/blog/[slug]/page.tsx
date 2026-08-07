@@ -5,6 +5,8 @@ import { allPostsQuery, postBySlugQuery, siteSettingsQuery } from '@/lib/sanity/
 import { getCanonicalUrl, getOgImage } from '@/lib/utils/metadata'
 import type { SiteSettings } from '@/lib/sanity/types'
 import BlogPostContent, { type SanityBlogPost } from '@/components/blog-page/BlogPostContent'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { blogPostSchema, breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
 
 interface PageProps {
   params: Promise<{
@@ -59,11 +61,42 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params
-  const post = await sanityFetch<SanityBlogPost | null>(postBySlugQuery, { slug }, { tags: ['post', 'author'] })
+
+  const [post, settings] = await Promise.all([
+    sanityFetch<SanityBlogPost | null>(postBySlugQuery, { slug }, { tags: ['post', 'author'] }),
+    sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
+  ])
 
   if (!post) {
     notFound()
   }
 
-  return <BlogPostContent post={post} />
+  const postUrl = getCanonicalUrl(settings, `/blog/${post.slug}`)
+  const siteUrl = getCanonicalUrl(settings, '')
+
+  const postGraph = graphSchema([
+    webPageSchema({
+      url: postUrl,
+      name: post.title,
+      description: post.metaDescription || post.excerpt,
+      siteUrl,
+      mainEntity: { '@id': `${postUrl}#article` },
+      imageUrl: post.ogImageUrl,
+      datePublished: post.publishedAt,
+      dateModified: post._updatedAt,
+    }),
+    blogPostSchema(post, siteUrl),
+    breadcrumbSchema([
+      { name: 'Home', url: siteUrl },
+      { name: 'Blog', url: `${siteUrl}/blog` },
+      { name: post.title, url: postUrl },
+    ]),
+  ])
+
+  return (
+    <>
+      <JsonLd id="ld-blog-post" data={postGraph} />
+      <BlogPostContent post={post} />
+    </>
+  )
 }
