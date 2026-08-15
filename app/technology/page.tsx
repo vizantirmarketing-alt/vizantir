@@ -100,8 +100,8 @@ export default function TechnologyHubPage() {
               </h1>
               <p className="text-base md:text-lg text-body leading-relaxed">
                 Every tool in our stack was chosen for the same reason: to compound into a site that
-                loads faster, breaks less, and stays maintainable for years. These are not buzzwords on
-                a proposal — they are the actual systems running your project from day one.
+                loads faster, breaks less, and stays maintainable for years. These aren&apos;t buzzwords on
+                a proposal. They&apos;re the actual systems running your project from day one.
               </p>
             </div>
 
@@ -134,7 +134,7 @@ export default function TechnologyHubPage() {
               <p className="text-base md:text-lg text-body leading-relaxed">
                 A website is only as reliable as the systems underneath it. WordPress plugins conflict.
                 Shared hosting slows down under traffic. Page builders lock you into templates. Our stack
-                avoids those tradeoffs by design — so performance, security, and editability improve
+                avoids those tradeoffs by design, so performance, security, and editability improve
                 together instead of competing.
               </p>
             </div>

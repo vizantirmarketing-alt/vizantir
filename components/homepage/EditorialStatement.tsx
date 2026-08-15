@@ -36,12 +36,12 @@ const EditorialStatement = () => {
             <p
               className="text-base md:text-lg leading-relaxed lg:pt-1 text-muted-foreground"
             >
-              A small number of clients at a time. Full attention on each one. The result is a site that feels like yours — because it is.
+              A small number of clients at a time. Full attention on each one. The result is a site that feels like yours. Because it is.
             </p>
             <p
               className="text-base md:text-lg leading-relaxed lg:pt-1 text-muted-foreground"
             >
-              Some websites are built. Most are assembled. You can tell the difference — and so can Google.
+              Some websites are built. Most are assembled. You can tell the difference. And so can Google.
             </p>
           </motion.div>
         </div>

@@ -339,7 +339,7 @@ export default function BlogPageClient({ posts }: Props) {
             className="mb-10 transition-colors duration-500"
             style={{ color: colors.textMuted }}
           >
-            No commitment, no pressure — just honest advice.
+            No commitment, no pressure. Just honest advice.
           </motion.p>
 
           <motion.div

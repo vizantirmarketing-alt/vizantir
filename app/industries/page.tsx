@@ -16,7 +16,7 @@ const PAGE_DESCRIPTION =
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Industries We Serve — Custom Web Design | Vizantir',
+    absolute: 'Industries We Serve – Custom Web Design | Vizantir',
   },
   description: PAGE_DESCRIPTION,
   alternates: {
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     url: PAGE_URL,
     siteName: 'Vizantir',
     locale: 'en_US',
-    title: 'Industries We Serve — Custom Web Design | Vizantir',
+    title: 'Industries We Serve – Custom Web Design | Vizantir',
     description: PAGE_DESCRIPTION,
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Industries We Serve — Vizantir',
+        alt: 'Industries We Serve – Vizantir',
       },
     ],
   },
@@ -68,7 +68,7 @@ export default function IndustriesHubPage() {
                 Who We Build For
               </h1>
               <p className="text-base md:text-lg text-body leading-relaxed">
-                Vizantir builds custom websites for established businesses across all sectors —
+                Vizantir builds custom websites for established businesses across all sectors,
                 wherever the website is a serious touchpoint between you and the people who decide
                 whether to work with you.
               </p>
@@ -78,7 +78,7 @@ export default function IndustriesHubPage() {
               <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
-                  Vizantir takes projects across the broader market — any established business that
+                  Vizantir takes projects across the broader market. Any established business that
                   wants a premium, custom-built site over a templated solution.
                 </p>
               </div>
@@ -96,7 +96,7 @@ export default function IndustriesHubPage() {
 
             <div className="max-w-3xl mx-auto text-center mb-16">
               <p className="text-base md:text-lg text-body leading-relaxed">
-                Industry isn&apos;t the qualifier — established business and premium budget are. If you
+                Industry isn&apos;t the qualifier. Established business and premium budget are. If you
                 operate in a sector that isn&apos;t listed here, the work looks the same: a custom site
                 built to be fast, durable, and uniquely yours.
               </p>

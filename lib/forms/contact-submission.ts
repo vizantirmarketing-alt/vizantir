@@ -103,7 +103,7 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
   }
 
   const resend = new Resend(apiKey);
-  const subject = `New contact: ${row.service} — ${row.name}`;
+  const subject = `New contact: ${row.service} – ${row.name}`;
 
   try {
     await resend.emails.send({

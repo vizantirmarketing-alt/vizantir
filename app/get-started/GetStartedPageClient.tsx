@@ -22,7 +22,7 @@ export default function GetStartedPageClient() {
       number: "03",
       title: "Deposit",
       description:
-        "50% down secures your spot and kicks off work. You talk to the person building the site — not layers of account staff.",
+        "50% down secures your spot and kicks off work. You talk to the person building the site, not layers of account staff.",
     },
     {
       number: "04",
@@ -34,7 +34,7 @@ export default function GetStartedPageClient() {
       number: "05",
       title: "Launch",
       description:
-        "Final review, remaining balance, then we go live. You get a finished product — not a half-built site and a wish list for \"phase two.\"",
+        "Final review, remaining balance, then we go live. You get a finished product, not a half-built site and a wish list for \"phase two.\"",
     },
   ]
 
@@ -49,7 +49,7 @@ export default function GetStartedPageClient() {
               Ready to start?
             </h1>
             <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
-              Fixed scope, fixed price, direct access to the builder. From first call to launch — here's how every project runs.
+              Fixed scope, fixed price, direct access to the builder. From first call to launch, here's how every project runs.
             </p>
           </motion.div>
         </div>
@@ -109,7 +109,7 @@ export default function GetStartedPageClient() {
               Next step: a real conversation
             </h2>
             <p className="text-lg mb-8 max-w-xl mx-auto text-muted-foreground">
-              Book a discovery call. We'll see if the project and timeline line up — no pressure, no hard sell.
+              Book a discovery call. We'll see if the project and timeline line up. No pressure, no hard sell.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

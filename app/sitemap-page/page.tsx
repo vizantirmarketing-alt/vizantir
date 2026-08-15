@@ -14,7 +14,7 @@ import SitemapPageClient from './SitemapPageClient'
 const PAGE_URL = 'https://www.vizantir.com/sitemap-page'
 const PAGE_TITLE = 'Sitemap'
 const PAGE_DESCRIPTION =
-  'Browse every page on the Vizantir website — services, industries, case studies, blog posts, and more.'
+  'Browse every page on the Vizantir website. Services, industries, case studies, blog posts, and more.'
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,

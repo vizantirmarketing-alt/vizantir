@@ -153,7 +153,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
               Still have questions?
             </h2>
             <p className="text-lg mb-6 text-muted-foreground">
-              We&apos;re here to help. Book a strategy call to walk through your goals, scope, and fit for your next website build—no pitch deck required.
+              We&apos;re here to help. Book a strategy call to walk through your goals, scope, and fit for your next website build. No pitch deck required.
             </p>
             <Link
               href="/contact"

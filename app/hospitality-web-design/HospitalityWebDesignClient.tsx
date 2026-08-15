@@ -30,7 +30,7 @@ const offeringBlocks = [
     icon: CalendarCheck,
     title: 'Booking Integrations',
     description:
-      'OpenTable, Resy, SevenRooms, direct booking, or hotel PMS — wired into the site so guests can book without hunting for a widget. Configurable to your venue’s operational setup.',
+      'OpenTable, Resy, SevenRooms, direct booking, or hotel PMS, wired into the site so guests can book without hunting for a widget. Configurable to your venue’s operational setup.',
   },
   {
     icon: FilePenLine,
@@ -54,7 +54,7 @@ const offeringBlocks = [
     icon: MapPin,
     title: 'Local SEO for “Near Me”',
     description:
-      'Structured for high-intent queries like “sushi near me,” “boutique hotel las vegas,” and “rooftop bar strip” — not just brand vanity terms.',
+      'Structured for high-intent queries like “sushi near me,” “boutique hotel las vegas,” and “rooftop bar strip,” not just brand vanity terms.',
   },
   {
     icon: Palette,
@@ -75,9 +75,9 @@ const agencyCompare = [
 
 const vizantirCompare = [
   'Custom Next.js builds matched to your venue',
-  'Structured menu content — searchable and mobile-friendly',
+  'Structured menu content. Searchable and mobile-friendly',
   'Performance tuned for Core Web Vitals',
-  'Brand-directed design — not a hospitality theme skin',
+  'Brand-directed design. Not a hospitality theme skin',
   'Booking integration wired from day one',
   'Conversion events tracked from launch',
   'Sanity CMS your team can run without a developer',
@@ -93,7 +93,7 @@ const methodologyItems = [
   {
     title: 'Local SEO structure',
     detail:
-      '“Sushi near me,” “boutique hotel las vegas,” and similar high-intent booking queries — structured into the IA so guests searching to book can find you.',
+      '“Sushi near me,” “boutique hotel las vegas,” and similar high-intent booking queries, structured into the IA so guests searching to book can find you.',
   },
   {
     title: 'Mobile-first booking flow',
@@ -103,12 +103,12 @@ const methodologyItems = [
   {
     title: 'Menu & event CMS',
     detail:
-      'Sanity so your team owns seasonal menus, specials, and private events — not the developer. Updates ship in minutes.',
+      'Sanity so your team owns seasonal menus, specials, and private events, not the developer. Updates ship in minutes.',
   },
   {
     title: 'Gallery architecture',
     detail:
-      'Atmosphere and food imagery loads fast and displays cleanly on any device — the visual pitch without the performance penalty.',
+      'Atmosphere and food imagery loads fast and displays cleanly on any device. The visual pitch without the performance penalty.',
   },
 ] as const
 
@@ -125,7 +125,7 @@ const processSteps = [
     step: '02',
     title: 'Design',
     description:
-      'Brand-directed design that reflects the venue — photography direction when the property needs visuals that match its atmosphere.',
+      'Brand-directed design that reflects the venue. Photography direction when the property needs visuals that match its atmosphere.',
   },
   {
     icon: Code2,
@@ -277,7 +277,7 @@ export default function HospitalityWebDesignClient() {
             </h2>
             <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
-                Template restaurant and hotel sites all look alike — the same hero, the same menu
+                Template restaurant and hotel sites all look alike. The same hero, the same menu
                 PDF, the same booking widget hidden three clicks deep. Guests decide in seconds. A
                 generic site loses them to a competitor with a stronger first impression.
               </p>
@@ -305,7 +305,7 @@ export default function HospitalityWebDesignClient() {
               Built for How Hospitality Guests Decide
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Every piece of the site earns its place — atmosphere, local findability, and a clear
+              Every piece of the site earns its place. Atmosphere, local findability, and a clear
               path to book.
             </p>
           </motion.div>
@@ -415,11 +415,11 @@ export default function HospitalityWebDesignClient() {
               id="proof-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
             >
-              Process-Driven Proof — Not Invented Case Studies
+              Process-Driven Proof, Not Invented Case Studies
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
               We do not pad this page with fabricated results. What we show is how the work is
-              structured — the same methodology every hospitality engagement follows.
+              structured, the same methodology every hospitality engagement follows.
             </p>
           </motion.div>
 
@@ -453,7 +453,7 @@ export default function HospitalityWebDesignClient() {
               Vizantir Design Studio · Las Vegas
             </p>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Custom Next.js websites for hospitality venues — restaurants, hotels, and lounges —
+              Custom Next.js websites for hospitality venues. Restaurants, hotels, and lounges,
               with booking-forward builds and local SEO structure. From Southern Nevada and
               nationwide.
             </p>
@@ -475,7 +475,7 @@ export default function HospitalityWebDesignClient() {
               What Happens When We Build Your Site
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              A clear sequence — Discovery through Launch — so you know exactly what the engagement
+              A clear sequence from Discovery through Launch, so you know exactly what the engagement
               looks like.
             </p>
           </motion.div>

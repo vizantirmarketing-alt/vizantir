@@ -39,7 +39,7 @@ const CARE_REFRAME = {
   eyebrow: 'Website Care',
   heading: 'Care That Isn\u2019t Damage Control',
   body: [
-    'Most maintenance plans charge you to patch a fragile platform \u2014 plugin updates, malware scans, whatever the CMS broke this week.',
+    'Most maintenance plans charge you to patch a fragile platform. Plugin updates, malware scans, whatever the CMS broke this week.',
     'A hand-coded Next.js site doesn\u2019t have those failure points. Vizantir care isn\u2019t about recovery. It keeps an already-fast, already-secure site continuously improving.',
   ],
 } as const
@@ -48,21 +48,21 @@ const LANDING_PAGE_PRICING = {
   eyebrow: 'Landing Pages',
   heading: 'Pages built to convert traffic',
   intro:
-    'Single-purpose pages for campaigns, offers, and paid traffic — custom-designed, tracked, and ready to plug into your ads.',
+    'Single-purpose pages for campaigns, offers, and paid traffic. Custom-designed, tracked, and ready to plug into your ads.',
 } as const
 
 const BLOG_ADDON = {
   eyebrow: 'Blog Writing Add-On',
   heading: 'Ongoing content, attached to your retainer',
   intro:
-    'Add ongoing content to any care plan. Human-written posts, researched and published live \u2014 attached to your retainer, not a separate engagement.',
+    'Add ongoing content to any care plan. Human-written posts, researched and published live. Attached to your retainer, not a separate engagement.',
 } as const
 
 const CHATBOT_ADDON = {
   eyebrow: 'AI Chatbot',
   heading: 'Always-on answers, trained on your content',
   intro:
-    'A custom chatbot trained on your site, services, and FAQs. Answers visitors instantly in your brand voice — no scripts, no canned responses.',
+    'A custom chatbot trained on your site, services, and FAQs. Answers visitors instantly in your brand voice. No scripts, no canned responses.',
 }
 
 const CARE_CLIENT_DISCOUNT = 'Care plan clients get 15% off.'
@@ -392,7 +392,7 @@ function StandalonePricingSection() {
       <PricingSection delay={0}>
         <SectionHeading eyebrow="Project Pricing" heading="Fixed scope. Fixed price. No surprises.">
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Three tiers built around how complex your site needs to be — not how much we think we can charge.
+            Three tiers built around how complex your site needs to be, not how much we think we can charge.
           </p>
         </SectionHeading>
         <div className="grid items-stretch gap-6 md:grid-cols-3">

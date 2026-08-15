@@ -468,7 +468,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
               Ready to talk about {service.title}?
             </h2>
             <p className="mb-8 text-lg" style={{ color: colors.textMuted }}>
-              Book a strategy call and we&apos;ll walk through goals, scope, and fit—no pitch deck required.
+              Book a strategy call and we&apos;ll walk through goals, scope, and fit. No pitch deck required.
             </p>
             <Button
               size="lg"

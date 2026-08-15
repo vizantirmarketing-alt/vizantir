@@ -12,7 +12,7 @@ type ChatMessage = {
 };
 
 const GREETING =
-  'I\'m the Vizantir concierge — ask me about our services, pricing, process, or the kind of work we do.';
+  'I\'m the Vizantir concierge. Ask me about our services, pricing, process, or the kind of work we do.';
 
 const STARTER_PROMPTS = [
   'How much does a website cost?',

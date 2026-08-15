@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Vizantir — Website Redesign Las Vegas',
+        alt: 'Vizantir – Website Redesign Las Vegas',
       },
     ],
   },

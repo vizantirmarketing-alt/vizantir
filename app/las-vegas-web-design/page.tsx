@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import LasVegasWebDesignClient from './LasVegasWebDesignClient'
 import { LasVegasPageSchema } from './_schema'
 
-const META_TITLE = 'Las Vegas Web Design Studio — Custom Next.js Websites | Vizantir'
+const META_TITLE = 'Las Vegas Web Design Studio – Custom Next.js Websites | Vizantir'
 const META_DESCRIPTION =
   'Custom Next.js web design for Las Vegas, Henderson, Summerlin, and Paradise businesses. Fixed-scope projects from $15,000. Built by a local studio, no templates.'
 
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: 'https://www.vizantir.com/las-vegas-web-design',
     siteName: 'Vizantir',
     locale: 'en_US',
-    title: 'Las Vegas Web Design Studio — Custom Next.js Websites',
+    title: 'Las Vegas Web Design Studio – Custom Next.js Websites',
     description:
       'Custom Next.js web design for Las Vegas businesses. Fixed-scope builds from a local studio serving Henderson, Summerlin, and Paradise.',
     images: [
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Vizantir — Las Vegas Web Design Studio',
+        alt: 'Vizantir – Las Vegas Web Design Studio',
       },
     ],
   },

@@ -30,13 +30,13 @@ const offeringBlocks = [
     icon: ShieldCheck,
     title: 'SEO Preservation & Ranking Continuity',
     description:
-      'Every URL mapped, every redirect audited, every schema element preserved so your Google rankings survive the redesign. Not an afterthought — the first thing we scope in discovery.',
+      'Every URL mapped, every redirect audited, every schema element preserved so your Google rankings survive the redesign. Not an afterthought. The first thing we scope in discovery.',
   },
   {
     icon: FileText,
     title: 'Content Migration',
     description:
-      "Your existing content library moves to the new site cleanly. We audit what's ranking, what's outdated, what needs a rewrite — no content gets accidentally lost in the shuffle.",
+      "Your existing content library moves to the new site cleanly. We audit what's ranking, what's outdated, what needs a rewrite. No content gets accidentally lost in the shuffle.",
   },
   {
     icon: GitBranch,
@@ -76,7 +76,7 @@ const cheapRedesignerCompare = [
 const fullRebuildAgencyCompare = [
   'Treats SEO as a post-launch afterthought',
   'Full rebuild without migration planning',
-  'Traffic drops 40-60% for months post-launch',
+  'Traffic drops 40–60% for months post-launch',
   'Charges $50k+ for a launch that damages the business',
   'Account managers, not the developer building the site',
   'Long timelines, monthly retainers to fix what they broke',
@@ -86,7 +86,7 @@ const vizantirCompare = [
   'SEO preservation scoped in discovery, not patched in later',
   'Full redirect map audited before launch',
   'Content migration with SEO audit built in',
-  'Custom Next.js — faster than the old site by design',
+  'Custom Next.js. Faster than the old site by design',
   'Staged launch, verified rankings before going public',
   'Direct access to the studio owner, not an account manager',
   'Fixed-scope pricing, no surprise invoices',
@@ -124,7 +124,7 @@ const methodologyItems = [
   {
     title: 'Content migration with SEO context',
     detail:
-      'Every ranking page reviewed for what to keep, what to rewrite, what to consolidate — no content lost, no rankings orphaned.',
+      'Every ranking page reviewed for what to keep, what to rewrite, what to consolidate. No content lost, no rankings orphaned.',
   },
   {
     title: 'Staged launch with verification',
@@ -182,7 +182,7 @@ const faqs = [
     answer: redesignPricingFaqs.timeline,
   },
   {
-    question: "We're on WordPress / Wix / Squarespace / Webflow — how does the migration work?",
+    question: "We're on WordPress / Wix / Squarespace / Webflow. How does the migration work?",
     answer: redesignPricingFaqs.existingPlatform,
   },
 ] as const
@@ -313,12 +313,12 @@ export default function WebsiteRedesignLasVegasClient() {
                 a partner who won&apos;t wreck what already works. Cheap redesigners rebuild
                 everything from scratch, break your redirect chains, and let years of Google
                 rankings evaporate the day the new site launches. Agencies pitch fresh design but
-                treat SEO as an afterthought — until your traffic disappears six weeks in.
+                treat SEO as an afterthought, until your traffic disappears six weeks in.
               </p>
               <p>
                 A careful migration keeps your rankings, your content library, and your traffic
-                intact while the site gets rebuilt around them. That&apos;s what Vizantir does —
-                custom Next.js redesigns with SEO preservation, redirect mapping, and content
+                intact while the site gets rebuilt around them. That&apos;s what Vizantir does.
+                Custom Next.js redesigns with SEO preservation, redirect mapping, and content
                 migration handled from day one, not patched in after launch.
               </p>
             </div>
@@ -340,7 +340,7 @@ export default function WebsiteRedesignLasVegasClient() {
               What We Build for Redesign Projects
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              SEO preservation first — then content migration, redirects, performance, and a clean
+              SEO preservation first, then content migration, redirects, performance, and a clean
               handoff so your rankings survive the rebuild.
             </p>
           </motion.div>
@@ -494,7 +494,7 @@ export default function WebsiteRedesignLasVegasClient() {
               Real Las Vegas Businesses We&apos;ve Built and Migrated
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Named work from Southern Nevada — not concept mockups, not invented case studies.
+              Named work from Southern Nevada. Not concept mockups, not invented case studies.
             </p>
           </motion.div>
 
@@ -532,7 +532,7 @@ export default function WebsiteRedesignLasVegasClient() {
               How We Approach Redesigns
             </h3>
             <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-              The same migration framework every redesign follows — SEO preservation before design
+              The same migration framework every redesign follows. SEO preservation before design
               starts.
             </p>
           </motion.div>
@@ -567,8 +567,8 @@ export default function WebsiteRedesignLasVegasClient() {
               Vizantir Design Studio · Las Vegas, NV 89139
             </p>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Custom Next.js redesigns for established Las Vegas businesses — WordPress migrations,
-              Wix migrations, Squarespace and Webflow projects — from Southern Nevada and
+              Custom Next.js redesigns for established Las Vegas businesses. WordPress migrations,
+              Wix migrations, Squarespace and Webflow projects from Southern Nevada and
               nationwide.
             </p>
           </motion.div>
@@ -589,7 +589,7 @@ export default function WebsiteRedesignLasVegasClient() {
               What Happens When We Redesign Your Site
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              A clear sequence — Discovery through Launch — scoped around SEO preservation and
+              A clear sequence from Discovery through Launch, scoped around SEO preservation and
               migration verification.
             </p>
           </motion.div>
@@ -637,7 +637,7 @@ export default function WebsiteRedesignLasVegasClient() {
               Redesign Project Tiers
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Clear project tiers so you know the investment before kickoff — not a vague estimate
+              Clear project tiers so you know the investment before kickoff, not a vague estimate
               that climbs after the deposit clears.
             </p>
           </motion.div>

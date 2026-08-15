@@ -7,11 +7,11 @@ const WhyVizantir = () => {
     {
       title: "Direct Access",
       description:
-        "You work closely with the person shaping the project — not layers of account management.",
+        "You work closely with the person shaping the project, not layers of account management.",
     },
     {
       title: "Clear Scope",
-      description: "Every engagement is structured around what the site actually needs — not vague add-ons or bloated retainers.",
+      description: "Every engagement is structured around what the site actually needs, not vague add-ons or bloated retainers.",
     },
     {
       title: "Built to Convert",

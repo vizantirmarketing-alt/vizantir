@@ -7,7 +7,7 @@ import { breadcrumbSchema, graphSchema } from '@/lib/schema'
 import AreWeAFitPageClient from './AreWeAFitPageClient'
 
 const areWeAFitDescription =
-  'Honest criteria on whether Vizantir is the right premium web design studio for your business — read this before booking a Strategy Call.'
+  'Honest criteria on whether Vizantir is the right premium web design studio for your business. Read this before booking a Strategy Call.'
 
 export const metadata: Metadata = {
   ...areWeAFitMetadata,

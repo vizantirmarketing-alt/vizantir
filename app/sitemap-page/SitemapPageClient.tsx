@@ -67,8 +67,8 @@ export default function SitemapPageClient({
           >
             <h1 className="mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">Sitemap</h1>
             <p className="max-w-2xl text-lg text-muted-foreground">
-              This page lists every public page on Vizantir&apos;s site, organized by section —
-              marketing pages, industries, technology, services, case studies, blog posts,
+              This page lists every public page on Vizantir&apos;s site, organized by section.
+              Marketing pages, industries, technology, services, case studies, blog posts,
               locations, and legal resources.
             </p>
           </motion.div>

@@ -55,7 +55,7 @@ const ServicesPreview = () => {
     {
       number: '02',
       title: 'Website Development',
-      input: "Custom Next.js builds — no plugins, no bloat, and fast enough to actually hold a visitor's attention",
+      input: "Custom Next.js builds. No plugins, no bloat, and fast enough to actually hold a visitor's attention",
       output: 'Clean codebase, CMS integration, performance-optimized build',
       outcome: 'A site that loads fast, works on every device, and grows with you',
     },
@@ -162,7 +162,7 @@ const ServicesPreview = () => {
             lineHeight: 1.65,
           }}
         >
-          Every site is built around what your business actually needs — not what looks good in a proposal.
+          Every site is built around what your business actually needs, not what looks good in a proposal.
         </motion.p>
 
         <motion.div

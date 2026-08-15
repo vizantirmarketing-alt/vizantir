@@ -172,7 +172,7 @@ function getSettingsWithFallback(settings: SiteSettings | null): SiteSettings {
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://vizantir.com',
     siteName: 'Vizantir',
     defaultMetaTitle: 'Vizantir | Custom Website Design Studio in Las Vegas',
-    defaultMetaDescription: 'A Las Vegas studio that designs and builds custom websites for established businesses. No templates, no plugins — built by hand in Next.js.',
+    defaultMetaDescription: 'A Las Vegas studio that designs and builds custom websites for established businesses. No templates, no plugins. Built by hand in Next.js.',
     organizationDescription: 'Premium web design and development agency',
     hasPhysicalLocation: false,
   }

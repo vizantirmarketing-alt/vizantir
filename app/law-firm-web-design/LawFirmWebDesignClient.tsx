@@ -32,7 +32,7 @@ const offeringBlocks = [
     icon: MapPin,
     title: 'Practice Area Pages Built for Local SEO',
     description:
-      "Dedicated pages for DUI, personal injury, family law, criminal defense, and other practice lines — structured so local, high-intent searches can find the right attorney. Configurable to your firm's actual practice mix, not a generic template list.",
+      "Dedicated pages for DUI, personal injury, family law, criminal defense, and other practice lines, structured so local, high-intent searches can find the right attorney. Configurable to your firm's actual practice mix, not a generic template list.",
   },
   {
     icon: UserRound,
@@ -44,13 +44,13 @@ const offeringBlocks = [
     icon: ShieldCheck,
     title: 'Trust Architecture',
     description:
-      'Layout and content hierarchy for bar admissions, recognitions, and case results within ethical advertising bounds. The site should feel like the firm — not a stock legal template.',
+      'Layout and content hierarchy for bar admissions, recognitions, and case results within ethical advertising bounds. The site should feel like the firm, not a stock legal template.',
   },
   {
     icon: CalendarCheck,
     title: 'Consultation Intake Flow',
     description:
-      'A real path from visitor to consultation request — not a buried “info” form. Clear CTAs, focused intake fields, and a flow that respects how high-value legal clients decide.',
+      'A real path from visitor to consultation request, not a buried “info” form. Clear CTAs, focused intake fields, and a flow that respects how high-value legal clients decide.',
   },
   {
     icon: Smartphone,
@@ -62,7 +62,7 @@ const offeringBlocks = [
     icon: FilePenLine,
     title: 'CMS the Firm Actually Owns',
     description:
-      'Sanity-powered content so your team can add practice area pages, update bios, and publish without waiting on a developer. You own the content system — not a locked theme.',
+      'Sanity-powered content so your team can add practice area pages, update bios, and publish without waiting on a developer. You own the content system, not a locked theme.',
   },
 ] as const
 
@@ -76,7 +76,7 @@ const agencyCompare = [
 
 const vizantirCompare = [
   'Custom Next.js builds matched to your brand',
-  'Brand-directed design — not a legal theme skin',
+  'Brand-directed design. Not a legal theme skin',
   'Performance tuned for Core Web Vitals',
   'Photography direction when the practice needs it',
   'Conversion events wired from day one',
@@ -93,7 +93,7 @@ const methodologyItems = [
   {
     title: 'Local SEO structure',
     detail:
-      'Location-aware IA, practice page templates, and internal linking built for queries like “Las Vegas DUI attorney” — not blog filler.',
+      'Location-aware IA, practice page templates, and internal linking built for queries like “Las Vegas DUI attorney,” not blog filler.',
   },
   {
     title: 'Practice area pages',
@@ -108,7 +108,7 @@ const methodologyItems = [
   {
     title: 'Consultation intake flow',
     detail:
-      'A guided path to book a consultation — fields, copy, and placement designed for intent, not vanity form fills.',
+      'A guided path to book a consultation. Fields, copy, and placement designed for intent, not vanity form fills.',
   },
 ] as const
 
@@ -125,7 +125,7 @@ const processSteps = [
     step: '02',
     title: 'Design',
     description:
-      'Custom brand direction — not templates. Photography guidance when the practice needs visuals that match its standing.',
+      'Custom brand direction, not templates. Photography guidance when the practice needs visuals that match its standing.',
   },
   {
     icon: Code2,
@@ -226,8 +226,9 @@ export default function LawFirmWebDesignClient() {
             transition={{ duration: 0.5, delay: 0.16 }}
             className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            Too many firms lose high-value clients to competitors with a stronger digital presence —
-            stuck on generic-agency sites that look interchangeable and convert poorly.
+            Too many firms lose high-value clients to competitors with a stronger digital
+            presence. They&apos;re stuck on generic-agency sites that look interchangeable and
+            convert poorly.
           </motion.p>
 
           <motion.div
@@ -271,19 +272,19 @@ export default function LawFirmWebDesignClient() {
             </h2>
             <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
-                Most law firm websites still look like every other firm on the block — a stock hero,
+                Most law firm websites still look like every other firm on the block. A stock hero,
                 a stock practice grid, and a contact form that could belong to anyone. Prospective
                 clients notice. When the site feels generic, so does the practice.
               </p>
               <p>
-                Local, high-intent searches — “Las Vegas DUI attorney,” “personal injury lawyer
-                Henderson,” “family law attorney Summerlin” — reward sites structured for those
+                Local, high-intent searches like “Las Vegas DUI attorney,” “personal injury lawyer
+                Henderson,” and “family law attorney Summerlin” reward sites structured for those
                 queries. Template builds rarely are. They rank for brand vanity terms and miss the
                 consultations that pay for the firm.
               </p>
               <p>
                 And when the only conversion path is a vague “info” form, serious clients stall.
-                They want a clear next step to a consultation — not another black hole inbox. A weak
+                They want a clear next step to a consultation, not another black hole inbox. A weak
                 site does not just underperform; it undercuts the caliber of the work your attorneys
                 already do.
               </p>
@@ -306,7 +307,7 @@ export default function LawFirmWebDesignClient() {
               Built for How Legal Clients Decide
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Every piece of the site earns its place — practice visibility, attorney credibility,
+              Every piece of the site earns its place. Practice visibility, attorney credibility,
               and a path to a consultation.
             </p>
           </motion.div>
@@ -416,11 +417,11 @@ export default function LawFirmWebDesignClient() {
               id="proof-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
             >
-              Process-Driven Proof — Not Invented Case Studies
+              Process-Driven Proof, Not Invented Case Studies
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
               We do not pad this page with fabricated results. What we show is how the work is
-              structured — the same methodology every law firm engagement follows.
+              structured, the same methodology every law firm engagement follows.
             </p>
           </motion.div>
 
@@ -455,7 +456,7 @@ export default function LawFirmWebDesignClient() {
             </p>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
               Custom Next.js websites for established practices. Fixed-scope engagements, local SEO
-              structure, and consultation-focused builds — from Southern Nevada and nationwide.
+              structure, and consultation-focused builds from Southern Nevada and nationwide.
             </p>
           </motion.div>
         </div>
@@ -475,7 +476,7 @@ export default function LawFirmWebDesignClient() {
               What Happens When We Build Your Site
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              A clear sequence — Discovery through Launch — so you know exactly what the engagement
+              A clear sequence from Discovery through Launch, so you know exactly what the engagement
               looks like.
             </p>
           </motion.div>

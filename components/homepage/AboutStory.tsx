@@ -56,7 +56,7 @@ const AboutStory = () => {
               <p 
                 className="text-base md:text-lg text-body" style={{ lineHeight: '1.7' }}
               >
-                We build from the ground up — considered, crafted, and coded for the way your business actually operates. Every decision is intentional. Every line of code earns its place.
+                We build from the ground up. Considered, crafted, and coded for the way your business actually operates. Every decision is intentional. Every line of code earns its place.
               </p>
             </motion.div>
 

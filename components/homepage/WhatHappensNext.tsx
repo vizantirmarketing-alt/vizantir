@@ -16,12 +16,12 @@ const WhatHappensNext = () => {
       number: '02',
       title: 'Get a Custom Strategy',
       description:
-        'We research your business, your market, and your competitors before anything is scoped. What comes back is a strategy built around what will actually work for you — not a generic proposal.',
+        'We research your business, your market, and your competitors before anything is scoped. What comes back is a strategy built around what will actually work for you, not a generic proposal.',
     },
     {
       number: '03',
       title: 'We Launch and Keep Tuning',
-      description: 'We build, refine, and launch — then support the site so it keeps performing.',
+      description: 'We build, refine, and launch, then support the site so it keeps performing.',
     },
   ];
 

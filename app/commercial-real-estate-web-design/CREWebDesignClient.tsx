@@ -48,7 +48,7 @@ const offeringBlocks = [
     icon: MessageSquare,
     title: 'Inquiry Routing',
     description:
-      'Property inquiry forms that route to the correct broker or team — not a black-hole info@ inbox that stalls the deal.',
+      'Property inquiry forms that route to the correct broker or team, not a black-hole info@ inbox that stalls the deal.',
   },
   {
     icon: FileBarChart,
@@ -75,7 +75,7 @@ const agencyCompare = [
 
 const vizantirCompare = [
   'Custom Next.js builds matched to your firm and asset class',
-  'Multi-audience IA — investors, tenants, brokers each get the right path',
+  'Multi-audience IA. Investors, tenants, brokers each get the right path',
   'Performance tuned for Core Web Vitals',
   'Broker bios with Person schema and contact routing',
   'Property inquiry routing wired from day one',
@@ -93,7 +93,7 @@ const methodologyItems = [
   {
     title: 'Listing architecture',
     detail:
-      'Property listings structured for how investors, tenants, and brokers actually search — fast, filterable, and information-dense where it matters.',
+      'Property listings structured for how investors, tenants, and brokers actually search. Fast, filterable, and information-dense where it matters.',
   },
   {
     title: 'Multi-audience IA',
@@ -125,7 +125,7 @@ const processSteps = [
     step: '02',
     title: 'Design',
     description:
-      'Brand-directed design that reflects the caliber of your firm and asset class — not a CRE theme skin.',
+      'Brand-directed design that reflects the caliber of your firm and asset class, not a CRE theme skin.',
   },
   {
     icon: Code2,
@@ -233,8 +233,8 @@ export default function CREWebDesignClient() {
             className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
             Too many CRE firms lose qualified inquiries to competitors with stronger listing
-            presentation and multi-audience content architecture — sites built for how deals
-            actually get done.
+            presentation and multi-audience content architecture. That&apos;s what a site built
+            for how deals actually get done looks like.
           </motion.p>
 
           <motion.div
@@ -278,7 +278,7 @@ export default function CREWebDesignClient() {
             </h2>
             <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
-                Template CRE sites all look alike — a stock building hero, a generic &ldquo;About Our
+                Template CRE sites all look alike. A stock building hero, a generic &ldquo;About Our
                 Firm&rdquo; page, a listing grid that doesn&apos;t help anyone find what they&apos;re
                 looking for. Investors, tenants, and capital partners all need different information
                 paths. A generic site loses them to a competitor who built their site for how CRE
@@ -287,7 +287,7 @@ export default function CREWebDesignClient() {
               <p>
                 Property inquiries live and die on presentation and clarity. Slow listing pages,
                 generic broker bios, and buried inquiry forms cost qualified leads. The site should
-                route each visitor to the right person, the right listing, the right answer — not
+                route each visitor to the right person, the right listing, the right answer, not
                 force them to hunt.
               </p>
             </div>
@@ -309,7 +309,7 @@ export default function CREWebDesignClient() {
               Built for How CRE Audiences Decide
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Every piece of the site earns its place — listing clarity, multi-audience paths, and a
+              Every piece of the site earns its place. Listing clarity, multi-audience paths, and a
               clear route to the right inquiry.
             </p>
           </motion.div>
@@ -419,11 +419,11 @@ export default function CREWebDesignClient() {
               id="proof-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
             >
-              Process-Driven Proof — Not Invented Case Studies
+              Process-Driven Proof, Not Invented Case Studies
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
               We do not pad this page with fabricated results. What we show is how the work is
-              structured — the same methodology every CRE engagement follows.
+              structured, the same methodology every CRE engagement follows.
             </p>
           </motion.div>
 
@@ -457,7 +457,7 @@ export default function CREWebDesignClient() {
               Vizantir Design Studio · Las Vegas
             </p>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Custom Next.js websites for CRE firms, brokerages, and property groups — with
+              Custom Next.js websites for CRE firms, brokerages, and property groups, with
               listing-forward builds and multi-audience content architecture. From Southern Nevada
               and nationwide.
             </p>
@@ -479,7 +479,7 @@ export default function CREWebDesignClient() {
               What Happens When We Build Your Site
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              A clear sequence — Discovery through Launch — so you know exactly what the engagement
+              A clear sequence from Discovery through Launch, so you know exactly what the engagement
               looks like.
             </p>
           </motion.div>

@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           url: '/og-image.png',
           width: 1200,
           height: 630,
-          alt: `${tech.name} Development — Vizantir Design Studio`,
+          alt: `${tech.name} Development – Vizantir Design Studio`,
         },
       ],
     },

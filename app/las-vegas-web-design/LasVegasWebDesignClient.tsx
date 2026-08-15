@@ -31,7 +31,7 @@ const offeringBlocks = [
     icon: Search,
     title: 'Local SEO Structure',
     description:
-      'Sites structured for "Las Vegas [service]" queries, Google Business Profile alignment, neighborhood-relevant keywords, and local search intent — not generic SEO advice.',
+      'Sites structured for "Las Vegas [service]" queries, Google Business Profile alignment, neighborhood-relevant keywords, and local search intent, not generic SEO advice.',
   },
   {
     icon: MapPinned,
@@ -43,7 +43,7 @@ const offeringBlocks = [
     icon: Phone,
     title: 'Conversion Paths for Local Buyers',
     description:
-      'Local buyers behave differently than national traffic. Phone-first CTAs, map integration, hours prominence, direction links — the details that turn Las Vegas searchers into actual customers.',
+      'Local buyers behave differently than national traffic. Phone-first CTAs, map integration, hours prominence, direction links. The details that turn Las Vegas searchers into actual customers.',
   },
   {
     icon: Zap,
@@ -86,7 +86,7 @@ const cheapLocalCompare = [
 const vizantirCompare = [
   'Custom Next.js builds matched to your business',
   'Local SEO structure from day one',
-  'Southern Nevada based — in-person when needed',
+  'Southern Nevada based. In-person when needed',
   'Performance tuned for Core Web Vitals',
   'Sanity CMS your team fully owns',
   'Fixed-scope pricing, no monthly software rent',
@@ -111,14 +111,14 @@ const realClients = [
     name: 'Pink Salt Salon & Spa',
     context: 'Salon & spa · Las Vegas',
     description:
-      'Migrated a luxury Las Vegas nail salon off a malware-prone WordPress site to a stable custom build. The goal was reliability and a site the team could trust after launch — not another plugin-heavy rebuild.',
+      'Migrated a luxury Las Vegas nail salon off a malware-prone WordPress site to a stable custom build. The goal was reliability and a site the team could trust after launch, not another plugin-heavy rebuild.',
     href: '/case-studies/pink-salt-salon',
   },
   {
     name: 'Meridian Row',
     context: 'Retail & dining development · Las Vegas',
     description:
-      'A fast, clean site for a premium Las Vegas retail and dining development. Built to present the project clearly and attract serious tenants — not look like every other CRE brochure site in the valley.',
+      'A fast, clean site for a premium Las Vegas retail and dining development. Built to present the project clearly and attract serious tenants, not look like every other CRE brochure site in the valley.',
     href: '/case-studies/meridian-row',
   },
 ] as const
@@ -132,12 +132,12 @@ const methodologyItems = [
   {
     title: 'Mobile-first performance',
     detail:
-      'Built for where 70%+ of Las Vegas local searches happen — fast loads, clean Core Web Vitals, and conversion paths that work on a phone.',
+      'Built for where 70%+ of Las Vegas local searches happen. Fast loads, clean Core Web Vitals, and conversion paths that work on a phone.',
   },
   {
     title: 'CMS ownership handoff',
     detail:
-      'Sanity so your team can publish hours, menus, prices, and photos without waiting on a developer — or paying monthly software rent for basic edits.',
+      'Sanity so your team can publish hours, menus, prices, and photos without waiting on a developer or paying monthly software rent for basic edits.',
   },
 ] as const
 
@@ -154,7 +154,7 @@ const processSteps = [
     step: '02',
     title: 'Design',
     description:
-      'Custom brand-directed design that reflects your business — not a template theme skin. Photography guidance when the project needs local visuals.',
+      'Custom brand-directed design that reflects your business, not a template theme skin. Photography guidance when the project needs local visuals.',
   },
   {
     icon: Code2,
@@ -273,7 +273,7 @@ export default function LasVegasWebDesignClient() {
           >
             Most Las Vegas business owners choose between out-of-town agencies who don&apos;t know
             the market, cheap template shops, and custom local studios. Vizantir is the third
-            option — a Southern Nevada studio that builds sites that actually work.
+            option. A Southern Nevada studio that builds sites that actually work.
           </motion.p>
 
           <motion.div
@@ -323,12 +323,12 @@ export default function LasVegasWebDesignClient() {
                 between Summerlin and Henderson, don&apos;t understand how local search actually
                 works for a Las Vegas business, and disappear the moment the project ships. Cheap
                 local shops build template WordPress sites that look like every other business in
-                the valley — slow, generic, and impossible to update without another invoice.
+                the valley. Slow, generic, and impossible to update without another invoice.
               </p>
               <p>
                 The third option is a local custom studio. Someone who understands the market,
                 builds the site right the first time, and stays reachable after launch. That&apos;s
-                what Vizantir does — custom Next.js websites for Las Vegas businesses that need
+                what Vizantir does. Custom Next.js websites for Las Vegas businesses that need
                 their site to actually work, not just exist.
               </p>
             </div>
@@ -504,7 +504,7 @@ export default function LasVegasWebDesignClient() {
               Real Las Vegas Businesses We&apos;ve Built For
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Named client work from Southern Nevada — not concept mockups, not invented case
+              Named client work from Southern Nevada. Not concept mockups, not invented case
               studies.
             </p>
           </motion.div>
@@ -543,7 +543,7 @@ export default function LasVegasWebDesignClient() {
               How We Approach Local Work
             </h3>
             <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-              The same framework every Las Vegas engagement follows — regardless of vertical.
+              The same framework every Las Vegas engagement follows, regardless of vertical.
             </p>
           </motion.div>
 
@@ -577,7 +577,7 @@ export default function LasVegasWebDesignClient() {
               Vizantir Design Studio · Las Vegas, NV 89139
             </p>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Custom Next.js websites for Las Vegas businesses across verticals — salons,
+              Custom Next.js websites for Las Vegas businesses across verticals. Salons,
               restaurants, law firms, CRE, and more. Built locally, structured for Southern Nevada
               search, owned by you after launch.
             </p>
@@ -599,7 +599,7 @@ export default function LasVegasWebDesignClient() {
               What Happens When We Build Your Site
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              A clear sequence — Discovery through Launch — adapted for cross-vertical local work.
+              A clear sequence from Discovery through Launch, adapted for cross-vertical local work.
             </p>
           </motion.div>
 
@@ -646,7 +646,7 @@ export default function LasVegasWebDesignClient() {
               Fixed-Scope Projects, No Surprise Invoices
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Clear project tiers so you know the investment before kickoff — not a vague estimate
+              Clear project tiers so you know the investment before kickoff, not a vague estimate
               that climbs after the deposit clears.
             </p>
           </motion.div>

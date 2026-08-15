@@ -6,7 +6,7 @@ import GetStartedPageClient from './GetStartedPageClient'
 const PAGE_URL = 'https://www.vizantir.com/get-started'
 const PAGE_TITLE = 'Get Started'
 const PAGE_DESCRIPTION =
-  'Fixed scope, fixed price, direct access to the builder. From first call to launch — here\'s how every project runs.'
+  'Fixed scope, fixed price, direct access to the builder. From first call to launch, here\'s how every project runs.'
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
