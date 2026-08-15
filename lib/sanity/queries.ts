@@ -161,7 +161,13 @@ export const caseStudiesBySlugsQuery = groq`
       alt,
       asset->{
         _id,
-        url
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
       }
     },
     stack,

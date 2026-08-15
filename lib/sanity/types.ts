@@ -140,6 +140,12 @@ interface CaseStudyImage {
   asset?: {
     _id: string
     url: string
+    metadata?: {
+      dimensions?: {
+        width: number
+        height: number
+      }
+    }
   }
 }
 

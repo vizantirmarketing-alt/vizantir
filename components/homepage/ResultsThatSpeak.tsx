@@ -48,11 +48,13 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 lg:gap-10">
+          <div className="grid items-start md:grid-cols-3 gap-8 lg:gap-10">
             {caseStudies.map((item, index) => {
               const imageUrl = item.heroImage?.asset?.url
                 ? absoluteImageUrl(item.heroImage.asset.url)
                 : undefined
+              const imageWidth = item.heroImage?.asset?.metadata?.dimensions?.width ?? 1600
+              const imageHeight = item.heroImage?.asset?.metadata?.dimensions?.height ?? 900
               const caseStudyHref = `/case-studies/${item.slug}`
 
               return (
@@ -66,7 +68,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
               >
                 <Link
                   href={caseStudyHref}
-                  className="relative mb-5 block overflow-hidden rounded-2xl aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.02]"
+                  className="mb-5 block overflow-hidden rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]"
                   style={{
                     boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
                     background: 'rgba(0, 0, 0, 0.04)',
@@ -76,8 +78,9 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
                     <Image
                       src={imageUrl}
                       alt={item.heroImage?.alt || item.title}
-                      fill
-                      className="object-cover object-top"
+                      width={imageWidth}
+                      height={imageHeight}
+                      className="h-auto w-full"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   ) : null}
