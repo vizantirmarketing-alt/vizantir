@@ -19,7 +19,7 @@ interface CaseStudiesClientProps {
  * currently stored on heroImage in Sanity. Until then every project renders
  * the placeholder treatment so the layout is exact.
  */
-const USE_SCREENSHOTS = false
+const USE_SCREENSHOTS = true
 const ANALYTIR_SHOT = '/work/analytir.jpg'
 
 /** next/image requires an absolute URL; Sanity may return protocol-relative `//cdn...` */
