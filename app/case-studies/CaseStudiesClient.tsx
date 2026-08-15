@@ -20,11 +20,29 @@ interface CaseStudiesClientProps {
  * the placeholder treatment so the layout is exact.
  */
 const USE_SCREENSHOTS = false
+const ANALYTIR_SHOT = '/work/analytir.png'
 
 /** next/image requires an absolute URL; Sanity may return protocol-relative `//cdn...` */
 function absoluteImageUrl(url: string) {
   const trimmed = url.trim()
   return trimmed.startsWith('//') ? `https:${trimmed}` : trimmed
+}
+
+function ShotPlaceholder() {
+  return (
+    <div
+      aria-hidden
+      className="absolute inset-0 flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.04)' }}
+    >
+      <span
+        className="text-[10px] uppercase tracking-[0.18em]"
+        style={{ color: 'var(--muted-foreground)' }}
+      >
+        Screenshot
+      </span>
+    </div>
+  )
 }
 
 function ProjectShot({
@@ -53,20 +71,7 @@ function ProjectShot({
     )
   }
 
-  return (
-    <div
-      aria-hidden
-      className="absolute inset-0 flex items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.04)' }}
-    >
-      <span
-        className="text-[10px] uppercase tracking-[0.18em]"
-        style={{ color: 'var(--muted-foreground)' }}
-      >
-        Screenshot
-      </span>
-    </div>
-  )
+  return <ShotPlaceholder />
 }
 
 const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
@@ -236,6 +241,18 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             className="mt-24 rounded-2xl border p-8 md:p-12"
             style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
           >
+            <div
+              className="relative mb-10 aspect-[21/9] overflow-hidden rounded-xl border"
+              style={{ borderColor: colors.cardBorder }}
+            >
+              <Image
+                src={ANALYTIR_SHOT}
+                alt="Analytir dashboard"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 1024px) 100vw, 900px"
+              />
+            </div>
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
               <div>
                 <p className="text-sm uppercase tracking-[0.2em]" style={{ color: colors.accent }}>
