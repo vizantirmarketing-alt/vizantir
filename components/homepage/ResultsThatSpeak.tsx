@@ -5,31 +5,19 @@ import Image from "next/image";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { motion } from 'framer-motion';
 import { Eyebrow } from '@/components/ui/Eyebrow';
+import type { CaseStudyListItem } from '@/lib/sanity/types';
 
-const ResultsThatSpeak = () => {
-  const projects = [
-    {
-      title: 'Golden Era Integra',
-      category: 'AUTOMOTIVE / ENTHUSIAST',
-      outcome: 'Editorial platform for a 1995 Acura Integra GS-R restoration — documented build journal, parts archive, and garage sale system, all running on Sanity CMS.',
-      image: '/g-e-i.png',
-      link: 'https://goldeneraintegra.com',
-    },
-    {
-      title: 'Eloraé Nails',
-      category: 'Beauty & Wellness',
-      outcome: 'Premium studio brand site—gallery, services, and bookings in one fast Next.js build.',
-      image: '/elorae-nails.png',
-      link: 'https://www.eloraenails.com',
-    },
-    {
-      title: 'Éclat Lounge',
-      category: 'CONCEPT PROJECT',
-      outcome: 'Concept build for a Las Vegas nightlife brand — reservations, events, and high-intent mobile traffic.',
-      image: '/eclat-lounge-lv.png',
-      link: 'https://eclatloungelv.com',
-    },
-  ];
+/** next/image requires an absolute URL; Sanity may return protocol-relative `//cdn...` */
+function absoluteImageUrl(url: string) {
+  const trimmed = url.trim()
+  return trimmed.startsWith('//') ? `https:${trimmed}` : trimmed
+}
+
+interface ResultsThatSpeakProps {
+  caseStudies: CaseStudyListItem[]
+}
+
+const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
 
   return (
     <section 
@@ -61,9 +49,15 @@ const ResultsThatSpeak = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 lg:gap-10">
-            {projects.map((item, index) => (
+            {caseStudies.map((item, index) => {
+              const imageUrl = item.heroImage?.asset?.url
+                ? absoluteImageUrl(item.heroImage.asset.url)
+                : undefined
+              const liveHref = item.siteUrl || '#'
+
+              return (
               <motion.article
-                key={item.title}
+                key={item._id}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
@@ -71,7 +65,7 @@ const ResultsThatSpeak = () => {
                 className="group flex flex-col"
               >
                 <a
-                  href={item.link}
+                  href={liveHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative mb-5 block overflow-hidden rounded-2xl aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.02]"
@@ -80,16 +74,18 @@ const ResultsThatSpeak = () => {
                     background: 'rgba(0, 0, 0, 0.04)',
                   }}
                 >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-contain object-top"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt={item.heroImage?.alt || item.title}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  ) : null}
                 </a>
                 <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-primary mb-1">
-                  {item.category}
+                  {item.industry}
                 </p>
                 <h3 
                   className="text-xl md:text-2xl font-bold mb-2 group-hover:text-cobalt-primary transition-colors text-foreground"
@@ -99,10 +95,10 @@ const ResultsThatSpeak = () => {
                 <p 
                   className="text-sm md:text-base leading-relaxed flex-1 mb-4 text-muted-foreground"
                 >
-                  {item.outcome}
+                  {item.summary}
                 </p>
                 <a
-                  href={item.link}
+                  href={liveHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="link-cobalt group inline-flex items-center gap-2 text-sm font-semibold"
@@ -112,7 +108,8 @@ const ResultsThatSpeak = () => {
                   <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </a>
               </motion.article>
-            ))}
+              )
+            })}
           </div>
 
           <div className="text-center mt-10 md:mt-12">

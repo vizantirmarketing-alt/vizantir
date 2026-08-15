@@ -1,7 +1,8 @@
 import { getPageSeo } from '@/sanity/lib/seo';
 import type { Metadata } from 'next';
 import { sanityFetch } from '@/lib/sanity/client';
-import { homepageFaqsQuery } from '@/lib/sanity/queries';
+import { caseStudiesBySlugsQuery, homepageFaqsQuery } from '@/lib/sanity/queries';
+import type { CaseStudyListItem } from '@/lib/sanity/types';
 import type { Faq } from '@/components/homepage/FAQSection';
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
@@ -56,8 +57,27 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const FEATURED_CASE_STUDY_SLUGS = [
+  'evolve-dance-center',
+  'pink-salt-salon',
+  'essence-of-watches',
+] as const
+
 export default async function Home() {
-  const faqs = await sanityFetch<Faq[]>(homepageFaqsQuery, {}, { tags: ['faq'] });
+  const [faqs, featuredCaseStudies] = await Promise.all([
+    sanityFetch<Faq[]>(homepageFaqsQuery, {}, { tags: ['faq'] }),
+    sanityFetch<CaseStudyListItem[]>(
+      caseStudiesBySlugsQuery,
+      { slugs: FEATURED_CASE_STUDY_SLUGS },
+      { tags: ['caseStudy'] },
+    ),
+  ])
+
+  const bySlug = new Map(featuredCaseStudies.map((study) => [study.slug, study]))
+  const orderedCaseStudies = FEATURED_CASE_STUDY_SLUGS.flatMap((slug) => {
+    const study = bySlug.get(slug)
+    return study ? [study] : []
+  })
 
   return (
     <>
@@ -71,7 +91,7 @@ export default async function Home() {
       <OperatorStatement />
       <WhyVizantir />
       <SectionDivider />
-      <ResultsThatSpeak />
+      <ResultsThatSpeak caseStudies={orderedCaseStudies} />
       <AnalytirSection />
       <FAQSection faqs={faqs} />
 

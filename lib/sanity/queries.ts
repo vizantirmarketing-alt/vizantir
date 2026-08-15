@@ -148,6 +148,31 @@ export const allCaseStudiesQuery = groq`
   }
 `
 
+export const caseStudiesBySlugsQuery = groq`
+  *[_type == "caseStudy" && slug.current in $slugs] {
+    _id,
+    _updatedAt,
+    title,
+    "slug": slug.current,
+    client,
+    industry,
+    summary,
+    heroImage{
+      alt,
+      asset->{
+        _id,
+        url
+      }
+    },
+    stack,
+    featured,
+    siteUrl,
+    challenge,
+    solution,
+    results
+  }
+`
+
 /** Proof Band verification for /landing-pages family. */
 export const landingPagesProofBandQuery = groq`
   *[_type == "caseStudy" && slug.current in [
