@@ -42,6 +42,7 @@ export default function AboutPage() {
       <JsonLd id="ld-about" data={aboutGraph} />
       <main className="min-h-screen bg-background text-foreground">
         <AmbientHero
+          compact
           eyebrow="Our History"
           headline="A studio for brands that have outgrown their website"
           subhead={aboutPageContent.hero.body}
@@ -55,55 +56,52 @@ export default function AboutPage() {
 
           return (
             <div key={section.id}>
-              <AboutSection section={section} />
-              {isBuildOnSection ? (
-                <section className="pt-2 pb-16 md:pb-20 -mt-px" style={{ background: 'var(--background)' }}>
-                  <div className="container mx-auto px-4">
-                    <div className="max-w-4xl mx-auto">
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
-                        {[
-                          { name: 'Next.js', slug: 'nextjs', file: 'nextjs.svg' },
-                          { name: 'Sanity', slug: 'sanity', file: 'sanity.svg' },
-                          { name: 'Vercel', slug: 'vercel', file: 'vercel.svg' },
-                          { name: 'Tailwind CSS', slug: 'tailwind', file: 'tailwind.svg' },
-                          { name: 'TypeScript', slug: 'typescript', file: 'typescript.svg' },
-                          { name: 'React', slug: 'react', file: 'react.svg' },
-                        ].map((tech) => (
-                          <Link
-                            key={tech.slug}
-                            href={`/technology/${tech.slug}`}
-                            className="group flex flex-col items-center justify-center gap-3 p-4 rounded-xl transition-all duration-300 hover:bg-white/50"
-                            aria-label={`Learn more about how Vizantir uses ${tech.name}`}
-                          >
-                            <div className="relative h-10 w-10 md:h-12 md:w-12 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
-                              <Image
-                                src={`/logos/${tech.file}`}
-                                alt={`${tech.name} logo`}
-                                fill
-                                className="object-contain"
-                                sizes="(max-width: 768px) 40px, 48px"
-                              />
-                            </div>
-                            <span className="text-xs md:text-sm font-medium text-meta group-hover:text-foreground transition-colors duration-300 text-center">
-                              {tech.name}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="mt-8 md:mt-10 text-center">
+              <AboutSection section={section}>
+                {isBuildOnSection ? (
+                  <div className="mt-10 md:mt-12">
+                    <div className="grid grid-cols-2 gap-6 md:grid-cols-3 md:gap-8 lg:grid-cols-6">
+                      {[
+                        { name: 'Next.js', slug: 'nextjs', file: 'nextjs.svg' },
+                        { name: 'Sanity', slug: 'sanity', file: 'sanity.svg' },
+                        { name: 'Vercel', slug: 'vercel', file: 'vercel.svg' },
+                        { name: 'Tailwind CSS', slug: 'tailwind', file: 'tailwind.svg' },
+                        { name: 'TypeScript', slug: 'typescript', file: 'typescript.svg' },
+                        { name: 'React', slug: 'react', file: 'react.svg' },
+                      ].map((tech) => (
                         <Link
-                          href="/technology"
-                          className="link-cobalt inline-flex items-center gap-2 font-medium text-sm md:text-base"
-                          style={{ color: 'var(--cobalt-accent)' }}
+                          key={tech.slug}
+                          href={`/technology/${tech.slug}`}
+                          className="group flex flex-col items-center justify-center gap-3 p-4 transition-transform duration-300 hover:scale-[1.04]"
+                          aria-label={`Learn more about how Vizantir uses ${tech.name}`}
                         >
-                          <span>See the full stack</span>
-                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          <div className="relative h-10 w-10 opacity-60 transition-opacity duration-300 group-hover:opacity-100 md:h-12 md:w-12">
+                            <Image
+                              src={`/logos/${tech.file}`}
+                              alt={`${tech.name} logo`}
+                              fill
+                              className="object-contain"
+                              sizes="(max-width: 768px) 40px, 48px"
+                            />
+                          </div>
+                          <span className="text-center text-xs font-medium text-meta transition-colors duration-300 group-hover:text-foreground md:text-sm">
+                            {tech.name}
+                          </span>
                         </Link>
-                      </div>
+                      ))}
+                    </div>
+                    <div className="mt-10 text-center">
+                      <Link
+                        href="/technology"
+                        className="link-cobalt inline-flex items-center gap-2 text-sm font-medium md:text-base"
+                        style={{ color: 'var(--cobalt-accent)' }}
+                      >
+                        <span>See the full stack</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </div>
                   </div>
-                </section>
-              ) : null}
+                ) : null}
+              </AboutSection>
               {shouldRenderPostSectionDivider ? <SectionDivider /> : null}
             </div>
           )

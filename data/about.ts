@@ -120,7 +120,7 @@ export const aboutPageContent: AboutPageContent = {
     },
   ],
   finalCta: {
-    href: '/are-we-a-fit',
-    label: 'Are We a Fit?',
+    href: '/contact',
+    label: 'Book a Strategy Call',
   },
 }
