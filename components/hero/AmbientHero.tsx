@@ -69,7 +69,7 @@ export function AmbientHero({
       <div
         className={
           compact
-            ? 'relative z-10 flex items-center px-6 pt-32 pb-16 md:min-h-[60vh] md:px-12 md:pt-24 md:pb-10 lg:px-20'
+            ? 'relative z-10 flex items-center px-6 pt-32 pb-12 md:min-h-[60vh] md:px-12 md:pt-24 md:pb-6 lg:px-20 lg:pb-4'
             : 'relative z-10 flex min-h-screen items-center px-6 md:px-12 lg:px-20'
         }
       >
@@ -77,7 +77,13 @@ export function AmbientHero({
           <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.24em] text-meta">
             {eyebrow}
           </p>
-          <h1 className="max-w-[17ch] text-[clamp(44px,6.4vw,92px)] font-bold leading-[0.95] tracking-[-0.035em] text-foreground">
+          <h1
+            className={
+              compact
+                ? 'max-w-[40ch] text-[clamp(40px,5.2vw,72px)] font-bold leading-[0.95] tracking-[-0.035em] text-foreground lg:text-[62px]'
+                : 'max-w-[17ch] text-[clamp(44px,6.4vw,92px)] font-bold leading-[0.95] tracking-[-0.035em] text-foreground'
+            }
+          >
             {headline}
           </h1>
           {subhead ? (

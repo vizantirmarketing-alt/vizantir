@@ -38,7 +38,7 @@ export function PricingCards({
       {heading ? (
         <h2
           className={cn(
-            'font-bold text-foreground',
+            'text-balance font-bold text-foreground',
             isStart
               ? 'mb-3 text-3xl leading-tight tracking-tight md:text-4xl'
               : 'mb-4 text-3xl md:text-4xl lg:text-5xl',
@@ -51,7 +51,7 @@ export function PricingCards({
       {intro ? (
         <p
           className={cn(
-            'text-muted-foreground',
+            'text-pretty text-muted-foreground',
             isStart
               ? 'mb-12 max-w-2xl text-base leading-relaxed'
               : 'mx-auto mb-16 max-w-2xl text-lg',
@@ -61,29 +61,35 @@ export function PricingCards({
         </p>
       ) : null}
 
-      <div className="mb-10 grid gap-6 md:grid-cols-3 lg:grid-cols-3">
+      <div className="mb-10 grid items-stretch gap-6 md:grid-cols-3 lg:grid-cols-3">
         {projectPricing.map((tier) => (
           <div
             key={tier.slug}
             className={cn(
-              'relative flex flex-col rounded-2xl border bg-muted p-8',
+              'relative flex h-full flex-col rounded-2xl border bg-muted p-8',
               tier.featured
                 ? 'border-cobalt-muted-border shadow-[0_0_40px_rgba(0,112,243,0.08)]'
                 : 'border-border',
             )}
           >
-            {tier.featured ? (
-              <span className="absolute -top-2 right-4 rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
+            <div className="mb-4 flex min-h-[22px] items-center justify-end">
+              <span
+                className={cn(
+                  'rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white',
+                  !tier.featured && 'invisible',
+                )}
+                aria-hidden={!tier.featured}
+              >
                 Popular
               </span>
-            ) : null}
-            <h3 className="mb-1 text-xl font-bold text-foreground">{tier.name}</h3>
+            </div>
+            <h3 className="mb-1 text-balance text-xl font-bold text-foreground">{tier.name}</h3>
             <p className="mb-1 text-3xl font-black text-cobalt-accent">{tier.price}</p>
-            <p className="mb-4 text-sm text-muted-foreground">{tier.timeline}</p>
-            <p className="mb-6 text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
+            <p className="mb-4 text-pretty text-sm text-muted-foreground">{tier.timeline}</p>
+            <p className="mb-6 text-pretty text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
             <ul className="mb-6 mt-2 space-y-3">
               {tier.includes.map((line) => (
-                <li key={line} className="flex items-start gap-2 text-sm text-foreground/80">
+                <li key={line} className="flex items-start gap-2 text-pretty text-sm text-foreground/80">
                   <CheckCircle2
                     className="mt-[2px] h-4 w-4 flex-shrink-0 text-cobalt-accent"
                     aria-hidden

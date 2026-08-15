@@ -85,27 +85,19 @@ function Card({
       className={cn(cardSurfaceVariants({ variant, featured }), className)}
       {...props}
     >
-      {showBadge ? <CardBadge>{badgeLabel}</CardBadge> : null}
+      <div className="mb-4 flex min-h-[22px] items-center justify-end">
+        <span
+          className={cn(
+            'rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white',
+            !showBadge && 'invisible',
+          )}
+          aria-hidden={!showBadge}
+        >
+          {badgeLabel}
+        </span>
+      </div>
       {children}
     </Component>
-  )
-}
-
-interface CardBadgeProps {
-  className?: string
-  children: React.ReactNode
-}
-
-function CardBadge({ className, children }: CardBadgeProps) {
-  return (
-    <span
-      className={cn(
-        'absolute -top-2 right-4 rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white',
-        className,
-      )}
-    >
-      {children}
-    </span>
   )
 }
 
@@ -116,7 +108,7 @@ interface CardHeaderProps {
 
 function CardHeader({ className, children }: CardHeaderProps) {
   return (
-    <div className={cn('mb-2 flex items-baseline justify-between gap-4', className)}>
+    <div className={cn('mb-2 flex flex-col gap-1', className)}>
       {children}
     </div>
   )
@@ -131,7 +123,7 @@ function CardTitle({ className, children }: CardTitleProps) {
   return (
     <h3
       className={cn(
-        'text-xl font-bold tracking-tight text-foreground md:text-[22px]',
+        'text-balance text-xl font-bold tracking-tight text-foreground md:text-[22px]',
         className,
       )}
     >
@@ -180,8 +172,8 @@ function CardDescription({
   return (
     <p
       className={cn(
-        size === 'sm' && 'text-sm leading-relaxed text-muted-foreground',
-        size === 'xs' && 'text-[13px] text-muted-foreground',
+        size === 'sm' && 'text-pretty text-sm leading-relaxed text-muted-foreground',
+        size === 'xs' && 'text-pretty text-[13px] text-muted-foreground',
         bordered && size === 'sm' && 'mb-6 border-b border-border pb-6',
         className,
       )}
@@ -198,7 +190,7 @@ interface CardTaglineProps {
 
 function CardTagline({ className, children }: CardTaglineProps) {
   return (
-    <p className={cn('mb-4 text-sm font-semibold text-cobalt-accent', className)}>
+    <p className={cn('mb-4 text-pretty text-sm font-semibold text-cobalt-accent', className)}>
       {children}
     </p>
   )
@@ -225,6 +217,10 @@ function CardPriceBlock({ compareAt, price, suffix, className }: CardPriceBlockP
   )
 }
 
+function CardDivider({ className }: { className?: string }) {
+  return <div className={cn('mb-6 border-t border-border', className)} aria-hidden />
+}
+
 interface CardCheckListProps {
   className?: string
   children: React.ReactNode
@@ -240,7 +236,7 @@ interface CardCheckItemProps {
 
 function CardCheckItem({ children }: CardCheckItemProps) {
   return (
-    <li className="flex items-start gap-2.5 text-sm text-foreground/80">
+    <li className="flex items-start gap-2.5 text-pretty text-sm text-foreground/80">
       <CheckCircle2
         className="mt-[2px] h-4 w-4 flex-shrink-0 text-cobalt-accent"
         aria-hidden
@@ -276,6 +272,7 @@ export {
   CardDescription,
   CardTagline,
   CardPriceBlock,
+  CardDivider,
   CardCheckList,
   CardCheckItem,
   CardBody,

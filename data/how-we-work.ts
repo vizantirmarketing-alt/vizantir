@@ -5,7 +5,7 @@ export const howWeWorkProcess = [
     number: '01',
     title: 'Discovery',
     description:
-      'We start by learning your business — not just your goals, but your market, your competitors, and where the real opportunity is. Before any design work begins we map what the site needs to do, who it needs to reach, and what will make someone choose you over the next option they find.',
+      'We start by learning your business, your market, your competitors, and where the real opportunity is. Before any design work begins we map what the site needs to do, who it needs to reach, and what will make someone choose you over the next option they find.',
   },
   {
     number: '02',
@@ -23,13 +23,13 @@ export const howWeWorkProcess = [
     number: '04',
     title: 'Build',
     description:
-      "Design, development, and check-ins at key milestones. You're never left wondering where things stand.",
+      'Design, development, and check-ins at key milestones. You see the work in progress at each milestone and give feedback before we move to the next one. You’re never left wondering where things stand.',
   },
   {
     number: '05',
     title: 'Launch',
     description:
-      "Final review, remaining balance, and we go live. You get a finished product — not 70% of one.",
+      'Final review, remaining balance, and we go live. You get a finished product, not 70% of one.',
   },
 ] as const
 

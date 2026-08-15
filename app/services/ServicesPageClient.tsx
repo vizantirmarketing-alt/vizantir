@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { ArrowRight, FileText } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -9,31 +9,29 @@ import { trackCTAClick } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import {
   Card,
-  CardBody,
   CardCheckItem,
   CardCheckList,
   CardDescription,
+  CardDivider,
   CardHeader,
   CardPrice,
-  CardPriceBlock,
   CardTagline,
   CardTitle,
 } from '@/components/ui/Card'
-import { PricingCards } from '@/components/pricing/PricingCards'
 import {
   blogPricing,
   carePricing,
   chatbotPricing,
   CHATBOT_SETUP_FEE,
-  formatCareClientPrice,
   landingPagePricing,
+  projectPricing,
   type BlogTier,
   type CareTier,
   type ChatbotTier,
   type LandingPageTier,
+  type PricingTier,
 } from '@/data/pricing'
 import { cn } from '@/lib/utils'
 
@@ -67,101 +65,153 @@ const CHATBOT_ADDON = {
     'A custom chatbot trained on your site, services, and FAQs. Answers visitors instantly in your brand voice — no scripts, no canned responses.',
 }
 
+const CARE_CLIENT_DISCOUNT = 'Care plan clients get 15% off.'
+
+const [essentialCare, websiteCare, growthCare] = carePricing
+const careFooterText = `After launch, care retainers start at ${essentialCare.price} for ${essentialCare.name}, ${websiteCare.price} for ${websiteCare.name}, and ${growthCare.price} for ${growthCare.name}.`
+
 function getBlogCadenceLabel(tier: BlogTier): string {
   if (tier.postsPerMonth === 0) return 'One-time engagement'
   return `${tier.postsPerMonth} posts per month`
 }
 
-function CarePricingCard({ tier }: { tier: CareTier }) {
+function SectionDivider() {
   return (
-    <Card variant="muted-30" featured={Boolean(tier.featured)}>
+    <div
+      className="h-px w-full"
+      style={{ background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243, 0.3), transparent)' }}
+      aria-hidden
+    />
+  )
+}
+
+function ServicePricingCard({
+  title,
+  price,
+  tagline,
+  description,
+  items = [],
+  featured = false,
+  as,
+  footer,
+}: {
+  title: string
+  price: ReactNode
+  tagline: string
+  description?: string
+  items?: readonly string[]
+  featured?: boolean
+  as?: 'div' | 'article'
+  footer?: ReactNode
+}) {
+  return (
+    <Card as={as} variant="muted-30" featured={featured}>
       <CardHeader>
-        <CardTitle>{tier.name}</CardTitle>
-        <CardPrice>
-          ${tier.priceMin.toLocaleString()}
-          <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
-        </CardPrice>
+        <CardTitle>{title}</CardTitle>
+        <CardPrice>{price}</CardPrice>
       </CardHeader>
 
-      <CardTagline>{tier.tagline}</CardTagline>
-      <CardDescription bordered>{tier.description}</CardDescription>
+      <CardTagline>{tagline}</CardTagline>
+      {description ? <CardDescription className="mb-4">{description}</CardDescription> : null}
+      <CardDivider />
 
-      <CardCheckList>
-        {tier.includes.map((line) => (
-          <CardCheckItem key={line}>{line}</CardCheckItem>
-        ))}
-      </CardCheckList>
+      {items.length > 0 ? (
+        <CardCheckList>
+          {items.map((line) => (
+            <CardCheckItem key={line}>{line}</CardCheckItem>
+          ))}
+        </CardCheckList>
+      ) : null}
+
+      {footer}
     </Card>
+  )
+}
+
+function CarePricingCard({ tier }: { tier: CareTier }) {
+  return (
+    <ServicePricingCard
+      title={tier.name}
+      price={
+        <>
+          ${tier.priceMin.toLocaleString()}
+          <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
+        </>
+      }
+      tagline={tier.tagline}
+      description={tier.description}
+      items={tier.includes}
+      featured={Boolean(tier.featured)}
+    />
   )
 }
 
 function LandingPagePricingCard({ tier }: { tier: LandingPageTier }) {
   return (
-    <Card variant="muted-30" featured={Boolean(tier.featured)}>
-      <CardHeader>
-        <CardTitle>{tier.name}</CardTitle>
-        <CardPrice>{tier.price}</CardPrice>
-      </CardHeader>
-
-      <CardTagline>{tier.tagline}</CardTagline>
-      <CardDescription bordered>{tier.description}</CardDescription>
-
-      <CardCheckList>
-        {tier.includes.map((line) => (
-          <CardCheckItem key={line}>{line}</CardCheckItem>
-        ))}
-      </CardCheckList>
-    </Card>
+    <ServicePricingCard
+      title={tier.name}
+      price={tier.price}
+      tagline={tier.tagline}
+      description={tier.description}
+      items={tier.includes}
+      featured={Boolean(tier.featured)}
+    />
   )
 }
 
 function BlogOptionCard({ tier }: { tier: BlogTier }) {
-  const isOneTime = tier.slug === 'blog-single'
-
   return (
-    <Card as="article" variant="muted-20" featured={tier.popular}>
-      <CardBody>
-        <CardTitle className="mb-1">{tier.name}</CardTitle>
-        <CardDescription size="xs" className="mb-6">
-          {getBlogCadenceLabel(tier)}
-        </CardDescription>
-
-        <CardPriceBlock
-          compareAt={tier.price}
-          price={formatCareClientPrice(tier.priceMin)}
-          suffix={isOneTime ? 'one-time' : '/mo'}
-        />
-
-        <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
-        <div className="text-xs font-semibold tracking-wide text-cobalt-accent">
-          15% off for care clients
-        </div>
-      </CardBody>
-    </Card>
+    <ServicePricingCard
+      as="article"
+      title={tier.name}
+      price={tier.price}
+      tagline={tier.tagline}
+      description={getBlogCadenceLabel(tier)}
+      items={tier.includes}
+      featured={Boolean(tier.popular)}
+    />
   )
 }
 
 function ChatbotOptionCard({ tier }: { tier: ChatbotTier }) {
   return (
-    <Card as="article" variant="muted-20" featured={tier.popular}>
-      <CardBody>
-        <CardTitle className="mb-1">{tier.name}</CardTitle>
-        <CardDescription size="xs" className="mb-6">
-          {tier.conversations}
-        </CardDescription>
+    <ServicePricingCard
+      as="article"
+      title={tier.name}
+      price={`$${tier.priceMin.toLocaleString()}/month`}
+      tagline={tier.tagline}
+      items={[tier.conversations]}
+      featured={Boolean(tier.popular)}
+    />
+  )
+}
 
-        <CardPriceBlock
-          compareAt={`$${tier.priceMin.toLocaleString()}/month`}
-          price={formatCareClientPrice(tier.priceMin)}
-          suffix="/mo"
-        />
-
-        <p className="mb-4 flex-1 text-[15px] leading-snug text-foreground/85">{tier.tagline}</p>
-        <div className="text-xs font-semibold tracking-wide text-cobalt-accent">
-          15% off for care clients
-        </div>
-      </CardBody>
-    </Card>
+function ProjectPricingCard({ tier }: { tier: PricingTier }) {
+  return (
+    <ServicePricingCard
+      title={tier.name}
+      price={tier.price}
+      tagline={tier.timeline}
+      description={tier.description}
+      items={tier.includes}
+      featured={tier.featured}
+      footer={
+        <Button
+          asChild
+          variant={tier.featured ? 'default' : 'cobaltOutline'}
+          className={
+            tier.featured
+              ? 'group w-full rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt'
+              : 'group w-full rounded-xl px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:[background:var(--cobalt-gradient)] hover:text-white hover:shadow-cobalt'
+          }
+        >
+          <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
+            Book a Strategy Call
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </Button>
+      }
+    />
   )
 }
 
@@ -267,7 +317,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
       {included.length > 0 ? (
         <ul className="m-0 list-none space-y-2 p-0">
           {included.map((item) => (
-            <li key={item} className="text-sm text-muted-foreground">
+            <li key={item} className="text-pretty text-sm text-muted-foreground">
               {item}
             </li>
           ))}
@@ -291,88 +341,115 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
   )
 }
 
+function SectionHeading({
+  eyebrow,
+  heading,
+  children,
+}: {
+  eyebrow?: string
+  heading: string
+  children?: ReactNode
+}) {
+  return (
+    <div className="mb-12 text-center">
+      {eyebrow ? (
+        <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-[0.25em] text-cobalt-accent">
+          {eyebrow}
+        </span>
+      ) : null}
+      <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+        {heading}
+      </h2>
+      {children}
+    </div>
+  )
+}
+
+function PricingSection({
+  children,
+  delay = 0,
+}: {
+  children: ReactNode
+  delay?: number
+}) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay }}
+      className="px-6 py-20 md:px-12 lg:px-20"
+    >
+      <div className="mx-auto max-w-5xl">{children}</div>
+    </motion.section>
+  )
+}
+
 function StandalonePricingSection() {
   return (
     <>
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0 }}
-        className="mt-20 md:mt-24"
-      >
-        <Eyebrow align="start">Project Pricing</Eyebrow>
-        <PricingCards
-          align="start"
-          heading="Fixed scope. Fixed price. No surprises."
-          intro="Three tiers built around how complex your site needs to be — not how much we think we can charge."
-          ctaHref="/contact"
-        />
-      </motion.section>
-
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="mt-16 border-t border-border pt-16 md:mt-20 md:pt-20"
-      >
-        <Eyebrow align="start">{CARE_REFRAME.eyebrow}</Eyebrow>
-        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
-          {CARE_REFRAME.heading}
-        </h2>
-        <div className="mb-12 max-w-2xl space-y-3.5 text-base leading-relaxed text-muted-foreground">
-          {CARE_REFRAME.body.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+      <SectionDivider />
+      <PricingSection delay={0}>
+        <SectionHeading eyebrow="Project Pricing" heading="Fixed scope. Fixed price. No surprises.">
+          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+            Three tiers built around how complex your site needs to be — not how much we think we can charge.
+          </p>
+        </SectionHeading>
+        <div className="grid items-stretch gap-6 md:grid-cols-3">
+          {projectPricing.map((tier) => (
+            <ProjectPricingCard key={tier.slug} tier={tier} />
           ))}
         </div>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-muted-foreground">
+          {careFooterText}
+        </p>
+      </PricingSection>
+
+      <SectionDivider />
+      <PricingSection delay={0.1}>
+        <SectionHeading eyebrow={CARE_REFRAME.eyebrow} heading={CARE_REFRAME.heading}>
+          <div className="mx-auto mt-3 max-w-2xl space-y-3.5 text-pretty text-base leading-relaxed text-muted-foreground">
+            {CARE_REFRAME.body.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+        </SectionHeading>
+        <div className="grid items-stretch gap-6 lg:grid-cols-3">
           {carePricing.map((tier) => (
             <CarePricingCard key={tier.slug} tier={tier} />
           ))}
         </div>
-      </motion.section>
+      </PricingSection>
 
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.15 }}
-        className="mt-16 border-t border-border pt-16 md:mt-20 md:pt-20"
-      >
-        <Eyebrow align="start">{LANDING_PAGE_PRICING.eyebrow}</Eyebrow>
-        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
-          {LANDING_PAGE_PRICING.heading}
-        </h2>
-        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          {LANDING_PAGE_PRICING.intro}
-        </p>
-        <div className="grid gap-6 lg:grid-cols-2">
+      <SectionDivider />
+      <PricingSection delay={0.15}>
+        <SectionHeading eyebrow={LANDING_PAGE_PRICING.eyebrow} heading={LANDING_PAGE_PRICING.heading}>
+          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+            {LANDING_PAGE_PRICING.intro}
+          </p>
+        </SectionHeading>
+        <div className="grid items-stretch gap-6 lg:grid-cols-2">
           {landingPagePricing.map((tier) => (
             <LandingPagePricingCard key={tier.slug} tier={tier} />
           ))}
         </div>
-      </motion.section>
+      </PricingSection>
 
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="mt-16 border-t border-border pt-16 md:mt-20 md:pt-20"
-      >
-        <Eyebrow align="start">{BLOG_ADDON.eyebrow}</Eyebrow>
-        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
-          {BLOG_ADDON.heading}
-        </h2>
-        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          {BLOG_ADDON.intro}
-        </p>
-        <div className="grid gap-6 lg:grid-cols-3">
+      <SectionDivider />
+      <PricingSection delay={0.2}>
+        <SectionHeading eyebrow={BLOG_ADDON.eyebrow} heading={BLOG_ADDON.heading}>
+          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+            {BLOG_ADDON.intro}
+          </p>
+        </SectionHeading>
+        <div className="grid items-stretch gap-6 lg:grid-cols-3">
           {blogPricing.map((tier) => (
             <BlogOptionCard key={tier.slug} tier={tier} />
           ))}
         </div>
+        <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
+          {CARE_CLIENT_DISCOUNT}
+        </p>
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-between">
           <p className="text-sm text-muted-foreground">Available as add-on to any Care plan.</p>
           <Link
@@ -384,28 +461,24 @@ function StandalonePricingSection() {
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-      </motion.section>
+      </PricingSection>
 
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="mt-16 md:mt-20 border-t border-border pt-16 md:pt-20"
-      >
-        <Eyebrow align="start">{CHATBOT_ADDON.eyebrow}</Eyebrow>
-        <h2 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
-          {CHATBOT_ADDON.heading}
-        </h2>
-        <p className="mb-12 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          {CHATBOT_ADDON.intro}
-        </p>
+      <SectionDivider />
+      <PricingSection delay={0.3}>
+        <SectionHeading eyebrow={CHATBOT_ADDON.eyebrow} heading={CHATBOT_ADDON.heading}>
+          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+            {CHATBOT_ADDON.intro}
+          </p>
+        </SectionHeading>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid items-stretch gap-6 lg:grid-cols-3">
           {chatbotPricing.map((tier) => (
             <ChatbotOptionCard key={tier.slug} tier={tier} />
           ))}
         </div>
+        <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
+          {CARE_CLIENT_DISCOUNT}
+        </p>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
@@ -420,7 +493,7 @@ function StandalonePricingSection() {
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-      </motion.section>
+      </PricingSection>
     </>
   )
 }
@@ -440,24 +513,23 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
     <div className="min-h-screen bg-background transition-colors duration-500">
       <ServicesHero />
 
+      <SectionDivider />
+
       <section
         id="services"
-        className="relative px-6 md:px-12 lg:px-20 py-20 md:py-24 bg-background transition-colors duration-500"
+        className="relative bg-background px-6 py-20 transition-colors duration-500 md:px-12 lg:px-20"
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="mx-auto max-w-5xl">
           <motion.div
-            className="mb-16 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground transition-colors duration-500">
-              Services
-            </h2>
+            <SectionHeading heading="Services" />
           </motion.div>
 
-          <div className="space-y-3">
+          <div className="divide-y divide-border">
             {services.map((service, index) => {
               const isOpen = openServiceId === service._id
               const Icon = iconForService(service.slug, index)
@@ -473,30 +545,25 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                   <button
                     type="button"
                     onClick={() => handleToggle(service._id)}
-                    className={cn(
-                      'group w-full text-left rounded-2xl p-6 md:p-8 border transition-all duration-500 bg-muted hover:bg-muted/80',
-                      isOpen ? 'border-cobalt-muted-border' : 'border-border',
-                    )}
+                    className="group w-full py-6 text-left transition-colors duration-500 md:py-7"
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-5">
+                      <div className="flex items-start gap-4">
                         <div
                           className={cn(
-                            'flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500',
-                            isOpen
-                              ? 'bg-cobalt-gradient text-white shadow-cobalt'
-                              : 'bg-background text-muted-foreground',
+                            'mt-0.5 flex-shrink-0 transition-colors duration-500',
+                            isOpen ? 'text-cobalt-accent' : 'text-muted-foreground',
                           )}
                         >
                           <Icon />
                         </div>
 
                         <div>
-                          <h3 className="text-lg md:text-xl font-semibold text-foreground transition-colors duration-500">
+                          <h3 className="text-balance text-lg font-semibold text-foreground transition-colors duration-500 md:text-xl">
                             {service.title}
                           </h3>
                           {service.description ? (
-                            <p className="mt-1 text-sm text-muted-foreground transition-colors duration-500">
+                            <p className="mt-1 text-pretty text-sm text-muted-foreground transition-colors duration-500">
                               {service.description}
                             </p>
                           ) : null}
@@ -519,7 +586,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                           transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="mt-6 border-t border-border pt-5 transition-colors duration-500">
+                          <div className="mt-6 pt-1 transition-colors duration-500">
                             <SanityServiceExpandedBody service={service} />
                           </div>
                         </motion.div>
@@ -530,11 +597,16 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
               )
             })}
           </div>
+        </div>
+      </section>
 
-          <StandalonePricingSection />
+      <StandalonePricingSection />
 
+      <SectionDivider />
+
+      <section className="px-6 py-20 md:px-12 md:py-24 lg:px-20">
+        <div className="mx-auto max-w-5xl text-center">
           <motion.div
-            className="mt-24 text-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -543,16 +615,13 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             <p className="mb-6 text-muted-foreground transition-colors duration-500">
               Ready to start your project?
             </p>
-            <Button
-              size="lg"
-              asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt group"
+            <Link
+              href="/contact"
+              onClick={() => trackCTAClick('get_started', 'services')}
+              className="bg-cobalt-gradient inline-flex items-center justify-center rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
             >
-              <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
-                Book a Strategy Call
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
+              Book a Strategy Call
+            </Link>
           </motion.div>
         </div>
       </section>

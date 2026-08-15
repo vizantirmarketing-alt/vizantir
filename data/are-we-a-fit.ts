@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { carePricing, landingPagePricing, projectPricing } from './pricing'
 
-const [essentialsProjectTier, , enterpriseProjectTier] = projectPricing
+const [essentialsProjectTier] = projectPricing
 const [essentialCareTier] = carePricing
 const campaignLandingPageTier = landingPagePricing.find(
   (tier) => tier.slug === 'campaign-landing-page',
@@ -94,43 +94,44 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
     id: 'ideal',
     heading: "You're likely a fit if...",
     bullets: [
-      'You run an established business in Las Vegas or nationwide — not a pre-launch idea or side project',
-      'Your current website is hurting your brand more than helping — and you already know it',
-      'You run an established business where presentation and trust affect revenue — beauty, wellness, creative studios, professional services, retail, luxury, or financial services',
-      'You want a custom website designed around your business — not a template with your logo pasted on it',
-      'You care about strategy, conversion, and search visibility — not just aesthetics',
-      `You're ready to invest ${essentialsProjectTier.price} or more in a custom website build`,
+      'Your current website is working against your brand, and you already know it',
+      'You run an established business with real revenue, not a pre-launch idea or a side project',
+      'How your business presents itself affects what you can charge and who says yes',
+      'You want a site built around how your business actually works, not a template with your logo on it',
+      "You expect the site to do a job, and you'll judge it on whether it did",
+      `You're ready to invest ${essentialsProjectTier.price} or more in a custom build`,
     ],
   },
   notIdealSection: {
     id: 'notIdeal',
     heading: "You're probably not a fit if...",
     bullets: [
-      "You're looking for the cheapest web design agency in Las Vegas",
-      'You want unlimited revisions, hourly billing, or "just buy more hours to finish"',
-      'You want to build the site yourself and hire someone to push buttons',
-      "You need full-service marketing — we build websites; we don't run your Google Ads or manage your social media",
-      'You want a plugin-heavy WordPress template, not a custom Next.js build',
+      "Price is your main filter and you're looking for the lowest number in Las Vegas",
+      'You want hourly billing, unlimited revisions, or open-ended scope',
+      'You want to make the design decisions and hire someone to execute them',
+      "You need marketing services. We build websites. We don't run your ads or manage your social",
+      'You want a WordPress site assembled from a template and plugins',
       'You need a full website live in two weeks',
     ],
   },
   budgetSection: {
     id: 'budget',
-    heading: "Let's talk web design pricing honestly.",
+    heading: 'What it costs.',
     paragraphs: [
-      `Custom website projects start at ${essentialsProjectTier.price} and scale to ${enterpriseProjectTier.price} depending on scope. That's not the cheapest option in the Las Vegas web design market, and it isn't meant to be.`,
+      `Custom website projects start at ${essentialsProjectTier.price} and scale past $60,000. What moves the number is scope: how many pages, how much custom functionality, whether we're building the content system or migrating one.`,
       {
-        before: 'We also build ',
-        link: { label: 'campaign landing pages', href: '/services/landing-pages' },
-        after: ` starting at ${campaignLandingPageFloor}, for businesses that need one page to do one job: a paid campaign, a launch, a single offer. After launch, care retainers start at ${essentialCareTier.price}.`,
+        before: '',
+        link: { label: 'Campaign landing pages', href: '/services/landing-pages' },
+        after: ` start at ${campaignLandingPageFloor}, for a business that needs one page to do one job. Ongoing maintenance is optional at $${essentialCareTier.priceMin.toLocaleString('en-US')} a month.`,
       },
-      'If budget is your primary concern, template platforms like Squarespace, Webflow, and Wix will serve you well. Vizantir is for businesses where the cost of a mediocre website — lost trust, lost leads, lost deals — is higher than the investment in a premium one.',
+      "If budget is the deciding factor, Squarespace and Wix are the right call. We're a fit when a weak website costs you more than a strong one does.",
+      "If we don't think a project at this level will pay for itself in your business, we'll say so on the call before you spend anything.",
     ],
   },
   closingSection: {
     id: 'closing',
     heading: 'Still unsure?',
-    body: "If you've read this page and you're still not sure whether Vizantir is the right web design partner for your business, that's exactly what the Strategy Call is for. It's a 30-minute conversation — no pitch deck, no pressure — where we'll tell you honestly whether our studio is the right fit for your project, or recommend someone better suited.",
+    body: "If you've read this page and you're still not sure whether Vizantir is right for your business, that's what the Strategy Call is for. Thirty minutes, no pitch deck. We'll tell you honestly whether we're the right studio for your project, or point you to someone better suited.",
   },
   closingCta: {
     label: 'Book a Strategy Call',
