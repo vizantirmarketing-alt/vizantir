@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, FileText } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import ServicesHero from './ServicesHero'
@@ -218,14 +218,38 @@ const CmsIcon = () => (
   </svg>
 )
 
-const SERVICE_ICONS = [StrategyIcon, DesignIcon, WebIcon, RefreshIcon, CmsIcon, CareIcon]
+const LandingIcon = () => <FileText className="h-6 w-6" strokeWidth={1.5} />
+
+const SERVICE_ICON_BY_SLUG: Record<string, typeof StrategyIcon> = {
+  'website-strategy': StrategyIcon,
+  'web-design': DesignIcon,
+  'web-development': WebIcon,
+  'landing-pages': LandingIcon,
+  'website-refreshes': RefreshIcon,
+  'cms-integrations': CmsIcon,
+  'website-care': CareIcon,
+}
+
+const SERVICE_ICON_FALLBACK = [
+  StrategyIcon,
+  DesignIcon,
+  WebIcon,
+  LandingIcon,
+  RefreshIcon,
+  CmsIcon,
+  CareIcon,
+]
+
+function iconForService(slug: string, index: number) {
+  return SERVICE_ICON_BY_SLUG[slug] ?? SERVICE_ICON_FALLBACK[index % SERVICE_ICON_FALLBACK.length]
+}
 
 function strategyCallLink() {
   return (
     <Link
       href="/contact"
       onClick={() => trackCTAClick('get_started', 'services')}
-      className="link-cobalt inline-flex items-center gap-2 mt-4 font-semibold text-cobalt-accent"
+      className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
     >
       Book a Strategy Call
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -239,7 +263,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
   const included = service.included?.filter(Boolean) ?? []
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       {included.length > 0 ? (
         <ul className="m-0 list-none space-y-2 p-0">
           {included.map((item) => (
@@ -249,18 +273,20 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
           ))}
         </ul>
       ) : null}
-      {service.slug ? (
-        <Link
-          href={`/services/${service.slug}`}
-          className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
-        >
-          Learn more
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </Link>
-      ) : null}
-      {strategyCallLink()}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
+        {service.slug ? (
+          <Link
+            href={`/services/${service.slug}`}
+            className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
+          >
+            Learn more
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        ) : null}
+        {strategyCallLink()}
+      </div>
     </div>
   )
 }
@@ -427,14 +453,14 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-foreground transition-colors duration-500">
-              What We Build
+              Services
             </h2>
           </motion.div>
 
           <div className="space-y-3">
             {services.map((service, index) => {
               const isOpen = openServiceId === service._id
-              const Icon = SERVICE_ICONS[index % SERVICE_ICONS.length]
+              const Icon = iconForService(service.slug, index)
 
               return (
                 <motion.div
@@ -493,7 +519,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                           transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="pt-8 mt-8 border-t border-border transition-colors duration-500">
+                          <div className="mt-6 border-t border-border pt-5 transition-colors duration-500">
                             <SanityServiceExpandedBody service={service} />
                           </div>
                         </motion.div>
