@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from 'framer-motion';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import type { CaseStudyListItem } from '@/lib/sanity/types';
@@ -53,7 +53,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
               const imageUrl = item.heroImage?.asset?.url
                 ? absoluteImageUrl(item.heroImage.asset.url)
                 : undefined
-              const liveHref = item.siteUrl || '#'
+              const caseStudyHref = `/case-studies/${item.slug}`
 
               return (
               <motion.article
@@ -64,10 +64,8 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
                 transition={{ duration: 0.5, delay: index * 0.08, ease: "easeOut" }}
                 className="group flex flex-col"
               >
-                <a
-                  href={liveHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={caseStudyHref}
                   className="relative mb-5 block overflow-hidden rounded-2xl aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.02]"
                   style={{
                     boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
@@ -83,7 +81,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   ) : null}
-                </a>
+                </Link>
                 <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-primary mb-1">
                   {item.industry}
                 </p>
@@ -97,16 +95,14 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
                 >
                   {item.summary}
                 </p>
-                <a
-                  href={liveHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={caseStudyHref}
                   className="link-cobalt group inline-flex items-center gap-2 text-sm font-semibold"
                   style={{ color: 'var(--cobalt-accent)' }}
                 >
-                  <span>View live site</span>
-                  <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </a>
+                  <span>Read case study</span>
+                  <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+                </Link>
               </motion.article>
               )
             })}
