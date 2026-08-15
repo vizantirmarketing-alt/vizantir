@@ -8,6 +8,21 @@ import { Check, X } from 'lucide-react'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { AmbientHero } from '@/components/hero/AmbientHero'
 
+function RecommendedBadge({ visible }: { visible: boolean }) {
+  return (
+    <div className="mb-4 flex min-h-[22px] items-center justify-end">
+      <span
+        className={`rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white ${
+          visible ? '' : 'invisible'
+        }`}
+        aria-hidden={!visible}
+      >
+        Recommended
+      </span>
+    </div>
+  )
+}
+
 export default function HowWeWorkPageClient() {
   // Colors matching Vizantir design system
   const colors = {
@@ -30,13 +45,9 @@ export default function HowWeWorkPageClient() {
     >
       <AmbientHero
         variant="helix"
+        compact
         eyebrow="How We Work"
-        headline={
-          <>
-            From first call to launch{' '}
-            <span className="text-muted-foreground">— no surprises.</span>
-          </>
-        }
+        headline="You know the price before we start."
         subhead="A clear process with defined scope, fixed pricing, and milestone check-ins. You know exactly what you're getting before we start."
       />
 
@@ -51,13 +62,13 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-16 text-center transition-colors duration-500"
+            className="text-2xl md:text-3xl font-bold mb-16 text-center text-balance transition-colors duration-500"
             style={{ color: colors.text }}
           >
             The Process
           </motion.h2>
 
-          <div className="space-y-8">
+          <div className="mx-auto w-fit max-w-full space-y-8">
             {howWeWorkProcess.map((step, index) => (
               <motion.div
                 key={step.number}
@@ -72,7 +83,7 @@ export default function HowWeWorkPageClient() {
                   className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center text-lg font-bold"
                   style={{
                     background: 'rgba(0, 112, 243,0.1)',
-                    color: colors.accent,
+                    color: '#0070F3',
                   }}
                 >
                   {step.number}
@@ -87,7 +98,7 @@ export default function HowWeWorkPageClient() {
                     {step.title}
                   </h3>
                   <p
-                    className="text-base leading-relaxed transition-colors duration-500"
+                    className="text-pretty text-base leading-relaxed transition-colors duration-500"
                     style={{ color: colors.textMuted }}
                   >
                     {step.description}
@@ -119,7 +130,7 @@ export default function HowWeWorkPageClient() {
               Comparison
             </span>
             <h2
-            className="text-2xl md:text-3xl font-bold transition-colors duration-500"
+            className="text-2xl md:text-3xl font-bold text-balance transition-colors duration-500"
             style={{ color: colors.text }}
             >
               Why Vizantir
@@ -127,19 +138,21 @@ export default function HowWeWorkPageClient() {
           </motion.div>
 
           {/* Comparison Cards */}
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid items-stretch md:grid-cols-3 gap-6">
             {/* Traditional Agencies */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="p-6 rounded-2xl border"
+              className="relative h-full overflow-hidden p-6 rounded-2xl border"
               style={{
                 background: colors.cardBg,
                 borderColor: colors.cardBorder,
               }}
             >
+              <RecommendedBadge visible={false} />
+
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
                 style={{
@@ -152,16 +165,16 @@ export default function HowWeWorkPageClient() {
               </div>
 
               <h3
-                className="text-lg font-bold mb-2 transition-colors duration-500"
+                className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 Traditional Agencies
               </h3>
 
-              <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
                   <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>Big teams, big overhead, big invoices</span>
+                  <span>Big teams, big overhead</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
@@ -184,12 +197,14 @@ export default function HowWeWorkPageClient() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="p-6 rounded-2xl border"
+              className="relative h-full overflow-hidden p-6 rounded-2xl border"
               style={{
                 background: colors.cardBg,
                 borderColor: colors.cardBorder,
               }}
             >
+              <RecommendedBadge visible={false} />
+
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
                 style={{
@@ -203,13 +218,13 @@ export default function HowWeWorkPageClient() {
               </div>
 
               <h3
-                className="text-lg font-bold mb-2 transition-colors duration-500"
+                className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 Hourly Dev Shops
               </h3>
 
-              <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
                   <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>You buy hours, not outcomes</span>
@@ -235,15 +250,13 @@ export default function HowWeWorkPageClient() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="p-6 rounded-2xl border relative"
+              className="relative h-full overflow-hidden p-6 rounded-2xl border"
               style={{
                 background: 'linear-gradient(135deg, rgba(0, 112, 243,0.1) 0%, rgba(0, 112, 243,0.02) 100%)',
                 borderColor: 'rgba(0, 112, 243,0.3)',
               }}
             >
-              <span className="absolute -top-2 right-4 rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
-                Recommended
-              </span>
+              <RecommendedBadge visible />
 
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
@@ -257,13 +270,13 @@ export default function HowWeWorkPageClient() {
               </div>
 
               <h3
-                className="text-lg font-bold mb-2 transition-colors duration-500"
+                className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
                 style={{ color: colors.text }}
               >
                 Vizantir
               </h3>
 
-              <ul className="space-y-2 text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 <li className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
                   <span>Fixed scope, fixed price</span>
@@ -290,11 +303,10 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-center mt-12 text-lg font-medium"
+            className="py-16 text-center text-xl font-medium md:py-20 md:text-2xl"
             style={{ color: colors.text }}
           >
-            "We don't sell hours.{' '}
-            <span className="transition-colors duration-500" style={{ color: colors.accent }}>We deliver finished products.</span>"
+            We don’t sell hours. We deliver finished products.
           </motion.p>
         </div>
       </section>
@@ -303,35 +315,36 @@ export default function HowWeWorkPageClient() {
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* What's Included Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
+      <section className="px-6 md:px-12 lg:px-20 pt-20 pb-10">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-12 text-center"
+            className="text-2xl md:text-3xl font-bold mb-12 text-center text-balance"
             style={{ color: colors.text }}
           >
             What to Expect
           </motion.h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid items-stretch gap-8 md:grid-cols-[1fr_auto_1fr] md:gap-0">
             {/* Included */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
+              className="md:pr-10 lg:pr-12"
             >
               <h3
-                className="text-xs tracking-[0.25em] uppercase font-medium mb-6 transition-colors duration-500"
+                className="text-xs tracking-[0.25em] uppercase font-medium mb-6 flex min-h-[2.5em] items-end transition-colors duration-500"
                 style={{ color: colors.accent }}
               >
                 Every Project Includes
               </h3>
 
-              <ul className="space-y-4 text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-4 text-pretty text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {[
                   'Defined scope before work begins',
                   'Milestone updates throughout',
@@ -347,24 +360,30 @@ export default function HowWeWorkPageClient() {
               </ul>
             </motion.div>
 
+            <div
+              className="hidden w-px self-stretch bg-black/[0.08] md:block"
+              aria-hidden
+            />
+
             {/* Not Included */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
+              className="self-stretch md:pl-10 lg:pl-12"
             >
               <h3
-                className="text-xs tracking-[0.25em] uppercase font-medium mb-6 transition-colors duration-500"
+                className="text-xs tracking-[0.25em] uppercase font-medium mb-6 flex min-h-[2.5em] items-end transition-colors duration-500"
                 style={{ color: colors.textSubtle }}
               >
                 Not Included (Unless Scoped)
               </h3>
 
-              <ul className="space-y-4 text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-4 text-pretty text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {[
                   'Unlimited revisions',
-                  'Ongoing maintenance',
+                  'Ongoing maintenance ($295/mo, optional)',
                   'Content writing',
                   'Stock photography',
                   'Hosting fees',
@@ -384,14 +403,14 @@ export default function HowWeWorkPageClient() {
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* FAQ Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
+      <section className="px-6 md:px-12 lg:px-20 pt-10 pb-20">
         <div className="max-w-3xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-12 text-center"
+            className="text-2xl md:text-3xl font-bold mb-12 text-center text-balance"
             style={{ color: colors.text }}
           >
             Questions
@@ -459,7 +478,7 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-6 transition-colors duration-500"
+            className="text-3xl md:text-4xl font-bold mb-6 text-balance transition-colors duration-500"
             style={{ color: colors.text }}
           >
             Ready to start?
@@ -484,18 +503,9 @@ export default function HowWeWorkPageClient() {
           >
             <Link
               href="/contact"
-              className="btn-dark inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-semibold group"
+              className="bg-cobalt-gradient inline-flex items-center justify-center rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
             >
-              <span>Get in Touch</span>
-              <svg
-                className="w-5 h-5 transition-transform group-hover:translate-x-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              Book a Strategy Call
             </Link>
           </motion.div>
         </div>
