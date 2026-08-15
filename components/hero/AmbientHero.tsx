@@ -9,6 +9,8 @@ export interface AmbientHeroProps {
   subhead?: string
   variant?: AmbientVariant
   children?: ReactNode
+  /** Shorter desktop hero (~60vh) so the following section peeks above the fold. Mobile stays padding-based. */
+  compact?: boolean
 }
 
 const AmbientHeroCanvas = lazy(() => import('./AmbientHeroCanvas'))
@@ -23,6 +25,7 @@ export function AmbientHero({
   subhead,
   variant = 'plane',
   children,
+  compact = false,
 }: AmbientHeroProps) {
   const [showCanvas, setShowCanvas] = useState(false)
 
@@ -37,7 +40,9 @@ export function AmbientHero({
   }, [])
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section
+      className={`relative overflow-hidden ${compact ? 'md:min-h-[60vh]' : 'min-h-screen'}`}
+    >
       <div
         className={`pointer-events-none absolute inset-0 z-0 ${
           variant === 'polygons'
@@ -61,7 +66,13 @@ export function AmbientHero({
         )}
       </div>
 
-      <div className="relative z-10 flex min-h-screen items-center px-6 md:px-12 lg:px-20">
+      <div
+        className={
+          compact
+            ? 'relative z-10 flex items-center px-6 pt-32 pb-16 md:min-h-[60vh] md:px-12 md:pt-24 md:pb-10 lg:px-20'
+            : 'relative z-10 flex min-h-screen items-center px-6 md:px-12 lg:px-20'
+        }
+      >
         <div className="mx-auto w-full max-w-5xl">
           <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.24em] text-meta">
             {eyebrow}

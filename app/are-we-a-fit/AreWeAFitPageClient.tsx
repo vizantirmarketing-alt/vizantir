@@ -20,12 +20,9 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
     bg: 'var(--background)',
     text: 'var(--foreground)',
     textMuted: '#6B7280',
-    accentSolid: 'var(--cobalt-primary)',
-    cardBg: '#FFFFFF',
-    cardBorder: 'rgba(0,0,0,0.08)',
     divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
-    budgetAsideBg: 'rgba(0, 112, 243,0.06)',
-    fitBulletIcon: 'rgba(0, 112, 243, 0.88)',
+    fitBulletIcon: '#0070F3',
+    notFitBulletIcon: '#C45C5C',
   }
 
   const sectionMotion = {
@@ -39,6 +36,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
     <main className="min-h-screen transition-colors duration-500" style={{ background: colors.bg }}>
       <AmbientHero
         variant="polygons"
+        compact
         eyebrow="Before You Book"
         headline="We're not for everyone."
         subhead="Honest criteria to help you decide before you book a Strategy Call."
@@ -46,82 +44,76 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
 
       <div className="h-px w-full" style={{ background: colors.divider }} />
 
-      {/* Ideal fit */}
-      <section className="px-6 py-14 md:px-12 md:py-16 lg:px-20" aria-labelledby="ideal-fit-heading">
-        <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionMotion}>
-            <h2
-              id="ideal-fit-heading"
-              className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
-              style={{ color: colors.text }}
-            >
-              {idealHeading}
-            </h2>
-            <ul className="space-y-4">
-              {content.idealSection.bullets?.map((item) => (
-                <li key={item} className="flex gap-3.5">
-                  <Check
-                    className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
-                    strokeWidth={1.15}
-                    style={{ color: colors.fitBulletIcon }}
-                    aria-hidden
-                  />
-                  <p className="text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
-                    {item}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        </div>
-      </section>
+      <div className="px-6 py-14 md:px-12 md:py-16 lg:px-20">
+        <div className="mx-auto grid max-w-6xl items-start gap-12 md:grid-cols-2 md:gap-x-16 md:gap-y-0 lg:gap-x-20">
+          {/* Ideal fit */}
+          <section aria-labelledby="ideal-fit-heading">
+            <motion.div {...sectionMotion}>
+              <h2
+                id="ideal-fit-heading"
+                className="mb-9 text-center text-balance text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+                style={{ color: colors.text }}
+              >
+                {idealHeading}
+              </h2>
+              <ul className="space-y-4">
+                {content.idealSection.bullets?.map((item) => (
+                  <li key={item} className="flex gap-3.5">
+                    <Check
+                      className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
+                      strokeWidth={1.15}
+                      style={{ color: colors.fitBulletIcon }}
+                      aria-hidden
+                    />
+                    <p
+                      className="text-pretty text-base leading-relaxed md:text-lg"
+                      style={{ color: colors.textMuted }}
+                    >
+                      {item}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </section>
 
-      {/* Not a fit — same surface treatment as ideal section */}
-      <section className="px-6 py-14 md:px-12 md:py-16 lg:px-20" aria-labelledby="not-fit-heading">
-        <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionMotion}>
-            <h2
-              id="not-fit-heading"
-              className="mb-9 text-center text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
-              style={{ color: colors.text }}
-            >
-              {notIdealHeading}
-            </h2>
-            <ul className="space-y-4">
-              {content.notIdealSection.bullets?.map((item) => (
-                <li key={item} className="flex gap-3.5">
-                  <X
-                    className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
-                    strokeWidth={1.15}
-                    style={{ color: colors.fitBulletIcon }}
-                    aria-hidden
-                  />
-                  <p className="text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
-                    {item}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+          {/* Not a fit */}
+          <section aria-labelledby="not-fit-heading">
+            <motion.div {...sectionMotion}>
+              <h2
+                id="not-fit-heading"
+                className="mb-9 text-center text-balance text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+                style={{ color: colors.text }}
+              >
+                {notIdealHeading}
+              </h2>
+              <ul className="space-y-4">
+                {content.notIdealSection.bullets?.map((item) => (
+                  <li key={item} className="flex gap-3.5">
+                    <X
+                      className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
+                      strokeWidth={1.15}
+                      style={{ color: colors.notFitBulletIcon }}
+                      aria-hidden
+                    />
+                    <p
+                      className="text-pretty text-base leading-relaxed md:text-lg"
+                      style={{ color: colors.textMuted }}
+                    >
+                      {item}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </section>
         </div>
-      </section>
+      </div>
 
-      {/* Budget — candid aside */}
+      {/* Budget */}
       <section className="px-6 py-14 md:px-12 md:py-16 lg:px-20" aria-labelledby="budget-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div
-            {...sectionMotion}
-            className="rounded-2xl border-l-4 py-6 pl-10 pr-5 md:pl-12 md:pr-9"
-            style={{
-              borderLeftColor: colors.accentSolid,
-              background: colors.budgetAsideBg,
-              borderTop: `1px solid ${colors.cardBorder}`,
-              borderRight: `1px solid ${colors.cardBorder}`,
-              borderBottom: `1px solid ${colors.cardBorder}`,
-              borderTopRightRadius: '1rem',
-              borderBottomRightRadius: '1rem',
-            }}
-          >
+          <motion.div {...sectionMotion}>
             <h2
               id="budget-heading"
               className="mb-5 text-2xl font-bold tracking-tight md:text-3xl"
@@ -169,16 +161,19 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
 
       {/* Closing CTA */}
       <section className="px-6 py-14 md:px-12 md:pb-20 lg:px-20" aria-labelledby="closing-heading">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto max-w-6xl text-center">
           <motion.div {...sectionMotion}>
             <h2
               id="closing-heading"
-              className="mb-6 text-2xl font-bold tracking-tight md:text-3xl"
+              className="mb-6 text-balance text-2xl font-bold tracking-tight md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.closingSection.heading}
             </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed md:text-lg" style={{ color: colors.textMuted }}>
+            <p
+              className="mx-auto mb-8 max-w-6xl text-base leading-relaxed md:text-lg"
+              style={{ color: colors.textMuted }}
+            >
               {content.closingSection.body}
             </p>
             <Link
