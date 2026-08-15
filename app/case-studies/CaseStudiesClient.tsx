@@ -20,7 +20,7 @@ interface CaseStudiesClientProps {
  * the placeholder treatment so the layout is exact.
  */
 const USE_SCREENSHOTS = false
-const ANALYTIR_SHOT = '/work/analytir.png'
+const ANALYTIR_SHOT = '/work/analytir.jpg'
 
 /** next/image requires an absolute URL; Sanity may return protocol-relative `//cdn...` */
 function absoluteImageUrl(url: string) {
