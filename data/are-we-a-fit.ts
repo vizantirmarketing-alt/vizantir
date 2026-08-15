@@ -89,7 +89,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
   heroEyebrow: 'Fit & expectations',
   heroHeading: 'Not every web design project is right for us. Not every studio is right for you.',
   heroSubheading:
-    "The honest answer to 'are we a fit for your business?' — so you can decide before you book a strategy call with Vizantir.",
+    "The honest answer to 'are we a fit for your business?' Decide before you book a strategy call with Vizantir.",
   idealSection: {
     id: 'ideal',
     heading: "You're likely a fit if...",

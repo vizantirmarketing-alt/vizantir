@@ -25,7 +25,7 @@ export const FAQ_ITEMS = [
     answer: redesignPricingFaqs.timeline,
   },
   {
-    question: "We're on WordPress / Wix / Squarespace / Webflow — how does the migration work?",
+    question: "We're on WordPress / Wix / Squarespace / Webflow. How does the migration work?",
     answer: redesignPricingFaqs.existingPlatform,
   },
 ] as const

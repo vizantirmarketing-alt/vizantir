@@ -110,7 +110,7 @@ export function LasVegasPageSchema() {
         '@type': 'WebPage',
         '@id': `${PAGE_URL}#webpage`,
         url: PAGE_URL,
-        name: 'Las Vegas Web Design Studio — Custom Next.js Websites',
+        name: 'Las Vegas Web Design Studio – Custom Next.js Websites',
         description:
           'Custom Next.js web design for Las Vegas, Henderson, Summerlin, and Paradise businesses. Fixed-scope projects from a local studio.',
         isPartOf: { '@id': `${SITE_URL}/#website` },
