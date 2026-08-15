@@ -84,7 +84,7 @@ export const aboutPageContent: AboutPageContent = {
       heading: 'New studio, not a first attempt',
       paragraphs: [
         'Vizantir is new. The experience behind it is not.',
-        'The studio was founded on more than ten years of hands-on web development — from custom WordPress themes to modern websites and applications built with Next.js, TypeScript, and Sanity.',
+        'The studio was founded on more than a decade of hands-on web development, from custom WordPress themes to modern websites and applications built with Next.js, TypeScript, and Sanity.',
         'That background matters. We know why WordPress became the default, and we know where it starts to fall short for brands that care about speed, security, and design.',
         "Most agencies only know one side of that story. We've built on both.",
       ],
@@ -102,7 +102,7 @@ export const aboutPageContent: AboutPageContent = {
       id: 'whoWeWorkWith',
       heading: 'Who we work with',
       paragraphs: [
-        'Vizantir works with premium brands and established businesses — beauty and wellness studios, creative spaces, professional services, and product companies that serve a discerning audience.',
+        'Vizantir works with established businesses whose customers judge them on how they present.',
         "The common thread isn't the industry. It's the standard.",
         'Our clients care about craft, notice when something is off, and want their website to hold up to the same scrutiny as the rest of their business.',
       ],
@@ -113,7 +113,7 @@ export const aboutPageContent: AboutPageContent = {
       paragraphs: [
         'Vizantir was founded by James Tram and runs as a focused studio, not a traditional agency.',
         'James spent 25 years operating businesses before moving into engineering, the last decade of it building for the web. That order matters. He looks at a website the way an owner does, as something that has to earn its cost, then builds it the way an engineer does.',
-        "The person you meet in a first call is the person doing the work. The design, the development, the decisions. There's no sales handoff and no account manager passing things along.",
+        'The person you meet in a first call is the person doing the work, from the design through the code. There’s no sales handoff and no account manager passing things along.',
         'He started the studio after years of watching good brands get handed generic websites by agencies that treat web as an add-on to a marketing retainer.',
         'Vizantir exists to do it differently, for clients who want it done well.',
       ],
