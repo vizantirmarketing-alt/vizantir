@@ -91,13 +91,13 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="mt-10 aspect-[16/10] overflow-hidden rounded-2xl border"
+              className="mt-10 overflow-hidden rounded-2xl border"
               style={{ borderColor: colors.cardBorder, background: colors.cardBg }}
             >
               <img
                 src={caseStudy.heroImage.asset.url}
                 alt={caseStudy.heroImage.alt || caseStudy.title}
-                className="h-full w-full object-cover object-top"
+                className="h-auto w-full"
               />
             </motion.div>
           ) : null}
