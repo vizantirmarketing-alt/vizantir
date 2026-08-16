@@ -6,51 +6,6 @@ import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schem
 import type { ServiceListItem, SiteSettings } from '@/lib/sanity/types'
 import ServicesPageClient from './ServicesPageClient'
 
-const DROPPED_SERVICE_SLUGS = new Set(['nextjs-development', 'sanity-cms'])
-
-const SERVICE_MERGES: {
-  keepSlug: string
-  dropSlug: string
-  title?: string
-}[] = [
-  { keepSlug: 'web-development', dropSlug: 'nextjs-development' },
-  { keepSlug: 'cms-integrations', dropSlug: 'sanity-cms', title: 'CMS Integration' },
-]
-
-function pickMoreCompleteText(primary?: string, secondary?: string): string | undefined {
-  const left = primary?.trim() ?? ''
-  const right = secondary?.trim() ?? ''
-  if (!left && !right) return undefined
-  return right.length > left.length ? right : left
-}
-
-function pickMoreCompleteList(primary?: string[], secondary?: string[]): string[] | undefined {
-  const left = primary?.filter(Boolean) ?? []
-  const right = secondary?.filter(Boolean) ?? []
-  if (left.length === 0 && right.length === 0) return primary
-  return right.length > left.length ? right : left
-}
-
-/** Collapse duplicate Sanity services for the /services accordion. Order is unchanged. */
-function mergeDuplicateServices(services: ServiceListItem[]): ServiceListItem[] {
-  const bySlug = new Map(services.map((service) => [service.slug, service]))
-
-  return services
-    .filter((service) => !DROPPED_SERVICE_SLUGS.has(service.slug))
-    .map((service) => {
-      const pair = SERVICE_MERGES.find((merge) => merge.keepSlug === service.slug)
-      if (!pair) return service
-
-      const dropped = bySlug.get(pair.dropSlug)
-      return {
-        ...service,
-        title: pair.title ?? service.title,
-        description: pickMoreCompleteText(service.description, dropped?.description),
-        included: pickMoreCompleteList(service.included, dropped?.included),
-      }
-    })
-}
-
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
 
@@ -77,7 +32,7 @@ export default async function ServicesPage() {
   ])
 
   // Order matches `allServicesQuery` only (GROQ `order(...)`). No sorting in React.
-  const list = mergeDuplicateServices(services ?? [])
+  const list = services ?? []
 
   if (!settings) {
     return <ServicesPageClient services={list} />
