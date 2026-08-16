@@ -221,7 +221,7 @@ export default function WebsiteRedesignLasVegasClient() {
   return (
     <main className="bg-background text-foreground transition-colors duration-500">
       {/* 1 — Hero */}
-      <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
         {/* Atmosphere image slot — before/after redesign visual or neutral local imagery to be added in follow-up */}
         <div
           className="pointer-events-none absolute inset-0"

@@ -26,7 +26,7 @@ export function LandingPagesHero({
   trackingLocation,
 }: LandingPagesHeroProps) {
   return (
-    <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+    <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
       <div className="pointer-events-none absolute inset-0" aria-hidden data-atmosphere-slot />
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"

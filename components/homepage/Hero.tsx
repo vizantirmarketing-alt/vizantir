@@ -59,7 +59,7 @@ const Hero = () => {
 
   return (
     <section
-      className="hero-section relative min-h-screen short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
+      className="hero-section relative min-h-[100svh] short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
       style={{ 
         background: 'var(--background)',
       }}
@@ -143,7 +143,7 @@ const Hero = () => {
       />
 
       <div 
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-screen short-landscape:min-h-0 py-16 lg:py-16 short-landscape:py-10"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-[100svh] short-landscape:min-h-0 py-16 lg:py-16 short-landscape:py-10"
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}

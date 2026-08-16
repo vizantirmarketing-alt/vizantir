@@ -41,7 +41,7 @@ export function AmbientHero({
 
   return (
     <section
-      className={`relative overflow-hidden ${compact ? 'md:min-h-[60vh]' : 'min-h-screen'}`}
+      className={`relative overflow-hidden ${compact ? 'md:min-h-[60svh]' : 'min-h-[100svh]'}`}
     >
       <div
         className={`pointer-events-none absolute inset-0 z-0 ${
@@ -69,8 +69,8 @@ export function AmbientHero({
       <div
         className={
           compact
-            ? 'relative z-10 flex items-center px-6 pt-32 pb-12 md:min-h-[60vh] md:px-12 md:pt-24 md:pb-6 lg:px-20 lg:pb-4'
-            : 'relative z-10 flex min-h-screen items-center px-6 md:px-12 lg:px-20'
+            ? 'relative z-10 flex items-center px-6 pt-32 pb-12 md:min-h-[60svh] md:px-12 md:pt-24 md:pb-6 lg:px-20 lg:pb-4'
+            : 'relative z-10 flex min-h-[100svh] items-center px-6 md:px-12 lg:px-20'
         }
       >
         <div className="mx-auto w-full max-w-5xl">
