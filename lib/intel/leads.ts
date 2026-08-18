@@ -211,10 +211,20 @@ function asIsoTimestamp(value: unknown): string | null {
 }
 
 function asNonNegativeInt(value: unknown): number | null {
-  if (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0) {
-    return value
+  if (typeof value === 'bigint') {
+    if (value < BigInt(0) || value > BigInt(Number.MAX_SAFE_INTEGER)) {
+      return null
+    }
+    return Number(value)
   }
-  if (typeof value === 'string' && /^(0|[1-9]\d*)$/.test(value)) {
+  if (typeof value === 'number' && Number.isFinite(value) && value >= 0) {
+    const rounded = Math.round(value)
+    if (Number.isSafeInteger(rounded) && Math.abs(value - rounded) < 1e-9) {
+      return rounded
+    }
+    return null
+  }
+  if (typeof value === 'string' && /^(0|[1-9]\d*)(\.0+)?$/.test(value)) {
     const parsed = Number(value)
     if (Number.isSafeInteger(parsed)) {
       return parsed

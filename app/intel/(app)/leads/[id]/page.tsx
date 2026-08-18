@@ -7,6 +7,7 @@ import { LeadPipelineForms } from '@/app/intel/_components/LeadPipelineForms'
 import { LeadStatusBadge } from '@/app/intel/_components/LeadStatusBadge'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import {
+  centsToDollarInput,
   formatChannelLabel,
   formatFullTimestamp,
   formatStatusLabel,
@@ -95,6 +96,7 @@ export default async function IntelLeadDetailPage({
           leadId={lead.id}
           status={lead.status}
           estimatedValueCents={lead.estimated_value_cents}
+          estimatedValueDollars={centsToDollarInput(lead.estimated_value_cents)}
           notes={lead.notes}
         />
       </section>
@@ -306,15 +308,8 @@ function HistorySection({ history }: { history: LeadStatusHistoryRow[] }) {
                   ? `${formatStatusLabel(entry.previous_status)} → ${formatStatusLabel(entry.new_status)}`
                   : `Set to ${formatStatusLabel(entry.new_status)}`}
               </p>
-              <p className="mt-1 text-sm text-meta">
-                {entry.changed_by ? (
-                  <>
-                    {entry.changed_by}
-                    <span aria-hidden className="px-2">
-                      ·
-                    </span>
-                  </>
-                ) : null}
+              <p className="mt-1 text-sm text-body">
+                {entry.changed_by ? `${entry.changed_by} · ` : null}
                 <time dateTime={entry.changed_at}>
                   {formatFullTimestamp(entry.changed_at)}
                 </time>

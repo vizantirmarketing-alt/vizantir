@@ -24,6 +24,7 @@ type LeadPipelineFormsProps = {
   leadId: string
   status: LeadStatus
   estimatedValueCents: number | null
+  estimatedValueDollars: string
   notes: string | null
 }
 
@@ -43,12 +44,18 @@ export function LeadPipelineForms({
   leadId,
   status,
   estimatedValueCents,
+  estimatedValueDollars,
   notes,
 }: LeadPipelineFormsProps) {
   return (
     <div className="mt-8 space-y-10">
       <StatusForm leadId={leadId} currentStatus={status} />
-      <ValueForm leadId={leadId} estimatedValueCents={estimatedValueCents} />
+      <ValueForm
+        key={estimatedValueDollars || 'empty'}
+        leadId={leadId}
+        estimatedValueCents={estimatedValueCents}
+        estimatedValueDollars={estimatedValueDollars}
+      />
       <NotesForm leadId={leadId} notes={notes} />
     </div>
   )
@@ -137,11 +144,17 @@ function StatusForm({
 function ValueForm({
   leadId,
   estimatedValueCents,
+  estimatedValueDollars,
 }: {
   leadId: string
   estimatedValueCents: number | null
+  estimatedValueDollars: string
 }) {
-  const [value, setValue] = useState(centsToDollarInput(estimatedValueCents))
+  const [value, setValue] = useState(
+    estimatedValueDollars.length > 0
+      ? estimatedValueDollars
+      : centsToDollarInput(estimatedValueCents),
+  )
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 

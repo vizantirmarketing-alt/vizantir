@@ -254,7 +254,7 @@ export function leadDetailHref(
 }
 
 export function centsToDollarInput(cents: number | null): string {
-  if (cents === null) {
+  if (cents === null || typeof cents !== 'number' || !Number.isFinite(cents)) {
     return ''
   }
   const dollars = cents / 100
