@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {
   formatChannelLabel,
   formatSubmittedAt,
+  leadDetailHref,
   leadsListHref,
   type LeadListRow,
   type LeadsListParams,
@@ -14,6 +15,7 @@ import { LeadStatusBadge } from '@/app/intel/_components/LeadStatusBadge'
 type LeadsListProps = {
   rows: LeadListRow[]
   nowMs: number
+  listParams: LeadsListParams
 }
 
 function SubmittedCell({ iso, nowMs }: { iso: string; nowMs: number }) {
@@ -24,7 +26,7 @@ function SubmittedCell({ iso, nowMs }: { iso: string; nowMs: number }) {
   )
 }
 
-export function LeadsList({ rows, nowMs }: LeadsListProps) {
+export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
   return (
     <div className="mt-12">
       <ul className="divide-y divide-black/8 lg:hidden">
@@ -32,7 +34,7 @@ export function LeadsList({ rows, nowMs }: LeadsListProps) {
           <li key={row.id} className="py-6">
             <div className="flex items-start justify-between gap-4">
               <Link
-                href={`/intel/leads/${row.id}`}
+                href={leadDetailHref(row.id, listParams)}
                 className="text-base font-medium text-foreground transition-colors hover:text-cobalt-primary"
               >
                 {row.name}
@@ -91,7 +93,7 @@ export function LeadsList({ rows, nowMs }: LeadsListProps) {
                 </td>
                 <td className="max-w-[12rem] py-4 pr-4">
                   <Link
-                    href={`/intel/leads/${row.id}`}
+                    href={leadDetailHref(row.id, listParams)}
                     className="font-medium text-foreground transition-colors hover:text-cobalt-primary"
                   >
                     {row.name}

@@ -110,8 +110,26 @@ function firstSearchParam(
   return value
 }
 
-function isLeadStatus(value: string): value is LeadStatus {
+export function isLeadStatus(value: string): value is LeadStatus {
   return LEAD_STATUSES.some((status) => status === value)
+}
+
+export function isNotifyStatus(value: string): value is NotifyStatus {
+  return NOTIFY_STATUSES.some((status) => status === value)
+}
+
+export function formatStatusLabel(status: string): string {
+  if (isLeadStatus(status)) {
+    return LEAD_STATUS_LABELS[status]
+  }
+  return status
+}
+
+const LEAD_ID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+export function isLeadId(value: string): boolean {
+  return LEAD_ID_RE.test(value)
 }
 
 function isLeadChannel(value: string): value is LeadChannel {
@@ -175,6 +193,30 @@ export function leadsListHref(params: Partial<LeadsListParams>): string {
   return query.length > 0 ? `/intel/leads?${query}` : '/intel/leads'
 }
 
+export function leadDetailHref(
+  id: string,
+  params?: Partial<LeadsListParams>,
+): string {
+  const path = `/intel/leads/${id}`
+  if (!params) {
+    return path
+  }
+  const listHref = leadsListHref(params)
+  const queryIndex = listHref.indexOf('?')
+  if (queryIndex === -1) {
+    return path
+  }
+  return `${path}${listHref.slice(queryIndex)}`
+}
+
+export function centsToDollarInput(cents: number | null): string {
+  if (cents === null) {
+    return ''
+  }
+  const dollars = cents / 100
+  return Number.isInteger(dollars) ? String(dollars) : dollars.toFixed(2)
+}
+
 export function formatChannelLabel(channel: string | null): string {
   if (channel === null || channel.length === 0) {
     return '—'
@@ -188,6 +230,23 @@ export function formatChannelLabel(channel: string | null): string {
 }
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000
+
+export function formatFullTimestamp(iso: string): string {
+  const then = Date.parse(iso)
+  if (Number.isNaN(then)) {
+    return '—'
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short',
+  }).format(new Date(then))
+}
 
 export function formatSubmittedAt(iso: string, nowMs: number): string {
   const then = Date.parse(iso)

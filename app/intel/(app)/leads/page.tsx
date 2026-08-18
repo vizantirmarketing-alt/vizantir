@@ -69,7 +69,7 @@ export default async function IntelLeadsPage({ searchParams }: LeadsPageProps) {
     <div className="max-w-5xl">
       <LeadsHeader />
       <LeadsFilters params={params} />
-      <LeadsList rows={result.rows} nowMs={result.nowMs} />
+      <LeadsList rows={result.rows} nowMs={result.nowMs} listParams={params} />
       <LeadsPagination
         params={params}
         page={result.page}
