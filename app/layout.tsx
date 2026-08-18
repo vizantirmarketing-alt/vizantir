@@ -6,17 +6,7 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import type { SiteSettings } from '@/lib/sanity/types'
 
-import Navbar from '@/components/navbar/Navbar'
-
-import Footer from '@/components/footer/Footer'
-
-import SmoothScroll from '@/components/SmoothScroll'
-
-import ScrollProgress from '@/components/ScrollProgress'
-
-import { ScrollToTop } from '@/components/ScrollToTop'
-
-import { VizantirChat } from '@/components/chat/VizantirChat'
+import { SiteChrome } from '@/components/SiteChrome'
 
 import { Analytics } from '@vercel/analytics/next'
 
@@ -279,14 +269,7 @@ export default async function RootLayout({
       <body>
         <BusinessJsonLd />
         <WebSiteJsonLd />
-        <SmoothScroll>
-          <ScrollToTop />
-          <ScrollProgress />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </SmoothScroll>
-        <VizantirChat />
+        <SiteChrome>{children}</SiteChrome>
         <Analytics />
         <GoogleAnalytics />
         <ClarityScript />
