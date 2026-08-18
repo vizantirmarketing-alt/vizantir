@@ -20,6 +20,10 @@ import { VizantirChat } from '@/components/chat/VizantirChat'
 
 import { Analytics } from '@vercel/analytics/next'
 
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
+
+import { ClarityScript } from '@/components/analytics/ClarityScript'
+
 import './globals.css'
 
 // Load Satoshi font family
@@ -282,6 +286,8 @@ export default async function RootLayout({
         </SmoothScroll>
         <VizantirChat />
         <Analytics />
+        <GoogleAnalytics />
+        <ClarityScript />
       </body>
     </html>
   )
