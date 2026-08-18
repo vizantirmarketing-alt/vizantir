@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/clarity-sync",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/gsc-sync",
+      "schedule": "30 9 * * *"
     }
   ]
 }

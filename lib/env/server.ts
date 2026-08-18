@@ -6,6 +6,8 @@ const serverEnvSchema = z.object({
     .regex(/^\d+$/)
     .optional(),
   GSC_SITE_URL: z.string().url().optional(),
+  /** Base64-encoded service account JSON. Scope: webmasters.readonly */
+  GSC_SERVICE_ACCOUNT_KEY: z.string().min(1).optional(),
   CLARITY_API_TOKEN: z.string().min(1).optional(),
   /** Comma-separated Intel allowlist. Documented value: vizantirmarketing@gmail.com */
   INTEL_ALLOWED_EMAILS: z.string().min(1).optional(),
@@ -14,6 +16,7 @@ const serverEnvSchema = z.object({
 export const serverEnv = serverEnvSchema.parse({
   GA4_PROPERTY_ID: process.env.GA4_PROPERTY_ID,
   GSC_SITE_URL: process.env.GSC_SITE_URL,
+  GSC_SERVICE_ACCOUNT_KEY: process.env.GSC_SERVICE_ACCOUNT_KEY,
   CLARITY_API_TOKEN: process.env.CLARITY_API_TOKEN,
   INTEL_ALLOWED_EMAILS: process.env.INTEL_ALLOWED_EMAILS,
 })
