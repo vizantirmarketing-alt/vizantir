@@ -71,34 +71,114 @@ function rowLineBlock(label: string, value: string): string {
   `;
 }
 
+type NotifyStatus = 'sent' | 'failed' | 'not_configured';
+
+type NotifyOutcome = {
+  notify_status: NotifyStatus;
+  notified_at: string | null;
+  notify_error: string | null;
+};
+
+function readInsertedId(value: unknown): string | null {
+  if (typeof value !== 'object' || value === null || !('id' in value)) {
+    return null;
+  }
+  const id = value.id;
+  return typeof id === 'string' && id.length > 0 ? id : null;
+}
+
+function truncateNotifyError(message: string): string {
+  return message.length > 500 ? message.slice(0, 500) : message;
+}
+
+function notifyErrorFromUnknown(err: unknown, row: ContactSubmissionRow): string {
+  if (err instanceof Error && err.message.trim().length > 0) {
+    return sanitizeNotifyError(err.message, row);
+  }
+  if (typeof err === 'string' && err.trim().length > 0) {
+    return sanitizeNotifyError(err, row);
+  }
+  return 'Notification send failed';
+}
+
+function sanitizeNotifyError(message: string, row: ContactSubmissionRow): string {
+  let out = message.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted]');
+  const pii = [row.email, row.name, row.phone, row.company, row.message];
+  for (const value of pii) {
+    const trimmed = value?.trim();
+    if (!trimmed || trimmed.length < 3) {
+      continue;
+    }
+    out = out.split(trimmed).join('[redacted]');
+  }
+  return truncateNotifyError(out);
+}
+
+async function recordNotifyOutcome(
+  supabase: ReturnType<typeof createSupabaseServiceRole>,
+  id: string | null,
+  outcome: NotifyOutcome
+): Promise<void> {
+  if (!id) {
+    return;
+  }
+  try {
+    const { error } = await supabase
+      .from('contact_submissions')
+      .update({
+        notify_status: outcome.notify_status,
+        notified_at: outcome.notified_at,
+        notify_error: outcome.notify_error,
+      })
+      .eq('id', id);
+    if (error) {
+      console.error('contact_submissions notify status update failed:', error);
+    }
+  } catch {
+    // Recording notify status must never break a saved submission.
+  }
+}
+
 export async function submitContactForm(row: ContactSubmissionRow): Promise<void> {
   const supabase = createSupabaseServiceRole();
 
-  const { error } = await supabase.from('contact_submissions').insert({
-    name: row.name,
-    email: row.email,
-    phone: row.phone,
-    company: row.company,
-    service: row.service,
-    budget: row.budget,
-    message: row.message,
-    ip_hash: row.ipHash,
-  });
+  const { data, error } = await supabase
+    .from('contact_submissions')
+    .insert({
+      name: row.name,
+      email: row.email,
+      phone: row.phone,
+      company: row.company,
+      service: row.service,
+      budget: row.budget,
+      message: row.message,
+      ip_hash: row.ipHash,
+    })
+    .select('id')
+    .single();
 
   if (error) {
     console.error('contact_submissions insert failed:', error);
     throw new Error('Database insert failed');
   }
 
+  const submissionId = readInsertedId(data);
   const submittedAtIso = new Date().toISOString();
   const to = process.env.CONTACT_NOTIFICATION_EMAIL;
   const from = process.env.RESEND_FROM_EMAIL;
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!to || !from || !apiKey) {
-    console.error(
-      'Resend / notification env missing (CONTACT_NOTIFICATION_EMAIL, RESEND_FROM_EMAIL, RESEND_API_KEY)'
-    );
+    const missing: string[] = [];
+    if (!to) missing.push('CONTACT_NOTIFICATION_EMAIL');
+    if (!from) missing.push('RESEND_FROM_EMAIL');
+    if (!apiKey) missing.push('RESEND_API_KEY');
+    console.error(`Resend / notification env missing (${missing.join(', ')})`);
+    await recordNotifyOutcome(supabase, submissionId, {
+      notify_status: 'not_configured',
+      notified_at: null,
+      notify_error: `Missing env: ${missing.join(', ')}`,
+    });
     return;
   }
 
@@ -106,7 +186,7 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
   const subject = `New contact: ${row.service} – ${row.name}`;
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from,
       to,
       replyTo: row.email,
@@ -126,7 +206,31 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
         `Submitted at: ${submittedAtIso}`,
       ].join('\n'),
     });
+
+    if (result.error) {
+      console.error('Resend send failed:', result.error.name);
+      await recordNotifyOutcome(supabase, submissionId, {
+        notify_status: 'failed',
+        notified_at: null,
+        notify_error: sanitizeNotifyError(
+          `${result.error.name}: ${result.error.message}`,
+          row
+        ),
+      });
+      return;
+    }
+
+    await recordNotifyOutcome(supabase, submissionId, {
+      notify_status: 'sent',
+      notified_at: new Date().toISOString(),
+      notify_error: null,
+    });
   } catch (err) {
-    console.error('Resend send failed:', err);
+    console.error('Resend send failed');
+    await recordNotifyOutcome(supabase, submissionId, {
+      notify_status: 'failed',
+      notified_at: null,
+      notify_error: notifyErrorFromUnknown(err, row),
+    });
   }
 }
