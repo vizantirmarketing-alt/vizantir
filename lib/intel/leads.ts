@@ -2,7 +2,9 @@ import 'server-only'
 
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 import {
+  LEADS_EXPORT_ROW_CAP,
   LEADS_PAGE_SIZE,
+  centsToDollarInput,
   isLeadStatus,
   isNotifyStatus,
   leadsFiltersActive,
@@ -63,6 +65,32 @@ export type FetchLeadsResult =
     }
   | { ok: false }
 
+export type LeadExportRecord = {
+  submitted_at: string
+  name: string
+  email: string
+  phone: string | null
+  company: string | null
+  service: string
+  budget: string | null
+  message: string
+  status: LeadStatus
+  estimated_value_dollars: string
+  notes: string | null
+  landing_page: string | null
+  referrer: string | null
+  utm_source: string | null
+  utm_medium: string | null
+  utm_campaign: string | null
+  initial_channel: string | null
+  notify_status: NotifyStatus | null
+  notified_at: string | null
+}
+
+export type FetchLeadsExportResult =
+  | { ok: true; records: LeadExportRecord[]; truncated: boolean }
+  | { ok: false }
+
 const LIST_COLUMNS =
   'id, name, company, service, status, initial_channel, notify_status, created_at'
 
@@ -92,6 +120,28 @@ const DETAIL_COLUMNS = [
 ].join(', ')
 
 const HISTORY_COLUMNS = 'id, previous_status, new_status, changed_by, changed_at'
+
+const EXPORT_COLUMNS = [
+  'name',
+  'email',
+  'phone',
+  'company',
+  'service',
+  'budget',
+  'message',
+  'landing_page',
+  'referrer',
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'initial_channel',
+  'notify_status',
+  'notified_at',
+  'status',
+  'estimated_value_cents',
+  'notes',
+  'created_at',
+].join(', ')
 
 function asOptionalText(value: unknown): string | null {
   if (value === null || value === undefined) {
@@ -256,6 +306,80 @@ function toLeadDetail(value: unknown): LeadDetail | null {
   }
 }
 
+function toIso8601Utc(iso: string): string {
+  return new Date(iso).toISOString()
+}
+
+function toLeadExportRecord(value: unknown): LeadExportRecord | null {
+  if (typeof value !== 'object' || value === null) {
+    return null
+  }
+
+  const name = readField(value, 'name')
+  const email = readField(value, 'email')
+  const service = readField(value, 'service')
+  const message = readField(value, 'message')
+  const status = readField(value, 'status')
+  const createdAt = asIsoTimestamp(readField(value, 'created_at'))
+
+  if (typeof name !== 'string' || name.trim().length === 0) {
+    return null
+  }
+  if (typeof email !== 'string' || email.trim().length === 0) {
+    return null
+  }
+  if (typeof service !== 'string') {
+    return null
+  }
+  if (typeof message !== 'string') {
+    return null
+  }
+  if (typeof status !== 'string' || !isLeadStatus(status)) {
+    return null
+  }
+  if (createdAt === null) {
+    return null
+  }
+
+  const estimatedRaw = readField(value, 'estimated_value_cents')
+  const estimatedValueCents =
+    estimatedRaw === null || estimatedRaw === undefined
+      ? null
+      : asNonNegativeInt(estimatedRaw)
+
+  if (
+    estimatedRaw !== null &&
+    estimatedRaw !== undefined &&
+    estimatedValueCents === null
+  ) {
+    return null
+  }
+
+  const notifiedAt = asIsoTimestamp(readField(value, 'notified_at'))
+
+  return {
+    submitted_at: toIso8601Utc(createdAt),
+    name: name.trim(),
+    email: email.trim(),
+    phone: asOptionalText(readField(value, 'phone')),
+    company: asOptionalText(readField(value, 'company')),
+    service: service.trim(),
+    budget: asOptionalText(readField(value, 'budget')),
+    message,
+    status,
+    estimated_value_dollars: centsToDollarInput(estimatedValueCents),
+    notes: asOptionalText(readField(value, 'notes')),
+    landing_page: asOptionalText(readField(value, 'landing_page')),
+    referrer: asOptionalText(readField(value, 'referrer')),
+    utm_source: asOptionalText(readField(value, 'utm_source')),
+    utm_medium: asOptionalText(readField(value, 'utm_medium')),
+    utm_campaign: asOptionalText(readField(value, 'utm_campaign')),
+    initial_channel: asOptionalText(readField(value, 'initial_channel')),
+    notify_status: asNotifyStatus(readField(value, 'notify_status')),
+    notified_at: notifiedAt === null ? null : toIso8601Utc(notifiedAt),
+  }
+}
+
 function toHistoryRow(value: unknown): LeadStatusHistoryRow | null {
   if (typeof value !== 'object' || value === null) {
     return null
@@ -299,39 +423,53 @@ function sanitizeSearchTerm(raw: string): string {
     .slice(0, 100)
 }
 
+/**
+ * Shared status / channel / q / sort application for the list page and CSV export.
+ */
+async function queryFilteredLeads(
+  columns: string,
+  params: LeadsListParams,
+  range: { from: number; to: number },
+) {
+  const supabase = createSupabaseServiceRole()
+  let query = supabase
+    .from('contact_submissions')
+    .select(columns, { count: 'exact' })
+
+  if (params.status !== 'all') {
+    query = query.eq('status', params.status)
+  }
+
+  if (params.channel !== 'all') {
+    query = query.eq('initial_channel', params.channel)
+  }
+
+  const search = sanitizeSearchTerm(params.q)
+  if (search.length > 0) {
+    query = query.or(
+      `name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`,
+    )
+  }
+
+  return query
+    .order('created_at', { ascending: params.sort === 'oldest' })
+    .order('id', { ascending: params.sort === 'oldest' })
+    .range(range.from, range.to)
+}
+
 export async function fetchLeads(
   params: LeadsListParams,
 ): Promise<FetchLeadsResult> {
   const filtersActive = leadsFiltersActive(params)
 
   try {
-    const supabase = createSupabaseServiceRole()
     const from = (params.page - 1) * LEADS_PAGE_SIZE
     const to = from + LEADS_PAGE_SIZE - 1
-
-    let query = supabase
-      .from('contact_submissions')
-      .select(LIST_COLUMNS, { count: 'exact' })
-
-    if (params.status !== 'all') {
-      query = query.eq('status', params.status)
-    }
-
-    if (params.channel !== 'all') {
-      query = query.eq('initial_channel', params.channel)
-    }
-
-    const search = sanitizeSearchTerm(params.q)
-    if (search.length > 0) {
-      query = query.or(
-        `name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`,
-      )
-    }
-
-    const { data, error, count } = await query
-      .order('created_at', { ascending: params.sort === 'oldest' })
-      .order('id', { ascending: params.sort === 'oldest' })
-      .range(from, to)
+    const { data, error, count } = await queryFilteredLeads(
+      LIST_COLUMNS,
+      params,
+      { from, to },
+    )
 
     if (error) {
       console.error('Intel leads query failed')
@@ -359,6 +497,39 @@ export async function fetchLeads(
     }
   } catch {
     console.error('Intel leads query failed')
+    return { ok: false }
+  }
+}
+
+export async function fetchLeadsExport(
+  params: LeadsListParams,
+): Promise<FetchLeadsExportResult> {
+  try {
+    const { data, error, count } = await queryFilteredLeads(
+      EXPORT_COLUMNS,
+      params,
+      { from: 0, to: LEADS_EXPORT_ROW_CAP - 1 },
+    )
+
+    if (error) {
+      console.error('Intel leads export query failed')
+      return { ok: false }
+    }
+
+    const records = Array.isArray(data)
+      ? data.flatMap((row) => {
+          const parsed = toLeadExportRecord(row)
+          return parsed ? [parsed] : []
+        })
+      : []
+
+    const fetched = Array.isArray(data) ? data.length : records.length
+    const total = typeof count === 'number' && count >= 0 ? count : fetched
+    const truncated = total > LEADS_EXPORT_ROW_CAP
+
+    return { ok: true, records, truncated }
+  } catch {
+    console.error('Intel leads export query failed')
     return { ok: false }
   }
 }

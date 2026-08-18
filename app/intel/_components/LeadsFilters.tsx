@@ -10,6 +10,7 @@ import {
   LEAD_CHANNEL_LABELS,
   LEAD_STATUSES,
   LEAD_STATUS_LABELS,
+  leadsExportHref,
   leadsFiltersActive,
   leadsListHref,
   parseLeadsListParams,
@@ -163,6 +164,13 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
             Clear filters
           </Link>
         ) : null}
+
+        <a
+          href={leadsExportHref(params)}
+          className="text-sm text-foreground transition-colors hover:text-cobalt-primary sm:ml-auto"
+        >
+          Export this filtered view
+        </a>
       </div>
     </form>
   )

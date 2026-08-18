@@ -1,6 +1,7 @@
 import type { InitialChannel } from '@/lib/forms/attribution'
 
 export const LEADS_PAGE_SIZE = 25
+export const LEADS_EXPORT_ROW_CAP = 5000
 
 export const LEAD_STATUSES = [
   'new',
@@ -169,7 +170,10 @@ export function leadsFiltersActive(params: LeadsListParams): boolean {
   return params.status !== 'all' || params.channel !== 'all' || params.q.length > 0
 }
 
-export function leadsListHref(params: Partial<LeadsListParams>): string {
+function leadsFilterSearchParams(
+  params: Partial<LeadsListParams>,
+  options?: { includePage?: boolean },
+): URLSearchParams {
   const merged: LeadsListParams = { ...DEFAULT_PARAMS, ...params }
   const search = new URLSearchParams()
 
@@ -185,12 +189,52 @@ export function leadsListHref(params: Partial<LeadsListParams>): string {
   if (merged.sort !== 'newest') {
     search.set('sort', merged.sort)
   }
-  if (merged.page > 1) {
+  if (options?.includePage && merged.page > 1) {
     search.set('page', String(merged.page))
   }
 
-  const query = search.toString()
+  return search
+}
+
+export function leadsListHref(params: Partial<LeadsListParams>): string {
+  const query = leadsFilterSearchParams(params, { includePage: true }).toString()
   return query.length > 0 ? `/intel/leads?${query}` : '/intel/leads'
+}
+
+export function leadsExportHref(params: Partial<LeadsListParams>): string {
+  const query = leadsFilterSearchParams(params).toString()
+  return query.length > 0
+    ? `/intel/leads/export?${query}`
+    : '/intel/leads/export'
+}
+
+function utcDateStamp(date: Date): string {
+  const year = String(date.getUTCFullYear())
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+export function leadsExportFilename(
+  params: LeadsListParams,
+  options: { truncated: boolean; now?: Date },
+): string {
+  const parts = ['leads', utcDateStamp(options.now ?? new Date())]
+
+  if (params.status !== 'all') {
+    parts.push(`status-${params.status}`)
+  }
+  if (params.channel !== 'all') {
+    parts.push(`channel-${params.channel}`)
+  }
+  if (params.q.length > 0) {
+    parts.push('search')
+  }
+  if (options.truncated) {
+    parts.push('truncated')
+  }
+
+  return `${parts.join('-')}.csv`
 }
 
 export function leadDetailHref(
