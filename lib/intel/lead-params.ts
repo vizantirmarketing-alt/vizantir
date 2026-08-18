@@ -1,0 +1,231 @@
+import type { InitialChannel } from '@/lib/forms/attribution'
+
+export const LEADS_PAGE_SIZE = 25
+
+export const LEAD_STATUSES = [
+  'new',
+  'reviewing',
+  'contacted',
+  'discovery_scheduled',
+  'proposal_sent',
+  'won',
+  'lost',
+  'not_qualified',
+  'spam',
+] as const
+
+export type LeadStatus = (typeof LEAD_STATUSES)[number]
+
+export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
+  new: 'New',
+  reviewing: 'Reviewing',
+  contacted: 'Contacted',
+  discovery_scheduled: 'Discovery scheduled',
+  proposal_sent: 'Proposal sent',
+  won: 'Won',
+  lost: 'Lost',
+  not_qualified: 'Not qualified',
+  spam: 'Spam',
+}
+
+const CLOSED_STATUSES = new Set<LeadStatus>([
+  'won',
+  'lost',
+  'not_qualified',
+  'spam',
+])
+
+export function isClosedLeadStatus(status: LeadStatus): boolean {
+  return CLOSED_STATUSES.has(status)
+}
+
+export const LEAD_CHANNELS = [
+  'campaign',
+  'direct',
+  'organic_search',
+  'ai_referral',
+  'social',
+  'referral',
+] as const satisfies readonly InitialChannel[]
+
+export type LeadChannel = (typeof LEAD_CHANNELS)[number]
+
+export const LEAD_CHANNEL_LABELS: Record<LeadChannel, string> = {
+  campaign: 'Campaign',
+  direct: 'Direct',
+  organic_search: 'Organic search',
+  ai_referral: 'AI referral',
+  social: 'Social',
+  referral: 'Referral',
+}
+
+export const NOTIFY_STATUSES = ['sent', 'failed', 'not_configured'] as const
+
+export type NotifyStatus = (typeof NOTIFY_STATUSES)[number]
+
+export type LeadListRow = {
+  id: string
+  name: string
+  company: string | null
+  service: string
+  status: LeadStatus
+  initial_channel: string | null
+  notify_status: NotifyStatus | null
+  created_at: string
+}
+
+export type LeadsSort = 'newest' | 'oldest'
+
+export type LeadsListParams = {
+  status: LeadStatus | 'all'
+  channel: LeadChannel | 'all'
+  q: string
+  sort: LeadsSort
+  page: number
+}
+
+export type LeadsSearchParams = {
+  status?: string | string[]
+  channel?: string | string[]
+  q?: string | string[]
+  sort?: string | string[]
+  page?: string | string[]
+}
+
+const DEFAULT_PARAMS: LeadsListParams = {
+  status: 'all',
+  channel: 'all',
+  q: '',
+  sort: 'newest',
+  page: 1,
+}
+
+function firstSearchParam(
+  value: string | string[] | undefined,
+): string | undefined {
+  if (Array.isArray(value)) {
+    const first = value[0]
+    return typeof first === 'string' ? first : undefined
+  }
+  return value
+}
+
+function isLeadStatus(value: string): value is LeadStatus {
+  return LEAD_STATUSES.some((status) => status === value)
+}
+
+function isLeadChannel(value: string): value is LeadChannel {
+  return LEAD_CHANNELS.some((channel) => channel === value)
+}
+
+export function parseLeadsListParams(
+  searchParams: LeadsSearchParams,
+): LeadsListParams {
+  const statusRaw = firstSearchParam(searchParams.status)
+  const channelRaw = firstSearchParam(searchParams.channel)
+  const qRaw = firstSearchParam(searchParams.q)
+  const sortRaw = firstSearchParam(searchParams.sort)
+  const pageRaw = firstSearchParam(searchParams.page)
+
+  const status =
+    statusRaw && statusRaw !== 'all' && isLeadStatus(statusRaw)
+      ? statusRaw
+      : 'all'
+  const channel =
+    channelRaw && channelRaw !== 'all' && isLeadChannel(channelRaw)
+      ? channelRaw
+      : 'all'
+  const q = qRaw?.trim() ?? ''
+  const sort: LeadsSort = sortRaw === 'oldest' ? 'oldest' : 'newest'
+
+  const parsedPage = pageRaw ? Number.parseInt(pageRaw, 10) : 1
+  const page =
+    Number.isFinite(parsedPage) && parsedPage > 0
+      ? Math.floor(parsedPage)
+      : 1
+
+  return { status, channel, q, sort, page }
+}
+
+export function leadsFiltersActive(params: LeadsListParams): boolean {
+  return params.status !== 'all' || params.channel !== 'all' || params.q.length > 0
+}
+
+export function leadsListHref(params: Partial<LeadsListParams>): string {
+  const merged: LeadsListParams = { ...DEFAULT_PARAMS, ...params }
+  const search = new URLSearchParams()
+
+  if (merged.status !== 'all') {
+    search.set('status', merged.status)
+  }
+  if (merged.channel !== 'all') {
+    search.set('channel', merged.channel)
+  }
+  if (merged.q.length > 0) {
+    search.set('q', merged.q)
+  }
+  if (merged.sort !== 'newest') {
+    search.set('sort', merged.sort)
+  }
+  if (merged.page > 1) {
+    search.set('page', String(merged.page))
+  }
+
+  const query = search.toString()
+  return query.length > 0 ? `/intel/leads?${query}` : '/intel/leads'
+}
+
+export function formatChannelLabel(channel: string | null): string {
+  if (channel === null || channel.length === 0) {
+    return '—'
+  }
+  for (const known of LEAD_CHANNELS) {
+    if (known === channel) {
+      return LEAD_CHANNEL_LABELS[known]
+    }
+  }
+  return channel
+}
+
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000
+
+export function formatSubmittedAt(iso: string, nowMs: number): string {
+  const then = Date.parse(iso)
+  if (Number.isNaN(then)) {
+    return '—'
+  }
+
+  const diffMs = nowMs - then
+  if (diffMs >= 0 && diffMs < WEEK_MS) {
+    return formatRelative(diffMs)
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(then))
+}
+
+function formatRelative(diffMs: number): string {
+  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+  const seconds = Math.round(diffMs / 1000)
+
+  if (seconds < 60) {
+    return 'Just now'
+  }
+
+  const minutes = Math.round(seconds / 60)
+  if (minutes < 60) {
+    return rtf.format(-minutes, 'minute')
+  }
+
+  const hours = Math.round(minutes / 60)
+  if (hours < 24) {
+    return rtf.format(-hours, 'hour')
+  }
+
+  const days = Math.round(hours / 24)
+  return rtf.format(-days, 'day')
+}

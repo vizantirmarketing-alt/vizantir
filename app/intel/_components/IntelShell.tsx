@@ -79,19 +79,22 @@ export function IntelShell({ email, children }: IntelShellProps) {
   const menuId = useId()
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="lg:grid lg:min-h-screen lg:grid-cols-[13.5rem_minmax(0,1fr)]">
-        <aside className="hidden flex-col border-r border-black/8 px-8 py-12 lg:flex">
-          <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
+    <div className="min-h-svh bg-background">
+      <div className="lg:grid lg:min-h-svh lg:grid-cols-[13.5rem_minmax(0,1fr)]">
+        <aside className="hidden border-r border-black/8 px-8 py-12 lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:self-start">
+          <p className="shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
             Intel
           </p>
-          <p className="mt-3 text-sm text-meta">Vizantir</p>
+          <p className="mt-3 shrink-0 text-sm text-meta">Vizantir</p>
 
-          <nav aria-label="Intel" className="mt-14 flex-1">
+          <nav
+            aria-label="Intel"
+            className="mt-14 min-h-0 flex-1 overflow-y-auto"
+          >
             <NavLinks pathname={pathname} />
           </nav>
 
-          <div className="mt-12 space-y-3">
+          <div className="mt-8 shrink-0 space-y-3">
             <p className="truncate text-xs text-meta" title={email}>
               {email}
             </p>
@@ -99,8 +102,8 @@ export function IntelShell({ email, children }: IntelShellProps) {
           </div>
         </aside>
 
-        <div className="flex min-h-screen flex-col">
-          <header className="flex items-center justify-between border-b border-black/8 px-6 py-4 lg:hidden">
+        <div className="flex min-h-svh flex-col">
+          <header className="flex shrink-0 items-center justify-between border-b border-black/8 px-6 py-4 lg:hidden">
             <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
               Intel
             </p>
@@ -124,13 +127,15 @@ export function IntelShell({ email, children }: IntelShellProps) {
             <nav
               id={menuId}
               aria-label="Intel"
-              className="border-b border-black/8 px-6 py-8 lg:hidden"
+              className="flex max-h-[calc(100svh-4.5rem)] flex-col border-b border-black/8 px-6 py-8 lg:hidden"
             >
-              <NavLinks
-                pathname={pathname}
-                onNavigate={() => setMobileOpen(false)}
-              />
-              <div className="mt-8 space-y-3 border-t border-black/8 pt-8">
+              <div className="min-h-0 flex-1 overflow-y-auto">
+                <NavLinks
+                  pathname={pathname}
+                  onNavigate={() => setMobileOpen(false)}
+                />
+              </div>
+              <div className="mt-8 shrink-0 space-y-3 border-t border-black/8 pt-8">
                 <p className="truncate text-xs text-meta" title={email}>
                   {email}
                 </p>
@@ -140,7 +145,7 @@ export function IntelShell({ email, children }: IntelShellProps) {
           ) : null}
 
           <main className="flex-1 px-6 py-16 md:px-12 md:py-20 lg:px-16 lg:py-24">
-            <div className="mx-auto max-w-2xl">{children}</div>
+            {children}
           </main>
         </div>
       </div>

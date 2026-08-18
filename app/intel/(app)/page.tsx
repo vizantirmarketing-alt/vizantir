@@ -4,7 +4,7 @@ export default async function IntelOverviewPage() {
   await requireIntelUser()
 
   return (
-    <div>
+    <div className="max-w-2xl">
       <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
         Intel
       </p>
