@@ -1,13 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { trackFormSubmission, trackPhoneClick } from '@/lib/analytics'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { Honeypot } from '@/components/forms/Honeypot'
 import { TurnstileWidget } from '@/components/forms/TurnstileWidget'
+import {
+  captureClientAttribution,
+  type ClientAttribution,
+} from '@/lib/forms/attribution'
 import {
   CONTACT_BUDGETS,
   CONTACT_LANDING_PAGE_BUDGETS,
@@ -31,6 +35,11 @@ export default function ContactPageClient() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const attributionRef = useRef<ClientAttribution | null>(null)
+
+  useEffect(() => {
+    attributionRef.current = captureClientAttribution()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -78,6 +87,11 @@ export default function ContactPageClient() {
           message: formData.message,
           website: websiteHoneypot,
           turnstileToken,
+          landing_page: attributionRef.current?.landing_page ?? null,
+          referrer: attributionRef.current?.referrer ?? null,
+          utm_source: attributionRef.current?.utm_source ?? null,
+          utm_medium: attributionRef.current?.utm_medium ?? null,
+          utm_campaign: attributionRef.current?.utm_campaign ?? null,
         }),
       })
       const data = (await res.json().catch(() => ({}))) as {

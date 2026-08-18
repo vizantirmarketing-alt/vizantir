@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
+  ATTRIBUTION_FIELD_MAX,
+  deriveInitialChannel,
+  resolveRequestOrigin,
+  stripControlChars,
+} from '@/lib/forms/attribution';
+import {
   CONTACT_BUDGETS,
   CONTACT_LANDING_PAGE_BUDGETS,
   CONTACT_SERVICES,
@@ -17,6 +23,17 @@ const serviceEnum = z.enum(CONTACT_SERVICES);
 const websiteBudgetEnum = z.enum(CONTACT_BUDGETS);
 const landingPageBudgetEnum = z.enum(CONTACT_LANDING_PAGE_BUDGETS);
 const budgetEnum = z.union([websiteBudgetEnum, landingPageBudgetEnum]);
+
+const optionalAttributionText = (max: number) =>
+  z
+    .string()
+    .max(max)
+    .transform((s) => {
+      const cleaned = stripControlChars(s).trim();
+      return cleaned === '' ? null : cleaned;
+    })
+    .optional()
+    .nullable();
 
 const bodySchema = z
   .object({
@@ -43,6 +60,11 @@ const bodySchema = z
     message: z.string().trim().min(10).max(5000),
     website: z.string().optional(),
     turnstileToken: z.string().min(1),
+    landing_page: optionalAttributionText(ATTRIBUTION_FIELD_MAX.landing_page),
+    referrer: optionalAttributionText(ATTRIBUTION_FIELD_MAX.referrer),
+    utm_source: optionalAttributionText(ATTRIBUTION_FIELD_MAX.utm_source),
+    utm_medium: optionalAttributionText(ATTRIBUTION_FIELD_MAX.utm_medium),
+    utm_campaign: optionalAttributionText(ATTRIBUTION_FIELD_MAX.utm_campaign),
   })
   .superRefine((data, ctx) => {
     // Optional budget: null always allowed (no cross-check).
@@ -131,6 +153,16 @@ export async function POST(req: Request) {
       budget: body.budget,
       message: body.message,
       ipHash,
+      landingPage: body.landing_page ?? null,
+      referrer: body.referrer ?? null,
+      utmSource: body.utm_source ?? null,
+      utmMedium: body.utm_medium ?? null,
+      utmCampaign: body.utm_campaign ?? null,
+      initialChannel: deriveInitialChannel({
+        utmSource: body.utm_source,
+        referrer: body.referrer,
+        requestOrigin: resolveRequestOrigin(req),
+      }),
     });
   } catch {
     return NextResponse.json(

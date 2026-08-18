@@ -1,5 +1,6 @@
 import 'server-only';
 import { Resend } from 'resend';
+import { emptyToNull } from '@/lib/forms/attribution';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 export type ContactSubmissionRow = {
@@ -11,6 +12,12 @@ export type ContactSubmissionRow = {
   budget: string | null;
   message: string;
   ipHash: string;
+  landingPage: string | null;
+  referrer: string | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  initialChannel: string | null;
 };
 
 function escapeHtml(s: string): string {
@@ -153,6 +160,12 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
       budget: row.budget,
       message: row.message,
       ip_hash: row.ipHash,
+      landing_page: emptyToNull(row.landingPage),
+      referrer: emptyToNull(row.referrer),
+      utm_source: emptyToNull(row.utmSource),
+      utm_medium: emptyToNull(row.utmMedium),
+      utm_campaign: emptyToNull(row.utmCampaign),
+      initial_channel: emptyToNull(row.initialChannel),
     })
     .select('id')
     .single();

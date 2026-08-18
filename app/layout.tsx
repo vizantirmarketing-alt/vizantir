@@ -20,6 +20,8 @@ import { VizantirChat } from '@/components/chat/VizantirChat'
 
 import { Analytics } from '@vercel/analytics/next'
 
+import { AttributionCapture } from '@/components/analytics/AttributionCapture'
+
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 
 import { ClarityScript } from '@/components/analytics/ClarityScript'
@@ -288,6 +290,7 @@ export default async function RootLayout({
         <Analytics />
         <GoogleAnalytics />
         <ClarityScript />
+        <AttributionCapture />
       </body>
     </html>
   )
