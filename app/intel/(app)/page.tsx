@@ -1,19 +1,45 @@
+import type { Metadata } from 'next'
+
+import {
+  DecisionEmptyState,
+  DecisionFeed,
+  DecisionHeader,
+  DecisionQueryError,
+} from '@/app/intel/_components/DecisionFeed'
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { fetchDecisionFeed } from '@/lib/intel/decisions/feed'
+
+export const metadata: Metadata = {
+  title: 'Overview',
+  robots: { index: false, follow: false },
+}
 
 export default async function IntelOverviewPage() {
   await requireIntelUser()
+  const result = await fetchDecisionFeed()
+
+  if (!result.ok) {
+    return (
+      <div className="max-w-5xl">
+        <DecisionHeader />
+        <DecisionQueryError />
+      </div>
+    )
+  }
+
+  if (result.total === 0) {
+    return (
+      <div className="max-w-5xl">
+        <DecisionHeader />
+        <DecisionEmptyState />
+      </div>
+    )
+  }
 
   return (
-    <div className="max-w-2xl">
-      <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
-        Intel
-      </p>
-      <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground md:text-4xl">
-        Overview
-      </h1>
-      <p className="mt-6 max-w-md text-base leading-relaxed text-body">
-        Data surfaces for this workspace are coming.
-      </p>
+    <div className="max-w-5xl">
+      <DecisionHeader />
+      <DecisionFeed sections={result.sections} />
     </div>
   )
 }
