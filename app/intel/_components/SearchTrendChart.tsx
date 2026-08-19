@@ -2,11 +2,12 @@ import { formatPercentAgainstMeaningfulBase } from '@/lib/intel/format-change'
 import { SEARCH_RANGE_LABELS, type SearchRange } from '@/lib/intel/search-params'
 import type { DailyPoint, SearchComparison } from '@/lib/intel/search'
 
-import { formatQueryCount, SectionHeading } from '@/app/intel/_components/SearchSurface'
+import { formatQueryCount } from '@/app/intel/_components/SearchSurface'
+import { Panel } from '@/app/intel/_components/ui/Panel'
 
 const WIDTH = 720
-const HEIGHT = 248
-const PAD = { top: 16, right: 44, bottom: 32, left: 44 }
+const HEIGHT = 220
+const PAD = { top: 14, right: 40, bottom: 28, left: 40 }
 /** Dual-series rendering starts once a day actually occupies the clicks axis. */
 const CLICKS_SERIES_MIN = 5
 const CLICK_MARKER_RADIUS = 4
@@ -289,12 +290,16 @@ export function SearchTrendChart({
   )
 
   return (
-    <section className="mt-20">
-      <SectionHeading>Trend</SectionHeading>
-      <p className="mt-8 max-w-2xl text-base leading-relaxed text-body">
+    <Panel
+      title="Trend"
+      headerAction={
+        <span className="text-xs text-meta">{SEARCH_RANGE_LABELS[range]}</span>
+      }
+    >
+      <p className="max-w-2xl text-sm leading-relaxed text-body">
         {visibleSummary(clicks, impressions, comparison, range)}
       </p>
-      <div className="mt-6 flex flex-wrap gap-6 text-sm">
+      <div className="mt-3 flex flex-wrap gap-5 text-sm">
         {markClicks ? (
           <>
             <p className="text-meta">Impressions</p>
@@ -307,11 +312,11 @@ export function SearchTrendChart({
           </>
         )}
       </div>
-      <figure className="mt-6">
+      <figure className="mt-3">
         <figcaption className="sr-only">{description}</figcaption>
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          className="h-auto w-full"
+          className="h-[180px] w-full md:h-[220px]"
           role="img"
           aria-labelledby="search-trend-title"
         >
@@ -469,6 +474,6 @@ export function SearchTrendChart({
           ))}
         </svg>
       </figure>
-    </section>
+    </Panel>
   )
 }

@@ -10,7 +10,6 @@ import {
   LEAD_CHANNEL_LABELS,
   LEAD_STATUSES,
   LEAD_STATUS_LABELS,
-  leadsExportHref,
   leadsFiltersActive,
   leadsListHref,
   parseLeadsListParams,
@@ -61,9 +60,8 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
       method="get"
       action="/intel/leads"
       onSubmit={onSubmit}
-      className="mt-10"
     >
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <label
             htmlFor="intel-leads-status"
@@ -130,7 +128,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+      <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-3">
         <div>
           <label htmlFor="intel-leads-sort" className="sr-only">
             Sort
@@ -164,13 +162,6 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
             Clear filters
           </Link>
         ) : null}
-
-        <a
-          href={leadsExportHref(params)}
-          className="text-sm text-foreground transition-colors hover:text-cobalt-primary sm:ml-auto"
-        >
-          Export this filtered view
-        </a>
       </div>
     </form>
   )

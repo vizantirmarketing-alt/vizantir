@@ -54,7 +54,7 @@ export function DecisionStatusControls({
   }
 
   return (
-    <form onSubmit={onSubmit} aria-busy={pending} className="mt-6 max-w-md">
+    <form onSubmit={onSubmit} aria-busy={pending} className="max-w-md">
       <label
         htmlFor={`decision-status-${itemId}`}
         className="mb-2 block text-sm font-medium text-body"

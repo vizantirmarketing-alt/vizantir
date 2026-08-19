@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { LeadPipelineForms } from '@/app/intel/_components/LeadPipelineForms'
 import { LeadStatusBadge } from '@/app/intel/_components/LeadStatusBadge'
+import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import {
   centsToDollarInput,
@@ -53,55 +54,56 @@ export default async function IntelLeadDetailPage({
 
   if (!result.ok) {
     return (
-      <div className="max-w-3xl">
+      <div className="flex flex-col gap-4">
         <BackLink href={backHref} />
-        <h1 className="mt-10 text-3xl font-black tracking-tight text-foreground md:text-4xl">
+        <h1 className="text-base font-semibold tracking-tight text-foreground">
           Inquiry
         </h1>
-        <p
-          className="mt-8 max-w-md text-base leading-relaxed text-body"
-          role="alert"
-        >
-          Unable to load this inquiry. Try again shortly.
-        </p>
+        <Panel>
+          <p className="text-sm leading-relaxed text-body" role="alert">
+            Unable to load this inquiry. Try again shortly.
+          </p>
+        </Panel>
       </div>
     )
   }
 
   const { lead, history } = result
+  const deliveryWarning =
+    lead.notify_status === 'failed' || lead.notify_status === 'not_configured'
 
   return (
-    <div className="max-w-3xl">
+    <div className="flex flex-col gap-4">
       <BackLink href={backHref} />
 
-      <p className="mt-10 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
-        Intel
-      </p>
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        <h1 className="text-3xl font-black tracking-tight text-foreground md:text-4xl">
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-base font-semibold tracking-tight text-foreground">
           {lead.name}
         </h1>
         <LeadStatusBadge status={lead.status} />
       </div>
 
-      <InquirySection lead={lead} />
-      <AttributionSection lead={lead} />
-      <DeliverySection lead={lead} />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <InquirySection lead={lead} />
+        <AttributionSection lead={lead} />
+      </div>
 
-      <section className="mt-20">
-        <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
-          Pipeline
-        </h2>
-        <LeadPipelineForms
-          leadId={lead.id}
-          status={lead.status}
-          estimatedValueCents={lead.estimated_value_cents}
-          estimatedValueDollars={centsToDollarInput(lead.estimated_value_cents)}
-          notes={lead.notes}
-        />
-      </section>
+      <div className={deliveryWarning ? undefined : 'grid gap-4 lg:grid-cols-2'}>
+        <DeliverySection lead={lead} />
+      </div>
 
-      <HistorySection history={history} />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Panel title="Pipeline">
+          <LeadPipelineForms
+            leadId={lead.id}
+            status={lead.status}
+            estimatedValueCents={lead.estimated_value_cents}
+            estimatedValueDollars={centsToDollarInput(lead.estimated_value_cents)}
+            notes={lead.notes}
+          />
+        </Panel>
+        <HistorySection history={history} />
+      </div>
     </div>
   )
 }
@@ -127,7 +129,7 @@ function Field({
   return (
     <div>
       <dt className="text-sm text-meta">{label}</dt>
-      <dd className="mt-1 text-base text-foreground">{children}</dd>
+      <dd className="mt-1 text-sm text-foreground">{children}</dd>
     </div>
   )
 }
@@ -148,11 +150,8 @@ function InquirySection({ lead }: { lead: LeadDetail }) {
   const telHref = lead.phone ? toTelHref(lead.phone) : null
 
   return (
-    <section className="mt-16">
-      <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
-        Inquiry
-      </h2>
-      <dl className="mt-8 grid gap-x-12 gap-y-8 sm:grid-cols-2">
+    <Panel title="Inquiry">
+      <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
         <Field label="Name">{lead.name}</Field>
         <Field label="Email">
           <a
@@ -178,18 +177,18 @@ function InquirySection({ lead }: { lead: LeadDetail }) {
         <Field label="Service">{lead.service}</Field>
         <Field label="Budget">{dash(lead.budget)}</Field>
         <Field label="Submitted">
-          <time dateTime={lead.created_at}>
+          <time dateTime={lead.created_at} className="tabular-nums">
             {formatFullTimestamp(lead.created_at)}
           </time>
         </Field>
       </dl>
-      <div className="mt-10">
+      <div className="mt-6">
         <p className="text-sm text-meta">Message</p>
-        <p className="mt-3 max-w-2xl whitespace-pre-wrap text-base leading-relaxed text-foreground">
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground">
           {lead.message}
         </p>
       </div>
-    </section>
+    </Panel>
   )
 }
 
@@ -206,12 +205,9 @@ function hasAttribution(lead: LeadDetail): boolean {
 
 function AttributionSection({ lead }: { lead: LeadDetail }) {
   return (
-    <section className="mt-20">
-      <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
-        Attribution
-      </h2>
+    <Panel title="Attribution">
       {hasAttribution(lead) ? (
-        <dl className="mt-8 grid gap-x-12 gap-y-8 sm:grid-cols-2">
+        <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
           <Field label="Landing page">{dash(lead.landing_page)}</Field>
           <Field label="Referrer">{dash(lead.referrer)}</Field>
           <Field label="UTM source">{dash(lead.utm_source)}</Field>
@@ -222,11 +218,11 @@ function AttributionSection({ lead }: { lead: LeadDetail }) {
           </Field>
         </dl>
       ) : (
-        <p className="mt-8 max-w-md text-base leading-relaxed text-body">
+        <p className="text-sm leading-relaxed text-body">
           This inquiry predates attribution capture.
         </p>
       )}
-    </section>
+    </Panel>
   )
 }
 
@@ -252,11 +248,8 @@ function DeliverySection({ lead }: { lead: LeadDetail }) {
     lead.notify_status === 'failed' ? 'text-warning-severe' : 'text-warning'
 
   return (
-    <section className="mt-20">
-      <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
-        Delivery
-      </h2>
-      <dl className="mt-8 grid gap-x-12 gap-y-8 sm:grid-cols-2">
+    <Panel title="Delivery" className={needsReply ? 'border-warning' : undefined}>
+      <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
         <Field label="Notification">
           <span className={needsReply ? warningClass : undefined}>
             {notifyStatusLabel(lead.notify_status)}
@@ -264,7 +257,7 @@ function DeliverySection({ lead }: { lead: LeadDetail }) {
         </Field>
         <Field label="Notified">
           {lead.notified_at ? (
-            <time dateTime={lead.notified_at}>
+            <time dateTime={lead.notified_at} className="tabular-nums">
               {formatFullTimestamp(lead.notified_at)}
             </time>
           ) : (
@@ -273,44 +266,39 @@ function DeliverySection({ lead }: { lead: LeadDetail }) {
         </Field>
       </dl>
       {lead.notify_error ? (
-        <p className="mt-8 max-w-md text-sm leading-relaxed text-body">
+        <p className="mt-5 text-sm leading-relaxed text-body">
           {lead.notify_error}
         </p>
       ) : null}
       {needsReply ? (
-        <p
-          className={`mt-8 max-w-md text-sm leading-relaxed ${warningClass}`}
-        >
+        <p className={`mt-5 text-sm leading-relaxed ${warningClass}`}>
           The notification email may not have been received. This inquiry still
           needs a reply.
         </p>
       ) : null}
-    </section>
+    </Panel>
   )
 }
 
 function HistorySection({ history }: { history: LeadStatusHistoryRow[] }) {
   return (
-    <section className="mt-20">
-      <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
-        History
-      </h2>
+    <Panel title="History">
       {history.length === 0 ? (
-        <p className="mt-8 max-w-md text-base leading-relaxed text-body">
+        <p className="text-sm leading-relaxed text-body">
           No status changes have been recorded.
         </p>
       ) : (
-        <ol className="mt-8 divide-y divide-black/8">
+        <ol className="divide-y divide-black/8">
           {history.map((entry) => (
-            <li key={entry.id} className="py-5 first:pt-0">
-              <p className="text-base text-foreground">
+            <li key={entry.id} className="py-2 first:pt-0">
+              <p className="text-sm text-foreground">
                 {entry.previous_status
                   ? `${formatStatusLabel(entry.previous_status)} → ${formatStatusLabel(entry.new_status)}`
                   : `Set to ${formatStatusLabel(entry.new_status)}`}
               </p>
               <p className="mt-1 text-sm text-body">
                 {entry.changed_by ? `${entry.changed_by} · ` : null}
-                <time dateTime={entry.changed_at}>
+                <time dateTime={entry.changed_at} className="tabular-nums">
                   {formatFullTimestamp(entry.changed_at)}
                 </time>
               </p>
@@ -318,6 +306,6 @@ function HistorySection({ history }: { history: LeadStatusHistoryRow[] }) {
           ))}
         </ol>
       )}
-    </section>
+    </Panel>
   )
 }

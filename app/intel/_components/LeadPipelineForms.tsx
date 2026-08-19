@@ -48,7 +48,7 @@ export function LeadPipelineForms({
   notes,
 }: LeadPipelineFormsProps) {
   return (
-    <div className="mt-8 space-y-10">
+    <div className="space-y-8">
       <StatusForm leadId={leadId} currentStatus={status} />
       <ValueForm
         key={estimatedValueDollars || 'empty'}

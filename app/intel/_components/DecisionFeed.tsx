@@ -1,39 +1,34 @@
 import type { ReactNode } from 'react'
+import { ChevronDown } from 'lucide-react'
 
 import { DecisionStatusControls } from '@/app/intel/_components/DecisionStatusControls'
+import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
+import { Panel, type PanelAccent } from '@/app/intel/_components/ui/Panel'
+import { Sparkline } from '@/app/intel/_components/ui/Sparkline'
 import {
-  DECISION_CATEGORY_LABELS,
-  DECISION_CONFIDENCE_LABELS,
-  DECISION_STATUS_LABELS,
-  type DecisionConfidence,
-  type DecisionStatus,
-} from '@/lib/intel/decision-params'
+  ConfidenceChip,
+  DecisionStatusChip,
+} from '@/app/intel/_components/ui/StatusChip'
+import { StatStrip } from '@/app/intel/_components/ui/StatStrip'
+import { DECISION_CATEGORY_LABELS, type DecisionCategory } from '@/lib/intel/decision-params'
+import { formatHeadlineFact } from '@/lib/intel/decisions/headline-fact'
 import type {
   DecisionFeedItem,
   DecisionFeedSection,
 } from '@/lib/intel/decisions/feed'
 import { formatSpanLabel } from '@/lib/intel/search-params'
-import { cn } from '@/lib/utils'
 
 export function DecisionHeader() {
   return (
-    <div>
-      <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
-        Intel
-      </p>
-      <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground md:text-4xl">
-        Overview
-      </h1>
-    </div>
+    <h1 className="text-base font-semibold tracking-tight text-foreground">
+      Overview
+    </h1>
   )
 }
 
 export function DecisionQueryError() {
   return (
-    <p
-      className="mt-16 max-w-md text-base leading-relaxed text-body"
-      role="alert"
-    >
+    <p className="text-sm leading-relaxed text-body" role="alert">
       Unable to load the decision feed. Try again shortly.
     </p>
   )
@@ -41,9 +36,9 @@ export function DecisionQueryError() {
 
 export function DecisionEmptyState() {
   return (
-    <div className="mt-16 max-w-md">
-      <p className="text-base font-medium text-foreground">No findings yet</p>
-      <p className="mt-3 text-base leading-relaxed text-body">
+    <div>
+      <p className="text-sm font-medium text-foreground">No findings yet</p>
+      <p className="mt-2 text-sm leading-relaxed text-body">
         Detectors run daily after Search Console sync. Findings that need a
         look will appear here.
       </p>
@@ -51,90 +46,168 @@ export function DecisionEmptyState() {
   )
 }
 
+function formatCount(value: number | null): string {
+  if (value === null) {
+    return '—'
+  }
+  return new Intl.NumberFormat('en-US').format(value)
+}
+
+function lastTwoDayContext(values: readonly number[]): string | undefined {
+  if (values.length < 2) {
+    return undefined
+  }
+  const yesterday = values[values.length - 1]
+  const dayBefore = values[values.length - 2]
+  if (yesterday === undefined || dayBefore === undefined) {
+    return undefined
+  }
+  return `${formatCount(yesterday)} yesterday · ${formatCount(dayBefore)} day before`
+}
+
+type OverviewStatStripProps = {
+  findingsNeedingAttention: number | null
+  leadsLast28Days: number | null
+  leadsDaily: number[]
+  clicks28d: number | null
+  clicksDaily: number[]
+  impressions28d: number | null
+  impressionsDaily: number[]
+}
+
+export function OverviewStatStrip({
+  findingsNeedingAttention,
+  leadsLast28Days,
+  leadsDaily,
+  clicks28d,
+  clicksDaily,
+  impressions28d,
+  impressionsDaily,
+}: OverviewStatStripProps) {
+  return (
+    <StatStrip>
+      <MetricCard
+        label="Findings needing attention"
+        value={formatCount(findingsNeedingAttention)}
+      />
+      <MetricCard
+        label="Leads this 28 days"
+        value={formatCount(leadsLast28Days)}
+        sparkline={
+          leadsDaily.length > 0 ? <Sparkline points={leadsDaily} /> : undefined
+        }
+        context={lastTwoDayContext(leadsDaily)}
+      />
+      <MetricCard
+        label="Clicks 28d"
+        value={formatCount(clicks28d)}
+        sparkline={
+          clicksDaily.length > 0 ? (
+            <Sparkline points={clicksDaily} />
+          ) : undefined
+        }
+        context={lastTwoDayContext(clicksDaily)}
+      />
+      <MetricCard
+        label="Impressions 28d"
+        value={formatCount(impressions28d)}
+        sparkline={
+          impressionsDaily.length > 0 ? (
+            <Sparkline points={impressionsDaily} />
+          ) : undefined
+        }
+        context={lastTwoDayContext(impressionsDaily)}
+      />
+    </StatStrip>
+  )
+}
+
+const CATEGORY_ACCENT: Record<DecisionCategory, PanelAccent> = {
+  needs_attention: 'warning-severe',
+  opportunity: 'cobalt',
+  working: 'positive',
+  system: 'neutral',
+}
+
 export function DecisionFeed({ sections }: { sections: DecisionFeedSection[] }) {
   return (
-    <div className="mt-14 space-y-16">
+    <div className="flex flex-col gap-3">
       {sections.map((section) => (
-        <section key={section.category}>
-          <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
-            {DECISION_CATEGORY_LABELS[section.category]}
-          </h2>
-          <ul className="mt-6 divide-y divide-black/8">
+        <Panel
+          key={section.category}
+          title={DECISION_CATEGORY_LABELS[section.category]}
+          accent={CATEGORY_ACCENT[section.category]}
+        >
+          <ul className="divide-y divide-black/8">
             {section.items.map((item) => (
-              <li key={item.id} className="py-8 first:pt-0">
+              <li key={item.id}>
                 <DecisionItem item={item} />
               </li>
             ))}
           </ul>
-        </section>
+        </Panel>
       ))}
     </div>
   )
 }
 
 function DecisionItem({ item }: { item: DecisionFeedItem }) {
+  const fact = formatHeadlineFact(item.detector, item.evidence)
+
   return (
-    <article>
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
-        <h3 className="text-base font-medium text-foreground">{item.title}</h3>
-        <ConfidenceLabel confidence={item.confidence} />
-        <StatusLabel status={item.status} />
-      </div>
-      <p className="mt-2 text-sm text-meta">
-        {formatSpanLabel({ start: item.periodStart, end: item.periodEnd })}
-      </p>
-      <p className="mt-4 max-w-2xl text-base leading-relaxed text-body">
-        {item.description}
-      </p>
-      {item.recommendedAction ? (
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-body">
-          <span className="font-medium text-foreground">Recommended. </span>
-          {item.recommendedAction}
-        </p>
-      ) : null}
-      {item.relatedUrl ? <RelatedUrl href={item.relatedUrl} /> : null}
-      <EvidenceBlock evidence={item.evidence} />
-      <DecisionStatusControls itemId={item.id} currentStatus={item.status} />
+    <article className="min-w-0">
+      <details className="group">
+        <summary className="flex h-12 cursor-pointer list-none items-center gap-2.5 overflow-hidden [&::-webkit-details-marker]:hidden">
+          <h3 className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+            {item.title}
+          </h3>
+          <span className="shrink-0">
+            <ConfidenceChip confidence={item.confidence} />
+          </span>
+          <span className="shrink-0">
+            <DecisionStatusChip status={item.status} />
+          </span>
+          {fact ? (
+            <span className="min-w-0 max-w-[8rem] truncate text-xs tabular-nums text-meta sm:max-w-[16rem]">
+              {fact}
+            </span>
+          ) : null}
+          <ChevronDown
+            className="ml-auto size-3.5 shrink-0 text-meta transition-transform group-open:rotate-180"
+            aria-hidden
+          />
+        </summary>
+        <div className="space-y-3 border-t border-black/8 pb-3 pt-3">
+          <p className="text-xs text-meta">
+            {formatSpanLabel({ start: item.periodStart, end: item.periodEnd })}
+          </p>
+          <p className="text-sm leading-relaxed text-body">{item.description}</p>
+          {item.recommendedAction ? (
+            <p className="text-sm leading-relaxed text-body">
+              <span className="font-medium text-foreground">Recommended. </span>
+              {item.recommendedAction}
+            </p>
+          ) : null}
+          {item.relatedUrl ? <RelatedUrl href={item.relatedUrl} /> : null}
+          <EvidenceBlock evidence={item.evidence} />
+          <DecisionStatusControls
+            itemId={item.id}
+            currentStatus={item.status}
+          />
+        </div>
+      </details>
     </article>
-  )
-}
-
-function ConfidenceLabel({ confidence }: { confidence: DecisionConfidence }) {
-  return (
-    <span
-      className={cn(
-        'text-xs tracking-wide',
-        confidence === 'exploratory' ? 'text-meta' : 'text-body',
-      )}
-    >
-      {DECISION_CONFIDENCE_LABELS[confidence]}
-    </span>
-  )
-}
-
-function StatusLabel({ status }: { status: DecisionStatus }) {
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs tracking-wide',
-        status === 'new'
-          ? 'bg-cobalt-muted-subtle text-foreground'
-          : 'text-meta',
-      )}
-    >
-      {DECISION_STATUS_LABELS[status]}
-    </span>
   )
 }
 
 function RelatedUrl({ href }: { href: string }) {
   const label = href.replace(/^https?:\/\//, '')
   if (!/^https?:\/\//i.test(href)) {
-    return <p className="mt-3 text-sm text-body">{href}</p>
+    return <p className="text-sm text-body">{href}</p>
   }
 
   return (
-    <p className="mt-3 text-sm">
+    <p className="text-sm">
       <a
         href={href}
         className="text-cobalt-primary transition-colors hover:text-[#1E85FF]"
@@ -152,11 +225,11 @@ function EvidenceBlock({ evidence }: { evidence: Record<string, unknown> }) {
   }
 
   return (
-    <details className="mt-5 max-w-2xl">
+    <details>
       <summary className="cursor-pointer text-sm text-meta transition-colors hover:text-foreground">
         Evidence
       </summary>
-      <dl className="mt-4 space-y-3">
+      <dl className="mt-3 space-y-3">
         {entries.map(([key, value]) => (
           <div key={key}>
             <dt className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
@@ -197,7 +270,11 @@ function EvidenceValue({
     return value ? 'Yes' : 'No'
   }
   if (typeof value === 'number') {
-    return formatEvidenceNumber(fieldKey, value)
+    return (
+      <span className="tabular-nums">
+        {formatEvidenceNumber(fieldKey, value)}
+      </span>
+    )
   }
   if (typeof value === 'string') {
     if (value.length === 0) {

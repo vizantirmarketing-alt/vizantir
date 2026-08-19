@@ -5,40 +5,119 @@ import {
   DecisionFeed,
   DecisionHeader,
   DecisionQueryError,
+  OverviewStatStrip,
 } from '@/app/intel/_components/DecisionFeed'
+import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
-import { fetchDecisionFeed } from '@/lib/intel/decisions/feed'
+import {
+  fetchDecisionFeed,
+  type DecisionFeedSection,
+} from '@/lib/intel/decisions/feed'
+import { fetchLeadDailySeriesInLastDays } from '@/lib/intel/leads'
+import { fetchSiteRangeTotals } from '@/lib/intel/search'
 
 export const metadata: Metadata = {
   title: 'Overview',
   robots: { index: false, follow: false },
 }
 
+function countNewFindings(sections: DecisionFeedSection[]): number {
+  let count = 0
+  for (const section of sections) {
+    for (const item of section.items) {
+      if (item.status === 'new') {
+        count += 1
+      }
+    }
+  }
+  return count
+}
+
+function clicksFromTotals(
+  result: Awaited<ReturnType<typeof fetchSiteRangeTotals>>,
+): number | null {
+  if (!result.ok) {
+    return null
+  }
+  if (result.status === 'no_data') {
+    return 0
+  }
+  return result.totals.clicks
+}
+
+function impressionsFromTotals(
+  result: Awaited<ReturnType<typeof fetchSiteRangeTotals>>,
+): number | null {
+  if (!result.ok) {
+    return null
+  }
+  if (result.status === 'no_data') {
+    return 0
+  }
+  return result.totals.impressions
+}
+
+function dailyMetric(
+  result: Awaited<ReturnType<typeof fetchSiteRangeTotals>>,
+  metric: 'clicks' | 'impressions',
+): number[] {
+  if (!result.ok || result.status !== 'ready') {
+    return []
+  }
+  return result.daily.map((point) => point[metric])
+}
+
 export default async function IntelOverviewPage() {
   await requireIntelUser()
-  const result = await fetchDecisionFeed()
+
+  const [result, siteTotals, leadSeries] = await Promise.all([
+    fetchDecisionFeed(),
+    fetchSiteRangeTotals('28d'),
+    fetchLeadDailySeriesInLastDays(28),
+  ])
+
+  const stats = (
+    <OverviewStatStrip
+      findingsNeedingAttention={
+        result.ok ? countNewFindings(result.sections) : null
+      }
+      leadsLast28Days={leadSeries === null ? null : leadSeries.total}
+      leadsDaily={leadSeries === null ? [] : leadSeries.daily}
+      clicks28d={clicksFromTotals(siteTotals)}
+      clicksDaily={dailyMetric(siteTotals, 'clicks')}
+      impressions28d={impressionsFromTotals(siteTotals)}
+      impressionsDaily={dailyMetric(siteTotals, 'impressions')}
+    />
+  )
 
   if (!result.ok) {
     return (
-      <div className="max-w-5xl">
+      <div className="flex flex-col gap-4">
         <DecisionHeader />
-        <DecisionQueryError />
+        {stats}
+        <Panel>
+          <DecisionQueryError />
+        </Panel>
       </div>
     )
   }
 
   if (result.total === 0) {
     return (
-      <div className="max-w-5xl">
+      <div className="flex flex-col gap-4">
         <DecisionHeader />
-        <DecisionEmptyState />
+        {stats}
+        <Panel>
+          <DecisionEmptyState />
+        </Panel>
       </div>
     )
   }
 
   return (
-    <div className="max-w-5xl">
+    <div className="flex flex-col gap-4">
       <DecisionHeader />
+      {stats}
       <DecisionFeed sections={result.sections} />
     </div>
   )

@@ -5,8 +5,8 @@ import {
   formatQueryCount,
   formatQueryCtr,
   formatQueryPosition,
-  SectionHeading,
 } from '@/app/intel/_components/SearchSurface'
+import { Panel } from '@/app/intel/_components/ui/Panel'
 
 function TableHead({ columns }: { columns: readonly string[] }) {
   return (
@@ -17,8 +17,8 @@ function TableHead({ columns }: { columns: readonly string[] }) {
             key={column}
             className={
               index === columns.length - 1
-                ? 'py-3 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta'
-                : 'py-3 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta'
+                ? 'py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta'
+                : 'py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta'
             }
           >
             {column}
@@ -31,28 +31,27 @@ function TableHead({ columns }: { columns: readonly string[] }) {
 
 export function SearchTopQueries({ rows }: { rows: readonly QueryAggregate[] }) {
   return (
-    <section className="mt-20">
-      <SectionHeading>Top queries</SectionHeading>
+    <Panel title="Top queries">
       {rows.length === 0 ? (
-        <p className="mt-8 max-w-md text-base leading-relaxed text-body">
+        <p className="text-sm leading-relaxed text-body">
           No queries in this range.
         </p>
       ) : (
-        <div className="mt-8">
+        <div>
           <ul className="divide-y divide-black/8 lg:hidden">
             {rows.map((row) => (
-              <li key={row.query} className="py-6">
-                <p className="text-base font-medium text-foreground">
+              <li key={row.query} className="py-2">
+                <p className="text-sm font-medium text-foreground">
                   {row.query}
                 </p>
-                <p className="mt-2 text-sm text-body">
+                <p className="mt-1 text-sm tabular-nums text-body">
                   {formatQueryCount(row.clicks)} clicks
                   <span aria-hidden className="px-2">
                     ·
                   </span>
                   {formatQueryCount(row.impressions)} impressions
                 </p>
-                <p className="mt-1 text-sm text-meta">
+                <p className="mt-1 text-sm tabular-nums text-meta">
                   {formatQueryCtr(row.ctr)} CTR
                   <span aria-hidden className="px-2">
                     ·
@@ -74,19 +73,19 @@ export function SearchTopQueries({ rows }: { rows: readonly QueryAggregate[] }) 
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.query} className="border-b border-black/8">
-                    <td className="max-w-[22rem] py-4 pr-4 font-medium text-foreground">
+                    <td className="max-w-[22rem] py-[5px] pr-4 font-medium text-foreground">
                       {row.query}
                     </td>
-                    <td className="whitespace-nowrap py-4 pr-4 text-body">
+                    <td className="whitespace-nowrap py-[5px] pr-4 tabular-nums text-body">
                       {formatQueryCount(row.clicks)}
                     </td>
-                    <td className="whitespace-nowrap py-4 pr-4 text-body">
+                    <td className="whitespace-nowrap py-[5px] pr-4 tabular-nums text-body">
                       {formatQueryCount(row.impressions)}
                     </td>
-                    <td className="whitespace-nowrap py-4 pr-4 text-body">
+                    <td className="whitespace-nowrap py-[5px] pr-4 tabular-nums text-body">
                       {formatQueryCtr(row.ctr)}
                     </td>
-                    <td className="whitespace-nowrap py-4 text-body">
+                    <td className="whitespace-nowrap py-[5px] tabular-nums text-body">
                       {formatQueryPosition(row.position)}
                     </td>
                   </tr>
@@ -96,7 +95,7 @@ export function SearchTopQueries({ rows }: { rows: readonly QueryAggregate[] }) 
           </div>
         </div>
       )}
-    </section>
+    </Panel>
   )
 }
 
@@ -113,7 +112,7 @@ function MoverList({
     return (
       <div>
         <h3 className="text-sm font-medium text-foreground">{title}</h3>
-        <p className="mt-4 text-sm leading-relaxed text-body">
+        <p className="mt-3 text-sm leading-relaxed text-body">
           None in this range.
         </p>
       </div>
@@ -123,11 +122,11 @@ function MoverList({
   return (
     <div>
       <h3 className="text-sm font-medium text-foreground">{title}</h3>
-      <ul className="mt-4 divide-y divide-black/8 lg:hidden">
+      <ul className="mt-3 divide-y divide-black/8 lg:hidden">
         {rows.map((row) => (
-          <li key={row.query} className="py-5">
-            <p className="text-base font-medium text-foreground">{row.query}</p>
-            <p className="mt-2 text-sm text-body">
+          <li key={row.query} className="py-2">
+            <p className="text-sm font-medium text-foreground">{row.query}</p>
+            <p className="mt-1 text-sm tabular-nums text-body">
               {formatClickDelta(row.delta)} clicks
               <span aria-hidden className="px-2">
                 ·
@@ -141,23 +140,23 @@ function MoverList({
           </li>
         ))}
       </ul>
-      <div className="mt-4 hidden lg:block">
+      <div className="mt-3 hidden lg:block">
         <table className="w-full border-collapse text-left text-sm">
           <caption className="sr-only">{caption}</caption>
           <TableHead columns={['Query', 'Delta', 'Now', 'Prior']} />
           <tbody>
             {rows.map((row) => (
               <tr key={row.query} className="border-b border-black/8">
-                <td className="max-w-[18rem] py-4 pr-4 font-medium text-foreground">
+                <td className="max-w-[18rem] py-[5px] pr-4 font-medium text-foreground">
                   {row.query}
                 </td>
-                <td className="whitespace-nowrap py-4 pr-4 text-body">
+                <td className="whitespace-nowrap py-[5px] pr-4 tabular-nums text-body">
                   {formatClickDelta(row.delta)}
                 </td>
-                <td className="whitespace-nowrap py-4 pr-4 text-body">
+                <td className="whitespace-nowrap py-[5px] pr-4 tabular-nums text-body">
                   {formatQueryCount(row.clicks)}
                 </td>
-                <td className="whitespace-nowrap py-4 text-body">
+                <td className="whitespace-nowrap py-[5px] tabular-nums text-body">
                   {formatQueryCount(row.priorClicks)}
                 </td>
               </tr>
@@ -177,9 +176,8 @@ export function SearchMovers({
   losing: readonly QueryMover[]
 }) {
   return (
-    <section className="mt-20">
-      <SectionHeading>Movers</SectionHeading>
-      <div className="mt-8 grid gap-16 lg:grid-cols-2">
+    <Panel title="Movers">
+      <div className="grid gap-6 lg:grid-cols-2">
         <MoverList
           title="Gaining clicks"
           rows={gaining}
@@ -191,7 +189,7 @@ export function SearchMovers({
           caption="Queries losing clicks versus the prior period"
         />
       </div>
-    </section>
+    </Panel>
   )
 }
 
@@ -201,21 +199,20 @@ export function SearchNearPageOne({
   rows: readonly QueryAggregate[]
 }) {
   return (
-    <section className="mt-20">
-      <SectionHeading>Close to page one</SectionHeading>
+    <Panel title="Close to page one">
       {rows.length === 0 ? (
-        <p className="mt-8 max-w-md text-base leading-relaxed text-body">
+        <p className="text-sm leading-relaxed text-body">
           No queries sit between positions 8 and 20 with enough impressions.
         </p>
       ) : (
-        <div className="mt-8">
+        <div>
           <ul className="divide-y divide-black/8 lg:hidden">
             {rows.map((row) => (
-              <li key={row.query} className="py-6">
-                <p className="text-base font-medium text-foreground">
+              <li key={row.query} className="py-2">
+                <p className="text-sm font-medium text-foreground">
                   {row.query}
                 </p>
-                <p className="mt-2 text-sm text-body">
+                <p className="mt-1 text-sm tabular-nums text-body">
                   Position {formatQueryPosition(row.position)}
                   <span aria-hidden className="px-2">
                     ·
@@ -235,13 +232,13 @@ export function SearchNearPageOne({
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.query} className="border-b border-black/8">
-                    <td className="max-w-[22rem] py-4 pr-4 font-medium text-foreground">
+                    <td className="max-w-[22rem] py-[5px] pr-4 font-medium text-foreground">
                       {row.query}
                     </td>
-                    <td className="whitespace-nowrap py-4 pr-4 text-body">
+                    <td className="whitespace-nowrap py-[5px] pr-4 tabular-nums text-body">
                       {formatQueryPosition(row.position)}
                     </td>
-                    <td className="whitespace-nowrap py-4 text-body">
+                    <td className="whitespace-nowrap py-[5px] tabular-nums text-body">
                       {formatQueryCount(row.impressions)}
                     </td>
                   </tr>
@@ -251,6 +248,6 @@ export function SearchNearPageOne({
           </div>
         </div>
       )}
-    </section>
+    </Panel>
   )
 }

@@ -1,6 +1,9 @@
-import type { ReactNode } from 'react'
 import Link from 'next/link'
 
+import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
+import type { MetricDeltaDirection } from '@/app/intel/_components/ui/MetricCard'
+import { Sparkline } from '@/app/intel/_components/ui/Sparkline'
+import { StatStrip } from '@/app/intel/_components/ui/StatStrip'
 import { formatPercentAgainstMeaningfulBase } from '@/lib/intel/format-change'
 import {
   formatDisplayDate,
@@ -12,6 +15,7 @@ import {
   type SearchRange,
 } from '@/lib/intel/search-params'
 import type {
+  DailyPoint,
   MetricTotals,
   SearchComparison,
 } from '@/lib/intel/search'
@@ -19,23 +23,15 @@ import { cn } from '@/lib/utils'
 
 export function SearchHeader() {
   return (
-    <div>
-      <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
-        Intel
-      </p>
-      <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground md:text-4xl">
-        Search
-      </h1>
-    </div>
+    <h1 className="text-base font-semibold tracking-tight text-foreground">
+      Search
+    </h1>
   )
 }
 
 export function SearchQueryError() {
   return (
-    <p
-      className="mt-16 max-w-md text-base leading-relaxed text-body"
-      role="alert"
-    >
+    <p className="text-sm leading-relaxed text-body" role="alert">
       Unable to load search data. Try again shortly.
     </p>
   )
@@ -48,16 +44,16 @@ type EmptyStateProps = {
 
 export function SearchEmptyState({ title, body }: EmptyStateProps) {
   return (
-    <div className="mt-16 max-w-md">
-      <p className="text-base font-medium text-foreground">{title}</p>
-      <p className="mt-3 text-base leading-relaxed text-body">{body}</p>
+    <div>
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="mt-2 text-sm leading-relaxed text-body">{body}</p>
     </div>
   )
 }
 
 export function SearchRangeNav({ range }: { range: SearchRange }) {
   return (
-    <nav aria-label="Date range" className="mt-10 flex flex-wrap gap-6">
+    <nav aria-label="Date range" className="flex flex-wrap gap-x-4 gap-y-1">
       {SEARCH_RANGES.map((value) => {
         const active = value === range
         return (
@@ -86,21 +82,20 @@ type DateSpansProps = {
 }
 
 export function SearchDateSpans({ span, comparison }: DateSpansProps) {
+  const prior = comparison.available
+    ? `vs ${formatSpanLabel(comparison.span)}`
+    : comparison.coverageStartedOn
+      ? `Prior unavailable — coverage starts ${formatDisplayDate(comparison.coverageStartedOn)}`
+      : 'Prior unavailable'
+
   return (
-    <div className="mt-4 space-y-1">
-      <p className="text-sm text-body">{formatSpanLabel(span)}</p>
-      {comparison.available ? (
-        <p className="text-sm text-meta">
-          Compared with {formatSpanLabel(comparison.span)}
-        </p>
-      ) : (
-        <p className="text-sm text-meta">
-          {comparison.coverageStartedOn
-            ? `Prior period unavailable — coverage starts ${formatDisplayDate(comparison.coverageStartedOn)}`
-            : 'Prior period unavailable — coverage start is not recorded'}
-        </p>
-      )}
-    </div>
+    <p className="text-xs text-meta">
+      {formatSpanLabel(span)}
+      <span aria-hidden className="px-1.5">
+        ·
+      </span>
+      {prior}
+    </p>
   )
 }
 
@@ -136,192 +131,140 @@ function formatSigned(value: number, digits?: number): string {
   return digits === undefined ? '0' : (0).toFixed(digits)
 }
 
-type ChangeTone = 'better' | 'worse' | 'flat' | 'neutral'
-
-function toneClass(tone: ChangeTone): string {
-  if (tone === 'worse') {
-    return 'text-warning'
-  }
-  if (tone === 'better') {
-    return 'text-foreground'
-  }
-  return 'text-meta'
-}
-
-function countTone(current: number, previous: number): ChangeTone {
+function numericDirection(
+  current: number,
+  previous: number,
+): MetricDeltaDirection {
   if (current > previous) {
-    return 'better'
+    return 'up'
   }
   if (current < previous) {
-    return 'worse'
+    return 'down'
   }
   return 'flat'
 }
 
-function positionTone(current: number, previous: number): ChangeTone {
-  if (current < previous) {
-    return 'better'
-  }
-  if (current > previous) {
-    return 'worse'
-  }
-  return 'flat'
+type DeltaFields = {
+  deltaLabel: string
+  deltaDirection: MetricDeltaDirection
+  context: string
 }
 
-function ChangeLine({
-  children,
-  tone,
-}: {
-  children: string
-  tone: ChangeTone
-}) {
-  return <p className={cn('mt-2 text-sm', toneClass(tone))}>{children}</p>
-}
-
-function CountChange({
-  current,
-  previous,
-}: {
-  current: number
-  previous: number
-}) {
-  const tone = countTone(current, previous)
+function countDelta(current: number, previous: number): DeltaFields {
   const relative = formatPercentAgainstMeaningfulBase(current, previous)
-  const parts = [`Prior ${formatCount(previous)}`]
-  if (current !== previous) {
-    parts.push(formatSigned(current - previous))
+  const deltaLabel =
+    current === previous
+      ? '0'
+      : (relative ?? formatSigned(current - previous))
+  return {
+    deltaLabel,
+    deltaDirection: numericDirection(current, previous),
+    context: `Prior ${formatCount(previous)}`,
   }
-  if (relative && current !== previous) {
-    parts.push(relative)
-  }
-  if (current === previous) {
-    parts.push('no change')
-  }
-  return <ChangeLine tone={tone}>{parts.join(' · ')}</ChangeLine>
 }
 
-function CtrChange({
-  current,
-  previous,
-}: {
-  current: number | null
-  previous: number | null
-}) {
+function ctrDelta(
+  current: number | null,
+  previous: number | null,
+): DeltaFields | null {
   if (current === null || previous === null) {
-    return <ChangeLine tone="neutral">Prior —</ChangeLine>
+    return null
   }
   const deltaPoints = (current - previous) * 100
-  const tone = countTone(current, previous)
-  const parts = [`Prior ${formatCtr(previous)}`]
-  if (deltaPoints === 0) {
-    parts.push('no change')
-  } else {
-    parts.push(`${formatSigned(deltaPoints, 1)} pt`)
+  return {
+    deltaLabel:
+      deltaPoints === 0 ? '0' : `${formatSigned(deltaPoints, 1)} pt`,
+    deltaDirection: numericDirection(current, previous),
+    context: `Prior ${formatCtr(previous)}`,
   }
-  return <ChangeLine tone={tone}>{parts.join(' · ')}</ChangeLine>
 }
 
-function PositionChange({
-  current,
-  previous,
-}: {
-  current: number | null
-  previous: number | null
-}) {
+function positionDelta(
+  current: number | null,
+  previous: number | null,
+): DeltaFields | null {
   if (current === null || previous === null) {
-    return <ChangeLine tone="neutral">Prior —</ChangeLine>
+    return null
   }
   const delta = current - previous
-  const tone = positionTone(current, previous)
-  const parts = [`Prior ${formatPosition(previous)}`]
-  if (delta === 0) {
-    parts.push('no change')
-  } else {
-    parts.push(formatSigned(delta, 1))
-    parts.push(tone === 'better' ? 'better' : 'worse')
+  return {
+    deltaLabel: delta === 0 ? '0' : formatSigned(delta, 1),
+    deltaDirection: numericDirection(current, previous),
+    context: `Prior ${formatPosition(previous)}`,
   }
-  return <ChangeLine tone={tone}>{parts.join(' · ')}</ChangeLine>
-}
-
-function MetricCard({
-  label,
-  value,
-  change,
-}: {
-  label: string
-  value: string
-  change: ReactNode
-}) {
-  return (
-    <div>
-      <p className="text-sm text-meta">{label}</p>
-      <p className="mt-2 text-2xl font-medium tracking-tight text-foreground">
-        {value}
-      </p>
-      {change}
-    </div>
-  )
 }
 
 type SummaryCardsProps = {
   totals: MetricTotals
   comparison: SearchComparison
+  daily: readonly DailyPoint[]
 }
 
-export function SearchSummaryCards({ totals, comparison }: SummaryCardsProps) {
+export function SearchSummaryCards({
+  totals,
+  comparison,
+  daily,
+}: SummaryCardsProps) {
   const prior = comparison.available ? comparison.totals : null
+  const clickDelta = prior ? countDelta(totals.clicks, prior.clicks) : null
+  const impressionDelta = prior
+    ? countDelta(totals.impressions, prior.impressions)
+    : null
+  const ctrChange = prior ? ctrDelta(totals.ctr, prior.ctr) : null
+  const positionChange = prior
+    ? positionDelta(totals.position, prior.position)
+    : null
+  const clickPoints = daily.map((point) => point.clicks)
+  const impressionPoints = daily.map((point) => point.impressions)
 
   return (
-    <section className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+    <StatStrip>
       <MetricCard
         label="Clicks"
         value={formatCount(totals.clicks)}
-        change={
-          prior ? (
-            <CountChange current={totals.clicks} previous={prior.clicks} />
-          ) : null
+        deltaLabel={clickDelta?.deltaLabel}
+        deltaDirection={clickDelta?.deltaDirection}
+        sparkline={
+          clickPoints.length > 0 ? (
+            <Sparkline points={clickPoints} />
+          ) : undefined
         }
+        context={clickDelta?.context}
       />
       <MetricCard
         label="Impressions"
         value={formatCount(totals.impressions)}
-        change={
-          prior ? (
-            <CountChange
-              current={totals.impressions}
-              previous={prior.impressions}
-            />
-          ) : null
+        deltaLabel={impressionDelta?.deltaLabel}
+        deltaDirection={impressionDelta?.deltaDirection}
+        sparkline={
+          impressionPoints.length > 0 ? (
+            <Sparkline points={impressionPoints} />
+          ) : undefined
         }
+        context={impressionDelta?.context}
       />
       <MetricCard
         label="CTR"
         value={formatCtr(totals.ctr)}
-        change={
-          prior ? (
-            <CtrChange current={totals.ctr} previous={prior.ctr} />
-          ) : null
-        }
+        deltaLabel={ctrChange?.deltaLabel}
+        deltaDirection={ctrChange?.deltaDirection}
+        context={ctrChange?.context}
       />
       <MetricCard
         label="Average position"
         value={formatPosition(totals.position)}
-        change={
-          prior ? (
-            <PositionChange
-              current={totals.position}
-              previous={prior.position}
-            />
-          ) : null
-        }
+        deltaLabel={positionChange?.deltaLabel}
+        deltaDirection={positionChange?.deltaDirection}
+        lowerIsBetter
+        context={positionChange?.context}
       />
-    </section>
+    </StatStrip>
   )
 }
 
 export function SearchPositionCaveat() {
   return (
-    <p className="mt-20 max-w-2xl text-sm leading-relaxed text-meta">
+    <p className="text-sm leading-relaxed text-meta">
       Average position is directional. Google averages it across impressions.
     </p>
   )
@@ -333,19 +276,11 @@ export function SearchMoversUnavailable({
   coverageStartedOn: string | null
 }) {
   return (
-    <p className="mt-16 max-w-2xl text-sm leading-relaxed text-meta">
+    <p className="text-sm leading-relaxed text-meta">
       {coverageStartedOn
         ? `Query movers are omitted because the prior period starts before trustworthy coverage (${formatDisplayDate(coverageStartedOn)}).`
         : 'Query movers are omitted because the prior period cannot be verified against coverage.'}
     </p>
-  )
-}
-
-export function SectionHeading({ children }: { children: string }) {
-  return (
-    <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
-      {children}
-    </h2>
   )
 }
 

@@ -10,18 +10,24 @@ export function LeadDeliveryMark({ status }: LeadDeliveryMarkProps) {
   }
 
   if (status === 'sent') {
-    return <span className="text-xs text-meta/70">Sent</span>
+    return (
+      <span className="inline-flex items-center rounded-full bg-black/[0.03] px-2 py-0.5 text-[0.65rem] text-meta/70">
+        Sent
+      </span>
+    )
   }
 
   if (status === 'failed') {
     return (
-      <span className="text-xs font-medium text-warning-severe">
+      <span className="inline-flex items-center rounded-full bg-warning-severe-soft px-2 py-0.5 text-[0.65rem] font-medium text-warning-severe">
         Delivery failed
       </span>
     )
   }
 
   return (
-    <span className="text-xs font-medium text-warning">Not configured</span>
+    <span className="inline-flex items-center rounded-full bg-warning-soft px-2 py-0.5 text-[0.65rem] font-medium text-warning">
+      Not configured
+    </span>
   )
 }

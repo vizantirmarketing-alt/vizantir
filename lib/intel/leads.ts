@@ -13,6 +13,7 @@ import {
   type LeadsListParams,
   type NotifyStatus,
 } from '@/lib/intel/lead-params'
+import { enumerateDates } from '@/lib/intel/search-params'
 
 export type { LeadListRow }
 
@@ -541,6 +542,174 @@ export async function fetchLeadsExport(
   } catch {
     console.error('Intel leads export query failed')
     return { ok: false }
+  }
+}
+
+const ACTIVE_PIPELINE_STATUSES: readonly LeadStatus[] = [
+  'reviewing',
+  'contacted',
+  'discovery_scheduled',
+  'proposal_sent',
+]
+
+const DELIVERY_ISSUE_STATUSES: readonly NotifyStatus[] = [
+  'failed',
+  'not_configured',
+]
+
+export type LeadDashboardStats = {
+  total: number | null
+  newCount: number | null
+  activePipeline: number | null
+  deliveryIssues: number | null
+}
+
+function readCount(count: number | null): number | null {
+  return typeof count === 'number' && count >= 0 ? count : null
+}
+
+export type LeadDailySeries = {
+  total: number
+  daily: number[]
+}
+
+function utcDateKey(iso: string): string | null {
+  const ms = Date.parse(iso)
+  if (Number.isNaN(ms)) {
+    return null
+  }
+  return new Date(ms).toISOString().slice(0, 10)
+}
+
+/**
+ * Rolling-window lead volume plus calendar-day buckets for a sparkline.
+ * Same filter as the previous head-count: created_at >= now - days.
+ */
+export async function fetchLeadDailySeriesInLastDays(
+  days: number,
+): Promise<LeadDailySeries | null> {
+  const sinceIso = new Date(Date.now() - days * 86_400_000).toISOString()
+  const startDate = utcDateKey(sinceIso)
+  const endDate = new Date().toISOString().slice(0, 10)
+  if (startDate === null) {
+    return null
+  }
+
+  try {
+    const supabase = createSupabaseServiceRole()
+    const { data, error } = await supabase
+      .from('contact_submissions')
+      .select('created_at')
+      .gte('created_at', sinceIso)
+
+    if (error) {
+      console.error('Intel leads query failed')
+      return null
+    }
+
+    const dates = enumerateDates({ start: startDate, end: endDate })
+    const counts = new Map<string, number>()
+    for (const date of dates) {
+      counts.set(date, 0)
+    }
+
+    const rows = Array.isArray(data) ? data : []
+    let total = 0
+    for (const row of rows) {
+      if (typeof row !== 'object' || row === null) {
+        continue
+      }
+      const createdAt = readField(row, 'created_at')
+      if (typeof createdAt !== 'string') {
+        continue
+      }
+      const key = utcDateKey(createdAt)
+      if (key === null) {
+        continue
+      }
+      const existing = counts.get(key)
+      if (existing === undefined) {
+        continue
+      }
+      counts.set(key, existing + 1)
+      total += 1
+    }
+
+    return {
+      total,
+      daily: dates.map((date) => {
+        const value = counts.get(date)
+        return value === undefined ? 0 : value
+      }),
+    }
+  } catch {
+    console.error('Intel leads query failed')
+    return null
+  }
+}
+
+export async function countLeadsCreatedInLastDays(
+  days: number,
+): Promise<number | null> {
+  const series = await fetchLeadDailySeriesInLastDays(days)
+  if (series === null) {
+    return null
+  }
+  return series.total
+}
+
+export async function fetchLeadDashboardStats(): Promise<LeadDashboardStats> {
+  const empty: LeadDashboardStats = {
+    total: null,
+    newCount: null,
+    activePipeline: null,
+    deliveryIssues: null,
+  }
+
+  try {
+    const supabase = createSupabaseServiceRole()
+
+    const [totalResult, newResult, activeResult, deliveryResult] =
+      await Promise.all([
+        supabase
+          .from('contact_submissions')
+          .select('id', { count: 'exact', head: true }),
+        supabase
+          .from('contact_submissions')
+          .select('id', { count: 'exact', head: true })
+          .eq('status', 'new'),
+        supabase
+          .from('contact_submissions')
+          .select('id', { count: 'exact', head: true })
+          .in('status', [...ACTIVE_PIPELINE_STATUSES]),
+        supabase
+          .from('contact_submissions')
+          .select('id', { count: 'exact', head: true })
+          .in('notify_status', [...DELIVERY_ISSUE_STATUSES]),
+      ])
+
+    if (
+      totalResult.error ||
+      newResult.error ||
+      activeResult.error ||
+      deliveryResult.error
+    ) {
+      console.error('Intel leads query failed')
+    }
+
+    return {
+      total: totalResult.error ? null : (readCount(totalResult.count) ?? 0),
+      newCount: newResult.error ? null : (readCount(newResult.count) ?? 0),
+      activePipeline: activeResult.error
+        ? null
+        : (readCount(activeResult.count) ?? 0),
+      deliveryIssues: deliveryResult.error
+        ? null
+        : (readCount(deliveryResult.count) ?? 0),
+    }
+  } catch {
+    console.error('Intel leads query failed')
+    return empty
   }
 }
 

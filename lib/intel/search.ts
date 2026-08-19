@@ -584,3 +584,54 @@ export async function fetchSearchIntelligence(
     return { ok: false }
   }
 }
+
+export type FetchSiteRangeTotalsResult =
+  | { ok: false }
+  | { ok: true; status: 'no_data' }
+  | {
+      ok: true
+      status: 'ready'
+      totals: MetricTotals
+      span: DateSpan
+      daily: DailyPoint[]
+    }
+
+/**
+ * Site-daily totals for a range. Does not load query-page rows.
+ */
+export async function fetchSiteRangeTotals(
+  range: SearchRange,
+): Promise<FetchSiteRangeTotalsResult> {
+  try {
+    const supabase = createSupabaseServiceRole()
+    const latestDate = await fetchLatestSiteDate(supabase)
+
+    if (latestDate === 'error') {
+      console.error('Intel search query failed')
+      return { ok: false }
+    }
+
+    if (latestDate === null) {
+      return { ok: true, status: 'no_data' }
+    }
+
+    const span = spanEndingOn(latestDate, SEARCH_RANGE_DAYS[range])
+    const siteRows = await fetchSiteDaily(supabase, span)
+
+    if (siteRows === null) {
+      console.error('Intel search query failed')
+      return { ok: false }
+    }
+
+    return {
+      ok: true,
+      status: 'ready',
+      totals: aggregateSiteMetrics(siteRows),
+      span,
+      daily: dailySeries(span, siteRows),
+    }
+  } catch {
+    console.error('Intel search query failed')
+    return { ok: false }
+  }
+}

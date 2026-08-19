@@ -11,6 +11,9 @@ import {
 
 import { LeadDeliveryMark } from '@/app/intel/_components/LeadDeliveryMark'
 import { LeadStatusBadge } from '@/app/intel/_components/LeadStatusBadge'
+import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
+import { StatStrip } from '@/app/intel/_components/ui/StatStrip'
+import type { LeadDashboardStats } from '@/lib/intel/leads'
 
 type LeadsListProps = {
   rows: LeadListRow[]
@@ -20,7 +23,7 @@ type LeadsListProps = {
 
 function SubmittedCell({ iso, nowMs }: { iso: string; nowMs: number }) {
   return (
-    <time dateTime={iso} title={iso}>
+    <time dateTime={iso} title={iso} className="tabular-nums">
       {formatSubmittedAt(iso, nowMs)}
     </time>
   )
@@ -28,28 +31,28 @@ function SubmittedCell({ iso, nowMs }: { iso: string; nowMs: number }) {
 
 export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
   return (
-    <div className="mt-12">
+    <div>
       <ul className="divide-y divide-black/8 lg:hidden">
         {rows.map((row) => (
-          <li key={row.id} className="py-6">
+          <li key={row.id} className="py-2">
             <div className="flex items-start justify-between gap-4">
               <Link
                 href={leadDetailHref(row.id, listParams)}
-                className="text-base font-medium text-foreground transition-colors hover:text-cobalt-primary"
+                className="text-sm font-medium text-foreground transition-colors hover:text-cobalt-primary"
               >
                 {row.name}
               </Link>
               <LeadStatusBadge status={row.status} />
             </div>
             <p className="mt-1 text-sm text-body">{row.company ?? '—'}</p>
-            <p className="mt-3 text-sm text-meta">
+            <p className="mt-2 text-sm text-meta">
               {row.service}
               <span aria-hidden className="px-2">
                 ·
               </span>
               {formatChannelLabel(row.initial_channel)}
             </p>
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-meta">
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-meta">
               <SubmittedCell iso={row.created_at} nowMs={nowMs} />
               <LeadDeliveryMark status={row.notify_status} />
             </div>
@@ -62,25 +65,25 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
           <caption className="sr-only">Contact submissions</caption>
           <thead>
             <tr className="border-b border-black/8">
-              <th className="py-3 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Submitted
               </th>
-              <th className="py-3 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Name
               </th>
-              <th className="py-3 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Company
               </th>
-              <th className="py-3 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Service
               </th>
-              <th className="py-3 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Status
               </th>
-              <th className="py-3 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Channel
               </th>
-              <th className="py-3 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Delivery
               </th>
             </tr>
@@ -88,10 +91,10 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
           <tbody>
             {rows.map((row) => (
               <tr key={row.id} className="border-b border-black/8">
-                <td className="whitespace-nowrap py-4 pr-4 text-meta">
+                <td className="whitespace-nowrap py-[5px] pr-4 text-meta">
                   <SubmittedCell iso={row.created_at} nowMs={nowMs} />
                 </td>
-                <td className="max-w-[12rem] py-4 pr-4">
+                <td className="max-w-[12rem] py-[5px] pr-4">
                   <Link
                     href={leadDetailHref(row.id, listParams)}
                     className="font-medium text-foreground transition-colors hover:text-cobalt-primary"
@@ -99,19 +102,19 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
                     {row.name}
                   </Link>
                 </td>
-                <td className="max-w-[11rem] truncate py-4 pr-4 text-body">
+                <td className="max-w-[11rem] truncate py-[5px] pr-4 text-body">
                   {row.company ?? '—'}
                 </td>
-                <td className="max-w-[11rem] truncate py-4 pr-4 text-body">
+                <td className="max-w-[11rem] truncate py-[5px] pr-4 text-body">
                   {row.service}
                 </td>
-                <td className="py-4 pr-4">
+                <td className="py-[5px] pr-4">
                   <LeadStatusBadge status={row.status} />
                 </td>
-                <td className="whitespace-nowrap py-4 pr-4 text-body">
+                <td className="whitespace-nowrap py-[5px] pr-4 text-body">
                   {formatChannelLabel(row.initial_channel)}
                 </td>
-                <td className="py-4">
+                <td className="py-[5px]">
                   <LeadDeliveryMark status={row.notify_status} />
                 </td>
               </tr>
@@ -148,9 +151,9 @@ export function LeadsPagination({
   return (
     <nav
       aria-label="Leads pagination"
-      className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-black/8 pt-8"
+      className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-black/8 pt-3"
     >
-      <p className="text-sm text-meta">
+      <p className="text-sm tabular-nums text-meta">
         {total} {total === 1 ? 'inquiry' : 'inquiries'}
         {pageCount > 1 ? ` · Page ${page} of ${pageCount}` : null}
       </p>
@@ -190,13 +193,13 @@ type EmptyStateProps = {
 
 export function LeadsEmptyState({ title, body, action }: EmptyStateProps) {
   return (
-    <div className="mt-16 max-w-md">
-      <p className="text-base font-medium text-foreground">{title}</p>
-      <p className="mt-3 text-base leading-relaxed text-body">{body}</p>
+    <div>
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="mt-2 text-sm leading-relaxed text-body">{body}</p>
       {action ? (
         <Link
           href={action.href}
-          className="mt-6 inline-block text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="mt-4 inline-block text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]"
         >
           {action.label}
         </Link>
@@ -207,7 +210,7 @@ export function LeadsEmptyState({ title, body, action }: EmptyStateProps) {
 
 export function LeadsQueryError() {
   return (
-    <p className="mt-16 max-w-md text-base leading-relaxed text-body" role="alert">
+    <p className="text-sm leading-relaxed text-body" role="alert">
       Unable to load inquiries. Try again shortly.
     </p>
   )
@@ -215,13 +218,41 @@ export function LeadsQueryError() {
 
 export function LeadsHeader() {
   return (
-    <div>
-      <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
-        Intel
-      </p>
-      <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground md:text-4xl">
-        Leads
-      </h1>
-    </div>
+    <h1 className="text-base font-semibold tracking-tight text-foreground">
+      Leads
+    </h1>
+  )
+}
+
+function formatCount(value: number | null): string {
+  if (value === null) {
+    return '—'
+  }
+  return new Intl.NumberFormat('en-US').format(value)
+}
+
+export function LeadsStatStrip({ stats }: { stats: LeadDashboardStats }) {
+  const deliveryContext =
+    stats.deliveryIssues !== null && stats.deliveryIssues > 0
+      ? 'Failed or not configured'
+      : undefined
+  const deliveryTone =
+    deliveryContext === undefined ? undefined : 'warning'
+
+  return (
+    <StatStrip>
+      <MetricCard label="Total inquiries" value={formatCount(stats.total)} />
+      <MetricCard label="New" value={formatCount(stats.newCount)} />
+      <MetricCard
+        label="Active pipeline"
+        value={formatCount(stats.activePipeline)}
+      />
+      <MetricCard
+        label="Delivery issues"
+        value={formatCount(stats.deliveryIssues)}
+        context={deliveryContext}
+        contextTone={deliveryTone}
+      />
+    </StatStrip>
   )
 }

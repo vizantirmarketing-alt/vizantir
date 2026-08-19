@@ -1,0 +1,105 @@
+import type { ReactNode } from 'react'
+
+import { cn } from '@/lib/utils'
+
+export type MetricDeltaDirection = 'up' | 'down' | 'flat'
+
+type MetricCardProps = {
+  label: string
+  value: string
+  deltaLabel?: string
+  deltaDirection?: MetricDeltaDirection
+  lowerIsBetter?: boolean
+  sparkline?: ReactNode
+  context?: string
+  contextTone?: 'meta' | 'warning' | 'warning-severe'
+}
+
+type DeltaTone = 'positive' | 'warning' | 'neutral'
+
+function deltaTone(
+  direction: MetricDeltaDirection,
+  lowerIsBetter: boolean,
+): DeltaTone {
+  if (direction === 'flat') {
+    return 'neutral'
+  }
+  const improved = lowerIsBetter ? direction === 'down' : direction === 'up'
+  return improved ? 'positive' : 'warning'
+}
+
+function DeltaChip({
+  label,
+  direction,
+  lowerIsBetter,
+}: {
+  label: string
+  direction: MetricDeltaDirection
+  lowerIsBetter: boolean
+}) {
+  const tone = deltaTone(direction, lowerIsBetter)
+  const arrow = direction === 'up' ? '▲' : direction === 'down' ? '▼' : null
+  const judgment =
+    tone === 'positive'
+      ? 'Improved'
+      : tone === 'warning'
+        ? 'Declined'
+        : 'Unchanged'
+
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-0.5 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[0.65rem] font-medium tabular-nums',
+        tone === 'positive' && 'bg-positive-soft text-positive',
+        tone === 'warning' && 'bg-warning-soft text-warning',
+        tone === 'neutral' && 'bg-black/[0.05] text-meta',
+      )}
+      aria-label={`${judgment} ${label}`}
+    >
+      {arrow ? <span aria-hidden>{arrow}</span> : null}
+      {label}
+    </span>
+  )
+}
+
+export function MetricCard({
+  label,
+  value,
+  deltaLabel,
+  deltaDirection,
+  lowerIsBetter = false,
+  sparkline,
+  context,
+  contextTone = 'meta',
+}: MetricCardProps) {
+  return (
+    <div className="flex min-w-0 flex-col rounded-xl border border-black/8 bg-white px-3 py-2 md:px-3.5 md:py-2.5">
+      <p className="text-[0.7rem] leading-4 text-meta">{label}</p>
+      <div className="mt-1 flex items-center gap-2">
+        <p className="text-2xl leading-none font-medium tabular-nums tracking-tight text-foreground">
+          {value}
+        </p>
+        {deltaLabel !== undefined && deltaDirection !== undefined ? (
+          <DeltaChip
+            label={deltaLabel}
+            direction={deltaDirection}
+            lowerIsBetter={lowerIsBetter}
+          />
+        ) : null}
+      </div>
+      {sparkline ? <div className="mt-1.5">{sparkline}</div> : null}
+      {context ? (
+        <p
+          className={cn(
+            'mt-1 truncate text-[0.7rem] leading-4',
+            contextTone === 'warning' && 'text-warning',
+            contextTone === 'warning-severe' && 'text-warning-severe',
+            contextTone === 'meta' && 'text-meta',
+          )}
+        >
+          {context}
+        </p>
+      ) : null}
+    </div>
+  )
+}
