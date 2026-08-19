@@ -6,7 +6,7 @@ Internal operator dashboard at `/intel`. Written 2026-08-18 from the repository.
 
 ## 1. System state
 
-Live surfaces (auth required except login): Overview (decision feed), Search, Leads (+ detail + CSV export). Instrumented public site; GSC + Clarity ingest; daily detectors.
+Live surfaces (auth required except login): Overview (28-day stat strip + decision feed), Search, Leads (+ detail + CSV export). Instrumented public site; GSC + Clarity ingest; daily detectors. Shared dashboard primitives live in `app/intel/_components/ui/`.
 
 ### Instrumentation
 
@@ -28,7 +28,7 @@ Both analytics `NEXT_PUBLIC_` vars are **absent from `.env.local`**. Tags theref
 
 Write path: `lib/forms/attribution.ts` (client capture + `initial_channel`) → `lib/forms/contact-submission.ts` (insert + Resend notify + `notify_status`). Intel reads/mutates the same rows (`lib/intel/leads.ts`, `app/intel/(app)/leads/[id]/actions.ts`). CSV at `/intel/leads/export`.
 
-`notify_status` **is** shown per lead (`LeadDeliveryMark` on the list; labels on the detail page). There is no aggregate health view or alert on failed/not_configured.
+`notify_status` **is** shown per lead (`LeadDeliveryMark` on the list; labels on the detail page). The Leads page also shows an aggregate **Delivery issues** count on `LeadsStatStrip` (`fetchLeadDashboardStats` → `notify_status` in `failed` \| `not_configured`). There is no alert, no `sync_runs` health surface, and Overview does not show this count.
 
 ### GSC sync
 
@@ -43,7 +43,15 @@ Daily window: UTC today−5 through today−2 (`lib/gsc/sync.ts`). `?backfill=1`
 
 ### Decision feed
 
-Overview (`app/intel/(app)/page.tsx`) renders `decision_items` via `lib/intel/decisions/feed.ts`. Hidden statuses: `completed`, `dismissed`. Ranked by `score * exp(-days_since_created / 14)`.
+Overview (`app/intel/(app)/page.tsx`) renders a 28-day `OverviewStatStrip` then `decision_items` via `lib/intel/decisions/feed.ts`. Hidden statuses: `completed`, `dismissed`. Ranked by `score * exp(-days_since_created / 14)` (`DECISION_NOVELTY_TAU_DAYS`). Cards show a one-line triage fact from `formatHeadlineFact` (impressions ± position; no percents).
+
+Strip metrics (null → em dash):
+
+| Card | Source | Window |
+|---|---|---|
+| Findings needing attention | Count of feed items with `status === 'new'` | Current feed (hidden statuses already excluded) |
+| Leads this 28 days | `fetchLeadDailySeriesInLastDays(28)` | Rolling `created_at >= now − 28d`, plus a daily sparkline |
+| Clicks 28d / Impressions 28d | `fetchSiteRangeTotals('28d')` | GSC site-daily span ending on latest stored date (not calendar-now; same 28d helper as Search) |
 
 Three detectors (`lib/intel/decisions/detectors/index.ts`):
 
@@ -90,6 +98,33 @@ Magic link (`shouldCreateUser: false`) → `/intel/auth/callback`. Allowlist: `I
 **Percentages suppressed below a meaningful base.** `MEANINGFUL_COMPARISON_BASE = 10` in `lib/intel/format-change.ts`. Search summary + trend chart use it. `percentChangeFromPrior` wraps the same rule; no detector currently calls it. Decision cards do not render percents.
 
 **Impression-weighted aggregation.** CTR = `sum(clicks) / sum(impressions)`. Position = `sum(position * impressions) / sum(impressions)`. Comment in `lib/intel/search.ts`: daily averages are never averaged together. Same weighting in `lib/intel/decisions/grouping.ts`.
+
+**Dashboard density and color.** Intel surfaces compose five primitives in `app/intel/_components/ui/` rather than ad-hoc cards. Density is in class names, not a named token: page stacks `gap-4`; titles `text-base font-semibold tracking-tight`; panel/kicker labels `text-[0.7rem]` uppercase tracked meta; chips `text-[0.65rem]`; MetricCard `px-3 py-2`; Panel `px-4 py-3 md:px-5 md:py-4`; shell main `max-w-[1200px]`.
+
+| Primitive | Role |
+|---|---|
+| `Panel` | White section (`rounded-xl border border-black/8`). Optional title + `headerAction`. Optional 3px left accent: `warning-severe` \| `cobalt` \| `positive` \| `neutral`. |
+| `StatStrip` | Responsive 1 / 2 / 4-col grid (`gap-3`) for MetricCards. |
+| `MetricCard` | Compact KPI: meta label, `text-2xl tabular-nums` value, optional delta chip, Sparkline, context line (`meta` \| `warning` \| `warning-severe`). |
+| `Sparkline` | Polyline default 120×36. Stroke is always `stroke-cobalt-primary/40` — not judgment-colored. |
+| `StatusChip` | Internal. Exported as `DecisionStatusChip`, `LeadStatusChip`, `ConfidenceChip`. Tones: `new` (cobalt), `active`, `success` (positive), `muted`. |
+
+Semantic tokens in `app/globals.css` (`:root` + `@theme inline`):
+
+| Token | Encoded use |
+|---|---|
+| `--positive` / `--positive-soft` | Improvement or completion only. CSS comment: `Intel semantic color — improvement / completion only for --positive`. |
+| `--cobalt-soft` | New / selected wash (Intel nav active, StatusChip `new`). |
+| `--warning-soft` / `--warning-severe-soft` | Caution / severe fills. `--warning` / `--warning-severe` remain the text colors. |
+
+Green is not a generic “good” or “on” color. In code:
+
+- **MetricCard deltas.** `deltaTone`: improved → positive, declined → warning, flat → neutral. Improvement respects `lowerIsBetter` (Search average position). Search clicks / impressions / CTR treat up as improved.
+- **StatusChip `success`.** Decision `completed`; lead `won`. `new` is cobalt. Dismissed / lost / not_qualified / spam are muted.
+- **`LeadDeliveryMark`.** `sent` is muted, not green. `failed` → warning-severe; `not_configured` → warning.
+- **Panel `positive` accent.** Working feed section left border (`CATEGORY_ACCENT.working`). Needs-attention uses `warning-severe`; opportunity `cobalt`; system `neutral`.
+
+Leads Delivery issues card: `contextTone="warning"` and copy “Failed or not configured” when the count is > 0; no green.
 
 ---
 
@@ -139,10 +174,10 @@ Vercel environment checkboxes are **not in the repo**. `.env.local` presence bel
 
 ## 5. Open risks
 
-- **Lint:** `pnpm lint` → `33 errors, 18 warnings` (2026-08-18). Zero findings under `lib/intel`, `lib/gsc`, `lib/clarity`, `app/intel`, `app/api/cron`. “Predating this work” is consistent with that split; git history was not inspected (repo rule: no git).
+- **Lint:** `pnpm lint` → `33 errors, 18 warnings` (2026-08-18, before this dashboard pass). Zero findings under `lib/intel`, `lib/gsc`, `lib/clarity`, `app/intel`, `app/api/cron` at that run. **Not re-run** after `app/intel/_components/ui/` and the Overview/Leads strips. Git history was not inspected (repo rule: no git).
 - **Tests:** no `test` script, no `*.test.*` / `*.spec.*`, no vitest/jest/playwright in the tree.
 - **Sync failure alerting:** `sync_runs` records `status` / `error_code` / `administrator_message`. Nothing consumes it.
-- **`notify_status`:** recorded and shown per lead; no site-wide failed-delivery surface.
+- **`notify_status`:** recorded, shown per lead, and aggregated as **Delivery issues** on the Leads stat strip (`failed` + `not_configured`). No alert, no Overview card, no dedicated health page.
 - **Law-firm overlap:** `law-firm` group can emit `buried-demand`; `geo-signal` can emit on the same query set if a non-focus geo term matches. No shared identity or relation table. Dedup deferred.
 
 ---
@@ -168,8 +203,7 @@ Negative evidence only — none of these have code, routes, or tables beyond unu
 1. Confirm the first unattended cron sequence in `sync_runs` (Clarity 09:00 → GSC 09:30) and that 10:00 decisions produced `decision_items`. Decisions leave no `sync_runs` row — check `decision_items.created_at` / cron logs.
 2. In GA4, mark `lead_form_submit` and `consultation_click` as key events if not already. Code already sends those names (`lib/analytics.ts`). Console config is **unverified**.
 3. GA4 event audit, then Stage 4 (GA4 surfaces) once the property has a meaningful window. “Stage 4” is not a name in the repo.
-4. Overview metric cards. Overview is feed-only today; Search already has click/impression/CTR/position cards.
-5. Site health surface that reads `sync_runs` and aggregates `notify_status`.
+4. Site health surface that reads `sync_runs`. `notify_status` aggregate exists on Leads only; still no consumer of `sync_runs`. Overview metric cards are already in (`OverviewStatStrip`).
 
 ---
 
@@ -182,9 +216,13 @@ Negative evidence only — none of these have code, routes, or tables beyond unu
 | 242-day GSC backfill from `2025-12-18` | Floor + date math verified. Database completeness **unverified**. |
 | Cron 09:00 / 09:30 / 10:00 UTC | Schedules verified. UTC is Vercel platform default, not in `vercel.json`. |
 | No `middleware.ts` | Verified. |
-| Lint 33 / 18 | Verified `pnpm lint` 2026-08-18. |
+| Lint 33 / 18 | Verified `pnpm lint` 2026-08-18 **before** the dashboard primitives. Current totals **unverified**. |
 | Clarity 10 req/day | **Unverified in code.** |
 | Vercel env environment matrix | **Unverified.** `.env.local` key presence verified. |
 | Production-only analytics tags | Consistent with missing local `NEXT_PUBLIC_*` analytics keys; dashboard **unverified**. |
 | First unattended cron success | **Unverified** (needs `sync_runs`). |
 | GA4 key events configured | **Unverified** (GA4 console). |
+| Overview 28d strip + ui primitives | Verified (`page.tsx`, `DecisionFeed.tsx`, `app/intel/_components/ui/*`, tokens in `globals.css`). |
+| Green = improvement/completion | Verified in CSS comment + MetricCard / StatusChip / LeadDeliveryMark. Working panel left-border also uses `--positive`. |
+| Leads Delivery issues count | Verified (`DELIVERY_ISSUE_STATUSES`, `LeadsStatStrip`). Live Postgres counts **unverified**. |
+| Overview vs Search 28d alignment | Windows differ by design (leads rolling-now vs GSC latest stored date). Whether operators treat them as the same “28 days” is **unverified**. |
