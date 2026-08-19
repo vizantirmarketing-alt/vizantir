@@ -1,6 +1,7 @@
 import 'server-only';
 import { runGa4Report, type Ga4Row } from '@/lib/ga4/client';
 import { serverEnv } from '@/lib/env/server';
+import { recordSyncSuccessEvent } from '@/lib/intel/activity';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 const PROPERTY_TIME_ZONE = 'America/Los_Angeles';
@@ -234,6 +235,22 @@ async function finishRun(
       error_code: result.status === 'success' ? null : result.status,
     })
     .eq('id', runId);
+
+  if (
+    result.status === 'success' &&
+    result.recordsProcessed > 0 &&
+    result.dataThroughDate !== null
+  ) {
+    try {
+      await recordSyncSuccessEvent({
+        provider: 'ga4',
+        recordsProcessed: result.recordsProcessed,
+        dataThroughDate: result.dataThroughDate,
+      });
+    } catch {
+      // Recording an event must never fail a sync.
+    }
+  }
 }
 
 function toDailyRows(

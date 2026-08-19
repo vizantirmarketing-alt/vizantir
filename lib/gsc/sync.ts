@@ -5,6 +5,7 @@ import {
   type GscRow,
 } from '@/lib/gsc/client';
 import { serverEnv } from '@/lib/env/server';
+import { recordSyncSuccessEvent } from '@/lib/intel/activity';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 const BACKFILL_FLOOR = '2025-12-18';
@@ -396,6 +397,18 @@ async function finishRun(
       error_code: result.status === 'success' ? null : result.status,
     })
     .eq('id', runId);
+
+  if (result.status === 'success' && result.recordsProcessed > 0) {
+    try {
+      await recordSyncSuccessEvent({
+        provider: 'gsc',
+        recordsProcessed: result.recordsProcessed,
+        dataThroughDate: result.dataThroughDate,
+      });
+    } catch {
+      // Recording an event must never fail a sync.
+    }
+  }
 }
 
 function iterateBackfillWindows(

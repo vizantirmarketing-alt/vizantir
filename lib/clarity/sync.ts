@@ -1,5 +1,6 @@
 import 'server-only';
 import { fetchClarityInsights, type ClarityMetricGroup } from '@/lib/clarity/client';
+import { recordSyncSuccessEvent } from '@/lib/intel/activity';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 const DIMENSION_SETS: readonly (readonly string[])[] = [
@@ -120,6 +121,18 @@ export async function syncClarity(): Promise<SyncClarityResult> {
         error_code: status === 'success' ? null : status,
       })
       .eq('id', runId);
+
+    if (status === 'success' && recordsProcessed > 0) {
+      try {
+        await recordSyncSuccessEvent({
+          provider: 'clarity',
+          recordsProcessed,
+          dataThroughDate,
+        });
+      } catch {
+        // Recording an event must never fail a sync.
+      }
+    }
 
     return { status, recordsProcessed, message };
   } catch {

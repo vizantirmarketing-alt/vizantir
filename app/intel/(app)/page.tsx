@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { ActivityFeed } from '@/app/intel/_components/ActivityFeed'
 import {
   DecisionEmptyState,
   DecisionFeed,
@@ -9,6 +10,7 @@ import {
 } from '@/app/intel/_components/DecisionFeed'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { fetchActivity } from '@/lib/intel/activity'
 import {
   fetchDecisionFeed,
   type DecisionFeedSection,
@@ -70,11 +72,16 @@ function dailyMetric(
 export default async function IntelOverviewPage() {
   await requireIntelUser()
 
-  const [result, siteTotals, leadSeries] = await Promise.all([
+  const [result, siteTotals, leadSeries, activity] = await Promise.all([
     fetchDecisionFeed(),
     fetchSiteRangeTotals('28d'),
     fetchLeadDailySeriesInLastDays(28),
+    fetchActivity(10),
   ])
+
+  const activityFeed = (
+    <ActivityFeed items={activity.items} nowMs={activity.nowMs} />
+  )
 
   const stats = (
     <OverviewStatStrip
@@ -95,6 +102,7 @@ export default async function IntelOverviewPage() {
       <div className="flex flex-col gap-4">
         <DecisionHeader />
         {stats}
+        {activityFeed}
         <Panel>
           <DecisionQueryError />
         </Panel>
@@ -107,6 +115,7 @@ export default async function IntelOverviewPage() {
       <div className="flex flex-col gap-4">
         <DecisionHeader />
         {stats}
+        {activityFeed}
         <Panel>
           <DecisionEmptyState />
         </Panel>
@@ -118,6 +127,7 @@ export default async function IntelOverviewPage() {
     <div className="flex flex-col gap-4">
       <DecisionHeader />
       {stats}
+      {activityFeed}
       <DecisionFeed sections={result.sections} />
     </div>
   )
