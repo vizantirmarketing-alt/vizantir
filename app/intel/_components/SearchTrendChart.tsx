@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import { formatPercentAgainstMeaningfulBase } from '@/lib/intel/format-change'
 import { SEARCH_RANGE_LABELS, type SearchRange } from '@/lib/intel/search-params'
 import type { DailyPoint, SearchComparison } from '@/lib/intel/search'
@@ -7,10 +9,14 @@ import { Panel } from '@/app/intel/_components/ui/Panel'
 
 const WIDTH = 720
 const HEIGHT = 220
-const PAD = { top: 14, right: 40, bottom: 28, left: 40 }
+const PAD = { top: 4, right: 0, bottom: 18, left: 0 }
 /** Dual-series rendering starts once a day actually occupies the clicks axis. */
 const CLICKS_SERIES_MIN = 5
-const CLICK_MARKER_RADIUS = 4
+const CLICK_MARKER_RADIUS = 5
+const CLICK_MARKER_RING = 2
+const LINE_CORNER_RADIUS = 12
+const FILLED_STROKE = 2
+const SECONDARY_STROKE = 1.5
 
 type PlotBox = {
   left: number
@@ -62,13 +68,64 @@ function toPoints(
   }))
 }
 
-function linePath(points: readonly { x: number; y: number }[]): string {
-  return points
-    .map((point, index) => {
-      const command = index === 0 ? 'M' : 'L'
-      return `${command}${point.x.toFixed(2)} ${point.y.toFixed(2)}`
-    })
-    .join(' ')
+function pct(value: number, total: number): string {
+  return `${((value / total) * 100).toFixed(3)}%`
+}
+
+function roundedLinePath(
+  points: readonly { x: number; y: number }[],
+  radius: number = LINE_CORNER_RADIUS,
+): string {
+  if (points.length === 0) {
+    return ''
+  }
+  if (points.length === 1) {
+    const only = points[0]
+    if (!only) return ''
+    return `M${only.x.toFixed(2)} ${only.y.toFixed(2)}`
+  }
+  if (points.length === 2) {
+    const first = points[0]
+    const last = points[1]
+    if (!first || !last) return ''
+    return `M${first.x.toFixed(2)} ${first.y.toFixed(2)} L${last.x.toFixed(2)} ${last.y.toFixed(2)}`
+  }
+
+  const start = points[0]
+  if (!start) return ''
+  let d = `M${start.x.toFixed(2)} ${start.y.toFixed(2)}`
+
+  for (let index = 1; index < points.length - 1; index += 1) {
+    const prev = points[index - 1]
+    const curr = points[index]
+    const next = points[index + 1]
+    if (!prev || !curr || !next) continue
+
+    const inDx = curr.x - prev.x
+    const inDy = curr.y - prev.y
+    const outDx = next.x - curr.x
+    const outDy = next.y - curr.y
+    const inLen = Math.hypot(inDx, inDy)
+    const outLen = Math.hypot(outDx, outDy)
+
+    if (inLen === 0 || outLen === 0) {
+      d += ` L${curr.x.toFixed(2)} ${curr.y.toFixed(2)}`
+      continue
+    }
+
+    const corner = Math.min(radius, inLen / 2, outLen / 2)
+    const beforeX = curr.x - (inDx / inLen) * corner
+    const beforeY = curr.y - (inDy / inLen) * corner
+    const afterX = curr.x + (outDx / outLen) * corner
+    const afterY = curr.y + (outDy / outLen) * corner
+
+    d += ` L${beforeX.toFixed(2)} ${beforeY.toFixed(2)} Q${curr.x.toFixed(2)} ${curr.y.toFixed(2)} ${afterX.toFixed(2)} ${afterY.toFixed(2)}`
+  }
+
+  const end = points[points.length - 1]
+  if (!end) return d
+  d += ` L${end.x.toFixed(2)} ${end.y.toFixed(2)}`
+  return d
 }
 
 function areaPath(points: readonly { x: number; y: number }[]): string {
@@ -78,7 +135,7 @@ function areaPath(points: readonly { x: number; y: number }[]): string {
     return ''
   }
   const baseline = (PLOT.top + PLOT.height).toFixed(2)
-  return `${linePath(points)} L${last.x.toFixed(2)} ${baseline} L${first.x.toFixed(2)} ${baseline} Z`
+  return `${roundedLinePath(points)} L${last.x.toFixed(2)} ${baseline} L${first.x.toFixed(2)} ${baseline} Z`
 }
 
 function compactCount(value: number): string {
@@ -220,6 +277,15 @@ function formatShortDate(iso: string): string {
   }).format(new Date(Date.UTC(year, month - 1, day)))
 }
 
+function dateAnchor(
+  index: number,
+  count: number,
+): 'start' | 'middle' | 'end' {
+  if (index === 0) return 'start'
+  if (index === count - 1) return 'end'
+  return 'middle'
+}
+
 type ClickMarker = {
   date: string
   clicks: number
@@ -248,6 +314,43 @@ function clickMarkersOnImpressions(
   return markers
 }
 
+function screenDotPath(x: number, y: number): string {
+  return `M${x.toFixed(2)} ${y.toFixed(2)}h0.01`
+}
+
+function StrokeSwatch({ className }: { className: string }) {
+  return (
+    <span
+      className={`h-[3px] w-2.5 shrink-0 rounded-full ${className}`}
+      aria-hidden
+    />
+  )
+}
+
+function MarkerSwatch() {
+  return (
+    <span
+      className="size-2 shrink-0 rounded-full bg-cobalt-primary ring-2 ring-white shadow-[0_0_0_1px] shadow-cobalt-primary"
+      aria-hidden
+    />
+  )
+}
+
+function LegendItem({
+  swatch,
+  label,
+}: {
+  swatch: ReactNode
+  label: string
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-sm text-body">
+      {swatch}
+      {label}
+    </span>
+  )
+}
+
 type SearchTrendChartProps = {
   daily: readonly DailyPoint[]
   clicks: number
@@ -272,14 +375,15 @@ export function SearchTrendChart({
   const impressionMax = maxOf(impressionValues)
   const clickPoints = toPoints(clickValues, clickMax)
   const impressionPoints = toPoints(impressionValues, impressionMax)
-  const clickLine = linePath(clickPoints)
-  const impressionLine = linePath(impressionPoints)
+  const clickLine = roundedLinePath(clickPoints)
+  const impressionLine = roundedLinePath(impressionPoints)
   const clickArea = areaPath(clickPoints)
   const impressionArea = areaPath(impressionPoints)
   const markers = markClicks
     ? clickMarkersOnImpressions(daily, impressionPoints)
     : []
   const baseline = PLOT.top + PLOT.height
+  const axisMax = markClicks ? impressionMax : clickMax
   const dates = tickDates(daily)
   const description = accessibleDescription(
     daily,
@@ -299,24 +403,35 @@ export function SearchTrendChart({
       <p className="max-w-2xl text-sm leading-relaxed text-body">
         {visibleSummary(clicks, impressions, comparison, range)}
       </p>
-      <div className="mt-3 flex flex-wrap gap-5 text-sm">
+      <div className="mt-3 flex flex-wrap items-center gap-5">
         {markClicks ? (
           <>
-            <p className="text-meta">Impressions</p>
-            <p className="text-cobalt-primary">Clicks · marked days</p>
+            <LegendItem
+              swatch={<StrokeSwatch className="bg-cobalt-primary" />}
+              label="Impressions"
+            />
+            <LegendItem
+              swatch={<MarkerSwatch />}
+              label="Clicks · marked days"
+            />
           </>
         ) : (
           <>
-            <p className="text-cobalt-primary">Clicks</p>
-            <p className="text-meta">Impressions</p>
+            <LegendItem
+              swatch={<StrokeSwatch className="bg-cobalt-primary" />}
+              label="Clicks"
+            />
+            <LegendItem
+              swatch={<StrokeSwatch className="bg-meta" />}
+              label="Impressions"
+            />
           </>
         )}
       </div>
       <figure className="mt-3">
         <figcaption className="sr-only">{description}</figcaption>
         <svg
-          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          className="h-[180px] w-full md:h-[220px]"
+          className="block h-[180px] w-full overflow-visible md:h-[220px]"
           role="img"
           aria-labelledby="search-trend-title"
         >
@@ -327,146 +442,143 @@ export function SearchTrendChart({
           </title>
           <desc>{description}</desc>
 
-          <line
-            x1={PLOT.left}
-            y1={baseline}
-            x2={PLOT.left + PLOT.width}
-            y2={baseline}
-            className="stroke-black/10"
-            strokeWidth="1"
-          />
-
-          {markClicks ? (
-            <>
-              <text
-                x={PLOT.left - 8}
-                y={PLOT.top + 4}
-                textAnchor="end"
-                className="fill-meta text-[0.65rem]"
-              >
-                {compactCount(impressionMax)}
-              </text>
-              <text
-                x={PLOT.left - 8}
-                y={baseline}
-                textAnchor="end"
-                className="fill-meta text-[0.65rem]"
-              >
-                0
-              </text>
-            </>
-          ) : (
-            <>
-              <text
-                x={PLOT.left - 8}
-                y={PLOT.top + 4}
-                textAnchor="end"
-                className="fill-cobalt-primary text-[0.65rem]"
-              >
-                {compactCount(clickMax)}
-              </text>
-              <text
-                x={PLOT.left - 8}
-                y={baseline}
-                textAnchor="end"
-                className="fill-cobalt-primary text-[0.65rem]"
-              >
-                0
-              </text>
-              <text
-                x={PLOT.left + PLOT.width + 8}
-                y={PLOT.top + 4}
-                textAnchor="start"
-                className="fill-meta text-[0.65rem]"
-              >
-                {compactCount(impressionMax)}
-              </text>
-              <text
-                x={PLOT.left + PLOT.width + 8}
-                y={baseline}
-                textAnchor="start"
-                className="fill-meta text-[0.65rem]"
-              >
-                0
-              </text>
-            </>
-          )}
-
-          {impressionArea ? (
-            <path d={impressionArea} className="fill-foreground/8" />
-          ) : null}
-          {impressionLine ? (
-            <path
-              d={impressionLine}
-              className="stroke-foreground/35"
-              fill="none"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-              strokeLinecap="round"
+          <svg
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+            preserveAspectRatio="none"
+            aria-hidden
+          >
+            <line
+              x1={0}
+              y1={baseline}
+              x2={WIDTH}
+              y2={baseline}
+              className="stroke-black/10"
+              strokeWidth="1"
             />
-          ) : null}
-          {impressionPoints.length === 1 && impressionPoints[0] ? (
-            <circle
-              cx={impressionPoints[0].x}
-              cy={impressionPoints[0].y}
-              r="3"
-              className="fill-foreground/40"
-            />
-          ) : null}
 
-          {markClicks ? (
-            markers.map((marker) => (
-              <g key={marker.date}>
-                <circle
-                  cx={marker.x}
-                  cy={marker.y}
-                  r={CLICK_MARKER_RADIUS}
-                  className="fill-cobalt-primary"
-                />
-                {marker.clicks > 1 ? (
+            {markClicks ? (
+              <>
+                {impressionArea ? (
+                  <path d={impressionArea} className="fill-cobalt-primary/18" />
+                ) : null}
+                {impressionLine ? (
+                  <path
+                    d={impressionLine}
+                    className="fill-none stroke-cobalt-primary"
+                    strokeWidth={FILLED_STROKE}
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                ) : null}
+                {impressionPoints.length === 1 && impressionPoints[0] ? (
+                  <path
+                    d={screenDotPath(
+                      impressionPoints[0].x,
+                      impressionPoints[0].y,
+                    )}
+                    className="stroke-cobalt-primary"
+                    strokeWidth={FILLED_STROKE + 3}
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                ) : null}
+                {markers.map((marker) => (
+                  <g key={marker.date}>
+                    <path
+                      d={screenDotPath(marker.x, marker.y)}
+                      className="stroke-white"
+                      strokeWidth={
+                        CLICK_MARKER_RADIUS * 2 + CLICK_MARKER_RING * 2
+                      }
+                      strokeLinecap="round"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                    <path
+                      d={screenDotPath(marker.x, marker.y)}
+                      className="stroke-cobalt-primary"
+                      strokeWidth={CLICK_MARKER_RADIUS * 2}
+                      strokeLinecap="round"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </g>
+                ))}
+              </>
+            ) : (
+              <>
+                {impressionLine ? (
+                  <path
+                    d={impressionLine}
+                    className="fill-none stroke-meta"
+                    strokeWidth={SECONDARY_STROKE}
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                ) : null}
+                {clickArea ? (
+                  <path d={clickArea} className="fill-cobalt-primary/18" />
+                ) : null}
+                {clickLine ? (
+                  <path
+                    d={clickLine}
+                    className="fill-none stroke-cobalt-primary"
+                    strokeWidth={FILLED_STROKE}
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                ) : null}
+                {clickPoints.length === 1 && clickPoints[0] ? (
+                  <path
+                    d={screenDotPath(clickPoints[0].x, clickPoints[0].y)}
+                    className="stroke-cobalt-primary"
+                    strokeWidth={FILLED_STROKE + 3}
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                ) : null}
+              </>
+            )}
+          </svg>
+
+          <text
+            x={8}
+            y={pct(PLOT.top + 11, HEIGHT)}
+            className="fill-meta text-[0.65rem]"
+          >
+            {compactCount(axisMax)}
+          </text>
+          <text
+            x={8}
+            y={pct(baseline - 2, HEIGHT)}
+            className="fill-meta text-[0.65rem]"
+          >
+            0
+          </text>
+
+          {markClicks
+            ? markers.map((marker) =>
+                marker.clicks > 1 ? (
                   <text
-                    x={marker.x}
-                    y={marker.y - CLICK_MARKER_RADIUS - 4}
+                    key={`${marker.date}-count`}
+                    x={pct(marker.x, WIDTH)}
+                    y={pct(marker.y, HEIGHT)}
+                    dy={-(CLICK_MARKER_RADIUS + CLICK_MARKER_RING + 3)}
                     textAnchor="middle"
                     className="fill-cobalt-primary text-[0.65rem]"
                   >
                     {marker.clicks}
                   </text>
-                ) : null}
-              </g>
-            ))
-          ) : (
-            <>
-              {clickArea ? (
-                <path d={clickArea} className="fill-cobalt-primary/12" />
-              ) : null}
-              {clickLine ? (
-                <path
-                  d={clickLine}
-                  className="stroke-cobalt-primary"
-                  fill="none"
-                  strokeWidth="1.75"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                />
-              ) : null}
-              {clickPoints.length === 1 && clickPoints[0] ? (
-                <circle
-                  cx={clickPoints[0].x}
-                  cy={clickPoints[0].y}
-                  r="3"
-                  className="fill-cobalt-primary"
-                />
-              ) : null}
-            </>
-          )}
+                ) : null,
+              )
+            : null}
 
           {dates.map((tick) => (
             <text
               key={`${tick.index}-${tick.label}`}
-              x={xAt(tick.index, daily.length)}
-              y={HEIGHT - 8}
-              textAnchor="middle"
+              x={pct(xAt(tick.index, daily.length), WIDTH)}
+              y={pct(HEIGHT - 5, HEIGHT)}
+              textAnchor={dateAnchor(tick.index, daily.length)}
               className="fill-meta text-[0.65rem]"
             >
               {tick.label}
