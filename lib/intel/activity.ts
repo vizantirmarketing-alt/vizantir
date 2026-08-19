@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { fetchCrawlerFirstSeen } from '@/lib/intel/crawlers'
 import {
   formatStatusLabel,
   leadDetailHref,
@@ -9,7 +10,12 @@ import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 export type ActivityTone = 'neutral' | 'positive' | 'warning' | 'warning-severe'
 
-export type ActivityCategory = 'lead' | 'finding' | 'sync' | 'visitors'
+export type ActivityCategory =
+  | 'lead'
+  | 'finding'
+  | 'sync'
+  | 'visitors'
+  | 'crawler'
 
 export type ActivityItem = {
   id: string
@@ -61,6 +67,7 @@ export async function fetchActivity(
     syncs,
     visitors,
     recorded,
+    crawlerFirsts,
   ] = await Promise.all([
     fetchInquiryEvents(take),
     fetchStatusMoveEvents(take),
@@ -68,6 +75,7 @@ export async function fetchActivity(
     fetchSyncRunEvents(),
     fetchVisitorEvents(),
     fetchRecordedEvents(take),
+    fetchCrawlerFirstVisitEvents(nowMs),
   ])
 
   const merged = [
@@ -77,6 +85,7 @@ export async function fetchActivity(
     ...syncs,
     ...visitors,
     ...recorded,
+    ...crawlerFirsts,
   ]
 
   merged.sort((left, right) => {
@@ -304,6 +313,39 @@ async function fetchSyncRunEvents(): Promise<ActivityItem[]> {
       }
     }
     return selectSyncActivity(parsed)
+  } catch {
+    return []
+  }
+}
+
+async function fetchCrawlerFirstVisitEvents(
+  nowMs: number,
+): Promise<ActivityItem[]> {
+  try {
+    const rows = await fetchCrawlerFirstSeen()
+    const windowStart = nowMs - 30 * DAY_MS
+    const items: ActivityItem[] = []
+
+    for (const row of rows) {
+      const then = Date.parse(row.firstSeenAt)
+      if (Number.isNaN(then)) {
+        continue
+      }
+      if (then < windowStart || then > nowMs) {
+        continue
+      }
+      items.push({
+        id: `crawler-first:${row.bot}`,
+        occurredAt: row.firstSeenAt,
+        category: 'crawler',
+        title: `First visit from ${row.bot}`,
+        detail: null,
+        href: null,
+        tone: 'positive',
+      })
+    }
+
+    return items
   } catch {
     return []
   }

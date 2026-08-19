@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import {
+  Bot,
   Eye,
   RefreshCw,
   ScanSearch,
@@ -22,6 +23,7 @@ const CATEGORY_ICON: Record<ActivityCategory, LucideIcon> = {
   finding: ScanSearch,
   sync: RefreshCw,
   visitors: Eye,
+  crawler: Bot,
 }
 
 type ActivityFeedProps = {
@@ -119,7 +121,11 @@ function chipClass(category: ActivityCategory, tone: ActivityTone): string {
   if (tone === 'warning') {
     return 'bg-warning-soft text-warning'
   }
-  if (category === 'lead' || category === 'finding') {
+  if (
+    category === 'lead' ||
+    category === 'finding' ||
+    category === 'crawler'
+  ) {
     return 'bg-cobalt-soft text-cobalt-primary'
   }
   return 'bg-black/[0.05] text-meta'

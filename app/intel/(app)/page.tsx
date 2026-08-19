@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { ActivityFeed } from '@/app/intel/_components/ActivityFeed'
+import { AiPlatformsPanel } from '@/app/intel/_components/AiPlatformsPanel'
 import {
   DecisionEmptyState,
   DecisionFeed,
@@ -11,6 +12,7 @@ import {
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { fetchActivity } from '@/lib/intel/activity'
+import { fetchCrawlerPlatformOverview } from '@/lib/intel/crawlers'
 import {
   fetchDecisionFeed,
   type DecisionFeedSection,
@@ -72,12 +74,18 @@ function dailyMetric(
 export default async function IntelOverviewPage() {
   await requireIntelUser()
 
-  const [result, siteTotals, leadSeries, activity] = await Promise.all([
-    fetchDecisionFeed(),
-    fetchSiteRangeTotals('28d'),
-    fetchLeadDailySeriesInLastDays(28),
-    fetchActivity(),
-  ])
+  const [result, siteTotals, leadSeries, activity, crawlers] =
+    await Promise.all([
+      fetchDecisionFeed(),
+      fetchSiteRangeTotals('28d'),
+      fetchLeadDailySeriesInLastDays(28),
+      fetchActivity(),
+      fetchCrawlerPlatformOverview(),
+    ])
+
+  const aiPlatforms = (
+    <AiPlatformsPanel rows={crawlers} nowMs={activity.nowMs} />
+  )
 
   const activityFeed = (
     <ActivityFeed items={activity.items} nowMs={activity.nowMs} />
@@ -102,6 +110,7 @@ export default async function IntelOverviewPage() {
       <div className="flex flex-col gap-4">
         <DecisionHeader />
         {stats}
+        {aiPlatforms}
         {activityFeed}
         <Panel>
           <DecisionQueryError />
@@ -115,6 +124,7 @@ export default async function IntelOverviewPage() {
       <div className="flex flex-col gap-4">
         <DecisionHeader />
         {stats}
+        {aiPlatforms}
         {activityFeed}
         <Panel>
           <DecisionEmptyState />
@@ -127,6 +137,7 @@ export default async function IntelOverviewPage() {
     <div className="flex flex-col gap-4">
       <DecisionHeader />
       {stats}
+      {aiPlatforms}
       {activityFeed}
       <DecisionFeed sections={result.sections} />
     </div>
