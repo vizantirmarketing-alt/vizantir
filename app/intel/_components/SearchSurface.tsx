@@ -1,4 +1,10 @@
 import Link from 'next/link'
+import {
+  ChartNoAxesColumn,
+  Eye,
+  MousePointerClick,
+  Percent,
+} from 'lucide-react'
 
 import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
 import type { MetricDeltaDirection } from '@/app/intel/_components/ui/MetricCard'
@@ -222,6 +228,8 @@ export function SearchSummaryCards({
       <MetricCard
         label="Clicks"
         value={formatCount(totals.clicks)}
+        icon={<MousePointerClick className="size-3" />}
+        accent="cobalt-tint"
         deltaLabel={clickDelta?.deltaLabel}
         deltaDirection={clickDelta?.deltaDirection}
         sparkline={
@@ -234,6 +242,8 @@ export function SearchSummaryCards({
       <MetricCard
         label="Impressions"
         value={formatCount(totals.impressions)}
+        icon={<Eye className="size-3" />}
+        accent="cobalt-tint"
         deltaLabel={impressionDelta?.deltaLabel}
         deltaDirection={impressionDelta?.deltaDirection}
         sparkline={
@@ -246,6 +256,8 @@ export function SearchSummaryCards({
       <MetricCard
         label="CTR"
         value={formatCtr(totals.ctr)}
+        icon={<Percent className="size-3" />}
+        accent="cobalt-tint"
         deltaLabel={ctrChange?.deltaLabel}
         deltaDirection={ctrChange?.deltaDirection}
         context={ctrChange?.context}
@@ -253,6 +265,8 @@ export function SearchSummaryCards({
       <MetricCard
         label="Average position"
         value={formatPosition(totals.position)}
+        icon={<ChartNoAxesColumn className="size-3" />}
+        accent="cobalt-tint"
         deltaLabel={positionChange?.deltaLabel}
         deltaDirection={positionChange?.deltaDirection}
         lowerIsBetter

@@ -4,11 +4,16 @@ type SparklineProps = {
   height?: number
 }
 
-function sparklinePath(
+type SparkPoint = {
+  x: number
+  y: number
+}
+
+function sparklineCoords(
   points: readonly number[],
   width: number,
   height: number,
-): string | null {
+): SparkPoint[] | null {
   if (points.length === 0) {
     return null
   }
@@ -28,8 +33,8 @@ function sparklinePath(
 
   const range = max - min
   const lastIndex = Math.max(1, points.length - 1)
+  const coords: SparkPoint[] = []
 
-  const commands: string[] = []
   for (let index = 0; index < points.length; index += 1) {
     const value = points[index]
     if (value === undefined) {
@@ -40,20 +45,40 @@ function sparklinePath(
       range === 0
         ? height / 2
         : padY + (1 - (value - min) / range) * usable
-    const command = commands.length === 0 ? 'M' : 'L'
-    commands.push(`${command}${x.toFixed(2)} ${y.toFixed(2)}`)
+    coords.push({ x, y })
   }
 
-  if (commands.length === 0) {
+  if (coords.length === 0) {
     return null
   }
 
-  if (commands.length === 1) {
-    const y = (height / 2).toFixed(2)
-    return `M0 ${y} L${width.toFixed(2)} ${y}`
+  if (coords.length === 1) {
+    const y = coords[0]?.y ?? height / 2
+    return [
+      { x: 0, y },
+      { x: width, y },
+    ]
   }
 
-  return commands.join(' ')
+  return coords
+}
+
+function sparklineLinePath(coords: readonly SparkPoint[]): string {
+  return coords
+    .map((point, index) => {
+      const command = index === 0 ? 'M' : 'L'
+      return `${command}${point.x.toFixed(2)} ${point.y.toFixed(2)}`
+    })
+    .join(' ')
+}
+
+function sparklineAreaPath(
+  coords: readonly SparkPoint[],
+  width: number,
+  height: number,
+): string {
+  const line = sparklineLinePath(coords)
+  return `${line} L${width.toFixed(2)} ${height.toFixed(2)} L0 ${height.toFixed(2)} Z`
 }
 
 export function Sparkline({
@@ -61,24 +86,26 @@ export function Sparkline({
   width = 120,
   height = 36,
 }: SparklineProps) {
-  const d = sparklinePath(points, width, height)
-  if (d === null) {
+  const coords = sparklineCoords(points, width, height)
+  if (coords === null) {
     return null
   }
+
+  const line = sparklineLinePath(coords)
+  const area = sparklineAreaPath(coords, width, height)
 
   return (
     <svg
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      fill="none"
       aria-hidden
       className="overflow-visible"
     >
+      <path d={area} className="fill-cobalt-primary/18" />
       <path
-        d={d}
-        fill="none"
-        className="stroke-cobalt-primary/40"
+        d={line}
+        className="fill-none stroke-cobalt-primary"
         strokeWidth="1.5"
         strokeLinejoin="round"
         strokeLinecap="round"

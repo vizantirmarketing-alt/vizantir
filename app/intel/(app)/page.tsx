@@ -76,7 +76,7 @@ export default async function IntelOverviewPage() {
     fetchDecisionFeed(),
     fetchSiteRangeTotals('28d'),
     fetchLeadDailySeriesInLastDays(28),
-    fetchActivity(10),
+    fetchActivity(),
   ])
 
   const activityFeed = (

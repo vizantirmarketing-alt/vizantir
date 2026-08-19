@@ -7,7 +7,7 @@ import {
 import { isIsoDate } from '@/lib/intel/search-params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
-export type ActivityTone = 'neutral' | 'positive' | 'warning'
+export type ActivityTone = 'neutral' | 'positive' | 'warning' | 'warning-severe'
 
 export type ActivityCategory = 'lead' | 'finding' | 'sync' | 'visitors'
 
@@ -30,15 +30,23 @@ type SyncProvider = 'ga4' | 'gsc' | 'clarity'
 
 type SyncRunStatus = 'success' | 'partial' | 'failed'
 
+type ParsedSyncRun = {
+  provider: SyncProvider
+  status: SyncRunStatus
+  item: ActivityItem
+}
+
 const SYNC_EVENT_TYPES = new Set([
   'ga4_sync',
   'gsc_sync',
   'clarity_sync',
 ])
 
-const DEFAULT_ACTIVITY_LIMIT = 10
+const DEFAULT_ACTIVITY_LIMIT = 12
+const SYNC_LOOKBACK_LIMIT = 40
 const DAY_MS = 86_400_000
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const GA4_PROPERTY_TIME_ZONE = 'America/Los_Angeles'
 
 export async function fetchActivity(
   limit: number = DEFAULT_ACTIVITY_LIMIT,
@@ -57,8 +65,8 @@ export async function fetchActivity(
     fetchInquiryEvents(take),
     fetchStatusMoveEvents(take),
     fetchFindingEvents(take),
-    fetchSyncRunEvents(take),
-    fetchVisitorEvents(take),
+    fetchSyncRunEvents(),
+    fetchVisitorEvents(),
     fetchRecordedEvents(take),
   ])
 
@@ -272,7 +280,7 @@ async function fetchFindingEvents(limit: number): Promise<ActivityItem[]> {
   }
 }
 
-async function fetchSyncRunEvents(limit: number): Promise<ActivityItem[]> {
+async function fetchSyncRunEvents(): Promise<ActivityItem[]> {
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
@@ -282,48 +290,48 @@ async function fetchSyncRunEvents(limit: number): Promise<ActivityItem[]> {
       )
       .in('status', ['success', 'partial', 'failed'])
       .order('started_at', { ascending: false })
-      .limit(limit)
+      .limit(SYNC_LOOKBACK_LIMIT)
 
     if (error || !Array.isArray(data)) {
       return []
     }
 
-    const items: ActivityItem[] = []
+    const parsed: ParsedSyncRun[] = []
     for (const row of data) {
-      const parsed = toSyncRunEvent(row)
-      if (parsed) {
-        items.push(parsed)
+      const item = toSyncRunEvent(row)
+      if (item) {
+        parsed.push(item)
       }
     }
-    return items
+    return selectSyncActivity(parsed)
   } catch {
     return []
   }
 }
 
-async function fetchVisitorEvents(limit: number): Promise<ActivityItem[]> {
+async function fetchVisitorEvents(): Promise<ActivityItem[]> {
   try {
+    const yesterday = propertyYesterdayDate()
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
       .from('ga4_daily')
-      .select('date, users')
-      .eq('channel_group', '')
-      .order('date', { ascending: false })
-      .limit(limit)
+      .select('date, users, channel_group')
+      .eq('date', yesterday)
 
     if (error || !Array.isArray(data)) {
       return []
     }
 
-    const yesterday = utcYesterdayDate()
-    const items: ActivityItem[] = []
     for (const row of data) {
+      if (!isSiteTotalChannel(readField(row, 'channel_group'))) {
+        continue
+      }
       const parsed = toVisitorEvent(row, yesterday)
       if (parsed) {
-        items.push(parsed)
+        return [parsed]
       }
     }
-    return items
+    return []
   } catch {
     return []
   }
@@ -491,7 +499,7 @@ function toFindingEvent(value: unknown): ActivityItem | null {
   }
 }
 
-function toSyncRunEvent(value: unknown): ActivityItem | null {
+function toSyncRunEvent(value: unknown): ParsedSyncRun | null {
   if (typeof value !== 'object' || value === null) {
     return null
   }
@@ -514,28 +522,75 @@ function toSyncRunEvent(value: unknown): ActivityItem | null {
     return null
   }
 
-  const warning = statusRaw === 'partial' || statusRaw === 'failed'
   const label = providerLabel(providerRaw)
   const count = formatCount(records)
 
   let title: string
+  let tone: ActivityTone
   if (statusRaw === 'failed') {
     title = `${label} sync failed`
+    tone = 'warning-severe'
   } else if (statusRaw === 'partial') {
     title = `${label} sync partial · ${count} records`
+    tone = 'warning'
   } else {
     title = `${label} sync completed · ${count} records`
+    tone = 'neutral'
   }
 
   return {
-    id: `sync:${id}`,
-    occurredAt,
-    category: 'sync',
-    title,
-    detail: null,
-    href: null,
-    tone: warning ? 'warning' : 'neutral',
+    provider: providerRaw,
+    status: statusRaw,
+    item: {
+      id: `sync:${id}`,
+      occurredAt,
+      category: 'sync',
+      title,
+      detail: null,
+      href: null,
+      tone,
+    },
   }
+}
+
+function selectSyncActivity(runs: readonly ParsedSyncRun[]): ActivityItem[] {
+  const latestSuccessAt = new Map<SyncProvider, string>()
+  for (const run of runs) {
+    if (run.status !== 'success') {
+      continue
+    }
+    const current = latestSuccessAt.get(run.provider)
+    if (current === undefined || run.item.occurredAt > current) {
+      latestSuccessAt.set(run.provider, run.item.occurredAt)
+    }
+  }
+
+  const keptSuccess = new Set<SyncProvider>()
+  const items: ActivityItem[] = []
+
+  for (const run of runs) {
+    if (run.status === 'failed') {
+      const successAt = latestSuccessAt.get(run.provider)
+      if (successAt !== undefined && run.item.occurredAt < successAt) {
+        continue
+      }
+      items.push(run.item)
+      continue
+    }
+
+    if (run.status === 'partial') {
+      items.push(run.item)
+      continue
+    }
+
+    if (keptSuccess.has(run.provider)) {
+      continue
+    }
+    keptSuccess.add(run.provider)
+    items.push(run.item)
+  }
+
+  return items
 }
 
 function toVisitorEvent(
@@ -552,16 +607,15 @@ function toVisitorEvent(
   if (typeof date !== 'string' || !isIsoDate(date) || users === null) {
     return null
   }
-
-  const count = formatCount(users)
-  const title =
-    date === yesterday ? `${count} visitors yesterday` : `${count} visitors`
+  if (date !== yesterday) {
+    return null
+  }
 
   return {
     id: `visitors:${date}`,
     occurredAt: `${date}T12:00:00.000Z`,
     category: 'visitors',
-    title,
+    title: `${formatCount(users)} visitors yesterday`,
     detail: null,
     href: null,
     tone: 'neutral',
@@ -616,11 +670,10 @@ function recordedCategory(eventType: string): ActivityCategory {
 }
 
 function recordedTone(eventType: string): ActivityTone {
-  if (
-    eventType.includes('fail') ||
-    eventType.includes('partial') ||
-    eventType.includes('warning')
-  ) {
+  if (eventType.includes('fail')) {
+    return 'warning-severe'
+  }
+  if (eventType.includes('partial') || eventType.includes('warning')) {
     return 'warning'
   }
   if (eventType.includes('won') || eventType.includes('success')) {
@@ -657,12 +710,31 @@ function isSyncRunStatus(value: string): value is SyncRunStatus {
   return value === 'success' || value === 'partial' || value === 'failed'
 }
 
-function utcYesterdayDate(): string {
-  const now = new Date()
-  const yesterday = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1),
-  )
-  return yesterday.toISOString().slice(0, 10)
+function propertyYesterdayDate(): string {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: GA4_PROPERTY_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date())
+
+  const year = Number(parts.find((part) => part.type === 'year')?.value)
+  const month = Number(parts.find((part) => part.type === 'month')?.value)
+  const day = Number(parts.find((part) => part.type === 'day')?.value)
+  if (
+    !Number.isInteger(year) ||
+    !Number.isInteger(month) ||
+    !Number.isInteger(day)
+  ) {
+    const fallback = new Date(Date.now() - DAY_MS)
+    return fallback.toISOString().slice(0, 10)
+  }
+
+  return new Date(Date.UTC(year, month - 1, day - 1)).toISOString().slice(0, 10)
+}
+
+function isSiteTotalChannel(value: unknown): boolean {
+  return value === '' || value === null || value === undefined
 }
 
 function isCalendarYesterday(thenMs: number, nowMs: number): boolean {

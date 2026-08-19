@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CircleDot, Inbox, Layers, TriangleAlert } from 'lucide-react'
 
 import {
   formatChannelLabel,
@@ -241,15 +242,29 @@ export function LeadsStatStrip({ stats }: { stats: LeadDashboardStats }) {
 
   return (
     <StatStrip>
-      <MetricCard label="Total inquiries" value={formatCount(stats.total)} />
-      <MetricCard label="New" value={formatCount(stats.newCount)} />
+      <MetricCard
+        label="Total inquiries"
+        value={formatCount(stats.total)}
+        icon={<Inbox className="size-3" />}
+        accent="cobalt"
+      />
+      <MetricCard
+        label="New"
+        value={formatCount(stats.newCount)}
+        icon={<CircleDot className="size-3" />}
+        accent="cobalt"
+      />
       <MetricCard
         label="Active pipeline"
         value={formatCount(stats.activePipeline)}
+        icon={<Layers className="size-3" />}
+        accent="cobalt"
       />
       <MetricCard
         label="Delivery issues"
         value={formatCount(stats.deliveryIssues)}
+        icon={<TriangleAlert className="size-3" />}
+        accent="warning"
         context={deliveryContext}
         contextTone={deliveryTone}
       />

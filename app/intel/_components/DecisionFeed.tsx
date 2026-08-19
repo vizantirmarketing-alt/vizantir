@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react'
-import { ChevronDown } from 'lucide-react'
+import {
+  ChevronDown,
+  Eye,
+  MousePointerClick,
+  ScanSearch,
+  UserRound,
+} from 'lucide-react'
 
 import { DecisionStatusControls } from '@/app/intel/_components/DecisionStatusControls'
 import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
@@ -62,6 +68,9 @@ function lastTwoDayContext(values: readonly number[]): string | undefined {
   if (yesterday === undefined || dayBefore === undefined) {
     return undefined
   }
+  if (yesterday === 0 && dayBefore === 0) {
+    return 'Quiet yesterday'
+  }
   return `${formatCount(yesterday)} yesterday · ${formatCount(dayBefore)} day before`
 }
 
@@ -89,10 +98,14 @@ export function OverviewStatStrip({
       <MetricCard
         label="Findings needing attention"
         value={formatCount(findingsNeedingAttention)}
+        icon={<ScanSearch className="size-3" />}
+        accent="cobalt"
       />
       <MetricCard
         label="Leads this 28 days"
         value={formatCount(leadsLast28Days)}
+        icon={<UserRound className="size-3" />}
+        accent="cobalt"
         sparkline={
           leadsDaily.length > 0 ? <Sparkline points={leadsDaily} /> : undefined
         }
@@ -101,6 +114,8 @@ export function OverviewStatStrip({
       <MetricCard
         label="Clicks 28d"
         value={formatCount(clicks28d)}
+        icon={<MousePointerClick className="size-3" />}
+        accent="cobalt-tint"
         sparkline={
           clicksDaily.length > 0 ? (
             <Sparkline points={clicksDaily} />
@@ -111,6 +126,8 @@ export function OverviewStatStrip({
       <MetricCard
         label="Impressions 28d"
         value={formatCount(impressions28d)}
+        icon={<Eye className="size-3" />}
+        accent="cobalt-tint"
         sparkline={
           impressionsDaily.length > 0 ? (
             <Sparkline points={impressionsDaily} />
@@ -168,14 +185,16 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
             <DecisionStatusChip status={item.status} />
           </span>
           {fact ? (
-            <span className="min-w-0 max-w-[8rem] truncate text-xs tabular-nums text-meta sm:max-w-[16rem]">
+            <span className="min-w-0 max-w-[8rem] truncate text-xs font-medium tabular-nums text-body sm:max-w-[16rem]">
               {fact}
             </span>
           ) : null}
-          <ChevronDown
-            className="ml-auto size-3.5 shrink-0 text-meta transition-transform group-open:rotate-180"
-            aria-hidden
-          />
+          <span className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-md bg-cobalt-soft text-cobalt-primary">
+            <ChevronDown
+              className="size-3.5 transition-transform group-open:rotate-180"
+              aria-hidden
+            />
+          </span>
         </summary>
         <div className="space-y-3 border-t border-black/8 pb-3 pt-3">
           <p className="text-xs text-meta">

@@ -19,6 +19,13 @@ const ACCENT_BORDER: Record<PanelAccent, string> = {
   neutral: 'border-l-[3px] border-l-black/20',
 }
 
+const ACCENT_TITLE: Record<PanelAccent, string> = {
+  'warning-severe': 'text-warning-severe',
+  cobalt: 'text-cobalt-primary',
+  positive: 'text-positive',
+  neutral: 'text-meta',
+}
+
 export function Panel({
   title,
   headerAction,
@@ -39,7 +46,12 @@ export function Panel({
       {hasHeader ? (
         <div className="mb-2.5 flex items-center justify-between gap-4">
           {title ? (
-            <h2 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+            <h2
+              className={cn(
+                'text-[0.7rem] font-medium uppercase tracking-[0.18em]',
+                accent ? ACCENT_TITLE[accent] : 'text-meta',
+              )}
+            >
               {title}
             </h2>
           ) : (

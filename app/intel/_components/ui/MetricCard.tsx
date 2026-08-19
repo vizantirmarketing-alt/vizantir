@@ -4,9 +4,13 @@ import { cn } from '@/lib/utils'
 
 export type MetricDeltaDirection = 'up' | 'down' | 'flat'
 
+export type MetricAccent = 'cobalt' | 'cobalt-tint' | 'warning'
+
 type MetricCardProps = {
   label: string
   value: string
+  icon?: ReactNode
+  accent?: MetricAccent
   deltaLabel?: string
   deltaDirection?: MetricDeltaDirection
   lowerIsBetter?: boolean
@@ -16,6 +20,12 @@ type MetricCardProps = {
 }
 
 type DeltaTone = 'positive' | 'warning' | 'neutral'
+
+const ICON_CHIP: Record<MetricAccent, string> = {
+  cobalt: 'bg-cobalt-soft text-cobalt-primary',
+  'cobalt-tint': 'bg-cobalt-muted-subtle text-cobalt-primary',
+  warning: 'bg-warning-soft text-warning',
+}
 
 function deltaTone(
   direction: MetricDeltaDirection,
@@ -49,7 +59,7 @@ function DeltaChip({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-0.5 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[0.65rem] font-medium tabular-nums',
+        'inline-flex items-center gap-0.5 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[0.65rem] font-semibold tabular-nums',
         tone === 'positive' && 'bg-positive-soft text-positive',
         tone === 'warning' && 'bg-warning-soft text-warning',
         tone === 'neutral' && 'bg-black/[0.05] text-meta',
@@ -65,6 +75,8 @@ function DeltaChip({
 export function MetricCard({
   label,
   value,
+  icon,
+  accent = 'cobalt',
   deltaLabel,
   deltaDirection,
   lowerIsBetter = false,
@@ -74,7 +86,20 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <div className="flex min-w-0 flex-col rounded-xl border border-black/8 bg-white px-3 py-2 md:px-3.5 md:py-2.5">
-      <p className="text-[0.7rem] leading-4 text-meta">{label}</p>
+      <div className="flex items-center gap-2">
+        {icon ? (
+          <span
+            className={cn(
+              'flex size-5 shrink-0 items-center justify-center rounded-md',
+              ICON_CHIP[accent],
+            )}
+            aria-hidden
+          >
+            {icon}
+          </span>
+        ) : null}
+        <p className="text-[0.7rem] leading-4 text-meta">{label}</p>
+      </div>
       <div className="mt-1 flex items-center gap-2">
         <p className="text-2xl leading-none font-medium tabular-nums tracking-tight text-foreground">
           {value}

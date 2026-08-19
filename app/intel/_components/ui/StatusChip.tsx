@@ -13,10 +13,10 @@ import { cn } from '@/lib/utils'
 type StatusTone = 'new' | 'active' | 'success' | 'muted'
 
 const TONE_CLASS: Record<StatusTone, string> = {
-  new: 'bg-cobalt-soft text-foreground',
-  active: 'bg-black/[0.05] text-foreground',
-  success: 'bg-positive-soft text-positive',
-  muted: 'bg-black/[0.03] text-meta',
+  new: 'bg-cobalt-soft font-medium text-foreground',
+  active: 'bg-black/[0.08] font-medium text-foreground',
+  success: 'bg-positive-soft font-medium text-positive',
+  muted: 'bg-black/[0.05] font-medium text-meta',
 }
 
 const DOT_CLASS: Record<StatusTone, string> = {

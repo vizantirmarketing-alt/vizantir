@@ -57,6 +57,7 @@ function ActivityRow({
   nowMs: number
 }) {
   const recent = isActivityRecent(item.occurredAt, nowMs)
+  const failed = item.tone === 'warning-severe'
   const Icon = CATEGORY_ICON[item.category]
 
   return (
@@ -74,7 +75,11 @@ function ActivityRow({
         <p
           className={cn(
             'truncate text-sm',
-            recent ? 'text-foreground' : 'text-meta',
+            failed
+              ? 'font-medium text-warning-severe'
+              : recent
+                ? 'text-foreground'
+                : 'text-meta',
           )}
         >
           {item.title}
@@ -108,6 +113,9 @@ function ActivityRow({
 }
 
 function chipClass(category: ActivityCategory, tone: ActivityTone): string {
+  if (tone === 'warning-severe') {
+    return 'bg-warning-severe-soft text-warning-severe'
+  }
   if (tone === 'warning') {
     return 'bg-warning-soft text-warning'
   }
