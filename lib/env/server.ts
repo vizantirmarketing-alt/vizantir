@@ -6,7 +6,7 @@ const serverEnvSchema = z.object({
     .regex(/^\d+$/)
     .optional(),
   GSC_SITE_URL: z.string().url().optional(),
-  /** Base64-encoded service account JSON. Scope: webmasters.readonly */
+  /** Base64-encoded service account JSON. GSC: webmasters.readonly. GA4: analytics.readonly. */
   GSC_SERVICE_ACCOUNT_KEY: z.string().min(1).optional(),
   CLARITY_API_TOKEN: z.string().min(1).optional(),
   /** Comma-separated Intel allowlist. Documented value: vizantirmarketing@gmail.com */

@@ -5,6 +5,10 @@
       "schedule": "0 9 * * *"
     },
     {
+      "path": "/api/cron/ga4-sync",
+      "schedule": "15 9 * * *"
+    },
+    {
       "path": "/api/cron/gsc-sync",
       "schedule": "30 9 * * *"
     },
