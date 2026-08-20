@@ -139,7 +139,7 @@ export default function SitemapPageClient({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
             >
-              <SectionHeading label="Case Studies" />
+              <SectionHeading label="Our Work" />
               <ul className="space-y-3">
                 {caseStudies.map((study) => (
                   <li key={study.slug}>

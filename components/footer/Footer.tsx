@@ -89,7 +89,7 @@ const Footer = () => {
                 { name: 'Industries', href: '/industries' },
                 { name: 'Technology', href: '/technology' },
                 { name: 'About Us', href: '/about' },
-                { name: 'Case Studies', href: '/case-studies' },
+                { name: 'Our Work', href: '/case-studies' },
                 { name: 'Analytir', href: '/analytir' },
                 { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
               ].map((link) => (
