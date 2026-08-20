@@ -24,6 +24,7 @@ import {
   blogPricing,
   carePricing,
   chatbotPricing,
+  chatbotSharedIncludes,
   CHATBOT_SETUP_FEE,
   landingPagePricing,
   projectPricing,
@@ -62,7 +63,7 @@ const AI_EXPERIENCE = {
   eyebrow: 'AI Experience Integration',
   heading: 'Built into the existing website and its data',
   intro:
-    'A knowledge assistant integrated with the client\'s site and approved business data — not a widget dropped on the page. It handles customer questions, lead qualification, guided service discovery, and content-based answers, with custom conversation flows, analytics, and CRM or workflow integration where the project requires it.',
+    'A knowledge assistant integrated with the client\'s site and approved business data — not a widget dropped on the page. Every plan includes the capabilities below. What differs is the depth of integration as the site gets busier.',
 } as const
 
 const CARE_CLIENT_DISCOUNT = 'Care plan clients get 15% off.'
@@ -468,6 +469,12 @@ function OngoingCapabilities() {
             {AI_EXPERIENCE.intro}
           </p>
         </SectionHeading>
+
+        <CardCheckList className="mx-auto mb-10 max-w-2xl flex-none">
+          {chatbotSharedIncludes.map((line) => (
+            <CardCheckItem key={line}>{line}</CardCheckItem>
+          ))}
+        </CardCheckList>
 
         <div className="grid items-stretch gap-6 lg:grid-cols-3">
           {chatbotPricing.map((tier) => (

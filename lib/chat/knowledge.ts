@@ -14,6 +14,7 @@ import {
   landingPagePricing,
   blogPricing,
   chatbotPricing,
+  chatbotSharedIncludes,
   CHATBOT_SETUP_FEE,
   EXISTING_SITE_PAGE_RATE_DISPLAY,
   formatCareClientPrice,
@@ -111,10 +112,10 @@ function buildPricing(): string {
   const blogBlock = `${blogIntro}\n\n${blogTiers}`
   const chatbotIntro = [
     'Vizantir offers AI Experience Integration: a knowledge assistant built into the client\'s existing website and approved business data — not a generic widget.',
-    'It handles customer questions, lead qualification, guided service discovery, and content-based answers, with custom conversation flows, analytics, and CRM or workflow integration where the project requires it.',
     'Primarily sold as an add-on to Website Care; also available standalone.',
     'This is not a self-serve product: setup, data integration, and conversation metering are handled per client by the Vizantir team. Conversation limits are plan detail, not the differentiator.',
   ].join(' ')
+  const chatbotShared = `Every AI Experience Integration includes:\n${bullets(chatbotSharedIncludes)}`
   const chatbotTiers = chatbotPricing
     .map((t) => {
       const carePrice = formatCareClientPrice(t.priceMin)
@@ -124,11 +125,11 @@ function buildPricing(): string {
         `Care client price: ${carePrice}/month (15% off)`,
         `Plan detail: ${t.conversations}`,
         t.tagline,
-        `Includes:\n${bullets(t.includes)}`,
+        `What differs at this plan:\n${bullets(t.includes)}`,
       ].join('\n')
     })
     .join('\n\n')
-  const chatbotBlock = `${chatbotIntro}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
+  const chatbotBlock = `${chatbotIntro}\n\n${chatbotShared}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
   const existingSiteRate = `Existing Vizantir website clients get an existing-site page rate starting at ${EXISTING_SITE_PAGE_RATE_DISPLAY} for a single Campaign Landing Page-scope page on the existing stack. That rate applies in place of care preferred rates rather than on top of them.`
   const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nSEARCH & CONTENT GROWTH (monthly add-on or one-time):\n\n${blogBlock}\n\nAI EXPERIENCE INTEGRATION (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`

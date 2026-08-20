@@ -32,7 +32,7 @@ export type LandingPageTier = {
 }
 
 export type BlogTier = {
-  slug: 'blog-single' | 'blog-essentials' | 'blog-growth'
+  slug: 'blog-single' | 'blog-ongoing' | 'blog-program'
   name: string
   price: string
   priceMin: number
@@ -230,8 +230,8 @@ export const blogPricing: BlogTier[] = [
     ],
   },
   {
-    slug: 'blog-essentials',
-    name: 'Essentials',
+    slug: 'blog-ongoing',
+    name: 'Ongoing',
     price: '$650/month',
     priceMin: 650,
     cadence: 'per month',
@@ -247,8 +247,8 @@ export const blogPricing: BlogTier[] = [
     ],
   },
   {
-    slug: 'blog-growth',
-    name: 'Growth',
+    slug: 'blog-program',
+    name: 'Program',
     price: '$1,200/month',
     priceMin: 1200,
     cadence: 'per month',
@@ -266,7 +266,7 @@ export const blogPricing: BlogTier[] = [
 ]
 
 export type ChatbotTier = {
-  slug: 'chatbot-starter' | 'chatbot-growth' | 'chatbot-scale'
+  slug: 'chatbot-starter' | 'chatbot-standard' | 'chatbot-scale'
   name: string
   priceMin: number       // 150 — used to compute display + discount
   conversations: string
@@ -280,11 +280,11 @@ export const CHATBOT_SETUP_FEE = {
   description: 'One-time setup: integrate the assistant into the existing site, connect approved business data, and tune conversation flows.',
 } as const
 
-const chatbotIncludes = [
+export const chatbotSharedIncludes = [
   'Website knowledge assistant trained on approved business data',
   'Customer questions, lead qualification, and guided service discovery',
   'Content-based answers and custom conversation flows',
-  'Analytics, plus CRM or workflow integration where the project requires it',
+  'Analytics',
 ] as const
 
 export const chatbotPricing: ChatbotTier[] = [
@@ -294,15 +294,23 @@ export const chatbotPricing: ChatbotTier[] = [
     priceMin: 150,
     conversations: 'Plan includes up to 500 conversations per month',
     tagline: 'Integrated into the existing site and its approved content.',
-    includes: [...chatbotIncludes],
+    includes: [
+      'Approved-content integration for the current site',
+      'Custom conversation flows tuned to existing pages and services',
+      'CRM or workflow integration available where the project requires it',
+    ],
   },
   {
-    slug: 'chatbot-growth',
-    name: 'Growth',
+    slug: 'chatbot-standard',
+    name: 'Standard',
     priceMin: 350,
     conversations: 'Plan includes up to 2,000 conversations per month',
     tagline: 'The same integration, sized for a busier site.',
-    includes: [...chatbotIncludes],
+    includes: [
+      'Business-data integration sized for a busier site',
+      'Custom conversation flows sized for higher traffic',
+      'CRM or workflow integration available where the project requires it',
+    ],
   },
   {
     slug: 'chatbot-scale',
@@ -310,7 +318,11 @@ export const chatbotPricing: ChatbotTier[] = [
     priceMin: 600,
     conversations: 'Plan includes up to 5,000 conversations per month',
     tagline: 'The same integration, sized for higher traffic and operations.',
-    includes: [...chatbotIncludes],
+    includes: [
+      'Business-data integration sized for higher traffic and operations',
+      'Custom conversation flows sized for operational use',
+      'CRM or workflow integration included',
+    ],
   },
 ]
 
