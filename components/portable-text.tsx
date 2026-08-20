@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { PortableText, type PortableTextComponents } from '@portabletext/react'
+import { PortableText, toPlainText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 
 type PortableTextRendererProps = {
@@ -29,6 +29,12 @@ function toInternalLinkHref(href: string): string {
     // ignore
   }
   return href
+}
+
+/** True when Portable Text has visible text, not just empty blocks. */
+export function hasPortableTextContent(value: unknown): value is PortableTextBlock[] {
+  if (!Array.isArray(value) || value.length === 0) return false
+  return toPlainText(value as PortableTextBlock[]).trim().length > 0
 }
 
 /** Shared Portable Text mapping (blog, case studies, services). */
@@ -111,6 +117,6 @@ export const vizantirPortableTextComponents: PortableTextComponents = {
 }
 
 export function PortableTextRenderer({ value }: PortableTextRendererProps) {
-  if (!value || value.length === 0) return null
+  if (!hasPortableTextContent(value)) return null
   return <PortableText value={value} components={vizantirPortableTextComponents} />
 }

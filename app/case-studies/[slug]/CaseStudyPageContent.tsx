@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { PortableText } from '@portabletext/react'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
-import { vizantirPortableTextComponents } from '@/components/portable-text'
+import { hasPortableTextContent, vizantirPortableTextComponents } from '@/components/portable-text'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { formatCaseStudyMetadataLine } from '@/lib/case-studies/metadata'
 import type { CaseStudy } from '@/lib/sanity/types'
@@ -31,9 +31,9 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
 
   const metadataLine = formatCaseStudyMetadataLine(caseStudy.title, caseStudy.client, caseStudy.industry)
 
-  const hasChallenge = Array.isArray(caseStudy.challenge) && caseStudy.challenge.length > 0
-  const hasSolution = Array.isArray(caseStudy.solution) && caseStudy.solution.length > 0
-  const hasResults = Array.isArray(caseStudy.results) && caseStudy.results.length > 0
+  const hasChallenge = hasPortableTextContent(caseStudy.challenge)
+  const hasSolution = hasPortableTextContent(caseStudy.solution)
+  const hasResults = hasPortableTextContent(caseStudy.results)
   const hasStack = Array.isArray(caseStudy.stack) && caseStudy.stack.length > 0
 
   return (
