@@ -1,11 +1,11 @@
 import { AmbientHero } from '@/components/hero/AmbientHero'
 
-const INCLUDED_ITEMS = [
-  'Custom design, no templates',
-  'Mobile-first development',
-  'CMS integration included',
-  'URL structure and page hierarchy planned from the start, not bolted on later',
-  'Post-launch support available',
+const ENGAGEMENT_ARC = [
+  'Strategy — business goals, customer behavior, content structure, conversion paths, and technical requirements',
+  'Custom design built from that strategy',
+  'Development on a hand-coded Next.js stack',
+  'Launch with the site ready to operate',
+  'Ongoing growth and improvement after launch',
 ] as const
 
 export default function ServicesHero() {
@@ -14,16 +14,16 @@ export default function ServicesHero() {
       variant="contour"
       compact
       eyebrow="Services"
-      headline="What We Build"
-      subhead="Our Las Vegas studio builds custom websites for established businesses. We figure out what the site needs to do before we design a single page."
+      headline="Strategy-led websites for established businesses"
+      subhead="We figure out what the site needs to do before we design a single page — the business goals, how customers actually behave, the content structure, the conversion paths, and the technical requirements that follow."
     >
       <div className="mt-8 max-w-xl md:mt-8">
         <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-cobalt-accent">
-          What&apos;s included in every build
+          The engagement
         </p>
 
         <ul className="mb-0 list-none space-y-2 p-0 m-0">
-          {INCLUDED_ITEMS.map((line) => (
+          {ENGAGEMENT_ARC.map((line) => (
             <li
               key={line}
               className="flex items-start gap-2.5 text-base leading-relaxed text-muted-foreground"

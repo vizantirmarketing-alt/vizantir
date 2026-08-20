@@ -11,16 +11,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!settings) {
     return {
-      title: 'Website Strategy, Design & Development Services',
+      title: 'Website Strategy, Design & Development',
       description:
-        "Explore strategy, design, development, CMS integrations, and ongoing care for established brands that care how they're perceived.",
+        'Custom website strategy, design, and development for established businesses, with ongoing growth after launch.',
     }
   }
 
   return {
-    title: 'Website Strategy, Design & Development Services',
+    title: 'Website Strategy, Design & Development',
     description:
-      "Explore strategy, design, development, CMS integrations, and ongoing care for established brands that care how they're perceived.",
+      'Custom website strategy, design, and development for established businesses, with ongoing growth after launch.',
     alternates: { canonical: `${settings.siteUrl}/services` },
   }
 }
@@ -42,8 +42,9 @@ export default async function ServicesPage() {
   const pageGraph = graphSchema([
     collectionPageSchema({
       url,
-      name: 'Our Services',
-      description: 'Professional services we offer.',
+      name: 'Website Strategy, Design & Development',
+      description:
+        'Custom website strategy, design, development, and ongoing growth for established businesses.',
       siteUrl: settings.siteUrl,
       items: list.map((s) => ({ name: s.title, url: `${settings.siteUrl}/services/${s.slug}` })),
     }),

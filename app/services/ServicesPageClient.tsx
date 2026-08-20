@@ -37,42 +37,42 @@ import { cn } from '@/lib/utils'
 
 const CARE_REFRAME = {
   eyebrow: 'Website Care',
-  heading: 'Care That Isn\u2019t Damage Control',
+  heading: 'Ongoing improvement after launch',
   body: [
-    'Most maintenance plans charge you to patch a fragile platform. Plugin updates, malware scans, whatever the CMS broke this week.',
-    'A hand-coded Next.js site doesn\u2019t have those failure points. Vizantir care isn\u2019t about recovery. It keeps an already-fast, already-secure site continuously improving.',
+    'Launch is the start of the relationship, not the end of the work. Website Care is the usual continuation of a Vizantir website project.',
+    'The work is content changes, performance monitoring, analytics review, conversion improvements, search visibility, technical upkeep, new functionality, and strategic support — so the site keeps earning after it goes live.',
   ],
 } as const
 
 const LANDING_PAGE_PRICING = {
   eyebrow: 'Landing Pages',
-  heading: 'Pages built to convert traffic',
+  heading: 'Scoped conversion work',
   intro:
-    'Single-purpose pages for campaigns, offers, and paid traffic. Custom-designed, tracked, and ready to plug into your ads.',
+    'Campaign, offer, or traffic-source pages built inside the same website strategy — not a separate way to start working with Vizantir. Conversion System is for businesses spending $5,000 or more per month on paid traffic, or an offer that has to work across more than one audience.',
 } as const
 
-const BLOG_ADDON = {
-  eyebrow: 'Blog Writing Add-On',
-  heading: 'Ongoing content, attached to your retainer',
+const CONTENT_GROWTH = {
+  eyebrow: 'Search & Content Growth',
+  heading: 'Strategy, implementation, and publishing into the site',
   intro:
-    'Add ongoing content to any care plan. Human-written posts, researched and published live. Attached to your retainer, not a separate engagement.',
+    'Search opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility — published directly into the site. Plans below describe the engagement, not a quantity of posts for sale.',
 } as const
 
-const CHATBOT_ADDON = {
-  eyebrow: 'AI Chatbot',
-  heading: 'Always-on answers, trained on your content',
+const AI_EXPERIENCE = {
+  eyebrow: 'AI Experience Integration',
+  heading: 'Built into the existing website and its data',
   intro:
-    'A custom chatbot trained on your site, services, and FAQs. Answers visitors instantly in your brand voice. No scripts, no canned responses.',
-}
+    'A knowledge assistant integrated with the client\'s site and approved business data — not a widget dropped on the page. It handles customer questions, lead qualification, guided service discovery, and content-based answers, with custom conversation flows, analytics, and CRM or workflow integration where the project requires it.',
+} as const
 
 const CARE_CLIENT_DISCOUNT = 'Care plan clients get 15% off.'
 
 const [essentialCare, websiteCare, growthCare] = carePricing
 const careFooterText = `After launch, care retainers start at ${essentialCare.price} for ${essentialCare.name}, ${websiteCare.price} for ${websiteCare.name}, and ${growthCare.price} for ${growthCare.name}.`
 
-function getBlogCadenceLabel(tier: BlogTier): string {
-  if (tier.postsPerMonth === 0) return 'One-time engagement'
-  return `${tier.postsPerMonth} posts per month`
+function getContentPlanDetail(tier: BlogTier): string {
+  if (tier.postsPerMonth === 0) return 'One-time plan'
+  return `Monthly plan · typical publishing cadence of ${tier.postsPerMonth} pieces`
 }
 
 function SectionDivider() {
@@ -90,8 +90,10 @@ function ServicePricingCard({
   price,
   tagline,
   description,
+  detail,
   items = [],
   featured = false,
+  badge,
   as,
   footer,
 }: {
@@ -99,13 +101,15 @@ function ServicePricingCard({
   price: ReactNode
   tagline: string
   description?: string
+  detail?: string
   items?: readonly string[]
   featured?: boolean
+  badge?: string | false
   as?: 'div' | 'article'
   footer?: ReactNode
 }) {
   return (
-    <Card as={as} variant="muted-30" featured={featured}>
+    <Card as={as} variant="muted-30" featured={featured} badge={badge}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardPrice>{price}</CardPrice>
@@ -113,6 +117,11 @@ function ServicePricingCard({
 
       <CardTagline>{tagline}</CardTagline>
       {description ? <CardDescription className="mb-4">{description}</CardDescription> : null}
+      {detail ? (
+        <CardDescription size="xs" className="mb-4">
+          {detail}
+        </CardDescription>
+      ) : null}
       <CardDivider />
 
       {items.length > 0 ? (
@@ -142,6 +151,7 @@ function CarePricingCard({ tier }: { tier: CareTier }) {
       description={tier.description}
       items={tier.includes}
       featured={Boolean(tier.featured)}
+      badge={false}
     />
   )
 }
@@ -150,38 +160,36 @@ function LandingPagePricingCard({ tier }: { tier: LandingPageTier }) {
   return (
     <ServicePricingCard
       title={tier.name}
-      price={tier.price}
+      price={`Starting at $${tier.priceMin.toLocaleString()}`}
       tagline={tier.tagline}
       description={tier.description}
       items={tier.includes}
-      featured={Boolean(tier.featured)}
     />
   )
 }
 
-function BlogOptionCard({ tier }: { tier: BlogTier }) {
+function ContentGrowthCard({ tier }: { tier: BlogTier }) {
   return (
     <ServicePricingCard
       as="article"
       title={tier.name}
       price={tier.price}
       tagline={tier.tagline}
-      description={getBlogCadenceLabel(tier)}
+      detail={getContentPlanDetail(tier)}
       items={tier.includes}
-      featured={Boolean(tier.popular)}
     />
   )
 }
 
-function ChatbotOptionCard({ tier }: { tier: ChatbotTier }) {
+function AiExperienceCard({ tier }: { tier: ChatbotTier }) {
   return (
     <ServicePricingCard
       as="article"
       title={tier.name}
       price={`$${tier.priceMin.toLocaleString()}/month`}
       tagline={tier.tagline}
-      items={[tier.conversations]}
-      featured={Boolean(tier.popular)}
+      detail={tier.conversations}
+      items={tier.includes}
     />
   )
 }
@@ -195,6 +203,7 @@ function ProjectPricingCard({ tier }: { tier: PricingTier }) {
       description={tier.description}
       items={tier.includes}
       featured={tier.featured}
+      badge={tier.featured ? 'Recommended' : false}
       footer={
         <Button
           asChild
@@ -294,21 +303,6 @@ function iconForService(slug: string, index: number) {
   return SERVICE_ICON_BY_SLUG[slug] ?? SERVICE_ICON_FALLBACK[index % SERVICE_ICON_FALLBACK.length]
 }
 
-function strategyCallLink() {
-  return (
-    <Link
-      href="/contact"
-      onClick={() => trackCTAClick('get_started', 'services')}
-      className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
-    >
-      Book a Strategy Call
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
-    </Link>
-  )
-}
-
 function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
   const included = service.included?.filter(Boolean) ?? []
 
@@ -323,20 +317,17 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
           ))}
         </ul>
       ) : null}
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
-        {service.slug ? (
-          <Link
-            href={`/services/${service.slug}`}
-            className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
-          >
-            Learn more
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        ) : null}
-        {strategyCallLink()}
-      </div>
+      {service.slug ? (
+        <Link
+          href={`/services/${service.slug}`}
+          className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
+        >
+          Learn more
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </Link>
+      ) : null}
     </div>
   )
 }
@@ -345,19 +336,26 @@ function SectionHeading({
   eyebrow,
   heading,
   children,
+  compact = false,
 }: {
   eyebrow?: string
   heading: string
   children?: ReactNode
+  compact?: boolean
 }) {
   return (
-    <div className="mb-12 text-center">
+    <div className={compact ? 'mb-8 text-center' : 'mb-12 text-center'}>
       {eyebrow ? (
         <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-[0.25em] text-cobalt-accent">
           {eyebrow}
         </span>
       ) : null}
-      <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+      <h2
+        className={cn(
+          'text-balance font-bold leading-tight tracking-tight text-foreground',
+          compact ? 'text-2xl md:text-3xl' : 'text-3xl md:text-4xl',
+        )}
+      >
         {heading}
       </h2>
       {children}
@@ -368,9 +366,11 @@ function SectionHeading({
 function PricingSection({
   children,
   delay = 0,
+  compact = false,
 }: {
   children: ReactNode
   delay?: number
+  compact?: boolean
 }) {
   return (
     <motion.section
@@ -378,36 +378,48 @@ function PricingSection({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay }}
-      className="px-6 py-20 md:px-12 lg:px-20"
+      className={compact ? 'px-6 py-12 md:px-12 lg:px-20' : 'px-6 py-20 md:px-12 lg:px-20'}
     >
       <div className="mx-auto max-w-5xl">{children}</div>
     </motion.section>
   )
 }
 
-function StandalonePricingSection() {
+function ProjectPricingSection() {
+  return (
+    <PricingSection>
+      <SectionHeading eyebrow="Website Projects" heading="Fixed scope. Fixed price. One engagement.">
+        <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+          Strategy, custom design, development, and launch priced as a complete website project. Growth is the
+          engagement most established businesses need.
+        </p>
+      </SectionHeading>
+      <div className="grid items-stretch gap-6 md:grid-cols-3">
+        {projectPricing.map((tier) => (
+          <ProjectPricingCard key={tier.slug} tier={tier} />
+        ))}
+      </div>
+      <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-muted-foreground">
+        {careFooterText}
+      </p>
+    </PricingSection>
+  )
+}
+
+function OngoingCapabilities() {
   return (
     <>
-      <SectionDivider />
-      <PricingSection delay={0}>
-        <SectionHeading eyebrow="Project Pricing" heading="Fixed scope. Fixed price. No surprises.">
+      <PricingSection compact>
+        <SectionHeading eyebrow="After launch" heading="The engagement continues">
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Three tiers built around how complex your site needs to be, not how much we think we can charge.
+            Website Care, search and content, campaign pages, and AI experience work sit inside the same
+            relationship — supporting the site after it launches, not competing with the website project.
           </p>
         </SectionHeading>
-        <div className="grid items-stretch gap-6 md:grid-cols-3">
-          {projectPricing.map((tier) => (
-            <ProjectPricingCard key={tier.slug} tier={tier} />
-          ))}
-        </div>
-        <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-muted-foreground">
-          {careFooterText}
-        </p>
       </PricingSection>
 
-      <SectionDivider />
-      <PricingSection delay={0.1}>
-        <SectionHeading eyebrow={CARE_REFRAME.eyebrow} heading={CARE_REFRAME.heading}>
+      <PricingSection delay={0.05} compact>
+        <SectionHeading compact eyebrow={CARE_REFRAME.eyebrow} heading={CARE_REFRAME.heading}>
           <div className="mx-auto mt-3 max-w-2xl space-y-3.5 text-pretty text-base leading-relaxed text-muted-foreground">
             {CARE_REFRAME.body.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -421,9 +433,24 @@ function StandalonePricingSection() {
         </div>
       </PricingSection>
 
-      <SectionDivider />
-      <PricingSection delay={0.15}>
-        <SectionHeading eyebrow={LANDING_PAGE_PRICING.eyebrow} heading={LANDING_PAGE_PRICING.heading}>
+      <PricingSection delay={0.1} compact>
+        <SectionHeading compact eyebrow={CONTENT_GROWTH.eyebrow} heading={CONTENT_GROWTH.heading}>
+          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+            {CONTENT_GROWTH.intro}
+          </p>
+        </SectionHeading>
+        <div className="grid items-stretch gap-6 lg:grid-cols-3">
+          {blogPricing.map((tier) => (
+            <ContentGrowthCard key={tier.slug} tier={tier} />
+          ))}
+        </div>
+        <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
+          {CARE_CLIENT_DISCOUNT}
+        </p>
+      </PricingSection>
+
+      <PricingSection delay={0.15} compact>
+        <SectionHeading compact eyebrow={LANDING_PAGE_PRICING.eyebrow} heading={LANDING_PAGE_PRICING.heading}>
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
             {LANDING_PAGE_PRICING.intro}
           </p>
@@ -435,64 +462,25 @@ function StandalonePricingSection() {
         </div>
       </PricingSection>
 
-      <SectionDivider />
-      <PricingSection delay={0.2}>
-        <SectionHeading eyebrow={BLOG_ADDON.eyebrow} heading={BLOG_ADDON.heading}>
+      <PricingSection delay={0.2} compact>
+        <SectionHeading compact eyebrow={AI_EXPERIENCE.eyebrow} heading={AI_EXPERIENCE.heading}>
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            {BLOG_ADDON.intro}
-          </p>
-        </SectionHeading>
-        <div className="grid items-stretch gap-6 lg:grid-cols-3">
-          {blogPricing.map((tier) => (
-            <BlogOptionCard key={tier.slug} tier={tier} />
-          ))}
-        </div>
-        <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
-          {CARE_CLIENT_DISCOUNT}
-        </p>
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-between">
-          <p className="text-sm text-muted-foreground">Available as add-on to any Care plan.</p>
-          <Link
-            href="/contact"
-            onClick={() => trackCTAClick('get_started', 'services')}
-            className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
-          >
-            Book a Strategy Call
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </PricingSection>
-
-      <SectionDivider />
-      <PricingSection delay={0.3}>
-        <SectionHeading eyebrow={CHATBOT_ADDON.eyebrow} heading={CHATBOT_ADDON.heading}>
-          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            {CHATBOT_ADDON.intro}
+            {AI_EXPERIENCE.intro}
           </p>
         </SectionHeading>
 
         <div className="grid items-stretch gap-6 lg:grid-cols-3">
           {chatbotPricing.map((tier) => (
-            <ChatbotOptionCard key={tier.slug} tier={tier} />
+            <AiExperienceCard key={tier.slug} tier={tier} />
           ))}
         </div>
         <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
           {CARE_CLIENT_DISCOUNT}
         </p>
-
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">
-            {CHATBOT_SETUP_FEE.display} one-time setup. Available as add-on to any Care plan.
-          </p>
-          <Link
-            href="/contact"
-            onClick={() => trackCTAClick('get_started', 'services')}
-            className="link-cobalt inline-flex items-center gap-2 text-sm font-semibold text-cobalt-accent"
-          >
-            Book a Strategy Call
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+        <p className="mt-3 text-sm text-muted-foreground">
+          {CHATBOT_SETUP_FEE.display} one-time setup. Integrate the assistant into the existing site, connect
+          approved business data, and tune conversation flows.
+        </p>
       </PricingSection>
     </>
   )
@@ -515,6 +503,10 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
 
       <SectionDivider />
 
+      <ProjectPricingSection />
+
+      <SectionDivider />
+
       <section
         id="services"
         className="relative bg-background px-6 py-20 transition-colors duration-500 md:px-12 lg:px-20"
@@ -526,7 +518,12 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <SectionHeading heading="Services" />
+            <SectionHeading heading="What the engagement covers">
+              <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+                Strategy, design, development, launch, and ongoing growth — one website project, not a menu of
+                disconnected offerings.
+              </p>
+            </SectionHeading>
           </motion.div>
 
           <div className="divide-y divide-border">
@@ -600,7 +597,9 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
         </div>
       </section>
 
-      <StandalonePricingSection />
+      <SectionDivider />
+
+      <OngoingCapabilities />
 
       <SectionDivider />
 
@@ -613,7 +612,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             transition={{ delay: 0.3 }}
           >
             <p className="mb-6 text-muted-foreground transition-colors duration-500">
-              Ready to start your project?
+              Start a conversation about a website project.
             </p>
             <Link
               href="/contact"
@@ -628,4 +627,3 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
     </div>
   )
 }
-

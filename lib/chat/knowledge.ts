@@ -83,9 +83,9 @@ function buildPricing(): string {
     .map((t) => `### ${t.name} — ${t.price}\n${t.description}\nIncludes:\n${bullets(t.includes)}`)
     .join('\n\n')
   const blogIntro = [
-    'Vizantir offers ongoing blog writing as an add-on to any Website Care plan.',
-    'Posts are human-written, researched against the client\u2019s industry and audience, and published live in Sanity \u2014 not a separate engagement, not AI-generated.',
-    'Available standalone as a single post; recurring tiers are care-attached only.',
+    'Vizantir offers Search & Content Growth as an add-on to any Website Care plan.',
+    'The work is strategy, implementation, and publishing into the site: search opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility.',
+    'Plans describe the engagement, not a quantity of posts. Available as a one-time assignment or a monthly plan; recurring tiers are care-attached only.',
   ].join(' ')
   const blogTiers = blogPricing
     .map((t) => {
@@ -97,8 +97,8 @@ function buildPricing(): string {
         ? `${formatCareClientPrice(t.priceMin)} (one-time, 15% off)`
         : `${formatCareClientPrice(t.priceMin)}/month (15% off)`
       const cadenceLine = isOneTime
-        ? 'Cadence: one-time engagement'
-        : `Cadence: ${t.postsPerMonth} posts per month`
+        ? 'Plan detail: one-time assignment'
+        : `Plan detail: monthly, typical publishing cadence of ${t.postsPerMonth} pieces`
       return [
         `### ${t.name}`,
         `Standard price: ${standardPrice}`,
@@ -110,10 +110,10 @@ function buildPricing(): string {
     .join('\n\n')
   const blogBlock = `${blogIntro}\n\n${blogTiers}`
   const chatbotIntro = [
-    'Vizantir offers a custom AI chatbot trained on each client\u2019s site content, services, and FAQs.',
-    'It answers visitors in the client\u2019s brand voice \u2014 not canned scripts or generic widgets.',
+    'Vizantir offers AI Experience Integration: a knowledge assistant built into the client\'s existing website and approved business data — not a generic widget.',
+    'It handles customer questions, lead qualification, guided service discovery, and content-based answers, with custom conversation flows, analytics, and CRM or workflow integration where the project requires it.',
     'Primarily sold as an add-on to Website Care; also available standalone.',
-    'This is not a self-serve product: setup, training, and conversation metering are handled per client by the Vizantir team.',
+    'This is not a self-serve product: setup, data integration, and conversation metering are handled per client by the Vizantir team. Conversation limits are plan detail, not the differentiator.',
   ].join(' ')
   const chatbotTiers = chatbotPricing
     .map((t) => {
@@ -122,15 +122,16 @@ function buildPricing(): string {
         `### ${t.name}`,
         `Standard price: $${t.priceMin.toLocaleString()}/month`,
         `Care client price: ${carePrice}/month (15% off)`,
-        `Includes: ${t.conversations}`,
+        `Plan detail: ${t.conversations}`,
         t.tagline,
+        `Includes:\n${bullets(t.includes)}`,
       ].join('\n')
     })
     .join('\n\n')
   const chatbotBlock = `${chatbotIntro}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
   const existingSiteRate = `Existing Vizantir website clients get an existing-site page rate starting at ${EXISTING_SITE_PAGE_RATE_DISPLAY} for a single Campaign Landing Page-scope page on the existing stack. That rate applies in place of care preferred rates rather than on top of them.`
-  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nBLOG WRITING (monthly add-on or one-time):\n\n${blogBlock}\n\nAI CHATBOT (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
+  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nSEARCH & CONTENT GROWTH (monthly add-on or one-time):\n\n${blogBlock}\n\nAI EXPERIENCE INTEGRATION (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
   return section('PRICING', body)
 }
 
