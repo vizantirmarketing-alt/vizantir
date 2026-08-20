@@ -129,7 +129,7 @@ export const carePricing: CareTier[] = [
       'Performance monitoring',
       'Up to 1 hour per month of content changes',
       'Email response within 2 business days',
-      'Quarterly website health review covering performance, Core Web Vitals, broken links, form functionality, indexing health, analytics health, and technical issues needing attention',
+      'Quarterly website health review',
     ],
   },
   {
@@ -148,7 +148,7 @@ export const carePricing: CareTier[] = [
       'Performance, analytics, and Core Web Vitals review',
       'Search visibility and technical upkeep',
       'Priority email response (24–48 hr)',
-      'Monthly performance and opportunity summary — Vizantir reviews what is happening with the site and identifies practical improvements across performance, search visibility, content and conversion opportunities, UX issues, technical improvements, and pages needing attention',
+      'Monthly performance and opportunity review',
     ],
   },
   {
@@ -167,7 +167,7 @@ export const carePricing: CareTier[] = [
       'Advanced analytics and performance review',
       'Search visibility, structured data, and technical optimization',
       'Strategic support and priority scheduling',
-      'Quarterly website roadmap and strategy session covering what to improve next, which pages underperform, where users drop off, search opportunities, new functionality worth building, and what to test next quarter',
+      'Quarterly website roadmap and strategy session',
     ],
   },
 ]
