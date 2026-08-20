@@ -4,7 +4,7 @@ import { memo, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { trackCTAClick } from '@/lib/analytics'
@@ -130,29 +130,60 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b pb-5"
+            className="border-b pb-5"
             style={{ borderColor: colors.rule }}
           >
-            {categories.map((category) => {
-              const isActive = selectedCategory === category
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => setSelectedCategory(category)}
-                  className="text-sm transition-colors duration-200"
-                  style={{
-                    color: isActive ? colors.accent : colors.textMuted,
-                    fontWeight: isActive ? 600 : 400,
-                  }}
-                >
-                  {category}
-                </button>
-              )
-            })}
-            <span className="ml-auto text-sm tabular-nums" style={{ color: colors.textMuted }}>
-              {filteredStudies.length} {filteredStudies.length === 1 ? 'project' : 'projects'}
-            </span>
+            <div className="relative md:hidden">
+              <select
+                aria-label="Filter by category"
+                value={selectedCategory}
+                onChange={(event) => setSelectedCategory(event.target.value)}
+                className="w-full cursor-pointer appearance-none bg-transparent pr-7 text-sm outline-none"
+                style={{
+                  color: selectedCategory === 'All' ? colors.textMuted : colors.accent,
+                  fontWeight: selectedCategory === 'All' ? 400 : 600,
+                }}
+              >
+                {categories.map((category) => {
+                  const count =
+                    category === 'All'
+                      ? caseStudies.length
+                      : caseStudies.filter((cs) => cs.industry === category).length
+                  return (
+                    <option key={category} value={category} style={{ color: colors.text }}>
+                      {category} ({count})
+                    </option>
+                  )
+                })}
+              </select>
+              <ChevronDown
+                aria-hidden
+                className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2"
+                style={{ color: selectedCategory === 'All' ? colors.textMuted : colors.accent }}
+              />
+            </div>
+            <div className="hidden flex-wrap items-center gap-x-7 gap-y-3 md:flex">
+              {categories.map((category) => {
+                const isActive = selectedCategory === category
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => setSelectedCategory(category)}
+                    className="text-sm transition-colors duration-200"
+                    style={{
+                      color: isActive ? colors.accent : colors.textMuted,
+                      fontWeight: isActive ? 600 : 400,
+                    }}
+                  >
+                    {category}
+                  </button>
+                )
+              })}
+              <span className="ml-auto text-sm tabular-nums" style={{ color: colors.textMuted }}>
+                {filteredStudies.length} {filteredStudies.length === 1 ? 'project' : 'projects'}
+              </span>
+            </div>
           </motion.div>
 
           {/* Index */}
