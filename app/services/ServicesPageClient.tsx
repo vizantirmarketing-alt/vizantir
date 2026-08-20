@@ -21,13 +21,14 @@ import {
   CardTitle,
 } from '@/components/ui/Card'
 import {
-  blogPricing,
   carePricing,
   chatbotPricing,
   chatbotSharedIncludes,
   CHATBOT_SETUP_FEE,
+  CHATBOT_USAGE_FROM,
   landingPagePricing,
   projectPricing,
+  publicBlogPricing,
   type BlogTier,
   type CareTier,
   type ChatbotTier,
@@ -63,7 +64,17 @@ const AI_EXPERIENCE = {
   eyebrow: 'AI Experience Integration',
   heading: 'Built into the existing website and its data',
   intro:
-    'A knowledge assistant integrated with the client\'s site and approved business data — not a widget dropped on the page. Every plan includes the capabilities below. What differs is the depth of integration as the site gets busier.',
+    'Custom AI experiences built into the website and connected to approved business content, data, and workflows — not a widget dropped on the page. Integration scope depends on the site, data sources, CRM requirements, lead flow, and use case.',
+} as const
+
+const AFTER_LAUNCH_TRANSITION =
+  'After launch, the work continues through Website Care, search and content growth, campaign work, and AI experience integration.'
+
+const CONTENT_GROWTH_AVAILABILITY = 'Available for Vizantir website and care clients.'
+
+const CLOSING_CTA = {
+  heading: 'The strategy call starts with the business.',
+  body: 'Describe where the business is going, what the current site is failing to do, and what needs to change. That is the material the conversation needs.',
 } as const
 
 const CARE_CLIENT_DISCOUNT = 'Care plan clients get 15% off.'
@@ -182,16 +193,68 @@ function ContentGrowthCard({ tier }: { tier: BlogTier }) {
   )
 }
 
-function AiExperienceCard({ tier }: { tier: ChatbotTier }) {
+function conversationAllowanceCopy(tiers: readonly ChatbotTier[]): string {
+  const counts = tiers
+    .map((tier) => tier.conversations.match(/[\d,]+/)?.[0])
+    .filter((value): value is string => Boolean(value))
+  if (counts.length === 0) {
+    return 'Usage is metered. Allowances are sized during scoping.'
+  }
+  const listed =
+    counts.length === 1
+      ? counts[0]
+      : `${counts.slice(0, -1).join(', ')}, or ${counts[counts.length - 1]}`
+  return `Usage is metered. Allowances are sized during scoping — currently up to ${listed} conversations per month depending on the integration.`
+}
+
+function ConversationAllowances({ copy }: { copy: string }) {
+  const [open, setOpen] = useState(false)
+
   return (
-    <ServicePricingCard
-      as="article"
-      title={tier.name}
-      price={`$${tier.priceMin.toLocaleString()}/month`}
-      tagline={tier.tagline}
-      detail={tier.conversations}
-      items={tier.includes}
-    />
+    <div className="mt-4 border-t border-border pt-4">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls="ai-conversation-allowances"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex w-full items-center justify-between gap-4 py-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+      >
+        <span className="text-sm font-medium text-foreground">Conversation allowances</span>
+        <AccordionIndicator isOpen={open} className="h-4 w-4 text-cobalt-accent" />
+      </button>
+      <p
+        id="ai-conversation-allowances"
+        hidden={!open}
+        className="mt-3 text-pretty text-[13px] text-muted-foreground"
+      >
+        {copy}
+      </p>
+    </div>
+  )
+}
+
+function AiExperienceBlock() {
+  return (
+    <Card as="article" variant="muted-30" className="mx-auto max-w-3xl">
+      <CardHeader>
+        <CardTitle>Ongoing usage and management</CardTitle>
+        <CardPrice>
+          {`from $${CHATBOT_USAGE_FROM.toLocaleString()}`}
+          <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
+        </CardPrice>
+      </CardHeader>
+      <CardTagline>Custom integration is scoped separately.</CardTagline>
+      <CardDivider />
+      <CardCheckList>
+        {chatbotSharedIncludes.map((line) => (
+          <CardCheckItem key={line}>{line}</CardCheckItem>
+        ))}
+      </CardCheckList>
+      <p className="text-pretty text-sm text-muted-foreground">
+        {CHATBOT_SETUP_FEE.display} one-time setup. {CARE_CLIENT_DISCOUNT}
+      </p>
+      <ConversationAllowances copy={conversationAllowanceCopy(chatbotPricing)} />
+    </Card>
   )
 }
 
@@ -411,15 +474,9 @@ function OngoingCapabilities() {
   return (
     <>
       <PricingSection compact>
-        <SectionHeading eyebrow="After launch" heading="The engagement continues">
-          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Website Care, search and content, campaign pages, and AI experience work sit inside the same
-            relationship — supporting the site after it launches, not competing with the website project.
-          </p>
-        </SectionHeading>
-      </PricingSection>
-
-      <PricingSection delay={0.05} compact>
+        <p className="mx-auto mb-10 max-w-2xl text-center text-pretty text-base leading-relaxed text-muted-foreground">
+          {AFTER_LAUNCH_TRANSITION}
+        </p>
         <SectionHeading compact eyebrow={CARE_REFRAME.eyebrow} heading={CARE_REFRAME.heading}>
           <div className="mx-auto mt-3 max-w-2xl space-y-3.5 text-pretty text-base leading-relaxed text-muted-foreground">
             {CARE_REFRAME.body.map((paragraph) => (
@@ -434,23 +491,23 @@ function OngoingCapabilities() {
         </div>
       </PricingSection>
 
-      <PricingSection delay={0.1} compact>
+      <PricingSection delay={0.05} compact>
         <SectionHeading compact eyebrow={CONTENT_GROWTH.eyebrow} heading={CONTENT_GROWTH.heading}>
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
             {CONTENT_GROWTH.intro}
           </p>
         </SectionHeading>
-        <div className="grid items-stretch gap-6 lg:grid-cols-3">
-          {blogPricing.map((tier) => (
+        <div className="grid items-stretch gap-6 lg:grid-cols-2">
+          {publicBlogPricing.map((tier) => (
             <ContentGrowthCard key={tier.slug} tier={tier} />
           ))}
         </div>
         <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
-          {CARE_CLIENT_DISCOUNT}
+          {CONTENT_GROWTH_AVAILABILITY} {CARE_CLIENT_DISCOUNT}
         </p>
       </PricingSection>
 
-      <PricingSection delay={0.15} compact>
+      <PricingSection delay={0.1} compact>
         <SectionHeading compact eyebrow={LANDING_PAGE_PRICING.eyebrow} heading={LANDING_PAGE_PRICING.heading}>
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
             {LANDING_PAGE_PRICING.intro}
@@ -463,31 +520,13 @@ function OngoingCapabilities() {
         </div>
       </PricingSection>
 
-      <PricingSection delay={0.2} compact>
+      <PricingSection delay={0.15} compact>
         <SectionHeading compact eyebrow={AI_EXPERIENCE.eyebrow} heading={AI_EXPERIENCE.heading}>
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
             {AI_EXPERIENCE.intro}
           </p>
         </SectionHeading>
-
-        <CardCheckList className="mx-auto mb-10 max-w-2xl flex-none">
-          {chatbotSharedIncludes.map((line) => (
-            <CardCheckItem key={line}>{line}</CardCheckItem>
-          ))}
-        </CardCheckList>
-
-        <div className="grid items-stretch gap-6 lg:grid-cols-3">
-          {chatbotPricing.map((tier) => (
-            <AiExperienceCard key={tier.slug} tier={tier} />
-          ))}
-        </div>
-        <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
-          {CARE_CLIENT_DISCOUNT}
-        </p>
-        <p className="mt-3 text-sm text-muted-foreground">
-          {CHATBOT_SETUP_FEE.display} one-time setup. Integrate the assistant into the existing site, connect
-          approved business data, and tune conversation flows.
-        </p>
+        <AiExperienceBlock />
       </PricingSection>
     </>
   )
@@ -618,9 +657,11 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <p className="mb-6 text-muted-foreground transition-colors duration-500">
-              Start a conversation about a website project.
-            </p>
+            <SectionHeading compact heading={CLOSING_CTA.heading}>
+              <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+                {CLOSING_CTA.body}
+              </p>
+            </SectionHeading>
             <Link
               href="/contact"
               onClick={() => trackCTAClick('get_started', 'services')}

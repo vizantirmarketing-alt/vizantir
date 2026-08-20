@@ -12,10 +12,11 @@ import {
   projectPricing,
   carePricing,
   landingPagePricing,
-  blogPricing,
+  publicBlogPricing,
   chatbotPricing,
   chatbotSharedIncludes,
   CHATBOT_SETUP_FEE,
+  CHATBOT_USAGE_FROM,
   EXISTING_SITE_PAGE_RATE_DISPLAY,
   formatCareClientPrice,
   pricingFAQs,
@@ -84,22 +85,15 @@ function buildPricing(): string {
     .map((t) => `### ${t.name} — ${t.price}\n${t.description}\nIncludes:\n${bullets(t.includes)}`)
     .join('\n\n')
   const blogIntro = [
-    'Vizantir offers Search & Content Growth as an add-on to any Website Care plan.',
+    'Vizantir offers Search & Content Growth for Vizantir website and care clients.',
     'The work is strategy, implementation, and publishing into the site: search opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility.',
-    'Plans describe the engagement, not a quantity of posts. Available as a one-time assignment or a monthly plan; recurring tiers are care-attached only.',
+    'Plans describe the engagement, not a quantity of posts. Public monthly plans are Ongoing and Program. Do not quote Single Assignment or a $350 one-time price as a public offer.',
   ].join(' ')
-  const blogTiers = blogPricing
+  const blogTiers = publicBlogPricing
     .map((t) => {
-      const isOneTime = t.cadence === 'one-time'
-      const standardPrice = isOneTime
-        ? `$${t.priceMin.toLocaleString()} (one-time)`
-        : `$${t.priceMin.toLocaleString()}/month`
-      const carePrice = isOneTime
-        ? `${formatCareClientPrice(t.priceMin)} (one-time, 15% off)`
-        : `${formatCareClientPrice(t.priceMin)}/month (15% off)`
-      const cadenceLine = isOneTime
-        ? 'Plan detail: one-time assignment'
-        : `Plan detail: monthly, typical publishing cadence of ${t.postsPerMonth} pieces`
+      const standardPrice = `$${t.priceMin.toLocaleString()}/month`
+      const carePrice = `${formatCareClientPrice(t.priceMin)}/month (15% off)`
+      const cadenceLine = `Plan detail: monthly, typical publishing cadence of ${t.postsPerMonth} pieces`
       return [
         `### ${t.name}`,
         `Standard price: ${standardPrice}`,
@@ -111,28 +105,20 @@ function buildPricing(): string {
     .join('\n\n')
   const blogBlock = `${blogIntro}\n\n${blogTiers}`
   const chatbotIntro = [
-    'Vizantir offers AI Experience Integration: a knowledge assistant built into the client\'s existing website and approved business data — not a generic widget.',
-    'Primarily sold as an add-on to Website Care; also available standalone.',
-    'This is not a self-serve product: setup, data integration, and conversation metering are handled per client by the Vizantir team. Conversation limits are plan detail, not the differentiator.',
+    'Vizantir offers AI Experience Integration: custom AI experiences built into the website and connected to approved business content, data, and workflows — not a generic widget.',
+    'Integration scope depends on the site, data sources, CRM requirements, lead flow, and use case. Custom integration is scoped separately.',
+    `Ongoing usage and management starts at $${CHATBOT_USAGE_FROM.toLocaleString()}/month.`,
+    `One-time setup is ${CHATBOT_SETUP_FEE.display}. Care plan clients get 15% off usage (${formatCareClientPrice(CHATBOT_USAGE_FROM)}/month).`,
+    'Conversation limits are plan detail sized during scoping, not a public product differentiator. Do not present Starter, Standard, or Scale as separately sold public plans.',
   ].join(' ')
   const chatbotShared = `Every AI Experience Integration includes:\n${bullets(chatbotSharedIncludes)}`
-  const chatbotTiers = chatbotPricing
-    .map((t) => {
-      const carePrice = formatCareClientPrice(t.priceMin)
-      return [
-        `### ${t.name}`,
-        `Standard price: $${t.priceMin.toLocaleString()}/month`,
-        `Care client price: ${carePrice}/month (15% off)`,
-        `Plan detail: ${t.conversations}`,
-        t.tagline,
-        `What differs at this plan:\n${bullets(t.includes)}`,
-      ].join('\n')
-    })
-    .join('\n\n')
-  const chatbotBlock = `${chatbotIntro}\n\n${chatbotShared}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\n${chatbotTiers}`
+  const chatbotPlanDetail = chatbotPricing
+    .map((t) => t.conversations)
+    .join('; ')
+  const chatbotBlock = `${chatbotIntro}\n\n${chatbotShared}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\nPlan detail only (not public products): ${chatbotPlanDetail}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
   const existingSiteRate = `Existing Vizantir website clients get an existing-site page rate starting at ${EXISTING_SITE_PAGE_RATE_DISPLAY} for a single Campaign Landing Page-scope page on the existing stack. That rate applies in place of care preferred rates rather than on top of them.`
-  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nSEARCH & CONTENT GROWTH (monthly add-on or one-time):\n\n${blogBlock}\n\nAI EXPERIENCE INTEGRATION (monthly add-on or standalone):\n\n${chatbotBlock}\n\n${faqBlock}`
+  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (monthly retainers):\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nSEARCH & CONTENT GROWTH (monthly, for Vizantir website and care clients):\n\n${blogBlock}\n\nAI EXPERIENCE INTEGRATION (scoped custom integration):\n\n${chatbotBlock}\n\n${faqBlock}`
   return section('PRICING', body)
 }
 

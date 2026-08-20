@@ -214,6 +214,7 @@ export const landingPagePricing: LandingPageTier[] = [
 
 export const blogPricing: BlogTier[] = [
   {
+    // Not publicly presented on /services — retained for internal plan logic.
     slug: 'blog-single',
     name: 'Single Assignment',
     price: '$350',
@@ -265,6 +266,9 @@ export const blogPricing: BlogTier[] = [
   },
 ]
 
+/** Recurring Search & Content Growth plans presented on /services. `blog-single` is retained in `blogPricing` for internal plan logic. */
+export const publicBlogPricing = blogPricing.filter((tier) => tier.slug !== 'blog-single')
+
 export type ChatbotTier = {
   slug: 'chatbot-starter' | 'chatbot-standard' | 'chatbot-scale'
   name: string
@@ -288,6 +292,8 @@ export const chatbotSharedIncludes = [
 ] as const
 
 export const chatbotPricing: ChatbotTier[] = [
+  // Starter / Standard / Scale are not publicly presented on /services.
+  // Retained for internal plan logic (usage metering and conversation allowances).
   {
     slug: 'chatbot-starter',
     name: 'Starter',
@@ -325,6 +331,14 @@ export const chatbotPricing: ChatbotTier[] = [
     ],
   },
 ]
+
+const chatbotStarterTier = chatbotPricing.find((tier) => tier.slug === 'chatbot-starter')
+if (!chatbotStarterTier) {
+  throw new Error('chatbotPricing is missing chatbot-starter')
+}
+
+/** Public /services starting price for ongoing usage and management. */
+export const CHATBOT_USAGE_FROM = chatbotStarterTier.priceMin
 
 const essentialsTier = projectPricing[0]
 const growthTier = projectPricing[1]
