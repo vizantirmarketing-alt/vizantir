@@ -10,6 +10,7 @@ import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { aboutPageContent } from '@/data/about'
 import {
   projectPricing,
+  careBenefitTooltips,
   carePricing,
   landingPagePricing,
   publicBlogPricing,
@@ -79,7 +80,13 @@ function buildPricing(): string {
     )
     .join('\n\n')
   const care = carePricing
-    .map((c) => `### ${c.name} — ${c.price}\n${c.description}\nIncludes:\n${bullets(c.includes)}`)
+    .map((c) => {
+      const includes = c.includes.map((line) => {
+        const note = careBenefitTooltips[line]
+        return note ? `${line} — ${note}` : line
+      })
+      return `### ${c.name} — ${c.price}\n${c.description}\nIncludes:\n${bullets(includes)}`
+    })
     .join('\n\n')
   const landingPages = landingPagePricing
     .map((t) => `### ${t.name} — ${t.price}\n${t.description}\nIncludes:\n${bullets(t.includes)}`)

@@ -25,6 +25,20 @@ export type CareTier = {
   preferredRate: string
 }
 
+/** Plain-English notes for selected care benefits. Keys must match `includes` lines exactly. */
+export const careBenefitTooltips: Record<string, string> = {
+  'Quarterly website health review':
+    'We review the overall health of the site — performance, broken links, forms, search indexing, analytics, and technical issues that need attention.',
+  'Performance, analytics, and Core Web Vitals review':
+    'We review how the site performs technically and how visitors use it, including speed, Core Web Vitals, traffic, and engagement signals.',
+  'Monthly performance and opportunity review':
+    'Each month we review what is happening with the site and identify practical opportunities to improve content, search visibility, usability, and conversions.',
+  'Search visibility, structured data, and technical optimization':
+    'We improve the technical signals that help search engines and AI systems understand the business, its services, and the content on the site.',
+  'Quarterly website roadmap and strategy session':
+    'Each quarter we review what is working, what is underperforming, and what should be improved, tested, or built next.',
+}
+
 export type LandingPageTier = {
   slug: 'campaign-landing-page' | 'conversion-system'
   name: string

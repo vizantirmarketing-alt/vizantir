@@ -9,6 +9,7 @@ import { trackCTAClick } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
+import { InfoTooltip } from '@/components/ui/InfoTooltip'
 import {
   Card,
   CardCheckItem,
@@ -21,6 +22,7 @@ import {
   CardTitle,
 } from '@/components/ui/Card'
 import {
+  careBenefitTooltips,
   carePricing,
   chatbotPricing,
   chatbotSharedIncludes,
@@ -97,6 +99,11 @@ function SectionDivider() {
   )
 }
 
+function tooltipLabel(benefit: string): string {
+  const rest = benefit.charAt(0).toLowerCase() + benefit.slice(1)
+  return `More information about ${rest}`
+}
+
 function ServicePricingCard({
   title,
   price,
@@ -104,6 +111,7 @@ function ServicePricingCard({
   description,
   detail,
   items = [],
+  itemTooltips,
   featured = false,
   badge,
   as,
@@ -115,13 +123,21 @@ function ServicePricingCard({
   description?: string
   detail?: string
   items?: readonly string[]
+  itemTooltips?: Readonly<Record<string, string>>
   featured?: boolean
   badge?: string | false
   as?: 'div' | 'article'
   footer?: ReactNode
 }) {
   return (
-    <Card as={as} variant="muted-30" featured={featured} badge={badge}>
+    <Card
+      as={as}
+      variant="muted-30"
+      featured={featured}
+      badge={badge}
+      data-tooltip-boundary={itemTooltips ? true : undefined}
+      className={itemTooltips ? 'overflow-visible' : undefined}
+    >
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardPrice>{price}</CardPrice>
@@ -138,9 +154,17 @@ function ServicePricingCard({
 
       {items.length > 0 ? (
         <CardCheckList>
-          {items.map((line) => (
-            <CardCheckItem key={line}>{line}</CardCheckItem>
-          ))}
+          {items.map((line) => {
+            const tooltip = itemTooltips?.[line]
+            return (
+              <CardCheckItem key={line}>
+                {line}
+                {tooltip ? (
+                  <InfoTooltip label={tooltipLabel(line)}>{tooltip}</InfoTooltip>
+                ) : null}
+              </CardCheckItem>
+            )
+          })}
         </CardCheckList>
       ) : null}
 
@@ -162,6 +186,7 @@ function CarePricingCard({ tier }: { tier: CareTier }) {
       tagline={tier.tagline}
       description={tier.description}
       items={tier.includes}
+      itemTooltips={careBenefitTooltips}
       featured={Boolean(tier.featured)}
       badge={false}
     />

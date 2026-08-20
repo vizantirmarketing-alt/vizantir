@@ -241,7 +241,7 @@ function CardCheckItem({ children }: CardCheckItemProps) {
         className="mt-[2px] h-4 w-4 flex-shrink-0 text-cobalt-accent"
         aria-hidden
       />
-      {children}
+      <span className="min-w-0">{children}</span>
     </li>
   )
 }
