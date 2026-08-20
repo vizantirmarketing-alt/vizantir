@@ -18,6 +18,11 @@ export type CareTier = {
   description: string
   includes: string[]
   featured?: boolean
+  /**
+   * Care-client preferred rate on landing pages and campaign work.
+   * Commercial policy remains; not surfaced on /services care cards.
+   */
+  preferredRate: string
 }
 
 export type LandingPageTier = {
@@ -117,13 +122,14 @@ export const carePricing: CareTier[] = [
     tagline: 'Steady technical upkeep.',
     description:
       'Content changes, performance monitoring, and technical upkeep for a site that is live and needs to stay sharp.',
+    preferredRate: '10% preferred rate on all landing pages and campaign work',
     includes: [
       'Hosting oversight and deployment support',
       'Uptime and broken-link monitoring',
       'Performance monitoring',
       'Up to 1 hour per month of content changes',
       'Email response within 2 business days',
-      '10% preferred rate on all landing pages and campaign work',
+      'Quarterly website health review covering performance, Core Web Vitals, broken links, form functionality, indexing health, analytics health, and technical issues needing attention',
     ],
   },
   {
@@ -135,13 +141,14 @@ export const carePricing: CareTier[] = [
     description:
       'Everything in Essential Care, plus more room for content, conversion, and search improvements each month.',
     featured: true,
+    preferredRate: '15% preferred rate on all landing pages and campaign work',
     includes: [
       'Everything in Essential Care',
       'Up to 2 hours per month of content, layout, or conversion work',
       'Performance, analytics, and Core Web Vitals review',
       'Search visibility and technical upkeep',
       'Priority email response (24–48 hr)',
-      '15% preferred rate on all landing pages and campaign work',
+      'Monthly performance and opportunity summary — Vizantir reviews what is happening with the site and identifies practical improvements across performance, search visibility, content and conversion opportunities, UX issues, technical improvements, and pages needing attention',
     ],
   },
   {
@@ -152,14 +159,15 @@ export const carePricing: CareTier[] = [
     tagline: 'Ongoing improvement at a larger scale.',
     description:
       'Everything in Website Care, plus more monthly capacity for new functionality, conversion work, and strategic support.',
+    preferredRate: '20% preferred rate on all landing pages and campaign work',
     includes: [
       'Everything in Website Care',
       'Up to 4 hours per month of improvements, new sections, or new functionality',
-      'Quarterly conversion and performance pass on existing pages',
-      'Quarterly analytics and performance review',
-      'Search visibility, structured data, and technical upkeep',
-      'Strategic support and priority scheduling on new work',
-      '20% preferred rate on all landing pages and campaign work',
+      'Conversion and UX optimization',
+      'Advanced analytics and performance review',
+      'Search visibility, structured data, and technical optimization',
+      'Strategic support and priority scheduling',
+      'Quarterly website roadmap and strategy session covering what to improve next, which pages underperform, where users drop off, search opportunities, new functionality worth building, and what to test next quarter',
     ],
   },
 ]
