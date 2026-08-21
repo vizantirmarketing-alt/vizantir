@@ -26,6 +26,8 @@
     "migrate:faqs": "tsx scripts/migrate-faqs.ts",
     "migrate:faqs:live": "tsx scripts/migrate-faqs.ts --live",
     "create:gei": "tsx scripts/create-gei-case-study.ts",
+    "seed:case-study-sort-order": "tsx scripts/seed-case-study-sort-order.ts",
+    "seed:case-study-sort-order:live": "tsx scripts/seed-case-study-sort-order.ts --live",
     "create:post": "tsx scripts/create-post.ts",
     "seed:elementor-posts": "tsx scripts/seed-elementor-posts.ts",
     "seed:landing-pages-service": "tsx scripts/seed-landing-pages-service.ts",

@@ -110,6 +110,15 @@ export const caseStudy = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'sortOrder',
+      title: 'Sort Order',
+      type: 'number',
+      description:
+        'Lower numbers appear first on /case-studies. Use gaps of 10 so a case study can be inserted later without renumbering.',
+      validation: (Rule) => Rule.required().integer().min(0),
+      initialValue: 100,
+    }),
+    defineField({
       name: 'seo',
       title: 'SEO Settings',
       type: 'seo',
@@ -118,8 +127,24 @@ export const caseStudy = defineType({
   preview: {
     select: {
       title: 'title',
-      subtitle: 'client',
+      client: 'client',
+      sortOrder: 'sortOrder',
       media: 'heroImage',
     },
+    prepare({ title, client, sortOrder, media }) {
+      const clientLabel = client || 'No client';
+      return {
+        title,
+        subtitle: `${clientLabel} · sort: ${sortOrder ?? 100}`,
+        media,
+      };
+    },
   },
+  orderings: [
+    {
+      title: 'Sort order (ascending)',
+      name: 'sortOrderAsc',
+      by: [{ field: 'sortOrder', direction: 'asc' }],
+    },
+  ],
 });

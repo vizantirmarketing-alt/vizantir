@@ -124,7 +124,7 @@ export const serviceBySlugQuery = groq`
 // ============================================
 
 export const allCaseStudiesQuery = groq`
-  *[_type == "caseStudy"] | order(featured desc, _updatedAt desc) {
+  *[_type == "caseStudy"] | order(coalesce(sortOrder, 999) asc, _updatedAt desc) {
     _id,
     _updatedAt,
     title,
