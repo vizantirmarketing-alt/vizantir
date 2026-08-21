@@ -1,9 +1,10 @@
 /**
  * Canonical copy for FAQ corrections.
- * Prices and tier names come from carePricing — do not hand-author them here.
+ * Prices, tier names, and timelines come from carePricing / projectPricing —
+ * do not hand-author them here.
  */
 
-import { carePricing } from '../data/pricing'
+import { carePricing, pricingFAQs } from '../data/pricing'
 
 const [essentialCare, websiteCare, growthCare] = carePricing
 
@@ -27,3 +28,13 @@ export const PHILOSOPHY_FAQ_ANSWER =
 
 export const WORDPRESS_REFRESH_FAQ_ANSWER =
   'Yes. Vizantir rebuilds a WordPress site on Next.js and Sanity, migrating content and keeping what works, rather than modifying the WordPress install.'
+
+export function webDevelopmentTimelineFaqAnswer(): string {
+  return pricingFAQs.timeline
+}
+
+export const WEB_DEVELOPMENT_CARE_FAQ_ANSWER =
+  'Yes. Website Care is optional ongoing improvement after launch — content, conversion, search, and related work on a monthly retainer.'
+
+export const EXTRA_HOURS_FAQ_ANSWER =
+  "If you need more work than the plan includes, additional work is quoted based on scope. You'll always get an estimate before that work starts."

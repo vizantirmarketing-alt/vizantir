@@ -31,7 +31,7 @@ Vizantir is a design and development studio founded by an operator with 25 years
 - [CMS Integrations](https://www.vizantir.com/services): Sanity setup so teams can update content, add pages, and make changes without touching code.
 - [Next.js Development](https://www.vizantir.com/services): Scalable websites and web applications on Next.js, optimized for performance, search visibility, and maintainability.
 - [Sanity CMS Development](https://www.vizantir.com/services): Sanity CMS implemented so teams can manage and publish content without code.
-- [Website Care](https://www.vizantir.com/services): Post-launch updates, monitoring, and performance improvements on a monthly retainer.
+- [Website Care](https://www.vizantir.com/services): Ongoing improvement after launch — content, conversion, search, and related work on a monthly retainer.
 
 ## Who we work with
 Established businesses where trust and presentation affect revenue — beauty and wellness, creative studios, professional services, retail, luxury brands, and financial services. Dedicated SEO entry pages exist for several verticals, though active client work spans broader sectors. Best fit for companies whose current website is holding the brand back, who want a custom site over a template, and who are ready to invest ${customWebsiteFloor} or more in a custom website build, or ${campaignLandingPageFloor} or more for a campaign landing page. Not a fit for pre-launch ideas, lowest-bid shoppers, hourly or unlimited-revision arrangements, full-service marketing needs (Vizantir does not run Google Ads or manage social media), or two-week timelines.

@@ -1,4 +1,4 @@
-import { EXISTING_SITE_PAGE_RATE_DISPLAY } from '@/data/pricing'
+import { EXISTING_SITE_PAGE_RATE_DISPLAY, projectPricing } from '@/data/pricing'
 
 export const sharedQualifierFit = [
   "You're running paid traffic or planning to",
@@ -106,7 +106,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
       {
         question: 'How is this different from a website?',
         answer:
-          "A website answers 'what does this business do?' A landing page answers 'why should I take this specific action right now?' Different job, different scope, different price. Landing pages start at $3,500 and ship in 2-3 weeks. Full custom websites start at $15,000 and ship in 6-8 weeks. If you need both, we often scope a Campaign Landing Page or Conversion System first so paid traffic has a conversion surface while the broader site is still in progress.",
+          `A website answers 'what does this business do?' A landing page answers 'why should I take this specific action right now?' Different job, different scope, different price. Landing pages start at $3,500 and ship in 2-3 weeks. Full custom websites start at ${projectPricing[0].price} and take ${projectPricing[0].timeline} (${projectPricing[0].name}), ${projectPricing[1].timeline} (${projectPricing[1].name}), or ${projectPricing[2].timeline} (${projectPricing[2].name}). If you need both, we often scope a Campaign Landing Page or Conversion System first so paid traffic has a conversion surface while the broader site is still in progress.`,
       },
       {
         question: 'Which tier should I pick?',

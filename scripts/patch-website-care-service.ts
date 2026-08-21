@@ -16,6 +16,7 @@ import { createClient, type SanityClient } from '@sanity/client'
 import { config as loadEnv } from 'dotenv'
 
 import { carePricing } from '../data/pricing'
+import { EXTRA_HOURS_FAQ_ANSWER } from './faq-correction-copy'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -173,8 +174,7 @@ async function main() {
           _type: 'serviceFaqItem' as const,
           _key: key(),
           question: 'What happens if I need more work than my hours cover?',
-          answer:
-            "Additional hours are billed at your preferred client rate (10–20% off standard project pricing depending on your tier). No surprises — you'll always get an estimate before work starts.",
+          answer: EXTRA_HOURS_FAQ_ANSWER,
         },
         {
           _type: 'serviceFaqItem' as const,

@@ -51,7 +51,7 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: 'What does the timeline look like from kickoff to launch?',
-    answer: `${pricingFAQs.timeline} SEO and paid media campaigns are typically live within 2 weeks.`,
+    answer: pricingFAQs.timeline,
     placement: 'homepage',
     sortOrder: 30,
   },

@@ -17,8 +17,11 @@ import {
   afterLaunchFaqAnswer,
   COMPETITOR_RESEARCH_FAQ_ANSWER,
   EXISTING_SITE_FAQ_ANSWER,
+  EXTRA_HOURS_FAQ_ANSWER,
   PHILOSOPHY_FAQ_ANSWER,
   REDESIGN_FAQ_ANSWER,
+  WEB_DEVELOPMENT_CARE_FAQ_ANSWER,
+  webDevelopmentTimelineFaqAnswer,
   WORDPRESS_FAQ_ANSWER,
   WORDPRESS_REFRESH_FAQ_ANSWER,
 } from './faq-correction-copy'
@@ -131,6 +134,36 @@ const FAQ_PATCHES: FaqPatch[] = [
     phrase: 'can you refresh a wordpress site',
     getAnswer: () => WORDPRESS_REFRESH_FAQ_ANSWER,
   },
+  {
+    kind: 'serviceFaq',
+    id: 'website-care-extra-hours',
+    expectedServiceId: 'fb48f5d8-a98b-408b-9e33-3b88fc99994e',
+    expectedSlug: 'website-care',
+    expectedKey: '55892746e0e0',
+    label: 'Website Care extra hours',
+    phrase: 'need more work than my hours cover',
+    getAnswer: () => EXTRA_HOURS_FAQ_ANSWER,
+  },
+  {
+    kind: 'serviceFaq',
+    id: 'web-development-timeline',
+    expectedServiceId: '253da9aa-af45-4fad-845d-7c513c505a44',
+    expectedSlug: 'web-development',
+    expectedKey: '5ba8dd25b191',
+    label: 'Web Development timeline',
+    phrase: 'how long does development take',
+    getAnswer: webDevelopmentTimelineFaqAnswer,
+  },
+  {
+    kind: 'serviceFaq',
+    id: 'web-development-care',
+    expectedServiceId: '253da9aa-af45-4fad-845d-7c513c505a44',
+    expectedSlug: 'web-development',
+    expectedKey: '7f32433d271f',
+    label: 'Web Development after launch',
+    phrase: 'do you offer support after launch',
+    getAnswer: () => WEB_DEVELOPMENT_CARE_FAQ_ANSWER,
+  },
 ]
 
 const FORBIDDEN_ANSWER_PATTERNS: { label: string; pattern: RegExp }[] = [
@@ -149,6 +182,18 @@ const FORBIDDEN_ANSWER_PATTERNS: { label: string; pattern: RegExp }[] = [
   {
     label: 'implies editing the existing platform',
     pattern: /improve from there/i,
+  },
+  {
+    label: 'states an extra-hour or project discount rate',
+    pattern: /preferred client rate|10.?20%.+off standard project/i,
+  },
+  {
+    label: 'claims paid media live in 2 weeks',
+    pattern: /paid media campaigns are typically live/i,
+  },
+  {
+    label: 'frames Website Care as upkeep-only',
+    pattern: /Website Care retainers for ongoing updates, monitoring/i,
   },
 ]
 
