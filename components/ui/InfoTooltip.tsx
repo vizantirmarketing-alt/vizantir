@@ -18,6 +18,7 @@ type InfoTooltipProps = {
 }
 
 const VIEWPORT_PAD = 8
+const PANEL_VIEWPORT_INSET = 16
 const GAP = 6
 
 export function InfoTooltip({ label, children }: InfoTooltipProps) {
@@ -55,8 +56,9 @@ export function InfoTooltip({ label, children }: InfoTooltipProps) {
     )
 
     const available = clipRight - clipLeft
-    const maxWidth = Math.max(160, Math.min(280, available))
-    tooltip.style.maxWidth = `${maxWidth}px`
+    const viewportCap = viewportWidth - PANEL_VIEWPORT_INSET * 2
+    const maxWidth = Math.max(160, Math.min(280, available, viewportCap))
+    tooltip.style.maxWidth = `min(${maxWidth}px, calc(100vw - 2rem))`
 
     const tipRect = tooltip.getBoundingClientRect()
     const height = tipRect.height
@@ -153,10 +155,14 @@ export function InfoTooltip({ label, children }: InfoTooltipProps) {
         id={tooltipId}
         role="tooltip"
         className={cn(
-          'absolute z-50 w-max rounded-lg border border-cobalt-muted-border bg-background px-3 py-2 text-left text-[13px] leading-snug text-muted-foreground shadow-[0_4px_16px_rgba(0,112,243,0.08)]',
-          open ? 'visible opacity-100' : 'invisible pointer-events-none opacity-0',
+          'absolute z-50 w-max max-w-[calc(100vw-2rem)] rounded-lg border border-cobalt-muted-border bg-background px-3 py-2 text-left text-[13px] leading-snug text-muted-foreground shadow-[0_4px_16px_rgba(0,112,243,0.08)]',
+          open ? 'visible opacity-100' : 'pointer-events-none hidden',
         )}
-        style={{ top: coords.top, left: coords.left, maxWidth: coords.maxWidth }}
+        style={{
+          top: coords.top,
+          left: coords.left,
+          maxWidth: `min(${coords.maxWidth}px, calc(100vw - 2rem))`,
+        }}
       >
         {children}
       </span>
