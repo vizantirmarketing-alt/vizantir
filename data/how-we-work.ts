@@ -52,7 +52,7 @@ export const howWeWorkFaqs = [
   {
     question: 'Do you offer payment plans?',
     answer:
-      'Milestone payments are standard: 50% deposit, 25% at design approval, 25% before launch.',
+      'Two payments are standard: 50% deposit to begin, 50% on completion before launch.',
   },
   {
     question: 'What happens after launch?',

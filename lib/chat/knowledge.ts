@@ -107,6 +107,7 @@ function buildPricing(): string {
         `Care client price: ${carePrice}`,
         cadenceLine,
         t.tagline,
+        `Includes:\n${bullets(t.includes)}`,
       ].join('\n')
     })
     .join('\n\n')
