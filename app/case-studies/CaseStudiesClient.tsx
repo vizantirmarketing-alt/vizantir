@@ -32,7 +32,7 @@ function ShotPlaceholder() {
   return (
     <div
       aria-hidden
-      className="absolute inset-0 flex items-center justify-center"
+      className="flex items-center justify-center py-8"
       style={{ background: 'rgba(0,0,0,0.04)' }}
     >
       <span
@@ -57,13 +57,16 @@ function ProjectShot({
   priority?: boolean
 }) {
   const url = study.heroImage?.asset?.url
+  const width = study.heroImage?.asset?.metadata?.dimensions?.width ?? 1600
+  const height = study.heroImage?.asset?.metadata?.dimensions?.height ?? 900
 
   if (USE_SCREENSHOTS && url) {
     return (
       <Image
         src={absoluteImageUrl(url)}
         alt={study.heroImage?.alt || study.title}
-        fill
+        width={width}
+        height={height}
         className={className}
         sizes={sizes}
         priority={priority}
@@ -197,7 +200,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
               >
                 <Link
                   href={`/case-studies/${study.slug}`}
-                  className="group relative grid grid-cols-[112px_1fr] items-center gap-6 border-b py-7 transition-[padding] duration-[400ms] ease-[cubic-bezier(.16,.84,.34,1)] md:grid-cols-[132px_1fr_auto] md:gap-10 lg:hover:pl-5"
+                  className="group relative grid grid-cols-[112px_1fr] items-center gap-6 border-b py-7 transition-[padding] duration-[400ms] ease-[cubic-bezier(.16,.84,.34,1)] md:grid-cols-[300px_1fr_auto] md:gap-10 lg:hover:pl-5"
                   style={{ borderColor: colors.rule }}
                 >
                   <span
@@ -208,13 +211,13 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
 
                   {/* Persistent thumbnail */}
                   <div
-                    className="relative aspect-[3/2] w-full shrink-0 overflow-hidden rounded-[3px] border"
+                    className="w-full shrink-0 overflow-hidden rounded-[3px] border"
                     style={{ borderColor: colors.cardBorder, background: colors.cardBg }}
                   >
                     <ProjectShot
                       study={study}
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-                      sizes="132px"
+                      className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.03]"
+                      sizes="(min-width: 768px) 300px, 112px"
                       priority={index < 3}
                     />
                   </div>
