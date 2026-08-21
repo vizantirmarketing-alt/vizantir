@@ -9,7 +9,6 @@ import { trackCTAClick } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
-import { InfoTooltip } from '@/components/ui/InfoTooltip'
 import {
   Card,
   CardCheckItem,
@@ -99,10 +98,15 @@ function SectionDivider() {
   )
 }
 
-function tooltipLabel(benefit: string): string {
-  const rest = benefit.charAt(0).toLowerCase() + benefit.slice(1)
-  return `More information about ${rest}`
-}
+const CARE_LEGEND_GROUPS = carePricing
+  .map((tier) => ({
+    plan: tier.name,
+    entries: tier.includes.flatMap((line) => {
+      const explanation = careBenefitTooltips[line]
+      return explanation ? [{ term: line, explanation }] : []
+    }),
+  }))
+  .filter((group) => group.entries.length > 0)
 
 function ServicePricingCard({
   title,
@@ -111,7 +115,6 @@ function ServicePricingCard({
   description,
   detail,
   items = [],
-  itemTooltips,
   featured = false,
   badge,
   as,
@@ -123,21 +126,13 @@ function ServicePricingCard({
   description?: string
   detail?: string
   items?: readonly string[]
-  itemTooltips?: Readonly<Record<string, string>>
   featured?: boolean
   badge?: string | false
   as?: 'div' | 'article'
   footer?: ReactNode
 }) {
   return (
-    <Card
-      as={as}
-      variant="muted-30"
-      featured={featured}
-      badge={badge}
-      data-tooltip-boundary={itemTooltips ? true : undefined}
-      className={itemTooltips ? 'overflow-visible' : undefined}
-    >
+    <Card as={as} variant="muted-30" featured={featured} badge={badge}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardPrice>{price}</CardPrice>
@@ -154,17 +149,9 @@ function ServicePricingCard({
 
       {items.length > 0 ? (
         <CardCheckList>
-          {items.map((line) => {
-            const tooltip = itemTooltips?.[line]
-            return (
-              <CardCheckItem key={line}>
-                {line}
-                {tooltip ? (
-                  <InfoTooltip label={tooltipLabel(line)}>{tooltip}</InfoTooltip>
-                ) : null}
-              </CardCheckItem>
-            )
-          })}
+          {items.map((line) => (
+            <CardCheckItem key={line}>{line}</CardCheckItem>
+          ))}
         </CardCheckList>
       ) : null}
 
@@ -186,7 +173,6 @@ function CarePricingCard({ tier }: { tier: CareTier }) {
       tagline={tier.tagline}
       description={tier.description}
       items={tier.includes}
-      itemTooltips={careBenefitTooltips}
       featured={Boolean(tier.featured)}
       badge={false}
     />
@@ -254,6 +240,42 @@ function ConversationAllowances({ copy }: { copy: string }) {
       >
         {copy}
       </p>
+    </div>
+  )
+}
+
+function CareTermsLegend() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="mt-6 border-t border-border pt-4">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls="website-care-terms"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex w-full items-center justify-between gap-4 py-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+      >
+        <span className="text-sm font-medium text-foreground">What these terms mean</span>
+        <AccordionIndicator isOpen={open} className="h-4 w-4 text-cobalt-accent" />
+      </button>
+      <div id="website-care-terms" hidden={!open} className="mt-3 space-y-5">
+        {CARE_LEGEND_GROUPS.map((group) => (
+          <div key={group.plan}>
+            <p className="mb-2 text-xs font-medium text-muted-foreground">{group.plan}</p>
+            <dl className="space-y-3">
+              {group.entries.map((entry) => (
+                <div key={entry.term}>
+                  <dt className="text-[13px] font-medium text-foreground">{entry.term}</dt>
+                  <dd className="mt-0.5 text-pretty text-[13px] leading-relaxed text-muted-foreground">
+                    {entry.explanation}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -514,6 +536,7 @@ function OngoingCapabilities() {
             <CarePricingCard key={tier.slug} tier={tier} />
           ))}
         </div>
+        <CareTermsLegend />
       </PricingSection>
 
       <PricingSection delay={0.05} compact>

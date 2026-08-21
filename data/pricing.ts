@@ -25,7 +25,7 @@ export type CareTier = {
   preferredRate: string
 }
 
-/** Plain-English notes for selected care benefits. Keys must match `includes` lines exactly. */
+/** Plain-English notes for selected care benefits. Keys must match `includes` lines exactly. Used by the /services legend and chat knowledge. */
 export const careBenefitTooltips: Record<string, string> = {
   'Hosting oversight and deployment support':
     'We oversee the infrastructure your website runs on and handle deployment related issues so you do not have to manage the technical side yourself.',
