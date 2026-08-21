@@ -257,7 +257,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                       className="absolute right-0 top-0 inline-flex -translate-x-2.5 items-center gap-2 whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
                       style={{ color: colors.accent }}
                     >
-                      Read case study
+                      View project
                       <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
                     </span>
                   </div>
