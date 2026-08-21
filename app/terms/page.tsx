@@ -23,7 +23,7 @@ export default function TermsAndConditions() {
       subsections: [
         {
           subtitle: "1.1 Services",
-          content: "Vizantir.com provides website design and development services, including website strategy, custom design, custom development, CMS integration, and website care and maintenance."
+          content: "Vizantir.com provides website design and development services, including website strategy, custom design, custom development, CMS integration, and Website Care."
         },
         {
           subtitle: "1.2 Service Modifications",

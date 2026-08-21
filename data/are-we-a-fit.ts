@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { carePricing, landingPagePricing, projectPricing } from './pricing'
 
 const [essentialsProjectTier] = projectPricing
-const [essentialCareTier] = carePricing
 const campaignLandingPageTier = landingPagePricing.find(
   (tier) => tier.slug === 'campaign-landing-page',
 )
@@ -122,7 +121,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
       {
         before: '',
         link: { label: 'Campaign landing pages', href: '/services/landing-pages' },
-        after: ` start at ${campaignLandingPageFloor}, for a business that needs one page to do one job. Ongoing maintenance is optional at $${essentialCareTier.priceMin.toLocaleString('en-US')} a month.`,
+        after: ` start at ${campaignLandingPageFloor}, for a business that needs one page to do one job. After launch, Website Care is optional ongoing work — content, conversion, search, and related improvements. Monthly plans range from ${carePricing[0].price} to ${carePricing[2].price}; see the Services page.`,
       },
       "If budget is the deciding factor, Squarespace and Wix are the right call. We're a fit when a weak website costs you more than a strong one does.",
       "If we don't think a project at this level will pay for itself in your business, we'll say so on the call before you spend anything.",

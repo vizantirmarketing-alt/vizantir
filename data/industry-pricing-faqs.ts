@@ -1,4 +1,4 @@
-import { industryProjectCostAnswer, industryProjectTimelineAnswer } from './pricing'
+import { carePricing, industryProjectCostAnswer, industryProjectTimelineAnswer } from './pricing'
 
 export const lasVegasPricingFaqs = {
   cost: 'Custom Las Vegas websites at Vizantir start at $15,000. That covers strategy, design, development, and a Sanity CMS so your team owns the content system. Fixed-scope pricing. No surprise invoices.',
@@ -9,7 +9,7 @@ export const lasVegasPricingFaqs = {
   stackAndOwnership:
     'We build every site on Next.js with Sanity CMS. You own everything. The code, the content, the domain, the analytics. No proprietary lock-in, no monthly software rent for basic content edits. If you ever decide to move on, we hand off the repository cleanly.',
   postLaunch:
-    'We offer optional care plans starting at $295/month. Hosting oversight, security updates, monthly change hours, and preferred rates on future work. Existing site clients also get an existing-site page rate on landing pages and new sections, which applies in place of care preferred rates rather than in addition to them.',
+    `We offer optional Website Care for ongoing improvement after launch. Monthly plans range from ${carePricing[0].price} to ${carePricing[2].price}. ${carePricing[0].includes[0]}, ${carePricing[0].includes[2]}, and ${carePricing[0].includes[3]}. Existing site clients also get an existing-site page rate on landing pages and new sections, which applies in place of care preferred rates rather than in addition to them.`,
 } as const
 
 export const lasVegasPricingFaqItems = [

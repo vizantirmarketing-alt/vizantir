@@ -62,7 +62,7 @@ const ServicesPreview = () => {
     {
       number: '03',
       title: 'Website Care',
-      input: 'Ongoing support for updates, improvements, and post-launch maintenance.',
+      input: 'Ongoing improvement after launch. The usual continuation of a Vizantir website project.',
       output: 'Monthly updates, performance monitoring, content changes',
       outcome: 'A website that stays sharp after launch',
     },
