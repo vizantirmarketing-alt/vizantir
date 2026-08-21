@@ -1,7 +1,7 @@
 /**
  * Seed sortOrder on all published case studies.
- * Evolve is pinned first (10). Remaining docs follow the 2026-08-21
- * production /case-studies visual order, in gaps of 10.
+ * Real client work first (10–60), concept projects after (70–110),
+ * in gaps of 10.
  *
  * Default: dry run. Pass --live to write.
  *
@@ -20,25 +20,23 @@ const __dirname = dirname(__filename)
 const ROOT = join(__dirname, '..')
 
 const API_VERSION = '2025-12-05'
-const PINNED_FIRST = 'evolve-dance-center'
 
 /**
- * Production /case-studies order as of 2026-08-21, before this seed.
- * High Roller Legal had a later _updatedAt in Sanity but had not
- * reshuffled the live page yet — this list is the visual order, not the query.
+ * Real client work (10–60), then concept projects (70–110) in their
+ * previous relative order.
  */
-const LIVE_VISUAL_ORDER = [
-  'essence-of-watches',
-  'beacon-of-light-music',
-  'evolve-dance-center',
-  'petale-fete',
-  'high-roller-legal',
-  'golden-era-integra',
-  'meridian-row',
-  'fuji-omakase',
-  'pink-salt-salon',
-  'eclat-lounge',
-  'elorae-nails',
+const CASE_STUDY_SORT_ORDER = [
+  { slug: 'evolve-dance-center', sortOrder: 10 },
+  { slug: 'pink-salt-salon', sortOrder: 20 },
+  { slug: 'beacon-of-light-music', sortOrder: 30 },
+  { slug: 'elorae-nails', sortOrder: 40 },
+  { slug: 'golden-era-integra', sortOrder: 50 },
+  { slug: 'essence-of-watches', sortOrder: 60 },
+  { slug: 'petale-fete', sortOrder: 70 },
+  { slug: 'high-roller-legal', sortOrder: 80 },
+  { slug: 'meridian-row', sortOrder: 90 },
+  { slug: 'fuji-omakase', sortOrder: 100 },
+  { slug: 'eclat-lounge', sortOrder: 110 },
 ] as const
 
 type CaseStudyDoc = {
@@ -60,14 +58,10 @@ function requireEnv(name: string, value: string | undefined): string {
 }
 
 function buildSortMapping(): { slug: string; sortOrder: number }[] {
-  const remaining = LIVE_VISUAL_ORDER.filter((slug) => slug !== PINNED_FIRST)
-  return [
-    { slug: PINNED_FIRST, sortOrder: 10 },
-    ...remaining.map((slug, index) => ({
-      slug,
-      sortOrder: (index + 2) * 10,
-    })),
-  ]
+  return CASE_STUDY_SORT_ORDER.map((row) => ({
+    slug: row.slug,
+    sortOrder: row.sortOrder,
+  }))
 }
 
 function createWriteClient(): SanityClient {
@@ -110,8 +104,10 @@ async function main() {
   )
 
   const bySlug = new Map(docs.map((doc) => [doc.slug, doc]))
-  const expectedSlugs = new Set(LIVE_VISUAL_ORDER)
-  const unexpected = docs.filter((doc) => !expectedSlugs.has(doc.slug as (typeof LIVE_VISUAL_ORDER)[number]))
+  const expectedSlugs = new Set(CASE_STUDY_SORT_ORDER.map((row) => row.slug))
+  const unexpected = docs.filter(
+    (doc) => !expectedSlugs.has(doc.slug as (typeof CASE_STUDY_SORT_ORDER)[number]['slug'])
+  )
   const missing = mapping.filter((row) => !bySlug.has(row.slug))
 
   if (missing.length > 0) {
