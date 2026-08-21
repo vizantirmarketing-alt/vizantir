@@ -11,6 +11,7 @@ import { createClient, type SanityClient } from '@sanity/client'
 import { config as loadEnv } from 'dotenv'
 
 import { pricingFAQs } from '@/data/pricing'
+import { afterLaunchFaqAnswer } from './faq-correction-copy'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -49,7 +50,7 @@ const FAQ_UPDATE_RULES: FaqUpdateRule[] = [
     id: 'after-site-launches',
     label: 'After the site launches',
     phrase: 'what happens after the site launches',
-    getAnswer: () => pricingFAQs.retainer,
+    getAnswer: afterLaunchFaqAnswer,
   },
   {
     id: 'website-cost',

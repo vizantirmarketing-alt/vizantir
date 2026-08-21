@@ -14,6 +14,14 @@ const __dirname = dirname(__filename)
 const ROOT = join(__dirname, '..')
 
 import { pricingFAQs } from '../data/pricing'
+import {
+  afterLaunchFaqAnswer,
+  COMPETITOR_RESEARCH_FAQ_ANSWER,
+  EXISTING_SITE_FAQ_ANSWER,
+  PHILOSOPHY_FAQ_ANSWER,
+  REDESIGN_FAQ_ANSWER,
+  WORDPRESS_FAQ_ANSWER,
+} from './faq-correction-copy'
 
 const API_VERSION = '2025-12-05'
 
@@ -49,8 +57,7 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: 'Can you work with an existing site or brand?',
-    answer:
-      "Yes. We audit what you have, identify what's working and what isn't, and improve from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
+    answer: EXISTING_SITE_FAQ_ANSWER,
     placement: 'homepage',
     sortOrder: 40,
   },
@@ -63,8 +70,7 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: "What's your philosophy on design and results?",
-    answer:
-      'Design without strategy is decoration. Every decision we make — layout, copy, structure, speed — is tied to a business outcome. We build sites that convert, run ads that track to revenue, and measure what actually moves your business forward.',
+    answer: PHILOSOPHY_FAQ_ANSWER,
     placement: 'homepage',
     sortOrder: 60,
   },
@@ -82,8 +88,7 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: 'Do you build in Next.js or WordPress?',
-    answer:
-      "Both, depending on what fits the project. Next.js for performance-critical, custom builds. WordPress when the client needs a widely supported CMS and a familiar editing environment. We'll recommend the right platform based on your goals, team, and content needs — not our preference.",
+    answer: WORDPRESS_FAQ_ANSWER,
     placement: 'faqPage',
     sortOrder: 30,
   },
@@ -103,21 +108,19 @@ const FAQS: FaqSeed[] = [
   },
   {
     question: 'Do you research my competitors before designing the site?',
-    answer:
-      'Yes. Before any design work starts we look at how your competitors are positioning themselves online — what they are doing well and where the gaps are. That research shapes the strategy, the structure, and the direction of the site. You should not be guessing what makes you different. We find it.',
+    answer: COMPETITOR_RESEARCH_FAQ_ANSWER,
     placement: 'faqPage',
     sortOrder: 36,
   },
   {
     question: 'Do you redesign existing websites?',
-    answer:
-      "Yes. We audit what you have, identify what's working, and rebuild from there. You don't need to start from scratch. If a full rebuild makes more sense, we'll tell you honestly and explain why.",
+    answer: REDESIGN_FAQ_ANSWER,
     placement: 'faqPage',
     sortOrder: 40,
   },
   {
     question: 'What happens after the site launches?',
-    answer: `${pricingFAQs.retainer} Most clients stay on retainer after launch so the site keeps performing as the business evolves.`,
+    answer: afterLaunchFaqAnswer(),
     placement: 'faqPage',
     sortOrder: 50,
   },
