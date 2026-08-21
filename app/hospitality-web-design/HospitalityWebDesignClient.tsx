@@ -20,7 +20,7 @@ import {
   UtensilsCrossed,
   X,
 } from 'lucide-react'
-import { hospitalityPricingFaqs } from '@/data/industry-pricing-faqs'
+import { hospitalityPricingFaqItems } from '@/data/industry-pricing-faqs'
 import { trackBookStrategyCallIntent, trackPhoneClick } from '@/lib/analytics'
 
 const STRATEGY_CALL_HREF = '/contact'
@@ -143,24 +143,7 @@ const processSteps = [
   },
 ] as const
 
-const faqs = [
-  {
-    question: 'How much does a restaurant website cost?',
-    answer: hospitalityPricingFaqs.cost,
-  },
-  {
-    question: 'How long does it take to build a restaurant website?',
-    answer: hospitalityPricingFaqs.timeline,
-  },
-  {
-    question: 'Which booking systems do you integrate with?',
-    answer: hospitalityPricingFaqs.bookingIntegrations,
-  },
-  {
-    question: 'Can our team update menus without a developer?',
-    answer: hospitalityPricingFaqs.menuUpdates,
-  },
-] as const
+const faqs = hospitalityPricingFaqItems
 
 const containerVariants = {
   hidden: { opacity: 0 },

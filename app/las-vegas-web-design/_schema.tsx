@@ -1,5 +1,5 @@
 import { projectPricing } from '@/data/pricing'
-import { lasVegasPricingFaqs } from '@/data/industry-pricing-faqs'
+import { lasVegasPricingFaqItems } from '@/data/industry-pricing-faqs'
 
 interface PricingTierSchema {
   name: string
@@ -7,28 +7,7 @@ interface PricingTierSchema {
   description: string
 }
 
-export const FAQ_ITEMS = [
-  {
-    question: 'How much does a Las Vegas web design project cost?',
-    answer: lasVegasPricingFaqs.cost,
-  },
-  {
-    question: 'Why hire a local studio vs a national agency or overseas freelancer?',
-    answer: lasVegasPricingFaqs.localVsNational,
-  },
-  {
-    question: 'How long does a Las Vegas web design project take?',
-    answer: lasVegasPricingFaqs.timeline,
-  },
-  {
-    question: 'What technology do you use, and do we own it?',
-    answer: lasVegasPricingFaqs.stackAndOwnership,
-  },
-  {
-    question: 'What happens after the site launches?',
-    answer: lasVegasPricingFaqs.postLaunch,
-  },
-] as const
+export const FAQ_ITEMS = lasVegasPricingFaqItems
 
 const PRICING_TIERS: readonly PricingTierSchema[] = [
   {

@@ -20,7 +20,7 @@ import {
   X,
   Zap,
 } from 'lucide-react'
-import { redesignPricingFaqs } from '@/data/industry-pricing-faqs'
+import { redesignPricingFaqItems } from '@/data/industry-pricing-faqs'
 import { trackBookStrategyCallIntent, trackPhoneClick } from '@/lib/analytics'
 
 const STRATEGY_CALL_HREF = '/contact'
@@ -164,28 +164,7 @@ const processSteps = [
   },
 ] as const
 
-const faqs = [
-  {
-    question: 'Will we lose our search rankings during the redesign?',
-    answer: redesignPricingFaqs.seoRankings,
-  },
-  {
-    question: 'What happens to our existing content and pages?',
-    answer: redesignPricingFaqs.contentMigration,
-  },
-  {
-    question: 'Will our site go down during the migration?',
-    answer: redesignPricingFaqs.downtime,
-  },
-  {
-    question: 'How long does a Las Vegas website redesign take?',
-    answer: redesignPricingFaqs.timeline,
-  },
-  {
-    question: "We're on WordPress / Wix / Squarespace / Webflow. How does the migration work?",
-    answer: redesignPricingFaqs.existingPlatform,
-  },
-] as const
+const faqs = redesignPricingFaqItems
 
 const verticalLinks = [
   { label: 'law firms', href: '/law-firm-web-design' },

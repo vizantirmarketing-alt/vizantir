@@ -17,6 +17,7 @@ import {
   CONTACT_LANDING_PAGE_BUDGETS,
   CONTACT_SERVICES,
 } from '@/lib/forms/contact-fields'
+import { contactDetails } from '@/data/contact'
 
 export default function ContactPageClient() {
   const [formData, setFormData] = useState({
@@ -228,8 +229,8 @@ export default function ContactPageClient() {
                     </div>
                     <div>
                       <p className="font-semibold mb-1 text-foreground">Email</p>
-                      <a href="mailto:info@vizantir.com" className="link-cobalt" style={{ color: 'var(--cobalt-primary)' }}>
-                        info@vizantir.com
+                      <a href={`mailto:${contactDetails.email}`} className="link-cobalt" style={{ color: 'var(--cobalt-primary)' }}>
+                        {contactDetails.email}
                       </a>
                     </div>
                   </div>
@@ -242,11 +243,11 @@ export default function ContactPageClient() {
                     <div>
                       <p className="font-semibold mb-1 text-foreground">Phone</p>
                       <a 
-                        href="tel:+17022890758" 
+                        href={`tel:${contactDetails.phoneTel}`} 
                         onClick={trackPhoneClick}
                         className="link-cobalt text-body"
                       >
-                        +1 (702) 289-0758
+                        {contactDetails.phoneDisplay}
                       </a>
                     </div>
                   </div>
@@ -260,10 +261,10 @@ export default function ContactPageClient() {
                     <div>
                       <p className="font-semibold mb-1 text-foreground">Location</p>
                       <p className="text-body">
-                        Las Vegas, NV 89139
+                        {contactDetails.location}
                       </p>
                       <p className="text-sm mt-1 text-meta">
-                        Remote-first studio serving clients nationwide
+                        {contactDetails.serviceArea}
                       </p>
                     </div>
                   </div>
@@ -274,18 +275,12 @@ export default function ContactPageClient() {
               <div className="p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <h3 className="font-semibold mb-4 text-foreground">Business Hours</h3>
                 <div className="space-y-2 text-sm text-body">
-                  <div className="flex justify-between">
-                    <span>Monday - Friday</span>
-                    <span>9:00 AM - 6:00 PM PST</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Saturday</span>
-                    <span>By appointment</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Sunday</span>
-                    <span>Closed</span>
-                  </div>
+                  {contactDetails.hours.map((row) => (
+                    <div key={row.days} className="flex justify-between">
+                      <span>{row.days}</span>
+                      <span>{row.hours}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -293,7 +288,7 @@ export default function ContactPageClient() {
               <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <p className="text-sm text-body">
-                  Average response time: <strong>Under 24 hours</strong>
+                  Average response time: <strong>{contactDetails.responseTimeAverage}</strong>
                 </p>
               </div>
             </motion.div>

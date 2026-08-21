@@ -22,7 +22,7 @@ import {
   Code2,
   Rocket,
 } from 'lucide-react'
-import { lawFirmPricingFaqs } from '@/data/industry-pricing-faqs'
+import { lawFirmPricingFaqItems } from '@/data/industry-pricing-faqs'
 import { trackBookStrategyCallIntent, trackPhoneClick } from '@/lib/analytics'
 
 const STRATEGY_CALL_HREF = '/contact'
@@ -143,24 +143,7 @@ const processSteps = [
   },
 ] as const
 
-const faqs = [
-  {
-    question: 'How much does a law firm website cost?',
-    answer: lawFirmPricingFaqs.cost,
-  },
-  {
-    question: 'How long does it take to build a law firm website?',
-    answer: lawFirmPricingFaqs.timeline,
-  },
-  {
-    question: 'Do you build practice area pages?',
-    answer: lawFirmPricingFaqs.practiceAreas,
-  },
-  {
-    question: 'Can you work with an existing brand or logo?',
-    answer: lawFirmPricingFaqs.existingBrand,
-  },
-] as const
+const faqs = lawFirmPricingFaqItems
 
 const containerVariants = {
   hidden: { opacity: 0 },

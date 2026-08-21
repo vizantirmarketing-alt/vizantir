@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import LawFirmWebDesignClient from './LawFirmWebDesignClient'
-import { lawFirmPricingFaqs } from '@/data/industry-pricing-faqs'
+import { lawFirmPricingFaqItems } from '@/data/industry-pricing-faqs'
 
 export const metadata: Metadata = {
   title: 'Law Firm Web Design That Builds Trust',
@@ -66,40 +66,14 @@ const lawFirmServiceSchema = {
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'How much does a law firm website cost?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: lawFirmPricingFaqs.cost,
-      },
+  mainEntity: lawFirmPricingFaqItems.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
     },
-    {
-      '@type': 'Question',
-      name: 'How long does it take to build a law firm website?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: lawFirmPricingFaqs.timeline,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Do you build practice area pages?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: lawFirmPricingFaqs.practiceAreas,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Can you work with an existing brand or logo?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: lawFirmPricingFaqs.existingBrand,
-      },
-    },
-  ],
+  })),
 }
 
 const breadcrumbSchema = {

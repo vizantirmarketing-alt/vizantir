@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import CREWebDesignClient from './CREWebDesignClient'
-import { commercialRealEstatePricingFaqs } from '@/data/industry-pricing-faqs'
+import { commercialRealEstatePricingFaqItems } from '@/data/industry-pricing-faqs'
 
 const META_DESCRIPTION =
   'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.'
@@ -66,40 +66,14 @@ const creServiceSchema = {
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'How much does a commercial real estate website cost?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: commercialRealEstatePricingFaqs.cost,
-      },
+  mainEntity: commercialRealEstatePricingFaqItems.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
     },
-    {
-      '@type': 'Question',
-      name: 'How long does it take to build a CRE website?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: commercialRealEstatePricingFaqs.timeline,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How does the listings CMS work?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: commercialRealEstatePricingFaqs.listingsCms,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do you handle broker and team pages?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: commercialRealEstatePricingFaqs.brokerTeamPages,
-      },
-    },
-  ],
+  })),
 }
 
 const breadcrumbSchema = {

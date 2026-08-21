@@ -23,10 +23,34 @@ import {
   pricingFAQs,
 } from '@/data/pricing'
 import { areWeAFitPageContent, flattenAreWeAFitParagraph } from '@/data/are-we-a-fit'
-import { howWeWorkProcess, howWeWorkFaqs } from '@/data/how-we-work'
+import {
+  howWeWorkComparisonColumns,
+  howWeWorkComparisonTagline,
+  howWeWorkExcludes,
+  howWeWorkExcludesHeading,
+  howWeWorkFaqs,
+  howWeWorkIncludes,
+  howWeWorkIncludesHeading,
+  howWeWorkProcess,
+} from '@/data/how-we-work'
 import { CORE_STACK, SPECIALIZED_TOOLS } from '@/app/technology/_data'
 import type { Technology } from '@/app/technology/_data'
 import { SECONDARY_INDUSTRIES } from '@/app/industries/_data'
+import { contactDetails } from '@/data/contact'
+import { industryPricingFaqGroups } from '@/data/industry-pricing-faqs'
+import {
+  sitemapIndustryPages,
+  sitemapLandingPages,
+  sitemapLegalPages,
+  sitemapMainPages,
+  sitemapTechnologyPages,
+  type SitemapLink,
+} from '@/data/sitemap-page'
+import {
+  sharedQualifierFit,
+  sharedQualifierNotFit,
+  variants,
+} from '@/app/landing-pages/_data/variants'
 
 // ---- Types (loose; we only read these for serialization) ----
 type AnyRec = Record<string, unknown>
@@ -41,6 +65,26 @@ function section(title: string, body: string): string {
 function bullets(items: readonly string[] | undefined): string {
   if (!items?.length) return ''
   return items.map((i) => `- ${i}`).join('\n')
+}
+
+function formatFaqs(faqs: readonly { question: string; answer: string }[]): string {
+  return faqs.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n')
+}
+
+function siteUrl(href: string): string {
+  return href === '/' ? 'vizantir.com' : `vizantir.com${href}`
+}
+
+function formatSiteLink(link: SitemapLink): string {
+  return `- ${link.name}: ${siteUrl(link.href)}`
+}
+
+function flattenLinkedLine(item: {
+  before: string
+  after: string
+  link?: { label: string } | null
+}): string {
+  return `${item.before}${item.link?.label ?? ''}${item.after}`
 }
 
 // ---- Section builders ----
@@ -147,14 +191,37 @@ function buildFit(): string {
   return section('WHO WE WORK WITH (FIT)', body)
 }
 
+function buildContact(): string {
+  const hours = contactDetails.hours
+    .map((row) => `- ${row.days}: ${row.hours}`)
+    .join('\n')
+  const contactPage = sitemapMainPages.find((p) => p.href === '/contact')
+  const body = [
+    `Email: ${contactDetails.email}`,
+    `Phone: ${contactDetails.phoneDisplay}`,
+    `Location: ${contactDetails.location}`,
+    `Service area: ${contactDetails.serviceArea}`,
+    `Business hours:\n${hours}`,
+    `Average response time: ${contactDetails.responseTimeAverage}`,
+    contactPage && formatSiteLink(contactPage),
+  ].filter(Boolean).join('\n')
+  return section('CONTACT', body)
+}
+
 function buildProcess(): string {
   const steps = howWeWorkProcess
     .map((s) => `${s.number}. ${s.title}: ${s.description}`)
     .join('\n')
-  const faqs = howWeWorkFaqs
-    .map((f) => `Q: ${f.question}\nA: ${f.answer}`)
+  const comparison = howWeWorkComparisonColumns
+    .map((col) => `### ${col.name}\n${bullets(col.items)}`)
     .join('\n\n')
-  return section('HOW WE WORK (PROCESS)', `${steps}\n\n${faqs}`)
+  const includes = `${howWeWorkIncludesHeading}:\n${bullets(howWeWorkIncludes)}`
+  const excludes = `${howWeWorkExcludesHeading}:\n${bullets(howWeWorkExcludes)}`
+  const faqs = formatFaqs(howWeWorkFaqs)
+  return section(
+    'HOW WE WORK (PROCESS)',
+    `${steps}\n\n${comparison}\n\n${howWeWorkComparisonTagline}\n\n${includes}\n\n${excludes}\n\n${faqs}`,
+  )
 }
 
 function buildServices(services: AnyRec[]): string {
@@ -251,7 +318,7 @@ function buildTechnology(): string {
 }
 
 function buildIndustries(): string {
-  const body = [
+  const intro = [
     'Vizantir builds custom websites for established businesses across all sectors. The /industries hub is at vizantir.com/industries.',
     '',
     `We work with clients in: ${SECONDARY_INDUSTRIES.join(', ')}`,
@@ -263,29 +330,52 @@ function buildIndustries(): string {
     '',
     'These three landing pages are SEO entry points, not specialty claims — Vizantir\'s work spans all the sectors listed above.',
   ].join('\n')
-  return section('Industries', body)
+  const faqs = industryPricingFaqGroups
+    .map((group) => {
+      const page = sitemapIndustryPages.find((p) => p.href === group.href)
+      const heading = page
+        ? `${page.name}: ${siteUrl(page.href)}`
+        : siteUrl(group.href)
+      return `### ${heading}\n${formatFaqs(group.faqs)}`
+    })
+    .join('\n\n')
+  return section('Industries', `${intro}\n\n${faqs}`)
+}
+
+function buildLandingPageVariants(): string {
+  const body = Object.values(variants)
+    .map((variant) => {
+      const page = sitemapLandingPages.find((p) => p.href === variant.route)
+      const heading = page
+        ? `${page.name}: ${siteUrl(page.href)}`
+        : siteUrl(variant.route)
+      const fit = [...sharedQualifierFit, ...variant.qualifierOverrides.fit]
+      const notFit = [
+        ...sharedQualifierNotFit.map(flattenLinkedLine),
+        ...variant.qualifierOverrides.notFit,
+      ]
+      return [
+        `### ${heading}`,
+        `Fit:\n${bullets(fit)}`,
+        `Not a fit:\n${bullets(notFit)}`,
+        `FAQs:\n${formatFaqs(variant.faqs)}`,
+      ].join('\n\n')
+    })
+    .join('\n\n')
+  return section('LANDING PAGE VARIANTS', body)
 }
 
 function buildSiteRoutes(): string {
-  const body = [
-    'Main pages:',
-    '- Home: vizantir.com',
-    '- About: vizantir.com/about',
-    '- Services: vizantir.com/services',
-    '- Case Studies: vizantir.com/case-studies',
-    '- Blog: vizantir.com/blog',
-    '- FAQ: vizantir.com/faq',
-    '- Contact: vizantir.com/contact',
-    '- How We Work: vizantir.com/how-we-work',
-    '- Are We a Fit: vizantir.com/are-we-a-fit',
-    '- Get Started: vizantir.com/get-started',
-    '',
-    'Specialty pages:',
-    '- Las Vegas Web Design: vizantir.com/las-vegas-web-design',
-    '- Website Redesign Las Vegas: vizantir.com/website-redesign-las-vegas',
-    '- Industries Hub: vizantir.com/industries',
-    '- Technology Hub: vizantir.com/technology',
-  ].join('\n')
+  const groups: { label: string; links: readonly SitemapLink[] }[] = [
+    { label: 'Main pages', links: sitemapMainPages },
+    { label: 'Industry pages', links: sitemapIndustryPages },
+    { label: 'Landing pages', links: sitemapLandingPages },
+    { label: 'Technology pages', links: sitemapTechnologyPages },
+    { label: 'Legal pages', links: sitemapLegalPages },
+  ]
+  const body = groups
+    .map((group) => `${group.label}:\n${group.links.map(formatSiteLink).join('\n')}`)
+    .join('\n\n')
   return section('Site Routes', body)
 }
 
@@ -310,6 +400,7 @@ export async function getKnowledgeBlob(): Promise<string> {
     'VIZANTIR DESIGN STUDIO — COMPLETE SITE KNOWLEDGE',
     'Use ONLY the information below to answer questions about Vizantir.',
     buildSiteSettings(siteSettings),
+    buildContact(),
     buildAbout(),
     buildServices(services ?? []),
     buildPricing(),
@@ -317,6 +408,7 @@ export async function getKnowledgeBlob(): Promise<string> {
     buildProcess(),
     buildTechnology(),
     buildIndustries(),
+    buildLandingPageVariants(),
     buildSiteRoutes(),
     buildCaseStudies(caseStudies ?? []),
     buildFaqs(faqs ?? []),

@@ -1,5 +1,35 @@
 import { EXISTING_SITE_PAGE_RATE_DISPLAY } from '@/data/pricing'
 
+export const sharedQualifierFit = [
+  "You're running paid traffic or planning to",
+  'You have a specific offer, promotion, or launch to sell',
+  'You want the page to actually convert, not just exist',
+  'You care that the code is yours to keep',
+] as const
+
+export const sharedQualifierNotFit = [
+  {
+    before: 'You need a full multi-page website (',
+    link: { href: '/services/web-design', label: 'see Web Design instead' },
+    after: ')',
+  },
+  {
+    before: "Your offer isn't defined yet (",
+    link: { href: '/services/website-strategy', label: 'start with Website Strategy' },
+    after: ')',
+  },
+  {
+    before: 'You want a template you can edit yourself (Webflow serves that market well)',
+    link: null,
+    after: '',
+  },
+  {
+    before: 'You need a $500 one-pager (we can recommend other options)',
+    link: null,
+    after: '',
+  },
+] as const
+
 export type VariantSlug = 'primary' | 'googleAds' | 'productLaunches'
 
 export type ProcessEmphasisStep = 'strategy' | 'design' | 'build' | 'launch'

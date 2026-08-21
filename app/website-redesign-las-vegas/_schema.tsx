@@ -1,5 +1,5 @@
 import { projectPricing } from '@/data/pricing'
-import { redesignPricingFaqs } from '@/data/industry-pricing-faqs'
+import { redesignPricingFaqItems } from '@/data/industry-pricing-faqs'
 
 interface PricingTierSchema {
   name: string
@@ -7,28 +7,7 @@ interface PricingTierSchema {
   description: string
 }
 
-export const FAQ_ITEMS = [
-  {
-    question: 'Will we lose our search rankings during the redesign?',
-    answer: redesignPricingFaqs.seoRankings,
-  },
-  {
-    question: 'What happens to our existing content and pages?',
-    answer: redesignPricingFaqs.contentMigration,
-  },
-  {
-    question: 'Will our site go down during the migration?',
-    answer: redesignPricingFaqs.downtime,
-  },
-  {
-    question: 'How long does a Las Vegas website redesign take?',
-    answer: redesignPricingFaqs.timeline,
-  },
-  {
-    question: "We're on WordPress / Wix / Squarespace / Webflow. How does the migration work?",
-    answer: redesignPricingFaqs.existingPlatform,
-  },
-] as const
+export const FAQ_ITEMS = redesignPricingFaqItems
 
 const PRICING_TIERS: readonly PricingTierSchema[] = [
   {

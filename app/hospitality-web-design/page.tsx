@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import HospitalityWebDesignClient from './HospitalityWebDesignClient'
-import { hospitalityPricingFaqs } from '@/data/industry-pricing-faqs'
+import { hospitalityPricingFaqItems } from '@/data/industry-pricing-faqs'
 
 const META_DESCRIPTION =
   'Custom websites for restaurants, hotels, and lounges. Built on Next.js for mobile speed, bookings that convert, and a first impression that matches the venue.'
@@ -66,40 +66,14 @@ const hospitalityServiceSchema = {
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'How much does a restaurant website cost?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: hospitalityPricingFaqs.cost,
-      },
+  mainEntity: hospitalityPricingFaqItems.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
     },
-    {
-      '@type': 'Question',
-      name: 'How long does it take to build a restaurant website?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: hospitalityPricingFaqs.timeline,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Which booking systems do you integrate with?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: hospitalityPricingFaqs.bookingIntegrations,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Can our team update menus without a developer?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: hospitalityPricingFaqs.menuUpdates,
-      },
-    },
-  ],
+  })),
 }
 
 const breadcrumbSchema = {

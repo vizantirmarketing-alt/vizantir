@@ -1,7 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { howWeWorkFaqs, howWeWorkProcess } from '@/data/how-we-work'
+import {
+  howWeWorkComparisonColumns,
+  howWeWorkComparisonTagline,
+  howWeWorkExcludes,
+  howWeWorkExcludesHeading,
+  howWeWorkFaqs,
+  howWeWorkIncludes,
+  howWeWorkIncludesHeading,
+  howWeWorkProcess,
+} from '@/data/how-we-work'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
@@ -168,26 +177,16 @@ export default function HowWeWorkPageClient() {
                 className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
                 style={{ color: colors.text }}
               >
-                Traditional Agencies
+                {howWeWorkComparisonColumns[0].name}
               </h3>
 
               <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>Big teams, big overhead</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>Layers between you and the work</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>Vague quotes, surprise invoices</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>Account managers, not builders</span>
-                </li>
+                {howWeWorkComparisonColumns[0].items.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </motion.div>
 
@@ -221,26 +220,16 @@ export default function HowWeWorkPageClient() {
                 className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
                 style={{ color: colors.text }}
               >
-                Hourly Dev Shops
+                {howWeWorkComparisonColumns[1].name}
               </h3>
 
               <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>You buy hours, not outcomes</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>100 hours in, project 60% done</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>No guaranteed deliverable</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>"Buy more hours to finish"</span>
-                </li>
+                {howWeWorkComparisonColumns[1].items.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </motion.div>
 
@@ -273,26 +262,16 @@ export default function HowWeWorkPageClient() {
                 className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
                 style={{ color: colors.text }}
               >
-                Vizantir
+                {howWeWorkComparisonColumns[2].name}
               </h3>
 
               <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
-                <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>Fixed scope, fixed price</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>You get a finished product</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>Direct access to the builder</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
-                  <span>No surprise invoices</span>
-                </li>
+                {howWeWorkComparisonColumns[2].items.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </motion.div>
           </div>
@@ -306,7 +285,8 @@ export default function HowWeWorkPageClient() {
             className="py-16 text-center text-xl font-medium md:py-20 md:text-2xl"
             style={{ color: colors.text }}
           >
-            We don’t sell hours. We deliver finished products.
+            {howWeWorkComparisonTagline}
+
           </motion.p>
         </div>
       </section>
@@ -341,18 +321,12 @@ export default function HowWeWorkPageClient() {
                 className="text-xs tracking-[0.25em] uppercase font-medium mb-6 flex min-h-[2.5em] items-end transition-colors duration-500"
                 style={{ color: colors.accent }}
               >
-                Every Project Includes
+                {howWeWorkIncludesHeading}
               </h3>
 
               <ul className="space-y-4 text-pretty text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
-                {[
-                  'Defined scope before work begins',
-                  'Milestone updates throughout',
-                  'Mobile-responsive design',
-                  'Basic SEO setup',
-                  'Launch support',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3">
+                {howWeWorkIncludes.map((item) => (
+                  <li key={item} className="flex items-center gap-3">
                     <Check className="h-4 w-4 text-cobalt-accent flex-shrink-0 mt-[2px]" aria-hidden />
                     <span>{item}</span>
                   </li>
@@ -377,18 +351,12 @@ export default function HowWeWorkPageClient() {
                 className="text-xs tracking-[0.25em] uppercase font-medium mb-6 flex min-h-[2.5em] items-end transition-colors duration-500"
                 style={{ color: colors.textSubtle }}
               >
-                Not Included (Unless Scoped)
+                {howWeWorkExcludesHeading}
               </h3>
 
               <ul className="space-y-4 text-pretty text-base leading-relaxed transition-colors duration-500" style={{ color: colors.textMuted }}>
-                {[
-                  'Unlimited revisions',
-                  'Ongoing maintenance ($295/mo, optional)',
-                  'Content writing',
-                  'Stock photography',
-                  'Hosting fees',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3">
+                {howWeWorkExcludes.map((item) => (
+                  <li key={item} className="flex items-center gap-3">
                     <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
                     <span>{item}</span>
                   </li>
@@ -492,7 +460,7 @@ export default function HowWeWorkPageClient() {
             className="mb-10 text-base leading-relaxed transition-colors duration-500"
             style={{ color: colors.textMuted }}
           >
-            Let's talk about your project. No commitment, no pressure.
+            Let&apos;s talk about your project. No commitment, no pressure.
           </motion.p>
 
           <motion.div

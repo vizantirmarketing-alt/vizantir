@@ -6,36 +6,7 @@ import { CheckCircle2, X } from 'lucide-react'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
-
-const sharedFitItems = [
-  "You're running paid traffic or planning to",
-  'You have a specific offer, promotion, or launch to sell',
-  'You want the page to actually convert, not just exist',
-  'You care that the code is yours to keep',
-] as const
-
-const sharedNotFitItems = [
-  {
-    before: 'You need a full multi-page website (',
-    link: { href: '/services/web-design', label: 'see Web Design instead' },
-    after: ')',
-  },
-  {
-    before: "Your offer isn't defined yet (",
-    link: { href: '/services/website-strategy', label: 'start with Website Strategy' },
-    after: ')',
-  },
-  {
-    before: 'You want a template you can edit yourself (Webflow serves that market well)',
-    link: null,
-    after: '',
-  },
-  {
-    before: 'You need a $500 one-pager (we can recommend other options)',
-    link: null,
-    after: '',
-  },
-] as const
+import { sharedQualifierFit, sharedQualifierNotFit } from '../_data/variants'
 
 type QualifierOverrides = {
   fit?: string[]
@@ -47,9 +18,9 @@ type QualifierBandProps = {
 }
 
 export function QualifierBand({ overrides }: QualifierBandProps) {
-  const fitItems = [...sharedFitItems, ...(overrides?.fit ?? [])]
+  const fitItems = [...sharedQualifierFit, ...(overrides?.fit ?? [])]
   const notFitItems = [
-    ...sharedNotFitItems.map((item) => ({
+    ...sharedQualifierNotFit.map((item) => ({
       key: item.before,
       before: item.before,
       link: item.link,

@@ -20,7 +20,7 @@ import {
   UserRound,
   X,
 } from 'lucide-react'
-import { commercialRealEstatePricingFaqs } from '@/data/industry-pricing-faqs'
+import { commercialRealEstatePricingFaqItems } from '@/data/industry-pricing-faqs'
 import { trackBookStrategyCallIntent, trackPhoneClick } from '@/lib/analytics'
 
 const STRATEGY_CALL_HREF = '/contact'
@@ -143,24 +143,7 @@ const processSteps = [
   },
 ] as const
 
-const faqs = [
-  {
-    question: 'How much does a commercial real estate website cost?',
-    answer: commercialRealEstatePricingFaqs.cost,
-  },
-  {
-    question: 'How long does it take to build a CRE website?',
-    answer: commercialRealEstatePricingFaqs.timeline,
-  },
-  {
-    question: 'How does the listings CMS work?',
-    answer: commercialRealEstatePricingFaqs.listingsCms,
-  },
-  {
-    question: 'How do you handle broker and team pages?',
-    answer: commercialRealEstatePricingFaqs.brokerTeamPages,
-  },
-] as const
+const faqs = commercialRealEstatePricingFaqItems
 
 const containerVariants = {
   hidden: { opacity: 0 },
