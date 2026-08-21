@@ -33,6 +33,10 @@ export const careBenefitTooltips: Record<string, string> = {
     'We review how the site performs technically and how visitors use it, including speed, Core Web Vitals, traffic, and engagement signals.',
   'Monthly performance and opportunity review':
     'Each month we review what is happening with the site and identify practical opportunities to improve content, search visibility, usability, and conversions.',
+  'Conversion and UX optimization':
+    'We look for friction in the customer journey and make improvements that help more visitors find what they need and take action.',
+  'Advanced analytics and performance review':
+    'We take a deeper look at visitor behavior, page performance, conversion activity, and site trends to guide what should be improved next.',
   'Search visibility, structured data, and technical optimization':
     'We improve the technical signals that help search engines and AI systems understand the business, its services, and the content on the site.',
   'Quarterly website roadmap and strategy session':

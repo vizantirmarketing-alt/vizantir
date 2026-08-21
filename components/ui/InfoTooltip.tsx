@@ -118,7 +118,7 @@ export function InfoTooltip({ label, children }: InfoTooltipProps) {
   }, [open, updatePosition])
 
   return (
-    <span ref={wrapRef} className="relative ml-1 inline-flex align-text-bottom">
+    <span ref={wrapRef} className="relative ml-1.5 inline-flex align-text-bottom">
       <button
         ref={triggerRef}
         type="button"
@@ -144,7 +144,7 @@ export function InfoTooltip({ label, children }: InfoTooltipProps) {
           if (openedByHover.current) return
           setOpen((prev) => !prev)
         }}
-        className="-m-0.5 inline-flex size-5 shrink-0 scroll-mt-24 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-cobalt-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-1"
+        className="-my-0.5 inline-flex size-5 shrink-0 scroll-mt-24 items-center justify-center rounded-sm text-body transition-colors hover:text-cobalt-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-1"
       >
         <Info className="size-3.5" strokeWidth={1.75} aria-hidden />
       </button>
