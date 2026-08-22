@@ -1,5 +1,9 @@
 import 'server-only';
-import { fetchClarityInsights, type ClarityMetricGroup } from '@/lib/clarity/client';
+import {
+  fetchClarityInsights,
+  type ClarityInsightsResult,
+  type ClarityMetricGroup,
+} from '@/lib/clarity/client';
 import { recordSyncSuccessEvent } from '@/lib/intel/activity';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
@@ -17,6 +21,8 @@ export type SyncClarityResult = {
   recordsProcessed: number;
   message?: string;
 };
+
+type ClarityClientFailure = Extract<ClarityInsightsResult, { ok: false }>;
 
 type ClarityMetricDailyRow = {
   date: string;
@@ -68,7 +74,7 @@ export async function syncClarity(): Promise<SyncClarityResult> {
         });
 
         if (!result.ok) {
-          failedSets.push(label);
+          failedSets.push(formatFailedDimensionSet(label, result));
           continue;
         }
 
@@ -157,6 +163,19 @@ export async function syncClarity(): Promise<SyncClarityResult> {
 
     return { status: 'failed', recordsProcessed, message: 'Sync failed' };
   }
+}
+
+function formatFailedDimensionSet(
+  label: string,
+  failure?: Pick<ClarityClientFailure, 'reason' | 'status'>
+): string {
+  if (failure === undefined) {
+    return label;
+  }
+  if (failure.status === undefined) {
+    return `${label} (${failure.reason})`;
+  }
+  return `${label} (${failure.reason} ${failure.status})`;
 }
 
 function utcYesterdayDate(): string {

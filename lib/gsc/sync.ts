@@ -3,6 +3,7 @@ import {
   SEARCH_ANALYTICS_ROW_LIMIT,
   fetchSearchAnalytics,
   type GscRow,
+  type GscSearchAnalyticsResult,
 } from '@/lib/gsc/client';
 import { serverEnv } from '@/lib/env/server';
 import { recordSyncSuccessEvent } from '@/lib/intel/activity';
@@ -43,9 +44,11 @@ type GscQueryPageDailyRow = {
   updated_at: string;
 };
 
+type GscClientFailure = Extract<GscSearchAnalyticsResult, { ok: false }>;
+
 type WindowSyncResult =
   | { ok: true; recordsProcessed: number }
-  | { ok: false };
+  | { ok: false; failure?: Pick<GscClientFailure, 'reason' | 'status'> };
 
 export async function syncGsc(options?: {
   backfill?: boolean;
@@ -194,16 +197,16 @@ async function syncDailyWindow(
   const failedSets: string[] = [];
   let recordsProcessed = 0;
 
-  const siteCount = await syncSiteDimension(
+  const siteResult = await syncSiteDimension(
     supabase,
     startDate,
     endDate,
     updatedAt
   );
-  if (siteCount === null) {
-    failedSets.push('date');
+  if (!siteResult.ok) {
+    failedSets.push(formatFailedDimensionSet('date', siteResult.failure));
   } else {
-    recordsProcessed += siteCount;
+    recordsProcessed += siteResult.recordsProcessed;
   }
 
   const queryPageResult = await upsertQueryPagePages(
@@ -213,7 +216,9 @@ async function syncDailyWindow(
     updatedAt
   );
   if (!queryPageResult.ok) {
-    failedSets.push('date,query,page');
+    failedSets.push(
+      formatFailedDimensionSet('date,query,page', queryPageResult.failure)
+    );
   } else {
     recordsProcessed += queryPageResult.recordsProcessed;
   }
@@ -248,19 +253,19 @@ async function syncWindow(
     return { ok: false };
   }
 
-  const siteCount = await syncSiteDimension(
+  const siteResult = await syncSiteDimension(
     supabase,
     startDate,
     endDate,
     updatedAt
   );
-  if (siteCount === null) {
+  if (!siteResult.ok) {
     return { ok: false };
   }
 
   return {
     ok: true,
-    recordsProcessed: siteCount + queryPageResult.recordsProcessed,
+    recordsProcessed: siteResult.recordsProcessed + queryPageResult.recordsProcessed,
   };
 }
 
@@ -269,14 +274,17 @@ async function syncSiteDimension(
   startDate: string,
   endDate: string,
   updatedAt: string
-): Promise<number | null> {
+): Promise<WindowSyncResult> {
   const siteResult = await fetchSearchAnalytics({
     startDate,
     endDate,
     dimensions: ['date'],
   });
   if (!siteResult.ok) {
-    return null;
+    return {
+      ok: false,
+      failure: { reason: siteResult.reason, status: siteResult.status },
+    };
   }
 
   const siteRows = siteRowsForWindow(
@@ -292,10 +300,10 @@ async function syncSiteDimension(
     SITE_CONFLICT
   );
   if (!siteUpserted) {
-    return null;
+    return { ok: false };
   }
 
-  return siteRows.length;
+  return { ok: true, recordsProcessed: siteRows.length };
 }
 
 async function upsertQueryPagePages(
@@ -315,7 +323,10 @@ async function upsertQueryPagePages(
       startRow,
     });
     if (!page.ok) {
-      return { ok: false };
+      return {
+        ok: false,
+        failure: { reason: page.reason, status: page.status },
+      };
     }
 
     const rows = toQueryPageRows(page.rows, updatedAt);
@@ -496,6 +507,19 @@ function toQueryPageRows(
   }
 
   return mapped;
+}
+
+function formatFailedDimensionSet(
+  label: string,
+  failure?: Pick<GscClientFailure, 'reason' | 'status'>
+): string {
+  if (failure === undefined) {
+    return label;
+  }
+  if (failure.status === undefined) {
+    return `${label} (${failure.reason})`;
+  }
+  return `${label} (${failure.reason} ${failure.status})`;
 }
 
 function utcDateOffset(days: number): string {

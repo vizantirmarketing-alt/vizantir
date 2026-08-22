@@ -1,5 +1,5 @@
 import 'server-only';
-import { runGa4Report, type Ga4Row } from '@/lib/ga4/client';
+import { runGa4Report, type Ga4ReportResult, type Ga4Row } from '@/lib/ga4/client';
 import { serverEnv } from '@/lib/env/server';
 import { recordSyncSuccessEvent } from '@/lib/intel/activity';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
@@ -34,6 +34,12 @@ type Ga4DailyRow = {
   key_events: number;
   updated_at: string;
 };
+
+type Ga4ClientFailure = Extract<Ga4ReportResult, { ok: false }>;
+
+type DimensionSyncResult =
+  | { ok: true; recordsProcessed: number }
+  | { ok: false; failure?: Pick<Ga4ClientFailure, 'reason' | 'status'> };
 
 type PropertyWindow = {
   startDate: string;
@@ -89,28 +95,33 @@ export async function syncGa4(): Promise<SyncGa4Result> {
     const updatedAt = new Date().toISOString();
     const failedSets: string[] = [];
 
-    const siteCount = await syncSiteTotals(
+    const siteResult = await syncSiteTotals(
       supabase,
       window.startDate,
       window.endDate,
       updatedAt
     );
-    if (siteCount === null) {
-      failedSets.push('date');
+    if (!siteResult.ok) {
+      failedSets.push(formatFailedDimensionSet('date', siteResult.failure));
     } else {
-      recordsProcessed += siteCount;
+      recordsProcessed += siteResult.recordsProcessed;
     }
 
-    const channelCount = await syncChannelGroups(
+    const channelResult = await syncChannelGroups(
       supabase,
       window.startDate,
       window.endDate,
       updatedAt
     );
-    if (channelCount === null) {
-      failedSets.push('date,sessionDefaultChannelGroup');
+    if (!channelResult.ok) {
+      failedSets.push(
+        formatFailedDimensionSet(
+          'date,sessionDefaultChannelGroup',
+          channelResult.failure
+        )
+      );
     } else {
-      recordsProcessed += channelCount;
+      recordsProcessed += channelResult.recordsProcessed;
     }
 
     const status: SyncGa4Result['status'] =
@@ -155,7 +166,7 @@ async function syncSiteTotals(
   startDate: string,
   endDate: string,
   updatedAt: string
-): Promise<number | null> {
+): Promise<DimensionSyncResult> {
   const result = await runGa4Report({
     startDate,
     endDate,
@@ -163,16 +174,19 @@ async function syncSiteTotals(
     metrics: [...REPORT_METRICS],
   });
   if (!result.ok) {
-    return null;
+    return {
+      ok: false,
+      failure: { reason: result.reason, status: result.status },
+    };
   }
 
   const rows = toDailyRows(result.rows, '', updatedAt);
   const upserted = await upsertDaily(supabase, rows);
   if (!upserted) {
-    return null;
+    return { ok: false };
   }
 
-  return rows.length;
+  return { ok: true, recordsProcessed: rows.length };
 }
 
 async function syncChannelGroups(
@@ -180,7 +194,7 @@ async function syncChannelGroups(
   startDate: string,
   endDate: string,
   updatedAt: string
-): Promise<number | null> {
+): Promise<DimensionSyncResult> {
   const result = await runGa4Report({
     startDate,
     endDate,
@@ -188,16 +202,19 @@ async function syncChannelGroups(
     metrics: [...REPORT_METRICS],
   });
   if (!result.ok) {
-    return null;
+    return {
+      ok: false,
+      failure: { reason: result.reason, status: result.status },
+    };
   }
 
   const rows = toChannelRows(result.rows, updatedAt);
   const upserted = await upsertDaily(supabase, rows);
   if (!upserted) {
-    return null;
+    return { ok: false };
   }
 
-  return rows.length;
+  return { ok: true, recordsProcessed: rows.length };
 }
 
 async function upsertDaily(
@@ -251,6 +268,19 @@ async function finishRun(
       // Recording an event must never fail a sync.
     }
   }
+}
+
+function formatFailedDimensionSet(
+  label: string,
+  failure?: Pick<Ga4ClientFailure, 'reason' | 'status'>
+): string {
+  if (failure === undefined) {
+    return label;
+  }
+  if (failure.status === undefined) {
+    return `${label} (${failure.reason})`;
+  }
+  return `${label} (${failure.reason} ${failure.status})`;
 }
 
 function toDailyRows(
