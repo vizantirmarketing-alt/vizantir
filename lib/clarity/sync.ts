@@ -24,6 +24,11 @@ export type SyncClarityResult = {
 
 type ClarityClientFailure = Extract<ClarityInsightsResult, { ok: false }>;
 
+type DimensionSetFailure = {
+  reason: ClarityClientFailure['reason'] | 'upsert_error' | 'exception';
+  status?: number;
+};
+
 type ClarityMetricDailyRow = {
   date: string;
   window_days: number;
@@ -74,7 +79,12 @@ export async function syncClarity(): Promise<SyncClarityResult> {
         });
 
         if (!result.ok) {
-          failedSets.push(formatFailedDimensionSet(label, result));
+          failedSets.push(
+            formatFailedDimensionSet(label, {
+              reason: result.reason,
+              status: result.status,
+            })
+          );
           continue;
         }
 
@@ -94,13 +104,17 @@ export async function syncClarity(): Promise<SyncClarityResult> {
         });
 
         if (error) {
-          failedSets.push(label);
+          failedSets.push(
+            formatFailedDimensionSet(label, { reason: 'upsert_error' })
+          );
           continue;
         }
 
         recordsProcessed += rows.length;
       } catch {
-        failedSets.push(label);
+        failedSets.push(
+          formatFailedDimensionSet(label, { reason: 'exception' })
+        );
       }
     }
 
@@ -167,11 +181,8 @@ export async function syncClarity(): Promise<SyncClarityResult> {
 
 function formatFailedDimensionSet(
   label: string,
-  failure?: Pick<ClarityClientFailure, 'reason' | 'status'>
+  failure: Pick<DimensionSetFailure, 'reason' | 'status'>
 ): string {
-  if (failure === undefined) {
-    return label;
-  }
   if (failure.status === undefined) {
     return `${label} (${failure.reason})`;
   }
