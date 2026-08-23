@@ -24,6 +24,7 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get('code')
 
   if (!code) {
+    console.error('Intel auth callback: no code was present')
     return redirectUncached(loginErrorUrl(origin))
   }
 
@@ -31,6 +32,7 @@ export async function GET(request: Request) {
   const { error } = await supabase.auth.exchangeCodeForSession(code)
 
   if (error) {
+    console.error('Intel auth callback: exchangeCodeForSession error', error)
     return redirectUncached(loginErrorUrl(origin))
   }
 
@@ -38,7 +40,14 @@ export async function GET(request: Request) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!isAllowedEmail(user?.email)) {
+  if (!user) {
+    console.error('Intel auth callback: getUser returned no user')
+    await supabase.auth.signOut()
+    return redirectUncached(loginErrorUrl(origin))
+  }
+
+  if (!isAllowedEmail(user.email)) {
+    console.error('Intel auth callback: email was rejected')
     await supabase.auth.signOut()
     return redirectUncached(loginErrorUrl(origin))
   }
