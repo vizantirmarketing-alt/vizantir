@@ -121,7 +121,7 @@ export default async function IntelOverviewPage() {
         {aiPlatforms}
         {activityFeed}
         <Panel>
-          <DecisionEmptyState />
+          <DecisionEmptyState hiddenCount={result.hiddenCount} />
         </Panel>
       </div>
     )

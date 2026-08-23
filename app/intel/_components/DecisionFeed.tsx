@@ -22,7 +22,11 @@ import type {
   DecisionFeedItem,
   DecisionFeedSection,
 } from '@/lib/intel/decisions/feed'
-import { formatSpanLabel } from '@/lib/intel/search-params'
+import {
+  formatDisplayDate,
+  formatSpanLabel,
+  isIsoDate,
+} from '@/lib/intel/search-params'
 
 export function DecisionHeader() {
   return (
@@ -40,7 +44,22 @@ export function DecisionQueryError() {
   )
 }
 
-export function DecisionEmptyState() {
+export function DecisionEmptyState({ hiddenCount }: { hiddenCount: number }) {
+  if (hiddenCount > 0) {
+    return (
+      <div>
+        <p className="text-sm font-medium text-foreground">
+          All findings are triaged
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-body">
+          {hiddenCount === 1
+            ? '1 completed or dismissed finding is hidden from this view.'
+            : `${formatCount(hiddenCount)} completed or dismissed findings are hidden from this view.`}
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div>
       <p className="text-sm font-medium text-foreground">No findings yet</p>
@@ -207,6 +226,10 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
               {item.recommendedAction}
             </p>
           ) : null}
+          <CompletionRecord
+            resultNote={item.resultNote}
+            completedAt={item.completedAt}
+          />
           {item.relatedUrl ? <RelatedUrl href={item.relatedUrl} /> : null}
           <EvidenceBlock evidence={item.evidence} />
           <DecisionStatusControls
@@ -216,6 +239,46 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
         </div>
       </details>
     </article>
+  )
+}
+
+function formatCompletedAt(iso: string): string {
+  const datePart = iso.slice(0, 10)
+  return isIsoDate(datePart) ? formatDisplayDate(datePart) : iso
+}
+
+function CompletionRecord({
+  resultNote,
+  completedAt,
+}: {
+  resultNote: string | null
+  completedAt: string | null
+}) {
+  if (resultNote === null && completedAt === null) {
+    return null
+  }
+
+  return (
+    <div className="rounded-lg bg-positive-soft px-3 py-2.5">
+      {completedAt ? (
+        <p className="text-xs font-medium text-positive">
+          Completed{' '}
+          <time dateTime={completedAt}>{formatCompletedAt(completedAt)}</time>
+        </p>
+      ) : null}
+      {resultNote ? (
+        <p
+          className={
+            completedAt
+              ? 'mt-2 text-sm leading-relaxed text-body'
+              : 'text-sm leading-relaxed text-body'
+          }
+        >
+          <span className="font-medium text-foreground">Result. </span>
+          {resultNote}
+        </p>
+      ) : null}
+    </div>
   )
 }
 

@@ -27,13 +27,19 @@ export function LoginForm({ initialError = false }: LoginFormProps) {
       const supabase = createSupabaseBrowserClient()
       const emailRedirectTo = `${window.location.origin}/intel/auth/callback`
 
-      await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {
           emailRedirectTo,
           shouldCreateUser: false,
         },
       })
+
+      if (error) {
+        console.error('Intel magic-link request failed', error)
+        setStatus('error')
+        return
+      }
 
       setStatus('sent')
     } catch {

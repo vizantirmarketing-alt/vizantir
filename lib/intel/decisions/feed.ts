@@ -30,7 +30,12 @@ const EMISSION_COLUMNS = [
   'created_at',
 ].join(', ')
 
-const STATE_COLUMNS = ['finding_key', 'status'].join(', ')
+const STATE_COLUMNS = [
+  'finding_key',
+  'status',
+  'result_note',
+  'completed_at',
+].join(', ')
 
 export type DecisionFeedItem = {
   findingKey: string
@@ -43,6 +48,8 @@ export type DecisionFeedItem = {
   recommendedAction: string | null
   confidence: DecisionConfidence
   status: DecisionStatus
+  resultNote: string | null
+  completedAt: string | null
   periodStart: string
   periodEnd: string
   createdAt: string
@@ -54,7 +61,12 @@ export type DecisionFeedSection = {
 }
 
 export type FetchDecisionFeedResult =
-  | { ok: true; sections: DecisionFeedSection[]; total: number }
+  | {
+      ok: true
+      sections: DecisionFeedSection[]
+      total: number
+      hiddenCount: number
+    }
   | { ok: false }
 
 function readField(value: object, key: string): unknown {
@@ -182,10 +194,14 @@ function toEmission(value: unknown): ParsedEmission | null {
   }
 }
 
-function toFindingStatus(value: unknown): {
+type FindingStateRow = {
   findingKey: string
   status: DecisionStatus
-} | null {
+  resultNote: string | null
+  completedAt: string | null
+}
+
+function toFindingState(value: unknown): FindingStateRow | null {
   if (typeof value !== 'object' || value === null) {
     return null
   }
@@ -199,7 +215,12 @@ function toFindingStatus(value: unknown): {
     return null
   }
 
-  return { findingKey, status }
+  return {
+    findingKey,
+    status,
+    resultNote: asOptionalText(readField(value, 'result_note')),
+    completedAt: asIsoTimestamp(readField(value, 'completed_at')),
+  }
 }
 
 function latestEmissionPerFinding(
@@ -226,9 +247,9 @@ function latestEmissionPerFinding(
 
 function toRankedItem(
   emission: ParsedEmission,
-  status: DecisionStatus,
+  state: FindingStateRow,
 ): RankedItem | null {
-  if (isHiddenDecisionStatus(status)) {
+  if (isHiddenDecisionStatus(state.status)) {
     return null
   }
 
@@ -253,7 +274,9 @@ function toRankedItem(
       relatedUrl: emission.relatedUrl,
       recommendedAction: emission.recommendedAction,
       confidence: emission.confidence,
-      status,
+      status: state.status,
+      resultNote: state.resultNote,
+      completedAt: state.completedAt,
       periodStart: emission.periodStart,
       periodEnd: emission.periodEnd,
       createdAt: emission.createdAt,
@@ -308,21 +331,26 @@ export async function fetchDecisionFeed(): Promise<FetchDecisionFeedResult> {
       }
     }
 
-    const statusByKey = new Map<string, DecisionStatus>()
+    const stateByKey = new Map<string, FindingStateRow>()
     for (const row of statesResult.data) {
-      const parsed = toFindingStatus(row)
+      const parsed = toFindingState(row)
       if (parsed) {
-        statusByKey.set(parsed.findingKey, parsed.status)
+        stateByKey.set(parsed.findingKey, parsed)
       }
     }
 
     const ranked: RankedItem[] = []
+    let hiddenCount = 0
     for (const emission of latestEmissionPerFinding(emissions)) {
-      const status = statusByKey.get(emission.findingKey)
-      if (status === undefined) {
+      const state = stateByKey.get(emission.findingKey)
+      if (state === undefined) {
         continue
       }
-      const rankedItem = toRankedItem(emission, status)
+      if (isHiddenDecisionStatus(state.status)) {
+        hiddenCount += 1
+        continue
+      }
+      const rankedItem = toRankedItem(emission, state)
       if (rankedItem) {
         ranked.push(rankedItem)
       }
@@ -333,6 +361,7 @@ export async function fetchDecisionFeed(): Promise<FetchDecisionFeedResult> {
       ok: true,
       sections,
       total: ranked.length,
+      hiddenCount,
     }
   } catch {
     console.error('Intel decision feed query failed')
