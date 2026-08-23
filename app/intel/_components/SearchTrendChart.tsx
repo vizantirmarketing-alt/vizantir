@@ -12,10 +12,11 @@ const HEIGHT = 220
 const PAD = { top: 4, right: 0, bottom: 18, left: 0 }
 /** Dual-series rendering starts once a day actually occupies the clicks axis. */
 const CLICKS_SERIES_MIN = 5
-const CLICK_MARKER_RADIUS = 5
-const CLICK_MARKER_RING = 2
-const LINE_CORNER_RADIUS = 12
+const CLICK_MARKER_RADIUS = 3.5
+const CLICK_MARKER_RING = 1.4
+const LINE_CORNER_RADIUS = 3
 const FILLED_STROKE = 2
+const AREA_FILL_ID = 'search-trend-area-fill'
 const SECONDARY_STROKE = 1.5
 
 type PlotBox = {
@@ -384,6 +385,7 @@ export function SearchTrendChart({
     : []
   const baseline = PLOT.top + PLOT.height
   const axisMax = markClicks ? impressionMax : clickMax
+  const gridValues = [axisMax * (2 / 3), axisMax * (1 / 3)]
   const dates = tickDates(daily)
   const description = accessibleDescription(
     daily,
@@ -449,6 +451,38 @@ export function SearchTrendChart({
             preserveAspectRatio="none"
             aria-hidden
           >
+            <defs>
+              <linearGradient
+                id={AREA_FILL_ID}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="var(--cobalt-primary)"
+                  stopOpacity={0.18}
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--cobalt-primary)"
+                  stopOpacity={0}
+                />
+              </linearGradient>
+            </defs>
+
+            {gridValues.map((value) => (
+              <line
+                key={value}
+                x1={0}
+                y1={yAt(value, axisMax)}
+                x2={WIDTH}
+                y2={yAt(value, axisMax)}
+                className="stroke-black/10"
+                strokeWidth="0.5"
+              />
+            ))}
             <line
               x1={0}
               y1={baseline}
@@ -461,7 +495,7 @@ export function SearchTrendChart({
             {markClicks ? (
               <>
                 {impressionArea ? (
-                  <path d={impressionArea} className="fill-cobalt-primary/18" />
+                  <path d={impressionArea} fill={`url(#${AREA_FILL_ID})`} />
                 ) : null}
                 {impressionLine ? (
                   <path
@@ -517,7 +551,7 @@ export function SearchTrendChart({
                   />
                 ) : null}
                 {clickArea ? (
-                  <path d={clickArea} className="fill-cobalt-primary/18" />
+                  <path d={clickArea} fill={`url(#${AREA_FILL_ID})`} />
                 ) : null}
                 {clickLine ? (
                   <path
@@ -548,6 +582,16 @@ export function SearchTrendChart({
           >
             {compactCount(axisMax)}
           </text>
+          {gridValues.map((value) => (
+            <text
+              key={value}
+              x={8}
+              y={pct(yAt(value, axisMax) + 4, HEIGHT)}
+              className="fill-meta text-[0.65rem]"
+            >
+              {compactCount(Math.round(value))}
+            </text>
+          ))}
           <text
             x={8}
             y={pct(baseline - 2, HEIGHT)}
