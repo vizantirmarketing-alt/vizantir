@@ -4,6 +4,7 @@ import { createSupabaseServiceRole } from '@/lib/supabase/service'
 import {
   enumerateDates,
   isIsoDate,
+  latestCompleteDay,
   priorSpan,
   SEARCH_RANGE_DAYS,
   spanEndingOn,
@@ -402,6 +403,14 @@ function resolveComparison(
   return { available: true, span: prior }
 }
 
+function displaySpan(latestDate: string, days: number): DateSpan | null {
+  const periodEnd = latestCompleteDay([{ date: latestDate }])
+  if (periodEnd === null) {
+    return null
+  }
+  return spanEndingOn(periodEnd, days)
+}
+
 async function fetchLatestSiteDate(
   supabase: ReturnType<typeof createSupabaseServiceRole>,
 ): Promise<string | null | 'error'> {
@@ -512,7 +521,10 @@ export async function fetchSearchIntelligence(
     }
 
     const days = SEARCH_RANGE_DAYS[range]
-    const span = spanEndingOn(latestDate, days)
+    const span = displaySpan(latestDate, days)
+    if (span === null) {
+      return { ok: true, status: 'no_data' }
+    }
     const comparisonWindow = resolveComparison(
       span,
       coverageStartedOn,
@@ -615,7 +627,10 @@ export async function fetchSiteRangeTotals(
       return { ok: true, status: 'no_data' }
     }
 
-    const span = spanEndingOn(latestDate, SEARCH_RANGE_DAYS[range])
+    const span = displaySpan(latestDate, SEARCH_RANGE_DAYS[range])
+    if (span === null) {
+      return { ok: true, status: 'no_data' }
+    }
     const siteRows = await fetchSiteDaily(supabase, span)
 
     if (siteRows === null) {

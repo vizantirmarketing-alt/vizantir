@@ -74,10 +74,44 @@ export function formatUtcDate(date: Date): string {
   return date.toISOString().slice(0, 10)
 }
 
+export function utcToday(): string {
+  return formatUtcDate(new Date())
+}
+
 export function addUtcDays(iso: string, days: number): string {
   const date = parseUtcDate(iso)
   date.setUTCDate(date.getUTCDate() + days)
   return formatUtcDate(date)
+}
+
+/**
+ * Latest complete GSC day among `rows`.
+ * A complete day is at least 3 days before the current UTC date.
+ * today−2 is the trailing edge of the 5-to-2-days-ago sync window and
+ * GSC has often not finalized it when the 09:30 UTC cron runs;
+ * including it produces a phantom zero that reads as a traffic
+ * collapse. Same completed-day rule detectors use
+ * (`completedPeriodEnd` in lib/intel/decisions/run.ts), applied at
+ * GSC publish lag.
+ */
+export function latestCompleteDay(
+  rows: readonly { readonly date: string }[],
+): string | null {
+  let latest: string | null = null
+  for (const row of rows) {
+    if (latest === null || row.date > latest) {
+      latest = row.date
+    }
+  }
+  if (latest === null) {
+    return null
+  }
+
+  const trailing = addUtcDays(utcToday(), -2)
+  if (latest >= trailing) {
+    return addUtcDays(trailing, -1)
+  }
+  return latest
 }
 
 export function daysInclusive(start: string, end: string): number {
