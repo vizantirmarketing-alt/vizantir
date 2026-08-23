@@ -16,7 +16,11 @@ import {
   DecisionStatusChip,
 } from '@/app/intel/_components/ui/StatusChip'
 import { StatStrip } from '@/app/intel/_components/ui/StatStrip'
-import { DECISION_CATEGORY_LABELS, type DecisionCategory } from '@/lib/intel/decision-params'
+import {
+  DECISION_CATEGORY_LABELS,
+  isHiddenDecisionStatus,
+  type DecisionCategory,
+} from '@/lib/intel/decision-params'
 import { formatHeadlineFact } from '@/lib/intel/decisions/headline-fact'
 import type {
   DecisionFeedItem,
@@ -27,12 +31,16 @@ import {
   formatSpanLabel,
   isIsoDate,
 } from '@/lib/intel/search-params'
+import { cn } from '@/lib/utils'
 
-export function DecisionHeader() {
+export function DecisionHeader({ action }: { action?: ReactNode }) {
   return (
-    <h1 className="text-base font-semibold tracking-tight text-foreground">
-      Overview
-    </h1>
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <h1 className="text-base font-semibold tracking-tight text-foreground">
+        Overview
+      </h1>
+      {action}
+    </div>
   )
 }
 
@@ -189,12 +197,23 @@ export function DecisionFeed({ sections }: { sections: DecisionFeedSection[] }) 
 
 function DecisionItem({ item }: { item: DecisionFeedItem }) {
   const fact = formatHeadlineFact(item.detector, item.evidence)
+  const triaged = isHiddenDecisionStatus(item.status)
 
   return (
     <article className="min-w-0">
       <details className="group">
-        <summary className="flex h-12 cursor-pointer list-none items-center gap-2.5 overflow-hidden [&::-webkit-details-marker]:hidden">
-          <h3 className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+        <summary
+          className={cn(
+            'flex h-12 cursor-pointer list-none items-center gap-2.5 overflow-hidden [&::-webkit-details-marker]:hidden',
+            triaged && 'opacity-55',
+          )}
+        >
+          <h3
+            className={cn(
+              'min-w-0 flex-1 truncate text-sm font-medium',
+              triaged ? 'text-body' : 'text-foreground',
+            )}
+          >
             {item.title}
           </h3>
           <span className="shrink-0">

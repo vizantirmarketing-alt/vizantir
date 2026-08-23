@@ -9,10 +9,15 @@ import {
   DecisionQueryError,
   OverviewStatStrip,
 } from '@/app/intel/_components/DecisionFeed'
+import { DecisionTriagedToggle } from '@/app/intel/_components/DecisionTriagedToggle'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { fetchActivity } from '@/lib/intel/activity'
 import { fetchCrawlerPlatformOverview } from '@/lib/intel/crawlers'
+import {
+  parseOverviewPageParams,
+  type OverviewSearchParams,
+} from '@/lib/intel/decision-params'
 import {
   fetchDecisionFeed,
   type DecisionFeedSection,
@@ -23,6 +28,10 @@ import { fetchSiteRangeTotals } from '@/lib/intel/search'
 export const metadata: Metadata = {
   title: 'Overview',
   robots: { index: false, follow: false },
+}
+
+type OverviewPageProps = {
+  searchParams: Promise<OverviewSearchParams>
 }
 
 function countNewFindings(sections: DecisionFeedSection[]): number {
@@ -65,12 +74,16 @@ function dailyMetric(
   return result.daily.map((point) => point[metric])
 }
 
-export default async function IntelOverviewPage() {
+export default async function IntelOverviewPage({
+  searchParams,
+}: OverviewPageProps) {
   await requireIntelUser()
+
+  const { showTriaged } = parseOverviewPageParams(await searchParams)
 
   const [result, siteTotals, leadSeries, activity, crawlers] =
     await Promise.all([
-      fetchDecisionFeed(),
+      fetchDecisionFeed({ includeHidden: showTriaged }),
       fetchSiteRangeTotals('28d'),
       fetchLeadDailySeriesInLastDays(28),
       fetchActivity(),
@@ -113,10 +126,21 @@ export default async function IntelOverviewPage() {
     )
   }
 
+  const header = (
+    <DecisionHeader
+      action={
+        <DecisionTriagedToggle
+          showTriaged={showTriaged}
+          hiddenCount={result.hiddenCount}
+        />
+      }
+    />
+  )
+
   if (result.total === 0) {
     return (
       <div className="flex flex-col gap-4">
-        <DecisionHeader />
+        {header}
         {stats}
         {aiPlatforms}
         {activityFeed}
@@ -129,7 +153,7 @@ export default async function IntelOverviewPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <DecisionHeader />
+      {header}
       {stats}
       {aiPlatforms}
       {activityFeed}

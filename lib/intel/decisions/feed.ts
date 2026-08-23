@@ -249,10 +249,6 @@ function toRankedItem(
   emission: ParsedEmission,
   state: FindingStateRow,
 ): RankedItem | null {
-  if (isHiddenDecisionStatus(state.status)) {
-    return null
-  }
-
   const createdMs = Date.parse(emission.createdAt)
   if (Number.isNaN(createdMs)) {
     return null
@@ -303,7 +299,14 @@ function groupSections(ranked: RankedItem[]): DecisionFeedSection[] {
   })
 }
 
-export async function fetchDecisionFeed(): Promise<FetchDecisionFeedResult> {
+export type FetchDecisionFeedOptions = {
+  includeHidden?: boolean
+}
+
+export async function fetchDecisionFeed(
+  options: FetchDecisionFeedOptions = {},
+): Promise<FetchDecisionFeedResult> {
+  const includeHidden = options.includeHidden === true
   try {
     const supabase = createSupabaseServiceRole()
     const [emissionsResult, statesResult] = await Promise.all([
@@ -348,7 +351,9 @@ export async function fetchDecisionFeed(): Promise<FetchDecisionFeedResult> {
       }
       if (isHiddenDecisionStatus(state.status)) {
         hiddenCount += 1
-        continue
+        if (!includeHidden) {
+          continue
+        }
       }
       const rankedItem = toRankedItem(emission, state)
       if (rankedItem) {

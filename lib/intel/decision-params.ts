@@ -87,3 +87,31 @@ export function isFindingKey(value: string): boolean {
 export const DECISION_NOVELTY_TAU_DAYS = 14
 
 export const RESULT_NOTE_MAX_LENGTH = 2000
+
+export type OverviewSearchParams = {
+  triaged?: string | string[]
+}
+
+export type OverviewPageParams = {
+  showTriaged: boolean
+}
+
+function firstSearchParam(
+  value: string | string[] | undefined,
+): string | undefined {
+  if (Array.isArray(value)) {
+    const first = value[0]
+    return typeof first === 'string' ? first : undefined
+  }
+  return value
+}
+
+export function parseOverviewPageParams(
+  searchParams: OverviewSearchParams,
+): OverviewPageParams {
+  return { showTriaged: firstSearchParam(searchParams.triaged) === '1' }
+}
+
+export function overviewHref(params: OverviewPageParams): string {
+  return params.showTriaged ? '/intel?triaged=1' : '/intel'
+}
