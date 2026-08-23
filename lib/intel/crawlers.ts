@@ -102,27 +102,40 @@ export async function recordCrawlerHit(input: {
   }
 }
 
-export async function fetchCrawlerPlatformOverview(): Promise<
-  CrawlerPlatformRow[]
-> {
+export type FetchCrawlerPlatformOverviewResult =
+  | { ok: true; rows: CrawlerPlatformRow[] }
+  | { ok: false }
+
+export async function fetchCrawlerPlatformOverview(): Promise<FetchCrawlerPlatformOverviewResult> {
   const since = lookbackStartIso()
 
   try {
     const hits = await fetchHitsSince(since)
-    return aggregatePlatformRows(hits)
+    if (hits === null) {
+      return { ok: false }
+    }
+    return { ok: true, rows: aggregatePlatformRows(hits) }
   } catch {
-    return emptyOverview()
+    console.error('Intel crawler query failed')
+    return { ok: false }
   }
 }
 
-export async function fetchCrawlerFirstSeen(): Promise<CrawlerFirstSeen[]> {
+export type FetchCrawlerFirstSeenResult =
+  | { ok: true; items: CrawlerFirstSeen[] }
+  | { ok: false }
+
+export async function fetchCrawlerFirstSeen(): Promise<FetchCrawlerFirstSeenResult> {
   const since = lookbackStartIso()
 
   try {
     const hits = await fetchHitsSince(since)
+    if (hits === null) {
+      return { ok: false }
+    }
     const firstInWindow = firstSeenInHits(hits)
     if (firstInWindow.size === 0) {
-      return []
+      return { ok: true, items: [] }
     }
 
     const supabase = createSupabaseServiceRole()
@@ -146,23 +159,15 @@ export async function fetchCrawlerFirstSeen(): Promise<CrawlerFirstSeen[]> {
       }
       items.push({ bot, firstSeenAt })
     }
-    return items
+    return { ok: true, items }
   } catch {
-    return []
+    console.error('Intel crawler query failed')
+    return { ok: false }
   }
 }
 
 function lookbackStartIso(): string {
   return new Date(Date.now() - LOOKBACK_DAYS * DAY_MS).toISOString()
-}
-
-function emptyOverview(): CrawlerPlatformRow[] {
-  return CRAWLER_PLATFORM_ORDER.map((id) => ({
-    id,
-    label: CRAWLER_PLATFORM_LABELS[id],
-    hits30d: 0,
-    lastSeenAt: null,
-  }))
 }
 
 type ServiceClient = ReturnType<typeof createSupabaseServiceRole>
@@ -172,7 +177,7 @@ type CrawlerHitRow = {
   occurredAt: string
 }
 
-async function fetchHitsSince(since: string): Promise<CrawlerHitRow[]> {
+async function fetchHitsSince(since: string): Promise<CrawlerHitRow[] | null> {
   const supabase = createSupabaseServiceRole()
   const { data, error } = await supabase
     .from('crawler_hits')
@@ -182,7 +187,8 @@ async function fetchHitsSince(since: string): Promise<CrawlerHitRow[]> {
     .limit(RECENT_HIT_LIMIT)
 
   if (error || !Array.isArray(data)) {
-    return []
+    console.error('Intel crawler query failed')
+    return null
   }
 
   const hits: CrawlerHitRow[] = []

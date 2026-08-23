@@ -27,10 +27,13 @@ export type ActivityItem = {
   tone: ActivityTone
 }
 
-export type FetchActivityResult = {
-  items: ActivityItem[]
-  nowMs: number
-}
+export type FetchActivityResult =
+  | { ok: true; items: ActivityItem[]; nowMs: number }
+  | { ok: false; nowMs: number }
+
+type ActivitySourceResult =
+  | { ok: true; items: ActivityItem[] }
+  | { ok: false }
 
 type SyncProvider = 'ga4' | 'gsc' | 'clarity'
 
@@ -78,14 +81,26 @@ export async function fetchActivity(
     fetchCrawlerFirstVisitEvents(nowMs),
   ])
 
+  if (
+    !inquiries.ok ||
+    !statusMoves.ok ||
+    !findings.ok ||
+    !syncs.ok ||
+    !visitors.ok ||
+    !recorded.ok ||
+    !crawlerFirsts.ok
+  ) {
+    return { ok: false, nowMs }
+  }
+
   const merged = [
-    ...inquiries,
-    ...statusMoves,
-    ...findings,
-    ...syncs,
-    ...visitors,
-    ...recorded,
-    ...crawlerFirsts,
+    ...inquiries.items,
+    ...statusMoves.items,
+    ...findings.items,
+    ...syncs.items,
+    ...visitors.items,
+    ...recorded.items,
+    ...crawlerFirsts.items,
   ]
 
   merged.sort((left, right) => {
@@ -96,7 +111,7 @@ export async function fetchActivity(
     return left.id.localeCompare(right.id)
   })
 
-  return { items: merged.slice(0, take), nowMs }
+  return { ok: true, items: merged.slice(0, take), nowMs }
 }
 
 export async function recordSyncSuccessEvent(input: {
@@ -176,7 +191,12 @@ export function formatActivityRelative(iso: string, nowMs: number): string {
   }).format(new Date(then))
 }
 
-async function fetchInquiryEvents(limit: number): Promise<ActivityItem[]> {
+function activityQueryFailed(): ActivitySourceResult {
+  console.error('Intel activity query failed')
+  return { ok: false }
+}
+
+async function fetchInquiryEvents(limit: number): Promise<ActivitySourceResult> {
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
@@ -186,7 +206,7 @@ async function fetchInquiryEvents(limit: number): Promise<ActivityItem[]> {
       .limit(limit)
 
     if (error || !Array.isArray(data)) {
-      return []
+      return activityQueryFailed()
     }
 
     const items: ActivityItem[] = []
@@ -196,13 +216,15 @@ async function fetchInquiryEvents(limit: number): Promise<ActivityItem[]> {
         items.push(parsed)
       }
     }
-    return items
+    return { ok: true, items }
   } catch {
-    return []
+    return activityQueryFailed()
   }
 }
 
-async function fetchStatusMoveEvents(limit: number): Promise<ActivityItem[]> {
+async function fetchStatusMoveEvents(
+  limit: number,
+): Promise<ActivitySourceResult> {
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
@@ -212,7 +234,7 @@ async function fetchStatusMoveEvents(limit: number): Promise<ActivityItem[]> {
       .limit(limit)
 
     if (error || !Array.isArray(data)) {
-      return []
+      return activityQueryFailed()
     }
 
     const rows: Array<{
@@ -235,10 +257,13 @@ async function fetchStatusMoveEvents(limit: number): Promise<ActivityItem[]> {
     }
 
     if (rows.length === 0) {
-      return []
+      return { ok: true, items: [] }
     }
 
     const names = await fetchLeadNames(leadIds)
+    if (names === null) {
+      return activityQueryFailed()
+    }
     const items: ActivityItem[] = []
 
     for (const row of rows) {
@@ -257,13 +282,13 @@ async function fetchStatusMoveEvents(limit: number): Promise<ActivityItem[]> {
       })
     }
 
-    return items
+    return { ok: true, items }
   } catch {
-    return []
+    return activityQueryFailed()
   }
 }
 
-async function fetchFindingEvents(limit: number): Promise<ActivityItem[]> {
+async function fetchFindingEvents(limit: number): Promise<ActivitySourceResult> {
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
@@ -273,7 +298,7 @@ async function fetchFindingEvents(limit: number): Promise<ActivityItem[]> {
       .limit(limit)
 
     if (error || !Array.isArray(data)) {
-      return []
+      return activityQueryFailed()
     }
 
     const states: Array<{ findingKey: string; createdAt: string }> = []
@@ -284,12 +309,15 @@ async function fetchFindingEvents(limit: number): Promise<ActivityItem[]> {
       }
     }
     if (states.length === 0) {
-      return []
+      return { ok: true, items: [] }
     }
 
     const titles = await fetchFindingTitles(
       states.map((state) => state.findingKey),
     )
+    if (titles === null) {
+      return activityQueryFailed()
+    }
 
     const items: ActivityItem[] = []
     for (const state of states) {
@@ -307,15 +335,15 @@ async function fetchFindingEvents(limit: number): Promise<ActivityItem[]> {
         tone: 'neutral',
       })
     }
-    return items
+    return { ok: true, items }
   } catch {
-    return []
+    return activityQueryFailed()
   }
 }
 
 async function fetchFindingTitles(
   findingKeys: readonly string[],
-): Promise<Map<string, string>> {
+): Promise<Map<string, string> | null> {
   const titles = new Map<string, string>()
   if (findingKeys.length === 0) {
     return titles
@@ -329,7 +357,7 @@ async function fetchFindingTitles(
     .order('period_end', { ascending: false })
 
   if (error || !Array.isArray(data)) {
-    return titles
+    return null
   }
 
   for (const row of data) {
@@ -353,7 +381,7 @@ async function fetchFindingTitles(
   return titles
 }
 
-async function fetchSyncRunEvents(): Promise<ActivityItem[]> {
+async function fetchSyncRunEvents(): Promise<ActivitySourceResult> {
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
@@ -366,7 +394,7 @@ async function fetchSyncRunEvents(): Promise<ActivityItem[]> {
       .limit(SYNC_LOOKBACK_LIMIT)
 
     if (error || !Array.isArray(data)) {
-      return []
+      return activityQueryFailed()
     }
 
     const parsed: ParsedSyncRun[] = []
@@ -376,21 +404,24 @@ async function fetchSyncRunEvents(): Promise<ActivityItem[]> {
         parsed.push(item)
       }
     }
-    return selectSyncActivity(parsed)
+    return { ok: true, items: selectSyncActivity(parsed) }
   } catch {
-    return []
+    return activityQueryFailed()
   }
 }
 
 async function fetchCrawlerFirstVisitEvents(
   nowMs: number,
-): Promise<ActivityItem[]> {
+): Promise<ActivitySourceResult> {
   try {
-    const rows = await fetchCrawlerFirstSeen()
+    const result = await fetchCrawlerFirstSeen()
+    if (!result.ok) {
+      return activityQueryFailed()
+    }
     const windowStart = nowMs - 30 * DAY_MS
     const items: ActivityItem[] = []
 
-    for (const row of rows) {
+    for (const row of result.items) {
       const then = Date.parse(row.firstSeenAt)
       if (Number.isNaN(then)) {
         continue
@@ -409,13 +440,13 @@ async function fetchCrawlerFirstVisitEvents(
       })
     }
 
-    return items
+    return { ok: true, items }
   } catch {
-    return []
+    return activityQueryFailed()
   }
 }
 
-async function fetchVisitorEvents(): Promise<ActivityItem[]> {
+async function fetchVisitorEvents(): Promise<ActivitySourceResult> {
   try {
     const yesterday = propertyYesterdayDate()
     const supabase = createSupabaseServiceRole()
@@ -425,7 +456,7 @@ async function fetchVisitorEvents(): Promise<ActivityItem[]> {
       .eq('date', yesterday)
 
     if (error || !Array.isArray(data)) {
-      return []
+      return activityQueryFailed()
     }
 
     for (const row of data) {
@@ -434,16 +465,16 @@ async function fetchVisitorEvents(): Promise<ActivityItem[]> {
       }
       const parsed = toVisitorEvent(row, yesterday)
       if (parsed) {
-        return [parsed]
+        return { ok: true, items: [parsed] }
       }
     }
-    return []
+    return { ok: true, items: [] }
   } catch {
-    return []
+    return activityQueryFailed()
   }
 }
 
-async function fetchRecordedEvents(limit: number): Promise<ActivityItem[]> {
+async function fetchRecordedEvents(limit: number): Promise<ActivitySourceResult> {
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
@@ -453,7 +484,7 @@ async function fetchRecordedEvents(limit: number): Promise<ActivityItem[]> {
       .limit(limit)
 
     if (error || !Array.isArray(data)) {
-      return []
+      return activityQueryFailed()
     }
 
     const items: ActivityItem[] = []
@@ -463,13 +494,15 @@ async function fetchRecordedEvents(limit: number): Promise<ActivityItem[]> {
         items.push(parsed)
       }
     }
-    return items
+    return { ok: true, items }
   } catch {
-    return []
+    return activityQueryFailed()
   }
 }
 
-async function fetchLeadNames(ids: string[]): Promise<Map<string, string>> {
+async function fetchLeadNames(
+  ids: string[],
+): Promise<Map<string, string> | null> {
   const names = new Map<string, string>()
   if (ids.length === 0) {
     return names
@@ -482,7 +515,7 @@ async function fetchLeadNames(ids: string[]): Promise<Map<string, string>> {
     .in('id', ids)
 
   if (error || !Array.isArray(data)) {
-    return names
+    return null
   }
 
   for (const row of data) {

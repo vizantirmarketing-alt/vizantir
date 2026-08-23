@@ -1,27 +1,33 @@
 import { Panel } from '@/app/intel/_components/ui/Panel'
+import { PanelQueryError } from '@/app/intel/_components/ui/PanelRetry'
 import { formatActivityRelative } from '@/lib/intel/activity'
 import type { CrawlerPlatformRow } from '@/lib/intel/crawlers'
 import { cn } from '@/lib/utils'
 
-type AiPlatformsPanelProps = {
-  rows: CrawlerPlatformRow[]
-  nowMs: number
-}
+type AiPlatformsPanelProps =
+  | { failed: true }
+  | { failed?: false; rows: CrawlerPlatformRow[]; nowMs: number }
 
-export function AiPlatformsPanel({ rows, nowMs }: AiPlatformsPanelProps) {
+export function AiPlatformsPanel(props: AiPlatformsPanelProps) {
   return (
     <Panel title="AI platforms">
-      <p className="mb-3 text-[0.7rem] leading-4 text-meta">
-        Crawler visits to robots.txt. A proxy for AI platform awareness of the
-        site.
-      </p>
-      <ul className="divide-y divide-black/8">
-        {rows.map((row) => (
-          <li key={row.id}>
-            <PlatformRow row={row} nowMs={nowMs} />
-          </li>
-        ))}
-      </ul>
+      {props.failed ? (
+        <PanelQueryError message="Unable to load AI platform data. Data could not be loaded." />
+      ) : (
+        <>
+          <p className="mb-3 text-[0.7rem] leading-4 text-meta">
+            Crawler visits to robots.txt. A proxy for AI platform awareness of
+            the site.
+          </p>
+          <ul className="divide-y divide-black/8">
+            {props.rows.map((row) => (
+              <li key={row.id}>
+                <PlatformRow row={row} nowMs={props.nowMs} />
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </Panel>
   )
 }

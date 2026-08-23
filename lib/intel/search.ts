@@ -33,8 +33,8 @@ export type MetricTotals = {
 
 export type DailyPoint = {
   date: string
-  clicks: number
-  impressions: number
+  clicks: number | null
+  impressions: number | null
 }
 
 export type QueryAggregate = {
@@ -296,8 +296,8 @@ function dailySeries(span: DateSpan, rows: readonly SiteDailyRow[]): DailyPoint[
     const row = byDate.get(date)
     return {
       date,
-      clicks: row ? row.clicks : 0,
-      impressions: row ? row.impressions : 0,
+      clicks: row ? row.clicks : null,
+      impressions: row ? row.impressions : null,
     }
   })
 }
@@ -636,6 +636,10 @@ export async function fetchSiteRangeTotals(
     if (siteRows === null) {
       console.error('Intel search query failed')
       return { ok: false }
+    }
+
+    if (siteRows.length === 0) {
+      return { ok: true, status: 'no_data' }
     }
 
     return {

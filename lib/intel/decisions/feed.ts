@@ -344,9 +344,12 @@ export async function fetchDecisionFeed(
 
     const ranked: RankedItem[] = []
     let hiddenCount = 0
-    for (const emission of latestEmissionPerFinding(emissions)) {
+    let missingState = 0
+    const latest = latestEmissionPerFinding(emissions)
+    for (const emission of latest) {
       const state = stateByKey.get(emission.findingKey)
       if (state === undefined) {
+        missingState += 1
         continue
       }
       if (isHiddenDecisionStatus(state.status)) {
@@ -359,6 +362,13 @@ export async function fetchDecisionFeed(
       if (rankedItem) {
         ranked.push(rankedItem)
       }
+    }
+
+    if (missingState > 0) {
+      console.error('Intel decision feed missing finding_state rows')
+    }
+    if (latest.length > 0 && missingState === latest.length) {
+      return { ok: false }
     }
 
     const sections = groupSections(ranked)

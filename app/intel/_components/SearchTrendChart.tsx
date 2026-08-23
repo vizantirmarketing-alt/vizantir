@@ -33,17 +33,17 @@ const PLOT: PlotBox = {
   height: HEIGHT - PAD.top - PAD.bottom,
 }
 
-function peakOf(values: readonly number[]): number {
+function peakOf(values: readonly (number | null)[]): number {
   let max = 0
   for (const value of values) {
-    if (value > max) {
+    if (value !== null && value > max) {
       max = value
     }
   }
   return max
 }
 
-function maxOf(values: readonly number[]): number {
+function maxOf(values: readonly (number | null)[]): number {
   const peak = peakOf(values)
   return peak === 0 ? 1 : peak
 }
@@ -60,13 +60,21 @@ function yAt(value: number, max: number): number {
 }
 
 function toPoints(
-  values: readonly number[],
+  values: readonly (number | null)[],
   max: number,
 ): { x: number; y: number }[] {
-  return values.map((value, index) => ({
-    x: xAt(index, values.length),
-    y: yAt(value, max),
-  }))
+  const points: { x: number; y: number }[] = []
+  for (let index = 0; index < values.length; index += 1) {
+    const value = values[index]
+    if (value === null || value === undefined) {
+      continue
+    }
+    points.push({
+      x: xAt(index, values.length),
+      y: yAt(value, max),
+    })
+  }
+  return points
 }
 
 function pct(value: number, total: number): string {
@@ -205,25 +213,38 @@ function accessibleDescription(
     return `No daily search trend for ${spanLabel}.`
   }
 
-  let minClicks = daily[0]?.clicks ?? 0
-  let maxClicks = minClicks
-  let minImpressions = daily[0]?.impressions ?? 0
-  let maxImpressions = minImpressions
+  let minClicks: number | null = null
+  let maxClicks: number | null = null
+  let minImpressions: number | null = null
+  let maxImpressions: number | null = null
   let markedDays = 0
 
   for (const point of daily) {
-    if (point.clicks < minClicks) minClicks = point.clicks
-    if (point.clicks > maxClicks) maxClicks = point.clicks
-    if (point.impressions < minImpressions) minImpressions = point.impressions
-    if (point.impressions > maxImpressions) maxImpressions = point.impressions
-    if (point.clicks > 0) markedDays += 1
+    if (point.clicks !== null) {
+      if (minClicks === null || point.clicks < minClicks) minClicks = point.clicks
+      if (maxClicks === null || point.clicks > maxClicks) maxClicks = point.clicks
+      if (point.clicks > 0) markedDays += 1
+    }
+    if (point.impressions !== null) {
+      if (minImpressions === null || point.impressions < minImpressions) {
+        minImpressions = point.impressions
+      }
+      if (maxImpressions === null || point.impressions > maxImpressions) {
+        maxImpressions = point.impressions
+      }
+    }
   }
+
+  const clicksLow = minClicks ?? 0
+  const clicksHigh = maxClicks ?? 0
+  const impressionsLow = minImpressions ?? 0
+  const impressionsHigh = maxImpressions ?? 0
 
   if (markClicks) {
-    return `Line chart of daily impressions from ${spanLabel}, with circular markers on days that received clicks. Impressions totaled ${formatQueryCount(impressions)} and ranged from ${formatQueryCount(minImpressions)} to ${formatQueryCount(maxImpressions)} a day. Clicks totaled ${formatQueryCount(clicks)} across ${formatQueryCount(markedDays)} marked days, ranging from ${formatQueryCount(minClicks)} to ${formatQueryCount(maxClicks)} a day.`
+    return `Line chart of daily impressions from ${spanLabel}, with circular markers on days that received clicks. Impressions totaled ${formatQueryCount(impressions)} and ranged from ${formatQueryCount(impressionsLow)} to ${formatQueryCount(impressionsHigh)} a day. Clicks totaled ${formatQueryCount(clicks)} across ${formatQueryCount(markedDays)} marked days, ranging from ${formatQueryCount(clicksLow)} to ${formatQueryCount(clicksHigh)} a day.`
   }
 
-  return `Line chart of daily clicks and impressions from ${spanLabel}. Clicks totaled ${formatQueryCount(clicks)} and ranged from ${formatQueryCount(minClicks)} to ${formatQueryCount(maxClicks)} a day. Impressions totaled ${formatQueryCount(impressions)} and ranged from ${formatQueryCount(minImpressions)} to ${formatQueryCount(maxImpressions)} a day.`
+  return `Line chart of daily clicks and impressions from ${spanLabel}. Clicks totaled ${formatQueryCount(clicks)} and ranged from ${formatQueryCount(clicksLow)} to ${formatQueryCount(clicksHigh)} a day. Impressions totaled ${formatQueryCount(impressions)} and ranged from ${formatQueryCount(impressionsLow)} to ${formatQueryCount(impressionsHigh)} a day.`
 }
 
 function tickDates(daily: readonly DailyPoint[]): { index: number; label: string }[] {
@@ -296,20 +317,24 @@ type ClickMarker = {
 
 function clickMarkersOnImpressions(
   daily: readonly DailyPoint[],
-  impressionPoints: readonly { x: number; y: number }[],
+  impressionMax: number,
 ): ClickMarker[] {
   const markers: ClickMarker[] = []
   for (let index = 0; index < daily.length; index += 1) {
     const point = daily[index]
-    const host = impressionPoints[index]
-    if (!point || !host || point.clicks <= 0) {
+    if (
+      !point ||
+      point.clicks === null ||
+      point.clicks <= 0 ||
+      point.impressions === null
+    ) {
       continue
     }
     markers.push({
       date: point.date,
       clicks: point.clicks,
-      x: host.x,
-      y: host.y,
+      x: xAt(index, daily.length),
+      y: yAt(point.impressions, impressionMax),
     })
   }
   return markers
@@ -381,7 +406,7 @@ export function SearchTrendChart({
   const clickArea = areaPath(clickPoints)
   const impressionArea = areaPath(impressionPoints)
   const markers = markClicks
-    ? clickMarkersOnImpressions(daily, impressionPoints)
+    ? clickMarkersOnImpressions(daily, impressionMax)
     : []
   const baseline = PLOT.top + PLOT.height
   const axisMax = markClicks ? impressionMax : clickMax

@@ -10,6 +10,7 @@ import {
 import { DecisionStatusControls } from '@/app/intel/_components/DecisionStatusControls'
 import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
 import { Panel, type PanelAccent } from '@/app/intel/_components/ui/Panel'
+import { PanelQueryError, PanelRetry } from '@/app/intel/_components/ui/PanelRetry'
 import { Sparkline } from '@/app/intel/_components/ui/Sparkline'
 import {
   ConfidenceChip,
@@ -46,9 +47,7 @@ export function DecisionHeader({ action }: { action?: ReactNode }) {
 
 export function DecisionQueryError() {
   return (
-    <p className="text-sm leading-relaxed text-body" role="alert">
-      Unable to load the decision feed. Try again shortly.
-    </p>
+    <PanelQueryError message="Unable to load the decision feed. Data could not be loaded." />
   )
 }
 
@@ -86,13 +85,20 @@ function formatCount(value: number | null): string {
   return new Intl.NumberFormat('en-US').format(value)
 }
 
-function lastTwoDayContext(values: readonly number[]): string | undefined {
+function lastTwoDayContext(
+  values: readonly (number | null)[],
+): string | undefined {
   if (values.length < 2) {
     return undefined
   }
   const lastDay = values[values.length - 1]
   const priorDay = values[values.length - 2]
-  if (lastDay === undefined || priorDay === undefined) {
+  if (
+    lastDay === null ||
+    lastDay === undefined ||
+    priorDay === null ||
+    priorDay === undefined
+  ) {
     return undefined
   }
   if (lastDay === 0 && priorDay === 0) {
@@ -106,9 +112,11 @@ type OverviewStatStripProps = {
   leadsLast28Days: number | null
   leadsDaily: number[]
   clicks28d: number | null
-  clicksDaily: number[]
+  clicksDaily: Array<number | null>
+  clicksFailed: boolean
   impressions28d: number | null
-  impressionsDaily: number[]
+  impressionsDaily: Array<number | null>
+  impressionsFailed: boolean
 }
 
 export function OverviewStatStrip({
@@ -117,8 +125,10 @@ export function OverviewStatStrip({
   leadsDaily,
   clicks28d,
   clicksDaily,
+  clicksFailed,
   impressions28d,
   impressionsDaily,
+  impressionsFailed,
 }: OverviewStatStripProps) {
   return (
     <StatStrip>
@@ -143,24 +153,36 @@ export function OverviewStatStrip({
         value={formatCount(clicks28d)}
         icon={<MousePointerClick className="size-3" />}
         accent="cobalt-tint"
+        failed={clicksFailed}
+        context={
+          clicksFailed
+            ? 'Could not load this metric.'
+            : lastTwoDayContext(clicksDaily)
+        }
+        action={clicksFailed ? <PanelRetry /> : undefined}
         sparkline={
-          clicksDaily.length > 0 ? (
+          !clicksFailed && clicksDaily.length > 0 ? (
             <Sparkline points={clicksDaily} />
           ) : undefined
         }
-        context={lastTwoDayContext(clicksDaily)}
       />
       <MetricCard
         label="Impressions 28d"
         value={formatCount(impressions28d)}
         icon={<Eye className="size-3" />}
         accent="cobalt-tint"
+        failed={impressionsFailed}
+        context={
+          impressionsFailed
+            ? 'Could not load this metric.'
+            : lastTwoDayContext(impressionsDaily)
+        }
+        action={impressionsFailed ? <PanelRetry /> : undefined}
         sparkline={
-          impressionsDaily.length > 0 ? (
+          !impressionsFailed && impressionsDaily.length > 0 ? (
             <Sparkline points={impressionsDaily} />
           ) : undefined
         }
-        context={lastTwoDayContext(impressionsDaily)}
       />
     </StatStrip>
   )

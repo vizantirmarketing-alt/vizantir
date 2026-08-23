@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 
 import { Panel } from '@/app/intel/_components/ui/Panel'
+import { PanelQueryError } from '@/app/intel/_components/ui/PanelRetry'
 import {
   formatActivityRelative,
   isActivityRecent,
@@ -26,23 +27,24 @@ const CATEGORY_ICON: Record<ActivityCategory, LucideIcon> = {
   crawler: Bot,
 }
 
-type ActivityFeedProps = {
-  items: ActivityItem[]
-  nowMs: number
-}
+type ActivityFeedProps =
+  | { failed: true }
+  | { failed?: false; items: ActivityItem[]; nowMs: number }
 
-export function ActivityFeed({ items, nowMs }: ActivityFeedProps) {
+export function ActivityFeed(props: ActivityFeedProps) {
   return (
     <Panel title="Activity">
-      {items.length === 0 ? (
+      {props.failed ? (
+        <PanelQueryError message="Unable to load activity. Data could not be loaded." />
+      ) : props.items.length === 0 ? (
         <p className="text-sm text-body">
           Activity will appear as things happen.
         </p>
       ) : (
         <ul className="divide-y divide-black/8">
-          {items.map((item) => (
+          {props.items.map((item) => (
             <li key={item.id}>
-              <ActivityRow item={item} nowMs={nowMs} />
+              <ActivityRow item={item} nowMs={props.nowMs} />
             </li>
           ))}
         </ul>

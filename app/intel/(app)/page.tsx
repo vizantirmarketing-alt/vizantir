@@ -67,7 +67,7 @@ function impressionsFromTotals(
 function dailyMetric(
   result: Awaited<ReturnType<typeof fetchSiteRangeTotals>>,
   metric: 'clicks' | 'impressions',
-): number[] {
+): Array<number | null> {
   if (!result.ok || result.status !== 'ready') {
     return []
   }
@@ -90,12 +90,16 @@ export default async function IntelOverviewPage({
       fetchCrawlerPlatformOverview(),
     ])
 
-  const aiPlatforms = (
-    <AiPlatformsPanel rows={crawlers} nowMs={activity.nowMs} />
+  const aiPlatforms = crawlers.ok ? (
+    <AiPlatformsPanel rows={crawlers.rows} nowMs={activity.nowMs} />
+  ) : (
+    <AiPlatformsPanel failed />
   )
 
-  const activityFeed = (
+  const activityFeed = activity.ok ? (
     <ActivityFeed items={activity.items} nowMs={activity.nowMs} />
+  ) : (
+    <ActivityFeed failed />
   )
 
   const stats = (
@@ -107,8 +111,10 @@ export default async function IntelOverviewPage({
       leadsDaily={leadSeries === null ? [] : leadSeries.daily}
       clicks28d={clicksFromTotals(siteTotals)}
       clicksDaily={dailyMetric(siteTotals, 'clicks')}
+      clicksFailed={!siteTotals.ok}
       impressions28d={impressionsFromTotals(siteTotals)}
       impressionsDaily={dailyMetric(siteTotals, 'impressions')}
+      impressionsFailed={!siteTotals.ok}
     />
   )
 

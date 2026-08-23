@@ -8,6 +8,7 @@ import {
 
 import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
 import type { MetricDeltaDirection } from '@/app/intel/_components/ui/MetricCard'
+import { PanelQueryError } from '@/app/intel/_components/ui/PanelRetry'
 import { Sparkline } from '@/app/intel/_components/ui/Sparkline'
 import { StatStrip } from '@/app/intel/_components/ui/StatStrip'
 import { formatPercentAgainstMeaningfulBase } from '@/lib/intel/format-change'
@@ -37,9 +38,7 @@ export function SearchHeader() {
 
 export function SearchQueryError() {
   return (
-    <p className="text-sm leading-relaxed text-body" role="alert">
-      Unable to load search data. Try again shortly.
-    </p>
+    <PanelQueryError message="Unable to load search data. Data could not be loaded." />
   )
 }
 

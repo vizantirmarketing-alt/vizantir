@@ -1,5 +1,5 @@
 type SparklineProps = {
-  points: number[]
+  points: Array<number | null>
   width?: number
   height?: number
 }
@@ -10,7 +10,7 @@ type SparkPoint = {
 }
 
 function sparklineCoords(
-  points: readonly number[],
+  points: readonly (number | null)[],
   width: number,
   height: number,
 ): SparkPoint[] | null {
@@ -20,15 +20,19 @@ function sparklineCoords(
 
   const padY = 2
   const usable = Math.max(1, height - padY * 2)
-  let min = points[0]
-  let max = points[0]
-  if (min === undefined || max === undefined) {
-    return null
-  }
+  let min: number | null = null
+  let max: number | null = null
 
   for (const point of points) {
-    if (point < min) min = point
-    if (point > max) max = point
+    if (point === null) {
+      continue
+    }
+    if (min === null || point < min) min = point
+    if (max === null || point > max) max = point
+  }
+
+  if (min === null || max === null) {
+    return null
   }
 
   const range = max - min
@@ -37,7 +41,7 @@ function sparklineCoords(
 
   for (let index = 0; index < points.length; index += 1) {
     const value = points[index]
-    if (value === undefined) {
+    if (value === null || value === undefined) {
       continue
     }
     const x = points.length === 1 ? width / 2 : (index / lastIndex) * width

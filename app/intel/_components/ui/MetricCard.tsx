@@ -17,6 +17,8 @@ type MetricCardProps = {
   sparkline?: ReactNode
   context?: string
   contextTone?: 'meta' | 'warning' | 'warning-severe'
+  failed?: boolean
+  action?: ReactNode
 }
 
 type DeltaTone = 'positive' | 'warning' | 'neutral'
@@ -83,6 +85,8 @@ export function MetricCard({
   sparkline,
   context,
   contextTone = 'meta',
+  failed = false,
+  action,
 }: MetricCardProps) {
   return (
     <div className="flex min-w-0 flex-col rounded-xl border border-black/8 bg-white px-3 py-2 md:px-3.5 md:py-2.5">
@@ -91,7 +95,7 @@ export function MetricCard({
           <span
             className={cn(
               'flex size-5 shrink-0 items-center justify-center rounded-md',
-              ICON_CHIP[accent],
+              failed ? 'bg-warning-soft text-warning' : ICON_CHIP[accent],
             )}
             aria-hidden
           >
@@ -100,31 +104,43 @@ export function MetricCard({
         ) : null}
         <p className="text-[0.7rem] leading-4 text-meta">{label}</p>
       </div>
-      <div className="mt-1 flex items-center gap-2">
-        <p className="text-2xl leading-none font-medium tabular-nums tracking-tight text-foreground">
-          {value}
-        </p>
-        {deltaLabel !== undefined && deltaDirection !== undefined ? (
-          <DeltaChip
-            label={deltaLabel}
-            direction={deltaDirection}
-            lowerIsBetter={lowerIsBetter}
-          />
-        ) : null}
-      </div>
-      {sparkline ? <div className="mt-1.5">{sparkline}</div> : null}
-      {context ? (
-        <p
-          className={cn(
-            'mt-1 truncate text-[0.7rem] leading-4',
-            contextTone === 'warning' && 'text-warning',
-            contextTone === 'warning-severe' && 'text-warning-severe',
-            contextTone === 'meta' && 'text-meta',
-          )}
-        >
-          {context}
-        </p>
-      ) : null}
+      {failed ? (
+        <>
+          <p className="mt-1 text-sm leading-relaxed text-warning" role="alert">
+            {context ?? 'Could not load this metric.'}
+          </p>
+          {action ? <div className="mt-1.5">{action}</div> : null}
+        </>
+      ) : (
+        <>
+          <div className="mt-1 flex items-center gap-2">
+            <p className="text-2xl leading-none font-medium tabular-nums tracking-tight text-foreground">
+              {value}
+            </p>
+            {deltaLabel !== undefined && deltaDirection !== undefined ? (
+              <DeltaChip
+                label={deltaLabel}
+                direction={deltaDirection}
+                lowerIsBetter={lowerIsBetter}
+              />
+            ) : null}
+          </div>
+          {sparkline ? <div className="mt-1.5">{sparkline}</div> : null}
+          {context ? (
+            <p
+              className={cn(
+                'mt-1 truncate text-[0.7rem] leading-4',
+                contextTone === 'warning' && 'text-warning',
+                contextTone === 'warning-severe' && 'text-warning-severe',
+                contextTone === 'meta' && 'text-meta',
+              )}
+            >
+              {context}
+            </p>
+          ) : null}
+          {action ? <div className="mt-1.5">{action}</div> : null}
+        </>
+      )}
     </div>
   )
 }
