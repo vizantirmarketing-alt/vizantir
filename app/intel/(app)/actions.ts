@@ -7,7 +7,7 @@ import { requireIntelUser } from '@/lib/auth/allowlist'
 import {
   DECISION_STATUSES,
   RESULT_NOTE_MAX_LENGTH,
-  isDecisionId,
+  isFindingKey,
 } from '@/lib/intel/decision-params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
@@ -17,12 +17,12 @@ export type DecisionMutationResult =
 
 const GENERIC_ERROR = 'Unable to save. Try again shortly.'
 
-const decisionIdSchema = z
+const findingKeySchema = z
   .string()
-  .refine((value) => isDecisionId(value), { message: 'Invalid finding.' })
+  .refine((value) => isFindingKey(value), { message: 'Invalid finding.' })
 
 const statusSchema = z.object({
-  itemId: decisionIdSchema,
+  findingKey: findingKeySchema,
   newStatus: z.enum(DECISION_STATUSES),
   resultNote: z
     .string()
@@ -39,14 +39,14 @@ function readStatus(value: unknown): string | null {
 }
 
 export async function updateDecisionStatus(
-  itemId: string,
+  findingKey: string,
   newStatus: string,
   resultNote?: string,
 ): Promise<DecisionMutationResult> {
   await requireIntelUser()
 
   const parsed = statusSchema.safeParse({
-    itemId,
+    findingKey,
     newStatus,
     resultNote,
   })
@@ -67,9 +67,9 @@ export async function updateDecisionStatus(
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
-      .from('decision_items')
+      .from('finding_state')
       .select('status')
-      .eq('id', parsed.data.itemId)
+      .eq('finding_key', parsed.data.findingKey)
       .maybeSingle()
 
     if (error) {
@@ -89,6 +89,9 @@ export async function updateDecisionStatus(
     if (sameStatus && parsed.data.newStatus !== 'completed') {
       return { ok: true }
     }
+    if (sameStatus && storedNote === null) {
+      return { ok: true }
+    }
 
     const patch: Record<string, unknown> = {
       status: parsed.data.newStatus,
@@ -96,7 +99,9 @@ export async function updateDecisionStatus(
     }
 
     if (parsed.data.newStatus === 'completed') {
-      patch.completed_at = now
+      if (current !== 'completed') {
+        patch.completed_at = now
+      }
       if (storedNote !== null) {
         patch.result_note = storedNote
       }
@@ -105,10 +110,10 @@ export async function updateDecisionStatus(
     }
 
     const { data: updated, error: updateError } = await supabase
-      .from('decision_items')
+      .from('finding_state')
       .update(patch)
-      .eq('id', parsed.data.itemId)
-      .select('id')
+      .eq('finding_key', parsed.data.findingKey)
+      .select('finding_key')
       .maybeSingle()
 
     if (updateError) {
