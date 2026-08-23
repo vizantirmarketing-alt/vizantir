@@ -17,12 +17,12 @@ const fieldClassName =
   'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 type DecisionStatusControlsProps = {
-  itemId: string
+  findingKey: string
   currentStatus: DecisionStatus
 }
 
 export function DecisionStatusControls({
-  itemId,
+  findingKey,
   currentStatus,
 }: DecisionStatusControlsProps) {
   const [selected, setSelected] = useState<DecisionStatus>(currentStatus)
@@ -43,7 +43,7 @@ export function DecisionStatusControls({
     setError(null)
     startTransition(async () => {
       const result = await updateDecisionStatus(
-        itemId,
+        findingKey,
         selected,
         selected === 'completed' ? note : undefined,
       )
@@ -56,14 +56,14 @@ export function DecisionStatusControls({
   return (
     <form onSubmit={onSubmit} aria-busy={pending} className="max-w-md">
       <label
-        htmlFor={`decision-status-${itemId}`}
+        htmlFor={`decision-status-${findingKey}`}
         className="mb-2 block text-sm font-medium text-body"
       >
         Status
       </label>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <select
-          id={`decision-status-${itemId}`}
+          id={`decision-status-${findingKey}`}
           name="status"
           value={selected}
           disabled={pending}
@@ -99,14 +99,14 @@ export function DecisionStatusControls({
       {selected === 'completed' ? (
         <div className="mt-3">
           <label
-            htmlFor={`decision-note-${itemId}`}
+            htmlFor={`decision-note-${findingKey}`}
             className="mb-2 block text-sm font-medium text-body"
           >
             Result note
             <span className="font-normal text-meta"> (optional)</span>
           </label>
           <textarea
-            id={`decision-note-${itemId}`}
+            id={`decision-note-${findingKey}`}
             name="resultNote"
             rows={3}
             maxLength={RESULT_NOTE_MAX_LENGTH}

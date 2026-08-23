@@ -267,8 +267,8 @@ async function fetchFindingEvents(limit: number): Promise<ActivityItem[]> {
   try {
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
-      .from('decision_items')
-      .select('id, title, created_at')
+      .from('finding_state')
+      .select('finding_key, created_at')
       .order('created_at', { ascending: false })
       .limit(limit)
 
@@ -276,17 +276,81 @@ async function fetchFindingEvents(limit: number): Promise<ActivityItem[]> {
       return []
     }
 
-    const items: ActivityItem[] = []
+    const states: Array<{ findingKey: string; createdAt: string }> = []
     for (const row of data) {
-      const parsed = toFindingEvent(row)
+      const parsed = toFindingStateRow(row)
       if (parsed) {
-        items.push(parsed)
+        states.push(parsed)
       }
+    }
+    if (states.length === 0) {
+      return []
+    }
+
+    const titles = await fetchFindingTitles(
+      states.map((state) => state.findingKey),
+    )
+
+    const items: ActivityItem[] = []
+    for (const state of states) {
+      const title = titles.get(state.findingKey)
+      if (title === undefined) {
+        continue
+      }
+      items.push({
+        id: `finding:${state.findingKey}`,
+        occurredAt: state.createdAt,
+        category: 'finding',
+        title: `New finding: ${title}`,
+        detail: null,
+        href: '/intel',
+        tone: 'neutral',
+      })
     }
     return items
   } catch {
     return []
   }
+}
+
+async function fetchFindingTitles(
+  findingKeys: readonly string[],
+): Promise<Map<string, string>> {
+  const titles = new Map<string, string>()
+  if (findingKeys.length === 0) {
+    return titles
+  }
+
+  const supabase = createSupabaseServiceRole()
+  const { data, error } = await supabase
+    .from('decision_items')
+    .select('finding_key, title, period_end')
+    .in('finding_key', [...findingKeys])
+    .order('period_end', { ascending: false })
+
+  if (error || !Array.isArray(data)) {
+    return titles
+  }
+
+  for (const row of data) {
+    if (typeof row !== 'object' || row === null) {
+      continue
+    }
+    const findingKey = readField(row, 'finding_key')
+    const title = readField(row, 'title')
+    if (typeof findingKey !== 'string' || findingKey.length === 0) {
+      continue
+    }
+    if (typeof title !== 'string' || title.trim().length === 0) {
+      continue
+    }
+    if (titles.has(findingKey)) {
+      continue
+    }
+    titles.set(findingKey, title.trim())
+  }
+
+  return titles
 }
 
 async function fetchSyncRunEvents(): Promise<ActivityItem[]> {
@@ -511,34 +575,25 @@ function parseStatusHistory(value: unknown): {
   }
 }
 
-function toFindingEvent(value: unknown): ActivityItem | null {
+function toFindingStateRow(value: unknown): {
+  findingKey: string
+  createdAt: string
+} | null {
   if (typeof value !== 'object' || value === null) {
     return null
   }
 
-  const id = asPositiveInt(readField(value, 'id'))
-  const title = readField(value, 'title')
+  const findingKey = readField(value, 'finding_key')
   const createdAt = asIsoTimestamp(readField(value, 'created_at'))
 
-  if (id === null) {
-    return null
-  }
-  if (typeof title !== 'string' || title.trim().length === 0) {
+  if (typeof findingKey !== 'string' || findingKey.length === 0) {
     return null
   }
   if (createdAt === null) {
     return null
   }
 
-  return {
-    id: `finding:${id}`,
-    occurredAt: createdAt,
-    category: 'finding',
-    title: `New finding: ${title.trim()}`,
-    detail: null,
-    href: '/intel',
-    tone: 'neutral',
-  }
+  return { findingKey, createdAt }
 }
 
 function toSyncRunEvent(value: unknown): ParsedSyncRun | null {

@@ -88,3 +88,18 @@ export function slugifyKey(value: string): string {
 export function emissionKeyFor(id: string, periodEnd: string): string {
   return `${id}:${periodEnd}`
 }
+
+const EMISSION_DATE_SUFFIX = /:\d{4}-\d{2}-\d{2}$/
+
+/**
+ * Stable finding identity: strip the trailing `:YYYY-MM-DD` window from
+ * emission_key and prefix `{detector}:` only when the remainder does not
+ * already start with it. Matches existing finding_state rows exactly.
+ */
+export function findingKeyFor(detector: string, emissionKey: string): string {
+  const withoutDate = emissionKey.replace(EMISSION_DATE_SUFFIX, '')
+  if (withoutDate.startsWith(`${detector}:`)) {
+    return withoutDate
+  }
+  return `${detector}:${withoutDate}`
+}

@@ -2,7 +2,11 @@ import 'server-only'
 
 import { DETECTORS } from '@/lib/intel/decisions/detectors'
 import { loadGroupingForSpan } from '@/lib/intel/decisions/grouping'
-import type { DetectorInput, Finding } from '@/lib/intel/decisions/types'
+import {
+  findingKeyFor,
+  type DetectorInput,
+  type Finding,
+} from '@/lib/intel/decisions/types'
 import {
   addUtcDays,
   isIsoDate,
@@ -125,6 +129,23 @@ function pairKey(detector: string, emissionKey: string): string {
   return `${detector}\t${emissionKey}`
 }
 
+async function ensureFindingState(
+  supabase: ServiceClient,
+  findingKeys: readonly string[],
+): Promise<boolean> {
+  if (findingKeys.length === 0) {
+    return true
+  }
+
+  const unique = [...new Set(findingKeys)]
+  const upserted = await supabase.from('finding_state').upsert(
+    unique.map((finding_key) => ({ finding_key })),
+    { onConflict: 'finding_key', ignoreDuplicates: true },
+  )
+
+  return upserted.error === null
+}
+
 async function persistFindings(
   supabase: ServiceClient,
   detector: string,
@@ -136,7 +157,20 @@ async function persistFindings(
     return 0
   }
 
-  const emissionKeys = findings.map((finding) => finding.emissionKey)
+  const keyed = findings.map((finding) => ({
+    finding,
+    findingKey: findingKeyFor(detector, finding.emissionKey),
+  }))
+
+  const parentsReady = await ensureFindingState(
+    supabase,
+    keyed.map((row) => row.findingKey),
+  )
+  if (!parentsReady) {
+    return null
+  }
+
+  const emissionKeys = keyed.map((row) => row.finding.emissionKey)
   const existingResult = await supabase
     .from('decision_items')
     .select('detector, emission_key')
@@ -154,23 +188,24 @@ async function persistFindings(
 
   const now = new Date().toISOString()
   const toInsert: Array<Record<string, unknown>> = []
-  const toUpdate: Finding[] = []
+  const toUpdate: Array<{ finding: Finding; findingKey: string }> = []
 
-  for (const finding of findings) {
-    if (existing.has(pairKey(detector, finding.emissionKey))) {
-      toUpdate.push(finding)
+  for (const row of keyed) {
+    if (existing.has(pairKey(detector, row.finding.emissionKey))) {
+      toUpdate.push(row)
     } else {
       toInsert.push({
         detector,
-        emission_key: finding.emissionKey,
-        category: finding.category,
-        title: finding.title,
-        description: finding.description,
-        evidence_json: finding.evidence,
-        related_url: finding.relatedUrl ?? null,
-        recommended_action: finding.recommendedAction ?? null,
-        confidence: finding.confidence,
-        score: finding.score,
+        emission_key: row.finding.emissionKey,
+        finding_key: row.findingKey,
+        category: row.finding.category,
+        title: row.finding.title,
+        description: row.finding.description,
+        evidence_json: row.finding.evidence,
+        related_url: row.finding.relatedUrl ?? null,
+        recommended_action: row.finding.recommendedAction ?? null,
+        confidence: row.finding.confidence,
+        score: row.finding.score,
         period_start: periodStart,
         period_end: periodEnd,
         updated_at: now,
@@ -188,17 +223,18 @@ async function persistFindings(
     saved += toInsert.length
   }
 
-  for (const finding of toUpdate) {
+  for (const row of toUpdate) {
     const updated = await supabase
       .from('decision_items')
       .update({
-        score: finding.score,
-        evidence_json: finding.evidence,
-        description: finding.description,
+        finding_key: row.findingKey,
+        score: row.finding.score,
+        evidence_json: row.finding.evidence,
+        description: row.finding.description,
         updated_at: now,
       })
       .eq('detector', detector)
-      .eq('emission_key', finding.emissionKey)
+      .eq('emission_key', row.finding.emissionKey)
 
     if (updated.error) {
       return null

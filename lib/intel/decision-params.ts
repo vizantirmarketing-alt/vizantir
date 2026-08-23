@@ -70,12 +70,17 @@ export function isHiddenDecisionStatus(status: DecisionStatus): boolean {
   return HIDDEN_STATUSES.has(status)
 }
 
-export function isDecisionId(value: string): boolean {
-  if (!/^[1-9]\d*$/.test(value)) {
+const FINDING_KEY_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/
+const FINDING_KEY_DATE_SUFFIX = /:\d{4}-\d{2}-\d{2}$/
+
+export function isFindingKey(value: string): boolean {
+  if (value.length < 3 || value.length > 256) {
     return false
   }
-  const parsed = Number(value)
-  return Number.isSafeInteger(parsed)
+  if (FINDING_KEY_DATE_SUFFIX.test(value)) {
+    return false
+  }
+  return FINDING_KEY_RE.test(value)
 }
 
 /** Novelty decay tau in days: effective_score = score * exp(-days_since_created / tau). */

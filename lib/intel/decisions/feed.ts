@@ -14,8 +14,8 @@ import {
 import { isIsoDate } from '@/lib/intel/search-params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
-const FEED_COLUMNS = [
-  'id',
+const EMISSION_COLUMNS = [
+  'finding_key',
   'detector',
   'category',
   'title',
@@ -25,14 +25,15 @@ const FEED_COLUMNS = [
   'recommended_action',
   'confidence',
   'score',
-  'status',
   'period_start',
   'period_end',
   'created_at',
 ].join(', ')
 
+const STATE_COLUMNS = ['finding_key', 'status'].join(', ')
+
 export type DecisionFeedItem = {
-  id: string
+  findingKey: string
   detector: string
   category: DecisionCategory
   title: string
@@ -58,29 +59,6 @@ export type FetchDecisionFeedResult =
 
 function readField(value: object, key: string): unknown {
   return Reflect.get(value, key)
-}
-
-function asPositiveInt(value: unknown): number | null {
-  if (typeof value === 'bigint') {
-    if (value < BigInt(1) || value > BigInt(Number.MAX_SAFE_INTEGER)) {
-      return null
-    }
-    return Number(value)
-  }
-  if (typeof value === 'number' && Number.isFinite(value) && value >= 1) {
-    const rounded = Math.round(value)
-    if (Number.isSafeInteger(rounded) && Math.abs(value - rounded) < 1e-9) {
-      return rounded
-    }
-    return null
-  }
-  if (typeof value === 'string' && /^[1-9]\d*$/.test(value)) {
-    const parsed = Number(value)
-    if (Number.isSafeInteger(parsed)) {
-      return parsed
-    }
-  }
-  return null
 }
 
 function asFiniteNumber(value: unknown): number | null {
@@ -128,29 +106,47 @@ function asEvidence(value: unknown): Record<string, unknown> {
   return { ...value }
 }
 
+type ParsedEmission = {
+  findingKey: string
+  detector: string
+  category: DecisionCategory
+  title: string
+  description: string
+  evidence: Record<string, unknown>
+  relatedUrl: string | null
+  recommendedAction: string | null
+  confidence: DecisionConfidence
+  score: number
+  periodStart: string
+  periodEnd: string
+  createdAt: string
+}
+
 type RankedItem = {
   item: DecisionFeedItem
   effectiveScore: number
 }
 
-function toFeedItem(value: unknown): RankedItem | null {
+function toEmission(value: unknown): ParsedEmission | null {
   if (typeof value !== 'object' || value === null) {
     return null
   }
 
-  const id = asPositiveInt(readField(value, 'id'))
+  const findingKey = readField(value, 'finding_key')
   const detector = readField(value, 'detector')
   const category = readField(value, 'category')
   const title = readField(value, 'title')
   const description = readField(value, 'description')
   const confidence = readField(value, 'confidence')
-  const status = readField(value, 'status')
   const score = asFiniteNumber(readField(value, 'score'))
   const periodStart = asIsoDateValue(readField(value, 'period_start'))
   const periodEnd = asIsoDateValue(readField(value, 'period_end'))
   const createdAt = asIsoTimestamp(readField(value, 'created_at'))
 
-  if (id === null || typeof detector !== 'string' || detector.length === 0) {
+  if (typeof findingKey !== 'string' || findingKey.length === 0) {
+    return null
+  }
+  if (typeof detector !== 'string' || detector.length === 0) {
     return null
   }
   if (typeof category !== 'string' || !isDecisionCategory(category)) {
@@ -162,12 +158,6 @@ function toFeedItem(value: unknown): RankedItem | null {
   if (typeof confidence !== 'string' || !isDecisionConfidence(confidence)) {
     return null
   }
-  if (typeof status !== 'string' || !isDecisionStatus(status)) {
-    return null
-  }
-  if (isHiddenDecisionStatus(status)) {
-    return null
-  }
   if (score === null || periodStart === null || periodEnd === null) {
     return null
   }
@@ -175,31 +165,98 @@ function toFeedItem(value: unknown): RankedItem | null {
     return null
   }
 
-  const createdMs = Date.parse(createdAt)
+  return {
+    findingKey,
+    detector,
+    category,
+    title,
+    description,
+    evidence: asEvidence(readField(value, 'evidence_json')),
+    relatedUrl: asOptionalText(readField(value, 'related_url')),
+    recommendedAction: asOptionalText(readField(value, 'recommended_action')),
+    confidence,
+    score,
+    periodStart,
+    periodEnd,
+    createdAt,
+  }
+}
+
+function toFindingStatus(value: unknown): {
+  findingKey: string
+  status: DecisionStatus
+} | null {
+  if (typeof value !== 'object' || value === null) {
+    return null
+  }
+
+  const findingKey = readField(value, 'finding_key')
+  const status = readField(value, 'status')
+  if (typeof findingKey !== 'string' || findingKey.length === 0) {
+    return null
+  }
+  if (typeof status !== 'string' || !isDecisionStatus(status)) {
+    return null
+  }
+
+  return { findingKey, status }
+}
+
+function latestEmissionPerFinding(
+  emissions: readonly ParsedEmission[],
+): ParsedEmission[] {
+  const sorted = [...emissions].sort((left, right) => {
+    if (right.periodEnd !== left.periodEnd) {
+      return right.periodEnd.localeCompare(left.periodEnd)
+    }
+    return right.createdAt.localeCompare(left.createdAt)
+  })
+
+  const latest: ParsedEmission[] = []
+  const seen = new Set<string>()
+  for (const emission of sorted) {
+    if (seen.has(emission.findingKey)) {
+      continue
+    }
+    seen.add(emission.findingKey)
+    latest.push(emission)
+  }
+  return latest
+}
+
+function toRankedItem(
+  emission: ParsedEmission,
+  status: DecisionStatus,
+): RankedItem | null {
+  if (isHiddenDecisionStatus(status)) {
+    return null
+  }
+
+  const createdMs = Date.parse(emission.createdAt)
   if (Number.isNaN(createdMs)) {
     return null
   }
 
   const daysSinceCreated = Math.max(0, (Date.now() - createdMs) / 86_400_000)
   const effectiveScore =
-    score * Math.exp(-daysSinceCreated / DECISION_NOVELTY_TAU_DAYS)
+    emission.score * Math.exp(-daysSinceCreated / DECISION_NOVELTY_TAU_DAYS)
 
   return {
     effectiveScore,
     item: {
-      id: String(id),
-      detector,
-      category,
-      title,
-      description,
-      evidence: asEvidence(readField(value, 'evidence_json')),
-      relatedUrl: asOptionalText(readField(value, 'related_url')),
-      recommendedAction: asOptionalText(readField(value, 'recommended_action')),
-      confidence,
+      findingKey: emission.findingKey,
+      detector: emission.detector,
+      category: emission.category,
+      title: emission.title,
+      description: emission.description,
+      evidence: emission.evidence,
+      relatedUrl: emission.relatedUrl,
+      recommendedAction: emission.recommendedAction,
+      confidence: emission.confidence,
       status,
-      periodStart,
-      periodEnd,
-      createdAt,
+      periodStart: emission.periodStart,
+      periodEnd: emission.periodEnd,
+      createdAt: emission.createdAt,
     },
   }
 }
@@ -226,25 +283,48 @@ function groupSections(ranked: RankedItem[]): DecisionFeedSection[] {
 export async function fetchDecisionFeed(): Promise<FetchDecisionFeedResult> {
   try {
     const supabase = createSupabaseServiceRole()
-    const { data, error } = await supabase
-      .from('decision_items')
-      .select(FEED_COLUMNS)
-      .not('status', 'in', '(completed,dismissed)')
+    const [emissionsResult, statesResult] = await Promise.all([
+      supabase
+        .from('decision_items')
+        .select(EMISSION_COLUMNS)
+        .order('period_end', { ascending: false }),
+      supabase.from('finding_state').select(STATE_COLUMNS),
+    ])
 
-    if (error) {
+    if (emissionsResult.error || statesResult.error) {
       console.error('Intel decision feed query failed')
       return { ok: false }
     }
 
-    if (!Array.isArray(data)) {
+    if (!Array.isArray(emissionsResult.data) || !Array.isArray(statesResult.data)) {
       return { ok: false }
     }
 
-    const ranked: RankedItem[] = []
-    for (const row of data) {
-      const parsed = toFeedItem(row)
+    const emissions: ParsedEmission[] = []
+    for (const row of emissionsResult.data) {
+      const parsed = toEmission(row)
       if (parsed) {
-        ranked.push(parsed)
+        emissions.push(parsed)
+      }
+    }
+
+    const statusByKey = new Map<string, DecisionStatus>()
+    for (const row of statesResult.data) {
+      const parsed = toFindingStatus(row)
+      if (parsed) {
+        statusByKey.set(parsed.findingKey, parsed.status)
+      }
+    }
+
+    const ranked: RankedItem[] = []
+    for (const emission of latestEmissionPerFinding(emissions)) {
+      const status = statusByKey.get(emission.findingKey)
+      if (status === undefined) {
+        continue
+      }
+      const rankedItem = toRankedItem(emission, status)
+      if (rankedItem) {
+        ranked.push(rankedItem)
       }
     }
 

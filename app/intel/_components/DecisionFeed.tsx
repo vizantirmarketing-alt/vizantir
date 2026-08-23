@@ -63,15 +63,15 @@ function lastTwoDayContext(values: readonly number[]): string | undefined {
   if (values.length < 2) {
     return undefined
   }
-  const yesterday = values[values.length - 1]
-  const dayBefore = values[values.length - 2]
-  if (yesterday === undefined || dayBefore === undefined) {
+  const lastDay = values[values.length - 1]
+  const priorDay = values[values.length - 2]
+  if (lastDay === undefined || priorDay === undefined) {
     return undefined
   }
-  if (yesterday === 0 && dayBefore === 0) {
-    return 'Quiet yesterday'
+  if (lastDay === 0 && priorDay === 0) {
+    return 'Quiet last two days'
   }
-  return `${formatCount(yesterday)} yesterday · ${formatCount(dayBefore)} day before`
+  return `${formatCount(lastDay)} last day · ${formatCount(priorDay)} prior day`
 }
 
 type OverviewStatStripProps = {
@@ -157,7 +157,7 @@ export function DecisionFeed({ sections }: { sections: DecisionFeedSection[] }) 
         >
           <ul className="divide-y divide-black/8">
             {section.items.map((item) => (
-              <li key={item.id}>
+              <li key={item.findingKey}>
                 <DecisionItem item={item} />
               </li>
             ))}
@@ -210,7 +210,7 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
           {item.relatedUrl ? <RelatedUrl href={item.relatedUrl} /> : null}
           <EvidenceBlock evidence={item.evidence} />
           <DecisionStatusControls
-            itemId={item.id}
+            findingKey={item.findingKey}
             currentStatus={item.status}
           />
         </div>
