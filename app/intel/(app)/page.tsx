@@ -40,11 +40,8 @@ function countNewFindings(sections: DecisionFeedSection[]): number {
 function clicksFromTotals(
   result: Awaited<ReturnType<typeof fetchSiteRangeTotals>>,
 ): number | null {
-  if (!result.ok) {
+  if (!result.ok || result.status === 'no_data') {
     return null
-  }
-  if (result.status === 'no_data') {
-    return 0
   }
   return result.totals.clicks
 }
@@ -52,11 +49,8 @@ function clicksFromTotals(
 function impressionsFromTotals(
   result: Awaited<ReturnType<typeof fetchSiteRangeTotals>>,
 ): number | null {
-  if (!result.ok) {
+  if (!result.ok || result.status === 'no_data') {
     return null
-  }
-  if (result.status === 'no_data') {
-    return 0
   }
   return result.totals.impressions
 }
