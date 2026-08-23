@@ -96,11 +96,11 @@ export function Sparkline({
 
   return (
     <svg
-      width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
       aria-hidden
-      className="overflow-visible"
+      className="w-full"
     >
       <path d={area} className="fill-cobalt-primary/18" />
       <path
@@ -109,6 +109,7 @@ export function Sparkline({
         strokeWidth="1.5"
         strokeLinejoin="round"
         strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
       />
     </svg>
   )
