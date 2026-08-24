@@ -29,8 +29,8 @@ export type CareTier = {
 export const careBenefitTooltips: Record<string, string> = {
   'Hosting oversight and deployment support':
     'We oversee the infrastructure your website runs on and handle deployment related issues so you do not have to manage the technical side yourself.',
-  'Quarterly website health review':
-    'We review the overall health of the site — performance, broken links, forms, search indexing, analytics, and technical issues that need attention.',
+  'Monthly website health report':
+    'Each month we send a report covering uptime, dependency and security updates, Core Web Vitals from real visitor data, a traffic summary, and any broken links found.',
   'Performance, analytics, and Core Web Vitals review':
     'We review how the site performs technically and how visitors use it, including speed, Core Web Vitals, traffic, and engagement signals.',
   'Search visibility and technical upkeep':
@@ -151,7 +151,7 @@ export const carePricing: CareTier[] = [
       'Performance monitoring',
       'Up to 1 hour per month of content changes',
       'Email response within 2 business days',
-      'Quarterly website health review',
+      'Monthly website health report',
     ],
   },
   {
