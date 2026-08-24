@@ -90,11 +90,14 @@ export async function syncClarity(): Promise<SyncClarityResult> {
           continue;
         }
 
-        const rows = toDailyRows(
-          result.data,
-          dimensions,
-          dataThroughDate,
-          collectedAt
+        const rows = deduplicateRowsByConflictKey(
+          toDailyRows(
+            result.data,
+            dimensions,
+            dataThroughDate,
+            collectedAt
+          ),
+          label
         );
 
         if (rows.length === 0) {
@@ -283,4 +286,85 @@ function toDimValue(value: string | number | undefined): string {
     return '';
   }
   return String(value);
+}
+
+function deduplicateRowsByConflictKey(
+  rows: ClarityMetricDailyRow[],
+  dimensionSetLabel: string
+): ClarityMetricDailyRow[] {
+  const byKey = new Map<string, ClarityMetricDailyRow>();
+
+  for (const row of rows) {
+    const key = conflictKeyString(row);
+    const existing = byKey.get(key);
+    if (
+      existing !== undefined &&
+      !metricsEqual(existing.metrics, row.metrics)
+    ) {
+      console.error('Intel clarity duplicate:', {
+        dimensionSet: dimensionSetLabel,
+        conflictKey: conflictKeyParts(row),
+        metrics: existing.metrics,
+        incomingMetrics: row.metrics,
+      });
+    }
+    byKey.set(key, row);
+  }
+
+  return Array.from(byKey.values());
+}
+
+function conflictKeyParts(row: ClarityMetricDailyRow): {
+  date: string;
+  window_days: number;
+  metric_name: string;
+  dim1_name: string;
+  dim1_value: string;
+  dim2_name: string;
+  dim2_value: string;
+  dim3_name: string;
+  dim3_value: string;
+} {
+  return {
+    date: row.date,
+    window_days: row.window_days,
+    metric_name: row.metric_name,
+    dim1_name: row.dim1_name,
+    dim1_value: row.dim1_value,
+    dim2_name: row.dim2_name,
+    dim2_value: row.dim2_value,
+    dim3_name: row.dim3_name,
+    dim3_value: row.dim3_value,
+  };
+}
+
+function conflictKeyString(row: ClarityMetricDailyRow): string {
+  return JSON.stringify([
+    row.date,
+    row.window_days,
+    row.metric_name,
+    row.dim1_name,
+    row.dim1_value,
+    row.dim2_name,
+    row.dim2_value,
+    row.dim3_name,
+    row.dim3_value,
+  ]);
+}
+
+function metricsEqual(
+  a: Record<string, string | number>,
+  b: Record<string, string | number>
+): boolean {
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  }
+  for (const key of aKeys) {
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+  return true;
 }
