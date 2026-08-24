@@ -63,17 +63,6 @@ function readStatus(value: unknown): string | null {
   return typeof status === 'string' && status.length > 0 ? status : null
 }
 
-function readUpdatedAt(value: unknown): string | null {
-  if (typeof value !== 'object' || value === null) {
-    return null
-  }
-  const updatedAt = Reflect.get(value, 'updated_at')
-  if (typeof updatedAt !== 'string' || Number.isNaN(Date.parse(updatedAt))) {
-    return null
-  }
-  return updatedAt
-}
-
 export async function updateLeadStatus(
   leadId: string,
   newStatus: string,
@@ -89,7 +78,7 @@ export async function updateLeadStatus(
     const supabase = createSupabaseServiceRole()
     const { data, error } = await supabase
       .from('contact_submissions')
-      .select('status, updated_at')
+      .select('status')
       .eq('id', parsed.data.leadId)
       .maybeSingle()
 
@@ -107,43 +96,14 @@ export async function updateLeadStatus(
       return { ok: true }
     }
 
-    const previousUpdatedAt = readUpdatedAt(data)
-    const now = new Date().toISOString()
-    const { error: updateError } = await supabase
-      .from('contact_submissions')
-      .update({
-        status: parsed.data.newStatus,
-        updated_at: now,
-      })
-      .eq('id', parsed.data.leadId)
+    const { error: rpcError } = await supabase.rpc('update_lead_status', {
+      p_lead_id: parsed.data.leadId,
+      p_new_status: parsed.data.newStatus,
+      p_changed_by: user.email,
+    })
 
-    if (updateError) {
+    if (rpcError) {
       console.error('Intel lead status update failed')
-      return { ok: false, error: GENERIC_ERROR }
-    }
-
-    const { error: historyError } = await supabase
-      .from('lead_status_history')
-      .insert({
-        lead_id: parsed.data.leadId,
-        previous_status: current,
-        new_status: parsed.data.newStatus,
-        changed_by: user.email,
-      })
-
-    if (historyError) {
-      console.error('Intel lead status history insert failed')
-      const revert: Record<string, unknown> = { status: current }
-      if (previousUpdatedAt !== null) {
-        revert.updated_at = previousUpdatedAt
-      }
-      const { error: revertError } = await supabase
-        .from('contact_submissions')
-        .update(revert)
-        .eq('id', parsed.data.leadId)
-      if (revertError) {
-        console.error('Intel lead status revert failed')
-      }
       return { ok: false, error: GENERIC_ERROR }
     }
 

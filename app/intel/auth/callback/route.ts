@@ -29,6 +29,7 @@ export async function GET(request: Request) {
   }
 
   const supabase = await createSupabaseServerClient()
+  await supabase.auth.signOut()
   const { error } = await supabase.auth.exchangeCodeForSession(code)
 
   if (error) {

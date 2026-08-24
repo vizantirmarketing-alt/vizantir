@@ -245,9 +245,33 @@ async function persistFindings(
   return saved
 }
 
+type DetectorFailure = {
+  reason: 'upsert_error' | 'exception'
+  status?: number
+}
+
 export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult> {
+  let runId: number | null = null
+  let findings = 0
+  let dataThroughDate: string | null = null
+
   try {
     const supabase = createSupabaseServiceRole()
+
+    const inserted = await supabase
+      .from('sync_runs')
+      .insert({ provider: 'decisions', status: 'running' })
+      .select('id')
+      .single()
+
+    runId = readNumericId(inserted.data)
+    if (inserted.error || runId === null) {
+      return {
+        status: 'failed',
+        findings: 0,
+        message: 'Failed to record sync run',
+      }
+    }
 
     const [latestDate, coverageStartedOn] = await Promise.all([
       fetchLatestSiteDate(supabase),
@@ -256,18 +280,33 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
 
     if (latestDate === 'error' || coverageStartedOn === 'error') {
       console.error('Decision detectors failed')
-      return { status: 'failed', findings: 0, message: 'Unable to load GSC coverage.' }
+      const message = 'Unable to load GSC coverage.'
+      await finishRun(supabase, runId, {
+        status: 'failed',
+        recordsProcessed: 0,
+        dataThroughDate,
+        message,
+      })
+      return { status: 'failed', findings: 0, message }
     }
 
     if (latestDate === null) {
+      const message = 'No completed GSC days available.'
+      await finishRun(supabase, runId, {
+        status: 'success',
+        recordsProcessed: 0,
+        dataThroughDate,
+        message,
+      })
       return {
         status: 'success',
         findings: 0,
-        message: 'No completed GSC days available.',
+        message,
       }
     }
 
     const periodEnd = completedPeriodEnd(latestDate)
+    dataThroughDate = periodEnd
     const span = spanEndingOn(periodEnd, WINDOW_DAYS)
     const prior = priorSpan(span)
     const comparisonAvailable =
@@ -276,7 +315,14 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
     const grouping = await loadGroupingForSpan(span)
     if (grouping === null) {
       console.error('Decision detectors failed')
-      return { status: 'failed', findings: 0, message: 'Unable to load GSC rows.' }
+      const message = 'Unable to load GSC rows.'
+      await finishRun(supabase, runId, {
+        status: 'failed',
+        recordsProcessed: 0,
+        dataThroughDate,
+        message,
+      })
+      return { status: 'failed', findings: 0, message }
     }
 
     const input: DetectorInput = {
@@ -291,53 +337,126 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
       comparisonAvailable,
     }
 
-    let findings = 0
-    let detectFailed = false
-    let persistFailed = false
+    const failedSets: string[] = []
+    let attempted = 0
 
     for (const detector of DETECTORS) {
       if (detector.needsComparison && !comparisonAvailable) {
         continue
       }
 
-      let detected: Finding[]
+      attempted += 1
+
       try {
-        detected = detector.detect(input)
+        const detected = detector.detect(input)
+        const saved = await persistFindings(
+          supabase,
+          detector.name,
+          detected,
+          span.start,
+          span.end,
+        )
+        if (saved === null) {
+          failedSets.push(
+            formatFailedDetector(detector.name, { reason: 'upsert_error' }),
+          )
+          continue
+        }
+        findings += saved
       } catch {
-        detectFailed = true
-        continue
+        failedSets.push(
+          formatFailedDetector(detector.name, { reason: 'exception' }),
+        )
       }
-
-      const saved = await persistFindings(
-        supabase,
-        detector.name,
-        detected,
-        span.start,
-        span.end,
-      )
-      if (saved === null) {
-        persistFailed = true
-        continue
-      }
-      findings += saved
     }
 
-    if (detectFailed && persistFailed && findings === 0) {
+    const status: RunDecisionDetectorsResult['status'] =
+      failedSets.length === 0
+        ? 'success'
+        : failedSets.length === attempted
+          ? 'failed'
+          : 'partial'
+
+    if (status === 'failed') {
       console.error('Decision detectors failed')
-      return { status: 'failed', findings: 0, message: 'Detectors failed to run.' }
     }
 
-    if (detectFailed || persistFailed) {
-      return {
-        status: 'partial',
-        findings,
-        message: 'Some detectors or writes did not complete.',
-      }
-    }
+    const message =
+      failedSets.length > 0
+        ? `Failed detectors: ${failedSets.join('; ')}`
+        : undefined
 
-    return { status: 'success', findings }
+    await finishRun(supabase, runId, {
+      status,
+      recordsProcessed: findings,
+      dataThroughDate,
+      message,
+    })
+
+    return { status, findings, message }
   } catch {
     console.error('Decision detectors failed')
+    if (runId !== null) {
+      try {
+        const supabase = createSupabaseServiceRole()
+        await finishRun(supabase, runId, {
+          status: 'failed',
+          recordsProcessed: findings,
+          dataThroughDate,
+          message: 'Decision run failed.',
+        })
+      } catch {
+        // Swallow so the function never throws.
+      }
+    }
+
     return { status: 'failed', findings: 0, message: 'Decision run failed.' }
   }
+}
+
+async function finishRun(
+  supabase: ServiceClient,
+  runId: number,
+  result: {
+    status: RunDecisionDetectorsResult['status']
+    recordsProcessed: number
+    dataThroughDate: string | null
+    message?: string
+  },
+): Promise<void> {
+  await supabase
+    .from('sync_runs')
+    .update({
+      status: result.status,
+      completed_at: new Date().toISOString(),
+      records_processed: result.recordsProcessed,
+      data_through_date: result.dataThroughDate,
+      administrator_message: result.message ?? null,
+      error_code: result.status === 'success' ? null : result.status,
+    })
+    .eq('id', runId)
+}
+
+function formatFailedDetector(
+  label: string,
+  failure: Pick<DetectorFailure, 'reason' | 'status'>,
+): string {
+  if (failure.status === undefined) {
+    return `${label} (${failure.reason})`
+  }
+  return `${label} (${failure.reason} ${failure.status})`
+}
+
+function readNumericId(value: unknown): number | null {
+  if (typeof value !== 'object' || value === null || !('id' in value)) {
+    return null
+  }
+  const id = value.id
+  if (typeof id === 'number' && Number.isFinite(id)) {
+    return id
+  }
+  if (typeof id === 'string' && /^\d+$/.test(id)) {
+    return Number(id)
+  }
+  return null
 }
