@@ -16,6 +16,8 @@ const DIMENSION_SETS: readonly (readonly string[])[] = [
 const UPSERT_CONFLICT_COLUMNS =
   'date,window_days,metric_name,dim1_name,dim1_value,dim2_name,dim2_value,dim3_name,dim3_value';
 
+const UPSERT_BATCH_SIZE = 500;
+
 export type SyncClarityResult = {
   status: 'success' | 'partial' | 'failed';
   recordsProcessed: number;
@@ -99,26 +101,41 @@ export async function syncClarity(): Promise<SyncClarityResult> {
           continue;
         }
 
-        const { error } = await supabase.from('clarity_metric_daily').upsert(rows, {
-          onConflict: UPSERT_CONFLICT_COLUMNS,
-        });
+        let written = 0;
 
-        if (error) {
-          console.error('Intel clarity upsert:', {
-            dimensionSet: label,
-            rowCount: rows.length,
-            message: error.message,
-            code: error.code,
-            details: error.details,
-            hint: error.hint,
-          });
-          failedSets.push(
-            formatFailedDimensionSet(label, { reason: 'upsert_error' })
-          );
-          continue;
+        for (
+          let offset = 0;
+          offset < rows.length;
+          offset += UPSERT_BATCH_SIZE
+        ) {
+          const batchIndex = offset / UPSERT_BATCH_SIZE;
+          const batch = rows.slice(offset, offset + UPSERT_BATCH_SIZE);
+          const { error } = await supabase
+            .from('clarity_metric_daily')
+            .upsert(batch, {
+              onConflict: UPSERT_CONFLICT_COLUMNS,
+            });
+
+          if (error) {
+            console.error('Intel clarity upsert:', {
+              dimensionSet: label,
+              batchIndex,
+              rowCount: batch.length,
+              message: error.message,
+              code: error.code,
+              details: error.details,
+              hint: error.hint,
+            });
+            failedSets.push(
+              formatFailedDimensionSet(label, { reason: 'upsert_error' })
+            );
+            break;
+          }
+
+          written += batch.length;
         }
 
-        recordsProcessed += rows.length;
+        recordsProcessed += written;
       } catch {
         failedSets.push(
           formatFailedDimensionSet(label, { reason: 'exception' })
