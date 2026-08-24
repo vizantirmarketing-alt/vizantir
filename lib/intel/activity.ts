@@ -35,7 +35,7 @@ type ActivitySourceResult =
   | { ok: true; items: ActivityItem[] }
   | { ok: false }
 
-type SyncProvider = 'ga4' | 'gsc' | 'clarity'
+type SyncProvider = 'ga4' | 'gsc' | 'clarity' | 'decisions'
 
 type SyncRunStatus = 'success' | 'partial' | 'failed'
 
@@ -49,6 +49,7 @@ const SYNC_EVENT_TYPES = new Set([
   'ga4_sync',
   'gsc_sync',
   'clarity_sync',
+  'decisions_sync',
 ])
 
 const DEFAULT_ACTIVITY_LIMIT = 12
@@ -134,7 +135,7 @@ export async function recordSyncSuccessEvent(input: {
     await supabase.from('intel_events').upsert(
       {
         event_type: `${input.provider}_sync`,
-        title: `${label} sync completed · ${count} records`,
+        title: `${label} completed · ${count} records`,
         source: input.provider,
         dedupe_key: `${input.provider}:${input.dataThroughDate}`,
       },
@@ -658,13 +659,13 @@ function toSyncRunEvent(value: unknown): ParsedSyncRun | null {
   let title: string
   let tone: ActivityTone
   if (statusRaw === 'failed') {
-    title = `${label} sync failed`
+    title = `${label} failed`
     tone = 'warning-severe'
   } else if (statusRaw === 'partial') {
-    title = `${label} sync partial · ${count} records`
+    title = `${label} partial · ${count} records`
     tone = 'warning'
   } else {
-    title = `${label} sync completed · ${count} records`
+    title = `${label} completed · ${count} records`
     tone = 'neutral'
   }
 
@@ -824,16 +825,24 @@ function statusMoveTone(status: string): ActivityTone {
 
 function providerLabel(provider: SyncProvider): string {
   if (provider === 'ga4') {
-    return 'GA4'
+    return 'GA4 sync'
   }
   if (provider === 'gsc') {
-    return 'GSC'
+    return 'GSC sync'
   }
-  return 'Clarity'
+  if (provider === 'clarity') {
+    return 'Clarity sync'
+  }
+  return 'Decision scan'
 }
 
 function isSyncProvider(value: string): value is SyncProvider {
-  return value === 'ga4' || value === 'gsc' || value === 'clarity'
+  return (
+    value === 'ga4' ||
+    value === 'gsc' ||
+    value === 'clarity' ||
+    value === 'decisions'
+  )
 }
 
 function isSyncRunStatus(value: string): value is SyncRunStatus {
