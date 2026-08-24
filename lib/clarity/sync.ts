@@ -104,6 +104,14 @@ export async function syncClarity(): Promise<SyncClarityResult> {
         });
 
         if (error) {
+          console.error('Intel clarity upsert:', {
+            dimensionSet: label,
+            rowCount: rows.length,
+            message: error.message,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+          });
           failedSets.push(
             formatFailedDimensionSet(label, { reason: 'upsert_error' })
           );
