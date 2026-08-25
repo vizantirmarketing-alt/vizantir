@@ -40,7 +40,17 @@ export async function POST(request: Request, context: RouteContext) {
       { pdfPath: result.pdfPath, bytes: result.bytes },
       { status: 200 }
     );
-  } catch {
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(
+        'Intel report pdf:',
+        error.name,
+        error.message,
+        error.stack ?? ''
+      );
+    } else {
+      console.error('Intel report pdf:', error);
+    }
     return NextResponse.json(
       { error: 'PDF generation failed' },
       { status: 500 }

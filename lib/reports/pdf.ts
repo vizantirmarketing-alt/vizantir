@@ -90,8 +90,8 @@ export async function renderReportPdf(
     }
 
     return { ok: true, pdfPath, bytes: pdf.byteLength };
-  } catch {
-    console.error('PDF generation failed');
+  } catch (error) {
+    logIntelReportPdfError(error);
     return { ok: false, reason: 'render_failed' };
   }
 }
@@ -190,13 +190,18 @@ async function capturePrintPdf(
 
     const token = signPrintToken(reportId, secret);
     const printUrl = `${appOrigin()}/intel/reports/${reportId}/print?token=${encodeURIComponent(token)}`;
+    console.error(
+      'Intel report pdf: navigate',
+      originAndPath(printUrl)
+    );
     const response = await page.goto(printUrl, {
       waitUntil: 'networkidle',
       timeout: 45_000,
     });
 
-    if (response === null || response.status() !== 200) {
-      console.error('Print route did not return 200');
+    const status = response === null ? null : response.status();
+    console.error('Intel report pdf: navigation status', status);
+    if (status !== 200) {
       return null;
     }
 
@@ -223,18 +228,66 @@ async function capturePrintPdf(
 async function launchBrowser() {
   if (process.env.VERCEL) {
     chromium.setGraphicsMode = false;
-    const executablePath = await chromium.executablePath(CHROMIUM_PACK_URL);
-    return playwright.launch({
+    let executablePath: string;
+    try {
+      executablePath = await chromium.executablePath(CHROMIUM_PACK_URL);
+      console.error('Intel report pdf: chromium executablePath', executablePath);
+    } catch (error) {
+      console.error(
+        'Intel report pdf: chromium executablePath resolution failed'
+      );
+      logIntelReportPdfError(error);
+      throw error;
+    }
+
+    return launchPlaywright({
       args: chromium.args,
       executablePath,
       headless: true,
     });
   }
 
-  return playwright.launch({
+  console.error('Intel report pdf: chromium executablePath', 'channel:chrome');
+  return launchPlaywright({
     channel: 'chrome',
     headless: true,
   });
+}
+
+async function launchPlaywright(
+  options: Parameters<typeof playwright.launch>[0]
+) {
+  try {
+    const browser = await playwright.launch(options);
+    console.error('Intel report pdf: chromium launch succeeded');
+    return browser;
+  } catch (error) {
+    console.error('Intel report pdf: chromium launch failed');
+    logIntelReportPdfError(error);
+    throw error;
+  }
+}
+
+function originAndPath(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return `${parsed.origin}${parsed.pathname}`;
+  } catch {
+    return '[unparseable]';
+  }
+}
+
+function logIntelReportPdfError(caught: unknown): void {
+  if (caught instanceof Error) {
+    console.error(
+      'Intel report pdf:',
+      caught.name,
+      caught.message,
+      caught.stack ?? ''
+    );
+    return;
+  }
+  console.error('Intel report pdf:', caught);
 }
 
 function appOrigin(): string {
