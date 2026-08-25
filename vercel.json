@@ -1,4 +1,10 @@
 {
+  "functions": {
+    "app/api/reports/[reportId]/pdf/route.ts": {
+      "memory": 2048,
+      "maxDuration": 90
+    }
+  },
   "crons": [
     {
       "path": "/api/cron/clarity-sync",

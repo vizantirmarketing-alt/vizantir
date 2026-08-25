@@ -36,6 +36,8 @@ const nextConfig: NextConfig = {
     'googleapis',
     'google-auth-library',
     'google-gax',
+    'playwright-core',
+    '@sparticuz/chromium-min',
   ],
 
   async redirects() {
