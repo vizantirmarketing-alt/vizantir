@@ -561,3 +561,32 @@ html, body {
     font-size: 1.875rem;
   }
 }
+
+/* Monthly client report — print pagination for the HTML → PDF path. */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.65in;
+  }
+
+  .report-document {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    background: white;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .report-section,
+  .report-metric,
+  .report-document tr,
+  .report-document li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-preview-only {
+    display: none !important;
+  }
+}
