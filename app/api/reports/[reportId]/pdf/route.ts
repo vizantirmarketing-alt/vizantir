@@ -1,6 +1,9 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { NextResponse } from 'next/server';
-import { renderReportPdf } from '@/lib/reports/pdf';
+import {
+  renderReportPdf,
+  type PdfRenderDiagnostics,
+} from '@/lib/reports/pdf';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,6 +27,8 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Temporary diagnostic scaffolding — remove once PDF render failures are identified.
+  const debug = await requestWantsDebug(request);
   const { reportId } = await context.params;
 
   try {
@@ -31,13 +36,21 @@ export async function POST(request: Request, context: RouteContext) {
 
     if (!result.ok) {
       return NextResponse.json(
-        { error: failureMessage(result.reason), reason: result.reason },
+        {
+          error: failureMessage(result.reason),
+          reason: result.reason,
+          ...(debug ? { diagnostics: result.diagnostics } : {}),
+        },
         { status: failureStatus(result.reason) }
       );
     }
 
     return NextResponse.json(
-      { pdfPath: result.pdfPath, bytes: result.bytes },
+      {
+        pdfPath: result.pdfPath,
+        bytes: result.bytes,
+        ...(debug ? { diagnostics: result.diagnostics } : {}),
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -52,10 +65,61 @@ export async function POST(request: Request, context: RouteContext) {
       console.error('Intel report pdf:', error);
     }
     return NextResponse.json(
-      { error: 'PDF generation failed' },
+      {
+        error: 'PDF generation failed',
+        ...(debug ? { diagnostics: diagnosticsFromCaught(error) } : {}),
+      },
       { status: 500 }
     );
   }
+}
+
+// Temporary diagnostic scaffolding — remove once PDF render failures are identified.
+async function requestWantsDebug(request: Request): Promise<boolean> {
+  const url = new URL(request.url);
+  if (url.searchParams.get('debug') === 'true') {
+    return true;
+  }
+
+  try {
+    const body: unknown = await request.json();
+    if (!isPlainObject(body)) {
+      return false;
+    }
+    return body.debug === true || body.debug === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function diagnosticsFromCaught(caught: unknown): PdfRenderDiagnostics {
+  if (caught instanceof Error) {
+    return {
+      chromiumExecutablePath: null,
+      launchSucceeded: false,
+      navigateUrl: null,
+      navigationStatus: null,
+      errorName: caught.name,
+      errorMessage: caught.message,
+      errorStack: caught.stack
+        ? caught.stack.split('\n').slice(0, 8).join('\n')
+        : null,
+    };
+  }
+
+  return {
+    chromiumExecutablePath: null,
+    launchSucceeded: false,
+    navigateUrl: null,
+    navigationStatus: null,
+    errorName: typeof caught,
+    errorMessage: String(caught),
+    errorStack: null,
+  };
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function failureMessage(

@@ -16,8 +16,19 @@ const REPORTS_BUCKET = 'reports';
 const PERIOD_RE = /^\d{4}-\d{2}-\d{2}$/;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+// Temporary diagnostic scaffolding — remove once PDF render failures are identified.
+export type PdfRenderDiagnostics = {
+  chromiumExecutablePath: string | null;
+  launchSucceeded: boolean;
+  navigateUrl: string | null;
+  navigationStatus: number | null;
+  errorName: string | null;
+  errorMessage: string | null;
+  errorStack: string | null;
+};
+
 export type RenderReportPdfResult =
-  | { ok: true; pdfPath: string; bytes: number }
+  | { ok: true; pdfPath: string; bytes: number; diagnostics: PdfRenderDiagnostics }
   | {
       ok: false;
       reason:
@@ -28,6 +39,7 @@ export type RenderReportPdfResult =
         | 'render_failed'
         | 'upload_failed'
         | 'db_error';
+      diagnostics: PdfRenderDiagnostics;
     };
 
 type ServiceClient = ReturnType<typeof createSupabaseServiceRole>;
@@ -42,28 +54,30 @@ type ReportRow = {
 export async function renderReportPdf(
   reportId: string
 ): Promise<RenderReportPdfResult> {
+  const diagnostics = emptyDiagnostics();
+
   if (!isReportId(reportId)) {
-    return { ok: false, reason: 'invalid_id' };
+    return { ok: false, reason: 'invalid_id', diagnostics };
   }
 
   const secret = process.env.CRON_SECRET;
   if (!secret) {
-    return { ok: false, reason: 'misconfigured' };
+    return { ok: false, reason: 'misconfigured', diagnostics };
   }
 
   try {
     const supabase = createSupabaseServiceRole();
     const loaded = await loadRenderableReport(supabase, reportId);
     if (!loaded.ok) {
-      return loaded;
+      return { ...loaded, diagnostics };
     }
 
     const { report, slug } = loaded;
     const pdfPath = `${slug}/${report.period}.pdf`;
 
-    const pdf = await capturePrintPdf(report.id, secret);
+    const pdf = await capturePrintPdf(report.id, secret, diagnostics);
     if (pdf === null) {
-      return { ok: false, reason: 'render_failed' };
+      return { ok: false, reason: 'render_failed', diagnostics };
     }
 
     const uploaded = await supabase.storage
@@ -75,7 +89,7 @@ export async function renderReportPdf(
 
     if (uploaded.error) {
       console.error('PDF upload failed');
-      return { ok: false, reason: 'upload_failed' };
+      return { ok: false, reason: 'upload_failed', diagnostics };
     }
 
     const updated = await supabase
@@ -86,13 +100,14 @@ export async function renderReportPdf(
 
     if (updated.error) {
       console.error('PDF path update failed');
-      return { ok: false, reason: 'db_error' };
+      return { ok: false, reason: 'db_error', diagnostics };
     }
 
-    return { ok: true, pdfPath, bytes: pdf.byteLength };
+    return { ok: true, pdfPath, bytes: pdf.byteLength, diagnostics };
   } catch (error) {
+    applyCaughtError(diagnostics, error);
     logIntelReportPdfError(error);
-    return { ok: false, reason: 'render_failed' };
+    return { ok: false, reason: 'render_failed', diagnostics };
   }
 }
 
@@ -175,9 +190,10 @@ async function loadRenderableReport(
 
 async function capturePrintPdf(
   reportId: string,
-  secret: string
+  secret: string,
+  diagnostics: PdfRenderDiagnostics
 ): Promise<Buffer | null> {
-  const browser = await launchBrowser();
+  const browser = await launchBrowser(diagnostics);
   try {
     const page = await browser.newPage({
       viewport: { width: 1280, height: 720 },
@@ -190,16 +206,15 @@ async function capturePrintPdf(
 
     const token = signPrintToken(reportId, secret);
     const printUrl = `${appOrigin()}/intel/reports/${reportId}/print?token=${encodeURIComponent(token)}`;
-    console.error(
-      'Intel report pdf: navigate',
-      originAndPath(printUrl)
-    );
+    diagnostics.navigateUrl = originAndPath(printUrl);
+    console.error('Intel report pdf: navigate', diagnostics.navigateUrl);
     const response = await page.goto(printUrl, {
       waitUntil: 'networkidle',
       timeout: 45_000,
     });
 
     const status = response === null ? null : response.status();
+    diagnostics.navigationStatus = status;
     console.error('Intel report pdf: navigation status', status);
     if (status !== 200) {
       return null;
@@ -225,14 +240,17 @@ async function capturePrintPdf(
   }
 }
 
-async function launchBrowser() {
+async function launchBrowser(diagnostics: PdfRenderDiagnostics) {
   if (process.env.VERCEL) {
     chromium.setGraphicsMode = false;
     let executablePath: string;
     try {
       executablePath = await chromium.executablePath(CHROMIUM_PACK_URL);
+      diagnostics.chromiumExecutablePath = executablePath;
       console.error('Intel report pdf: chromium executablePath', executablePath);
     } catch (error) {
+      diagnostics.chromiumExecutablePath = pathResolutionFailure(error);
+      applyCaughtError(diagnostics, error);
       console.error(
         'Intel report pdf: chromium executablePath resolution failed'
       );
@@ -240,28 +258,33 @@ async function launchBrowser() {
       throw error;
     }
 
-    return launchPlaywright({
+    return launchPlaywright(diagnostics, {
       args: chromium.args,
       executablePath,
       headless: true,
     });
   }
 
+  diagnostics.chromiumExecutablePath = 'channel:chrome';
   console.error('Intel report pdf: chromium executablePath', 'channel:chrome');
-  return launchPlaywright({
+  return launchPlaywright(diagnostics, {
     channel: 'chrome',
     headless: true,
   });
 }
 
 async function launchPlaywright(
+  diagnostics: PdfRenderDiagnostics,
   options: Parameters<typeof playwright.launch>[0]
 ) {
   try {
     const browser = await playwright.launch(options);
+    diagnostics.launchSucceeded = true;
     console.error('Intel report pdf: chromium launch succeeded');
     return browser;
   } catch (error) {
+    diagnostics.launchSucceeded = false;
+    applyCaughtError(diagnostics, error);
     console.error('Intel report pdf: chromium launch failed');
     logIntelReportPdfError(error);
     throw error;
@@ -275,6 +298,47 @@ function originAndPath(url: string): string {
   } catch {
     return '[unparseable]';
   }
+}
+
+function emptyDiagnostics(): PdfRenderDiagnostics {
+  return {
+    chromiumExecutablePath: null,
+    launchSucceeded: false,
+    navigateUrl: null,
+    navigationStatus: null,
+    errorName: null,
+    errorMessage: null,
+    errorStack: null,
+  };
+}
+
+function applyCaughtError(
+  diagnostics: PdfRenderDiagnostics,
+  caught: unknown
+): void {
+  if (caught instanceof Error) {
+    diagnostics.errorName = caught.name;
+    diagnostics.errorMessage = caught.message;
+    diagnostics.errorStack = stackPreview(caught.stack);
+    return;
+  }
+  diagnostics.errorName = typeof caught;
+  diagnostics.errorMessage = String(caught);
+  diagnostics.errorStack = null;
+}
+
+function pathResolutionFailure(caught: unknown): string {
+  if (caught instanceof Error) {
+    return `resolution failed: ${caught.message}`;
+  }
+  return `resolution failed: ${String(caught)}`;
+}
+
+function stackPreview(stack: string | undefined): string | null {
+  if (!stack) {
+    return null;
+  }
+  return stack.split('\n').slice(0, 8).join('\n');
 }
 
 function logIntelReportPdfError(caught: unknown): void {
