@@ -37,6 +37,7 @@ export type RenderReportPdfResult =
         | 'failed'
         | 'misconfigured'
         | 'render_failed'
+        | 'redirected_away'
         | 'upload_failed'
         | 'db_error';
       diagnostics: PdfRenderDiagnostics;
@@ -61,7 +62,11 @@ export async function renderReportPdf(
   }
 
   const secret = process.env.CRON_SECRET;
-  if (!secret) {
+  const origin = appOrigin();
+  if (!secret || origin === null) {
+    if (origin === null) {
+      console.error('Intel report pdf: NEXT_PUBLIC_SITE_URL is unset');
+    }
     return { ok: false, reason: 'misconfigured', diagnostics };
   }
 
@@ -75,14 +80,14 @@ export async function renderReportPdf(
     const { report, slug } = loaded;
     const pdfPath = `${slug}/${report.period}.pdf`;
 
-    const pdf = await capturePrintPdf(report.id, secret, diagnostics);
-    if (pdf === null) {
-      return { ok: false, reason: 'render_failed', diagnostics };
+    const captured = await capturePrintPdf(report.id, secret, origin, diagnostics);
+    if (!captured.ok) {
+      return { ok: false, reason: captured.reason, diagnostics };
     }
 
     const uploaded = await supabase.storage
       .from(REPORTS_BUCKET)
-      .upload(pdfPath, pdf, {
+      .upload(pdfPath, captured.pdf, {
         contentType: 'application/pdf',
         upsert: true,
       });
@@ -103,7 +108,7 @@ export async function renderReportPdf(
       return { ok: false, reason: 'db_error', diagnostics };
     }
 
-    return { ok: true, pdfPath, bytes: pdf.byteLength, diagnostics };
+    return { ok: true, pdfPath, bytes: captured.pdf.byteLength, diagnostics };
   } catch (error) {
     applyCaughtError(diagnostics, error);
     logIntelReportPdfError(error);
@@ -191,8 +196,12 @@ async function loadRenderableReport(
 async function capturePrintPdf(
   reportId: string,
   secret: string,
+  origin: string,
   diagnostics: PdfRenderDiagnostics
-): Promise<Buffer | null> {
+): Promise<
+  | { ok: true; pdf: Buffer }
+  | { ok: false; reason: 'render_failed' | 'redirected_away' }
+> {
   const browser = await launchBrowser(diagnostics);
   try {
     const page = await browser.newPage({
@@ -205,7 +214,7 @@ async function capturePrintPdf(
     );
 
     const token = signPrintToken(reportId, secret);
-    const printUrl = `${appOrigin()}/intel/reports/${reportId}/print?token=${encodeURIComponent(token)}`;
+    const printUrl = `${origin}/intel/reports/${reportId}/print?token=${encodeURIComponent(token)}`;
     diagnostics.navigateUrl = originAndPath(printUrl);
     console.error('Intel report pdf: navigate', diagnostics.navigateUrl);
     const response = await page.goto(printUrl, {
@@ -216,8 +225,21 @@ async function capturePrintPdf(
     const status = response === null ? null : response.status();
     diagnostics.navigationStatus = status;
     console.error('Intel report pdf: navigation status', status);
+
+    const expectedOrigin = urlOrigin(printUrl);
+    const finalOrigin = urlOrigin(page.url());
+    if (expectedOrigin === null || finalOrigin !== expectedOrigin) {
+      diagnostics.errorName = 'redirected_away';
+      diagnostics.errorMessage = originAndPath(page.url());
+      console.error(
+        'Intel report pdf: redirected away',
+        diagnostics.errorMessage
+      );
+      return { ok: false, reason: 'redirected_away' };
+    }
+
     if (status !== 200) {
-      return null;
+      return { ok: false, reason: 'render_failed' };
     }
 
     await page.waitForSelector('.report-document', { timeout: 15_000 });
@@ -234,7 +256,7 @@ async function capturePrintPdf(
       },
     });
 
-    return Buffer.from(pdf);
+    return { ok: true, pdf: Buffer.from(pdf) };
   } finally {
     await browser.close();
   }
@@ -300,6 +322,14 @@ function originAndPath(url: string): string {
   }
 }
 
+function urlOrigin(url: string): string | null {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return null;
+  }
+}
+
 function emptyDiagnostics(): PdfRenderDiagnostics {
   return {
     chromiumExecutablePath: null,
@@ -354,15 +384,9 @@ function logIntelReportPdfError(caught: unknown): void {
   console.error('Intel report pdf:', caught);
 }
 
-function appOrigin(): string {
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
+function appOrigin(): string | null {
   const site = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');
-  if (site) {
-    return site;
-  }
-  return `http://127.0.0.1:${process.env.PORT ?? '3000'}`;
+  return site || null;
 }
 
 function isThirdPartyTracker(url: URL): boolean {

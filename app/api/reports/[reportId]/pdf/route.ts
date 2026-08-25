@@ -129,6 +129,7 @@ function failureMessage(
     | 'failed'
     | 'misconfigured'
     | 'render_failed'
+    | 'redirected_away'
     | 'upload_failed'
     | 'db_error'
 ): string {
@@ -154,6 +155,7 @@ function failureStatus(
     | 'failed'
     | 'misconfigured'
     | 'render_failed'
+    | 'redirected_away'
     | 'upload_failed'
     | 'db_error'
 ): number {
