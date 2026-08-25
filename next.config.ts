@@ -31,6 +31,13 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
+  serverExternalPackages: [
+    '@google-analytics/data',
+    'googleapis',
+    'google-auth-library',
+    'google-gax',
+  ],
+
   async redirects() {
     return [
       {
