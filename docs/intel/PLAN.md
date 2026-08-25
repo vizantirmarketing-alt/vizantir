@@ -1,12 +1,12 @@
 # Vizantir Intelligence — plan of record
 
-Internal operator dashboard at `/intel`. Written 2026-08-18 from the repository. Updated 2026-08-23 from production and the database. Claims that could not be confirmed in source are marked **unverified**.
+Internal operator dashboard at `/intel`. Written 2026-08-18 from the repository. Updated 2026-08-24 from production and the database. Claims that could not be confirmed in source are marked **unverified**.
 
 ---
 
 ## 1. System state
 
-Live surfaces (auth required except login): Overview (28-day stat strip + AI platforms + activity feed + decision feed), Search, Leads (+ detail + CSV export). Instrumented public site; GSC + GA4 + Clarity ingest; daily detectors. Shared dashboard primitives live in `app/intel/_components/ui/`.
+Live surfaces (auth required except login): Overview (28-day stat strip + sync health + AI platforms + activity feed + decision feed), Search, Leads (+ detail + CSV export). Instrumented public site; GSC + GA4 + Clarity ingest; daily detectors. Shared dashboard primitives live in `app/intel/_components/ui/`.
 
 ### Instrumentation
 
@@ -28,9 +28,9 @@ Both analytics `NEXT_PUBLIC_` vars are **absent from `.env.local`**. Tags theref
 
 Write path: `lib/forms/attribution.ts` (client capture + `initial_channel`) → `lib/forms/contact-submission.ts` (insert + Resend notify + `notify_status`). Intel reads/mutates the same rows (`lib/intel/leads.ts`, `app/intel/(app)/leads/[id]/actions.ts`). CSV at `/intel/leads/export`.
 
-`notify_status` **is** shown per lead (`LeadDeliveryMark` on the list; labels on the detail page). The Leads page also shows an aggregate **Delivery issues** count on `LeadsStatStrip` (`fetchLeadDashboardStats` → `notify_status` in `failed` \| `not_configured`). There is no alert, no `sync_runs` health surface, and Overview does not show this count.
+`notify_status` **is** shown per lead (`LeadDeliveryMark` on the list; labels on the detail page). The Leads page also shows an aggregate **Delivery issues** count on `LeadsStatStrip` (`fetchLeadDashboardStats` → `notify_status` in `failed` \| `not_configured`). There is no alert and Overview does not show this count. The Overview sync health panel reads `sync_runs`, not delivery issues.
 
-Lead status update + status history insert are two sequential writes with a manual revert, not atomic. Should be one Postgres function via `rpc()`.
+Lead status update + history insert are one transaction. `updateLeadStatus` calls `update_lead_status` via `rpc()` (`supabase/migrations/0015_lead_status_transaction.sql`): updates `contact_submissions` and inserts `lead_status_history` with `FOR UPDATE` on the lead row. The manual compensating revert is gone. Verified end to end through the UI 2026-08-24.
 
 ### GSC sync
 
@@ -47,7 +47,7 @@ The 5-to-2-days-ago window can store an unfinalized day as clicks 0 / impression
 
 ### Decision feed
 
-Overview (`app/intel/(app)/page.tsx`) renders a 28-day `OverviewStatStrip`, then AI platforms, the activity feed, then `decision_items` via `lib/intel/decisions/feed.ts`. Hidden statuses: `completed`, `dismissed` — read from `finding_state`, not from `decision_items`. Ranked by `score * exp(-days_since_created / 14)` (`DECISION_NOVELTY_TAU_DAYS`). Cards show a one-line triage fact from `formatHeadlineFact` (impressions ± position; no percents).
+Overview (`app/intel/(app)/page.tsx`) renders a 28-day `OverviewStatStrip`, then sync health, then AI platforms, the activity feed, then `decision_items` via `lib/intel/decisions/feed.ts`. Hidden statuses: `completed`, `dismissed` — read from `finding_state`, not from `decision_items`. Ranked by `score * exp(-days_since_created / 14)` (`DECISION_NOVELTY_TAU_DAYS`). Cards show a one-line triage fact from `formatHeadlineFact` (impressions ± position; no percents).
 
 Strip metrics (null → em dash):
 
@@ -67,7 +67,9 @@ Three detectors (`lib/intel/decisions/detectors/index.ts`):
 
 Seeded groups in `0010_decision_feed.sql`: wordpress-security, law-firm, cre, platform-compare, brand, vegas-web-design.
 
-Cron `runDecisionDetectors()` does **not** write `sync_runs`. Its runs are observable only via `decision_items` timestamps and the HTTP response. That is an open instrumentation gap. The unattended-cron success criterion was never “four green rows in `sync_runs`” — that was never achievable.
+`runDecisionDetectors()` writes `sync_runs` (`provider = 'decisions'`, `records_processed` = findings persisted). Zero findings because nothing crossed threshold is success/0, not partial. Mixed detector outcomes are partial with a typed reason in `administrator_message`, matching Clarity’s annotation style.
+
+The activity feed had to be taught about it — `SyncProvider` was a three-value union and decisions rows were read and silently discarded. Now a fourth provider, labelled “Decision scan” (not “sync” — it emits findings). The label refactor moved the word “sync” out of the title templates and into `providerLabel()`. First `sync_runs` row 2026-08-24; first activity feed entry the same day. The earlier statement that decisions runs are observable only via `decision_items` timestamps and the HTTP response is wrong.
 
 ### Crons (`vercel.json`)
 
@@ -78,13 +80,13 @@ Cron `runDecisionDetectors()` does **not** write `sync_runs`. Its runs are obser
 | `/api/cron/gsc-sync` | `30 9 * * *` | `syncGsc()` |
 | `/api/cron/decisions` | `0 10 * * *` | `runDecisionDetectors()` |
 
-Vercel Cron is UTC; `vercel.json` does not restate the timezone. All four routes require `Authorization: Bearer ${CRON_SECRET}` (timing-safe). Verified `sync_runs` writers: GSC and GA4 write success rows; Clarity writes success / partial / failed; decisions writes nothing.
+Vercel Cron is UTC; `vercel.json` does not restate the timezone. All four routes require `Authorization: Bearer ${CRON_SECRET}` (timing-safe). Verified `sync_runs` writers: GSC and GA4 write success rows; Clarity writes success / partial / failed; decisions writes success / partial / failed (`provider = 'decisions'`).
 
 ### Intel auth
 
 Magic link (`shouldCreateUser: false`) → `/intel/auth/callback`. Allowlist: `INTEL_ALLOWED_EMAILS`, default `vizantirmarketing@gmail.com` (`lib/auth/allowlist.ts`). `/intel` is `noindex` and disallowed in `app/robots.ts`.
 
-Magic-link sign-in fails when a stale Supabase refresh token is present (`refresh_token_not_found`). The callback’s `exchangeCodeForSession` fails against the poisoned session and redirects to `/intel/login?error=auth`. Workaround: visit `/intel/auth/signout` and clear vizantir.com cookies. **Not fixed** — the callback should clear any existing session before exchanging.
+Magic-link sign-in used to fail when a stale Supabase refresh token was present (`refresh_token_not_found`). The callback’s `exchangeCodeForSession` failed against the poisoned session and redirected to `/intel/login?error=auth`. The callback now calls `signOut()` before `exchangeCodeForSession`, so a stale refresh token cannot poison a fresh magic-link sign-in. Still **unverified in the wild** — it proves itself the next time a session would have expired. Workaround if it recurs: visit `/intel/auth/signout` and clear vizantir.com cookies.
 
 `app/intel/auth/callback/route.ts` logs each of its four failure branches with an `Intel auth callback:` prefix, greppable in Vercel logs. Previously all four collapsed to a generic redirect with no logging.
 
@@ -102,7 +104,17 @@ The build output line `ƒ Proxy (Middleware)` is `proxy.ts` at the repo root (Ne
 
 **Clarity rows are 3-day windows.** Export client types `numOfDays: 1 \| 2 \| 3`; sync always sends `3`. `0005_clarity_window_days.sql` puts `window_days` in `clarity_metric_daily_slice_key`. Rows are stored as one slice dated UTC yesterday, not exploded into three daily rows. Operator reason (not commented in code): the export API cannot produce single-day multi-dimension rows. Dimension sets: `URL`; `Device, Browser`; `Source, Medium, Campaign`.
 
-Two failure modes were conflated and must be kept separate. (1) Quota exhaustion is real but transient and only occurs after manual runs. (2) A separate persistent failure affects two dimension sets — URL, and Source/Medium/Campaign — which fail in **every** run including quota-healthy ones, and have never written a row. Ruled out: table schema, the unique index (`clarity_metric_daily_slice_key` covers date, window_days, metric_name, and all three dim name/value pairs), and service_role grants (INSERT/UPDATE/SELECT all true). The failures are at the upsert or exception path, not the Clarity API — a third dimension set (`Device, Browser`) succeeds every run with the same credentials. The 09:00 UTC cron on 2026-08-24 is the first run with annotated failure paths (`upsert_error` vs `exception`). Do not trigger manually — 10 calls/day, sync uses 3.
+Two failure modes were conflated and must be kept separate. (1) Quota exhaustion is real but transient and only occurs after manual runs. (2) A separate persistent failure affects two dimension sets — URL, and Source/Medium/Campaign — which fail in **every** run including quota-healthy ones, and have never written a row. The root cause is Postgres error 21000 — “ON CONFLICT DO UPDATE command cannot affect row a second time. Ensure that no rows proposed for insertion within the same command have duplicate constrained values.” Confirmed by POSTing two rows with identical conflict keys directly to the Supabase REST endpoint and reading the error body.
+
+Critical diagnostic note: PostgREST returns this as HTTP 500, not 400. That is why it read as a server-side failure for over a week. A constraint violation (unique, not-null, value-too-long) returns 400 with a Postgres code; 21000 returns 500. Do not assume 500 means infrastructure.
+
+The URL and Source/Medium/Campaign sets produce rows that collapse to the same conflict key (date, window_days, metric_name, and all three dim name/value pairs). Device/Browser does not, which is why it is the only set that has ever written.
+
+Ruled out, in order — do not re-test: table schema, the unique index (`clarity_metric_daily_slice_key` covers date, window_days, metric_name, and all three dim name/value pairs), service_role grants (INSERT/UPDATE/SELECT all true), NOT NULL violations (every field is explicitly defaulted in the row builder), and payload size. Batching was added and did **not** fix it — the request trace showed one Supabase POST per dimension set both before and after, proving every set fits inside a single 500-row batch.
+
+Fix status: rows are now deduplicated by conflict key before upsert (last wins), with an `Intel clarity duplicate:` log when two rows sharing a key have different metrics. **DEPLOYED BUT UNVERIFIED** — the test run after deploy hit `rate_limited` 429 on two of three sets. The URL set did fetch and still returned `upsert_error`, so either there is a second cause or the dedup missed something. The 2026-08-25 09:00 UTC cron is the first clean test. As of 2026-08-24 the Clarity streak is 12 consecutive unhealthy runs. Do not trigger manually — 10 calls/day, sync uses 3.
+
+**`sync_runs.provider` is a closed check — expand it before adding a job.** `0004_sync_runs.sql` constrained `provider` to `ga4 | gsc | clarity`. Adding the decisions cron required expanding it (`0015_lead_status_transaction.sql` also replaces that constraint). Without the new value the insert fails closed, the runner returns “Failed to record sync run”, and **the detectors do not run**. Any future sync job must expand this constraint first or it will silently disable itself.
 
 **`provider_coverage` gates comparisons.** Search (`lib/intel/search.ts`): if `prior.start < coverage.started_on` (or coverage missing), comparison is `{ available: false }` — UI shows “Prior period unavailable”, movers omitted. Detectors receive `comparisonAvailable`; `needsComparison` detectors are skipped. **No current detector sets `needsComparison`.** Crossing a coverage boundary is never computed.
 
@@ -149,6 +161,8 @@ Green is not a generic “good” or “on” color. In code:
 
 Leads Delivery issues card: `contextTone="warning"` and copy “Failed or not configured” when the count is > 0; no green.
 
+**Sync health on Overview stays quiet when everything is fine.** `lib/intel/sync-health.ts` + `app/intel/_components/SyncHealthPanel.tsx`, placed between the stat strip and AI platforms. Latest run per provider plus a consecutive-unhealthy streak (30-run lookback). Healthy providers collapse into one summary line; only failing providers get a row, with `administrator_message` and the streak. A success older than 48h is flagged stale. A provider with no runs is a distinct state from a failed run. Four green rows every day would stop being read.
+
 ---
 
 ## 3. Environment variables
@@ -187,11 +201,11 @@ Vercel environment checkboxes are **not in the repo**. `.env.local` presence bel
 
 **Clarity export API.** Client allows 1–3 day windows; sync uses 3. Three requests per run. **10 req/day quota is not encoded** — operator/API constraint. Missed days are unrecoverable (`0003` note). `clarity_metric_daily` is written by sync only; no Intel UI reads it. Fixing the pipeline has no payoff until the deferred behavior/friction surface exists.
 
-Do not trigger Clarity manually. Quota exhaustion is transient and only occurs after manual runs. The persistent URL and Source/Medium/Campaign failures are a separate, non-quota problem (see Architecture). Wait for the 09:00 UTC cron on 2026-08-24 to name `upsert_error` vs `exception`.
+Do not trigger Clarity manually. Quota exhaustion is transient and only occurs after manual runs. The persistent URL and Source/Medium/Campaign failures are a separate, non-quota problem: Postgres 21000 from duplicate conflict keys in one upsert (see Architecture). Dedup is deployed but unverified. Wait for the 09:00 UTC cron on 2026-08-25 — the first clean test after the post-deploy run hit `rate_limited` 429.
 
 **GSC lag.** Daily sync covers 5-to-2-days-ago UTC. Data-through date stored on the run is today−2. 2–3 day publishing lag is implied by that window, not commented. Display caps at today−3 UTC so an unfinalized trailing edge is not plotted as a real zero.
 
-**Migrations.** SQL files live in `supabase/migrations/` (`0001`–`0014`). No `supabase/config.toml`, no package.json migrate script, no CLI runner. Apply by pasting into the Supabase SQL editor. `0006_service_role_grants.sql` plus per-table grants on later migrations.
+**Migrations.** SQL files live in `supabase/migrations/` (`0001`–`0015`). No `supabase/config.toml`, no package.json migrate script, no CLI runner. Apply by pasting into the Supabase SQL editor. `0006_service_role_grants.sql` plus per-table grants on later migrations. `0015_lead_status_transaction.sql` adds `update_lead_status` (and its `service_role` grant) and replaces the `sync_runs.provider` check. Applied manually 2026-08-24.
 
 Handoff rule 7 (file in repo AND applied in the SQL editor) was violated twice, opposite ways, and both stayed silent for days:
 
@@ -202,7 +216,7 @@ Standing check: after any migration, verify the table exists in the database AND
 
 **Never run `vercel env pull .env.local`.** It overwrites the local file. Local-only values (Turnstile test keys, `RATE_LIMIT_SALT`, `CRON_SECRET`, and anything else not meant to match Production) would be destroyed. This contradicts the generic `.cursorrules` sync instruction; this document is the Intel-specific rule.
 
-**`sync_runs`.** Written by Clarity, GSC, and GA4 sync. Nothing dedicated in `app/intel` consumes it as a health surface; the activity feed reads recent rows as events. Decisions cron does not record a run. Do not treat “four green `sync_runs` rows” as the unattended-cron success criterion — decisions has never written one.
+**`sync_runs`.** Written by Clarity, GSC, GA4, and decisions. Overview consumes it as a health panel (`SyncHealthPanel`); the activity feed still reads recent rows as events. Decisions is labelled “Decision scan” in the feed. Do not treat “four green `sync_runs` rows” as the unattended-cron success criterion — the health panel is built to stay quiet when everything is fine.
 
 **Undocumented tables.** `public` also contains `bot_hits`, `bot_ip_ranges`, `daily_rollups`, `deploys`, `events`, and `submissions`. None are created by any migration in `supabase/migrations/` and none are referenced by intel code. Origin is not in this repo. `submissions` and `events` are confusingly close to the live `contact_submissions` and `intel_events` and could be queried by mistake.
 
@@ -218,7 +232,7 @@ Standing check: after any migration, verify the table exists in the database AND
 
 - **Lint:** `pnpm lint` → `33 errors, 18 warnings` (2026-08-18, before this dashboard pass). Zero findings under `lib/intel`, `lib/gsc`, `lib/clarity`, `app/intel`, `app/api/cron` at that run. **Not re-run** after `app/intel/_components/ui/` and the Overview/Leads strips. Git history was not inspected (repo rule: no git).
 - **Tests:** no `test` script, no `*.test.*` / `*.spec.*`, no vitest/jest/playwright in the tree.
-- **Sync failure alerting:** `sync_runs` records `status` / `error_code` / `administrator_message`. The activity feed shows recent rows; there is still no health surface or alert.
+- **Sync failure alerting:** `sync_runs` records `status` / `error_code` / `administrator_message`. Overview has a health panel (latest run + streak; quiet when healthy). There is still no alert.
 - **`notify_status`:** recorded, shown per lead, and aggregated as **Delivery issues** on the Leads stat strip (`failed` + `not_configured`). No alert, no Overview card, no dedicated health page.
 - **Law-firm overlap:** `law-firm` group can emit `buried-demand`; `geo-signal` can emit on the same query set if a non-focus geo term matches. No shared identity or relation table. Dedup deferred.
 - **Dead columns:** `decision_items.status` / `result_note` / `completed_at` will stay `'new'` forever. Querying them by hand misleads.
@@ -244,15 +258,12 @@ Negative evidence only — none of these have code, routes, or tables beyond unu
 
 ## 7. Next steps (order)
 
-1. **Clarity persistent dimension-set failures.** URL and Source/Medium/Campaign fail in every run for a non-API, non-schema, non-grant reason. The 09:00 UTC cron on 2026-08-24 is the first run with annotated failure paths and will name `upsert_error` vs `exception`. Do not trigger manually — 10 calls/day, sync uses 3.
-2. **Decisions cron does not write to `sync_runs`.** Runs are observable only via `decision_items` timestamps and the HTTP response.
-3. **Lead status update + history insert** are two sequential writes with a manual revert, not atomic. Should be one Postgres function via `rpc()`.
-4. **Auth callback** should clear an existing session before `exchangeCodeForSession`. Stale refresh tokens currently poison magic-link sign-in (`refresh_token_not_found` → `/intel/login?error=auth`). Workaround: `/intel/auth/signout` and clear vizantir.com cookies.
-5. **Clarity is ingested and read by nothing.** No `/intel` surface consumes `clarity_metric_daily`. Fixing the pipeline has no payoff until the deferred behavior/friction surface exists.
-6. **Remaining audit items not yet addressed:** window-consistency mismatches (rolling-28-days leads vs complete-day GSC 28d sharing the same label; lead sparkline 29 buckets vs GSC 28; AI platforms 30-day rolling window unlabeled); dead exports `countLeadsCreatedInLastDays` and `percentChangeFromPrior`; `SANITY_WEBHOOK_SECRET` is dead (the live webhook reads `SANITY_REVALIDATE_SECRET`); `SANITY_API_WRITE_TOKEN` is used only by `scripts/`, not at runtime.
-7. **Business decisions owned by James:** the Squarespace page review (pos 24.3, commercial comparison intent, zero clicks — the best single opportunity), the WordPress deepen-or-leave call, the Reno mis-association-vs-expansion question.
+1. **Clarity persistent dimension-set failures — verify the deploy.** Root cause is Postgres 21000 (duplicate conflict keys in one upsert). Dedup is deployed but unverified: the post-deploy test hit `rate_limited` 429 on two of three sets; the URL set still returned `upsert_error`. The 2026-08-25 09:00 UTC cron is the first clean test. Do not trigger manually — 10 calls/day, sync uses 3. As of 2026-08-24 the streak is 12 consecutive unhealthy runs.
+2. **Clarity is ingested and read by nothing.** No `/intel` surface consumes `clarity_metric_daily`. Fixing the pipeline has no payoff until the deferred behavior/friction surface exists.
+3. **Remaining audit items not yet addressed:** window-consistency mismatches (rolling-28-days leads vs complete-day GSC 28d sharing the same label; lead sparkline 29 buckets vs GSC 28; AI platforms 30-day rolling window unlabeled); dead exports `countLeadsCreatedInLastDays` and `percentChangeFromPrior`; `SANITY_WEBHOOK_SECRET` is dead (the live webhook reads `SANITY_REVALIDATE_SECRET`); `SANITY_API_WRITE_TOKEN` is used only by `scripts/`, not at runtime.
+4. **Business decisions owned by James:** the Squarespace page review (pos 24.3, commercial comparison intent, zero clicks — the best single opportunity), the WordPress deepen-or-leave call, the Reno mis-association-vs-expansion question.
 
-Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_submit` and `consultation_click` as GA4 key events if not already (console **unverified**); GA4 event audit, then a GA4 surface once the property has a meaningful window; a site-health surface that reads `sync_runs`.
+Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_submit` and `consultation_click` as GA4 key events if not already (console **unverified**); GA4 event audit, then a GA4 surface once the property has a meaningful window.
 
 ---
 
@@ -269,8 +280,8 @@ Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_s
 | Clarity 10 req/day | **Unverified in code.** |
 | Vercel env environment matrix | **Unverified.** `.env.local` key presence verified. |
 | Production-only analytics tags | Consistent with missing local `NEXT_PUBLIC_*` analytics keys; dashboard **unverified**. |
-| Unattended cron / `sync_runs` | GSC and GA4 write success rows. Clarity writes success / partial / failed. Decisions writes nothing. “Four green rows” was never the criterion. |
-| Clarity partials | Two problems, not one. Quota exhaustion is transient and post-manual. URL and Source/Medium/Campaign fail every run, including quota-healthy ones; never written a row. Schema, unique index, and grants ruled out. |
+| Unattended cron / `sync_runs` | GSC and GA4 write success rows. Clarity writes success / partial / failed. Decisions writes success / partial / failed (`provider = 'decisions'`). Health panel stays quiet when healthy — “four green rows” is not the criterion. |
+| Clarity partials | Two problems, not one. Quota exhaustion is transient and post-manual. URL and Source/Medium/Campaign fail every run: Postgres 21000 from duplicate conflict keys in one upsert. PostgREST returns 21000 as HTTP 500. Schema, unique index, grants, NOT NULL, payload size, and batching ruled out. Dedup deployed but unverified. Streak 12 as of 2026-08-24. |
 | GA4 key events configured | **Unverified** (GA4 console). |
 | Overview 28d strip + ui primitives | Verified (`page.tsx`, `DecisionFeed.tsx`, `app/intel/_components/ui/*`, tokens in `globals.css`). |
 | Green = improvement/completion | Verified in CSS comment + MetricCard / StatusChip / LeadDeliveryMark. Working panel left-border also uses `--positive`. |
@@ -280,5 +291,10 @@ Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_s
 | Display completed-day cap | Verified (`latestCompleteDay` in `lib/intel/search-params.ts`). Phantom-zero on 2026-08-21 observed in production. |
 | Failed vs empty panel states | Verified (Overview GSC cards, activity, AI platforms, decision feed, Search). |
 | `0012` / `0014` migration divergence | Verified. `0012` applied 2026-08-23. `0014` file now in repo. |
-| Auth callback logging | Verified (`Intel auth callback:` prefix, four branches). Stale-token fix **not done**. |
+| `0015` lead status + provider check | Verified. File in repo. Applied manually 2026-08-24. |
+| Decisions `sync_runs` + activity feed | Verified. First `sync_runs` row 2026-08-24; first activity feed entry the same day. Labelled “Decision scan”. |
+| Lead status atomicity | Verified end to end through the UI 2026-08-24 (`update_lead_status` via `rpc()`). |
+| Sync health panel | Verified (`lib/intel/sync-health.ts`, `SyncHealthPanel`, Overview placement). |
+| `sync_runs.provider` closed check | Verified landmine. `0004` was `ga4 \| gsc \| clarity`; `0015` adds `decisions`. Insert fail-closes and detectors do not run if a new provider is missing. |
+| Auth callback logging | Verified (`Intel auth callback:` prefix, four branches). Stale-session `signOut()` before exchange is in code; **unverified in the wild**. |
 | Cursor tsc/build claims | Wrong twice on 2026-08-23. Vercel / local `pnpm run build` is authoritative. |
