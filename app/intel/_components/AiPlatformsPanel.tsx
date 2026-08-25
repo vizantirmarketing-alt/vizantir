@@ -16,8 +16,8 @@ export function AiPlatformsPanel(props: AiPlatformsPanelProps) {
       ) : (
         <>
           <p className="mb-3 text-[0.7rem] leading-4 text-meta">
-            Crawler visits to robots.txt. A proxy for AI platform awareness of
-            the site.
+            Crawler visits to robots.txt in the last 30 days. A proxy for AI
+            platform awareness of the site.
           </p>
           <ul className="divide-y divide-black/8">
             {props.rows.map((row) => (

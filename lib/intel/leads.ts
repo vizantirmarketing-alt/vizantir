@@ -13,7 +13,7 @@ import {
   type LeadsListParams,
   type NotifyStatus,
 } from '@/lib/intel/lead-params'
-import { enumerateDates } from '@/lib/intel/search-params'
+import { enumerateDates, spanEndingOn, utcToday } from '@/lib/intel/search-params'
 
 export type { LeadListRow }
 
@@ -582,18 +582,15 @@ function utcDateKey(iso: string): string | null {
 }
 
 /**
- * Rolling-window lead volume plus calendar-day buckets for a sparkline.
- * Same filter as the previous head-count: created_at >= now - days.
+ * Calendar-day lead volume plus sparkline buckets.
+ * Both the total and the sparkline use `spanEndingOn(utcToday(), days)` so
+ * adjacent GSC series share a bucket count and the number matches the bars.
  */
 export async function fetchLeadDailySeriesInLastDays(
   days: number,
 ): Promise<LeadDailySeries | null> {
   const sinceIso = new Date(Date.now() - days * 86_400_000).toISOString()
-  const startDate = utcDateKey(sinceIso)
-  const endDate = new Date().toISOString().slice(0, 10)
-  if (startDate === null) {
-    return null
-  }
+  const dates = enumerateDates(spanEndingOn(utcToday(), days))
 
   try {
     const supabase = createSupabaseServiceRole()
@@ -606,8 +603,6 @@ export async function fetchLeadDailySeriesInLastDays(
       console.error('Intel leads query failed')
       return null
     }
-
-    const dates = enumerateDates({ start: startDate, end: endDate })
     const counts = new Map<string, number>()
     for (const date of dates) {
       counts.set(date, 0)
@@ -631,8 +626,8 @@ export async function fetchLeadDailySeriesInLastDays(
       if (existing === undefined) {
         continue
       }
-      counts.set(key, existing + 1)
       total += 1
+      counts.set(key, existing + 1)
     }
 
     return {
@@ -646,16 +641,6 @@ export async function fetchLeadDailySeriesInLastDays(
     console.error('Intel leads query failed')
     return null
   }
-}
-
-export async function countLeadsCreatedInLastDays(
-  days: number,
-): Promise<number | null> {
-  const series = await fetchLeadDailySeriesInLastDays(days)
-  if (series === null) {
-    return null
-  }
-  return series.total
 }
 
 export async function fetchLeadDashboardStats(): Promise<LeadDashboardStats> {

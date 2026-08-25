@@ -139,14 +139,14 @@ export function OverviewStatStrip({
         accent="cobalt"
       />
       <MetricCard
-        label="Leads this 28 days"
+        label="Leads 28d to today"
         value={formatCount(leadsLast28Days)}
         icon={<UserRound className="size-3" />}
         accent="cobalt"
         sparkline={
           leadsDaily.length > 0 ? <Sparkline points={leadsDaily} /> : undefined
         }
-        context={lastTwoDayContext(leadsDaily)}
+        context={lastTwoDayContext(leadsDaily) ?? 'Includes today'}
       />
       <MetricCard
         label="Clicks 28d"
