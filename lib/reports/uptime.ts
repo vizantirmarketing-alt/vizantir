@@ -13,7 +13,7 @@ export type UptimeIncident = {
 
 export type UptimeReportData = {
   uptimePercentage: number | null;
-  coverage: 'full' | 'partial';
+  coverage: 'full' | 'partial' | 'none';
   monitorCreatedAt: string;
   incidents: UptimeIncident[];
 };
@@ -120,15 +120,13 @@ function parseMonitorResponse(
   }
 
   const monitorCreatedAt = new Date(createdUnix * 1000).toISOString();
-  const coverage: 'full' | 'partial' =
-    createdUnix > startUnix ? 'partial' : 'full';
+  const coverage: 'full' | 'partial' | 'none' =
+    createdUnix > endUnix ? 'none' : createdUnix > startUnix ? 'partial' : 'full';
 
-  const createdAfterPeriod = createdUnix > endUnix;
-  const uptimePercentage = createdAfterPeriod
-    ? null
-    : parseUptimePercentage(monitor.custom_uptime_ranges);
+  const uptimePercentage =
+    coverage === 'full' ? parseUptimePercentage(monitor.custom_uptime_ranges) : null;
 
-  const incidents = parseIncidents(monitor.logs);
+  const incidents = coverage === 'none' ? [] : parseIncidents(monitor.logs);
 
   return {
     uptimePercentage,
