@@ -1,3 +1,5 @@
+import { MEANINGFUL_COMPARISON_BASE } from '@/lib/intel/format-change';
+
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})/;
 
 export function formatInteger(value: number): string {
@@ -106,6 +108,19 @@ export function formatSignedCtr(value: number): string {
     return `−${abs} pts`;
   }
   return '0 pts';
+}
+
+export function meaningfulComparisonDelta(
+  change: number | null,
+  priorBase: number | null
+): number | null {
+  if (change === null || priorBase === null) {
+    return null;
+  }
+  if (priorBase < MEANINGFUL_COMPARISON_BASE) {
+    return null;
+  }
+  return change;
 }
 
 export function plural(count: number, singular: string, pluralForm: string): string {

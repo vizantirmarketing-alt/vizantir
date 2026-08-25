@@ -15,6 +15,7 @@ import {
   formatSignedInteger,
   formatUptime,
   humanizeEventName,
+  meaningfulComparisonDelta,
 } from '@/lib/reports/format'
 import type { ReportClient, ReportDocument } from '@/lib/reports/load'
 import type { CruxMetric } from '@/lib/reports/crux'
@@ -320,8 +321,10 @@ function SearchSection({
     { ok: true; skipped: false }
   >['data']
 }) {
-  const impressionsFalling =
-    data.impressionsChange !== null && data.impressionsChange < 0
+  const ctrDelta = meaningfulComparisonDelta(
+    data.ctrChange,
+    data.prior?.impressions ?? null,
+  )
 
   return (
     <ReportSection title="Search performance">
@@ -355,17 +358,20 @@ function SearchSection({
             <Metric
               label="CTR"
               value={formatCtr(data.current.ctr)}
-              detail={higherBetterDetail(data.ctrChange, formatSignedCtr)}
-              detailClassName={higherBetterClass(data.ctrChange)}
+              detail={
+                data.prior === null
+                  ? 'New'
+                  : ctrDelta === null
+                    ? undefined
+                    : formatSignedCtr(ctrDelta)
+              }
+              detailClassName={higherBetterClass(ctrDelta)}
             />
             <Metric
               label="Average position"
               value={formatPosition(data.current.position)}
               detail={positionDetail(data.positionChange)}
-              detailClassName={positionClass(
-                data.positionChange,
-                impressionsFalling,
-              )}
+              detailClassName={positionClass(data.positionChange)}
             />
           </MetricGrid>
 
@@ -375,7 +381,7 @@ function SearchSection({
             </h3>
             <MovedTable
               caption="Top search queries"
-              rows={data.topQueries}
+              rows={rankSearchRows(data.topQueries)}
               kind="query"
             />
           </div>
@@ -386,7 +392,7 @@ function SearchSection({
             </h3>
             <MovedTable
               caption="Top search pages"
-              rows={data.topPages}
+              rows={rankSearchRows(data.topPages)}
               kind="page"
             />
           </div>
@@ -622,13 +628,7 @@ function MovedTable({
               ) : (
                 <>
                   {' · '}
-                  <span
-                    className={positionClass(
-                      row.positionChange,
-                      row.impressionsChange !== null &&
-                        row.impressionsChange < 0,
-                    )}
-                  >
+                  <span className={positionClass(row.positionChange)}>
                     {positionDetail(row.positionChange)}
                   </span>
                 </>
@@ -661,8 +661,10 @@ function MovedTable({
           </thead>
           <tbody>
             {rows.map((row) => {
-              const impressionsFalling =
-                row.impressionsChange !== null && row.impressionsChange < 0
+              const ctrDelta = meaningfulComparisonDelta(
+                row.ctrChange,
+                row.prior?.impressions ?? null,
+              )
               return (
                 <tr key={row.key} className="border-b border-black/8">
                   <td
@@ -694,10 +696,7 @@ function MovedTable({
                   </td>
                   <td className="px-2 py-2.5 text-right tabular-nums text-body">
                     {formatCtr(row.ctr)}
-                    <ChangeLine
-                      change={row.ctrChange}
-                      format={formatSignedCtr}
-                    />
+                    <ChangeLine change={ctrDelta} format={formatSignedCtr} />
                   </td>
                   <td className="py-2.5 pl-2 text-right tabular-nums text-body">
                     {formatPosition(row.position)}
@@ -705,7 +704,7 @@ function MovedTable({
                       <span
                         className={cn(
                           'mt-0.5 block text-xs leading-snug',
-                          positionClass(row.positionChange, impressionsFalling),
+                          positionClass(row.positionChange),
                         )}
                       >
                         {positionDetail(row.positionChange)}
@@ -769,15 +768,17 @@ function positionDetail(change: number | null): string {
     : `${abs} closer to the top`
 }
 
-function positionClass(
-  change: number | null,
-  impressionsFalling: boolean,
-): string {
-  if (change === null || change === 0) {
+function positionClass(change: number | null): string {
+  if (change === null || change >= 0) {
     return 'text-meta'
   }
-  if (change < 0) {
-    return 'text-positive'
-  }
-  return impressionsFalling ? 'text-warning' : 'text-meta'
+  return 'text-positive'
+}
+
+const SEARCH_TABLE_LIMIT = 5
+
+function rankSearchRows(rows: GscMovedRow[]): GscMovedRow[] {
+  return [...rows]
+    .sort((a, b) => b.impressions - a.impressions)
+    .slice(0, SEARCH_TABLE_LIMIT)
 }

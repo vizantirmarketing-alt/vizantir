@@ -274,10 +274,14 @@ function parseGscData(value: unknown): GscReportData | null {
     impressionsChange,
     ctrChange,
     positionChange,
-    topQueries,
-    topPages,
+    topQueries: sortMovedRowsByImpressions(topQueries),
+    topPages: sortMovedRowsByImpressions(topPages),
     emptyRows: value.emptyRows,
   };
+}
+
+function sortMovedRowsByImpressions(rows: GscMovedRow[]): GscMovedRow[] {
+  return [...rows].sort((a, b) => b.impressions - a.impressions);
 }
 
 function parseGscTotals(value: unknown): GscTotals | null {
