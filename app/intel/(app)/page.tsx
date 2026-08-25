@@ -10,6 +10,7 @@ import {
   OverviewStatStrip,
 } from '@/app/intel/_components/DecisionFeed'
 import { DecisionTriagedToggle } from '@/app/intel/_components/DecisionTriagedToggle'
+import { SyncHealthPanel } from '@/app/intel/_components/SyncHealthPanel'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { fetchActivity } from '@/lib/intel/activity'
@@ -24,6 +25,7 @@ import {
 } from '@/lib/intel/decisions/feed'
 import { fetchLeadDailySeriesInLastDays } from '@/lib/intel/leads'
 import { fetchSiteRangeTotals } from '@/lib/intel/search'
+import { fetchSyncHealth } from '@/lib/intel/sync-health'
 
 export const metadata: Metadata = {
   title: 'Overview',
@@ -81,14 +83,21 @@ export default async function IntelOverviewPage({
 
   const { showTriaged } = parseOverviewPageParams(await searchParams)
 
-  const [result, siteTotals, leadSeries, activity, crawlers] =
+  const [result, siteTotals, leadSeries, activity, crawlers, syncHealth] =
     await Promise.all([
       fetchDecisionFeed({ includeHidden: showTriaged }),
       fetchSiteRangeTotals('28d'),
       fetchLeadDailySeriesInLastDays(28),
       fetchActivity(),
       fetchCrawlerPlatformOverview(),
+      fetchSyncHealth(),
     ])
+
+  const syncHealthPanel = syncHealth.ok ? (
+    <SyncHealthPanel providers={syncHealth.providers} nowMs={syncHealth.nowMs} />
+  ) : (
+    <SyncHealthPanel failed />
+  )
 
   const aiPlatforms = crawlers.ok ? (
     <AiPlatformsPanel rows={crawlers.rows} nowMs={activity.nowMs} />
@@ -123,6 +132,7 @@ export default async function IntelOverviewPage({
       <div className="flex flex-col gap-4">
         <DecisionHeader />
         {stats}
+        {syncHealthPanel}
         {aiPlatforms}
         {activityFeed}
         <Panel>
@@ -148,6 +158,7 @@ export default async function IntelOverviewPage({
       <div className="flex flex-col gap-4">
         {header}
         {stats}
+        {syncHealthPanel}
         {aiPlatforms}
         {activityFeed}
         <Panel>
@@ -161,6 +172,7 @@ export default async function IntelOverviewPage({
     <div className="flex flex-col gap-4">
       {header}
       {stats}
+      {syncHealthPanel}
       {aiPlatforms}
       {activityFeed}
       <DecisionFeed sections={result.sections} />
