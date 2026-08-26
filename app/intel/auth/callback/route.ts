@@ -3,12 +3,9 @@ import { NextResponse } from 'next/server'
 import { isAllowedEmail } from '@/lib/auth/allowlist'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
-// TEMP: distinct error query params for diagnosing Google OAuth failures. Revert to a single 'auth' value once the cause is found.
-type LoginErrorCode = 'no_code' | 'exchange' | 'no_user' | 'not_allowed'
-
-function loginErrorUrl(origin: string, error: LoginErrorCode): URL {
+function loginErrorUrl(origin: string): URL {
   const url = new URL('/intel/login', origin)
-  url.searchParams.set('error', error)
+  url.searchParams.set('error', 'auth')
   return url
 }
 
@@ -28,16 +25,15 @@ export async function GET(request: Request) {
 
   if (!code) {
     console.error('Intel auth callback: no code was present')
-    return redirectUncached(loginErrorUrl(origin, 'no_code'))
+    return redirectUncached(loginErrorUrl(origin))
   }
 
   const supabase = await createSupabaseServerClient()
-  await supabase.auth.signOut()
   const { error } = await supabase.auth.exchangeCodeForSession(code)
 
   if (error) {
     console.error('Intel auth callback: exchangeCodeForSession error', error)
-    return redirectUncached(loginErrorUrl(origin, 'exchange'))
+    return redirectUncached(loginErrorUrl(origin))
   }
 
   const {
@@ -47,13 +43,13 @@ export async function GET(request: Request) {
   if (!user) {
     console.error('Intel auth callback: getUser returned no user')
     await supabase.auth.signOut()
-    return redirectUncached(loginErrorUrl(origin, 'no_user'))
+    return redirectUncached(loginErrorUrl(origin))
   }
 
   if (!isAllowedEmail(user.email)) {
     console.error('Intel auth callback: email was rejected')
     await supabase.auth.signOut()
-    return redirectUncached(loginErrorUrl(origin, 'not_allowed'))
+    return redirectUncached(loginErrorUrl(origin))
   }
 
   return redirectUncached(new URL('/intel', origin))
