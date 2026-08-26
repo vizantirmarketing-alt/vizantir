@@ -264,6 +264,7 @@ function TrafficSection({
         <Metric
           label="New / returning"
           value={`${formatInteger(data.newUsers)} / ${formatInteger(data.returningUsers)}`}
+          valueNote="users"
           detail={`${formatInteger(data.newUserSessions)} / ${formatInteger(data.returningUserSessions)} sessions`}
         />
       </MetricGrid>
@@ -478,11 +479,13 @@ function MetricGrid({
 function Metric({
   label,
   value,
+  valueNote,
   detail,
   detailClassName,
 }: {
   label: string
   value: string
+  valueNote?: string
   detail?: string
   detailClassName?: string
 }) {
@@ -493,6 +496,11 @@ function Metric({
       </dt>
       <dd className="mt-1.5 text-xl font-medium tabular-nums tracking-tight text-foreground">
         {value}
+        {valueNote !== undefined ? (
+          <span className="ml-1.5 text-sm font-normal tracking-normal text-meta">
+            {valueNote}
+          </span>
+        ) : null}
       </dd>
       {detail !== undefined ? (
         <p

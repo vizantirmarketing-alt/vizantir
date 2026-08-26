@@ -94,7 +94,7 @@ export function formatSignedInteger(value: number): string {
   if (value < 0) {
     return `−${abs}`;
   }
-  return '0';
+  return '—';
 }
 
 export function formatSignedCtr(value: number): string {
@@ -107,7 +107,7 @@ export function formatSignedCtr(value: number): string {
   if (percent < 0) {
     return `−${abs} pts`;
   }
-  return '0 pts';
+  return '—';
 }
 
 export function meaningfulComparisonDelta(
