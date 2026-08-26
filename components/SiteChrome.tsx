@@ -12,9 +12,10 @@ import { VizantirChat } from '@/components/chat/VizantirChat'
 
 export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname()
-  const isIntel = pathname.startsWith('/intel')
+  const isBareDocument =
+    pathname.startsWith('/intel') || pathname.startsWith('/r/')
 
-  if (isIntel) {
+  if (isBareDocument) {
     return <>{children}</>
   }
 

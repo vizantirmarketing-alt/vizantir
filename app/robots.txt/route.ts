@@ -46,6 +46,7 @@ async function buildRobotsTxt(): Promise<string> {
     'Disallow: /admin/',
     'Disallow: /studio/',
     'Disallow: /intel/',
+    'Disallow: /r/',
     '',
     `Sitemap: ${siteUrl}/sitemap.xml`,
     '',
