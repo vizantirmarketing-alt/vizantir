@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/intel', label: 'Overview' },
   { href: '/intel/search', label: 'Search' },
   { href: '/intel/leads', label: 'Leads' },
+  { href: '/intel/reports', label: 'Reports' },
 ] as const
 
 type IntelShellProps = {

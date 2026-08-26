@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+import Link from 'next/link'
 
 import { MonthlyReport } from '@/app/intel/reports/_components/MonthlyReport'
+import { ReportReviewControls } from '@/app/intel/reports/_components/ReportReviewControls'
+import { loadReviewFields } from '@/app/intel/reports/data'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { isReportId, loadReport } from '@/lib/reports/load'
 
@@ -22,34 +26,91 @@ export default async function IntelReportPreviewPage({
 
   const { reportId } = await params
   if (!isReportId(reportId)) {
-    return <ReportStateMessage title="Report not found" body="No report exists for this address." />
+    return (
+      <PreviewChrome>
+        <ReportStateMessage title="Report not found" body="No report exists for this address." />
+      </PreviewChrome>
+    )
   }
 
   const result = await loadReport(reportId)
 
   if (!result.ok && result.reason === 'not_found') {
-    return <ReportStateMessage title="Report not found" body="No report exists for this address." />
+    return (
+      <PreviewChrome>
+        <ReportStateMessage title="Report not found" body="No report exists for this address." />
+      </PreviewChrome>
+    )
   }
 
   if (!result.ok && result.reason === 'malformed') {
     return (
-      <ReportStateMessage
-        title="Snapshot unreadable"
-        body="This report exists, but its snapshot is missing, the wrong version, or malformed. It cannot be rendered from the stored record."
-      />
+      <PreviewChrome>
+        <ReportStateMessage
+          title="Snapshot unreadable"
+          body="This report exists, but its snapshot is missing, the wrong version, or malformed. It cannot be rendered from the stored record."
+        />
+      </PreviewChrome>
     )
   }
 
   if (!result.ok) {
     return (
-      <ReportStateMessage
-        title="Unable to load report"
-        body="The report could not be loaded. Try again shortly."
-      />
+      <PreviewChrome>
+        <ReportStateMessage
+          title="Unable to load report"
+          body="The report could not be loaded. Try again shortly."
+        />
+      </PreviewChrome>
     )
   }
 
-  return <MonthlyReport document={result.document} />
+  const awaitingReview =
+    result.document.tier === 'care' && result.document.status === 'pending'
+  const review = awaitingReview
+    ? await loadReviewFields(result.document.reportId, result.document.client.id)
+    : null
+
+  return (
+    <PreviewChrome
+      review={
+        awaitingReview ? (
+          <ReportReviewControls
+            reportId={result.document.reportId}
+            analysis={review?.ok ? review.fields.analysis : ''}
+            workCompleted={review?.ok ? review.fields.workCompleted : ''}
+          />
+        ) : null
+      }
+    >
+      <MonthlyReport document={result.document} />
+    </PreviewChrome>
+  )
+}
+
+function PreviewChrome({
+  children,
+  review,
+}: {
+  children: ReactNode
+  review?: ReactNode
+}) {
+  return (
+    <div>
+      <div className="print:hidden border-b border-black/8 px-5 py-4 sm:px-8">
+        <div className="mx-auto w-full max-w-[40rem]">
+          <Link
+            href="/intel/reports"
+            className="text-sm text-meta transition-colors hover:text-foreground"
+          >
+            Reports
+          </Link>
+          {review}
+        </div>
+      </div>
+      {children}
+    </div>
+  )
 }
 
 function ReportStateMessage({
