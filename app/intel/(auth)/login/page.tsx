@@ -29,7 +29,7 @@ export default async function IntelLoginPage({ searchParams }: IntelLoginPagePro
           Sign in
         </h1>
         <p className="mt-4 mb-10 text-base leading-relaxed text-body">
-          Enter your email to receive a sign-in link.
+          Continue with Google to sign in.
         </p>
         <LoginForm initialError={initialError} />
       </div>
