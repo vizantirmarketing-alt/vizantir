@@ -15,6 +15,8 @@ const serverEnvSchema = z.object({
   UPTIMEROBOT_API_KEY: z.string().min(1).optional(),
   /** Comma-separated Intel allowlist. Documented value: vizantirmarketing@gmail.com */
   INTEL_ALLOWED_EMAILS: z.string().min(1).optional(),
+  /** Dedicated Resend from-address for report delivery. Do not reuse RESEND_FROM_EMAIL. */
+  REPORTS_FROM_EMAIL: z.string().min(1).optional(),
 })
 
 export const serverEnv = serverEnvSchema.parse({
@@ -25,4 +27,5 @@ export const serverEnv = serverEnvSchema.parse({
   CRUX_API_KEY: process.env.CRUX_API_KEY,
   UPTIMEROBOT_API_KEY: process.env.UPTIMEROBOT_API_KEY,
   INTEL_ALLOWED_EMAILS: process.env.INTEL_ALLOWED_EMAILS,
+  REPORTS_FROM_EMAIL: process.env.REPORTS_FROM_EMAIL,
 })

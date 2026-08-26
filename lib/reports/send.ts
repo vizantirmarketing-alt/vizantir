@@ -2,6 +2,7 @@ import 'server-only';
 
 import { Resend } from 'resend';
 
+import { serverEnv } from '@/lib/env/server';
 import { generateReportToken } from '@/lib/reports/access-token';
 import { formatMonth } from '@/lib/reports/format';
 import { isReportId } from '@/lib/reports/load';
@@ -17,6 +18,7 @@ export type SendReportResult =
         | 'failed'
         | 'already_sent'
         | 'missing_pdf'
+        | 'missing_from'
         | 'misconfigured'
         | 'send_failed'
         | 'db_error';
@@ -54,8 +56,18 @@ export async function sendReport(reportId: string): Promise<SendReportResult> {
     const { report, client } = loaded;
     const origin = appOrigin();
     const apiKey = process.env.RESEND_API_KEY;
-    const from = process.env.RESEND_FROM_EMAIL;
-    if (origin === null || !apiKey || !from) {
+    const from = serverEnv.REPORTS_FROM_EMAIL;
+    if (!from) {
+      console.error('Report send missing REPORTS_FROM_EMAIL');
+      await recordSendError(
+        supabase,
+        report.id,
+        report.clientId,
+        'REPORTS_FROM_EMAIL is not configured'
+      );
+      return { ok: false, reason: 'missing_from' };
+    }
+    if (origin === null || !apiKey) {
       console.error('Report send misconfigured');
       await recordSendError(
         supabase,

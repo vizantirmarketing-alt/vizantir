@@ -52,6 +52,7 @@ function failureMessage(
     | 'failed'
     | 'already_sent'
     | 'missing_pdf'
+    | 'missing_from'
     | 'misconfigured'
     | 'send_failed'
     | 'db_error'
@@ -71,6 +72,9 @@ function failureMessage(
   if (reason === 'invalid_id') {
     return 'Invalid request';
   }
+  if (reason === 'missing_from') {
+    return 'Report sender is not configured';
+  }
   if (reason === 'misconfigured') {
     return 'Server configuration error';
   }
@@ -84,6 +88,7 @@ function failureStatus(
     | 'failed'
     | 'already_sent'
     | 'missing_pdf'
+    | 'missing_from'
     | 'misconfigured'
     | 'send_failed'
     | 'db_error'

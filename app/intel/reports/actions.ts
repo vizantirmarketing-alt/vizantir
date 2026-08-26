@@ -187,6 +187,7 @@ function sendFailureMessage(
     | 'failed'
     | 'already_sent'
     | 'missing_pdf'
+    | 'missing_from'
     | 'misconfigured'
     | 'send_failed'
     | 'db_error',
@@ -202,6 +203,9 @@ function sendFailureMessage(
   }
   if (reason === 'failed') {
     return 'This report cannot be sent.'
+  }
+  if (reason === 'missing_from') {
+    return 'Report sender is not configured.'
   }
   if (reason === 'misconfigured') {
     return 'Email is not configured.'
