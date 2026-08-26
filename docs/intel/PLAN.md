@@ -1,12 +1,12 @@
 # Vizantir Intelligence — plan of record
 
-Internal operator dashboard at `/intel`. Written 2026-08-18 from the repository. Updated 2026-08-24 from production and the database. Claims that could not be confirmed in source are marked **unverified**.
+Internal operator dashboard at `/intel`. Written 2026-08-18 from the repository. Updated 2026-08-25 from production and the database. Claims that could not be confirmed in source are marked **unverified**.
 
 ---
 
 ## 1. System state
 
-Live surfaces (auth required except login): Overview (28-day stat strip + sync health + AI platforms + activity feed + decision feed), Search, Leads (+ detail + CSV export). Instrumented public site; GSC + GA4 + Clarity ingest; daily detectors. Shared dashboard primitives live in `app/intel/_components/ui/`.
+Live surfaces (auth required except login): Overview (28-day stat strip + sync health + AI platforms + activity feed + decision feed), Search, Leads (+ detail + CSV export), Reports (Care review queue + per-report preview). Public client report at `/r/[token]` (no auth). Instrumented public site; GSC + GA4 + Clarity ingest; daily detectors; monthly client reports. Shared dashboard primitives live in `app/intel/_components/ui/`.
 
 ### Instrumentation
 
@@ -71,6 +71,64 @@ Seeded groups in `0010_decision_feed.sql`: wordpress-security, law-firm, cre, pl
 
 The activity feed had to be taught about it — `SyncProvider` was a three-value union and decisions rows were read and silently discarded. Now a fourth provider, labelled “Decision scan” (not “sync” — it emits findings). The label refactor moved the word “sync” out of the title templates and into `providerLabel()`. First `sync_runs` row 2026-08-24; first activity feed entry the same day. The earlier statement that decisions runs are observable only via `decision_items` timestamps and the HTTP response is wrong.
 
+### Client reporting
+
+Monthly website reports per client: PDF export, emailed as a tokenized link. Separate from the intel dashboard, which is single-tenant and for James only. This module **is** multi-tenant — every query filters by `client_id`. Code in `lib/reports/`; operator queue at `/intel/reports`; public view at `/r/[token]`. Verified in production 2026-08-25.
+
+Schema (`supabase/migrations/0016_clients_and_reports.sql`, applied 2026-08-25):
+
+- `clients` — `name`, `slug`, `site_url`, `contact_email`, `care_tier` (`essential` \| `care`), `ga4_property_id`, `gsc_site_url`, `crux_origin`, `uptimerobot_monitor_id`, `engagement_metrics` jsonb, `active`. The four integration columns are nullable; a client can exist before granting access.
+- `reports` — `client_id`, `period` (first of month), `tier`, `status` (`pending` \| `draft` \| `sent` \| `failed`), `snapshot` jsonb, `analysis`, `work_completed`, `pdf_path`, `token`, `sent_at`, `send_error`, `opened_at`.
+- unique `(client_id, period)` is load-bearing: Vercel cron can retry and a client must never receive two reports for one month.
+- Check constraint: status `sent` requires `sent_at` not null.
+
+Storage (`supabase/migrations/0017_reports_pdf_storage.sql`, applied 2026-08-25): private `reports` bucket, PDF-only, 10MB cap, no policies — service role only.
+
+Data sources, one module each in `lib/reports/`:
+
+| Source | Credential | Notes |
+|---|---|---|
+| GA4 + Search Console | Existing `GSC_SERVICE_ACCOUNT_KEY` | Property and site URL come from the client row, not env. Same credential the intel dashboard uses, so a credential failure takes down both. Splitting them is deferred. |
+| CrUX | `CRUX_API_KEY` | A 404 means the origin is below CrUX's reporting threshold — that is normal, returns `no_data`, and the speed section is omitted. Never substitute Lighthouse; lab and field data are not comparable. |
+| UptimeRobot | `UPTIMEROBOT_API_KEY` | Coverage is `full` \| `partial` \| `none`. `uptimePercentage` is null unless coverage is full — a monitor created mid-period must not report a percentage for a month it did not watch. |
+
+Blockers vs warnings — the distinction matters:
+
+- **Blockers** (status `failed`, not sendable): `ga4_failed`, `zero_sessions`, `gsc_failed`, `gsc_empty_rows`. These are the report's substance.
+- **Warnings** (still sendable, section omitted): `crux_failed`, `uptime_failed`. Supporting detail. Holding a report because CrUX had a bad afternoon is the wrong trade, but the warning is recorded so a source failing every month is visible rather than silently dropped.
+
+Snapshot is immutable and versioned (`REPORT_SNAPSHOT_VERSION`, currently 2). Never re-query the sources at render time — GA4 reprocesses and GSC revises recent days, so a regenerated report would not match what the client received.
+
+**PDF generation.** `playwright-core` + `@sparticuz/chromium-min` in a Vercel function (`app/api/reports/[reportId]/pdf`, 2048MB, 90s). Chromium screenshots the print route rather than a second template, so the PDF and the web report cannot drift.
+
+CRITICAL, this cost an evening: chromium must navigate to `NEXT_PUBLIC_SITE_URL`, **not** `VERCEL_URL`. The deployment-specific hostname has Vercel deployment protection enabled and returns 302 to Vercel's SSO login. Chromium follows it, gets 200 on the auth page, and times out waiting for `.report-document`. The code now fails closed if `NEXT_PUBLIC_SITE_URL` is unset rather than falling back.
+
+The print route (`app/intel/reports/[reportId]/print`) takes a 5-minute HMAC token signed with `CRON_SECRET`, so chromium can render without a session. Report id and expiry are both in the signature; comparison is timing-safe (`lib/reports/print-token.ts`).
+
+Vercel's log viewer did not surface console output for these functions across multiple attempts. Diagnosis came from a debug flag returning diagnostics in the HTTP response. There is temporary scaffolding on the PDF route (`debug=true` after `CRON_SECRET` auth) that should be removed.
+
+**Delivery.** Public tokenized route at `/r/[token]` — outside `/intel`, no auth. Token is 32 random bytes, base64url (`lib/reports/access-token.ts`), **not** derived from the report id. Disallowed in `app/robots.txt/route.ts`. `SiteChrome` excludes `/r/` so the report renders bare.
+
+The PDF is served via a short-lived Supabase signed URL; the bucket stays private. `opened_at` is set on first view only.
+
+Email sends a link, not an attachment: open tracking, typo fixes without resending, no spam filters on large attachments. Currently from `notifications@vizantir.com` — the dedicated `mail.vizantir.com` sending subdomain with its own DKIM is **not** yet set up, so report delivery shares reputation with lead notifications.
+
+**Cron.** `/api/cron/reports`, `0 11 4 * *`. The 4th because GSC lags 2–3 days and GA4 needs ~48 hours. Each client is wrapped in its own try/catch — one bad property must not kill the run. Essential tier sends automatically. Care tier stops at `pending` for review at `/intel/reports`. Mutations: `updateReportReviewFields`, `sendReviewedReport`.
+
+DECISION: this job does **not** write to `sync_runs`. It is a report run, not a data sync, and adding a provider would have required expanding the closed check constraint again. Outcomes are returned per client in the HTTP response.
+
+Capacity: 300s `maxDuration`, and each client costs a snapshot pull plus a chromium render — roughly 30–40s observed. That is about 7–8 clients before the run times out.
+
+**Onboarding a client.**
+
+1. Insert the client row.
+2. Client grants the service account Viewer on their GA4 property.
+3. Client adds the service account email in Search Console **manually** — there is no API for GSC user management. Document this with screenshots.
+4. Create an UptimeRobot monitor. Monitors do not backfill, so create it as early as possible.
+5. Confirm their conversion events exist in GA4, or the report shows traffic without outcomes.
+
+Open items for this module: remove the `debug=true` scaffolding on the PDF route; set up `mail.vizantir.com` with its own DKIM before real clients; cosmetic (zero deltas render as a second “0” rather than a dash; the new/returning block shows users over sessions without labelling which is which); the LLM-drafted analysis for Care tier is deliberately **not** built — the manual edit path works first; onboard Evolve Dance Center as client two.
+
 ### Crons (`vercel.json`)
 
 | Path | Schedule | Code |
@@ -79,12 +137,13 @@ The activity feed had to be taught about it — `SyncProvider` was a three-value
 | `/api/cron/ga4-sync` | `15 9 * * *` | `syncGa4()` |
 | `/api/cron/gsc-sync` | `30 9 * * *` | `syncGsc()` |
 | `/api/cron/decisions` | `0 10 * * *` | `runDecisionDetectors()` |
+| `/api/cron/reports` | `0 11 4 * *` | `runMonthlyReports()` |
 
-Vercel Cron is UTC; `vercel.json` does not restate the timezone. All four routes require `Authorization: Bearer ${CRON_SECRET}` (timing-safe). Verified `sync_runs` writers: GSC and GA4 write success rows; Clarity writes success / partial / failed; decisions writes success / partial / failed (`provider = 'decisions'`).
+Vercel Cron is UTC; `vercel.json` does not restate the timezone. All five routes require `Authorization: Bearer ${CRON_SECRET}` (timing-safe). Verified `sync_runs` writers: GSC and GA4 write success rows; Clarity writes success / partial / failed; decisions writes success / partial / failed (`provider = 'decisions'`). The reports job does **not** write `sync_runs` — see Client reporting.
 
 ### Intel auth
 
-Magic link (`shouldCreateUser: false`) → `/intel/auth/callback`. Allowlist: `INTEL_ALLOWED_EMAILS`, default `vizantirmarketing@gmail.com` (`lib/auth/allowlist.ts`). `/intel` is `noindex` and disallowed in `app/robots.ts`.
+Magic link (`shouldCreateUser: false`) → `/intel/auth/callback`. Allowlist: `INTEL_ALLOWED_EMAILS`, default `vizantirmarketing@gmail.com` (`lib/auth/allowlist.ts`). `/intel` is `noindex` and disallowed in `app/robots.txt/route.ts`. `/r/` is also disallowed there — public report URLs are tokenized, not secret-by-obscurity-in-robots, but they must not be crawled.
 
 Magic-link sign-in used to fail when a stale Supabase refresh token was present (`refresh_token_not_found`). The callback’s `exchangeCodeForSession` failed against the poisoned session and redirected to `/intel/login?error=auth`. The callback now calls `signOut()` before `exchangeCodeForSession`, so a stale refresh token cannot poison a fresh magic-link sign-in. Still **unverified in the wild** — it proves itself the next time a session would have expired. Workaround if it recurs: visit `/intel/auth/signout` and clear vizantir.com cookies.
 
@@ -96,7 +155,7 @@ Magic-link sign-in used to fail when a stale Supabase refresh token was present 
 
 **/intel, not /studio.** Sanity Studio is a catch-all at `app/studio/[[...tool]]/page.tsx` (`basePath: '/studio'`). `/intel` is a separate App Router tree.
 
-**Auth in the `(app)` layout + `requireIntelUser()` on every mutation; no `middleware.ts`.** Protected UI lives under `app/intel/(app)/layout.tsx`. Login is `(auth)/login`. `/intel/leads/export` is **outside** `(app)`, so the layout does not wrap it — the route calls `requireIntelUser()` itself. Mutations: `updateDecisionStatus`, `updateLeadStatus`, `updateLeadValue`, `updateLeadNotes`. No `middleware.ts` exists in the repo.
+**Auth in the `(app)` layout + `requireIntelUser()` on every mutation; no `middleware.ts`.** Protected UI lives under `app/intel/(app)/layout.tsx`. Login is `(auth)/login`. `/intel/leads/export` and `/intel/reports` are **outside** `(app)` — the layout does not wrap them; those routes call `requireIntelUser()` themselves (reports print is HMAC, not session). `/r/[token]` is public and has no Intel auth. Mutations: `updateDecisionStatus`, `updateLeadStatus`, `updateLeadValue`, `updateLeadNotes`, `updateReportReviewFields`, `sendReviewedReport`. No `middleware.ts` exists in the repo.
 
 The build output line `ƒ Proxy (Middleware)` is `proxy.ts` at the repo root (Next 16’s middleware successor). Its matcher is `/` only and it strips `page_id` on the homepage. It does **not** protect `/intel`. Auth remains layout + `requireIntelUser()`.
 
@@ -114,7 +173,9 @@ Ruled out, in order — do not re-test: table schema, the unique index (`clarity
 
 Fix status: rows are now deduplicated by conflict key before upsert (last wins), with an `Intel clarity duplicate:` log when two rows sharing a key have different metrics. **DEPLOYED BUT UNVERIFIED** — the test run after deploy hit `rate_limited` 429 on two of three sets. The URL set did fetch and still returned `upsert_error`, so either there is a second cause or the dedup missed something. The 2026-08-25 09:00 UTC cron is the first clean test. As of 2026-08-24 the Clarity streak is 12 consecutive unhealthy runs. Do not trigger manually — 10 calls/day, sync uses 3.
 
-**`sync_runs.provider` is a closed check — expand it before adding a job.** `0004_sync_runs.sql` constrained `provider` to `ga4 | gsc | clarity`. Adding the decisions cron required expanding it (`0015_lead_status_transaction.sql` also replaces that constraint). Without the new value the insert fails closed, the runner returns “Failed to record sync run”, and **the detectors do not run**. Any future sync job must expand this constraint first or it will silently disable itself.
+**`sync_runs.provider` is a closed check — expand it before adding a job.** `0004_sync_runs.sql` constrained `provider` to `ga4 | gsc | clarity`. Adding the decisions cron required expanding it (`0015_lead_status_transaction.sql` also replaces that constraint). Without the new value the insert fails closed, the runner returns “Failed to record sync run”, and **the detectors do not run**. Any future sync job must expand this constraint first or it will silently disable itself. The monthly reports cron deliberately does **not** write `sync_runs` — it is a report run, not a data sync, and expanding the check again was the wrong trade.
+
+**Client reports are multi-tenant; the intel dashboard is not.** Every reports query filters by `client_id`. The snapshot is immutable and versioned (`REPORT_SNAPSHOT_VERSION`, currently 2) — never re-query GA4/GSC at render time. Chromium PDF capture must use `NEXT_PUBLIC_SITE_URL`, not `VERCEL_URL` (deployment protection 302s to SSO; see Client reporting).
 
 **`provider_coverage` gates comparisons.** Search (`lib/intel/search.ts`): if `prior.start < coverage.started_on` (or coverage missing), comparison is `{ available: false }` — UI shows “Prior period unavailable”, movers omitted. Detectors receive `comparisonAvailable`; `needsComparison` detectors are skipped. **No current detector sets `needsComparison`.** Crossing a coverage boundary is never computed.
 
@@ -177,21 +238,24 @@ Vercel environment checkboxes are **not in the repo**. `.env.local` presence bel
 | `NEXT_PUBLIC_CLARITY_PROJECT_ID` | `lib/env/client.ts`, `ClarityScript` | no | no | **Unverified.** Operator: Production only. |
 | `GA4_PROPERTY_ID` | `lib/env/server.ts`, `lib/ga4/sync.ts` | no | yes | **Unverified.** |
 | `GSC_SITE_URL` | `lib/gsc/client.ts`, `lib/gsc/sync.ts` | no | yes | **Unverified.** Coverage seed uses `https://www.vizantir.com/`. |
-| `GSC_SERVICE_ACCOUNT_KEY` | `lib/gsc/auth.ts` (base64 JSON). GSC: `webmasters.readonly`. GA4: `analytics.readonly`. | no | yes | **Unverified.** |
+| `GSC_SERVICE_ACCOUNT_KEY` | `lib/gsc/auth.ts` (base64 JSON). GSC: `webmasters.readonly`. GA4: `analytics.readonly`. Also `lib/reports/` (same credential; client property/site from the `clients` row). | no | yes | **Unverified.** |
 | `CLARITY_API_TOKEN` | `lib/clarity/client.ts` | no | yes | **Unverified.** |
+| `CRUX_API_KEY` | `lib/env/server.ts`, `lib/reports/crux.ts` | no | **Unverified.** | Required for report speed section. |
+| `UPTIMEROBOT_API_KEY` | `lib/env/server.ts`, `lib/reports/uptime.ts` | no | **Unverified.** | Required for report uptime section. |
 | `INTEL_ALLOWED_EMAILS` | `lib/auth/allowlist.ts` | yes (`vizantirmarketing@gmail.com`) | yes | **Unverified.** |
-| `CRON_SECRET` | `app/api/cron/{clarity-sync,ga4-sync,gsc-sync,decisions}` | no | yes | Required wherever Vercel Cron runs (Production). |
+| `CRON_SECRET` | `app/api/cron/{clarity-sync,ga4-sync,gsc-sync,decisions,reports}`; also HMAC for report print route | no | yes | Required wherever Vercel Cron runs (Production). |
+| `NEXT_PUBLIC_SITE_URL` | Report PDF chromium origin (`lib/reports/pdf.ts`). Fail-closed if unset. Also site metadata / robots. | yes | **Unverified.** | Required for PDF render. Do **not** substitute `VERCEL_URL`. |
 | `NEXT_PUBLIC_SUPABASE_URL` | supabase server/browser/service clients | yes | yes | Required for Intel + forms. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | server + browser supabase (auth cookies) | yes | yes | Required for Intel login. |
 | `SUPABASE_SERVICE_ROLE_KEY` | `lib/supabase/service.ts` (all Intel data + ingest) | yes | yes | Required. |
 | `CONTACT_NOTIFICATION_EMAIL` | `lib/forms/contact-submission.ts` | yes | no | Required for `notify_status=sent`. |
-| `RESEND_API_KEY` | same | yes | no | same |
-| `RESEND_FROM_EMAIL` | same | yes | no | same |
+| `RESEND_API_KEY` | `lib/forms/contact-submission.ts`; also `lib/reports/send.ts` | yes | no | Required for leads + report email. |
+| `RESEND_FROM_EMAIL` | same. Currently `notifications@vizantir.com` — report delivery shares this reputation until `mail.vizantir.com` exists. | yes | no | same |
 | `RATE_LIMIT_SALT` | `lib/forms/rate-limit.ts` | yes | yes | Forms, not the Intel UI. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | `TurnstileWidget` | yes | yes | Forms. Local uses test keys (operator). |
 | `TURNSTILE_SECRET_KEY` | `lib/forms/turnstile.ts` | yes | yes | Forms. |
 
-`.env.example` does not list the GA4/Clarity/GSC/cron Intel vars.
+`.env.example` does not list the GA4/Clarity/GSC/cron Intel vars, nor `CRUX_API_KEY` / `UPTIMEROBOT_API_KEY`. `NEXT_PUBLIC_SITE_URL` is listed (site + PDF origin).
 
 `SANITY_WEBHOOK_SECRET` is dead — the live webhook reads `SANITY_REVALIDATE_SECRET`. `SANITY_API_WRITE_TOKEN` is used only by `scripts/`, not at runtime.
 
@@ -205,7 +269,7 @@ Do not trigger Clarity manually. Quota exhaustion is transient and only occurs a
 
 **GSC lag.** Daily sync covers 5-to-2-days-ago UTC. Data-through date stored on the run is today−2. 2–3 day publishing lag is implied by that window, not commented. Display caps at today−3 UTC so an unfinalized trailing edge is not plotted as a real zero.
 
-**Migrations.** SQL files live in `supabase/migrations/` (`0001`–`0015`). No `supabase/config.toml`, no package.json migrate script, no CLI runner. Apply by pasting into the Supabase SQL editor. `0006_service_role_grants.sql` plus per-table grants on later migrations. `0015_lead_status_transaction.sql` adds `update_lead_status` (and its `service_role` grant) and replaces the `sync_runs.provider` check. Applied manually 2026-08-24.
+**Migrations.** SQL files live in `supabase/migrations/` (`0001`–`0017`). No `supabase/config.toml`, no package.json migrate script, no CLI runner. Apply by pasting into the Supabase SQL editor. `0006_service_role_grants.sql` plus per-table grants on later migrations. `0015_lead_status_transaction.sql` adds `update_lead_status` (and its `service_role` grant) and replaces the `sync_runs.provider` check. Applied manually 2026-08-24. `0016_clients_and_reports.sql` and `0017_reports_pdf_storage.sql` applied 2026-08-25.
 
 Handoff rule 7 (file in repo AND applied in the SQL editor) was violated twice, opposite ways, and both stayed silent for days:
 
@@ -216,7 +280,7 @@ Standing check: after any migration, verify the table exists in the database AND
 
 **Never run `vercel env pull .env.local`.** It overwrites the local file. Local-only values (Turnstile test keys, `RATE_LIMIT_SALT`, `CRON_SECRET`, and anything else not meant to match Production) would be destroyed. This contradicts the generic `.cursorrules` sync instruction; this document is the Intel-specific rule.
 
-**`sync_runs`.** Written by Clarity, GSC, GA4, and decisions. Overview consumes it as a health panel (`SyncHealthPanel`); the activity feed still reads recent rows as events. Decisions is labelled “Decision scan” in the feed. Do not treat “four green `sync_runs` rows” as the unattended-cron success criterion — the health panel is built to stay quiet when everything is fine.
+**`sync_runs`.** Written by Clarity, GSC, GA4, and decisions. Overview consumes it as a health panel (`SyncHealthPanel`); the activity feed still reads recent rows as events. Decisions is labelled “Decision scan” in the feed. Do not treat “four green `sync_runs` rows” as the unattended-cron success criterion — the health panel is built to stay quiet when everything is fine. The reports cron does **not** write here; judge that run from the HTTP response (per-client outcomes).
 
 **Undocumented tables.** `public` also contains `bot_hits`, `bot_ip_ranges`, `daily_rollups`, `deploys`, `events`, and `submissions`. None are created by any migration in `supabase/migrations/` and none are referenced by intel code. Origin is not in this repo. `submissions` and `events` are confusingly close to the live `contact_submissions` and `intel_events` and could be queried by mistake.
 
@@ -237,22 +301,27 @@ Standing check: after any migration, verify the table exists in the database AND
 - **Law-firm overlap:** `law-firm` group can emit `buried-demand`; `geo-signal` can emit on the same query set if a non-focus geo term matches. No shared identity or relation table. Dedup deferred.
 - **Dead columns:** `decision_items.status` / `result_note` / `completed_at` will stay `'new'` forever. Querying them by hand misleads.
 - **Activity fail-closed:** one of seven `fetchActivity` sources failing takes down the whole panel. Logs do not name the source.
+- **Shared Google credential:** `GSC_SERVICE_ACCOUNT_KEY` serves intel ingest and client reports. One failure takes down both.
+- **Reports cron capacity:** ~30–40s per client, 300s `maxDuration` — about 7–8 clients before timeout.
+- **Report PDF debug scaffolding:** `debug=true` after `CRON_SECRET` auth still on the PDF route. Remove it.
 
 ---
 
 ## 6. Deferred (not in the repo)
 
-Negative evidence only — none of these have code, routes, or tables beyond unused hooks:
+Negative evidence only for the first five — none of those have code, routes, or tables beyond unused hooks:
 
 - **GA4 Intel surfaces** — wait for ~28 days of tagged data. Coverage `started_on` for `ga4` is `current_date` at migration apply, not a hardcoded install day. Mid-September 2026 is calendar arithmetic from an ~mid-August 2026 install, **not encoded**. Ingest and the activity-feed visitor line exist; there is still no GA4 page.
 - **Behavior / friction surface** — Clarity data is ingested, not displayed. No `/intel` surface consumes `clarity_metric_daily`.
 - **Change impact**
 - **Migration equity vault**
 - **Opportunity queue as a separate surface** — `opportunity` is a feed category, not its own page.
-- **Monthly reports**
-- **Multi-tenant anything** — single allowlist, single GSC site, single Clarity project.
+- **LLM-drafted Care-tier analysis** — monthly client reports exist; the Care edit path is manual on purpose. Do not add a draft model until that path has been used.
+- **Split GA4/GSC credentials** — reports reuse `GSC_SERVICE_ACCOUNT_KEY`. A credential failure takes down intel ingest and client reports together.
 
-`GA4_PROPERTY_ID` and `needsComparison` are the only forward hooks already in code.
+The intel dashboard remains single-tenant (one allowlist, one GSC site, one Clarity project, one GA4 property in env). Client reporting is the exception: multi-tenant, `client_id` on every query.
+
+`GA4_PROPERTY_ID` and `needsComparison` remain unused forward hooks in intel code. Client reporting is built; it does not use those hooks.
 
 ---
 
@@ -262,6 +331,7 @@ Negative evidence only — none of these have code, routes, or tables beyond unu
 2. **Clarity is ingested and read by nothing.** No `/intel` surface consumes `clarity_metric_daily`. Fixing the pipeline has no payoff until the deferred behavior/friction surface exists.
 3. **Remaining audit items not yet addressed:** window-consistency mismatches (rolling-28-days leads vs complete-day GSC 28d sharing the same label; lead sparkline 29 buckets vs GSC 28; AI platforms 30-day rolling window unlabeled); dead exports `countLeadsCreatedInLastDays` and `percentChangeFromPrior`; `SANITY_WEBHOOK_SECRET` is dead (the live webhook reads `SANITY_REVALIDATE_SECRET`); `SANITY_API_WRITE_TOKEN` is used only by `scripts/`, not at runtime.
 4. **Business decisions owned by James:** the Squarespace page review (pos 24.3, commercial comparison intent, zero clicks — the best single opportunity), the WordPress deepen-or-leave call, the Reno mis-association-vs-expansion question.
+5. **Client reporting follow-through.** Remove the `debug=true` scaffolding on the PDF route. Set up `mail.vizantir.com` with its own DKIM before sending to real clients. Cosmetic: zero deltas render as a second “0” rather than a dash; the new/returning block shows users over sessions without labelling which is which. Onboard Evolve Dance Center as client two.
 
 Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_submit` and `consultation_click` as GA4 key events if not already (console **unverified**); GA4 event audit, then a GA4 surface once the property has a meaningful window.
 
@@ -274,13 +344,13 @@ Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_s
 | GA4 measurement ID `G-XHVNEPJH26` | **Unverified in source.** Property `506059011` is in `0003`. |
 | Clarity `ure4592vry` | Verified (`0003`). |
 | 242-day GSC backfill from `2025-12-18` | Floor + date math verified. Database completeness **unverified**. Ingest frozen at Aug 16 until the Aug 21 key fix (verified). |
-| Cron 09:00 / 09:15 / 09:30 / 10:00 UTC | Schedules verified. UTC is Vercel platform default, not in `vercel.json`. |
+| Cron 09:00 / 09:15 / 09:30 / 10:00 UTC | Schedules verified. UTC is Vercel platform default, not in `vercel.json`. Reports cron `0 11 4 * *` verified 2026-08-25. |
 | No `middleware.ts` | Verified. `proxy.ts` exists; matcher `/` only; does not protect `/intel`. |
 | Lint 33 / 18 | Verified `pnpm lint` 2026-08-18 **before** the dashboard primitives. Current totals **unverified**. |
 | Clarity 10 req/day | **Unverified in code.** |
 | Vercel env environment matrix | **Unverified.** `.env.local` key presence verified. |
 | Production-only analytics tags | Consistent with missing local `NEXT_PUBLIC_*` analytics keys; dashboard **unverified**. |
-| Unattended cron / `sync_runs` | GSC and GA4 write success rows. Clarity writes success / partial / failed. Decisions writes success / partial / failed (`provider = 'decisions'`). Health panel stays quiet when healthy — “four green rows” is not the criterion. |
+| Unattended cron / `sync_runs` | GSC and GA4 write success rows. Clarity writes success / partial / failed. Decisions writes success / partial / failed (`provider = 'decisions'`). Health panel stays quiet when healthy — “four green rows” is not the criterion. Reports cron does not write `sync_runs`. |
 | Clarity partials | Two problems, not one. Quota exhaustion is transient and post-manual. URL and Source/Medium/Campaign fail every run: Postgres 21000 from duplicate conflict keys in one upsert. PostgREST returns 21000 as HTTP 500. Schema, unique index, grants, NOT NULL, payload size, and batching ruled out. Dedup deployed but unverified. Streak 12 as of 2026-08-24. |
 | GA4 key events configured | **Unverified** (GA4 console). |
 | Overview 28d strip + ui primitives | Verified (`page.tsx`, `DecisionFeed.tsx`, `app/intel/_components/ui/*`, tokens in `globals.css`). |
@@ -295,6 +365,7 @@ Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_s
 | Decisions `sync_runs` + activity feed | Verified. First `sync_runs` row 2026-08-24; first activity feed entry the same day. Labelled “Decision scan”. |
 | Lead status atomicity | Verified end to end through the UI 2026-08-24 (`update_lead_status` via `rpc()`). |
 | Sync health panel | Verified (`lib/intel/sync-health.ts`, `SyncHealthPanel`, Overview placement). |
-| `sync_runs.provider` closed check | Verified landmine. `0004` was `ga4 \| gsc \| clarity`; `0015` adds `decisions`. Insert fail-closes and detectors do not run if a new provider is missing. |
+| `sync_runs.provider` closed check | Verified landmine. `0004` was `ga4 \| gsc \| clarity`; `0015` adds `decisions`. Insert fail-closes and detectors do not run if a new provider is missing. Reports cron does not add a provider. |
 | Auth callback logging | Verified (`Intel auth callback:` prefix, four branches). Stale-session `signOut()` before exchange is in code; **unverified in the wild**. |
+| Client reporting | Verified in production 2026-08-25. `0016`/`0017` applied. Unique `(client_id, period)`. Snapshot version 2, immutable. Chromium uses `NEXT_PUBLIC_SITE_URL` (fail-closed). Print HMAC 5-minute, timing-safe. Public `/r/[token]` (32-byte base64url, not derived from id). Reports cron does not write `sync_runs`. Essential auto-sends; Care stops at `pending`. PDF `debug=true` scaffolding still present. |
 | Cursor tsc/build claims | Wrong twice on 2026-08-23. Vercel / local `pnpm run build` is authoritative. |
