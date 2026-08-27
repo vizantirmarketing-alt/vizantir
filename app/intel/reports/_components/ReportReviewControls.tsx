@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 import {
+  generateReportAnalysis,
   sendReviewedReport,
   updateReportReviewFields,
 } from '@/app/intel/reports/actions'
@@ -28,10 +29,12 @@ export function ReportReviewControls({
   const [workValue, setWorkValue] = useState(workCompleted)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [sendError, setSendError] = useState<string | null>(null)
+  const [generateError, setGenerateError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
   const [savePending, startSave] = useTransition()
   const [sendPending, startSend] = useTransition()
-  const pending = savePending || sendPending
+  const [generatePending, startGenerate] = useTransition()
+  const pending = savePending || sendPending || generatePending
 
   function onSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -41,6 +44,7 @@ export function ReportReviewControls({
 
     setSaveError(null)
     setSendError(null)
+    setGenerateError(null)
     setSaved(false)
     startSave(async () => {
       const result = await updateReportReviewFields(
@@ -63,6 +67,7 @@ export function ReportReviewControls({
 
     setSaveError(null)
     setSendError(null)
+    setGenerateError(null)
     startSend(async () => {
       const savedFields = await updateReportReviewFields(
         reportId,
@@ -78,6 +83,31 @@ export function ReportReviewControls({
       if (!result.ok) {
         setSendError(result.error)
       }
+    })
+  }
+
+  function onDraft() {
+    if (pending) {
+      return
+    }
+    if (
+      analysisValue.trim().length > 0 &&
+      !window.confirm('Replace the current analysis with a new draft?')
+    ) {
+      return
+    }
+
+    setSaveError(null)
+    setSendError(null)
+    setGenerateError(null)
+    setSaved(false)
+    startGenerate(async () => {
+      const result = await generateReportAnalysis(reportId)
+      if (!result.ok) {
+        setGenerateError(result.error)
+        return
+      }
+      setAnalysisValue(result.text)
     })
   }
 
@@ -105,9 +135,20 @@ export function ReportReviewControls({
             setAnalysisValue(event.target.value)
             setSaved(false)
             setSaveError(null)
+            setGenerateError(null)
           }}
           className={cn(fieldClassName, 'min-h-[8rem] resize-y')}
         />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={pending}
+          onClick={onDraft}
+          className="mt-2 border-black/10"
+        >
+          {generatePending ? 'Drafting…' : 'Draft recommendations'}
+        </Button>
       </div>
 
       <div>
@@ -164,6 +205,11 @@ export function ReportReviewControls({
       {sendError ? (
         <p className="text-sm text-warning-severe" role="alert">
           {sendError}
+        </p>
+      ) : null}
+      {generateError ? (
+        <p className="text-sm text-warning-severe" role="alert">
+          {generateError}
         </p>
       ) : null}
     </form>

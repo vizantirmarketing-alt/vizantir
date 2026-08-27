@@ -4,7 +4,12 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import {
+  generateAnalysisDraft,
+  type GenerateAnalysisDraftResult,
+} from '@/lib/reports/analysis'
 import { isReportId } from '@/lib/reports/load'
+import { parseReportSnapshot } from '@/lib/reports/parse-snapshot'
 import { sendReport } from '@/lib/reports/send'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
@@ -12,8 +17,13 @@ export type ReportMutationResult =
   | { ok: true }
   | { ok: false; error: string }
 
+export type ReportAnalysisResult =
+  | { ok: true; text: string }
+  | { ok: false; error: string }
+
 const GENERIC_ERROR = 'Unable to save. Try again shortly.'
 const SEND_ERROR = 'Unable to send. Try again shortly.'
+const DRAFT_ERROR = 'Unable to draft. Try again shortly.'
 const FIELD_MAX = 20_000
 
 const reportIdSchema = z
@@ -93,6 +103,61 @@ export async function updateReportReviewFields(
   } catch {
     console.error('Report review fields update failed')
     return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+export async function generateReportAnalysis(
+  reportId: string,
+): Promise<ReportAnalysisResult> {
+  await requireIntelUser()
+
+  const parsed = reportIdSchema.safeParse(reportId)
+  if (!parsed.success) {
+    return { ok: false, error: 'Report not found.' }
+  }
+
+  try {
+    const located = await loadReviewableReport(parsed.data)
+    if (!located.ok) {
+      return located
+    }
+
+    const supabase = createSupabaseServiceRole()
+    const snapshotRow = await supabase
+      .from('reports')
+      .select('snapshot')
+      .eq('id', located.report.id)
+      .eq('client_id', located.report.clientId)
+      .eq('tier', 'care')
+      .eq('status', 'pending')
+      .maybeSingle()
+
+    if (snapshotRow.error) {
+      console.error('Report analysis draft failed')
+      return { ok: false, error: DRAFT_ERROR }
+    }
+    if (snapshotRow.data === null) {
+      return { ok: false, error: 'This report is no longer awaiting review.' }
+    }
+
+    const snapshot = parseReportSnapshot(
+      isPlainObject(snapshotRow.data) ? snapshotRow.data.snapshot : null,
+    )
+    if (snapshot === null) {
+      console.error('Report analysis draft failed')
+      return { ok: false, error: DRAFT_ERROR }
+    }
+
+    const drafted = await generateAnalysisDraft(snapshot)
+    if (!drafted.ok) {
+      console.error('Report analysis draft failed')
+      return { ok: false, error: draftFailureMessage(drafted.reason) }
+    }
+
+    return { ok: true, text: drafted.text }
+  } catch {
+    console.error('Report analysis draft failed')
+    return { ok: false, error: DRAFT_ERROR }
   }
 }
 
@@ -178,6 +243,33 @@ async function loadReviewableReport(
     ok: true,
     report: { id: parsed.id, clientId: parsed.clientId },
   }
+}
+
+function draftFailureMessage(
+  reason: Extract<GenerateAnalysisDraftResult, { ok: false }>['reason'],
+): string {
+  if (reason === 'not_configured') {
+    return 'The Anthropic API key is missing.'
+  }
+  if (reason === 'gsc_skipped') {
+    return 'This is an essential-tier report and has no search data.'
+  }
+  if (reason === 'gsc_failed') {
+    return 'Search data was not available for this report.'
+  }
+  if (reason === 'gsc_empty_rows') {
+    return 'Search Console returned no rows for this period.'
+  }
+  if (reason === 'unauthorized' || reason === 'forbidden') {
+    return 'The Anthropic API key was rejected.'
+  }
+  if (reason === 'rate_limited') {
+    return 'Drafting is rate limited. Try again shortly.'
+  }
+  if (reason === 'truncated') {
+    return 'The draft was cut off. Try again.'
+  }
+  return 'Draft generation failed. Try again.'
 }
 
 function sendFailureMessage(

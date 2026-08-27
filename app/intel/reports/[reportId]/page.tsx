@@ -9,6 +9,7 @@ import { requireIntelUser } from '@/lib/auth/allowlist'
 import { isReportId, loadReport } from '@/lib/reports/load'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60
 
 export const metadata: Metadata = {
   title: 'Report',
