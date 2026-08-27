@@ -333,6 +333,10 @@ function Ga4Section({ result }: { result: DashboardGa4Result }) {
           deltaDirection={returningDelta?.deltaDirection}
         />
       </StatStrip>
+      <p className="text-sm leading-relaxed text-body">
+        Users counts each person once for the window. New and returning can both include
+        the same person, so they do not add up to Users.
+      </p>
     </Panel>
   )
 }
