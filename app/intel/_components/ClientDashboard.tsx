@@ -346,6 +346,17 @@ function GscSection({ result }: { result: DashboardGscResult }) {
     return <SourceStatePanel source="gsc" reason={result.reason} />
   }
 
+  if (result.current.emptyRows) {
+    return (
+      <Panel title="Search Console">
+        <p className="text-sm leading-relaxed text-body">
+          Search Console has no data for this property yet. New properties usually take a
+          few days to report.
+        </p>
+      </Panel>
+    )
+  }
+
   const current = result.current.current
   const prior = result.prior
   const clickDelta = countDelta(current.clicks, prior?.clicks)
