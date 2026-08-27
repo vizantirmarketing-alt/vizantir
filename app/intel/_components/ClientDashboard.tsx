@@ -48,7 +48,7 @@ import {
 import { cn } from '@/lib/utils'
 
 const SELECT_CLASS =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus sm:w-56'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus sm:w-auto'
 
 const SOURCE_LABELS = {
   ga4: 'GA4',
