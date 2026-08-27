@@ -2,6 +2,12 @@ import 'server-only';
 
 import type { CruxMetric, CruxReportData, FetchCruxReportResult } from '@/lib/reports/crux';
 import type {
+  EngagementBreakdownRow,
+  EngagementEventCount,
+  EngagementReportData,
+  FetchEngagementReportResult,
+} from '@/lib/reports/engagement';
+import type {
   FetchGa4ReportResult,
   Ga4ChannelRow,
   Ga4ConversionRow,
@@ -34,7 +40,11 @@ const BLOCKERS: readonly ReportBlocker[] = [
   'gsc_failed',
   'gsc_empty_rows',
 ];
-const WARNINGS: readonly ReportWarning[] = ['crux_failed', 'uptime_failed'];
+const WARNINGS: readonly ReportWarning[] = [
+  'crux_failed',
+  'uptime_failed',
+  'engagement_failed',
+];
 const FAILURE_REASONS: readonly ReportSourceFailureReason[] = [
   'not_configured',
   'unauthorized',
@@ -49,9 +59,10 @@ export function parseReportSnapshot(value: unknown): ReportSnapshot | null {
   if (!isPlainObject(value)) {
     return null;
   }
-  if (value.version !== 2) {
+  if (!isSnapshotVersion(value.version)) {
     return null;
   }
+  const version = value.version;
 
   const generatedAt = asNonEmptyString(value.generatedAt);
   const period = parsePeriod(value.period);
@@ -62,6 +73,7 @@ export function parseReportSnapshot(value: unknown): ReportSnapshot | null {
   const uptime = parseUptime(value.uptime);
   const blockers = parseLiteralArray(value.blockers, isBlocker);
   const warnings = parseLiteralArray(value.warnings, isWarning);
+  const engagement = parseOptionalEngagement(value.engagement, version);
 
   if (
     generatedAt === null ||
@@ -72,13 +84,14 @@ export function parseReportSnapshot(value: unknown): ReportSnapshot | null {
     crux === null ||
     uptime === null ||
     blockers === null ||
-    warnings === null
+    warnings === null ||
+    engagement === null
   ) {
     return null;
   }
 
   return {
-    version: 2,
+    version,
     generatedAt,
     period,
     client,
@@ -86,6 +99,7 @@ export function parseReportSnapshot(value: unknown): ReportSnapshot | null {
     gsc,
     crux,
     uptime,
+    ...(engagement !== undefined ? { engagement } : {}),
     blockers,
     warnings,
   };
@@ -421,6 +435,98 @@ function parseUptime(value: unknown): FetchUptimeReportResult | null {
   return data === null ? null : { ok: true, data };
 }
 
+function parseOptionalEngagement(
+  value: unknown,
+  version: 2 | 3
+): FetchEngagementReportResult | undefined | null {
+  if (version === 2) {
+    return undefined;
+  }
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return parseEngagement(value);
+}
+
+function parseEngagement(value: unknown): FetchEngagementReportResult | null {
+  const failure = parseSourceFailure(value);
+  if (failure !== null) {
+    return failure;
+  }
+  if (!isPlainObject(value) || value.ok !== true) {
+    return null;
+  }
+  const data = parseEngagementData(value.data);
+  return data === null ? null : { ok: true, data };
+}
+
+function parseEngagementData(value: unknown): EngagementReportData | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+  const title = asNonEmptyString(value.title);
+  const events = parseArray(value.events, parseEngagementEventCount);
+  if (title === null || events === null) {
+    return null;
+  }
+  const breakdown =
+    value.breakdown === null || value.breakdown === undefined
+      ? null
+      : parseEngagementBreakdown(value.breakdown);
+  if (
+    value.breakdown !== null &&
+    value.breakdown !== undefined &&
+    breakdown === null
+  ) {
+    return null;
+  }
+  return { title, events, breakdown };
+}
+
+function parseEngagementBreakdown(
+  value: unknown
+): EngagementReportData['breakdown'] {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+  const dimension = asNonEmptyString(value.dimension);
+  const label = asNonEmptyString(value.label);
+  const rows = parseArray(value.rows, parseEngagementBreakdownRow);
+  if (dimension === null || label === null || rows === null) {
+    return null;
+  }
+  return { dimension, label, rows };
+}
+
+function parseEngagementBreakdownRow(
+  value: unknown
+): EngagementBreakdownRow | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+  const dimensionValue = asString(value.dimensionValue);
+  const events = parseArray(value.events, parseEngagementEventCount);
+  if (dimensionValue === null || events === null) {
+    return null;
+  }
+  return { dimensionValue, events };
+}
+
+function parseEngagementEventCount(
+  value: unknown
+): EngagementEventCount | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+  const name = asNonEmptyString(value.name);
+  const label = asNonEmptyString(value.label);
+  const count = asFiniteNumber(value.count);
+  if (name === null || label === null || count === null) {
+    return null;
+  }
+  return { name, label, count };
+}
+
 function parseUptimeData(value: unknown): UptimeReportData | null {
   if (!isPlainObject(value)) {
     return null;
@@ -553,6 +659,12 @@ function asFiniteNumber(value: unknown): number | null {
 
 function isCareTier(value: unknown): value is CareTier {
   return value === 'essential' || value === 'care';
+}
+
+function isSnapshotVersion(
+  value: unknown
+): value is ReportSnapshot['version'] {
+  return value === 2 || value === 3;
 }
 
 function isBlocker(value: unknown): value is ReportBlocker {

@@ -1,6 +1,11 @@
 import 'server-only';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 import { fetchCruxReport, type FetchCruxReportResult } from '@/lib/reports/crux';
+import {
+  fetchEngagementReport,
+  parseEngagementMetricsConfig,
+  type FetchEngagementReportResult,
+} from '@/lib/reports/engagement';
 import { fetchGa4Report, type FetchGa4ReportResult } from '@/lib/reports/ga4';
 import { fetchGscReport, type FetchGscReportResult } from '@/lib/reports/gsc';
 import {
@@ -8,7 +13,7 @@ import {
   type FetchUptimeReportResult,
 } from '@/lib/reports/uptime';
 
-export const REPORT_SNAPSHOT_VERSION = 2 as const;
+export const REPORT_SNAPSHOT_VERSION = 3 as const;
 
 const PERIOD_RE = /^\d{4}-\d{2}-01$/;
 const CLIENT_COLUMNS = [
@@ -21,6 +26,7 @@ const CLIENT_COLUMNS = [
   'gsc_site_url',
   'crux_origin',
   'uptimerobot_monitor_id',
+  'engagement_metrics',
   'active',
 ].join(', ');
 
@@ -32,17 +38,18 @@ export type ReportBlocker =
   | 'gsc_failed'
   | 'gsc_empty_rows';
 
-export type ReportWarning = 'crux_failed' | 'uptime_failed';
+export type ReportWarning = 'crux_failed' | 'uptime_failed' | 'engagement_failed';
 
 export type SourceSummary = {
   ga4: 'ok' | 'failed';
   gsc: 'ok' | 'failed' | 'skipped';
   crux: 'ok' | 'failed' | 'no_data';
   uptime: 'ok' | 'failed';
+  engagement: 'ok' | 'failed' | 'skipped';
 };
 
 export type ReportSnapshot = {
-  version: typeof REPORT_SNAPSHOT_VERSION;
+  version: 2 | typeof REPORT_SNAPSHOT_VERSION;
   generatedAt: string;
   period: {
     start: string;
@@ -61,6 +68,7 @@ export type ReportSnapshot = {
   gsc: FetchGscReportResult;
   crux: FetchCruxReportResult;
   uptime: FetchUptimeReportResult;
+  engagement?: FetchEngagementReportResult;
   blockers: ReportBlocker[];
   warnings: ReportWarning[];
 };
@@ -94,6 +102,7 @@ type ReportClient = {
   gscSiteUrl: string | null;
   cruxOrigin: string | null;
   uptimerobotMonitorId: string | null;
+  engagementMetrics: unknown;
 };
 
 type MonthWindow = {
@@ -136,7 +145,11 @@ export async function generateReport(
       return { ok: false, reason: 'already_sent' };
     }
 
-    const [ga4, gsc, crux, uptime] = await Promise.all([
+    const engagementConfig = parseEngagementMetricsConfig(
+      client.client.engagementMetrics
+    );
+
+    const [ga4, gsc, crux, uptime, engagement] = await Promise.all([
       isolate(
         () =>
           fetchGa4Report({
@@ -171,13 +184,25 @@ export async function generateReport(
           }),
         { ok: false, reason: 'http_error' } as const
       ),
+      engagementConfig === null
+        ? Promise.resolve(null)
+        : isolate(
+            () =>
+              fetchEngagementReport({
+                config: engagementConfig,
+                propertyId: client.client.ga4PropertyId,
+                startDate: window.startDate,
+                endDate: window.endDate,
+              }),
+            { ok: false, reason: 'http_error' } as const
+          ),
     ]);
 
     const blockers = collectBlockers({ ga4, gsc });
-    const warnings = collectWarnings({ crux, uptime });
+    const warnings = collectWarnings({ crux, uptime, engagement });
     const status: 'pending' | 'failed' =
       blockers.length === 0 ? 'pending' : 'failed';
-    const sources = toSourceSummary({ ga4, gsc, crux, uptime });
+    const sources = toSourceSummary({ ga4, gsc, crux, uptime, engagement });
 
     const snapshot: ReportSnapshot = {
       version: REPORT_SNAPSHOT_VERSION,
@@ -199,6 +224,7 @@ export async function generateReport(
       gsc,
       crux,
       uptime,
+      ...(engagement !== null ? { engagement } : {}),
       blockers,
       warnings,
     };
@@ -313,6 +339,7 @@ function parseClient(
       gscSiteUrl: asOptionalString(value.gsc_site_url),
       cruxOrigin: asOptionalString(value.crux_origin),
       uptimerobotMonitorId: asOptionalString(value.uptimerobot_monitor_id),
+      engagementMetrics: value.engagement_metrics ?? null,
     },
   };
 }
@@ -341,6 +368,7 @@ function collectBlockers(params: {
 function collectWarnings(params: {
   crux: FetchCruxReportResult;
   uptime: FetchUptimeReportResult;
+  engagement: FetchEngagementReportResult | null;
 }): ReportWarning[] {
   const warnings: ReportWarning[] = [];
 
@@ -352,6 +380,10 @@ function collectWarnings(params: {
     warnings.push('uptime_failed');
   }
 
+  if (params.engagement !== null && !params.engagement.ok) {
+    warnings.push('engagement_failed');
+  }
+
   return warnings;
 }
 
@@ -360,6 +392,7 @@ function toSourceSummary(params: {
   gsc: FetchGscReportResult;
   crux: FetchCruxReportResult;
   uptime: FetchUptimeReportResult;
+  engagement: FetchEngagementReportResult | null;
 }): SourceSummary {
   return {
     ga4: params.ga4.ok ? 'ok' : 'failed',
@@ -374,6 +407,12 @@ function toSourceSummary(params: {
         ? 'no_data'
         : 'ok',
     uptime: params.uptime.ok ? 'ok' : 'failed',
+    engagement:
+      params.engagement === null
+        ? 'skipped'
+        : params.engagement.ok
+          ? 'ok'
+          : 'failed',
   };
 }
 

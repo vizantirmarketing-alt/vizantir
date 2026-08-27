@@ -19,6 +19,7 @@ import {
 } from '@/lib/reports/format'
 import type { ReportClient, ReportDocument } from '@/lib/reports/load'
 import type { CruxMetric } from '@/lib/reports/crux'
+import type { EngagementReportData } from '@/lib/reports/engagement'
 import type { GscMovedRow } from '@/lib/reports/gsc'
 import { buildReportSummary } from '@/lib/reports/summary'
 import { cn } from '@/lib/utils'
@@ -35,6 +36,7 @@ export function MonthlyReport({ document }: MonthlyReportProps) {
   const showSpeed =
     snapshot.crux.ok && snapshot.crux.kind === 'metrics'
   const showHealth = snapshot.uptime.ok
+  const engagementData = readableEngagement(snapshot)
 
   return (
     <article className="report-document mx-auto w-full min-w-0 max-w-[40rem] px-5 py-10 sm:px-8 sm:py-14">
@@ -70,6 +72,10 @@ export function MonthlyReport({ document }: MonthlyReportProps) {
       ) : null}
 
       <TrafficSection snapshot={snapshot} />
+
+      {engagementData !== null ? (
+        <EngagementSection data={engagementData} />
+      ) : null}
 
       {showSearch && snapshot.gsc.ok && !snapshot.gsc.skipped ? (
         <SearchSection data={snapshot.gsc.data} />
@@ -312,6 +318,58 @@ function TrafficSection({
       </div>
     </ReportSection>
   )
+}
+
+function EngagementSection({
+  data,
+}: {
+  data: EngagementReportData
+}) {
+  return (
+    <ReportSection title={data.title}>
+      <SimpleTable
+        caption={data.title}
+        columns={['Event', 'Count']}
+        rows={data.events.map((row) => [
+          row.label,
+          formatInteger(row.count),
+        ])}
+      />
+
+      {data.breakdown !== null && data.breakdown.rows.length > 0 ? (
+        <div className="mt-8">
+          <h3 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+            {data.breakdown.label}
+          </h3>
+          <SimpleTable
+            caption={data.breakdown.label}
+            columns={[
+              data.breakdown.label,
+              ...data.events.map((event) => event.label),
+            ]}
+            rows={data.breakdown.rows.map((row) => [
+              row.dimensionValue,
+              ...row.events.map((event) => formatInteger(event.count)),
+            ])}
+            wrapFirst
+          />
+        </div>
+      ) : null}
+    </ReportSection>
+  )
+}
+
+function readableEngagement(
+  snapshot: ReportDocument['snapshot'],
+): EngagementReportData | null {
+  if (snapshot.engagement === undefined || !snapshot.engagement.ok) {
+    return null
+  }
+  const data = snapshot.engagement.data
+  if (!data.events.some((event) => event.count > 0)) {
+    return null
+  }
+  return data
 }
 
 function SearchSection({
