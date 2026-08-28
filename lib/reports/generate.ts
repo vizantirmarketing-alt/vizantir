@@ -27,6 +27,7 @@ const CLIENT_COLUMNS = [
   'crux_origin',
   'uptimerobot_monitor_id',
   'engagement_metrics',
+  'reporting_context',
   'active',
 ].join(', ');
 

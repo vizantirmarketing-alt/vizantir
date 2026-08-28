@@ -18,6 +18,7 @@ export const CLIENT_COLUMNS = [
   'crux_origin',
   'uptimerobot_monitor_id',
   'engagement_metrics',
+  'reporting_context',
   'active',
 ].join(', ');
 
@@ -33,6 +34,7 @@ export type IntelClient = {
   cruxOrigin: string | null;
   uptimerobotMonitorId: string | null;
   engagementMetrics: unknown;
+  reportingContext: string | null;
   active: boolean;
 };
 
@@ -141,6 +143,7 @@ function parseClientRow(value: unknown): IntelClient | null {
   const gscSiteUrl = asNullableString(value.gsc_site_url);
   const cruxOrigin = asNullableString(value.crux_origin);
   const uptimerobotMonitorId = asNullableString(value.uptimerobot_monitor_id);
+  const reportingContext = asNullableString(value.reporting_context);
 
   if (
     id === null ||
@@ -153,6 +156,7 @@ function parseClientRow(value: unknown): IntelClient | null {
     gscSiteUrl === undefined ||
     cruxOrigin === undefined ||
     uptimerobotMonitorId === undefined ||
+    reportingContext === undefined ||
     typeof value.active !== 'boolean'
   ) {
     return null;
@@ -170,6 +174,7 @@ function parseClientRow(value: unknown): IntelClient | null {
     cruxOrigin,
     uptimerobotMonitorId,
     engagementMetrics: value.engagement_metrics,
+    reportingContext,
     active: value.active,
   };
 }
