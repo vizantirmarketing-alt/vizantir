@@ -123,7 +123,7 @@ async function syncClient(
   try {
     const result = await fetchPsiReport({ url: client.cruxOrigin });
     if (!result.ok) {
-      console.error('PSI client fetch failed');
+      console.error('PSI client fetch failed', client.id, JSON.stringify(result));
       return false;
     }
 
@@ -142,13 +142,13 @@ async function syncClient(
       .from('psi_results')
       .upsert(row, { onConflict: UPSERT_CONFLICT });
     if (error) {
-      console.error('PSI upsert failed');
+      console.error('PSI upsert failed', client.id, JSON.stringify(error));
       return false;
     }
 
     return true;
-  } catch {
-    console.error('PSI client sync failed');
+  } catch (err) {
+    console.error('PSI client sync threw', client.id, String(err));
     return false;
   }
 }
