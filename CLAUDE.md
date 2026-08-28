@@ -78,3 +78,47 @@ Extract fields with targeted commands; never print the whole value.
 - CrUX often has no field data at all for low-traffic sites. This is not a
   misconfiguration and does not resolve on its own
 - Uptime shows a mid-window message until the monitor has 28 days of history
+
+## Supabase
+
+There is no migrate runner. Migration files in `supabase/migrations/` are applied
+by pasting them into the Supabase SQL editor. Two things follow from that.
+
+### Verify what actually applied
+
+Running a migration file does not guarantee every statement in it ran. A file
+containing both a constraint change and a `create table` has been observed to
+apply neither while reporting success. After applying anything, verify directly:
+
+```sql
+select conname, pg_get_constraintdef(oid)
+from pg_constraint
+where conrelid = 'public.<table>'::regclass and contype = 'c';
+
+select count(*) from public.<table>;
+```
+
+### New tables need explicit grants
+
+Tables created through the SQL editor do not get the automatic role grants that
+Supabase applies to tables created through its UI. Without them the service role
+gets a 403 on every write, which looks like an RLS problem and is not. RLS being
+enabled with no policies is normal here and is not the cause.
+
+Every new table needs:
+
+```sql
+grant select, insert, update, delete on public.<table> to service_role;
+grant select on public.<table> to authenticated;
+```
+
+The error to recognize is Postgres `42501`, `permission denied for table <name>`.
+Its `hint` field names the exact grant required.
+
+### Reading errors from cron routes
+
+Vercel does not surface `console.error` output from cron routes in either the CLI
+(`vercel logs`) or the dashboard's log detail view. The request row's External
+APIs table shows outbound method and status codes, which is enough to tell a
+Supabase POST 403 from a Google API failure, but not the message. To see an
+actual error, return it in the route's JSON response instead of logging it.
