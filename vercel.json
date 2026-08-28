@@ -23,6 +23,10 @@
       "schedule": "30 9 * * *"
     },
     {
+      "path": "/api/cron/psi-sync",
+      "schedule": "45 9 * * *"
+    },
+    {
       "path": "/api/cron/decisions",
       "schedule": "0 10 * * *"
     },
