@@ -25,6 +25,7 @@ import { PanelQueryError } from '@/app/intel/_components/ui/PanelRetry'
 import { StatStrip } from '@/app/intel/_components/ui/StatStrip'
 import type {
   ClientDashboard as DashboardResult,
+  DashboardAudienceResult,
   DashboardCruxResult,
   DashboardGa4Result,
   DashboardGscResult,
@@ -56,6 +57,7 @@ const SOURCE_LABELS = {
   gsc: 'Search Console',
   crux: 'CrUX',
   uptime: 'Uptime',
+  audience: 'Audience',
 } as const
 
 const SOURCE_SETUP = {
@@ -63,6 +65,7 @@ const SOURCE_SETUP = {
   gsc: 'a Search Console site URL',
   crux: 'a CrUX origin',
   uptime: 'an UptimeRobot monitor ID',
+  audience: 'a GA4 property ID',
 } as const
 
 const CARE_TIER_LABEL = {
@@ -220,6 +223,7 @@ export function ClientDashboard({
         />
       </div>
       <Ga4Section result={dashboard.ga4} />
+      <AudienceSection result={dashboard.audience} />
       <GscSection result={dashboard.gsc} />
       <CruxSection result={dashboard.crux} />
       <UptimeSection result={dashboard.uptime} />
@@ -468,6 +472,69 @@ function Ga4BreakdownTable({
         </table>
       </div>
     </div>
+  )
+}
+
+function AudienceSection({ result }: { result: DashboardAudienceResult }) {
+  if (!result.ok) {
+    return <SourceStatePanel source="audience" reason={result.reason} />
+  }
+
+  const countries = [...result.current.countries]
+    .sort((a, b) => b.sessions - a.sessions)
+    .slice(0, 5)
+  const devices = [...result.current.devices]
+    .sort((a, b) => b.sessions - a.sessions)
+    .slice(0, 5)
+  const browsers = [...result.current.browsers]
+    .sort((a, b) => b.sessions - a.sessions)
+    .slice(0, 5)
+
+  if (countries.length === 0 && devices.length === 0 && browsers.length === 0) {
+    return null
+  }
+
+  return (
+    <Panel title="Audience">
+      <div className="flex flex-col gap-6">
+        {countries.length > 0 ? (
+          <Ga4BreakdownTable
+            title="Countries"
+            caption="Countries by sessions"
+            columns={['Country', 'Sessions']}
+            rows={countries.map((row) => ({
+              key: row.label,
+              label: row.label,
+              value: formatInteger(row.sessions),
+            }))}
+          />
+        ) : null}
+        {devices.length > 0 ? (
+          <Ga4BreakdownTable
+            title="Devices"
+            caption="Devices by sessions"
+            columns={['Device', 'Sessions']}
+            rows={devices.map((row) => ({
+              key: row.label,
+              label: row.label,
+              value: formatInteger(row.sessions),
+            }))}
+          />
+        ) : null}
+        {browsers.length > 0 ? (
+          <Ga4BreakdownTable
+            title="Browsers"
+            caption="Browsers by sessions"
+            columns={['Browser', 'Sessions']}
+            rows={browsers.map((row) => ({
+              key: row.label,
+              label: row.label,
+              value: formatInteger(row.sessions),
+            }))}
+          />
+        ) : null}
+      </div>
+    </Panel>
   )
 }
 
