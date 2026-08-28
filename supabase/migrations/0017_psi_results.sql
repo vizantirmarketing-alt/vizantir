@@ -32,3 +32,6 @@ create index if not exists psi_results_client_id_idx
   on public.psi_results (client_id);
 
 alter table public.psi_results enable row level security;
+
+grant select, insert, update, delete on public.psi_results to service_role;
+grant select on public.psi_results to authenticated;
