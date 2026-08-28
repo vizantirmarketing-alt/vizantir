@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { loadClient } from '@/lib/clients/load'
 import {
   generateAnalysisDraft,
   type GenerateAnalysisDraftResult,
@@ -148,7 +149,16 @@ export async function generateReportAnalysis(
       return { ok: false, error: DRAFT_ERROR }
     }
 
-    const drafted = await generateAnalysisDraft(snapshot)
+    const client = await loadClient(located.report.clientId)
+    if (!client.ok) {
+      console.error('Report analysis draft failed')
+      return { ok: false, error: DRAFT_ERROR }
+    }
+
+    const drafted = await generateAnalysisDraft(
+      snapshot,
+      client.client.reportingContext,
+    )
     if (!drafted.ok) {
       console.error('Report analysis draft failed')
       return { ok: false, error: draftFailureMessage(drafted.reason) }

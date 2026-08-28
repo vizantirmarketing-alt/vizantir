@@ -15,6 +15,7 @@ Rules:
 - Use the per-row prior-period comparisons on GSC topQueries and topPages (positionChange, impressionsChange, clicksChange) to make each recommendation specific rather than generic.
 - State expected impact for each recommendation.
 - Skip any recommendation you cannot ground in the data provided.
+- When client context is provided, recommendations must not contradict it. Context takes precedence over inferences drawn from the numbers.
 - Write plainly, as one person explaining to another.
 - No marketing language.
 - Do not use em-dashes.
@@ -42,7 +43,8 @@ export type GenerateAnalysisDraftResult =
     };
 
 export async function generateAnalysisDraft(
-  snapshot: ReportSnapshot
+  snapshot: ReportSnapshot,
+  reportingContext?: string | null
 ): Promise<GenerateAnalysisDraftResult> {
   if (!snapshot.gsc.ok) {
     return { ok: false, reason: 'gsc_failed' };
@@ -58,6 +60,13 @@ export async function generateAnalysisDraft(
   if (apiKey === null) {
     return { ok: false, reason: 'not_configured' };
   }
+
+  const context =
+    typeof reportingContext === 'string' ? reportingContext.trim() : '';
+  const userContent =
+    context.length > 0
+      ? `Draft the Recommended next section from this report snapshot.\n\nClient context:\n${context}\n\nReport snapshot:\n${JSON.stringify(snapshot)}`
+      : `Draft the Recommended next section from this report snapshot:\n\n${JSON.stringify(snapshot)}`;
 
   let response: Response;
   try {
@@ -75,7 +84,7 @@ export async function generateAnalysisDraft(
         messages: [
           {
             role: 'user',
-            content: `Draft the Recommended next section from this report snapshot:\n\n${JSON.stringify(snapshot)}`,
+            content: userContent,
           },
         ],
       }),
