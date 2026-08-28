@@ -54,7 +54,7 @@ export async function fetchPsiReport(params: {
     response = await fetch(url, {
       method: 'GET',
       cache: 'no-store',
-      signal: AbortSignal.timeout(45000),
+      signal: AbortSignal.timeout(90000),
     });
   } catch {
     console.error('PSI request failed');
