@@ -73,21 +73,25 @@ export async function syncPsi(): Promise<SyncPsiResult> {
 
     let succeeded = 0;
     let failed = 0;
+    const failureReasons: string[] = [];
 
     for (const client of clients) {
       const upserted = await syncClient(supabase, client);
-      if (upserted) {
+      if (upserted.ok) {
         succeeded += 1;
         recordsProcessed += 1;
         continue;
       }
       failed += 1;
+      failureReasons.push(upserted.reason);
     }
 
     const status: SyncPsiResult['status'] =
       failed === 0 ? 'success' : succeeded === 0 ? 'failed' : 'partial';
     const message =
-      failed > 0 ? `${failed} of ${clients.length} clients failed` : undefined;
+      failed > 0
+        ? `${failed} of ${clients.length} clients failed | ${failureReasons[0].slice(0, 300)}`
+        : undefined;
 
     await finishRun(supabase, runId, {
       status,
@@ -119,12 +123,12 @@ export async function syncPsi(): Promise<SyncPsiResult> {
 async function syncClient(
   supabase: ServiceClient,
   client: IntelClient & { cruxOrigin: string }
-): Promise<boolean> {
+): Promise<{ ok: true } | { ok: false; reason: string }> {
   try {
     const result = await fetchPsiReport({ url: client.cruxOrigin });
     if (!result.ok) {
       console.error('PSI client fetch failed', client.id, JSON.stringify(result));
-      return false;
+      return { ok: false, reason: JSON.stringify(result) };
     }
 
     const row: PsiResultRow = {
@@ -143,13 +147,13 @@ async function syncClient(
       .upsert(row, { onConflict: UPSERT_CONFLICT });
     if (error) {
       console.error('PSI upsert failed', client.id, JSON.stringify(error));
-      return false;
+      return { ok: false, reason: `upsert: ${JSON.stringify(error)}` };
     }
 
-    return true;
+    return { ok: true };
   } catch (err) {
     console.error('PSI client sync threw', client.id, String(err));
-    return false;
+    return { ok: false, reason: `threw: ${String(err)}` };
   }
 }
 
