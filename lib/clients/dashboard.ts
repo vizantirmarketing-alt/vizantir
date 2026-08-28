@@ -13,8 +13,9 @@ import {
   type GscReportData,
   type GscTotals,
 } from '@/lib/reports/gsc';
-import { fetchPsiReport, type PsiReportData } from '@/lib/reports/psi';
+import type { PsiReportData } from '@/lib/reports/psi';
 import { fetchUptimeReport, type UptimeReportData } from '@/lib/reports/uptime';
+import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 export type DashboardWindow = {
   startDate: string;
@@ -290,10 +291,8 @@ async function loadCachedCrux(
       { revalidate: 3600, tags: [`client-${clientId}-crux`] }
     )(origin);
 
-    console.log('[crux-branch]', clientId, JSON.stringify(result));
-
     if (result.ok && result.kind === 'no_data') {
-      return loadCachedPsi(clientId, origin);
+      return loadStoredPsi(clientId);
     }
 
     return result;
@@ -303,28 +302,88 @@ async function loadCachedCrux(
   }
 }
 
-async function loadCachedPsi(
-  clientId: string,
-  origin: string
-): Promise<DashboardCruxResult> {
-  console.log('[psi-called]', clientId, origin);
+const PSI_COLUMNS = [
+  'strategy',
+  'fetched_at',
+  'performance_score',
+  'lcp_ms',
+  'tbt_ms',
+  'cls',
+].join(', ');
+
+async function loadStoredPsi(clientId: string): Promise<DashboardCruxResult> {
   try {
-    return await unstable_cache(
-      async (cachedOrigin: string): Promise<DashboardCruxResult> => {
-        const psiResult = await fetchPsiReport({ url: cachedOrigin });
-        if (!psiResult.ok) {
-          return { ok: true, kind: 'no_data' };
-        }
-        console.log('[psi-ok]', clientId);
-        return { ok: true, kind: 'lab', current: psiResult.data };
-      },
-      ['client-dashboard-psi', clientId, origin],
-      { revalidate: 86400, tags: [`client-${clientId}-psi`] }
-    )(origin);
+    const supabase = createSupabaseServiceRole();
+    const result = await supabase
+      .from('psi_results')
+      .select(PSI_COLUMNS)
+      .eq('client_id', clientId)
+      .eq('strategy', 'mobile')
+      .maybeSingle();
+
+    if (result.error) {
+      console.error('Client dashboard PSI lookup failed');
+      return { ok: true, kind: 'no_data' };
+    }
+    if (result.data === null) {
+      return { ok: true, kind: 'no_data' };
+    }
+
+    const data = parsePsiResultRow(result.data);
+    if (data === null) {
+      return { ok: true, kind: 'no_data' };
+    }
+
+    return { ok: true, kind: 'lab', current: data };
   } catch {
-    console.error('Client dashboard PSI fetch failed');
+    console.error('Client dashboard PSI lookup failed');
     return { ok: true, kind: 'no_data' };
   }
+}
+
+function parsePsiResultRow(value: unknown): PsiReportData | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+
+  const strategy = value.strategy;
+  const fetchedAt = asNonEmptyString(value.fetched_at);
+  const performanceScore = toFiniteNumber(value.performance_score);
+  const lcpValue = toFiniteNumber(value.lcp_ms);
+  const tbtValue = toFiniteNumber(value.tbt_ms);
+  const clsValue = toFiniteNumber(value.cls);
+
+  if (
+    strategy !== 'mobile' ||
+    fetchedAt === null ||
+    performanceScore === null ||
+    lcpValue === null ||
+    tbtValue === null ||
+    clsValue === null
+  ) {
+    return null;
+  }
+
+  return {
+    strategy,
+    fetchedAt,
+    performanceScore,
+    lcp: {
+      value: lcpValue,
+      threshold: 2500,
+      passed: lcpValue <= 2500,
+    },
+    tbt: {
+      value: tbtValue,
+      threshold: 200,
+      passed: tbtValue <= 200,
+    },
+    cls: {
+      value: clsValue,
+      threshold: 0.1,
+      passed: clsValue <= 0.1,
+    },
+  };
 }
 
 async function loadCachedUptime(
@@ -378,4 +437,23 @@ function formatUtcYmd(date: Date): string {
 
 function pad2(value: number): string {
   return String(value).padStart(2, '0');
+}
+
+function asNonEmptyString(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function toFiniteNumber(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+  return null;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
