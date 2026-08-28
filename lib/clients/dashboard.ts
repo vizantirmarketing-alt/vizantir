@@ -279,7 +279,7 @@ async function loadCachedCrux(
         return { ok: true, kind: 'metrics', current: cruxResult.data };
       },
       [
-        'client-dashboard-crux',
+        'client-dashboard-crux-v2',
         clientId,
         origin,
         window.startDate,
