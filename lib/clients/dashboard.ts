@@ -13,6 +13,7 @@ import {
   type GscReportData,
   type GscTotals,
 } from '@/lib/reports/gsc';
+import { fetchPsiReport, type PsiReportData } from '@/lib/reports/psi';
 import { fetchUptimeReport, type UptimeReportData } from '@/lib/reports/uptime';
 
 export type DashboardWindow = {
@@ -32,6 +33,7 @@ export type DashboardGscResult =
 
 export type DashboardCruxResult =
   | { ok: true; kind: 'metrics'; current: CruxReportData }
+  | { ok: true; kind: 'lab'; current: PsiReportData }
   | { ok: true; kind: 'no_data' }
   | ReportSourceFailure;
 
@@ -265,16 +267,16 @@ async function loadCachedCrux(
   window: DashboardWindow
 ): Promise<DashboardCruxResult> {
   try {
-    return await unstable_cache(
+    const result = await unstable_cache(
       async (cachedOrigin: string): Promise<DashboardCruxResult> => {
-        const result = await fetchCruxReport({ origin: cachedOrigin });
-        if (!result.ok) {
-          return result;
+        const cruxResult = await fetchCruxReport({ origin: cachedOrigin });
+        if (!cruxResult.ok) {
+          return cruxResult;
         }
-        if (result.kind === 'no_data') {
+        if (cruxResult.kind === 'no_data') {
           return { ok: true, kind: 'no_data' };
         }
-        return { ok: true, kind: 'metrics', current: result.data };
+        return { ok: true, kind: 'metrics', current: cruxResult.data };
       },
       [
         'client-dashboard-crux',
@@ -287,9 +289,37 @@ async function loadCachedCrux(
       ],
       { revalidate: 3600, tags: [`client-${clientId}-crux`] }
     )(origin);
+
+    if (result.ok && result.kind === 'no_data') {
+      return loadCachedPsi(clientId, origin);
+    }
+
+    return result;
   } catch {
     console.error('Client dashboard CrUX fetch failed');
     return { ok: false, reason: 'http_error' };
+  }
+}
+
+async function loadCachedPsi(
+  clientId: string,
+  origin: string
+): Promise<DashboardCruxResult> {
+  try {
+    return await unstable_cache(
+      async (cachedOrigin: string): Promise<DashboardCruxResult> => {
+        const psiResult = await fetchPsiReport({ url: cachedOrigin });
+        if (!psiResult.ok) {
+          return { ok: true, kind: 'no_data' };
+        }
+        return { ok: true, kind: 'lab', current: psiResult.data };
+      },
+      ['client-dashboard-psi', clientId, origin],
+      { revalidate: 86400, tags: [`client-${clientId}-psi`] }
+    )(origin);
+  } catch {
+    console.error('Client dashboard PSI fetch failed');
+    return { ok: true, kind: 'no_data' };
   }
 }
 

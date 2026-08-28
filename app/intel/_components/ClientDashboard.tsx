@@ -427,6 +427,51 @@ function CruxSection({ result }: { result: DashboardCruxResult }) {
     )
   }
 
+  if (result.kind === 'lab') {
+    const { current } = result
+
+    return (
+      <Panel title="PageSpeed Insights">
+        <StatStrip>
+          <MetricCard
+            label="Performance score"
+            value={formatInteger(current.performanceScore)}
+            icon={<Gauge className="size-3" />}
+            accent="cobalt-tint"
+          />
+          <MetricCard
+            label="Largest contentful paint"
+            value={formatLabLcp(current.lcp.value)}
+            icon={<Timer className="size-3" />}
+            accent={current.lcp.passed ? 'cobalt-tint' : 'warning'}
+            context={`${current.lcp.passed ? 'Met' : 'Missed'} the ${formatLabLcp(current.lcp.threshold)} threshold`}
+            contextTone={current.lcp.passed ? 'meta' : 'warning'}
+          />
+          <MetricCard
+            label="Total blocking time"
+            value={formatLabTbt(current.tbt.value)}
+            icon={<Activity className="size-3" />}
+            accent={current.tbt.passed ? 'cobalt-tint' : 'warning'}
+            context={`${current.tbt.passed ? 'Met' : 'Missed'} the ${formatLabTbt(current.tbt.threshold)} threshold`}
+            contextTone={current.tbt.passed ? 'meta' : 'warning'}
+          />
+          <MetricCard
+            label="Cumulative layout shift"
+            value={formatLabCls(current.cls.value)}
+            icon={<ChartNoAxesColumn className="size-3" />}
+            accent={current.cls.passed ? 'cobalt-tint' : 'warning'}
+            context={`${current.cls.passed ? 'Met' : 'Missed'} the ${formatLabCls(current.cls.threshold)} threshold`}
+            contextTone={current.cls.passed ? 'meta' : 'warning'}
+          />
+        </StatStrip>
+        <p className="text-sm leading-relaxed text-body">
+          Lab test from PageSpeed Insights, not real visitor data. Chrome has no field data
+          for this origin yet.
+        </p>
+      </Panel>
+    )
+  }
+
   const { current } = result
   const period = current.collectionPeriod
 
@@ -709,4 +754,16 @@ function formatSignedNumber(value: number, digits: number): string {
     return `−${abs}`
   }
   return (0).toFixed(digits)
+}
+
+function formatLabLcp(ms: number): string {
+  return `${(ms / 1000).toFixed(1)}s`
+}
+
+function formatLabTbt(ms: number): string {
+  return `${Math.round(ms)}ms`
+}
+
+function formatLabCls(value: number): string {
+  return value.toFixed(3)
 }
