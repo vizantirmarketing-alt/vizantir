@@ -7,6 +7,10 @@ import {
 } from '@/lib/clients/load';
 import { fetchCruxReport, type CruxReportData } from '@/lib/reports/crux';
 import { fetchGa4Report, type Ga4ReportData } from '@/lib/reports/ga4';
+import {
+  fetchGa4Audience,
+  type Ga4AudienceData,
+} from '@/lib/reports/ga4-audience';
 import type { ReportSourceFailure } from '@/lib/reports/google-credentials';
 import {
   fetchGscReport,
@@ -42,12 +46,17 @@ export type DashboardUptimeResult =
   | { ok: true; current: UptimeReportData }
   | ReportSourceFailure;
 
+export type DashboardAudienceResult =
+  | { ok: true; current: Ga4AudienceData }
+  | ReportSourceFailure;
+
 export type ClientDashboard = {
   window: DashboardWindow;
   ga4: DashboardGa4Result;
   gsc: DashboardGscResult;
   crux: DashboardCruxResult;
   uptime: DashboardUptimeResult;
+  audience: DashboardAudienceResult;
 };
 
 export function dashboardWindow(now: Date): DashboardWindow {
@@ -75,14 +84,15 @@ export async function loadClientDashboard(
   const sources = clientSources(client);
 
   try {
-    const [ga4, gsc, crux, uptime] = await Promise.all([
+    const [ga4, gsc, crux, uptime, audience] = await Promise.all([
       loadGa4Source(client, sources, window),
       loadGscSource(client, sources, window),
       loadCruxSource(client, sources, window),
       loadUptimeSource(client, sources, window),
+      loadAudienceSource(client, sources, window),
     ]);
 
-    return { window, ga4, gsc, crux, uptime };
+    return { window, ga4, gsc, crux, uptime, audience };
   } catch {
     console.error('Client dashboard load failed');
     return {
@@ -91,6 +101,7 @@ export async function loadClientDashboard(
       gsc: { ok: false, reason: 'http_error' },
       crux: { ok: false, reason: 'http_error' },
       uptime: { ok: false, reason: 'http_error' },
+      audience: { ok: false, reason: 'http_error' },
     };
   }
 }
@@ -141,6 +152,18 @@ function loadUptimeSource(
   }
 
   return loadCachedUptime(client.id, client.uptimerobotMonitorId, window);
+}
+
+function loadAudienceSource(
+  client: IntelClient,
+  sources: ClientSources,
+  window: DashboardWindow
+): Promise<DashboardAudienceResult> {
+  if (!sources.ga4 || client.ga4PropertyId === null) {
+    return Promise.resolve({ ok: false, reason: 'not_configured' });
+  }
+
+  return loadCachedAudience(client.id, client.ga4PropertyId, window);
 }
 
 async function loadCachedGa4(
@@ -199,6 +222,48 @@ async function loadCachedGa4(
     );
   } catch {
     console.error('Client dashboard GA4 fetch failed');
+    return { ok: false, reason: 'http_error' };
+  }
+}
+
+async function loadCachedAudience(
+  clientId: string,
+  propertyId: string,
+  window: DashboardWindow
+): Promise<DashboardAudienceResult> {
+  try {
+    return await unstable_cache(
+      async (
+        cachedPropertyId: string,
+        startDate: string,
+        endDate: string
+      ): Promise<DashboardAudienceResult> => {
+        const result = await fetchGa4Audience({
+          propertyId: cachedPropertyId,
+          startDate,
+          endDate,
+        });
+
+        if (!result.ok) {
+          return result;
+        }
+
+        return {
+          ok: true,
+          current: result.data,
+        };
+      },
+      [
+        'client-dashboard-audience',
+        clientId,
+        propertyId,
+        window.startDate,
+        window.endDate,
+      ],
+      { revalidate: 900, tags: [`client-${clientId}-audience`] }
+    )(propertyId, window.startDate, window.endDate);
+  } catch {
+    console.error('Client dashboard audience fetch failed');
     return { ok: false, reason: 'http_error' };
   }
 }
