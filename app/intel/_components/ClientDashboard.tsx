@@ -344,7 +344,130 @@ function Ga4Section({ result }: { result: DashboardGa4Result }) {
         Users counts each person once for the window. New and returning can both include
         the same person, so they do not add up to Users.
       </p>
+      <Ga4Breakdowns
+        channelGroups={current.channelGroups}
+        topPages={current.topPages}
+        conversions={current.conversions}
+      />
     </Panel>
+  )
+}
+
+function Ga4Breakdowns({
+  channelGroups,
+  topPages,
+  conversions,
+}: {
+  channelGroups: readonly { channel: string; sessions: number }[]
+  topPages: readonly { pagePath: string; screenPageViews: number }[]
+  conversions: readonly { eventName: string; keyEvents: number }[]
+}) {
+  const channels = [...channelGroups]
+    .sort((a, b) => b.sessions - a.sessions)
+    .slice(0, 5)
+  const pages = [...topPages]
+    .sort((a, b) => b.screenPageViews - a.screenPageViews)
+    .slice(0, 5)
+  const events = [...conversions]
+    .sort((a, b) => b.keyEvents - a.keyEvents)
+    .slice(0, 5)
+
+  if (channels.length === 0 && pages.length === 0 && events.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="mt-4 flex flex-col gap-6">
+      {channels.length > 0 ? (
+        <Ga4BreakdownTable
+          title="Top channels"
+          caption="Top channels by sessions"
+          columns={['Channel', 'Sessions']}
+          rows={channels.map((row) => ({
+            key: row.channel,
+            label: row.channel,
+            value: formatInteger(row.sessions),
+          }))}
+        />
+      ) : null}
+      {pages.length > 0 ? (
+        <Ga4BreakdownTable
+          title="Top pages"
+          caption="Top pages by views"
+          columns={['Page', 'Views']}
+          rows={pages.map((row) => ({
+            key: row.pagePath,
+            label: row.pagePath.length === 0 ? '/' : row.pagePath,
+            value: formatInteger(row.screenPageViews),
+          }))}
+        />
+      ) : null}
+      {events.length > 0 ? (
+        <Ga4BreakdownTable
+          title="Key events"
+          caption="Key events by count"
+          columns={['Event', 'Count']}
+          rows={events.map((row) => ({
+            key: row.eventName,
+            label: row.eventName,
+            value: formatInteger(row.keyEvents),
+          }))}
+        />
+      ) : null}
+    </div>
+  )
+}
+
+function Ga4BreakdownTable({
+  title,
+  caption,
+  columns,
+  rows,
+}: {
+  title: string
+  caption: string
+  columns: readonly [string, string]
+  rows: readonly { key: string; label: string; value: string }[]
+}) {
+  return (
+    <div>
+      <h3 className="text-sm font-medium text-foreground">{title}</h3>
+      <ul className="mt-3 divide-y divide-black/8 lg:hidden">
+        {rows.map((row) => (
+          <li key={row.key} className="py-2">
+            <p className="text-sm font-medium text-foreground">{row.label}</p>
+            <p className="mt-1 text-sm tabular-nums text-body">{row.value}</p>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-3 hidden lg:block">
+        <table className="w-full border-collapse text-left text-sm">
+          <caption className="sr-only">{caption}</caption>
+          <thead>
+            <tr className="border-b border-black/8">
+              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+                {columns[0]}
+              </th>
+              <th className="py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+                {columns[1]}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.key} className="border-b border-black/8">
+                <td className="max-w-[22rem] py-[5px] pr-4 font-medium text-foreground">
+                  {row.label}
+                </td>
+                <td className="whitespace-nowrap py-[5px] tabular-nums text-body">
+                  {row.value}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
 
