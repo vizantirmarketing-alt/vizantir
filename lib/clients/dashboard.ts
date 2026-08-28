@@ -290,6 +290,8 @@ async function loadCachedCrux(
       { revalidate: 3600, tags: [`client-${clientId}-crux`] }
     )(origin);
 
+    console.log('[crux-branch]', clientId, JSON.stringify(result));
+
     if (result.ok && result.kind === 'no_data') {
       return loadCachedPsi(clientId, origin);
     }
@@ -305,6 +307,7 @@ async function loadCachedPsi(
   clientId: string,
   origin: string
 ): Promise<DashboardCruxResult> {
+  console.log('[psi-called]', clientId, origin);
   try {
     return await unstable_cache(
       async (cachedOrigin: string): Promise<DashboardCruxResult> => {
@@ -312,6 +315,7 @@ async function loadCachedPsi(
         if (!psiResult.ok) {
           return { ok: true, kind: 'no_data' };
         }
+        console.log('[psi-ok]', clientId);
         return { ok: true, kind: 'lab', current: psiResult.data };
       },
       ['client-dashboard-psi', clientId, origin],
