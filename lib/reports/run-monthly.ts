@@ -2,7 +2,6 @@ import 'server-only';
 
 import { generateReport, type CareTier } from '@/lib/reports/generate';
 import { renderReportPdf } from '@/lib/reports/pdf';
-import { sendReport } from '@/lib/reports/send';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 export type MonthlyReportOutcome =
@@ -155,35 +154,12 @@ async function processClient(
     };
   }
 
-  if (client.careTier === 'care' || client.careTier === 'growth') {
-    return {
-      clientId: client.id,
-      clientName: client.name,
-      careTier: client.careTier,
-      reportId: generated.reportId,
-      outcome: 'pending_review',
-      reason: null,
-    };
-  }
-
-  const sent = await sendReport(generated.reportId);
-  if (!sent.ok) {
-    return {
-      clientId: client.id,
-      clientName: client.name,
-      careTier: client.careTier,
-      reportId: generated.reportId,
-      outcome: 'error',
-      reason: `send_${sent.reason}`,
-    };
-  }
-
   return {
     clientId: client.id,
     clientName: client.name,
     careTier: client.careTier,
     reportId: generated.reportId,
-    outcome: 'sent',
+    outcome: 'pending_review',
     reason: null,
   };
 }
