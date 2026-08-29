@@ -204,7 +204,7 @@ async function loadCachedGa4(
         };
       },
       [
-        'client-dashboard-ga4',
+        'client-dashboard-ga4-v2',
         clientId,
         propertyId,
         window.startDate,
@@ -254,7 +254,7 @@ async function loadCachedAudience(
         };
       },
       [
-        'client-dashboard-audience',
+        'client-dashboard-audience-v2',
         clientId,
         propertyId,
         window.startDate,
