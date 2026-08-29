@@ -72,12 +72,24 @@ export async function runGa4Report(
         };
       };
     };
-    dimensionFilter?: {
-      filter: {
-        fieldName: string;
-        inListFilter: { values: string[] };
-      };
-    };
+    dimensionFilter?:
+      | {
+          filter: {
+            fieldName: string;
+            inListFilter: { values: string[] };
+          };
+        }
+      | {
+          notExpression: {
+            filter: {
+              fieldName: string;
+              stringFilter: {
+                matchType: 'BEGINS_WITH';
+                value: string;
+              };
+            };
+          };
+        };
   }
 ): Promise<{ ok: true; rows: Ga4MetricRow[] } | ReportSourceFailure> {
   try {

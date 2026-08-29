@@ -93,6 +93,17 @@ export async function fetchGa4Report(params: {
           endDate: params.endDate,
           dimensions: ['pagePath'],
           metrics: ['screenPageViews', 'averageSessionDuration'],
+          dimensionFilter: {
+            notExpression: {
+              filter: {
+                fieldName: 'pagePath',
+                stringFilter: {
+                  matchType: 'BEGINS_WITH',
+                  value: '/intel',
+                },
+              },
+            },
+          },
           orderBys: [
             { metric: { metricName: 'screenPageViews' }, desc: true },
           ],

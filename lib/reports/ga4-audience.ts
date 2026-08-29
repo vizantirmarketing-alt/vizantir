@@ -11,6 +11,7 @@ import {
 } from '@/lib/reports/google-credentials';
 
 const AUDIENCE_ROW_LIMIT = 10;
+const UNSET_DIMENSION_VALUE = '(not set)';
 
 export type Ga4DimensionRow = {
   label: string;
@@ -106,7 +107,11 @@ function toDimensionRows(
   for (const row of rows) {
     const label = row.dimensions[0];
     const sessions = row.metrics[0];
-    if (label === undefined || sessions === undefined) {
+    if (
+      label === undefined ||
+      sessions === undefined ||
+      label === UNSET_DIMENSION_VALUE
+    ) {
       continue;
     }
     result.push({ label, sessions });
