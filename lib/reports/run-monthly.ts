@@ -155,7 +155,7 @@ async function processClient(
     };
   }
 
-  if (client.careTier === 'care') {
+  if (client.careTier === 'care' || client.careTier === 'growth') {
     return {
       clientId: client.id,
       clientName: client.name,
@@ -226,7 +226,7 @@ function parseActiveClient(value: unknown): ActiveClient | null {
   if (
     id === null ||
     name === null ||
-    (careTier !== 'essential' && careTier !== 'care')
+    (careTier !== 'essential' && careTier !== 'care' && careTier !== 'growth')
   ) {
     return null;
   }

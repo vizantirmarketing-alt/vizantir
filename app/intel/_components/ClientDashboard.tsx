@@ -71,6 +71,7 @@ const SOURCE_SETUP = {
 const CARE_TIER_LABEL = {
   essential: 'Essential',
   care: 'Care',
+  growth: 'Growth',
 } as const
 
 type SourceKey = keyof typeof SOURCE_LABELS
@@ -832,7 +833,7 @@ function CareTierChip({ tier }: { tier: IntelClient['careTier'] }) {
     <span
       className={cn(
         'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
-        tier === 'care'
+        tier === 'care' || tier === 'growth'
           ? 'bg-cobalt-soft font-medium text-foreground'
           : 'bg-black/[0.08] font-medium text-foreground',
       )}
@@ -840,7 +841,7 @@ function CareTierChip({ tier }: { tier: IntelClient['careTier'] }) {
       <span
         className={cn(
           'size-1.5 shrink-0 rounded-full',
-          tier === 'care' ? 'bg-cobalt-primary' : 'bg-meta',
+          tier === 'care' || tier === 'growth' ? 'bg-cobalt-primary' : 'bg-meta',
         )}
         aria-hidden
       />

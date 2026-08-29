@@ -203,7 +203,7 @@ function asNullableString(value: unknown): string | null | undefined {
 }
 
 function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care';
+  return value === 'essential' || value === 'care' || value === 'growth';
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

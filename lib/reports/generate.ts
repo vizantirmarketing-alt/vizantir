@@ -31,7 +31,7 @@ const CLIENT_COLUMNS = [
   'active',
 ].join(', ');
 
-export type CareTier = 'essential' | 'care';
+export type CareTier = 'essential' | 'care' | 'growth';
 
 export type ReportBlocker =
   | 'ga4_failed'
@@ -473,7 +473,7 @@ function isSentStatus(value: unknown): boolean {
 }
 
 function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care';
+  return value === 'essential' || value === 'care' || value === 'growth';
 }
 
 function readUuid(value: unknown): string | null {

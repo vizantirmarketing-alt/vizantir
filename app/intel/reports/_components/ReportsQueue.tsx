@@ -18,6 +18,7 @@ const STATUS_LABEL: Record<ReportStatus, string> = {
 const TIER_LABEL: Record<CareTier, string> = {
   essential: 'Essential',
   care: 'Care',
+  growth: 'Growth',
 }
 
 type StatusTone = 'new' | 'active' | 'success' | 'muted' | 'warning'

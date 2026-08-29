@@ -169,7 +169,7 @@ function asNonEmptyString(value: unknown): string | null {
 }
 
 function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care';
+  return value === 'essential' || value === 'care' || value === 'growth';
 }
 
 function isReportStatus(value: unknown): value is ReportStatus {
