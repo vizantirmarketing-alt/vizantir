@@ -154,8 +154,18 @@ export function ReportsQueue({
                       awaitingReview={row.awaitingReview}
                     />
                   </td>
-                  <td className="py-2.5 text-body">
-                    {row.hasPdf ? 'Ready' : '—'}
+                  <td className="py-2.5">
+                    {row.hasPdf ? (
+                      <Link
+                        href={`/intel/reports/${row.id}/download`}
+                        prefetch={false}
+                        className="font-medium text-foreground transition-colors hover:text-cobalt-primary"
+                      >
+                        Download
+                      </Link>
+                    ) : (
+                      <span className="text-meta">Not generated</span>
+                    )}
                   </td>
                 </tr>
               ))}

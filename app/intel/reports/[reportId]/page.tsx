@@ -7,6 +7,7 @@ import { ReportReviewControls } from '@/app/intel/reports/_components/ReportRevi
 import { loadReviewFields } from '@/app/intel/reports/data'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { isReportId, loadReport } from '@/lib/reports/load'
+import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -68,12 +69,18 @@ export default async function IntelReportPreviewPage({
 
   const awaitingReview =
     result.document.tier === 'care' && result.document.status === 'pending'
-  const review = awaitingReview
-    ? await loadReviewFields(result.document.reportId, result.document.client.id)
-    : null
+  const [review, hasPdf] = await Promise.all([
+    awaitingReview
+      ? loadReviewFields(result.document.reportId, result.document.client.id)
+      : Promise.resolve(null),
+    loadReportHasPdf(result.document.reportId),
+  ])
 
   return (
     <PreviewChrome
+      downloadHref={
+        hasPdf ? `/intel/reports/${result.document.reportId}/download` : null
+      }
       review={
         awaitingReview ? (
           <ReportReviewControls
@@ -91,27 +98,56 @@ export default async function IntelReportPreviewPage({
 
 function PreviewChrome({
   children,
+  downloadHref,
   review,
 }: {
   children: ReactNode
+  downloadHref?: string | null
   review?: ReactNode
 }) {
   return (
     <div>
       <div className="print:hidden border-b border-black/8 px-5 py-4 sm:px-8">
         <div className="mx-auto w-full max-w-[40rem]">
-          <Link
-            href="/intel/reports"
-            className="text-sm text-meta transition-colors hover:text-foreground"
-          >
-            Reports
-          </Link>
+          <div className="flex items-baseline justify-between gap-4">
+            <Link
+              href="/intel/reports"
+              className="text-sm text-meta transition-colors hover:text-foreground"
+            >
+              Reports
+            </Link>
+            {downloadHref ? (
+              <Link
+                href={downloadHref}
+                prefetch={false}
+                className="text-sm text-meta transition-colors hover:text-foreground"
+              >
+                Download PDF
+              </Link>
+            ) : null}
+          </div>
           {review}
         </div>
       </div>
       {children}
     </div>
   )
+}
+
+async function loadReportHasPdf(reportId: string): Promise<boolean> {
+  const supabase = createSupabaseServiceRole()
+  const result = await supabase
+    .from('reports')
+    .select('pdf_path')
+    .eq('id', reportId)
+    .maybeSingle()
+
+  if (result.error || result.data === null) {
+    return false
+  }
+
+  const pdfPath = result.data.pdf_path
+  return typeof pdfPath === 'string' && pdfPath.trim().length > 0
 }
 
 function ReportStateMessage({
