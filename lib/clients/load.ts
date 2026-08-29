@@ -1,6 +1,6 @@
 import 'server-only';
 
-import type { CareTier } from '@/lib/reports/generate';
+import { isCareTier, type CareTier } from '@/lib/reports/generate';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 const CLIENT_ID_RE =
@@ -200,10 +200,6 @@ function asNullableString(value: unknown): string | null | undefined {
   }
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
-}
-
-function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care' || value === 'growth';
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

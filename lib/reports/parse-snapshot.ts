@@ -14,11 +14,12 @@ import type {
   Ga4PageRow,
   Ga4ReportData,
 } from '@/lib/reports/ga4';
-import type {
-  CareTier,
-  ReportBlocker,
-  ReportSnapshot,
-  ReportWarning,
+import {
+  isCareTier,
+  type CareTier,
+  type ReportBlocker,
+  type ReportSnapshot,
+  type ReportWarning,
 } from '@/lib/reports/generate';
 import type { ReportSourceFailureReason } from '@/lib/reports/google-credentials';
 import type {
@@ -655,10 +656,6 @@ function asString(value: unknown): string | null {
 
 function asFiniteNumber(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
-}
-
-function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care' || value === 'growth';
 }
 
 function isSnapshotVersion(

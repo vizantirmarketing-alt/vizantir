@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
-import type { CareTier } from '@/lib/reports/generate'
+import { isCareTier, type CareTier } from '@/lib/reports/generate'
 import type { ReportStatus } from '@/lib/reports/load'
 
 export type QueueReportRow = {
@@ -268,10 +268,6 @@ function asText(value: unknown): string {
     return ''
   }
   return typeof value === 'string' ? value : ''
-}
-
-function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care' || value === 'growth'
 }
 
 function isReportStatus(value: unknown): value is ReportStatus {

@@ -472,7 +472,7 @@ function isSentStatus(value: unknown): boolean {
   return value.status === 'sent';
 }
 
-function isCareTier(value: unknown): value is CareTier {
+export function isCareTier(value: unknown): value is CareTier {
   return value === 'essential' || value === 'care' || value === 'growth';
 }
 

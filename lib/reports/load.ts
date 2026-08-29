@@ -1,6 +1,6 @@
 import 'server-only';
 
-import type { CareTier, ReportSnapshot } from '@/lib/reports/generate';
+import { isCareTier, type CareTier, type ReportSnapshot } from '@/lib/reports/generate';
 import { parseReportSnapshot } from '@/lib/reports/parse-snapshot';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
@@ -166,10 +166,6 @@ function asNonEmptyString(value: unknown): string | null {
   }
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
-}
-
-function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care' || value === 'growth';
 }
 
 function isReportStatus(value: unknown): value is ReportStatus {

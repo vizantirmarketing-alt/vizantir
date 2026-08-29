@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { isReportToken } from '@/lib/reports/access-token';
-import type { CareTier } from '@/lib/reports/generate';
+import { isCareTier, type CareTier } from '@/lib/reports/generate';
 import {
   isReportId,
   type ReportClient,
@@ -259,10 +259,6 @@ function asPeriod(value: unknown): string | null {
   }
   const datePart = value.slice(0, 10);
   return /^\d{4}-\d{2}-\d{2}$/.test(datePart) ? datePart : null;
-}
-
-function isCareTier(value: unknown): value is CareTier {
-  return value === 'essential' || value === 'care' || value === 'growth';
 }
 
 function isReportStatus(value: unknown): value is ReportStatus {
