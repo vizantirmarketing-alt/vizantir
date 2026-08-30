@@ -284,14 +284,17 @@ function TrafficSection({
             No channel breakdown was recorded.
           </p>
         ) : (
-          <SimpleTable
-            caption="Sessions by channel"
-            columns={['Channel', 'Sessions']}
-            rows={data.channelGroups.map((row) => [
-              row.channel,
-              formatInteger(row.sessions),
-            ])}
-          />
+          <>
+            <ChannelShareBar rows={data.channelGroups} />
+            <SimpleTable
+              caption="Sessions by channel"
+              columns={['Channel', 'Sessions']}
+              rows={data.channelGroups.map((row) => [
+                row.channel,
+                formatInteger(row.sessions),
+              ])}
+            />
+          </>
         )}
       </div>
 
@@ -570,6 +573,99 @@ function Metric({
           {detail}
         </p>
       ) : null}
+    </div>
+  )
+}
+
+const CHANNEL_SHARE_TINTS = [
+  'bg-cobalt-primary',
+  'bg-cobalt-focus',
+  'bg-cobalt-muted',
+  'bg-cobalt-muted-border',
+  'bg-cobalt-soft',
+] as const
+
+function channelShareTint(rank: number): string {
+  const tintCount = CHANNEL_SHARE_TINTS.length
+  const tint = CHANNEL_SHARE_TINTS[rank % tintCount]
+  if (tint === undefined) {
+    return 'bg-cobalt-primary'
+  }
+  return rank < tintCount ? tint : cn(tint, 'opacity-60')
+}
+
+function channelShareTints(
+  rows: readonly { sessions: number }[],
+): string[] {
+  const ranked = rows.map((row, index) => ({
+    index,
+    sessions: row.sessions,
+  }))
+  ranked.sort((a, b) => b.sessions - a.sessions || a.index - b.index)
+
+  const tints: string[] = rows.map(() => 'bg-cobalt-primary')
+  for (let rank = 0; rank < ranked.length; rank += 1) {
+    const item = ranked[rank]
+    if (item === undefined) {
+      continue
+    }
+    tints[item.index] = channelShareTint(rank)
+  }
+  return tints
+}
+
+function ChannelShareBar({
+  rows,
+}: {
+  rows: readonly { channel: string; sessions: number }[]
+}) {
+  const total = rows.reduce((sum, row) => sum + row.sessions, 0)
+  if (rows.length === 0 || total <= 0) {
+    return null
+  }
+
+  const tints = channelShareTints(rows)
+
+  return (
+    <div className="mt-3">
+      <div
+        className="flex h-2 w-full overflow-hidden rounded-full"
+        aria-hidden
+      >
+        {rows.map((row, index) => {
+          const share = (row.sessions / total) * 100
+          if (share <= 0) {
+            return null
+          }
+          return (
+            <div
+              key={`${row.channel}-${index}`}
+              className={tints[index]}
+              style={{ width: `${share}%` }}
+            />
+          )
+        })}
+      </div>
+      <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
+        {rows.map((row, index) => (
+          <li
+            key={`${row.channel}-${index}`}
+            className="flex items-center gap-1.5 text-[0.7rem] text-meta"
+          >
+            <span
+              className={cn(
+                'size-2 shrink-0 rounded-sm',
+                tints[index],
+              )}
+              aria-hidden
+            />
+            <span>{row.channel}</span>
+            <span className="tabular-nums">
+              {Math.round((row.sessions / total) * 100)}%
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
