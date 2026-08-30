@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import {
@@ -35,6 +36,7 @@ export default async function IntelClientPage({ params }: ClientPageProps) {
   if (!result.ok) {
     return (
       <div className="flex flex-col gap-4">
+        <ClientsBackLink />
         <ClientPageHeader />
         <Panel>
           <ClientQueryError />
@@ -51,10 +53,24 @@ export default async function IntelClientPage({ params }: ClientPageProps) {
   const clients = clientsResult.ok ? clientsResult.clients : [result.client]
 
   return (
-    <ClientDashboard
-      client={result.client}
-      clients={clients}
-      dashboard={dashboard}
-    />
+    <div className="flex flex-col gap-4">
+      <ClientsBackLink />
+      <ClientDashboard
+        client={result.client}
+        clients={clients}
+        dashboard={dashboard}
+      />
+    </div>
+  )
+}
+
+function ClientsBackLink() {
+  return (
+    <Link
+      href="/intel/clients"
+      className="text-sm text-meta transition-colors hover:text-foreground"
+    >
+      Clients
+    </Link>
   )
 }
