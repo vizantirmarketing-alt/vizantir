@@ -39,6 +39,7 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
             <div className="flex items-start justify-between gap-4">
               <Link
                 href={leadDetailHref(row.id, listParams)}
+                prefetch={false}
                 className="text-sm font-medium text-foreground transition-colors hover:text-cobalt-primary"
               >
                 {row.name}
@@ -98,6 +99,7 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
                 <td className="max-w-[12rem] py-[5px] pr-4">
                   <Link
                     href={leadDetailHref(row.id, listParams)}
+                    prefetch={false}
                     className="font-medium text-foreground transition-colors hover:text-cobalt-primary"
                   >
                     {row.name}

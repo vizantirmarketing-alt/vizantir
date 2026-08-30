@@ -92,6 +92,7 @@ export function ReportsQueue({
               <div className="flex items-start justify-between gap-4">
                 <Link
                   href={`/intel/reports/${row.id}`}
+                  prefetch={false}
                   className="min-w-0 text-sm font-medium text-foreground transition-colors hover:text-cobalt-primary"
                 >
                   {row.clientName}
@@ -141,6 +142,7 @@ export function ReportsQueue({
                   <td className="py-2.5 pr-4">
                     <Link
                       href={`/intel/reports/${row.id}`}
+                      prefetch={false}
                       className="font-medium text-foreground transition-colors hover:text-cobalt-primary"
                     >
                       {row.clientName}

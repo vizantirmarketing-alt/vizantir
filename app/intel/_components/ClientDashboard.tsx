@@ -136,6 +136,7 @@ export function ClientsList({ clients }: { clients: readonly ClientListItem[] })
           <li key={client.id} className="py-3">
             <Link
               href={`/intel/clients/${client.id}`}
+              prefetch={false}
               className="text-sm font-medium text-foreground transition-colors hover:text-cobalt-primary"
             >
               {client.name}
@@ -181,6 +182,7 @@ export function ClientsList({ clients }: { clients: readonly ClientListItem[] })
                 <td className="py-2.5 pr-4">
                   <Link
                     href={`/intel/clients/${client.id}`}
+                    prefetch={false}
                     className="font-medium text-foreground transition-colors hover:text-cobalt-primary"
                   >
                     {client.name}
