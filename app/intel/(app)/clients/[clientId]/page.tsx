@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 
 import {
   ClientDashboard,
@@ -68,8 +69,9 @@ function ClientsBackLink() {
   return (
     <Link
       href="/intel/clients"
-      className="text-sm text-meta transition-colors hover:text-foreground"
+      className="inline-flex items-baseline gap-1 text-sm text-foreground transition-colors hover:text-foreground"
     >
+      <ArrowLeft className="size-[1em]" aria-hidden />
       Clients
     </Link>
   )

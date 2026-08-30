@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 
 import { MonthlyReport } from '@/app/intel/reports/_components/MonthlyReport'
 import { ReportReviewControls } from '@/app/intel/reports/_components/ReportReviewControls'
@@ -112,8 +113,9 @@ function PreviewChrome({
           <div className="flex items-baseline justify-between gap-4">
             <Link
               href="/intel/reports"
-              className="text-sm text-meta transition-colors hover:text-foreground"
+              className="inline-flex items-baseline gap-1 text-sm text-foreground transition-colors hover:text-foreground"
             >
+              <ArrowLeft className="size-[1em]" aria-hidden />
               Reports
             </Link>
             {downloadHref ? (

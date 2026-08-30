@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 
 import { LeadPipelineForms } from '@/app/intel/_components/LeadPipelineForms'
 import { LeadStatusBadge } from '@/app/intel/_components/LeadStatusBadge'
@@ -112,8 +113,9 @@ function BackLink({ href }: { href: string }) {
   return (
     <Link
       href={href}
-      className="text-sm text-meta transition-colors hover:text-foreground"
+      className="inline-flex items-baseline gap-1 text-sm text-foreground transition-colors hover:text-foreground"
     >
+      <ArrowLeft className="size-[1em]" aria-hidden />
       Leads
     </Link>
   )
