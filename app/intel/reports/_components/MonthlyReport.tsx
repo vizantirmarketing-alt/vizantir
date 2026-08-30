@@ -397,8 +397,8 @@ function SearchSection({
       ) : (
         <>
           <p className="text-sm leading-relaxed text-meta">
-            Average position is lower-is-better. A higher number means the site
-            appeared further from the top, which is not by itself a failure —
+            A lower average position means the site appeared closer to the top
+            of search results. A higher number is not by itself a failure,
             especially when impressions are up.
           </p>
           <MetricGrid className="mt-6">
