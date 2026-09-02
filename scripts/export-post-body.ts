@@ -1,7 +1,8 @@
 /**
  * Export one Sanity post body to content-updates/{slug}.html
  * in the format scripts/update-blog-posts.ts parses.
- * Swap SLUG and run: npm run export:post
+ * Usage: npm run export:post -- some-slug
+ * Falls back to SLUG if no argument is given.
  */
 
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
@@ -254,9 +255,10 @@ function serializeBody(blocks: PortableBlock[]): { html: string; issues: string[
 }
 
 async function main() {
-  const slug = SLUG.trim()
+  const arg = process.argv[2]
+  const slug = (typeof arg === 'string' && arg.trim() ? arg : SLUG).trim()
   if (!slug) {
-    console.error('SLUG is empty — set it at the top of scripts/export-post-body.ts')
+    console.error('Slug is empty — pass one as an argument or set SLUG in scripts/export-post-body.ts')
     process.exit(1)
   }
 
