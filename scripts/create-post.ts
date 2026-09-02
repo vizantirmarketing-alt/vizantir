@@ -62,19 +62,25 @@ async function main() {
 
 const POST_DATA = {
   _type: 'post',
-  title: 'Why Your Website Needs to Work in Every Direction',
+  title: 'Two Searches, One Key: How Messy Search Data Breaks Clean Code',
   slug: {
     _type: 'slug',
-    current: 'why-your-website-needs-to-work-in-every-direction',
+    current: 'two-searches-one-key',
   },
-  publishedAt: '2026-06-02T21:00:00.000Z',
-  category: 'Strategy',
-  excerpt: 'Most sites are tested on desktop and a phone held upright. Here is what gets missed — and why it matters more than you think.',
-  readTime: '5 min read',
-  tags: ['responsive-design', 'mobile', 'strategy', 'web-design'],
+  publishedAt: '2026-09-03T16:00:00.000Z',
+  category: 'Platform',
+  excerpt:
+    'A detector job failed on a unique constraint that had never fired before. The cause: two real search queries that normalize to the same slug. Full walkthrough with code and SQL.',
+  readTime: '7 min read',
+  tags: ['search-console', 'postgres', 'typescript', 'debugging'],
+  author: {
+    _type: 'reference',
+    _ref: 'author-james-tram',
+  },
   seo: {
-    metaTitle: 'Why Your Website Needs to Work in Every Direction | Vizantir',
-    metaDescription: 'Portrait, landscape, tablet, mobile — your website should work perfectly on every screen and orientation. Here is what to check and why it matters.',
+    metaTitle: 'Two Searches, One Key: How Messy Search Data Breaks Clean Code',
+    metaDescription:
+      'Two real search queries normalized to the same slug and hit a unique constraint months after shipping. A debugging walkthrough with the actual code, SQL, and fix.',
     noIndex: false,
   },
 } as const

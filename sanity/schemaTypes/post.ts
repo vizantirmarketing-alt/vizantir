@@ -95,6 +95,7 @@ export const post = defineType({
                   { title: 'HTML', value: 'html' },
                   { title: 'CSS', value: 'css' },
                   { title: 'JSON', value: 'json' },
+                  { title: 'SQL', value: 'sql' },
                   { title: 'PHP', value: 'php' },
                   { title: 'Bash', value: 'bash' },
                   { title: 'Plain text', value: 'text' },

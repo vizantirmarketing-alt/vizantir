@@ -36,6 +36,7 @@ type CodeLanguage =
   | 'html'
   | 'css'
   | 'json'
+  | 'sql'
   | 'php'
   | 'bash'
   | 'text'
@@ -48,6 +49,7 @@ const ALLOWED_LANGUAGES = new Set<CodeLanguage>([
   'html',
   'css',
   'json',
+  'sql',
   'php',
   'bash',
   'text',
@@ -134,6 +136,7 @@ function mapClassToLanguage(raw: string): CodeLanguage {
     html: 'html',
     css: 'css',
     json: 'json',
+    sql: 'sql',
     php: 'php',
     bash: 'bash',
     sh: 'bash',
