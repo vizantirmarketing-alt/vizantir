@@ -129,12 +129,48 @@ function pairKey(detector: string, emissionKey: string): string {
   return `${detector}\t${emissionKey}`
 }
 
+type PersistError = {
+  message: string
+  code: string
+  details: string | null
+  hint: string | null
+}
+
+type KeyedFinding = {
+  finding: Finding
+  findingKey: string
+}
+
+function logPersistError(detector: string, error: PersistError): void {
+  console.error('Decision persistFindings failed', {
+    detector,
+    message: error.message,
+    code: error.code,
+    details: error.details,
+    hint: error.hint,
+  })
+}
+
+function collapseKeyedFindings(
+  keyed: readonly KeyedFinding[],
+): KeyedFinding[] {
+  const bestByKey = new Map<string, KeyedFinding>()
+  for (const row of keyed) {
+    const key = `${row.findingKey}\t${row.finding.emissionKey}`
+    const previous = bestByKey.get(key)
+    if (previous === undefined || row.finding.score > previous.finding.score) {
+      bestByKey.set(key, row)
+    }
+  }
+  return [...bestByKey.values()]
+}
+
 async function ensureFindingState(
   supabase: ServiceClient,
   findingKeys: readonly string[],
-): Promise<boolean> {
+): Promise<PersistError | null> {
   if (findingKeys.length === 0) {
-    return true
+    return null
   }
 
   const unique = [...new Set(findingKeys)]
@@ -143,7 +179,7 @@ async function ensureFindingState(
     { onConflict: 'finding_key', ignoreDuplicates: true },
   )
 
-  return upserted.error === null
+  return upserted.error
 }
 
 async function persistFindings(
@@ -157,16 +193,19 @@ async function persistFindings(
     return 0
   }
 
-  const keyed = findings.map((finding) => ({
-    finding,
-    findingKey: findingKeyFor(detector, finding.emissionKey),
-  }))
+  const keyed = collapseKeyedFindings(
+    findings.map((finding) => ({
+      finding,
+      findingKey: findingKeyFor(detector, finding.emissionKey),
+    })),
+  )
 
-  const parentsReady = await ensureFindingState(
+  const parentError = await ensureFindingState(
     supabase,
     keyed.map((row) => row.findingKey),
   )
-  if (!parentsReady) {
+  if (parentError) {
+    logPersistError(detector, parentError)
     return null
   }
 
@@ -178,6 +217,7 @@ async function persistFindings(
     .in('emission_key', emissionKeys)
 
   if (existingResult.error) {
+    logPersistError(detector, existingResult.error)
     return null
   }
 
@@ -188,7 +228,7 @@ async function persistFindings(
 
   const now = new Date().toISOString()
   const toInsert: Array<Record<string, unknown>> = []
-  const toUpdate: Array<{ finding: Finding; findingKey: string }> = []
+  const toUpdate: Array<KeyedFinding> = []
 
   for (const row of keyed) {
     if (existing.has(pairKey(detector, row.finding.emissionKey))) {
@@ -218,6 +258,7 @@ async function persistFindings(
   if (toInsert.length > 0) {
     const inserted = await supabase.from('decision_items').insert(toInsert)
     if (inserted.error) {
+      logPersistError(detector, inserted.error)
       return null
     }
     saved += toInsert.length
@@ -237,6 +278,7 @@ async function persistFindings(
       .eq('emission_key', row.finding.emissionKey)
 
     if (updated.error) {
+      logPersistError(detector, updated.error)
       return null
     }
     saved += 1
