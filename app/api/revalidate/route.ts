@@ -1,33 +1,54 @@
+import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook'
 import { revalidateTag } from 'next/cache'
-import { type NextRequest, NextResponse } from 'next/server'
-import { parseBody } from 'next-sanity/webhook'
+import { NextResponse } from 'next/server'
 
-export async function POST(req: NextRequest) {
-  try {
-    const { isValidSignature, body } = await parseBody<{
-      _type: string
-      slug?: { current?: string }
-    }>(req, process.env.SANITY_REVALIDATE_SECRET)
+export const runtime = 'nodejs'
 
-    if (!isValidSignature) {
-      return new Response('Invalid Signature', { status: 401 })
-    }
+type WebhookBody = {
+  _type?: unknown
+}
 
-    if (!body?._type) {
-      return new Response('Bad Request', { status: 400 })
-    }
-
-    // Revalidate the document type tag (Next.js 16 requires a cache life profile)
-    revalidateTag(body._type, 'max')
-
-    return NextResponse.json({
-      status: 200,
-      revalidated: true,
-      now: Date.now(),
-      body,
-    })
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Unknown error'
-    return new Response(message, { status: 500 })
+function tagsForType(type: unknown): string[] {
+  if (type === 'post' || type === 'author') {
+    return ['post', 'author']
   }
+
+  if (type === 'siteSettings') {
+    return ['siteSettings']
+  }
+
+  return ['post']
+}
+
+export async function POST(request: Request) {
+  const secret = process.env.SANITY_REVALIDATE_SECRET
+  if (!secret) {
+    return new NextResponse('Missing SANITY_REVALIDATE_SECRET', { status: 500 })
+  }
+
+  const rawBody = await request.text()
+  const signature = request.headers.get(SIGNATURE_HEADER_NAME) ?? ''
+
+  if (!(await isValidSignature(rawBody, signature, secret))) {
+    return new NextResponse('Invalid signature', { status: 401 })
+  }
+
+  let body: WebhookBody
+  try {
+    body = JSON.parse(rawBody) as WebhookBody
+  } catch {
+    return new NextResponse('Invalid JSON', { status: 400 })
+  }
+
+  const tags = tagsForType(body._type)
+
+  for (const tag of tags) {
+    revalidateTag(tag, 'max')
+  }
+
+  return NextResponse.json({
+    revalidated: true,
+    tags,
+    now: Date.now(),
+  })
 }
