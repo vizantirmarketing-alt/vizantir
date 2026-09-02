@@ -244,6 +244,13 @@ async function lookupIpReputation(ip: string | null): Promise<IpReputation> {
   }
 }
 
+type ProxyCheckIpEntry = {
+  proxy?: unknown;
+  vpn?: 'yes' | 'no';
+  type?: unknown;
+  risk?: unknown;
+};
+
 function parseProxyCheckReputation(data: unknown, ip: string): IpReputation {
   const empty = emptyIpReputation();
   const root = asRecord(data);
@@ -251,23 +258,30 @@ function parseProxyCheckReputation(data: unknown, ip: string): IpReputation {
     return empty;
   }
 
-  const entry = asRecord(root[ip]);
-  if (entry === null) {
+  const raw = asRecord(root[ip]);
+  if (raw === null) {
     return empty;
   }
 
+  const entry: ProxyCheckIpEntry = {
+    proxy: raw.proxy,
+    vpn: raw.vpn === 'yes' || raw.vpn === 'no' ? raw.vpn : undefined,
+    type: raw.type,
+    risk: raw.risk,
+  };
   const proxyYes = entry.proxy === 'yes';
-  const type = typeof entry.type === 'string' ? entry.type : null;
+  const type =
+    typeof entry.type === 'string' ? entry.type.toLowerCase() : null;
   const fraudScore =
     typeof entry.risk === 'number' && Number.isFinite(entry.risk)
       ? Math.min(100, Math.max(0, Math.round(entry.risk)))
       : null;
 
   return {
-    vpn: proxyYes && type === 'VPN',
+    vpn: entry.vpn === 'yes' || (proxyYes && type === 'vpn'),
     proxy: proxyYes,
-    tor: type === 'Tor',
-    isDatacenter: type === 'Hosting',
+    tor: type === 'tor',
+    isDatacenter: type === 'hosting',
     fraudScore,
   };
 }
