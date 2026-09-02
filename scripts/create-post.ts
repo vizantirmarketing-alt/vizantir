@@ -62,25 +62,25 @@ async function main() {
 
 const POST_DATA = {
   _type: 'post',
-  title: 'Two Searches, One Key: How Messy Search Data Breaks Clean Code',
+  title: 'What Website Monitoring Actually Catches',
   slug: {
     _type: 'slug',
-    current: 'two-searches-one-key',
+    current: 'what-website-monitoring-actually-catches',
   },
-  publishedAt: '2026-09-03T16:00:00.000Z',
-  category: 'Platform',
+  publishedAt: '2026-09-04T16:00:00.000Z',
+  category: 'Business',
   excerpt:
-    'A detector job failed on a unique constraint that had never fired before. The cause: two real search queries that normalize to the same slug. Full walkthrough with code and SQL.',
-  readTime: '7 min read',
-  tags: ['search-console', 'postgres', 'typescript', 'debugging'],
+    "Downtime is the failure everyone plans for, and the least common one. The failures that cost real money are quiet. Here's what monitoring is actually for.",
+  readTime: '6 min read',
+  tags: ['monitoring', 'maintenance', 'analytics', 'small-business'],
   author: {
     _type: 'reference',
     _ref: 'author-james-tram',
   },
   seo: {
-    metaTitle: 'Two Searches, One Key: How Messy Search Data Breaks Clean Code',
+    metaTitle: 'What Website Monitoring Actually Catches',
     metaDescription:
-      'Two real search queries normalized to the same slug and hit a unique constraint months after shipping. A debugging walkthrough with the actual code, SQL, and fix.',
+      'Most website failures are silent: broken tracking, stalled data syncs, forms that stop delivering. What ongoing monitoring actually catches and why nobody notices without it.',
     noIndex: false,
   },
 } as const
