@@ -7,7 +7,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 const project = {
   name: 'Projext NeXt',
   description: 'A faith-based automotive trade school in Las Vegas. Launching soon.',
-  image: '/work/projext-next.jpg',
+  image: '/work/projext-next.jpeg',
 }
 
 const InProgress = () => {
