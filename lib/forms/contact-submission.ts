@@ -1,5 +1,6 @@
 import 'server-only';
 import { Resend } from 'resend';
+import type { ContactEnrichment } from '@/lib/contact/enrich';
 import { emptyToNull } from '@/lib/forms/attribution';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
@@ -18,6 +19,7 @@ export type ContactSubmissionRow = {
   utmMedium: string | null;
   utmCampaign: string | null;
   initialChannel: string | null;
+  enrichment: ContactEnrichment;
 };
 
 function escapeHtml(s: string): string {
@@ -34,8 +36,14 @@ function contactNotificationHtml(row: ContactSubmissionRow, submittedAtIso: stri
   const company = row.company?.trim() ? escapeHtml(row.company) : dash;
   const budget = row.budget?.trim() ? escapeHtml(row.budget) : dash;
 
+  const flagged =
+    row.enrichment.isSuspect && row.enrichment.suspectReason
+      ? `<p style="margin: 0 0 20px; color: #DC2626; font-weight: 600;">Flagged: ${escapeHtml(row.enrichment.suspectReason)}</p>`
+      : '';
+
   return `
     <div style="font-family: 'Satoshi', system-ui, -apple-system, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 24px; color: #1F1E1B;">
+      ${flagged}
       <h1 style="font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin: 0 0 28px;">
         New contact submission
       </h1>
@@ -48,6 +56,7 @@ function contactNotificationHtml(row: ContactSubmissionRow, submittedAtIso: stri
           ${rowLine('Service', escapeHtml(row.service))}
           ${rowLine('Budget', budget)}
           ${rowLineBlock('Message', escapeHtml(row.message))}
+          ${submissionDetailsRows(row.enrichment)}
           ${rowLine('Submitted at', escapeHtml(submittedAtIso))}
         </tbody>
       </table>
@@ -55,6 +64,67 @@ function contactNotificationHtml(row: ContactSubmissionRow, submittedAtIso: stri
         Reply to this email to respond directly to the submitter.
       </p>
     </div>
+  `;
+}
+
+function contactNotificationText(
+  row: ContactSubmissionRow,
+  submittedAtIso: string
+): string {
+  const dash = '—';
+  const enrichment = row.enrichment;
+  const location = [enrichment.country, enrichment.region, enrichment.city]
+    .filter((part): part is string => part != null && part.length > 0)
+    .join(', ');
+  const mxLabel =
+    enrichment.mxValid === true ? 'yes' : enrichment.mxValid === false ? 'no' : dash;
+
+  const lines = [
+    ...(enrichment.isSuspect && enrichment.suspectReason
+      ? [`Flagged: ${enrichment.suspectReason}`, '']
+      : []),
+    `Name: ${row.name}`,
+    `Email: ${row.email}`,
+    `Phone: ${row.phone ?? dash}`,
+    `Company: ${row.company ?? dash}`,
+    `Service: ${row.service}`,
+    `Budget: ${row.budget ?? dash}`,
+    '',
+    `Message:`,
+    row.message,
+    '',
+  ];
+
+  lines.push(`Submission details`);
+
+  lines.push(
+    `Location: ${location.length > 0 ? location : dash}`,
+    `Device: ${enrichment.deviceSummary ?? dash}`,
+    `IP: ${enrichment.ip ?? dash}`,
+    `MX valid: ${mxLabel}`,
+    '',
+    `Submitted at: ${submittedAtIso}`
+  );
+
+  return lines.join('\n');
+}
+
+function submissionDetailsRows(enrichment: ContactEnrichment): string {
+  const dash = '—';
+  const location = [enrichment.country, enrichment.region, enrichment.city]
+    .filter((part): part is string => part != null && part.length > 0)
+    .join(', ');
+  const mxLabel =
+    enrichment.mxValid === true ? 'yes' : enrichment.mxValid === false ? 'no' : dash;
+
+  return `
+    <tr>
+      <td colspan="2" style="padding: 16px 0 8px; color: #6F6D66; font-weight: 500;">Submission details</td>
+    </tr>
+    ${rowLine('Location', escapeHtml(location.length > 0 ? location : dash))}
+    ${rowLine('Device', escapeHtml(enrichment.deviceSummary ?? dash))}
+    ${rowLine('IP', escapeHtml(enrichment.ip ?? dash))}
+    ${rowLine('MX valid', escapeHtml(mxLabel))}
   `;
 }
 
@@ -161,11 +231,28 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
       message: row.message,
       ip_hash: row.ipHash,
       landing_page: emptyToNull(row.landingPage),
-      referrer: emptyToNull(row.referrer),
+      referrer:
+        emptyToNull(row.referrer) ?? emptyToNull(row.enrichment.httpReferrer),
       utm_source: emptyToNull(row.utmSource),
       utm_medium: emptyToNull(row.utmMedium),
       utm_campaign: emptyToNull(row.utmCampaign),
       initial_channel: emptyToNull(row.initialChannel),
+      ip: row.enrichment.ip,
+      country: row.enrichment.country,
+      region: row.enrichment.region,
+      city: row.enrichment.city,
+      timezone: row.enrichment.timezone,
+      browser: row.enrichment.browser,
+      browser_version: row.enrichment.browserVersion,
+      os: row.enrichment.os,
+      os_version: row.enrichment.osVersion,
+      device_type: row.enrichment.deviceType,
+      user_agent: row.enrichment.userAgent,
+      accept_language: row.enrichment.acceptLanguage,
+      mx_valid: row.enrichment.mxValid,
+      is_suspect: row.enrichment.isSuspect,
+      suspect_reason: row.enrichment.suspectReason,
+      submit_duration_ms: row.enrichment.submitDurationMs,
     })
     .select('id')
     .single();
@@ -205,19 +292,7 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
       replyTo: row.email,
       subject,
       html: contactNotificationHtml(row, submittedAtIso),
-      text: [
-        `Name: ${row.name}`,
-        `Email: ${row.email}`,
-        `Phone: ${row.phone ?? '—'}`,
-        `Company: ${row.company ?? '—'}`,
-        `Service: ${row.service}`,
-        `Budget: ${row.budget ?? '—'}`,
-        '',
-        `Message:`,
-        row.message,
-        '',
-        `Submitted at: ${submittedAtIso}`,
-      ].join('\n'),
+      text: contactNotificationText(row, submittedAtIso),
     });
 
     if (result.error) {

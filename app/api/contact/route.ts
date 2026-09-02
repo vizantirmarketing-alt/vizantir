@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
+  enrichContactSubmission,
+  type ContactEnrichment,
+} from '@/lib/contact/enrich';
+import {
   ATTRIBUTION_FIELD_MAX,
   deriveInitialChannel,
   resolveRequestOrigin,
@@ -11,7 +15,10 @@ import {
   CONTACT_LANDING_PAGE_BUDGETS,
   CONTACT_SERVICES,
 } from '@/lib/forms/contact-fields';
-import { submitContactForm } from '@/lib/forms/contact-submission';
+import {
+  submitContactForm,
+  type ContactSubmissionRow,
+} from '@/lib/forms/contact-submission';
 import {
   emailSchema,
   isDisposableEmail,
@@ -59,6 +66,16 @@ const bodySchema = z
       .transform((v) => (v === '' ? null : v)),
     message: z.string().trim().min(10).max(5000),
     website: z.string().optional(),
+    startedAt: z
+      .union([z.number(), z.string()])
+      .optional()
+      .nullable()
+      .transform((value) => {
+        if (value == null || value === '') return null;
+        const n = typeof value === 'number' ? value : Number(value);
+        if (!Number.isFinite(n)) return null;
+        return Math.trunc(n);
+      }),
     turnstileToken: z.string().min(1),
     landing_page: optionalAttributionText(ATTRIBUTION_FIELD_MAX.landing_page),
     referrer: optionalAttributionText(ATTRIBUTION_FIELD_MAX.referrer),
@@ -90,8 +107,39 @@ const MAX_ATTEMPTS = 3;
 
 const silentSuccess = () => NextResponse.json({ ok: true });
 
+type ParsedContactBody = z.infer<typeof bodySchema>;
+
+function toSubmissionRow(
+  req: Request,
+  body: ParsedContactBody,
+  ipHash: string,
+  enrichment: ContactEnrichment
+): ContactSubmissionRow {
+  return {
+    name: body.name,
+    email: body.email,
+    phone: body.phone,
+    company: body.company,
+    service: body.service,
+    budget: body.budget,
+    message: body.message,
+    ipHash,
+    landingPage: body.landing_page ?? null,
+    referrer: body.referrer ?? null,
+    utmSource: body.utm_source ?? null,
+    utmMedium: body.utm_medium ?? null,
+    utmCampaign: body.utm_campaign ?? null,
+    initialChannel: deriveInitialChannel({
+      utmSource: body.utm_source,
+      referrer: body.referrer,
+      requestOrigin: resolveRequestOrigin(req),
+    }),
+    enrichment,
+  };
+}
+
 export async function POST(req: Request) {
-  let body: z.infer<typeof bodySchema>;
+  let body: ParsedContactBody;
 
   try {
     const json = await req.json();
@@ -103,7 +151,21 @@ export async function POST(req: Request) {
     );
   }
 
+  const enrichment = await enrichContactSubmission({
+    request: req,
+    email: body.email,
+    honeypot: body.website,
+    startedAt: body.startedAt ?? null,
+    pagePath: body.landing_page ?? null,
+  });
+
   if (body.website && body.website.trim().length > 0) {
+    try {
+      const ipHash = hashIp(getClientIp(req));
+      await submitContactForm(toSubmissionRow(req, body, ipHash, enrichment));
+    } catch {
+      // Bots must not learn that the honeypot fired.
+    }
     return silentSuccess();
   }
 
@@ -144,26 +206,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    await submitContactForm({
-      name: body.name,
-      email: body.email,
-      phone: body.phone,
-      company: body.company,
-      service: body.service,
-      budget: body.budget,
-      message: body.message,
-      ipHash,
-      landingPage: body.landing_page ?? null,
-      referrer: body.referrer ?? null,
-      utmSource: body.utm_source ?? null,
-      utmMedium: body.utm_medium ?? null,
-      utmCampaign: body.utm_campaign ?? null,
-      initialChannel: deriveInitialChannel({
-        utmSource: body.utm_source,
-        referrer: body.referrer,
-        requestOrigin: resolveRequestOrigin(req),
-      }),
-    });
+    await submitContactForm(toSubmissionRow(req, body, ipHash, enrichment));
   } catch {
     return NextResponse.json(
       { ok: false, error: 'Could not save your message. Please try again.' },

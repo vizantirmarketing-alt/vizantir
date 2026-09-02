@@ -31,6 +31,7 @@ export default function ContactPageClient() {
   })
 
   const [websiteHoneypot, setWebsiteHoneypot] = useState('')
+  const [startedAt] = useState(() => Date.now())
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
@@ -87,6 +88,7 @@ export default function ContactPageClient() {
           budget: formData.budget,
           message: formData.message,
           website: websiteHoneypot,
+          startedAt,
           turnstileToken,
           landing_page: attributionRef.current?.landing_page ?? null,
           referrer: attributionRef.current?.referrer ?? null,
@@ -406,6 +408,7 @@ export default function ContactPageClient() {
                       placeholder="What are your goals? What challenges are you facing? Any specific requirements?"
                     />
                   </div>
+                  <input type="hidden" name="startedAt" value={String(startedAt)} />
                   <Honeypot value={websiteHoneypot} onChange={setWebsiteHoneypot} />
                   <div>
                     <TurnstileWidget
