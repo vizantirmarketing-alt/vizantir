@@ -19,6 +19,14 @@ import {
 } from '@/lib/forms/contact-fields'
 import { contactDetails } from '@/data/contact'
 
+function scrollAndFocus(el: HTMLElement | null) {
+  if (!el) return
+  requestAnimationFrame(() => {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    el.focus({ preventScroll: true })
+  })
+}
+
 export default function ContactPageClient() {
   const [formData, setFormData] = useState({
     name: '',
@@ -38,10 +46,22 @@ export default function ContactPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const attributionRef = useRef<ClientAttribution | null>(null)
+  const successRef = useRef<HTMLElement>(null)
+  const errorRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
     attributionRef.current = captureClientAttribution()
   }, [])
+
+  useEffect(() => {
+    if (!isSubmitted) return
+    scrollAndFocus(successRef.current)
+  }, [isSubmitted])
+
+  useEffect(() => {
+    if (!submitError) return
+    scrollAndFocus(errorRef.current)
+  }, [submitError])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -138,7 +158,12 @@ export default function ContactPageClient() {
 
   if (isSubmitted) {
     return (
-      <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
+      <main
+        ref={successRef}
+        tabIndex={-1}
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}
+      >
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -418,7 +443,11 @@ export default function ContactPageClient() {
                     />
                   </div>
                   {submitError ? (
-                    <p className="text-sm mt-2 text-body">
+                    <p
+                      ref={errorRef}
+                      tabIndex={-1}
+                      className="text-sm mt-2 text-body"
+                    >
                       {submitError}
                     </p>
                   ) : null}
