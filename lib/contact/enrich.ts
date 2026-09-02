@@ -3,7 +3,9 @@ import { resolveMx } from 'node:dns/promises';
 import { UAParser } from 'ua-parser-js';
 
 const MX_TIMEOUT_MS = 3000;
+const PROXYCHECK_TIMEOUT_MS = 3000;
 const FAST_SUBMIT_MS = 3000;
+const HIGH_FRAUD_SCORE = 85;
 
 export type ContactDeviceType = 'mobile' | 'tablet' | 'desktop';
 
@@ -24,6 +26,11 @@ export type ContactEnrichment = {
   httpReferrer: string | null;
   pagePath: string | null;
   mxValid: boolean | null;
+  vpn: boolean | null;
+  proxy: boolean | null;
+  tor: boolean | null;
+  isDatacenter: boolean | null;
+  fraudScore: number | null;
   isSuspect: boolean;
   suspectReason: string | null;
   submitDurationMs: number | null;
@@ -43,14 +50,26 @@ export async function enrichContactSubmission(
   const { request } = input;
   const userAgent = readHeader(request, 'user-agent');
   const parsed = parseUserAgent(userAgent);
+  const ip = readClientIp(request);
   const submitDurationMs = durationFromStartedAt(input.startedAt);
+  const honeypotFlagged =
+    input.honeypot != null && input.honeypot.trim().length > 0;
+
+  const [mxValid, reputation] = await Promise.all([
+    resolveMxValid(input.email),
+    honeypotFlagged
+      ? Promise.resolve(emptyIpReputation())
+      : lookupIpReputation(ip),
+  ]);
+
   const suspectReasons = collectSuspectReasons({
     honeypot: input.honeypot,
     submitDurationMs,
+    reputation,
   });
 
   return {
-    ip: readClientIp(request),
+    ip,
     country: readGeoHeader(request, 'x-vercel-ip-country'),
     region: readGeoHeader(request, 'x-vercel-ip-country-region'),
     city: readGeoHeader(request, 'x-vercel-ip-city'),
@@ -65,11 +84,43 @@ export async function enrichContactSubmission(
     acceptLanguage: readHeader(request, 'accept-language'),
     httpReferrer: readHeader(request, 'referer'),
     pagePath: nonempty(input.pagePath),
-    mxValid: await resolveMxValid(input.email),
+    mxValid,
+    vpn: reputation.vpn,
+    proxy: reputation.proxy,
+    tor: reputation.tor,
+    isDatacenter: reputation.isDatacenter,
+    fraudScore: reputation.fraudScore,
     isSuspect: suspectReasons.length > 0,
     suspectReason: suspectReasons.length > 0 ? suspectReasons.join(',') : null,
     submitDurationMs,
   };
+}
+
+export function formatContactNetworkLabel(enrichment: {
+  vpn: boolean | null;
+  proxy: boolean | null;
+  tor: boolean | null;
+  isDatacenter: boolean | null;
+  fraudScore: number | null;
+}): string {
+  const parts: string[] = [];
+  if (
+    enrichment.vpn === true ||
+    enrichment.proxy === true ||
+    enrichment.tor === true
+  ) {
+    parts.push('VPN');
+  }
+  if (enrichment.isDatacenter === true) {
+    parts.push('Datacenter');
+  }
+  if (
+    enrichment.fraudScore != null &&
+    enrichment.fraudScore >= HIGH_FRAUD_SCORE
+  ) {
+    parts.push(`risk ${enrichment.fraudScore}`);
+  }
+  return parts.length > 0 ? parts.join(', ') : 'Clean';
 }
 
 function readHeader(request: Request, name: string): string | null {
@@ -110,9 +161,28 @@ function durationFromStartedAt(startedAt: number | null): number | null {
   return Date.now() - startedAt;
 }
 
+type IpReputation = {
+  vpn: boolean | null;
+  proxy: boolean | null;
+  tor: boolean | null;
+  isDatacenter: boolean | null;
+  fraudScore: number | null;
+};
+
+function emptyIpReputation(): IpReputation {
+  return {
+    vpn: null,
+    proxy: null,
+    tor: null,
+    isDatacenter: null,
+    fraudScore: null,
+  };
+}
+
 function collectSuspectReasons(input: {
   honeypot: string | undefined;
   submitDurationMs: number | null;
+  reputation: IpReputation;
 }): string[] {
   const reasons: string[] = [];
   if (input.honeypot != null && input.honeypot.trim().length > 0) {
@@ -125,7 +195,88 @@ function collectSuspectReasons(input: {
   ) {
     reasons.push('fast_submit');
   }
+  if (
+    input.reputation.vpn === true ||
+    input.reputation.proxy === true ||
+    input.reputation.tor === true
+  ) {
+    reasons.push('vpn');
+  }
+  if (input.reputation.isDatacenter === true) {
+    reasons.push('datacenter');
+  }
+  if (
+    input.reputation.fraudScore != null &&
+    input.reputation.fraudScore >= HIGH_FRAUD_SCORE
+  ) {
+    reasons.push('high_fraud_score');
+  }
   return reasons;
+}
+
+async function lookupIpReputation(ip: string | null): Promise<IpReputation> {
+  const empty = emptyIpReputation();
+  const apiKey = process.env.PROXYCHECK_API_KEY?.trim();
+  if (ip == null || !apiKey) {
+    return empty;
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, PROXYCHECK_TIMEOUT_MS);
+
+  try {
+    const url = `https://proxycheck.io/v2/${encodeURIComponent(ip)}?key=${encodeURIComponent(apiKey)}&vpn=3&risk=1`;
+    const res = await fetch(url, {
+      signal: controller.signal,
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      return empty;
+    }
+    const data: unknown = await res.json();
+    return parseProxyCheckReputation(data, ip);
+  } catch {
+    return empty;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function parseProxyCheckReputation(data: unknown, ip: string): IpReputation {
+  const empty = emptyIpReputation();
+  const root = asRecord(data);
+  if (root === null) {
+    return empty;
+  }
+
+  const entry = asRecord(root[ip]);
+  if (entry === null) {
+    return empty;
+  }
+
+  const proxyYes = entry.proxy === 'yes';
+  const type = typeof entry.type === 'string' ? entry.type : null;
+  const fraudScore =
+    typeof entry.risk === 'number' && Number.isFinite(entry.risk)
+      ? Math.min(100, Math.max(0, Math.round(entry.risk)))
+      : null;
+
+  return {
+    vpn: proxyYes && type === 'VPN',
+    proxy: proxyYes,
+    tor: type === 'Tor',
+    isDatacenter: type === 'Hosting',
+    fraudScore,
+  };
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return null;
+  }
+  return value as Record<string, unknown>;
 }
 
 type ParsedUserAgent = {

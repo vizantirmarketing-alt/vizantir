@@ -1,6 +1,9 @@
 import 'server-only';
 import { Resend } from 'resend';
-import type { ContactEnrichment } from '@/lib/contact/enrich';
+import {
+  formatContactNetworkLabel,
+  type ContactEnrichment,
+} from '@/lib/contact/enrich';
 import { emptyToNull } from '@/lib/forms/attribution';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
@@ -101,6 +104,7 @@ function contactNotificationText(
     `Location: ${location.length > 0 ? location : dash}`,
     `Device: ${enrichment.deviceSummary ?? dash}`,
     `IP: ${enrichment.ip ?? dash}`,
+    `Network: ${formatContactNetworkLabel(enrichment)}`,
     `MX valid: ${mxLabel}`,
     '',
     `Submitted at: ${submittedAtIso}`
@@ -124,6 +128,7 @@ function submissionDetailsRows(enrichment: ContactEnrichment): string {
     ${rowLine('Location', escapeHtml(location.length > 0 ? location : dash))}
     ${rowLine('Device', escapeHtml(enrichment.deviceSummary ?? dash))}
     ${rowLine('IP', escapeHtml(enrichment.ip ?? dash))}
+    ${rowLine('Network', escapeHtml(formatContactNetworkLabel(enrichment)))}
     ${rowLine('MX valid', escapeHtml(mxLabel))}
   `;
 }
@@ -250,6 +255,11 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
       user_agent: row.enrichment.userAgent,
       accept_language: row.enrichment.acceptLanguage,
       mx_valid: row.enrichment.mxValid,
+      vpn: row.enrichment.vpn,
+      proxy: row.enrichment.proxy,
+      tor: row.enrichment.tor,
+      is_datacenter: row.enrichment.isDatacenter,
+      fraud_score: row.enrichment.fraudScore,
       is_suspect: row.enrichment.isSuspect,
       suspect_reason: row.enrichment.suspectReason,
       submit_duration_ms: row.enrichment.submitDurationMs,
