@@ -141,6 +141,9 @@ type KeyedFinding = {
   findingKey: string
 }
 
+const ADMINISTRATOR_MESSAGE_MAX = 500
+const EXCEPTION_DETAIL_MAX = 200
+
 function logPersistError(detector: string, error: PersistError): void {
   console.error('Decision persistFindings failed', {
     detector,
@@ -149,6 +152,23 @@ function logPersistError(detector: string, error: PersistError): void {
     details: error.details,
     hint: error.hint,
   })
+}
+
+function truncate(value: string, max: number): string {
+  if (value.length <= max) {
+    return value
+  }
+  return value.slice(0, max)
+}
+
+function formatPersistErrorDetail(error: PersistError): string {
+  const head = [error.code, error.message]
+    .filter((part) => part.length > 0)
+    .join(' ')
+  if (error.hint !== null && error.hint.length > 0) {
+    return head.length > 0 ? `${head}; ${error.hint}` : error.hint
+  }
+  return head
 }
 
 function collapseKeyedFindings(
@@ -188,7 +208,7 @@ async function persistFindings(
   findings: readonly Finding[],
   periodStart: string,
   periodEnd: string,
-): Promise<number | null> {
+): Promise<number | { error: PersistError }> {
   if (findings.length === 0) {
     return 0
   }
@@ -206,7 +226,7 @@ async function persistFindings(
   )
   if (parentError) {
     logPersistError(detector, parentError)
-    return null
+    return { error: parentError }
   }
 
   const emissionKeys = keyed.map((row) => row.finding.emissionKey)
@@ -218,12 +238,19 @@ async function persistFindings(
 
   if (existingResult.error) {
     logPersistError(detector, existingResult.error)
-    return null
+    return { error: existingResult.error }
   }
 
   const existing = existingKeySet(existingResult.data)
   if (existing === null) {
-    return null
+    return {
+      error: {
+        message: 'Unexpected decision_items key payload',
+        code: '',
+        details: null,
+        hint: null,
+      },
+    }
   }
 
   const now = new Date().toISOString()
@@ -259,7 +286,7 @@ async function persistFindings(
     const inserted = await supabase.from('decision_items').insert(toInsert)
     if (inserted.error) {
       logPersistError(detector, inserted.error)
-      return null
+      return { error: inserted.error }
     }
     saved += toInsert.length
   }
@@ -279,7 +306,7 @@ async function persistFindings(
 
     if (updated.error) {
       logPersistError(detector, updated.error)
-      return null
+      return { error: updated.error }
     }
     saved += 1
   }
@@ -290,6 +317,7 @@ async function persistFindings(
 type DetectorFailure = {
   reason: 'upsert_error' | 'exception'
   status?: number
+  detail?: string
 }
 
 export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult> {
@@ -398,16 +426,22 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
           span.start,
           span.end,
         )
-        if (saved === null) {
+        if (typeof saved !== 'number') {
           failedSets.push(
-            formatFailedDetector(detector.name, { reason: 'upsert_error' }),
+            formatFailedDetector(detector.name, {
+              reason: 'upsert_error',
+              detail: formatPersistErrorDetail(saved.error),
+            }),
           )
           continue
         }
         findings += saved
-      } catch {
+      } catch (error) {
         failedSets.push(
-          formatFailedDetector(detector.name, { reason: 'exception' }),
+          formatFailedDetector(detector.name, {
+            reason: 'exception',
+            detail: truncate(String(error), EXCEPTION_DETAIL_MAX),
+          }),
         )
       }
     }
@@ -425,7 +459,10 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
 
     const message =
       failedSets.length > 0
-        ? `Failed detectors: ${failedSets.join('; ')}`
+        ? truncate(
+            `Failed detectors: ${failedSets.join('; ')}`,
+            ADMINISTRATOR_MESSAGE_MAX,
+          )
         : undefined
 
     await finishRun(supabase, runId, {
@@ -481,8 +518,11 @@ async function finishRun(
 
 function formatFailedDetector(
   label: string,
-  failure: Pick<DetectorFailure, 'reason' | 'status'>,
+  failure: Pick<DetectorFailure, 'reason' | 'status' | 'detail'>,
 ): string {
+  if (failure.detail !== undefined && failure.detail.length > 0) {
+    return `${label} (${failure.reason}: ${failure.detail})`
+  }
   if (failure.status === undefined) {
     return `${label} (${failure.reason})`
   }
