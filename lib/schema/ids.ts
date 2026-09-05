@@ -32,6 +32,10 @@ export function howToId(pageUrl: string) {
   return `${pageUrl}#howto`
 }
 
+export function faqId(pageUrl: string) {
+  return `${pageUrl}#faq`
+}
+
 // ============================================
 // Content Type Entities
 // Customize these paths for your URL structure
@@ -82,6 +86,10 @@ export function refWebsite(siteUrl: string) {
 
 export function refWebPage(pageUrl: string) {
   return { '@id': webPageId(pageUrl) }
+}
+
+export function refFaq(pageUrl: string) {
+  return { '@id': faqId(pageUrl) }
 }
 
 export function refPerson(siteUrl: string, slug: string) {

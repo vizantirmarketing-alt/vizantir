@@ -12,9 +12,9 @@ import {
 } from '@/data/pricing'
 
 import {
-  websiteId,
   webPageId,
   howToId,
+  faqId,
   serviceId,
   articleId,
   caseStudyId,
@@ -60,6 +60,45 @@ function pricedOffer(tier: {
       description: tier.description,
     },
   }
+}
+
+type ServiceOfferTier = {
+  name: string
+  price: number
+  description: string
+}
+
+/** Service slugs that publish a priced catalog. Other service slugs stay unpriced. */
+const SERVICE_OFFERS_BY_SLUG = new Map<string, readonly ServiceOfferTier[]>([
+  [
+    'website-care',
+    carePricing.map((tier) => ({
+      name: tier.name,
+      price: tier.priceMin,
+      description: tier.description,
+    })),
+  ],
+  [
+    'landing-pages',
+    landingPagePricing.map((tier) => ({
+      name: tier.name,
+      price: tier.priceMin,
+      description: tier.description,
+    })),
+  ],
+])
+
+function serviceOffers(slug: string) {
+  const tiers = SERVICE_OFFERS_BY_SLUG.get(slug)
+  if (!tiers) return undefined
+
+  return tiers.map((tier) => ({
+    '@type': 'Offer' as const,
+    name: tier.name,
+    price: tier.price.toString(),
+    priceCurrency: 'USD',
+    description: tier.description,
+  }))
 }
 
 // ============================================
@@ -162,11 +201,12 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
 // FAQ Schema
 // ============================================
 
-export function faqSchema(faqs: readonly FAQ[] | undefined | null) {
+export function faqSchema(faqs: readonly FAQ[] | undefined | null, pageUrl: string) {
   if (!faqs || faqs.length === 0) return null
 
   return {
     '@type': 'FAQPage',
+    '@id': faqId(pageUrl),
     mainEntity: faqs.map((faq) => ({
       '@type': 'Question',
       name: faq.question,
@@ -255,6 +295,7 @@ export function itemListSchema({ name, items }: ItemListSchemaParams) {
 
 export function serviceSchema(service: Service, siteUrl: string) {
   const url = `${siteUrl}/services/${service.slug}`
+  const offers = serviceOffers(service.slug)
 
   return {
     '@type': 'Service',
@@ -264,6 +305,7 @@ export function serviceSchema(service: Service, siteUrl: string) {
     url,
     provider: refOrganization(siteUrl),
     areaServed: { '@type': 'Country', name: 'United States' },
+    ...(offers && { offers }),
     ...(service.offerings && service.offerings.length > 0 && {
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
