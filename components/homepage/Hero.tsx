@@ -200,6 +200,12 @@ const Hero = () => {
             </span>
           </h1>
 
+          <p
+            className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500 text-muted-foreground"
+          >
+            Vizantir is a design and development studio in Las Vegas building custom websites for established brands. Every site is built from scratch on Next.js, with no templates and no page builders. Projects start at $15,000 and typically run six to twelve weeks from kickoff to launch.
+          </p>
+
           <p 
             className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500 text-muted-foreground"
           >
