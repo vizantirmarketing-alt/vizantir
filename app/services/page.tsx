@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { sanityFetch } from '@/lib/sanity/client'
 import { allServicesQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { JsonLd } from '@/components/seo/JsonLd'
-import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
+import { collectionPageSchema, breadcrumbSchema, graphSchema, servicesOfferCatalogSchema } from '@/lib/schema'
 import type { ServiceListItem, SiteSettings } from '@/lib/sanity/types'
 import ServicesPageClient from './ServicesPageClient'
 
@@ -48,6 +48,7 @@ export default async function ServicesPage() {
       siteUrl: settings.siteUrl,
       items: list.map((s) => ({ name: s.title, url: `${settings.siteUrl}/services/${s.slug}` })),
     }),
+    servicesOfferCatalogSchema(settings.siteUrl),
     breadcrumbSchema([
       { name: 'Home', url: settings.siteUrl },
       { name: 'Services', url },

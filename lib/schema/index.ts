@@ -5,6 +5,11 @@ import type {
   FAQ,
   CaseStudy,
 } from '@/lib/sanity/types'
+import {
+  carePricing,
+  landingPagePricing,
+  projectPricing,
+} from '@/data/pricing'
 
 import {
   websiteId,
@@ -21,6 +26,41 @@ import {
   refWebPage,
   refPerson,
 } from './ids'
+
+const OFFER_PRICE_BY_NAME = new Map<string, number>([
+  ...projectPricing.map((tier) => [tier.name, tier.priceNumeric] as const),
+  ...carePricing.map((tier) => [tier.name, tier.priceMin] as const),
+  ...landingPagePricing.map((tier) => [tier.name, tier.priceMin] as const),
+])
+
+function offerPriceFields(name: string) {
+  const price = OFFER_PRICE_BY_NAME.get(name)
+  if (price == null) return undefined
+
+  return {
+    price: price.toString(),
+    priceCurrency: 'USD' as const,
+  }
+}
+
+function pricedOffer(tier: {
+  name: string
+  price: number
+  description: string
+}) {
+  return {
+    '@type': 'Offer',
+    name: tier.name,
+    price: tier.price.toString(),
+    priceCurrency: 'USD',
+    description: tier.description,
+    itemOffered: {
+      '@type': 'Service',
+      name: tier.name,
+      description: tier.description,
+    },
+  }
+}
 
 // ============================================
 // Helpers
@@ -233,9 +273,50 @@ export function serviceSchema(service: Service, siteUrl: string) {
           '@id': `${url}#offer-${i}`,
           name: offering.name,
           description: offering.description,
+          ...offerPriceFields(offering.name),
         })),
       },
     }),
+  }
+}
+
+export function servicesOfferCatalogSchema(siteUrl: string) {
+  const url = `${siteUrl}/services`
+
+  return {
+    '@type': 'Service',
+    '@id': `${url}#pricing`,
+    name: 'Website Design Services',
+    url,
+    provider: refOrganization(siteUrl),
+    areaServed: { '@type': 'Country', name: 'United States' },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Website Design Pricing',
+      itemListElement: [
+        ...projectPricing.map((tier) =>
+          pricedOffer({
+            name: tier.name,
+            price: tier.priceNumeric,
+            description: tier.description,
+          }),
+        ),
+        ...carePricing.map((tier) =>
+          pricedOffer({
+            name: tier.name,
+            price: tier.priceMin,
+            description: tier.description,
+          }),
+        ),
+        ...landingPagePricing.map((tier) =>
+          pricedOffer({
+            name: tier.name,
+            price: tier.priceMin,
+            description: tier.description,
+          }),
+        ),
+      ],
+    },
   }
 }
 
