@@ -28,6 +28,22 @@ export const caseStudy = defineType({
       description: 'Client or brand name',
     }),
     defineField({
+      name: 'projectType',
+      title: 'Project type',
+      type: 'string',
+      description:
+        'Commissioned client work or a self-initiated studio project. Defaults to client so existing documents stay classified until they are set.',
+      options: {
+        list: [
+          { title: 'Client', value: 'client' },
+          { title: 'Studio', value: 'studio' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'client',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'industry',
       title: 'Industry',
       type: 'string',
@@ -128,14 +144,16 @@ export const caseStudy = defineType({
     select: {
       title: 'title',
       client: 'client',
+      projectType: 'projectType',
       sortOrder: 'sortOrder',
       media: 'heroImage',
     },
-    prepare({ title, client, sortOrder, media }) {
+    prepare({ title, client, projectType, sortOrder, media }) {
       const clientLabel = client || 'No client';
+      const typeLabel = projectType === 'studio' ? 'Studio' : 'Client';
       return {
         title,
-        subtitle: `${clientLabel} · sort: ${sortOrder ?? 100}`,
+        subtitle: `${clientLabel} · ${typeLabel} · sort: ${sortOrder ?? 100}`,
         media,
       };
     },

@@ -28,6 +28,7 @@
     "create:gei": "tsx scripts/create-gei-case-study.ts",
     "seed:case-study-sort-order": "tsx scripts/seed-case-study-sort-order.ts",
     "seed:case-study-sort-order:live": "tsx scripts/seed-case-study-sort-order.ts --live",
+    "seed:case-study-project-type": "tsx scripts/seed-case-study-project-type.ts",
     "create:post": "tsx scripts/create-post.ts",
     "export:post": "tsx scripts/export-post-body.ts",
     "seed:elementor-posts": "tsx scripts/seed-elementor-posts.ts",

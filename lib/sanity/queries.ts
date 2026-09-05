@@ -130,6 +130,7 @@ export const allCaseStudiesQuery = groq`
     title,
     "slug": slug.current,
     client,
+    projectType,
     industry,
     summary,
     heroImage{
@@ -161,6 +162,7 @@ export const caseStudiesBySlugsQuery = groq`
     title,
     "slug": slug.current,
     client,
+    projectType,
     industry,
     summary,
     heroImage{
@@ -204,6 +206,7 @@ export const caseStudyBySlugQuery = groq`
     title,
     "slug": slug.current,
     client,
+    projectType,
     industry,
     summary,
     heroImage{
@@ -340,7 +343,9 @@ export const chatAllServicesQuery = groq`
 export const chatAllCaseStudiesQuery = groq`
   *[_type == "caseStudy"] | order(featured desc) {
     title,
+    "slug": slug.current,
     client,
+    projectType,
     industry,
     summary,
     stack,
