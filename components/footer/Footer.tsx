@@ -90,10 +90,6 @@ const Footer = () => {
                 { name: 'Technology', href: '/technology' },
                 { name: 'About Us', href: '/about' },
                 { name: 'Our Work', href: '/case-studies' },
-                { name: 'Analytir', href: '/analytir' },
-                { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
-                { name: 'Website Redesign Las Vegas', href: '/website-redesign-las-vegas' },
-                { name: 'Landing Pages', href: '/landing-pages' },
                 { name: 'Get Started', href: '/get-started' },
               ].map((link) => (
                 <li key={link.href}>
@@ -120,6 +116,8 @@ const Footer = () => {
                 { name: 'Hospitality Web Design', href: '/hospitality-web-design' },
                 { name: 'Law Firm Web Design', href: '/law-firm-web-design' },
                 { name: 'Commercial Real Estate Web Design', href: '/commercial-real-estate-web-design' },
+                { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
+                { name: 'Website Redesign Las Vegas', href: '/website-redesign-las-vegas' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link 
@@ -146,6 +144,8 @@ const Footer = () => {
                 { name: 'FAQ', href: '/faq' },
                 // { name: 'Testimonials', href: '/testimonials' }, // Temporarily hidden
                 { name: 'Next.js vs WordPress', href: '/nextjs-vs-wordpress' },
+                { name: 'Landing Pages', href: '/landing-pages' },
+                { name: 'Analytir', href: '/analytir' },
                 { name: 'Sitemap', href: '/sitemap-page' },
               ].map((link) => (
                 <li key={link.href}>
