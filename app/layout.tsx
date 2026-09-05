@@ -59,7 +59,12 @@ const analytirMono = JetBrains_Mono({
   display: 'swap',
 })
 
-function BusinessJsonLd() {
+async function BusinessJsonLd() {
+  const settings = await getSettings()
+  const knowsAbout = settings?.knowsAbout
+    ?.filter((item) => typeof item === 'string' && item.trim() !== '')
+    .map((item) => item.trim())
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
@@ -124,6 +129,7 @@ function BusinessJsonLd() {
         { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Care' } },
       ],
     },
+    ...(knowsAbout && knowsAbout.length > 0 ? { knowsAbout } : {}),
   }
 
   return (
