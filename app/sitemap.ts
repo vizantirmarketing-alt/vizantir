@@ -8,37 +8,41 @@ export const revalidate = 3600
 /**
  * Real content-modification dates for hardcoded routes.
  *
+ * Update the matching entry whenever that page's visible content changes.
+ * Leaving these stale trains Google to ignore lastmod across the property.
+ *
  * Sanity-backed pages derive lastModified from `_updatedAt`. These routes have
- * no CMS record, so the date lives here. Update the entry when the page's
- * content actually changes — not on every deploy.
+ * no CMS record, so the date lives here. Do not bump a date on deploy, schema
+ * refactors, or shared-layout tweaks — only when this URL's content changed.
  *
  * Do not replace these with `new Date()`. Emitting a fresh timestamp on every
  * regeneration tells Google the whole site changed every hour, which causes it
- * to discount lastmod as a scheduling signal across the entire property.
+ * to discount lastmod as a scheduling signal.
  */
 const STATIC_PAGE_DATES: Record<string, string> = {
-  '': '2026-07-10',
-  '/about': '2026-07-10',
-  '/contact': '2026-07-10',
-  '/services': '2026-07-10',
-  '/blog': '2026-07-10',
-  '/faq': '2026-07-10',
-  '/las-vegas-web-design': '2026-07-10',
-  '/hospitality-web-design': '2026-07-10',
-  '/law-firm-web-design': '2026-07-10',
-  '/commercial-real-estate-web-design': '2026-07-10',
-  '/website-redesign-las-vegas': '2026-07-10',
-  '/landing-pages': '2026-07-10',
-  '/landing-pages/for-google-ads': '2026-07-10',
-  '/landing-pages/for-product-launches': '2026-07-10',
-  '/case-studies': '2026-07-10',
+  '': '2026-09-05',
+  '/about': '2026-08-15',
+  '/contact': '2026-09-04',
+  '/services': '2026-08-20',
+  '/blog': '2026-08-15',
+  '/faq': '2026-09-05',
+  '/las-vegas-web-design': '2026-08-20',
+  '/hospitality-web-design': '2026-08-20',
+  '/law-firm-web-design': '2026-08-20',
+  '/commercial-real-estate-web-design': '2026-08-20',
+  '/website-redesign-las-vegas': '2026-08-20',
+  '/landing-pages': '2026-08-20',
+  '/landing-pages/for-google-ads': '2026-08-20',
+  '/landing-pages/for-product-launches': '2026-08-20',
+  '/case-studies': '2026-09-05',
   '/analytir': '2026-08-06',
-  '/how-we-work': '2026-07-10',
+  '/how-we-work': '2026-08-20',
   '/nextjs-vs-wordpress': '2026-09-05',
-  '/are-we-a-fit': '2026-07-10',
-  '/get-started': '2026-07-10',
-  '/industries': '2026-07-10',
-  '/technology': '2026-07-10',
+  '/are-we-a-fit': '2026-08-20',
+  '/get-started': '2026-08-15',
+  '/industries': '2026-08-15',
+  '/technology': '2026-08-15',
+  '/llms.txt': '2026-09-05',
 }
 
 type StaticRoute = {
@@ -92,6 +96,7 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: '/technology', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/analytir', changeFrequency: 'yearly', priority: 0.7 },
   { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
+  { path: '/llms.txt', changeFrequency: 'monthly', priority: 0.5 },
 ]
 
 function staticDate(path: string): Date {
