@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { PortableText } from '@portabletext/react'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
@@ -341,40 +341,49 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 </h2>
               </motion.div>
               <div className="space-y-4">
-                {service.faqs!.map((faq, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.04 }}
-                    className="overflow-hidden rounded-xl"
-                    style={{
-                      background: 'rgba(0,0,0,0.02)',
-                      border: `1px solid rgba(0,0,0,0.08)`,
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                      className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
+                {service.faqs!.map((faq, index) => {
+                  const isOpen = openFaqIndex === index
+                  const triggerId = `service-faq-trigger-${service.slug}-${index}`
+                  const panelId = `service-faq-panel-${service.slug}-${index}`
+
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: index * 0.04 }}
+                      className="overflow-hidden rounded-xl"
+                      style={{
+                        background: 'rgba(0,0,0,0.02)',
+                        border: `1px solid rgba(0,0,0,0.08)`,
+                      }}
                     >
-                      <span className="pr-4 text-lg font-semibold">{faq.question}</span>
-                      <AccordionIndicator
-                        isOpen={openFaqIndex === index}
-                        className="w-5 h-5 flex-shrink-0"
-                        style={{ color: 'var(--cobalt-accent)' }}
-                      />
-                    </button>
-                    <AnimatePresence>
-                      {openFaqIndex === index ? (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.28 }}
-                          className="overflow-hidden"
-                        >
+                      <button
+                        id={triggerId}
+                        type="button"
+                        onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
+                      >
+                        <span className="pr-4 text-lg font-semibold">{faq.question}</span>
+                        <AccordionIndicator
+                          isOpen={isOpen}
+                          className="w-5 h-5 flex-shrink-0"
+                          style={{ color: 'var(--cobalt-accent)' }}
+                        />
+                      </button>
+                      <div
+                        id={panelId}
+                        role="region"
+                        aria-labelledby={triggerId}
+                        aria-hidden={!isOpen}
+                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                        }`}
+                      >
+                        <div className="overflow-hidden">
                           <div className="px-6 pb-6">
                             <p
                               className="leading-relaxed whitespace-pre-wrap text-body"
@@ -382,11 +391,11 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                               {faq.answer}
                             </p>
                           </div>
-                        </motion.div>
-                      ) : null}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )
+                })}
               </div>
             </div>
           </section>
