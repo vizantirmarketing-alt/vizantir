@@ -2,7 +2,7 @@
 
 import type { Faq } from '@/components/homepage/FAQSection'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 
@@ -92,6 +92,10 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
               </div>
             ) : (
               filteredFaqs.map((faq, index) => {
+                const isOpen = openId === faq._id
+                const triggerId = `faq-page-trigger-${faq._id}`
+                const panelId = `faq-page-panel-${faq._id}`
+
                 return (
                   <motion.div
                     key={faq._id}
@@ -105,33 +109,37 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                     }}
                   >
                     <button
+                      id={triggerId}
+                      type="button"
                       onClick={() => toggleFAQ(faq._id)}
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
                       className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
                     >
                       <span className="text-lg font-semibold pr-8">{faq.question}</span>
                       <AccordionIndicator
-                        isOpen={openId === faq._id}
+                        isOpen={isOpen}
                         className="w-5 h-5"
                         style={{ color: 'var(--cobalt-accent)' }}
                       />
                     </button>
-                    <AnimatePresence>
-                      {openId === faq._id && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="px-6 pb-6">
-                            <p className="leading-relaxed text-body">
-                              {faq.answer}
-                            </p>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    <div
+                      id={panelId}
+                      role="region"
+                      aria-labelledby={triggerId}
+                      aria-hidden={!isOpen}
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="px-6 pb-6">
+                          <p className="leading-relaxed text-body">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </motion.div>
                 )
               })

@@ -385,52 +385,72 @@ export default function HowWeWorkPageClient() {
           </motion.h2>
 
           <div className="space-y-3">
-            {howWeWorkFaqs.map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-              >
-                <button
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className={`w-full text-left px-6 py-5 rounded-xl border transition-all duration-300 ${
-                    openFaq !== index ? 'hover:bg-[#F9FAFB]' : ''
+            {howWeWorkFaqs.map((faq, index) => {
+              const isOpen = openFaq === index
+              const triggerId = `how-we-work-faq-trigger-${index}`
+              const panelId = `how-we-work-faq-panel-${index}`
+
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  className={`rounded-xl border px-6 py-5 transition-all duration-300 ${
+                    isOpen ? '' : 'hover:bg-[#F9FAFB]'
                   }`}
                   style={{
                     background: colors.cardBg,
-                    borderColor:
-                      openFaq === index
-                        ? 'rgba(0, 112, 243,0.3)'
-                        : colors.cardBorder,
+                    borderColor: isOpen
+                      ? 'rgba(0, 112, 243,0.3)'
+                      : colors.cardBorder,
                   }}
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <span
-                      className="font-medium"
-                      style={{ color: colors.text }}
-                    >
-                      {faq.question}
-                    </span>
-                    <AccordionIndicator
-                      isOpen={openFaq === index}
-                      className="w-5 h-5 flex-shrink-0"
-                      style={{ color: 'var(--cobalt-accent)' }}
-                    />
-                  </div>
+                  <button
+                    id={triggerId}
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="w-full text-left"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <span
+                        className="font-medium"
+                        style={{ color: colors.text }}
+                      >
+                        {faq.question}
+                      </span>
+                      <AccordionIndicator
+                        isOpen={isOpen}
+                        className="w-5 h-5 flex-shrink-0"
+                        style={{ color: 'var(--cobalt-accent)' }}
+                      />
+                    </div>
+                  </button>
 
-                  {openFaq === index && (
-                    <p
-                      className="mt-4 text-sm leading-relaxed"
-                      style={{ color: colors.textMuted }}
-                    >
-                      {faq.answer}
-                    </p>
-                  )}
-                </button>
-              </motion.div>
-            ))}
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={triggerId}
+                    aria-hidden={!isOpen}
+                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p
+                        className="mt-4 text-sm leading-relaxed"
+                        style={{ color: colors.textMuted }}
+                      >
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
