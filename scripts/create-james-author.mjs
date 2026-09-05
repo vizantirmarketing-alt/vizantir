@@ -66,11 +66,7 @@ const authorDoc = {
   slug: { _type: 'slug', current: 'james-tram' },
   role: 'Founder',
   linkedin: 'https://www.linkedin.com/in/james-tram-vizantir',
-  credentials: [
-    '25 years operating businesses',
-    'Next.js, TypeScript, Sanity',
-    'Founder, Vizantir Design Studio',
-  ],
+  credentials: ['25 years operating businesses'],
   bio: [
     {
       _type: 'block',

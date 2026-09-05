@@ -55,6 +55,9 @@ export const author = defineType({
       title: 'Credentials',
       type: 'array',
       of: [{ type: 'string' }],
+      description:
+        'One short phrase for the byline (e.g. “25 years operating businesses”). Do not list a tech stack or repeat the Role field.',
+      validation: (Rule) => Rule.max(1),
     }),
   ],
   preview: {
