@@ -38,7 +38,8 @@
     "patch:elementor-isnt-alone": "tsx scripts/patch-elementor-isnt-alone.ts",
     "patch:website-care-service": "tsx scripts/patch-website-care-service.ts",
     "patch:faq-corrections": "tsx scripts/patch-faq-corrections.ts",
-    "expand:faq-answers": "tsx scripts/expand-faq-answers.ts"
+    "expand:faq-answers": "tsx scripts/expand-faq-answers.ts",
+    "move:faq-placements": "tsx scripts/move-faq-placements.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",
