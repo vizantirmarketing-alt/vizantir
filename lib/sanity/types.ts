@@ -155,6 +155,7 @@ export interface CaseStudyListItem {
   title: string
   slug: string
   client?: string
+  projectType?: 'client' | 'studio'
   industry?: string
   summary?: string
   heroImage?: CaseStudyImage
