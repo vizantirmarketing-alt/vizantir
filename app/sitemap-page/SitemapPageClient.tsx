@@ -15,7 +15,6 @@ type Props = {
   services: SitemapPageItem[]
   caseStudies: SitemapPageItem[]
   posts: SitemapPageItem[]
-  locations: SitemapPageItem[]
 }
 
 function SectionHeading({ label }: { label: string }) {
@@ -52,7 +51,6 @@ export default function SitemapPageClient({
   services,
   caseStudies,
   posts,
-  locations,
 }: Props) {
   const postCount = posts.length
 
@@ -69,7 +67,7 @@ export default function SitemapPageClient({
             <p className="max-w-2xl text-lg text-muted-foreground">
               This page lists every public page on Vizantir&apos;s site, organized by section.
               Marketing pages, industries, technology, services, case studies, blog posts,
-              locations, and legal resources.
+              and legal resources.
             </p>
           </motion.div>
         </div>
@@ -153,28 +151,6 @@ export default function SitemapPageClient({
                 ))}
               </ul>
             </motion.div>
-
-            {locations.length > 0 ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.32 }}
-              >
-                <SectionHeading label="Locations" />
-                <ul className="space-y-3">
-                  {locations.map((location) => (
-                    <li key={location.slug}>
-                      <Link
-                        href={`/locations/${location.slug}`}
-                        className="link-cobalt text-muted-foreground"
-                      >
-                        {location.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ) : null}
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}

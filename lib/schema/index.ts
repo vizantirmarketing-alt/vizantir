@@ -1,7 +1,6 @@
 import type { 
   Service, 
   Post, 
-  Location, 
   FAQ,
   CaseStudy,
 } from '@/lib/sanity/types'
@@ -23,7 +22,6 @@ import {
   caseStudyId,
   personId,
   founderId,
-  locationId,
   refOrganization,
   refWebsite,
   refWebPage,
@@ -102,16 +100,6 @@ function serviceOffers(slug: string) {
     priceCurrency: 'USD',
     description: tier.description,
   }))
-}
-
-// ============================================
-// Helpers
-// ============================================
-
-function hasValidCoordinates(
-  coords?: { lat?: number; lng?: number }
-): coords is { lat: number; lng: number } {
-  return coords?.lat != null && coords?.lng != null
 }
 
 // ============================================
@@ -539,62 +527,6 @@ export function articleSchema({
         value: item.value,
       })),
     }),
-  }
-}
-
-// ============================================
-// Location Schema
-// ============================================
-
-export function locationSchema(location: Location, siteUrl: string) {
-  const url = `${siteUrl}/locations/${location.slug}`
-  const id = locationId(siteUrl, location.slug, location.hasPhysicalPresence)
-
-  // Physical location — distinct LocalBusiness for this /locations/[slug] URL; site-wide Organization/LocalBusiness is in app/layout.tsx
-  if (location.hasPhysicalPresence && location.address?.street) {
-    return {
-      '@type': 'LocalBusiness',
-      '@id': id,
-      name: location.name,
-      description: location.description,
-      url,
-      parentOrganization: refOrganization(siteUrl),
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: location.address.street,
-        addressLocality: location.address.city,
-        addressRegion: location.address.state,
-        postalCode: location.address.zip,
-        addressCountry: 'US',
-      },
-      ...(hasValidCoordinates(location.coordinates) && {
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: location.coordinates.lat,
-          longitude: location.coordinates.lng,
-        },
-      }),
-      ...(location.serviceAreas && location.serviceAreas.length > 0 && {
-        areaServed: location.serviceAreas.map((area) => ({
-          '@type': 'City',
-          name: area,
-        })),
-      }),
-    }
-  }
-
-  // Remote/service area (no physical presence)
-  return {
-    '@type': 'Service',
-    '@id': id,
-    name: `Services in ${location.city}`,
-    description: location.description,
-    url,
-    provider: refOrganization(siteUrl),
-    areaServed: {
-      '@type': 'City',
-      name: location.city,
-    },
   }
 }
 

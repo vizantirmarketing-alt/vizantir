@@ -236,53 +236,13 @@ export const caseStudyBySlugQuery = groq`
 `
 
 // ============================================
-// Locations (for multi-location businesses)
-// ============================================
-
-export const allLocationsQuery = groq`
-  *[_type == "location"] | order(name asc) {
-    _id,
-    _updatedAt,
-    name,
-    "slug": slug.current,
-    city,
-    state
-  }
-`
-
-export const locationBySlugQuery = groq`
-  *[_type == "location" && slug.current == $slug][0] {
-    _id,
-    _updatedAt,
-    name,
-    "slug": slug.current,
-    city,
-    state,
-    description,
-    headline,
-    subheadline,
-    hasPhysicalPresence,
-    address,
-    coordinates,
-    serviceAreas,
-    content,
-    testimonials,
-    faqs,
-    "metaTitle": seo.metaTitle,
-    "metaDescription": seo.metaDescription,
-    "ogImageUrl": seo.ogImage.asset->url
-  }
-`
-
-// ============================================
 // Sitemap
 // ============================================
 
 export const sitemapQuery = groq`{
   "posts": *[_type == "post" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt, publishedAt },
   "services": *[_type == "service" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(coalesce(order, 999) asc, title asc) { "slug": slug.current, _updatedAt },
-  "caseStudies": *[_type == "caseStudy" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt },
-  "locations": *[_type == "location" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt }
+  "caseStudies": *[_type == "caseStudy" && (!defined(seo.noIndex) || seo.noIndex == false)] { "slug": slug.current, _updatedAt }
 }`
 
 export const sitemapPageQuery = groq`{
@@ -299,11 +259,6 @@ export const sitemapPageQuery = groq`{
   "caseStudies": *[_type == "caseStudy" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(title asc) {
     "slug": slug.current,
     title,
-    _updatedAt
-  },
-  "locations": *[_type == "location" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(name asc) {
-    "slug": slug.current,
-    "title": name,
     _updatedAt
   }
 }`

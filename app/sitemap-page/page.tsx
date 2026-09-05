@@ -44,7 +44,7 @@ export const revalidate = 3600
 
 export default async function SitemapPage() {
   const data = await sanityFetch<SitemapPageData>(sitemapPageQuery, {}, {
-    tags: ['post', 'service', 'caseStudy', 'location'],
+    tags: ['post', 'service', 'caseStudy'],
   })
 
   return (
@@ -57,7 +57,6 @@ export default async function SitemapPage() {
       services={data.services ?? []}
       caseStudies={data.caseStudies ?? []}
       posts={data.posts ?? []}
-      locations={data.locations ?? []}
     />
   )
 }

@@ -108,7 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [settings, data] = await Promise.all([
     sanityFetch<Pick<SiteSettings, 'siteUrl'>>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
     sanityFetch<SitemapData>(sitemapQuery, {}, {
-      tags: ['post', 'service', 'caseStudy', 'location'],
+      tags: ['post', 'service', 'caseStudy'],
     }),
   ])
 
@@ -146,18 +146,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }))
 
-  const locationPages: MetadataRoute.Sitemap = (data?.locations || []).map((l) => ({
-    url: `${baseUrl}/locations/${l.slug}`,
-    lastModified: new Date(l._updatedAt),
-    changeFrequency: 'monthly',
-    priority: 0.8,
-  }))
-
   return [
     ...staticPages,
     ...postPages,
     ...servicePages,
     ...caseStudyPages,
-    ...locationPages,
   ]
 }

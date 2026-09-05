@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 import { sanityFetch } from '@/lib/sanity/client'
-import { serviceBySlugQuery, locationBySlugQuery, postBySlugQuery, siteSettingsQuery } from '@/lib/sanity/queries'
-import { webPageSchema, serviceSchema, locationSchema, blogPostSchema, faqSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
-import { serviceId, locationId, articleId } from '@/lib/schema/ids'
+import { serviceBySlugQuery, postBySlugQuery, siteSettingsQuery } from '@/lib/sanity/queries'
+import { webPageSchema, serviceSchema, blogPostSchema, faqSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
+import { serviceId, articleId } from '@/lib/schema/ids'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +23,6 @@ export default async function SchemaDebugPage({ params }: Props) {
         <p>Usage: /__schema-debug/[type]/[slug]</p>
         <ul>
           <li>/__schema-debug/service/your-service-slug</li>
-          <li>/__schema-debug/location/your-location-slug</li>
           <li>/__schema-debug/post/your-post-slug</li>
         </ul>
       </div>
@@ -59,19 +58,6 @@ export default async function SchemaDebugPage({ params }: Props) {
         serviceSchema(service, settings.siteUrl),
         breadcrumbSchema([{ name: 'Home', url: settings.siteUrl }, { name: 'Services', url: `${settings.siteUrl}/services` }, { name: service.title, url: pageUrl }]),
         faqSchema(service.faqs, pageUrl),
-      ])
-      break
-    case 'location':
-      const location = await sanityFetch<any>(locationBySlugQuery, { slug }, {
-        fresh: true,
-        tags: ['location'],
-      })
-      if (!location) notFound()
-      pageUrl = `${settings.siteUrl}/locations/${slug}`
-      schemaData = graphSchema([
-        webPageSchema({ url: pageUrl, name: location.name, siteUrl: settings.siteUrl, mainEntity: { '@id': locationId(settings.siteUrl, slug, location.hasPhysicalPresence) } }),
-        locationSchema(location, settings.siteUrl),
-        faqSchema(location.faqs, pageUrl),
       ])
       break
     case 'post':

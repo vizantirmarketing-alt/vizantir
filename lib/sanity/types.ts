@@ -172,44 +172,6 @@ export interface CaseStudy extends CaseStudyListItem, SEOFields {
 }
 
 // ============================================
-// Location Types (for multi-location businesses)
-// ============================================
-
-interface LocationListItem {
-  _id: string
-  _updatedAt: string
-  name: string
-  slug: string
-  city: string
-  state: string
-}
-
-export interface Location extends LocationListItem, SEOFields {
-  description?: string
-  headline?: string
-  subheadline?: string
-  hasPhysicalPresence: boolean
-  address?: {
-    street: string
-    city: string
-    state: string
-    zip: string
-  }
-  coordinates?: {
-    lat: number
-    lng: number
-  }
-  serviceAreas?: string[]
-  content?: any[] // PortableText
-  testimonials?: {
-    quote: string
-    name: string
-    company: string
-  }[]
-  faqs?: FAQ[]
-}
-
-// ============================================
 // Sitemap Types
 // ============================================
 
@@ -218,7 +180,6 @@ export interface SitemapData {
   posts?: { slug: string; _updatedAt: string; publishedAt: string }[]
   services?: { slug: string; _updatedAt: string }[]
   caseStudies?: { slug: string; _updatedAt: string }[]
-  locations?: { slug: string; _updatedAt: string }[]
 }
 
 export interface SitemapPageItem {
@@ -231,7 +192,6 @@ export interface SitemapPageData {
   posts: SitemapPageItem[]
   services: SitemapPageItem[]
   caseStudies: SitemapPageItem[]
-  locations: SitemapPageItem[]
 }
 
 
