@@ -20,7 +20,7 @@ const Footer = () => {
       }}
     >
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Company Info */}
           <div>
             <Link href="/" className="inline-block mb-4">
@@ -92,6 +92,34 @@ const Footer = () => {
                 { name: 'Our Work', href: '/case-studies' },
                 { name: 'Analytir', href: '/analytir' },
                 { name: 'Las Vegas Web Design', href: '/las-vegas-web-design' },
+                { name: 'Website Redesign Las Vegas', href: '/website-redesign-las-vegas' },
+                { name: 'Landing Pages', href: '/landing-pages' },
+                { name: 'Get Started', href: '/get-started' },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link 
+                    href={link.href} 
+                    className="link-cobalt text-muted-foreground"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Industries */}
+          <div>
+            <h4 
+              className="font-bold mb-4 text-foreground"
+            >
+              Industries
+            </h4>
+            <ul className="space-y-2">
+              {[
+                { name: 'Hospitality Web Design', href: '/hospitality-web-design' },
+                { name: 'Law Firm Web Design', href: '/law-firm-web-design' },
+                { name: 'Commercial Real Estate Web Design', href: '/commercial-real-estate-web-design' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link 
@@ -117,6 +145,7 @@ const Footer = () => {
                 { name: 'Blog', href: '/blog' },
                 { name: 'FAQ', href: '/faq' },
                 // { name: 'Testimonials', href: '/testimonials' }, // Temporarily hidden
+                { name: 'Next.js vs WordPress', href: '/nextjs-vs-wordpress' },
                 { name: 'Sitemap', href: '/sitemap-page' },
               ].map((link) => (
                 <li key={link.href}>
