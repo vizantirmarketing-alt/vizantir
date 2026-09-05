@@ -5,7 +5,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
-import { SECONDARY_INDUSTRIES } from './_data'
+import { PRIMARY_VERTICALS, SECONDARY_INDUSTRIES } from './_data'
 
 const SITE_URL = 'https://www.vizantir.com'
 const PAGE_URL = `${SITE_URL}/industries`
@@ -65,13 +65,37 @@ export default function IndustriesHubPage() {
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
               <Eyebrow className="mb-8">Industries</Eyebrow>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
-                Who We Build For
+                Industries We Serve
               </h1>
               <p className="text-base md:text-lg text-body leading-relaxed">
                 Vizantir builds custom websites for established businesses across all sectors,
                 wherever the website is a serious touchpoint between you and the people who decide
                 whether to work with you.
               </p>
+            </div>
+
+            <div className="mb-20 md:mb-28">
+              <div className="grid gap-6 md:grid-cols-2">
+                {PRIMARY_VERTICALS.map((vertical) => (
+                  <article
+                    key={vertical.href}
+                    className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
+                  >
+                    <h2 className="text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
+                    <p className="text-cobalt-accent font-medium mb-4">{vertical.tagline}</p>
+                    <p className="mb-6 flex-1 text-sm text-body leading-relaxed">
+                      {vertical.description}
+                    </p>
+                    <Link
+                      href={vertical.href}
+                      className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-accent"
+                    >
+                      {vertical.title}
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </article>
+                ))}
+              </div>
             </div>
 
             <div className="mb-20 md:mb-28">
