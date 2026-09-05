@@ -57,6 +57,15 @@ const nextConfig: NextConfig = {
   },
 
   async headers() {
+    const markdownAlternates = {
+      key: 'Link',
+      value: [
+        '</llms.txt>; rel="alternate"; type="text/plain"',
+        '</llms-full.txt>; rel="alternate"; type="text/plain"',
+        '</pricing.md>; rel="alternate"; type="text/markdown"',
+      ].join(', '),
+    };
+
     return [
       {
         // Cache static assets for 1 year
@@ -67,6 +76,15 @@ const nextConfig: NextConfig = {
             value: 'public, max-age=31536000, immutable',
           },
         ],
+      },
+      {
+        // `/:path*` does not match `/`
+        source: '/',
+        headers: [markdownAlternates],
+      },
+      {
+        source: '/:path*',
+        headers: [markdownAlternates],
       },
     ];
   },
