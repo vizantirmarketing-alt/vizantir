@@ -39,7 +39,8 @@
     "patch:website-care-service": "tsx scripts/patch-website-care-service.ts",
     "patch:faq-corrections": "tsx scripts/patch-faq-corrections.ts",
     "expand:faq-answers": "tsx scripts/expand-faq-answers.ts",
-    "move:faq-placements": "tsx scripts/move-faq-placements.ts"
+    "move:faq-placements": "tsx scripts/move-faq-placements.ts",
+    "audit:wordpress-claims": "tsx scripts/audit-wordpress-claims.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",
