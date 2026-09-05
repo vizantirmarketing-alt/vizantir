@@ -27,12 +27,50 @@ export type SanityBlogPost = {
     name: string
     slug: string
     role?: string
+    credentials?: string[]
     imageUrl?: string
   }
 }
 
 interface BlogPostContentProps {
   post: SanityBlogPost
+}
+
+const BYLINE_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+}
+
+function formatBylineDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', BYLINE_DATE_FORMAT)
+}
+
+function firstBylineCredential(credentials: string[], role?: string) {
+  const roleNorm = role?.toLowerCase()
+
+  for (const raw of credentials) {
+    const first = raw.split(',')[0]?.trim()
+    if (!first) continue
+    if (roleNorm && first.toLowerCase() === roleNorm) continue
+    return first
+  }
+
+  return undefined
+}
+
+function authorByline(author?: SanityBlogPost['author']) {
+  const name = author?.name ?? 'Vizantir'
+  const role = author?.role?.trim()
+  const credential = firstBylineCredential(
+    (author?.credentials ?? []).map((value) => value.trim()).filter(Boolean),
+    role,
+  )
+
+  let label = `By ${name}`
+  if (role) label += `, ${role}`
+  if (credential) label += ` · ${credential}`
+  return label
 }
 
 export default function BlogPostContent({ post }: BlogPostContentProps) {
@@ -47,7 +85,12 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   }
 
   const tags = post.tags ?? []
-  const authorName = post.author?.name ?? 'Vizantir'
+  const publishedLabel = formatBylineDate(post.publishedAt)
+  const updatedLabel = formatBylineDate(post._updatedAt)
+  const showLastUpdated =
+    Boolean(post._updatedAt) &&
+    updatedLabel !== publishedLabel &&
+    new Date(post._updatedAt).getTime() > new Date(post.publishedAt).getTime()
 
   return (
     <main style={{ background: colors.bg }}>
@@ -97,15 +140,15 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
             className="flex flex-wrap items-center gap-4 mb-8 text-sm transition-colors duration-500"
             style={{ color: colors.textMuted }}
           >
-            <span>By {authorName}</span>
+            <span>{authorByline(post.author)}</span>
             <span>•</span>
-            <span>
-              {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-            </span>
+            <time dateTime={post.publishedAt}>{publishedLabel}</time>
+            {showLastUpdated ? (
+              <>
+                <span>•</span>
+                <time dateTime={post._updatedAt}>Last updated {updatedLabel}</time>
+              </>
+            ) : null}
             {post.readTime ? (
               <>
                 <span>•</span>
