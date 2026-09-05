@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
   
-  if (!location || !settings) return {}
-  
+  if (!location) return {}
+
   const url = getCanonicalUrl(settings, `/locations/${location.slug}`)
   const title = location.metaTitle || `Services in ${location.city}`
   

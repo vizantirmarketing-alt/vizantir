@@ -59,6 +59,12 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'website',
       images: page?.seo?.ogImage ? [page.seo.ogImage] : ROOT_OG_IMAGES,
     },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['https://www.vizantir.com/og-image.png'],
+    },
   };
 }
 

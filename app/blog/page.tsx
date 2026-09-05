@@ -4,24 +4,27 @@ import { allPostsQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { collectionPageSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
 import type { SiteSettings } from '@/lib/sanity/types'
+import { getCanonicalUrl } from '@/lib/utils/metadata'
 import BlogPageClient, { type SanityBlogPostPreview } from './BlogPageClient'
+
+const PAGE_TITLE = 'Insights & Guides'
+const PAGE_DESCRIPTION =
+  'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.'
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
-
-  if (!settings) {
-    return {
-      title: 'Insights & Guides',
-      description:
-        'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.',
-    }
-  }
+  const url = getCanonicalUrl(settings, '/blog')
 
   return {
-    title: 'Insights & Guides',
-    description:
-      'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.',
-    alternates: { canonical: `${settings.siteUrl}/blog` },
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    alternates: { canonical: url },
+    openGraph: {
+      title: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      url,
+      type: 'website',
+    },
   }
 }
 

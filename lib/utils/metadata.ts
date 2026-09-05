@@ -15,11 +15,8 @@ export function getOgImage({ pageImage, settings, alt }: OgImageParams) {
 }
 
 export function getCanonicalUrl(settings: SiteSettings | null, path: string) {
-  if (!settings) {
-    const fallbackUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://vizantir.com'
-    return `${fallbackUrl}${path}`
-  }
-  return `${settings.siteUrl}${path}`
+  const base = settings?.siteUrl || 'https://www.vizantir.com'
+  return `${base}${path}`
 }
 
 

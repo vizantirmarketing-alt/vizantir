@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] }),
   ])
 
-  if (!service || !settings) return {}
+  if (!service) return {}
 
   const isLandingPagesService = slug === 'landing-pages'
   const pageUrl = getCanonicalUrl(settings, `/services/${service.slug}`)
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const baseTitle = isLandingPagesService
     ? LANDING_PAGES_SERVICE_TITLE
     : service.metaTitle || service.title
-  const siteName = settings.siteName || 'Vizantir'
+  const siteName = settings?.siteName || 'Vizantir'
   const socialTitle = baseTitle.endsWith(siteName)
     ? baseTitle
     : `${baseTitle} | ${siteName}`

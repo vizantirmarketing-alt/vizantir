@@ -15,38 +15,30 @@ import { getCanonicalUrl } from '@/lib/utils/metadata'
 import CaseStudiesClient from './CaseStudiesClient'
 import type { CaseStudyListItem } from '@/lib/sanity/types'
 
+const PAGE_TITLE = 'Website Case Studies & Success Stories'
+const PAGE_DESCRIPTION =
+  'See how Vizantir builds custom Next.js websites for established brands, from beauty and wellness to creative studios and retail.'
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ['siteSettings'] })
-  
-  if (!settings) {
-    return {
-      title: 'Website Case Studies & Success Stories',
-      description:
-        'See how Vizantir builds custom Next.js websites for established brands, from beauty and wellness to creative studios and retail.',
-    }
-  }
-
   const url = getCanonicalUrl(settings, '/case-studies')
 
   return {
-    title: 'Website Case Studies & Success Stories',
-    description:
-      'See how Vizantir builds custom Next.js websites for established brands, from beauty and wellness to creative studios and retail.',
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
     alternates: { canonical: url },
     openGraph: {
-      title: 'Website Case Studies & Success Stories | Vizantir',
-      description:
-        'See how Vizantir builds custom Next.js websites for established brands, from beauty and wellness to creative studios and retail.',
+      title: `${PAGE_TITLE} | Vizantir`,
+      description: PAGE_DESCRIPTION,
       url,
       type: 'website',
-      images: settings.ogImageUrl ? [{ url: settings.ogImageUrl }] : undefined,
+      images: settings?.ogImageUrl ? [{ url: settings.ogImageUrl }] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Website Case Studies & Success Stories | Vizantir',
-      description:
-        'See how Vizantir builds custom Next.js websites for established brands, from beauty and wellness to creative studios and retail.',
-      images: settings.ogImageUrl ? [settings.ogImageUrl] : undefined,
+      title: `${PAGE_TITLE} | Vizantir`,
+      description: PAGE_DESCRIPTION,
+      images: settings?.ogImageUrl ? [settings.ogImageUrl] : undefined,
     },
   }
 }

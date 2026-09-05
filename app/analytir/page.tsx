@@ -43,7 +43,23 @@ export const metadata: Metadata = {
   },
   description: analytirDescription,
   alternates: {
-    canonical: ANALYTIR_PATH,
+    canonical: PAGE_URL,
+  },
+  openGraph: {
+    title: analytirTitle,
+    description: analytirDescription,
+    url: PAGE_URL,
+    siteName: 'Vizantir',
+    locale: 'en_US',
+    type: 'website',
+    images: [
+      {
+        url: 'https://www.vizantir.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Vizantir Design Studio - Premium Web Design Las Vegas',
+      },
+    ],
   },
 }
 

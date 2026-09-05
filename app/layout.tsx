@@ -171,7 +171,7 @@ function getSettingsWithFallback(settings: SiteSettings | null): SiteSettings {
   if (settings) return settings
 
   return {
-    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://vizantir.com',
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.vizantir.com',
     siteName: 'Vizantir',
     defaultMetaTitle: 'Vizantir | Custom Website Design Studio in Las Vegas',
     defaultMetaDescription: 'A Las Vegas studio that designs and builds custom websites for established businesses. No templates, no plugins. Built by hand in Next.js.',
@@ -196,9 +196,6 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: settingsWithFallback.siteName }],
     creator: settingsWithFallback.siteName,
     publisher: settingsWithFallback.siteName,
-    alternates: {
-      canonical: 'https://www.vizantir.com',
-    },
     formatDetection: {
       email: false,
       address: false,
@@ -218,10 +215,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: 'website',
       locale: 'en_US',
-      url: settingsWithFallback.siteUrl || 'https://www.vizantir.com',
       siteName: settingsWithFallback.siteName,
-      title: 'Vizantir | Custom Website Design Studio in Las Vegas',
-      description: 'Custom Next.js websites for established Las Vegas businesses. Hand-built, not assembled from templates.',
       images: [
         {
           url: 'https://www.vizantir.com/og-image.png',
@@ -233,8 +227,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Vizantir | Custom Website Design Studio in Las Vegas',
-      description: 'Custom Next.js websites for established Las Vegas businesses. Hand-built, not assembled from templates.',
       images: ['https://www.vizantir.com/og-image.png'],
     },
     icons: {
