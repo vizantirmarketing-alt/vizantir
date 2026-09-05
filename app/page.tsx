@@ -25,7 +25,7 @@ const CTA = dynamic(() => import('@/components/homepage/CTA'))
 const WhatHappensNext = dynamic(() => import('@/components/homepage/WhatHappensNext'))
 
 const HOME_URL = 'https://www.vizantir.com'
-const HOME_TITLE = 'Custom Websites for Established Brands | Vizantir'
+const HOME_TITLE = 'Custom Web Design in Las Vegas | Vizantir'
 const HOME_DESCRIPTION =
   'We build custom websites for established businesses that care how they\'re perceived. Hand-built in Next.js by a Las Vegas studio, for clients nationwide.'
 const ROOT_OG_IMAGES = [
@@ -39,11 +39,13 @@ const ROOT_OG_IMAGES = [
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSeo('home');
-  const title = page?.seo?.metaTitle || HOME_TITLE
+  const title = HOME_TITLE
   const description = page?.seo?.metaDescription || HOME_DESCRIPTION
   
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     alternates: {
       canonical: HOME_URL,

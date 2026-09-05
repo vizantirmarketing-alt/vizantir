@@ -173,12 +173,12 @@ const Hero = () => {
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
             >
-              We build websites
+              Las Vegas web design
             </span>
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] mt-1 text-muted-foreground" style={{ textShadow: 'none' }}
             >
-              that make people stop and say
+              that makes people stop and say
             </span>
             <span className="block mt-3 sm:mt-4">
               <span
