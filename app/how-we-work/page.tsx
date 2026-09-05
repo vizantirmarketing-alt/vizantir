@@ -1,9 +1,23 @@
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
-import { breadcrumbSchema, graphSchema } from '@/lib/schema'
+import {
+  howWeWorkComparisonColumns,
+  howWeWorkFaqs,
+  howWeWorkProcess,
+} from '@/data/how-we-work'
+import {
+  breadcrumbSchema,
+  faqSchema,
+  graphSchema,
+  howToSchema,
+  itemListSchema,
+  webPageSchema,
+} from '@/lib/schema'
+import { howToId } from '@/lib/schema/ids'
 import HowWeWorkPageClient from './HowWeWorkPageClient'
 
-const PAGE_URL = 'https://www.vizantir.com/how-we-work'
+const SITE_URL = 'https://www.vizantir.com'
+const PAGE_URL = `${SITE_URL}/how-we-work`
 const PAGE_TITLE = 'Our Web Design Process & Collaboration'
 const PAGE_DESCRIPTION =
   'Discover our collaborative process from discovery to launch that ensures high-performance websites aligned with your vision and business goals.'
@@ -32,9 +46,33 @@ export const metadata: Metadata = {
   },
 }
 
-const breadcrumbGraph = graphSchema([
+const pageGraph = graphSchema([
+  webPageSchema({
+    url: PAGE_URL,
+    name: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    siteUrl: SITE_URL,
+    mainEntity: { '@id': howToId(PAGE_URL) },
+  }),
+  howToSchema({
+    url: PAGE_URL,
+    name: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    siteUrl: SITE_URL,
+    steps: howWeWorkProcess.map((step) => ({
+      name: step.title,
+      text: step.description,
+    })),
+  }),
+  faqSchema(howWeWorkFaqs),
+  itemListSchema({
+    items: howWeWorkComparisonColumns.map((column) => ({
+      name: column.name,
+      description: column.items.join(' '),
+    })),
+  }),
   breadcrumbSchema([
-    { name: 'Home', url: 'https://www.vizantir.com' },
+    { name: 'Home', url: SITE_URL },
     { name: 'How We Work', url: PAGE_URL },
   ]),
 ])
@@ -42,7 +80,7 @@ const breadcrumbGraph = graphSchema([
 export default function HowWeWorkPage() {
   return (
     <>
-      <JsonLd id="ld-breadcrumb" data={breadcrumbGraph} />
+      <JsonLd id="ld-how-we-work" data={pageGraph} />
       <HowWeWorkPageClient />
     </>
   )

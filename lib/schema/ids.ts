@@ -28,6 +28,10 @@ export function webPageId(pageUrl: string) {
   return `${pageUrl}#webpage`
 }
 
+export function howToId(pageUrl: string) {
+  return `${pageUrl}#howto`
+}
+
 // ============================================
 // Content Type Entities
 // Customize these paths for your URL structure

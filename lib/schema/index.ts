@@ -9,6 +9,7 @@ import type {
 import {
   websiteId,
   webPageId,
+  howToId,
   serviceId,
   articleId,
   caseStudyId,
@@ -121,7 +122,7 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
 // FAQ Schema
 // ============================================
 
-export function faqSchema(faqs: FAQ[] | undefined | null) {
+export function faqSchema(faqs: readonly FAQ[] | undefined | null) {
   if (!faqs || faqs.length === 0) return null
 
   return {
@@ -133,6 +134,77 @@ export function faqSchema(faqs: FAQ[] | undefined | null) {
         '@type': 'Answer',
         text: faq.answer,
       },
+    })),
+  }
+}
+
+// ============================================
+// HowTo Schema
+// ============================================
+
+interface HowToStepInput {
+  name: string
+  text: string
+}
+
+interface HowToSchemaParams {
+  url: string
+  name: string
+  description?: string
+  siteUrl: string
+  steps: readonly HowToStepInput[]
+}
+
+export function howToSchema({
+  url,
+  name,
+  description,
+  siteUrl,
+  steps,
+}: HowToSchemaParams) {
+  return {
+    '@type': 'HowTo',
+    '@id': howToId(url),
+    name,
+    ...(description && { description }),
+    url,
+    inLanguage: 'en-US',
+    isPartOf: refWebsite(siteUrl),
+    mainEntityOfPage: refWebPage(url),
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  }
+}
+
+// ============================================
+// ItemList Schema
+// ============================================
+
+interface ItemListItem {
+  name: string
+  description?: string
+  url?: string
+}
+
+interface ItemListSchemaParams {
+  name?: string
+  items: readonly ItemListItem[]
+}
+
+export function itemListSchema({ name, items }: ItemListSchemaParams) {
+  return {
+    '@type': 'ItemList',
+    ...(name && { name }),
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      ...(item.description && { description: item.description }),
+      ...(item.url && { url: item.url }),
     })),
   }
 }
