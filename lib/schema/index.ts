@@ -17,6 +17,7 @@ import {
   faqId,
   serviceId,
   articleId,
+  pageArticleId,
   caseStudyId,
   personId,
   founderId,
@@ -412,6 +413,60 @@ export function blogPostSchema(post: Post, siteUrl: string) {
     }),
 
     publisher: refOrganization(siteUrl),
+  }
+}
+
+// ============================================
+// Article Schema (standalone pages, not blog posts)
+// ============================================
+
+interface ArticleAboutProperty {
+  name: string
+  value: string
+}
+
+interface ArticleSchemaParams {
+  url: string
+  headline: string
+  description?: string
+  siteUrl: string
+  datePublished?: string
+  dateModified?: string
+  about?: readonly ArticleAboutProperty[]
+}
+
+export function articleSchema({
+  url,
+  headline,
+  description,
+  siteUrl,
+  datePublished,
+  dateModified,
+  about,
+}: ArticleSchemaParams) {
+  return {
+    '@type': 'Article',
+    '@id': pageArticleId(url),
+    headline,
+    ...(description && { description }),
+    url,
+    inLanguage: 'en-US',
+    ...(datePublished && { datePublished }),
+    ...(dateModified && { dateModified }),
+    isPartOf: refWebsite(siteUrl),
+    mainEntityOfPage: refWebPage(url),
+    author: {
+      '@type': 'Person',
+      '@id': founderId(siteUrl),
+    },
+    publisher: refOrganization(siteUrl),
+    ...(about && about.length > 0 && {
+      about: about.map((item) => ({
+        '@type': 'PropertyValue',
+        name: item.name,
+        value: item.value,
+      })),
+    }),
   }
 }
 

@@ -84,6 +84,10 @@ export function flattenAreWeAFitParagraph(paragraph: AreWeAFitParagraph): string
   return `${paragraph.before}${paragraph.link.label}${paragraph.after}`
 }
 
+export const areWeAFitPageTitle = 'Are We a Fit?'
+export const areWeAFitPageDescription =
+  'Honest criteria on whether Vizantir is the right premium web design studio for your business. Read this before booking a Strategy Call.'
+
 export const areWeAFitPageContent: AreWeAFitPageContent = {
   heroEyebrow: 'Fit & expectations',
   heroHeading: 'Not every web design project is right for us. Not every studio is right for you.',
@@ -137,3 +141,30 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
     href: '/contact',
   },
 }
+
+function sectionAnswer(section: AreWeAFitBulletSection): string {
+  if (section.bullets?.length) return section.bullets.join(' ')
+  if (section.paragraphs?.length) {
+    return section.paragraphs.map(flattenAreWeAFitParagraph).join(' ')
+  }
+  return section.body ?? ''
+}
+
+export const areWeAFitFaqs = [
+  {
+    question: areWeAFitPageContent.idealSection.heading,
+    answer: sectionAnswer(areWeAFitPageContent.idealSection),
+  },
+  {
+    question: areWeAFitPageContent.notIdealSection.heading,
+    answer: sectionAnswer(areWeAFitPageContent.notIdealSection),
+  },
+  {
+    question: areWeAFitPageContent.budgetSection.heading,
+    answer: sectionAnswer(areWeAFitPageContent.budgetSection),
+  },
+  {
+    question: areWeAFitPageContent.closingSection.heading,
+    answer: sectionAnswer(areWeAFitPageContent.closingSection),
+  },
+] as const

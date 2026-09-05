@@ -36,6 +36,10 @@ export function faqId(pageUrl: string) {
   return `${pageUrl}#faq`
 }
 
+export function pageArticleId(pageUrl: string) {
+  return `${pageUrl}#article`
+}
+
 // ============================================
 // Content Type Entities
 // Customize these paths for your URL structure

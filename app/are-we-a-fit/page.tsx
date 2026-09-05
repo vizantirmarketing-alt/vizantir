@@ -1,25 +1,32 @@
 import type { Metadata } from 'next'
 
 import { JsonLd } from '@/components/seo/JsonLd'
-import { areWeAFitMetadata, areWeAFitPageContent } from '@/data/are-we-a-fit'
-import { breadcrumbSchema, graphSchema } from '@/lib/schema'
+import {
+  areWeAFitFaqs,
+  areWeAFitMetadata,
+  areWeAFitPageContent,
+  areWeAFitPageDescription,
+  areWeAFitPageTitle,
+} from '@/data/are-we-a-fit'
+import { breadcrumbSchema, faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
+import { faqId } from '@/lib/schema/ids'
 
 import AreWeAFitPageClient from './AreWeAFitPageClient'
 
-const areWeAFitDescription =
-  'Honest criteria on whether Vizantir is the right premium web design studio for your business. Read this before booking a Strategy Call.'
+const SITE_URL = 'https://www.vizantir.com'
+const PAGE_URL = `${SITE_URL}/are-we-a-fit`
 
 export const metadata: Metadata = {
   ...areWeAFitMetadata,
-  title: 'Are We a Fit?',
-  description: areWeAFitDescription,
+  title: areWeAFitPageTitle,
+  description: areWeAFitPageDescription,
   openGraph: {
     ...(typeof areWeAFitMetadata.openGraph === 'object' && areWeAFitMetadata.openGraph !== null
       ? areWeAFitMetadata.openGraph
       : {}),
-    title: 'Are We a Fit? | Vizantir',
-    description: areWeAFitDescription,
-    url: 'https://www.vizantir.com/are-we-a-fit',
+    title: `${areWeAFitPageTitle} | Vizantir`,
+    description: areWeAFitPageDescription,
+    url: PAGE_URL,
     siteName: 'Vizantir',
     locale: 'en_US',
     type: 'website',
@@ -36,23 +43,31 @@ export const metadata: Metadata = {
     typeof areWeAFitMetadata.twitter === 'object' && areWeAFitMetadata.twitter !== null
       ? {
           ...areWeAFitMetadata.twitter,
-          title: 'Are We a Fit? | Vizantir',
-          description: areWeAFitDescription,
+          title: `${areWeAFitPageTitle} | Vizantir`,
+          description: areWeAFitPageDescription,
         }
       : areWeAFitMetadata.twitter,
 }
 
-const breadcrumbGraph = graphSchema([
+const pageGraph = graphSchema([
+  webPageSchema({
+    url: PAGE_URL,
+    name: areWeAFitPageTitle,
+    description: areWeAFitPageDescription,
+    siteUrl: SITE_URL,
+    mainEntity: { '@id': faqId(PAGE_URL) },
+  }),
+  faqSchema(areWeAFitFaqs, PAGE_URL),
   breadcrumbSchema([
-    { name: 'Home', url: 'https://www.vizantir.com' },
-    { name: 'Are We a Fit?', url: 'https://www.vizantir.com/are-we-a-fit' },
+    { name: 'Home', url: SITE_URL },
+    { name: areWeAFitPageTitle, url: PAGE_URL },
   ]),
 ])
 
 export default function AreWeAFitPage() {
   return (
     <>
-      <JsonLd id="ld-breadcrumb" data={breadcrumbGraph} />
+      <JsonLd id="ld-are-we-a-fit" data={pageGraph} />
       <AreWeAFitPageClient content={areWeAFitPageContent} />
     </>
   )

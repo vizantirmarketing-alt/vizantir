@@ -1,7 +1,24 @@
 import type { Metadata } from 'next'
 import { ArrowUpRight } from 'lucide-react'
 
+import { JsonLd } from '@/components/seo/JsonLd'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import {
+  ANALYTIR_DATE,
+  ANALYTIR_PATH,
+  analytirDescription,
+  analytirShippedModules,
+  analytirStats,
+  analytirTitle,
+} from '@/data/analytir'
+import { sitemapMainPages } from '@/data/sitemap-page'
+import {
+  articleSchema,
+  breadcrumbSchema,
+  graphSchema,
+  webPageSchema,
+} from '@/lib/schema'
+import { pageArticleId } from '@/lib/schema/ids'
 
 import { Hero } from './_components/Hero'
 import { Section } from './_components/Section'
@@ -13,46 +30,55 @@ import { DepositsScreen } from './_screens/DepositsScreen'
 import { ReportPageScreen } from './_screens/ReportPageScreen'
 import { LedgerScreen } from './_screens/LedgerScreen'
 
+const SITE_URL = 'https://www.vizantir.com'
+const PAGE_URL = `${SITE_URL}${ANALYTIR_PATH}`
+const analytirNav = sitemapMainPages.find((page) => page.href === ANALYTIR_PATH)
+if (!analytirNav) {
+  throw new Error('sitemapMainPages is missing /analytir')
+}
+
 export const metadata: Metadata = {
   title: {
-    absolute: 'Analytir | Vizantir Design Studio',
+    absolute: analytirTitle,
   },
-  description:
-    'The analytics engine we built in house, and what it says about how we work.',
+  description: analytirDescription,
   alternates: {
-    canonical: '/analytir',
+    canonical: ANALYTIR_PATH,
   },
 }
 
-const STATS = [
-  { value: '79', label: 'API routes' },
-  { value: '27', label: 'Database tables' },
-  { value: '11', label: 'Report archetypes' },
-  { value: '9', label: 'Alert types' },
-] as const
-
-const SHIPPED_MODULES = [
-  'Square ingestion, with QuickBooks and Stripe connectors built',
-  'Merchant-timezone reconciliation views',
-  'Natural-language SQL with pre-execution validation',
-  'Background job queue with retry',
-  'HMAC webhook verification',
-  'Encrypted token storage with revoked-credential detection',
-  'LLM narrative reports across eleven archetypes',
-  'Weekly and monthly PDF generation',
-  'Magic-link shared reports',
-  'Nine alert types with severity escalation',
-  'Per-tier quota enforcement',
-  'Stripe Checkout, trials, and webhook handling',
-  'Two-factor authentication with recovery codes',
-  'Session revocation and login history',
-  'Account deletion with grace period',
-  'Full user data export',
-] as const
+const pageGraph = graphSchema([
+  webPageSchema({
+    url: PAGE_URL,
+    name: analytirTitle,
+    description: analytirDescription,
+    siteUrl: SITE_URL,
+    mainEntity: { '@id': pageArticleId(PAGE_URL) },
+    datePublished: ANALYTIR_DATE,
+    dateModified: ANALYTIR_DATE,
+  }),
+  articleSchema({
+    url: PAGE_URL,
+    headline: analytirTitle,
+    description: analytirDescription,
+    siteUrl: SITE_URL,
+    datePublished: ANALYTIR_DATE,
+    dateModified: ANALYTIR_DATE,
+    about: analytirStats.map((stat) => ({
+      name: stat.label,
+      value: stat.value,
+    })),
+  }),
+  breadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: analytirNav.name, url: PAGE_URL },
+  ]),
+])
 
 export default function AnalytirPage() {
   return (
     <>
+      <JsonLd id="ld-analytir" data={pageGraph} />
       <Hero />
 
       <Section
@@ -176,7 +202,7 @@ export default function AnalytirPage() {
               className="flex flex-wrap"
               style={{ gap: 48, marginBottom: 40 }}
             >
-              {STATS.map((stat) => (
+              {analytirStats.map((stat) => (
                 <div key={stat.label}>
                   <p
                     style={{
@@ -223,7 +249,7 @@ export default function AnalytirPage() {
                 color: 'var(--foreground)',
               }}
             >
-              {SHIPPED_MODULES.map((module, index) => (
+              {analytirShippedModules.map((module, index) => (
                 <span key={module}>
                   {index > 0 && (
                     <span style={{ color: 'var(--text-meta)' }}> · </span>
