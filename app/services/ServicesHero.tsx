@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { AmbientHero } from '@/components/hero/AmbientHero'
 
 const ENGAGEMENT_ARC = [
@@ -7,6 +9,8 @@ const ENGAGEMENT_ARC = [
   'Launch with the site ready to operate',
   'Ongoing growth and improvement after launch',
 ] as const
+
+const STACK_LINE = 'Development on a hand-coded Next.js stack'
 
 export default function ServicesHero() {
   return (
@@ -32,7 +36,21 @@ export default function ServicesHero() {
                 className="mt-2 h-1 w-1 shrink-0 rounded-full bg-cobalt-accent"
                 aria-hidden
               />
-              <span>{line}</span>
+              <span>
+                {line === STACK_LINE ? (
+                  <>
+                    Development on a{' '}
+                    <Link
+                      href="/nextjs-vs-wordpress"
+                      className="font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                    >
+                      hand-coded Next.js stack
+                    </Link>
+                  </>
+                ) : (
+                  line
+                )}
+              </span>
             </li>
           ))}
         </ul>

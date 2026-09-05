@@ -60,7 +60,7 @@ interface AreWeAFitBulletSection {
   body?: string
   /** Multi-paragraph prose (budget); plain string or linked segment */
   paragraphs?: readonly AreWeAFitParagraph[]
-  bullets?: readonly string[]
+  bullets?: readonly AreWeAFitParagraph[]
 }
 
 interface AreWeAFitCta {
@@ -113,7 +113,11 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
       'You want hourly billing, unlimited revisions, or open-ended scope',
       'You want to make the design decisions and hire someone to execute them',
       "You need marketing services. We build websites. We don't run your ads or manage your social",
-      'You want a WordPress site assembled from a template and plugins',
+      {
+        before: 'You want a ',
+        link: { label: 'WordPress site assembled from a template and plugins', href: '/nextjs-vs-wordpress' },
+        after: '',
+      },
       'You need a full website live in two weeks',
     ],
   },
@@ -143,7 +147,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
 }
 
 function sectionAnswer(section: AreWeAFitBulletSection): string {
-  if (section.bullets?.length) return section.bullets.join(' ')
+  if (section.bullets?.length) return section.bullets.map(flattenAreWeAFitParagraph).join(' ')
   if (section.paragraphs?.length) {
     return section.paragraphs.map(flattenAreWeAFitParagraph).join(' ')
   }

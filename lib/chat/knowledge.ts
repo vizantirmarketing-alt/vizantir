@@ -22,7 +22,11 @@ import {
   formatCareClientPrice,
   pricingFAQs,
 } from '@/data/pricing'
-import { areWeAFitPageContent, flattenAreWeAFitParagraph } from '@/data/are-we-a-fit'
+import {
+  areWeAFitPageContent,
+  flattenAreWeAFitParagraph,
+  type AreWeAFitParagraph,
+} from '@/data/are-we-a-fit'
 import {
   howWeWorkComparisonColumns,
   howWeWorkComparisonTagline,
@@ -62,9 +66,9 @@ function section(title: string, body: string): string {
   return `\n## ${title}\n\n${trimmed}\n`
 }
 
-function bullets(items: readonly string[] | undefined): string {
+function bullets(items: readonly AreWeAFitParagraph[] | undefined): string {
   if (!items?.length) return ''
-  return items.map((i) => `- ${i}`).join('\n')
+  return items.map((i) => `- ${flattenAreWeAFitParagraph(i)}`).join('\n')
 }
 
 function formatFaqs(faqs: readonly { question: string; answer: string }[]): string {

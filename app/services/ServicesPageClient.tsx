@@ -501,8 +501,14 @@ function ProjectPricingSection() {
     <PricingSection>
       <SectionHeading eyebrow="Website Projects" heading="Fixed scope. Fixed price. One engagement.">
         <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-          Strategy, custom design, development, and launch priced as a complete website project. Growth is the
-          engagement most established businesses need.
+          Strategy, custom design, development, and launch priced as a complete website project,{' '}
+          <Link
+            href="/get-started"
+            className="font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+          >
+            from first call to launch
+          </Link>
+          . Growth is the engagement most established businesses need.
         </p>
       </SectionHeading>
       <div className="grid items-stretch gap-6 md:grid-cols-3">

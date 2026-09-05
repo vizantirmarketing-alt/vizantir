@@ -6,7 +6,11 @@ import { Check, X } from 'lucide-react'
 
 import { AmbientHero } from '@/components/hero/AmbientHero'
 import { trackCTAClick } from '@/lib/analytics'
-import type { AreWeAFitPageContent } from '@/data/are-we-a-fit'
+import {
+  flattenAreWeAFitParagraph,
+  type AreWeAFitPageContent,
+  type AreWeAFitParagraph,
+} from '@/data/are-we-a-fit'
 
 interface AreWeAFitPageClientProps {
   content: AreWeAFitPageContent
@@ -14,6 +18,23 @@ interface AreWeAFitPageClientProps {
 
 const idealHeading = "You're a fit if..."
 const notIdealHeading = "You're not a fit if..."
+
+const inlineLinkClassName =
+  'font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2'
+
+function AreWeAFitInlineCopy({ paragraph }: { paragraph: AreWeAFitParagraph }) {
+  if (typeof paragraph === 'string') return paragraph
+
+  return (
+    <>
+      {paragraph.before}
+      <Link href={paragraph.link.href} className={inlineLinkClassName}>
+        {paragraph.link.label}
+      </Link>
+      {paragraph.after}
+    </>
+  )
+}
 
 export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProps) {
   const colors = {
@@ -58,7 +79,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               </h2>
               <ul className="space-y-4">
                 {content.idealSection.bullets?.map((item) => (
-                  <li key={item} className="flex gap-3.5">
+                  <li key={flattenAreWeAFitParagraph(item)} className="flex gap-3.5">
                     <Check
                       className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
                       strokeWidth={1.15}
@@ -69,7 +90,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
                       className="text-pretty text-base leading-relaxed md:text-lg"
                       style={{ color: colors.textMuted }}
                     >
-                      {item}
+                      <AreWeAFitInlineCopy paragraph={item} />
                     </p>
                   </li>
                 ))}
@@ -89,7 +110,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               </h2>
               <ul className="space-y-4">
                 {content.notIdealSection.bullets?.map((item) => (
-                  <li key={item} className="flex gap-3.5">
+                  <li key={flattenAreWeAFitParagraph(item)} className="flex gap-3.5">
                     <X
                       className="mt-[0.35rem] h-[1.125rem] w-[1.125rem] shrink-0"
                       strokeWidth={1.15}
@@ -100,7 +121,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
                       className="text-pretty text-base leading-relaxed md:text-lg"
                       style={{ color: colors.textMuted }}
                     >
-                      {item}
+                      <AreWeAFitInlineCopy paragraph={item} />
                     </p>
                   </li>
                 ))}
@@ -122,36 +143,15 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {content.budgetSection.heading}
             </h2>
             <div className="space-y-4">
-              {content.budgetSection.paragraphs?.map((paragraph) => {
-                if (typeof paragraph === 'string') {
-                  return (
-                    <p
-                      key={paragraph}
-                      className="text-base leading-relaxed md:text-lg"
-                      style={{ color: colors.textMuted }}
-                    >
-                      {paragraph}
-                    </p>
-                  )
-                }
-
-                return (
-                  <p
-                    key={`${paragraph.before}${paragraph.link.href}${paragraph.after}`}
-                    className="text-base leading-relaxed md:text-lg"
-                    style={{ color: colors.textMuted }}
-                  >
-                    {paragraph.before}
-                    <Link
-                      href={paragraph.link.href}
-                      className="font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
-                    >
-                      {paragraph.link.label}
-                    </Link>
-                    {paragraph.after}
-                  </p>
-                )
-              })}
+              {content.budgetSection.paragraphs?.map((paragraph) => (
+                <p
+                  key={flattenAreWeAFitParagraph(paragraph)}
+                  className="text-base leading-relaxed md:text-lg"
+                  style={{ color: colors.textMuted }}
+                >
+                  <AreWeAFitInlineCopy paragraph={paragraph} />
+                </p>
+              ))}
             </div>
           </motion.div>
         </div>
