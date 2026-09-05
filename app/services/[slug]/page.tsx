@@ -94,7 +94,7 @@ export default async function ServicePage({ params }: Props) {
       { name: 'Services', url: `${settings.siteUrl}/services` },
       { name: service.title, url },
     ]),
-    faqSchema(service.faqs),
+    faqSchema(service.faqs, url),
   ])
 
   return (
