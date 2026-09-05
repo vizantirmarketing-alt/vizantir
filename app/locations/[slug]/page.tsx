@@ -73,7 +73,7 @@ export default async function LocationPage({ params }: Props) {
       { name: 'Locations', url: `${settings.siteUrl}/locations` },
       { name: location.city, url },
     ]),
-    faqSchema(location.faqs),
+    faqSchema(location.faqs, url),
   ])
 
   return (

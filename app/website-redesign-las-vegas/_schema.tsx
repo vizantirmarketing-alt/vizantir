@@ -1,5 +1,6 @@
 import { projectPricing } from '@/data/pricing'
 import { redesignPricingFaqItems } from '@/data/industry-pricing-faqs'
+import { faqSchema } from '@/lib/schema'
 
 interface PricingTierSchema {
   name: string
@@ -81,6 +82,7 @@ function buildBusinessEntity() {
 }
 
 export function WebsiteRedesignPageSchema() {
+  const faqNode = faqSchema(FAQ_ITEMS, PAGE_URL)
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -143,18 +145,7 @@ export function WebsiteRedesignPageSchema() {
           })),
         },
       },
-      {
-        '@type': 'FAQPage',
-        '@id': `${PAGE_URL}#faq`,
-        mainEntity: FAQ_ITEMS.map((faq) => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: faq.answer,
-          },
-        })),
-      },
+      ...(faqNode ? [faqNode] : []),
     ],
   }
 

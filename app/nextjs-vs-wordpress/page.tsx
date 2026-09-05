@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
 }
 
-const faqNode = faqSchema(nextjsVsWordpressFaqs)
+const faqNode = faqSchema(nextjsVsWordpressFaqs, PAGE_URL)
 const comparisonNode = itemListSchema({
   name: 'Next.js vs WordPress comparison',
   items: nextjsVsWordpressComparison.rows.map((row) => ({
@@ -79,7 +79,7 @@ const pageGraph = graphSchema([
     datePublished: NEXTJS_VS_WORDPRESS_DATE,
     dateModified: NEXTJS_VS_WORDPRESS_DATE,
   }),
-  faqNode ? { ...faqNode, '@id': `${PAGE_URL}#faq` } : null,
+  faqNode,
   { ...comparisonNode, '@id': `${PAGE_URL}#comparison` },
   { ...breadcrumbNode, '@id': `${PAGE_URL}#breadcrumb` },
 ])

@@ -1,4 +1,5 @@
 import { landingPagePricing } from '@/data/pricing'
+import { faqSchema } from '@/lib/schema'
 
 const SITE_URL = 'https://www.vizantir.com'
 const PROVIDER = {
@@ -33,6 +34,8 @@ export function buildLandingPagesSchema({
   faqs,
   breadcrumbs,
 }: BuildLandingPagesSchemaArgs) {
+  const faqNode = faqSchema(faqs, pageUrl)
+
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -55,18 +58,7 @@ export function buildLandingPagesSchema({
           description: tier.description,
         })),
       },
-      {
-        '@type': 'FAQPage',
-        '@id': `${pageUrl}#faq`,
-        mainEntity: faqs.map((faq) => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: faq.answer,
-          },
-        })),
-      },
+      ...(faqNode ? [faqNode] : []),
       {
         '@type': 'BreadcrumbList',
         '@id': `${pageUrl}#breadcrumb`,

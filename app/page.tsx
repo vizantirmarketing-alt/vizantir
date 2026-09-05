@@ -82,7 +82,7 @@ export default async function Home() {
     return study ? [study] : []
   })
 
-  const faqNode = faqSchema(faqs)
+  const faqNode = faqSchema(faqs, HOME_URL)
   const pageGraph = graphSchema([
     webPageSchema({
       url: HOME_URL,
@@ -90,7 +90,7 @@ export default async function Home() {
       description: HOME_DESCRIPTION,
       siteUrl: HOME_URL,
     }),
-    faqNode ? { ...faqNode, '@id': `${HOME_URL}#faq` } : null,
+    faqNode,
   ])
 
   return (

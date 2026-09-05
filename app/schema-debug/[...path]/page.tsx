@@ -58,7 +58,7 @@ export default async function SchemaDebugPage({ params }: Props) {
         webPageSchema({ url: pageUrl, name: service.title, siteUrl: settings.siteUrl, mainEntity: { '@id': serviceId(settings.siteUrl, slug) } }),
         serviceSchema(service, settings.siteUrl),
         breadcrumbSchema([{ name: 'Home', url: settings.siteUrl }, { name: 'Services', url: `${settings.siteUrl}/services` }, { name: service.title, url: pageUrl }]),
-        faqSchema(service.faqs),
+        faqSchema(service.faqs, pageUrl),
       ])
       break
     case 'location':
@@ -71,7 +71,7 @@ export default async function SchemaDebugPage({ params }: Props) {
       schemaData = graphSchema([
         webPageSchema({ url: pageUrl, name: location.name, siteUrl: settings.siteUrl, mainEntity: { '@id': locationId(settings.siteUrl, slug, location.hasPhysicalPresence) } }),
         locationSchema(location, settings.siteUrl),
-        faqSchema(location.faqs),
+        faqSchema(location.faqs, pageUrl),
       ])
       break
     case 'post':

@@ -4,6 +4,7 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { sanityFetch } from '@/lib/sanity/client'
 import { faqPageFaqsQuery } from '@/lib/sanity/queries'
 import { breadcrumbSchema, faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
+import { refFaq } from '@/lib/schema/ids'
 import FAQPageClient from './FAQPageClient'
 
 const SITE_URL = 'https://www.vizantir.com'
@@ -39,16 +40,16 @@ export const metadata: Metadata = {
 export default async function FAQPage() {
   const faqs = await sanityFetch<Faq[]>(faqPageFaqsQuery, {}, { tags: ['faq'] })
 
-  const faqNode = faqSchema(faqs)
+  const faqNode = faqSchema(faqs, PAGE_URL)
   const pageGraph = graphSchema([
     webPageSchema({
       url: PAGE_URL,
       name: PAGE_TITLE,
       description: PAGE_DESCRIPTION,
       siteUrl: SITE_URL,
-      mainEntity: faqNode ? { '@id': `${PAGE_URL}#faq` } : undefined,
+      mainEntity: faqNode ? refFaq(PAGE_URL) : undefined,
     }),
-    faqNode ? { ...faqNode, '@id': `${PAGE_URL}#faq` } : null,
+    faqNode,
     breadcrumbSchema([
       { name: 'Home', url: SITE_URL },
       { name: 'FAQ', url: PAGE_URL },

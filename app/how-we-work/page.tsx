@@ -64,7 +64,7 @@ const pageGraph = graphSchema([
       text: step.description,
     })),
   }),
-  faqSchema(howWeWorkFaqs),
+  faqSchema(howWeWorkFaqs, PAGE_URL),
   itemListSchema({
     items: howWeWorkComparisonColumns.map((column) => ({
       name: column.name,
