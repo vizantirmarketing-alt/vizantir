@@ -66,38 +66,56 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
             viewport={{ once: true, margin: "-50px" }}
             className="space-y-4"
           >
-            {faqs.map((faq, index) => (
-              <motion.div
-                key={faq._id}
-                variants={itemVariants}
-                className="rounded-xl overflow-hidden transition-all duration-300 border border-border bg-card"
-              >
-                <button
-                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200 hover:bg-[#F9FAFB]"
-                  style={{ background: '#FFFFFF' }}
+            {faqs.map((faq, index) => {
+              const isOpen = openIndex === index
+              const triggerId = `homepage-faq-trigger-${faq._id}`
+              const panelId = `homepage-faq-panel-${faq._id}`
+
+              return (
+                <motion.div
+                  key={faq._id}
+                  variants={itemVariants}
+                  className="rounded-xl overflow-hidden transition-all duration-300 border border-border bg-card"
                 >
-                  <span 
-                    className="text-lg font-semibold pr-8 text-foreground"
+                  <button
+                    id={triggerId}
+                    type="button"
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200 hover:bg-[#F9FAFB]"
+                    style={{ background: '#FFFFFF' }}
                   >
-                    {faq.question}
-                  </span>
-                  <AccordionIndicator
-                    isOpen={openIndex === index}
-                    className="w-5 h-5"
-                    style={{ color: 'var(--cobalt-accent)' }}
-                  />
-                </button>
-                
-                {openIndex === index && (
-                  <div 
-                    className="px-6 pb-5 leading-relaxed text-body"
+                    <span
+                      className="text-lg font-semibold pr-8 text-foreground"
+                    >
+                      {faq.question}
+                    </span>
+                    <AccordionIndicator
+                      isOpen={isOpen}
+                      className="w-5 h-5"
+                      style={{ color: 'var(--cobalt-accent)' }}
+                    />
+                  </button>
+
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={triggerId}
+                    aria-hidden={!isOpen}
+                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                    }`}
                   >
-                    {faq.answer}
+                    <div className="overflow-hidden">
+                      <p className="px-6 pb-5 leading-relaxed text-body">
+                        {faq.answer}
+                      </p>
+                    </div>
                   </div>
-                )}
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            })}
           </motion.div>
 
           <div className="text-center mt-10">
