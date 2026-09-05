@@ -3,10 +3,11 @@ import type { Faq } from '@/components/homepage/FAQSection'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { sanityFetch } from '@/lib/sanity/client'
 import { faqPageFaqsQuery } from '@/lib/sanity/queries'
-import { breadcrumbSchema, graphSchema } from '@/lib/schema'
+import { breadcrumbSchema, faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
 import FAQPageClient from './FAQPageClient'
 
-const PAGE_URL = 'https://www.vizantir.com/faq'
+const SITE_URL = 'https://www.vizantir.com'
+const PAGE_URL = `${SITE_URL}/faq`
 const PAGE_TITLE = 'Web Design FAQs & Answers'
 const PAGE_DESCRIPTION =
   'Find answers to common questions about timelines, pricing and our approach to premium website design and development, all in one place.'
@@ -35,19 +36,28 @@ export const metadata: Metadata = {
   },
 }
 
-const breadcrumbGraph = graphSchema([
-  breadcrumbSchema([
-    { name: 'Home', url: 'https://www.vizantir.com' },
-    { name: 'FAQ', url: PAGE_URL },
-  ]),
-])
-
 export default async function FAQPage() {
   const faqs = await sanityFetch<Faq[]>(faqPageFaqsQuery, {}, { tags: ['faq'] })
 
+  const faqNode = faqSchema(faqs)
+  const pageGraph = graphSchema([
+    webPageSchema({
+      url: PAGE_URL,
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      siteUrl: SITE_URL,
+      mainEntity: faqNode ? { '@id': `${PAGE_URL}#faq` } : undefined,
+    }),
+    faqNode ? { ...faqNode, '@id': `${PAGE_URL}#faq` } : null,
+    breadcrumbSchema([
+      { name: 'Home', url: SITE_URL },
+      { name: 'FAQ', url: PAGE_URL },
+    ]),
+  ])
+
   return (
     <>
-      <JsonLd id="ld-breadcrumb" data={breadcrumbGraph} />
+      <JsonLd id="ld-faq" data={pageGraph} />
       <FAQPageClient faqs={faqs} />
     </>
   )
