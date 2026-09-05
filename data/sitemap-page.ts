@@ -45,6 +45,7 @@ export const sitemapMainPages: SitemapLink[] = [
   { name: 'Our Work', href: '/case-studies' },
   { name: 'Analytir', href: '/analytir' },
   { name: 'How We Work', href: '/how-we-work' },
+  { name: 'Next.js vs WordPress', href: '/nextjs-vs-wordpress' },
   { name: 'Are We a Fit?', href: '/are-we-a-fit' },
   { name: 'Get Started', href: '/get-started' },
   { name: 'Sitemap', href: '/sitemap-page' },
