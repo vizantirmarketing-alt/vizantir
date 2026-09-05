@@ -42,7 +42,8 @@
     "move:faq-placements": "tsx scripts/move-faq-placements.ts",
     "audit:wordpress-claims": "tsx scripts/audit-wordpress-claims.ts",
     "correct:wordpress-claims": "tsx scripts/correct-wordpress-claims.ts",
-    "correct:wordpress-claims-r2": "tsx scripts/correct-wordpress-claims-r2.ts"
+    "correct:wordpress-claims-r2": "tsx scripts/correct-wordpress-claims-r2.ts",
+    "correct:wordpress-claims-r3": "tsx scripts/correct-wordpress-claims-r3.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",
