@@ -30,6 +30,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
   )
 
   const metadataLine = formatCaseStudyMetadataLine(caseStudy.title, caseStudy.client, caseStudy.industry)
+  const isStudio = caseStudy.projectType === 'studio'
 
   const hasChallenge = hasPortableTextContent(caseStudy.challenge)
   const hasSolution = hasPortableTextContent(caseStudy.solution)
@@ -61,9 +62,12 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
               {caseStudy.title}
             </h1>
-            {metadataLine ? (
+            {isStudio || metadataLine ? (
               <p className="mt-5 text-sm uppercase tracking-[0.2em]" style={{ color: colors.textMuted }}>
-                {metadataLine}
+                {isStudio ? (
+                  <span className="mr-3 inline-block">Studio Project</span>
+                ) : null}
+                {metadataLine ? <span>{metadataLine}</span> : null}
               </p>
             ) : null}
             {caseStudy.summary ? (

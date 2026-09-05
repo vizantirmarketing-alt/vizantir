@@ -77,10 +77,117 @@ function ProjectShot({
   return <ShotPlaceholder />
 }
 
+type IndexColors = {
+  bg: string
+  text: string
+  textMuted: string
+  accent: string
+  rule: string
+  cardBg: string
+  cardBorder: string
+}
+
+function isStudioProject(projectType: CaseStudyListItem['projectType']): boolean {
+  return projectType === 'studio'
+}
+
+function CaseStudyIndexRow({
+  study,
+  index,
+  colors,
+  showStudioMarker,
+}: {
+  study: CaseStudyListItem
+  index: number
+  colors: IndexColors
+  showStudioMarker: boolean
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: Math.min(index * 0.05, 0.3), ease: 'easeOut' }}
+    >
+      <Link
+        href={`/case-studies/${study.slug}`}
+        className="group relative grid grid-cols-[112px_1fr] items-center gap-6 border-b py-7 transition-[padding] duration-[400ms] ease-[cubic-bezier(.16,.84,.34,1)] md:grid-cols-[300px_1fr_auto] md:gap-10 lg:hover:pl-5"
+        style={{ borderColor: colors.rule }}
+      >
+        <span
+          aria-hidden
+          className="absolute left-0 top-1/2 hidden h-px w-0 -translate-y-1/2 transition-[width] duration-[400ms] ease-[cubic-bezier(.16,.84,.34,1)] lg:block lg:group-hover:w-3"
+          style={{ background: colors.accent }}
+        />
+
+        {/* Persistent thumbnail */}
+        <div
+          className="w-full shrink-0 overflow-hidden rounded-[3px] border"
+          style={{ borderColor: colors.cardBorder, background: colors.cardBg }}
+        >
+          <ProjectShot
+            study={study}
+            className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.03]"
+            sizes="(min-width: 768px) 300px, 112px"
+            priority={index < 3}
+          />
+        </div>
+
+        <div className="min-w-0">
+          <h2
+            className="mb-2 text-2xl font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-primary md:text-[2.35rem]"
+            style={{ color: colors.text }}
+          >
+            {study.title}
+          </h2>
+          {study.summary ? (
+            <p
+              className="max-w-[54ch] text-[0.95rem] leading-relaxed md:text-base"
+              style={{ color: colors.textMuted }}
+            >
+              {study.summary}
+            </p>
+          ) : null}
+          {showStudioMarker ? (
+            <span
+              className="mt-3 mr-3 inline-block text-xs uppercase tracking-[0.16em]"
+              style={{ color: colors.textMuted }}
+            >
+              Studio Project
+            </span>
+          ) : null}
+          <span
+            className="mt-3 inline-block text-xs uppercase tracking-[0.16em] md:hidden"
+            style={{ color: colors.textMuted }}
+          >
+            {study.industry}
+          </span>
+        </div>
+
+        {/* Sector swaps to CTA on hover */}
+        <div className="relative hidden h-6 w-[168px] md:block">
+          <span
+            className="absolute right-0 top-0 whitespace-nowrap text-sm transition-all duration-300 group-hover:translate-x-2.5 group-hover:opacity-0"
+            style={{ color: colors.textMuted }}
+          >
+            {study.industry}
+          </span>
+          <span
+            className="absolute right-0 top-0 inline-flex -translate-x-2.5 items-center gap-2 whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+            style={{ color: colors.accent }}
+          >
+            View project
+            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+          </span>
+        </div>
+      </Link>
+    </motion.div>
+  )
+}
+
 const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
 
-  const colors = useMemo(
+  const colors = useMemo<IndexColors>(
     () => ({
       bg: 'var(--background)',
       text: 'var(--foreground)',
@@ -104,6 +211,9 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
     selectedCategory === 'All'
       ? caseStudies
       : caseStudies.filter((cs) => cs.industry === selectedCategory)
+
+  const clientStudies = filteredStudies.filter((cs) => !isStudioProject(cs.projectType))
+  const studioStudies = filteredStudies.filter((cs) => isStudioProject(cs.projectType))
 
   return (
     <main className="min-h-screen pt-24 pb-20" style={{ background: colors.bg }}>
@@ -191,79 +301,53 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
 
           {/* Index */}
           <div className="relative">
-            {filteredStudies.map((study, index) => (
-              <motion.div
-                key={study._id}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: Math.min(index * 0.05, 0.3), ease: 'easeOut' }}
-              >
-                <Link
-                  href={`/case-studies/${study.slug}`}
-                  className="group relative grid grid-cols-[112px_1fr] items-center gap-6 border-b py-7 transition-[padding] duration-[400ms] ease-[cubic-bezier(.16,.84,.34,1)] md:grid-cols-[300px_1fr_auto] md:gap-10 lg:hover:pl-5"
-                  style={{ borderColor: colors.rule }}
+            {clientStudies.length > 0 ? (
+              <section>
+                <h2
+                  className="mb-2 mt-10 text-xl font-bold tracking-tight md:text-2xl"
+                  style={{ color: colors.text }}
                 >
-                  <span
-                    aria-hidden
-                    className="absolute left-0 top-1/2 hidden h-px w-0 -translate-y-1/2 transition-[width] duration-[400ms] ease-[cubic-bezier(.16,.84,.34,1)] lg:block lg:group-hover:w-3"
-                    style={{ background: colors.accent }}
+                  Client Work
+                </h2>
+                {clientStudies.map((study, index) => (
+                  <CaseStudyIndexRow
+                    key={study._id}
+                    study={study}
+                    index={index}
+                    colors={colors}
+                    showStudioMarker={false}
                   />
+                ))}
+              </section>
+            ) : null}
 
-                  {/* Persistent thumbnail */}
-                  <div
-                    className="w-full shrink-0 overflow-hidden rounded-[3px] border"
-                    style={{ borderColor: colors.cardBorder, background: colors.cardBg }}
-                  >
-                    <ProjectShot
-                      study={study}
-                      className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.03]"
-                      sizes="(min-width: 768px) 300px, 112px"
-                      priority={index < 3}
-                    />
-                  </div>
-
-                  <div className="min-w-0">
-                    <h2
-                      className="mb-2 text-2xl font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-primary md:text-[2.35rem]"
-                      style={{ color: colors.text }}
-                    >
-                      {study.title}
-                    </h2>
-                    {study.summary ? (
-                      <p
-                        className="max-w-[54ch] text-[0.95rem] leading-relaxed md:text-base"
-                        style={{ color: colors.textMuted }}
-                      >
-                        {study.summary}
-                      </p>
-                    ) : null}
-                    <span
-                      className="mt-3 inline-block text-xs uppercase tracking-[0.16em] md:hidden"
-                      style={{ color: colors.textMuted }}
-                    >
-                      {study.industry}
-                    </span>
-                  </div>
-
-                  {/* Sector swaps to CTA on hover */}
-                  <div className="relative hidden h-6 w-[168px] md:block">
-                    <span
-                      className="absolute right-0 top-0 whitespace-nowrap text-sm transition-all duration-300 group-hover:translate-x-2.5 group-hover:opacity-0"
-                      style={{ color: colors.textMuted }}
-                    >
-                      {study.industry}
-                    </span>
-                    <span
-                      className="absolute right-0 top-0 inline-flex -translate-x-2.5 items-center gap-2 whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-                      style={{ color: colors.accent }}
-                    >
-                      View project
-                      <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
-                    </span>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+            {studioStudies.length > 0 ? (
+              <section className={clientStudies.length > 0 ? 'mt-16' : 'mt-10'}>
+                <h2
+                  className="mb-3 text-xl font-bold tracking-tight md:text-2xl"
+                  style={{ color: colors.text }}
+                >
+                  Studio Projects
+                </h2>
+                <p
+                  className="mb-2 max-w-[54ch] text-[0.95rem] leading-relaxed md:text-base"
+                  style={{ color: colors.textMuted }}
+                >
+                  Projects the studio builds on its own initiative — to explore a brand, a
+                  category, or a technical problem. Each one ships to production on its own
+                  domain.
+                </p>
+                {studioStudies.map((study, index) => (
+                  <CaseStudyIndexRow
+                    key={study._id}
+                    study={study}
+                    index={index}
+                    colors={colors}
+                    showStudioMarker
+                  />
+                ))}
+              </section>
+            ) : null}
           </div>
 
           {/* In-house — Analytir */}
