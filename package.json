@@ -36,7 +36,8 @@
     "retire:old-elementor-posts": "tsx scripts/retire-old-elementor-posts.ts",
     "patch:elementor-isnt-alone": "tsx scripts/patch-elementor-isnt-alone.ts",
     "patch:website-care-service": "tsx scripts/patch-website-care-service.ts",
-    "patch:faq-corrections": "tsx scripts/patch-faq-corrections.ts"
+    "patch:faq-corrections": "tsx scripts/patch-faq-corrections.ts",
+    "expand:faq-answers": "tsx scripts/expand-faq-answers.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",
