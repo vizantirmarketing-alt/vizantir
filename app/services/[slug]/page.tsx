@@ -16,6 +16,9 @@ import type { Service, SiteSettings } from '@/lib/sanity/types'
 
 import ServicePageContent from './ServicePageContent'
 
+const LANDING_PAGES_COMMERCIAL_URL = 'https://www.vizantir.com/landing-pages'
+const LANDING_PAGES_SERVICE_TITLE = 'Landing Pages | Web Design Services'
+
 interface Props {
   params: Promise<{ slug: string }>
 }
@@ -39,8 +42,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!service || !settings) return {}
 
-  const url = getCanonicalUrl(settings, `/services/${service.slug}`)
-  const baseTitle = service.metaTitle || service.title
+  const isLandingPagesService = slug === 'landing-pages'
+  const pageUrl = getCanonicalUrl(settings, `/services/${service.slug}`)
+  const canonicalUrl = isLandingPagesService ? LANDING_PAGES_COMMERCIAL_URL : pageUrl
+  const baseTitle = isLandingPagesService
+    ? LANDING_PAGES_SERVICE_TITLE
+    : service.metaTitle || service.title
   const siteName = settings.siteName || 'Vizantir'
   const socialTitle = baseTitle.endsWith(siteName)
     ? baseTitle
@@ -49,11 +56,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: baseTitle,
     description: service.metaDescription || service.description,
-    alternates: { canonical: url },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: socialTitle,
       description: service.metaDescription || service.description,
-      url,
+      url: pageUrl,
       type: 'website',
       images: getOgImage({ pageImage: service.ogImageUrl, settings, alt: service.title }),
     },

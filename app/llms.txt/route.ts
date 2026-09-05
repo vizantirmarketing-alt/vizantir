@@ -88,7 +88,7 @@ Complete site knowledge: [llms-full.txt](https://www.vizantir.com/llms-full.txt)
 - [Website Strategy](https://www.vizantir.com/services/website-strategy): Mapping what the site needs to do before design begins — who it's for, what they care about, what makes them reach out.
 - [Web Design](https://www.vizantir.com/services/web-design): Custom design built around the brand and the buyer. No templates, no shortcuts.
 - [Web Development](https://www.vizantir.com/services/web-development): Fast, clean Next.js code a client's team can update without calling a developer.
-- [Landing Pages](https://www.vizantir.com/services/landing-pages): Conversion-focused pages built to turn traffic into leads.
+- [Landing Pages](https://www.vizantir.com/landing-pages): Conversion-focused pages built to turn traffic into leads.
 - [Website Refreshes](https://www.vizantir.com/services/website-refreshes): Fixing what's holding an existing site back without rebuilding what already works.
 - [CMS Integrations](https://www.vizantir.com/services/cms-integrations): Sanity setup so teams can update content, add pages, and make changes without touching code.
 - [Website Care](https://www.vizantir.com/services/website-care): Ongoing improvement after launch — content, conversion, search, and related work on a monthly retainer.

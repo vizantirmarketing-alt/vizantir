@@ -257,7 +257,7 @@ async function main() {
     ],
     seo: {
       _type: 'seo' as const,
-      metaTitle: 'Landing Page Design & Development | Vizantir',
+      metaTitle: 'Landing Pages | Web Design Services',
       metaDescription:
         'Custom landing pages built on Next.js. Strategy, design, and conversion-focused development starting at $3,500.',
       noIndex: false,

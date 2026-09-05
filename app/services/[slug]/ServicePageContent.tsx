@@ -88,6 +88,29 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 {service.description}
               </p>
             ) : null}
+            {service.slug === 'landing-pages' ? (
+              <Link
+                href="/landing-pages"
+                className="mt-8 flex items-center justify-between gap-4 rounded-2xl border p-5 no-underline transition-opacity hover:opacity-90 md:p-6"
+                style={{
+                  background: 'rgba(0, 112, 243, 0.08)',
+                  borderColor: 'rgba(0, 112, 243, 0.28)',
+                }}
+              >
+                <span className="min-w-0">
+                  <span
+                    className="mb-1 block text-xs font-medium uppercase tracking-[0.2em]"
+                    style={{ color: colors.accent }}
+                  >
+                    Landing page offerings
+                  </span>
+                  <span className="block text-lg font-semibold md:text-xl" style={{ color: colors.text }}>
+                    See packages, pricing, and live examples
+                  </span>
+                </span>
+                <ArrowRight className="h-5 w-5 shrink-0" style={{ color: colors.accent }} />
+              </Link>
+            ) : null}
           </motion.div>
         </div>
       </section>

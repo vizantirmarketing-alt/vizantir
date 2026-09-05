@@ -124,7 +124,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
       `Custom website projects start at ${essentialsProjectTier.price} and scale past $60,000. What moves the number is scope: how many pages, how much custom functionality, whether we're building the content system or migrating one.`,
       {
         before: '',
-        link: { label: 'Campaign landing pages', href: '/services/landing-pages' },
+        link: { label: 'Campaign landing pages', href: '/landing-pages' },
         after: ` start at ${campaignLandingPageFloor}, for a business that needs one page to do one job. After launch, Website Care is optional ongoing work — content, conversion, search, and related improvements. Monthly plans range from ${carePricing[0].price} to ${carePricing[2].price}; see the Services page.`,
       },
       "If budget is the deciding factor, Squarespace and Wix are the right call. We're a fit when a weak website costs you more than a strong one does.",
