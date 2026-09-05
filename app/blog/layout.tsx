@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Blog - Web Development Insights & Guides | Vizantir' },
+  title: { absolute: 'Web Design Insights for Business Owners | Vizantir' },
   description:
     'Practical answers to the questions business owners ask most about websites, SEO, WordPress, Next.js, performance, and security.',
   keywords:

@@ -86,7 +86,7 @@ export default function BlogPageClient({ posts }: Props) {
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6 transition-colors duration-500"
               style={{ color: colors.text }}
             >
-              Insights & Guides
+              Web Design Insights for Business Owners
             </h1>
             <p
               className="text-lg max-w-2xl mx-auto transition-colors duration-500"

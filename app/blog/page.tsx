@@ -7,7 +7,7 @@ import type { SiteSettings } from '@/lib/sanity/types'
 import { getCanonicalUrl } from '@/lib/utils/metadata'
 import BlogPageClient, { type SanityBlogPostPreview } from './BlogPageClient'
 
-const PAGE_TITLE = 'Insights & Guides'
+const PAGE_TITLE = 'Web Design Insights for Business Owners'
 const PAGE_DESCRIPTION =
   'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.'
 

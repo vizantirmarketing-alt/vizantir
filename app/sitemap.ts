@@ -24,7 +24,7 @@ const STATIC_PAGE_DATES: Record<string, string> = {
   '/about': '2026-08-15',
   '/contact': '2026-09-04',
   '/services': '2026-09-05',
-  '/blog': '2026-08-15',
+  '/blog': '2026-09-05',
   '/faq': '2026-09-05',
   '/las-vegas-web-design': '2026-08-20',
   '/hospitality-web-design': '2026-08-20',

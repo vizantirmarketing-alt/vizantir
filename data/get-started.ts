@@ -1,4 +1,4 @@
-export const getStartedTitle = 'Get Started'
+export const getStartedTitle = 'Start a Web Design Project in Las Vegas'
 export const getStartedDescription =
   "Fixed scope, fixed price, direct access to the builder. From first call to launch, here's how every project runs."
 

@@ -84,7 +84,7 @@ export function flattenAreWeAFitParagraph(paragraph: AreWeAFitParagraph): string
   return `${paragraph.before}${paragraph.link.label}${paragraph.after}`
 }
 
-export const areWeAFitPageTitle = 'Are We a Fit?'
+export const areWeAFitPageTitle = 'Is Vizantir the Right Web Design Studio for You?'
 export const areWeAFitPageDescription =
   'Honest criteria on whether Vizantir is the right premium web design studio for your business. Read this before booking a Strategy Call.'
 
