@@ -39,7 +39,25 @@ async function buildRobotsTxt(): Promise<string> {
     process.env.NEXT_PUBLIC_SITE_URL ||
     'https://vizantir.com'
 
+  const aiCrawlers = [
+    'GPTBot',
+    'ChatGPT-User',
+    'PerplexityBot',
+    'ClaudeBot',
+    'Claude-Web',
+    'Google-Extended',
+    'CCBot',
+  ]
+
+  const aiCrawlerBlocks = aiCrawlers.flatMap((agent) => [
+    `User-Agent: ${agent}`,
+    'Allow: /',
+    '',
+  ])
+
   return [
+    '# AI context: /llms.txt',
+    '',
     'User-Agent: *',
     'Allow: /',
     'Disallow: /api/',
@@ -48,6 +66,7 @@ async function buildRobotsTxt(): Promise<string> {
     'Disallow: /intel/',
     'Disallow: /r/',
     '',
+    ...aiCrawlerBlocks,
     `Sitemap: ${siteUrl}/sitemap.xml`,
     '',
   ].join('\n')

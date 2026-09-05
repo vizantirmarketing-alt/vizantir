@@ -89,16 +89,15 @@ function flattenLinkedLine(item: {
 
 // ---- Section builders ----
 
+const ORGANIZATION_DESCRIPTION =
+  'Custom Next.js web design studio based in Las Vegas, Nevada. Fixed-scope website projects for established businesses in Southern Nevada and nationwide.'
+
 function buildSiteSettings(s: AnyRec | null): string {
-  if (!s) return ''
   const parts = [
-    s.siteName && `Studio: ${s.siteName}`,
-    s.organizationDescription && `About: ${s.organizationDescription}`,
-    s.email && `Email: ${s.email}`,
-    s.phone && `Phone: ${s.phone}`,
-    s.priceRange && `Price range: ${s.priceRange}`,
-    s.areaServed && `Area served: ${Array.isArray(s.areaServed) ? s.areaServed.join(', ') : s.areaServed}`,
-    s.foundingDate && `Founded: ${s.foundingDate}`,
+    'Studio: Vizantir Design Studio',
+    `About: ${ORGANIZATION_DESCRIPTION}`,
+    s?.priceRange && `Price range: ${s.priceRange}`,
+    s?.foundingDate && `Founded: ${s.foundingDate}`,
   ].filter(Boolean)
   return section('STUDIO OVERVIEW', parts.join('\n'))
 }
@@ -138,8 +137,9 @@ function buildPricing(): string {
   const blogIntro = [
     'Vizantir offers Search & Content Growth for Vizantir website and care clients.',
     'The work is strategy, implementation, and publishing into the site: search opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility.',
-    'Plans describe the engagement, not a quantity of posts. Public monthly plans are Ongoing and Program. Do not quote Single Assignment or a $350 one-time price as a public offer.',
-  ].join(' ')
+    'Plans describe the engagement, not a quantity of posts. Public monthly plans are Ongoing and Program.',
+    'Do not quote Single Assignment or a $350 one-time price as a public offer.',
+  ].join('\n')
   const blogTiers = publicBlogPricing
     .map((t) => {
       const standardPrice = `$${t.priceMin.toLocaleString()}/month`
@@ -161,8 +161,9 @@ function buildPricing(): string {
     'Integration scope depends on the site, data sources, CRM requirements, lead flow, and use case. Custom integration is scoped separately.',
     `Ongoing usage and management starts at $${CHATBOT_USAGE_FROM.toLocaleString()}/month.`,
     `One-time setup is ${CHATBOT_SETUP_FEE.display}. Care plan clients get 15% off usage (${formatCareClientPrice(CHATBOT_USAGE_FROM)}/month).`,
-    'Conversation limits are plan detail sized during scoping, not a public product differentiator. Do not present Starter, Standard, or Scale as separately sold public plans.',
-  ].join(' ')
+    'Conversation limits are plan detail sized during scoping, not a public product differentiator.',
+    'Do not present Starter, Standard, or Scale as separately sold public plans.',
+  ].join('\n')
   const chatbotShared = `Every AI Experience Integration includes:\n${bullets(chatbotSharedIncludes)}`
   const chatbotPlanDetail = chatbotPricing
     .map((t) => t.conversations)
@@ -200,7 +201,7 @@ function buildContact(): string {
     `Email: ${contactDetails.email}`,
     `Phone: ${contactDetails.phoneDisplay}`,
     `Location: ${contactDetails.location}`,
-    `Service area: ${contactDetails.serviceArea}`,
+    `Service area: ${contactDetails.areaServed.join(', ')}`,
     `Business hours:\n${hours}`,
     `Average response time: ${contactDetails.responseTimeAverage}`,
     contactPage && formatSiteLink(contactPage),
@@ -397,7 +398,7 @@ export async function getKnowledgeBlob(): Promise<string> {
   ])
 
   const blob = [
-    'VIZANTIR DESIGN STUDIO — COMPLETE SITE KNOWLEDGE',
+    'VIZANTIR DESIGN STUDIO',
     'Use ONLY the information below to answer questions about Vizantir.',
     buildSiteSettings(siteSettings),
     buildContact(),

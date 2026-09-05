@@ -169,7 +169,8 @@ function getSettingsWithFallback(settings: SiteSettings | null): SiteSettings {
     siteName: 'Vizantir',
     defaultMetaTitle: 'Vizantir | Custom Website Design Studio in Las Vegas',
     defaultMetaDescription: 'A Las Vegas studio that designs and builds custom websites for established businesses. No templates, no plugins. Built by hand in Next.js.',
-    organizationDescription: 'Premium web design and development agency',
+    organizationDescription:
+      'Custom Next.js web design studio based in Las Vegas, Nevada. Fixed-scope website projects for established businesses in Southern Nevada and nationwide.',
     hasPhysicalLocation: false,
   }
 }
