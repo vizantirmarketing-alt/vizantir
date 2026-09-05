@@ -4,6 +4,8 @@ import { sanityFetch } from '@/lib/sanity/client';
 import { caseStudiesBySlugsQuery, homepageFaqsQuery } from '@/lib/sanity/queries';
 import type { CaseStudyListItem } from '@/lib/sanity/types';
 import type { Faq } from '@/components/homepage/FAQSection';
+import { JsonLd } from '@/components/seo/JsonLd'
+import { faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -80,8 +82,20 @@ export default async function Home() {
     return study ? [study] : []
   })
 
+  const faqNode = faqSchema(faqs)
+  const pageGraph = graphSchema([
+    webPageSchema({
+      url: HOME_URL,
+      name: HOME_TITLE,
+      description: HOME_DESCRIPTION,
+      siteUrl: HOME_URL,
+    }),
+    faqNode ? { ...faqNode, '@id': `${HOME_URL}#faq` } : null,
+  ])
+
   return (
     <>
+      <JsonLd id="ld-home" data={pageGraph} />
       <Hero />
       <Marquee />
       <EditorialStatement />
