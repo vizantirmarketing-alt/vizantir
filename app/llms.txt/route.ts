@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { carePricing, landingPagePricing, projectPricing } from "@/data/pricing";
+import { sanityFetch } from "@/lib/sanity/client";
+import { chatAllCaseStudiesQuery } from "@/lib/sanity/queries";
 
 const essentialsProjectTier = projectPricing[0];
 const growthProjectTier = projectPricing[1];
@@ -24,10 +26,57 @@ if (!campaignLandingPageTier || !conversionSystemTier) {
   throw new Error("landingPagePricing is missing expected tiers");
 }
 
+const campaignLandingPage = campaignLandingPageTier;
+const conversionSystem = conversionSystemTier;
+
+type PublishedCaseStudy = {
+  title?: string;
+  slug?: string;
+  summary?: string;
+  projectType?: "client" | "studio";
+};
+
+// Unset projectType is treated as 'client' to match the schema default.
+// A future case study added without the field set will be published here,
+// not silently omitted. Studio projects must be set to 'studio' explicitly.
+function isClientProject(projectType: PublishedCaseStudy["projectType"]): boolean {
+  return projectType !== "studio";
+}
+
+const LAUNCHED_SITE_BLURBS: Record<string, string> = {
+  "elorae-nails":
+    "Clean single-page site for a private Las Vegas nail studio, moved off Wix.",
+  "beacon-of-light-music":
+    "Catalog site for a worship songwriter — every track with its story, plus pages to find and follow the artist. New songs are added in Sanity without a developer.",
+  "evolve-dance-center":
+    "Las Vegas dance studio rebuilt from Wix onto Next.js and Sanity. Domain moved; email never went down.",
+  "golden-era-integra":
+    "Editorial platform for a 1995 Acura Integra GS-R restoration — build journal, parts archive, and garage sale system on Sanity.",
+  "pink-salt-salon":
+    "Migrated a luxury Las Vegas nail salon off a malware-prone WordPress site to a stable custom build.",
+};
+
+function formatLaunchedSites(items: PublishedCaseStudy[]): string {
+  return items
+    .filter((item) => isClientProject(item.projectType))
+    .flatMap((item) => {
+      if (typeof item.slug !== "string" || typeof item.title !== "string") {
+        return [];
+      }
+      const blurb = LAUNCHED_SITE_BLURBS[item.slug] ?? item.summary;
+      if (!blurb) {
+        return [];
+      }
+      return [`- [${item.title}](https://www.vizantir.com/case-studies/${item.slug}): ${blurb}`];
+    })
+    .join("\n");
+}
+
 const customWebsiteFloor = essentialsProjectTier.price;
 const campaignLandingPageFloor = `$${campaignLandingPageTier.priceMin.toLocaleString("en-US")}`;
 
-const content = `# Vizantir
+function buildContent(launchedSites: string): string {
+  return `# Vizantir
 
 > Premium custom website design and development studio based in Las Vegas, Nevada, serving clients nationwide. Vizantir builds bespoke, high-performance Next.js websites for established businesses that have outgrown their current site.
 
@@ -61,19 +110,15 @@ Custom website projects. Not the cheapest option in the Las Vegas market, by des
 - ${growthPartnerTier.name}: ${growthPartnerTier.price}. ${growthPartnerTier.description}
 
 ### Landing pages
-- ${campaignLandingPageTier.name}: ${campaignLandingPageTier.price}. ${campaignLandingPageTier.description}
-- ${conversionSystemTier.name}: ${conversionSystemTier.price}. ${conversionSystemTier.description}
+- ${campaignLandingPage.name}: ${campaignLandingPage.price}. ${campaignLandingPage.description}
+- ${conversionSystem.name}: ${conversionSystem.price}. ${conversionSystem.description}
 
 ## How we work
 A five-step process with defined scope and fixed pricing: Discovery (goals, timeline, fit), Proposal (clear scope document — what's included, price, timeline), 50% deposit to begin, Build (design and development with milestone check-ins), and Launch (final review, remaining balance, go live). No hourly billing — finished products, not hours.
 
 ## Launched sites
 Live sites built by the studio.
-- [Eloraé Nails](https://www.vizantir.com/case-studies/elorae-nails): Clean single-page site for a private Las Vegas nail studio, moved off Wix.
-- [Beacon of Light Music](https://www.vizantir.com/case-studies/beacon-of-light-music): Catalog site for a worship songwriter — every track with its story, plus pages to find and follow the artist. New songs are added in Sanity without a developer.
-- [Evolve Dance Center](https://www.vizantir.com/case-studies/evolve-dance-center): Las Vegas dance studio rebuilt from Wix onto Next.js and Sanity. Domain moved; email never went down.
-- [Golden Era Integra](https://www.vizantir.com/case-studies/golden-era-integra): Editorial platform for a 1995 Acura Integra GS-R restoration — build journal, parts archive, and garage sale system on Sanity.
-- [Pink Salt Salon & Spa](https://www.vizantir.com/case-studies/pink-salt-salon): Migrated a luxury Las Vegas nail salon off a malware-prone WordPress site to a stable custom build.
+${launchedSites}
 
 The full portfolio is at https://www.vizantir.com/case-studies.
 
@@ -104,8 +149,15 @@ Hours: Mon–Fri 9:00 AM–6:00 PM PST; Saturday by appointment; Sunday closed. 
 - LinkedIn: https://www.linkedin.com/company/vizantir/
 - Instagram: https://www.instagram.com/vizantirdesignstudio
 `;
+}
 
-export function GET() {
+export async function GET() {
+  const caseStudies = await sanityFetch<PublishedCaseStudy[]>(
+    chatAllCaseStudiesQuery,
+    {},
+    { tags: ["caseStudy"] },
+  );
+  const content = buildContent(formatLaunchedSites(caseStudies ?? []));
   return new NextResponse(content, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",

@@ -7,18 +7,10 @@ import { chatAllCaseStudiesQuery } from '@/lib/sanity/queries'
 const MODEL_INSTRUCTION_LINE =
   /^(use only the information below\b|do not (quote|present|use|invent|mention)\b|plan detail only \(not public products\))/i
 
-/** Live sites listed in /llms.txt. Case studies have no concept/client field. */
-const LAUNCHED_SITE_SLUGS = [
-  'elorae-nails',
-  'beacon-of-light-music',
-  'evolve-dance-center',
-  'golden-era-integra',
-  'pink-salt-salon',
-] as const
-
 type ChatCaseStudy = {
   title?: string
   slug?: string
+  projectType?: 'client' | 'studio'
   industry?: string
   summary?: string
   challenge?: string
@@ -26,6 +18,13 @@ type ChatCaseStudy = {
   results?: string
   stack?: string[]
   siteUrl?: string
+}
+
+// Unset projectType is treated as 'client' to match the schema default.
+// A future case study added without the field set will be published here,
+// not silently omitted. Studio projects must be set to 'studio' explicitly.
+function isClientProject(projectType: ChatCaseStudy['projectType']): boolean {
+  return projectType !== 'studio'
 }
 
 function isModelInstruction(line: string): boolean {
@@ -36,16 +35,7 @@ function isModelInstruction(line: string): boolean {
 }
 
 function launchedCaseStudies(items: ChatCaseStudy[]): ChatCaseStudy[] {
-  const bySlug = new Map(
-    items
-      .filter((item): item is ChatCaseStudy & { slug: string } => typeof item.slug === 'string')
-      .map((item) => [item.slug, item]),
-  )
-
-  return LAUNCHED_SITE_SLUGS.flatMap((slug) => {
-    const item = bySlug.get(slug)
-    return item ? [item] : []
-  })
+  return items.filter((item) => isClientProject(item.projectType))
 }
 
 function formatLaunchedCaseStudies(items: ChatCaseStudy[]): string {
