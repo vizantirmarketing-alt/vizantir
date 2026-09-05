@@ -36,6 +36,14 @@ export function faqId(pageUrl: string) {
   return `${pageUrl}#faq`
 }
 
+export function pageServiceId(pageUrl: string) {
+  return `${pageUrl}#service`
+}
+
+export function offerId(pageUrl: string, slug: string) {
+  return `${pageUrl}#offer-${slug}`
+}
+
 export function pageArticleId(pageUrl: string) {
   return `${pageUrl}#article`
 }

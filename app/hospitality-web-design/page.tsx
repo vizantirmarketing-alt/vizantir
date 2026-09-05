@@ -2,6 +2,15 @@ import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import HospitalityWebDesignClient from './HospitalityWebDesignClient'
 import { hospitalityPricingFaqItems } from '@/data/industry-pricing-faqs'
+import {
+  breadcrumbSchema,
+  faqSchema,
+  graphSchema,
+  pageServiceSchema,
+  projectOfferSchemas,
+  webPageSchema,
+} from '@/lib/schema'
+import { pageServiceId } from '@/lib/schema/ids'
 
 const META_DESCRIPTION =
   'Custom websites for restaurants, hotels, and lounges. Built on Next.js for mobile speed, bookings that convert, and a first impression that matches the venue.'
@@ -44,63 +53,39 @@ export const metadata: Metadata = {
   },
 }
 
-const hospitalityServiceSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: 'Hospitality Web Design',
-  description:
-    'Custom websites for restaurants, hotels, and lounges. Built on Next.js for mobile speed, bookings that convert, and a first impression that matches the venue.',
-  url: 'https://www.vizantir.com/hospitality-web-design',
-  provider: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://www.vizantir.com/#business',
-    name: 'Vizantir Design Studio',
-  },
-  areaServed: {
-    '@type': 'Country',
-    name: 'United States',
-  },
-  serviceType: 'Web design and development for hospitality businesses',
-}
+const SITE_URL = 'https://www.vizantir.com'
+const PAGE_URL = `${SITE_URL}/hospitality-web-design`
+const offerNodes = projectOfferSchemas(PAGE_URL)
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: hospitalityPricingFaqItems.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
-}
-
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Home',
-      item: 'https://www.vizantir.com',
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: 'Hospitality Web Design',
-      item: 'https://www.vizantir.com/hospitality-web-design',
-    },
-  ],
-}
+const pageGraph = graphSchema([
+  webPageSchema({
+    url: PAGE_URL,
+    name: 'Hospitality Web Design for Restaurants & Hotels',
+    description: META_DESCRIPTION,
+    siteUrl: SITE_URL,
+    mainEntity: { '@id': pageServiceId(PAGE_URL) },
+  }),
+  pageServiceSchema({
+    url: PAGE_URL,
+    name: 'Hospitality Web Design',
+    description:
+      'Custom websites for restaurants, hotels, and lounges. Built on Next.js for mobile speed, bookings that convert, and a first impression that matches the venue.',
+    siteUrl: SITE_URL,
+    serviceType: 'Web design and development for hospitality businesses',
+    offers: offerNodes.map((offer) => ({ '@id': offer['@id'] })),
+  }),
+  ...offerNodes,
+  faqSchema(hospitalityPricingFaqItems, PAGE_URL),
+  breadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Hospitality Web Design', url: PAGE_URL },
+  ]),
+])
 
 export default function HospitalityWebDesignPage() {
   return (
     <>
-      <JsonLd id="ld-hospitality-service" data={hospitalityServiceSchema} />
-      <JsonLd id="ld-faq" data={faqSchema} />
-      <JsonLd id="ld-breadcrumb" data={breadcrumbSchema} />
+      <JsonLd id="ld-hospitality-web-design" data={pageGraph} />
       <HospitalityWebDesignClient />
     </>
   )

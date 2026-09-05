@@ -2,6 +2,15 @@ import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import LawFirmWebDesignClient from './LawFirmWebDesignClient'
 import { lawFirmPricingFaqItems } from '@/data/industry-pricing-faqs'
+import {
+  breadcrumbSchema,
+  faqSchema,
+  graphSchema,
+  pageServiceSchema,
+  projectOfferSchemas,
+  webPageSchema,
+} from '@/lib/schema'
+import { pageServiceId } from '@/lib/schema/ids'
 
 export const metadata: Metadata = {
   title: 'Law Firm Web Design That Builds Trust',
@@ -44,63 +53,40 @@ export const metadata: Metadata = {
   },
 }
 
-const lawFirmServiceSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: 'Law Firm Web Design',
-  description:
-    'Custom websites for law firms and legal practices. Built to establish credibility, generate consultations, and present firms at the highest level.',
-  url: 'https://www.vizantir.com/law-firm-web-design',
-  provider: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://www.vizantir.com/#business',
-    name: 'Vizantir Design Studio',
-  },
-  areaServed: {
-    '@type': 'Country',
-    name: 'United States',
-  },
-  serviceType: 'Web design and development for law firms and legal practices',
-}
+const SITE_URL = 'https://www.vizantir.com'
+const PAGE_URL = `${SITE_URL}/law-firm-web-design`
+const offerNodes = projectOfferSchemas(PAGE_URL)
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: lawFirmPricingFaqItems.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
-}
-
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Home',
-      item: 'https://www.vizantir.com',
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: 'Law Firm Web Design',
-      item: 'https://www.vizantir.com/law-firm-web-design',
-    },
-  ],
-}
+const pageGraph = graphSchema([
+  webPageSchema({
+    url: PAGE_URL,
+    name: 'Law Firm Web Design That Builds Trust',
+    description:
+      'Custom websites for law firms and legal practices. Built to establish credibility, generate consultations, and present your firm at the highest level.',
+    siteUrl: SITE_URL,
+    mainEntity: { '@id': pageServiceId(PAGE_URL) },
+  }),
+  pageServiceSchema({
+    url: PAGE_URL,
+    name: 'Law Firm Web Design',
+    description:
+      'Custom websites for law firms and legal practices. Built to establish credibility, generate consultations, and present firms at the highest level.',
+    siteUrl: SITE_URL,
+    serviceType: 'Web design and development for law firms and legal practices',
+    offers: offerNodes.map((offer) => ({ '@id': offer['@id'] })),
+  }),
+  ...offerNodes,
+  faqSchema(lawFirmPricingFaqItems, PAGE_URL),
+  breadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Law Firm Web Design', url: PAGE_URL },
+  ]),
+])
 
 export default function LawFirmWebDesignPage() {
   return (
     <>
-      <JsonLd id="ld-law-firm-service" data={lawFirmServiceSchema} />
-      <JsonLd id="ld-faq" data={faqSchema} />
-      <JsonLd id="ld-breadcrumb" data={breadcrumbSchema} />
+      <JsonLd id="ld-law-firm-web-design" data={pageGraph} />
       <LawFirmWebDesignClient />
     </>
   )

@@ -15,6 +15,8 @@ import {
   webPageId,
   howToId,
   faqId,
+  pageServiceId,
+  offerId,
   serviceId,
   articleId,
   pageArticleId,
@@ -293,6 +295,76 @@ export function itemListSchema({ name, items }: ItemListSchemaParams) {
 // ============================================
 // Service Schema
 // ============================================
+
+interface OfferSchemaParams {
+  pageUrl: string
+  slug: string
+  name: string
+  price: number
+  description: string
+}
+
+export function offerSchema({
+  pageUrl,
+  slug,
+  name,
+  price,
+  description,
+}: OfferSchemaParams) {
+  return {
+    '@type': 'Offer',
+    '@id': offerId(pageUrl, slug),
+    name,
+    price: price.toString(),
+    priceCurrency: 'USD',
+    description,
+    itemOffered: { '@id': pageServiceId(pageUrl) },
+  }
+}
+
+/** Priced Offers for custom website projects (Essentials / Growth / Enterprise). */
+export function projectOfferSchemas(pageUrl: string) {
+  return projectPricing.map((tier) =>
+    offerSchema({
+      pageUrl,
+      slug: tier.slug,
+      name: tier.name,
+      price: tier.priceNumeric,
+      description: tier.description,
+    }),
+  )
+}
+
+interface PageServiceSchemaParams {
+  url: string
+  name: string
+  description: string
+  siteUrl: string
+  serviceType?: string
+  offers?: readonly { '@id': string }[]
+}
+
+/** Page-level Service for marketing URLs that are not Sanity `/services/[slug]` docs. */
+export function pageServiceSchema({
+  url,
+  name,
+  description,
+  siteUrl,
+  serviceType,
+  offers,
+}: PageServiceSchemaParams) {
+  return {
+    '@type': 'Service',
+    '@id': pageServiceId(url),
+    name,
+    description,
+    url,
+    provider: refOrganization(siteUrl),
+    areaServed: { '@type': 'Country', name: 'United States' },
+    ...(serviceType && { serviceType }),
+    ...(offers && offers.length > 0 && { offers }),
+  }
+}
 
 export function serviceSchema(service: Service, siteUrl: string) {
   const url = `${siteUrl}/services/${service.slug}`
