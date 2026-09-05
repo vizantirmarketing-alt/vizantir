@@ -14,7 +14,7 @@ const SITE_URL = 'https://www.vizantir.com'
 const PAGE_URL = `${SITE_URL}/get-started`
 
 export const metadata: Metadata = {
-  title: getStartedTitle,
+  title: { absolute: `${getStartedTitle} | Vizantir` },
   description: getStartedDescription,
   alternates: {
     canonical: PAGE_URL,

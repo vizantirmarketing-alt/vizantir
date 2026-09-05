@@ -14,7 +14,7 @@ const PAGE_DESCRIPTION =
   'Find answers to common questions about timelines, pricing and our approach to premium website design and development, all in one place.'
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: { absolute: `${PAGE_TITLE} | Vizantir` },
   description: PAGE_DESCRIPTION,
   alternates: {
     canonical: PAGE_URL,

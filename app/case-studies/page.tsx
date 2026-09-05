@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const url = getCanonicalUrl(settings, '/case-studies')
 
   return {
-    title: PAGE_TITLE,
+    title: { absolute: `${PAGE_TITLE} | Vizantir` },
     description: PAGE_DESCRIPTION,
     alternates: { canonical: url },
     openGraph: {

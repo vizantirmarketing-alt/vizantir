@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Cookie Policy',
+  title: { absolute: 'Cookie Policy | Vizantir' },
   description: 'How Vizantir Design Studio uses cookies and similar technologies.',
   robots: { index: false, follow: true },
   alternates: { canonical: 'https://www.vizantir.com/cookies' },

@@ -17,7 +17,7 @@ const PAGE_DESCRIPTION =
   'Browse every page on the Vizantir website. Services, industries, case studies, blog posts, and more.'
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: { absolute: `${PAGE_TITLE} | Vizantir` },
   description: PAGE_DESCRIPTION,
   alternates: {
     canonical: PAGE_URL,

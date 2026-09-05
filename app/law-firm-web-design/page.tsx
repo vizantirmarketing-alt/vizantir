@@ -13,7 +13,7 @@ import {
 import { pageServiceId } from '@/lib/schema/ids'
 
 export const metadata: Metadata = {
-  title: 'Law Firm Web Design That Builds Trust',
+  title: { absolute: 'Law Firm Web Design That Builds Trust | Vizantir' },
   description:
     'Custom websites for law firms and legal practices. Built to establish credibility, generate consultations, and present your firm at the highest level.',
   keywords: [

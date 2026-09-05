@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : `${baseTitle} | ${siteName}`
 
   return {
-    title: baseTitle,
+    title: { absolute: `${baseTitle} | Vizantir` },
     description,
     alternates: { canonical: url },
     openGraph: {

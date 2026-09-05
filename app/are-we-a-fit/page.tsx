@@ -18,7 +18,7 @@ const PAGE_URL = `${SITE_URL}/are-we-a-fit`
 
 export const metadata: Metadata = {
   ...areWeAFitMetadata,
-  title: areWeAFitPageTitle,
+  title: { absolute: `${areWeAFitPageTitle} | Vizantir` },
   description: areWeAFitPageDescription,
   openGraph: {
     ...(typeof areWeAFitMetadata.openGraph === 'object' && areWeAFitMetadata.openGraph !== null

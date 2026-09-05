@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = location.metaTitle || `Services in ${location.city}`
   
   return {
-    title,
+    title: { absolute: `${title} | Vizantir` },
     description: location.metaDescription || location.description,
     alternates: { canonical: url },
     openGraph: {

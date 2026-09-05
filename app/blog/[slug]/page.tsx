@@ -29,15 +29,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!post) {
     return {
-      title: 'Post Not Found',
+      title: { absolute: 'Post Not Found | Vizantir' },
     }
   }
 
   const description = post.metaDescription || post.excerpt || ''
   const url = getCanonicalUrl(settings, `/blog/${post.slug}`)
+  const pageTitle = post.metaTitle || post.title
 
   return {
-    title: post.metaTitle || post.title,
+    title: { absolute: `${pageTitle} | Vizantir` },
     description,
     alternates: { canonical: url },
     openGraph: {

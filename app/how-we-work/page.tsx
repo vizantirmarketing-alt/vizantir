@@ -23,7 +23,7 @@ const PAGE_DESCRIPTION =
   'Discover our collaborative process from discovery to launch that ensures high-performance websites aligned with your vision and business goals.'
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: { absolute: `${PAGE_TITLE} | Vizantir` },
   description: PAGE_DESCRIPTION,
   alternates: {
     canonical: PAGE_URL,

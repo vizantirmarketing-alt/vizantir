@@ -21,7 +21,7 @@ const SITE_URL = 'https://www.vizantir.com'
 const PAGE_URL = `${SITE_URL}${NEXTJS_VS_WORDPRESS_PATH}`
 
 export const metadata: Metadata = {
-  title: nextjsVsWordpressTitle,
+  title: { absolute: `${nextjsVsWordpressTitle} | Vizantir` },
   description: nextjsVsWordpressDescription,
   keywords: [
     'next.js vs wordpress',

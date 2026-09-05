@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
+  title: { absolute: 'Privacy Policy | Vizantir' },
   description: 'How Vizantir Design Studio collects, uses, and protects personal information.',
   robots: { index: false, follow: true },
   alternates: { canonical: 'https://www.vizantir.com/privacy' },
