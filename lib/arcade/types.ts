@@ -47,7 +47,7 @@ export interface ArcadeGameHost {
   onLevel: (level: number) => void
   onLevelClear: (payload: { level: number; score: number; isFinal: boolean }) => void
   onReady: () => void
-  onPowerUp?: (name: string) => void
+  onPowerUp?: (name: string | null) => void
   onPauseRequest?: () => void
   onPointerLockChange?: (locked: boolean) => void
   onLines?: (lines: number) => void

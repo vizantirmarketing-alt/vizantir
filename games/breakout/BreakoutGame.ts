@@ -252,10 +252,15 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     host.onScore(score)
   }
 
+  const emitPower = (name: string | null) => {
+    host.onPowerUp?.(name)
+  }
+
   const resetPaddle = () => {
     paddle = { x: LOGICAL_W / 2, y: PADDLE_Y, w: PADDLE_WIDTH, h: PADDLE_HEIGHT, vx: 0 }
     wideTimer = 0
     slowTimer = 0
+    emitPower(null)
   }
 
   const ballOnPaddle = (): Ball => ({
@@ -600,8 +605,15 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     flashGate = Math.max(0, flashGate - dt)
     glow = Math.max(0, glow - dt * 5)
     shake = Math.max(0, shake - dt)
+    const wideWas = wideTimer
+    const slowWas = slowTimer
     if (wideTimer > 0) wideTimer = Math.max(0, wideTimer - dt)
     if (slowTimer > 0) slowTimer = Math.max(0, slowTimer - dt)
+    if ((wideWas > 0 && wideTimer === 0) || (slowWas > 0 && slowTimer === 0)) {
+      if (wideTimer > 0) emitPower('WIDE')
+      else if (slowTimer > 0) emitPower('SLOW')
+      else emitPower(null)
+    }
 
     for (let i = particles.length - 1; i >= 0; i -= 1) {
       const particle = particles[i]
