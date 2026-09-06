@@ -44,7 +44,8 @@
     "correct:wordpress-claims": "tsx scripts/correct-wordpress-claims.ts",
     "correct:wordpress-claims-r2": "tsx scripts/correct-wordpress-claims-r2.ts",
     "correct:wordpress-claims-r3": "tsx scripts/correct-wordpress-claims-r3.ts",
-    "correct:wordpress-claims-r4": "tsx scripts/correct-wordpress-claims-r4.ts"
+    "correct:wordpress-claims-r4": "tsx scripts/correct-wordpress-claims-r4.ts",
+    "correct:wordpress-claims-r5": "tsx scripts/correct-wordpress-claims-r5.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",
