@@ -40,9 +40,10 @@ const STATIC_PAGE_DATES: Record<string, string> = {
   '/nextjs-vs-wordpress': '2026-09-05',
   '/are-we-a-fit': '2026-09-05',
   '/get-started': '2026-08-15',
-  '/industries': '2026-08-15',
+  '/industries': '2026-09-05',
   '/technology': '2026-08-15',
   '/llms.txt': '2026-09-05',
+  '/sitemap-page': '2026-09-05',
 }
 
 type StaticRoute = {
@@ -96,6 +97,7 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: '/technology', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/analytir', changeFrequency: 'yearly', priority: 0.7 },
   { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
+  { path: '/sitemap-page', changeFrequency: 'monthly', priority: 0.4 },
   { path: '/llms.txt', changeFrequency: 'monthly', priority: 0.5 },
 ]
 
