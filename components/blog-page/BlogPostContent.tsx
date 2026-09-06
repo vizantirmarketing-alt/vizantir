@@ -37,6 +37,7 @@ interface BlogPostContentProps {
 }
 
 const BYLINE_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  timeZone: 'America/Los_Angeles',
   month: 'long',
   day: 'numeric',
   year: 'numeric',
