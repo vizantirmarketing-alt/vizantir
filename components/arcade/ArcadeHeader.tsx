@@ -11,7 +11,7 @@ import { SoundToggle } from '@/components/arcade/SoundToggle'
 
 function ArcadeMark({ compact = false }: { compact?: boolean }) {
   return (
-    <a href="/play" className="arcade-mark" aria-label="Vizantir Arcade home">
+    <a href="/play" className="arcade-mark">
       <span className="arcade-mark-kicker">VIZANTIR</span>
       <span className="arcade-mark-title" style={compact ? { fontSize: '1rem' } : { fontSize: '1.15rem' }}>
         ARCADE

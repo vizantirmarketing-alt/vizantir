@@ -351,6 +351,9 @@ export function GameMount({
     >
       <GameActionsContext.Provider value={actions}>
         <div ref={rootRef} className="arcade-stage" data-game={gameId} tabIndex={0} aria-label={stageLabel}>
+          <div className="arcade-sr-only" aria-live="polite" aria-atomic="true">
+            {countdown ?? ''}
+          </div>
           {children(api)}
         </div>
       </GameActionsContext.Provider>

@@ -29,7 +29,6 @@ export const MATCH_MARGIN = 2
 export const MATCH_CAP = 15
 
 export const TRAIL_MAX = 6
-export const TRAIL_MAX_REDUCED = 3
 export const PULSE_LIFE = 0.12
 
 export const CREAM = '#E8DDC7'

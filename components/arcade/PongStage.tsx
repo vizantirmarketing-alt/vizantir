@@ -182,6 +182,7 @@ export function PongStage() {
                 <canvas
                   ref={mount.canvasRef}
                   className={phase === 'playing' ? 'arcade-stage-canvas is-hidden-cursor' : 'arcade-stage-canvas'}
+                  role="img"
                   aria-label="Pong playfield"
                 />
                 {mount.loading ? <LoadingPong /> : null}
@@ -218,8 +219,10 @@ export function PongStage() {
                   </div>
                 ) : null}
                 {phase === 'gameOver' ? (
-                  <div className="arcade-overlay">
-                    <p className="arcade-overlay-title">{playerWon ? 'YOU WIN' : 'CPU WINS'}</p>
+                  <div className="arcade-overlay" role="dialog" aria-labelledby="pong-over-title" aria-modal="true">
+                    <p id="pong-over-title" className="arcade-overlay-title">
+                      {playerWon ? 'YOU WIN' : 'CPU WINS'}
+                    </p>
                     {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
                     <p className="arcade-overlay-copy">
                       {formatScore(finalPlayer)} to {formatScore(finalCpu)}
@@ -247,7 +250,7 @@ export function PongStage() {
                   </div>
                 ) : null}
                 {mount.countdown ? (
-                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-live="assertive">
+                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-hidden="true">
                     <p className="arcade-overlay-title">{mount.countdown}</p>
                   </div>
                 ) : null}

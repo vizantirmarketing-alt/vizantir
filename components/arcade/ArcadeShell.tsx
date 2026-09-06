@@ -7,9 +7,25 @@ import { ArcadeHeader } from '@/components/arcade/ArcadeHeader'
 import { ArcadeMenu } from '@/components/arcade/ArcadeMenu'
 import { useArcade } from '@/components/arcade/ArcadeProvider'
 
+function HudLiveRegion() {
+  const { hud, currentGame } = useArcade()
+  const text =
+    currentGame && hud
+      ? hud.opponentScore !== undefined
+        ? `You ${hud.score}, CPU ${hud.opponentScore}`
+        : `Score ${hud.score}`
+      : ''
+
+  return (
+    <div className="arcade-sr-only" aria-live="polite" aria-atomic="true">
+      {text}
+    </div>
+  )
+}
+
 const INTRO_FLAG = 'vizantir.arcade.intro'
 
-type IntroState = 'boot' | 'play' | 'reduced' | 'done'
+type IntroState = 'play' | 'reduced' | 'done'
 
 function readSessionFlag(key: string): boolean {
   try {
@@ -30,7 +46,7 @@ function writeSessionFlag(key: string): void {
 export function ArcadeShell({ children }: { children: ReactNode }) {
   const { stageRef } = useArcade()
   const rootRef = useRef<HTMLDivElement>(null)
-  const [intro, setIntro] = useState<IntroState>('boot')
+  const [intro, setIntro] = useState<IntroState>('play')
 
   useLayoutEffect(() => {
     const root = document.documentElement
@@ -47,18 +63,17 @@ export function ArcadeShell({ children }: { children: ReactNode }) {
   }, [stageRef])
 
   useEffect(() => {
-    const seen = readSessionFlag(INTRO_FLAG)
-    if (seen) {
+    if (readSessionFlag(INTRO_FLAG)) {
       const skip = window.setTimeout(() => setIntro('done'), 0)
       return () => window.clearTimeout(skip)
     }
 
     writeSessionFlag(INTRO_FLAG)
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const play = window.setTimeout(() => setIntro(reduce ? 'reduced' : 'play'), 0)
+    const reduceId = reduce ? window.setTimeout(() => setIntro('reduced'), 0) : 0
     const done = window.setTimeout(() => setIntro('done'), reduce ? 300 : 1600)
     return () => {
-      window.clearTimeout(play)
+      if (reduceId) window.clearTimeout(reduceId)
       window.clearTimeout(done)
     }
   }, [])
@@ -71,6 +86,7 @@ export function ArcadeShell({ children }: { children: ReactNode }) {
         <span className="arcade-intro-title">ARCADE</span>
       </div>
       <ArcadeHeader />
+      <HudLiveRegion />
       <main className="arcade-main arcade-chrome">{children}</main>
       <ArcadeMenu />
     </div>

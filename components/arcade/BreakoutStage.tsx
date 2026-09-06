@@ -153,6 +153,7 @@ export function BreakoutStage() {
                 <canvas
                   ref={mount.canvasRef}
                   className={phase === 'playing' ? 'arcade-stage-canvas is-hidden-cursor' : 'arcade-stage-canvas'}
+                  role="img"
                   aria-label="Breakout playfield"
                 />
                 {mount.loading ? <LoadingBreakout /> : null}
@@ -174,8 +175,10 @@ export function BreakoutStage() {
                   </div>
                 ) : null}
                 {phase === 'gameOver' ? (
-                  <div className="arcade-overlay">
-                    <p className="arcade-overlay-title">SIGNAL LOST</p>
+                  <div className="arcade-overlay" role="dialog" aria-labelledby="breakout-over-title" aria-modal="true">
+                    <p id="breakout-over-title" className="arcade-overlay-title">
+                      SIGNAL LOST
+                    </p>
                     {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
                     <p className="arcade-overlay-copy">Score {formatScore(finalScore)}</p>
                     <p className="arcade-overlay-copy">Best {formatScore(best ?? finalScore)}</p>
@@ -193,8 +196,10 @@ export function BreakoutStage() {
                   </div>
                 ) : null}
                 {phase === 'complete' ? (
-                  <div className="arcade-overlay">
-                    <p className="arcade-overlay-title">SITE CLEARED</p>
+                  <div className="arcade-overlay" role="dialog" aria-labelledby="breakout-complete-title" aria-modal="true">
+                    <p id="breakout-complete-title" className="arcade-overlay-title">
+                      SITE CLEARED
+                    </p>
                     <p className="arcade-overlay-copy">Nothing left but the experience.</p>
                     {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
                     <p className="arcade-overlay-copy">Score {formatScore(finalScore)}</p>
@@ -220,7 +225,7 @@ export function BreakoutStage() {
                   </div>
                 ) : null}
                 {mount.countdown ? (
-                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-live="assertive">
+                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-hidden="true">
                     <p className="arcade-overlay-title">{mount.countdown}</p>
                   </div>
                 ) : null}

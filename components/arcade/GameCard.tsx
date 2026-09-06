@@ -18,7 +18,6 @@ export function GameCard({ game }: { game: GameEntry }) {
     <a
       href={game.href}
       className="arcade-game-card"
-      aria-label={`Play ${game.title}`}
       style={{ '--game-accent': game.accent } as CSSProperties}
     >
       <div className="arcade-game-card-top">

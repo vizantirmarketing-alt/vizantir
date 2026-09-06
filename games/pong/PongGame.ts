@@ -38,7 +38,6 @@ import {
   PULSE_LIFE,
   SERVE_HOLD,
   TRAIL_MAX,
-  TRAIL_MAX_REDUCED,
   YELLOW,
   type CpuProfile,
 } from '@/games/pong/config'
@@ -475,9 +474,12 @@ export const createPongGame: GameFactory = (host: ArcadeGameHost) => {
   }
 
   const recordTrail = () => {
-    const max = reduced() ? TRAIL_MAX_REDUCED : TRAIL_MAX
+    if (reduced()) {
+      if (ball.trail.length > 0) ball.trail = []
+      return
+    }
     ball.trail.push({ x: ball.x, y: ball.y })
-    if (ball.trail.length > max) ball.trail.shift()
+    if (ball.trail.length > TRAIL_MAX) ball.trail.shift()
   }
 
   const integrateBall = (dt: number) => {
@@ -654,16 +656,18 @@ export const createPongGame: GameFactory = (host: ArcadeGameHost) => {
     drawPaddle(cpu, MAGENTA, 'bottom')
     drawPaddle(player, YELLOW, 'top')
 
-    for (let i = 0; i < ball.trail.length; i += 1) {
-      const point = ball.trail[i]
-      if (!point) continue
-      ctx.globalAlpha = ((i + 1) / ball.trail.length) * 0.35
-      ctx.fillStyle = CYAN
-      ctx.beginPath()
-      ctx.arc(point.x, point.y, BALL_RADIUS * 0.7, 0, Math.PI * 2)
-      ctx.fill()
+    if (!reduced()) {
+      for (let i = 0; i < ball.trail.length; i += 1) {
+        const point = ball.trail[i]
+        if (!point) continue
+        ctx.globalAlpha = ((i + 1) / ball.trail.length) * 0.35
+        ctx.fillStyle = CYAN
+        ctx.beginPath()
+        ctx.arc(point.x, point.y, BALL_RADIUS * 0.7, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      ctx.globalAlpha = 1
     }
-    ctx.globalAlpha = 1
     ctx.save()
     if (!reduced()) {
       ctx.shadowColor = CYAN

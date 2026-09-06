@@ -419,7 +419,7 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     setBallVelocity(ball, angle)
     ball.vy = -Math.abs(ball.vy)
     ball.y = paddle.y - BALL_RADIUS - 0.5
-    glow = 1
+    if (!reduced()) glow = 1
     combo = 1
     audio.play('paddle')
   }
@@ -767,8 +767,13 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     }
 
     ctx.save()
-    ctx.shadowColor = `rgba(34, 240, 255, ${0.35 + glow * 0.45})`
-    ctx.shadowBlur = 10 + glow * 12
+    if (reduced()) {
+      ctx.shadowColor = 'rgba(34, 240, 255, 0.35)'
+      ctx.shadowBlur = 10
+    } else {
+      ctx.shadowColor = `rgba(34, 240, 255, ${0.35 + glow * 0.45})`
+      ctx.shadowBlur = 10 + glow * 12
+    }
     ctx.fillStyle = '#22F0FF'
     ctx.fillRect(paddle.x - paddle.w / 2, paddle.y, paddle.w, paddle.h)
     ctx.restore()

@@ -141,7 +141,12 @@ export function StackStage() {
             </div>
             <div className="arcade-stack-layout">
               <div ref={mount.frameRef} className="arcade-stage-frame arcade-stack-board">
-                <canvas ref={mount.canvasRef} className="arcade-stage-canvas" aria-label="Stack playfield" />
+                <canvas
+                  ref={mount.canvasRef}
+                  className="arcade-stage-canvas"
+                  role="img"
+                  aria-label="Stack playfield"
+                />
                 {mount.loading ? <LoadingStack /> : null}
                 {showReady ? (
                   <div className="arcade-overlay arcade-overlay-pass">
@@ -156,8 +161,10 @@ export function StackStage() {
                   </div>
                 ) : null}
                 {phase === 'gameOver' ? (
-                  <div className="arcade-overlay">
-                    <p className="arcade-overlay-title">STACK OVERFLOW</p>
+                  <div className="arcade-overlay" role="dialog" aria-labelledby="stack-over-title" aria-modal="true">
+                    <p id="stack-over-title" className="arcade-overlay-title">
+                      STACK OVERFLOW
+                    </p>
                     {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
                     <p className="arcade-overlay-copy">Score {formatScore(finalScore)}</p>
                     <p className="arcade-overlay-copy">Lines {finalLines}</p>
@@ -184,7 +191,7 @@ export function StackStage() {
                   </div>
                 ) : null}
                 {mount.countdown ? (
-                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-live="assertive">
+                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-hidden="true">
                     <p className="arcade-overlay-title">{mount.countdown}</p>
                   </div>
                 ) : null}

@@ -12,8 +12,10 @@ export const metadata: Metadata = {
 
 export default function OfflinePage() {
   return (
-    <section className="arcade-offline">
-      <h1 className="arcade-offline-title">OFFLINE</h1>
+    <section className="arcade-offline" role="dialog" aria-labelledby="arcade-offline-title" aria-modal="true">
+      <h1 id="arcade-offline-title" className="arcade-offline-title">
+        OFFLINE
+      </h1>
       <p className="arcade-offline-copy">
         This game needs to be opened online once before it can play offline.
       </p>

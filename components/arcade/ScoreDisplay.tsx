@@ -9,7 +9,7 @@ function formatArcadeScore(score: number | undefined): string {
 
 function LifeBars({ lives }: { lives: number }) {
   return (
-    <span className="arcade-life-bars" aria-label={`${lives} lives`}>
+    <span className="arcade-life-bars" role="img" aria-label={`${lives} lives`}>
       {[0, 1, 2].map((index) => (
         <span key={index} className={index < lives ? 'arcade-life-bar is-on' : 'arcade-life-bar'} />
       ))}
