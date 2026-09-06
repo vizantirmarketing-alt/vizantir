@@ -25,7 +25,6 @@ import {
   refOrganization,
   refWebsite,
   refWebPage,
-  refPerson,
 } from './ids'
 
 const OFFER_PRICE_BY_NAME = new Map<string, number>([

@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 
 import { sanityFetch } from '@/lib/sanity/client'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
+import { founderId } from '@/lib/schema/ids'
 import type { SiteSettings } from '@/lib/sanity/types'
 
 import { SiteChrome } from '@/components/SiteChrome'
@@ -110,7 +111,7 @@ async function BusinessJsonLd() {
     ],
     founder: {
       '@type': 'Person',
-      '@id': 'https://www.vizantir.com/about#person',
+      '@id': founderId('https://www.vizantir.com'),
       name: 'James Tram',
     },
     parentOrganization: {

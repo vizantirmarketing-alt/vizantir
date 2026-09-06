@@ -1,6 +1,7 @@
 import { projectPricing } from '@/data/pricing'
 import { redesignPricingFaqItems } from '@/data/industry-pricing-faqs'
 import { faqSchema } from '@/lib/schema'
+import { founderId } from '@/lib/schema/ids'
 
 interface PricingTierSchema {
   name: string
@@ -72,6 +73,7 @@ function buildBusinessEntity() {
     sameAs: [...SAME_AS],
     founder: {
       '@type': 'Person',
+      '@id': founderId(SITE_URL),
       name: 'James Tram',
     },
     parentOrganization: {

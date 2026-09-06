@@ -1,22 +1,21 @@
 import { Metadata } from 'next'
 
+const PAGE_TITLE = 'Web Design Insights for Business Owners'
+const PAGE_DESCRIPTION =
+  'Practical answers to the questions business owners ask most about websites, SEO, performance, and choosing the right platform.'
+
 export const metadata: Metadata = {
-  title: { absolute: 'Web Design Insights for Business Owners | Vizantir' },
-  description:
-    'Practical answers to the questions business owners ask most about websites, SEO, WordPress, Next.js, performance, and security.',
-  keywords:
-    'web development blog, WordPress vs Next.js, website SEO, web performance, business website tips',
+  title: { absolute: `${PAGE_TITLE} | Vizantir` },
+  description: PAGE_DESCRIPTION,
   openGraph: {
-    title: 'Blog | Vizantir',
-    description:
-      'Practical answers to the questions business owners ask most about websites, SEO, and choosing the right platform.',
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Blog | Vizantir',
-    description:
-      'Practical answers to the questions business owners ask most about websites, SEO, and choosing the right platform.',
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
   },
 }
 
