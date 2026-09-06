@@ -53,6 +53,26 @@ const nextConfig: NextConfig = {
         destination: '/case-studies',
         permanent: true,
       },
+      {
+        source: '/blog/wordpress-vs-nextjs-2026',
+        destination: '/nextjs-vs-wordpress',
+        statusCode: 301,
+      },
+      {
+        source: '/blog/wordpress-vs-nextjs-2026/',
+        destination: '/nextjs-vs-wordpress',
+        statusCode: 301,
+      },
+      {
+        source: '/blog/wordpress-vs-nextjs-honest-comparison',
+        destination: '/nextjs-vs-wordpress',
+        statusCode: 301,
+      },
+      {
+        source: '/blog/wordpress-vs-nextjs-honest-comparison/',
+        destination: '/nextjs-vs-wordpress',
+        statusCode: 301,
+      },
     ];
   },
 

@@ -30,7 +30,7 @@ export const siteSettingsQuery = groq`
 // ============================================
 
 export const allPostsQuery = groq`
-  *[_type == "post"] | order(publishedAt desc) {
+  *[_type == "post" && (!defined(seo.noIndex) || seo.noIndex == false)] | order(publishedAt desc) {
     _id,
     _updatedAt,
     title,
