@@ -46,6 +46,7 @@
     "correct:wordpress-claims-r3": "tsx scripts/correct-wordpress-claims-r3.ts",
     "correct:wordpress-claims-r4": "tsx scripts/correct-wordpress-claims-r4.ts",
     "correct:wordpress-claims-r5": "tsx scripts/correct-wordpress-claims-r5.ts",
+    "correct:dead-tool-recs": "tsx scripts/correct-dead-tool-recs.ts",
     "link:wordpress-cluster-pillar": "tsx scripts/link-wordpress-cluster-to-pillar.ts"
   },
   "dependencies": {
