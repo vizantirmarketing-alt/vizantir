@@ -206,10 +206,12 @@ export const createPongGame: GameFactory = (host: ArcadeGameHost) => {
   let destroyed = false
   let suppressLockMenu = false
 
-  const pointer = createPointerAxis(canvas, {
+  const pointerSurface = canvas.closest<HTMLElement>('[data-arcade-pointer]') ?? canvas
+  const pointer = createPointerAxis(pointerSurface, {
     axis: 'x',
     toLogical: (clientX, clientY) => clientToLogical(clientX, clientY, canvas.getBoundingClientRect(), view),
     getScale: () => view.scale,
+    getCurrent: () => player.x,
     range: () => ({ min: paddleMin(), max: paddleMax() }),
     onLockChange: (locked) => {
       if (destroyed) return
@@ -427,8 +429,9 @@ export const createPongGame: GameFactory = (host: ArcadeGameHost) => {
     const min = paddleMin()
     const max = paddleMax()
     const locked = pointer.isLocked
+    const direct = locked || pointer.isTouch
 
-    if (locked) {
+    if (direct) {
       if (pointer.target === null) pointer.target = player.x
       pointer.target = clamp(pointer.target + keyboardDelta(dt), min, max)
       player.x = pointer.target

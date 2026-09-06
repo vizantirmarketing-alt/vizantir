@@ -2,13 +2,24 @@ export interface PointerAxis {
   target: number | null
   isActive: boolean
   isLocked: boolean
+  isTouch: boolean
   requestLock(): void
   releaseLock(): void
   destroy(): void
 }
 
+const TOUCH_GAIN = 1.25
+
 function hasFinePointer(): boolean {
   return window.matchMedia('(pointer: fine)').matches
+}
+
+function isCoarsePointer(): boolean {
+  return window.matchMedia('(pointer: coarse)').matches
+}
+
+function isTouchMode(event: PointerEvent): boolean {
+  return event.pointerType === 'touch' || isCoarsePointer()
 }
 
 function requestPointerLockOn(element: HTMLElement): void {
@@ -46,6 +57,7 @@ export function createPointerAxis(
     axis: 'x' | 'y'
     toLogical: (clientX: number, clientY: number) => { x: number; y: number }
     getScale: () => number
+    getCurrent: () => number
     range: () => { min: number; max: number }
     sensitivity?: number
     onLockChange?: (locked: boolean) => void
@@ -58,10 +70,17 @@ export function createPointerAxis(
     return Math.min(max, Math.max(min, value))
   }
 
+  const clientOnAxis = (event: PointerEvent) => (options.axis === 'x' ? event.clientX : event.clientY)
+
+  let touchStartFinger = 0
+  let touchStartPaddle = 0
+  let touchNotified = false
+
   const state: PointerAxis = {
     target: null,
     isActive: false,
     isLocked: false,
+    isTouch: false,
     requestLock() {
       if (document.pointerLockElement !== null) return
       if (!hasFinePointer()) return
@@ -108,12 +127,33 @@ export function createPointerAxis(
     state.target = clampTarget(current + (movement / scale) * sensitivity)
   }
 
+  const applyTouch = (event: PointerEvent) => {
+    const scale = options.getScale()
+    if (scale <= 0) return
+    const delta = ((clientOnAxis(event) - touchStartFinger) / scale) * TOUCH_GAIN
+    state.target = clampTarget(touchStartPaddle + delta)
+    if (!touchNotified && Math.abs(clientOnAxis(event) - touchStartFinger) > 2) {
+      touchNotified = true
+      element.dispatchEvent(new CustomEvent('arcade:paddle-drag', { bubbles: true }))
+    }
+  }
+
+  const endTouch = () => {
+    state.isTouch = false
+    touchNotified = false
+  }
+
   const onMove = (event: PointerEvent) => {
     if (!event.isPrimary) return
     if (state.isLocked) {
       applyLockedMovement(event)
       return
     }
+    if (state.isTouch) {
+      applyTouch(event)
+      return
+    }
+    if (isTouchMode(event)) return
     if (state.isActive || event.buttons === 0) {
       applyAbsolute(event)
     }
@@ -122,13 +162,27 @@ export function createPointerAxis(
   const onDown = (event: PointerEvent) => {
     if (!event.isPrimary) return
     state.isActive = true
-    if (!state.isLocked) applyAbsolute(event)
+    if (state.isLocked) {
+      element.setPointerCapture(event.pointerId)
+      return
+    }
+    if (isTouchMode(event)) {
+      state.isTouch = true
+      touchStartFinger = clientOnAxis(event)
+      touchStartPaddle = options.getCurrent()
+      touchNotified = false
+      state.target = clampTarget(touchStartPaddle)
+      element.setPointerCapture(event.pointerId)
+      return
+    }
+    applyAbsolute(event)
     element.setPointerCapture(event.pointerId)
   }
 
   const onUp = (event: PointerEvent) => {
     if (!event.isPrimary) return
     state.isActive = false
+    endTouch()
     if (element.hasPointerCapture(event.pointerId)) {
       element.releasePointerCapture(event.pointerId)
     }

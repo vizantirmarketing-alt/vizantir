@@ -200,10 +200,12 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     return { min: half, max: LOGICAL_W - half }
   }
 
-  const pointer = createPointerAxis(canvas, {
+  const pointerSurface = canvas.closest<HTMLElement>('[data-arcade-pointer]') ?? canvas
+  const pointer = createPointerAxis(pointerSurface, {
     axis: 'x',
     toLogical: (clientX, clientY) => clientToLogical(clientX, clientY, canvas.getBoundingClientRect(), view),
     getScale: () => view.scale,
+    getCurrent: () => paddle.x,
     range: paddleRange,
     onLockChange: (locked) => {
       if (destroyed) return
@@ -472,8 +474,9 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     paddle.w = wideTimer > 0 ? PADDLE_WIDE : PADDLE_WIDTH
     const { min, max } = paddleRange()
     const locked = pointer.isLocked
+    const direct = locked || pointer.isTouch
 
-    if (locked) {
+    if (direct) {
       if (pointer.target === null) pointer.target = paddle.x
       pointer.target = clamp(pointer.target + keyboardDelta(dt), min, max)
       paddle.x = pointer.target

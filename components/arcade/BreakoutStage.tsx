@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { BreakoutFailed, LoadingBreakout } from '@/components/arcade/BreakoutChrome'
 import { GameMount, type GameMountCore } from '@/components/arcade/GameMount'
+import { PaddleSurface } from '@/components/arcade/PaddleTouchStrip'
 import { StageHud } from '@/components/arcade/ScoreDisplay'
 import { useArcade } from '@/components/arcade/ArcadeProvider'
 import { writeArcadeState, readArcadeState } from '@/lib/arcade/storage'
@@ -147,82 +148,84 @@ export function BreakoutStage() {
         return (
           <>
             <StageHud />
-            <div ref={mount.frameRef} className="arcade-stage-frame">
-              <canvas
-                ref={mount.canvasRef}
-                className={phase === 'playing' ? 'arcade-stage-canvas is-hidden-cursor' : 'arcade-stage-canvas'}
-                aria-label="Breakout playfield"
-              />
-              {mount.loading ? <LoadingBreakout /> : null}
-              {showReady ? (
-                <div className="arcade-overlay arcade-overlay-pass">
-                  <p className="arcade-overlay-title">{touchLaunch ? 'TAP TO LAUNCH' : 'CLICK OR SPACE TO LAUNCH'}</p>
-                  <p className="arcade-overlay-copy">Move: drag, mouse, arrows, or A D</p>
-                  {touchLaunch ? null : (
-                    <p className="arcade-overlay-mono">
-                      CLICK TO LOCK THE MOUSE TO THE PADDLE. ESC RELEASES IT.
-                    </p>
-                  )}
-                </div>
-              ) : null}
-              {showClear ? (
-                <div className="arcade-overlay arcade-overlay-pass">
-                  <p className="arcade-overlay-title">LEVEL {clearInfo?.level ?? 1} CLEAR</p>
-                  <p className="arcade-overlay-copy">Bonus 500 per remaining life</p>
-                </div>
-              ) : null}
-              {phase === 'gameOver' ? (
-                <div className="arcade-overlay">
-                  <p className="arcade-overlay-title">SIGNAL LOST</p>
-                  {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
-                  <p className="arcade-overlay-copy">Score {formatScore(finalScore)}</p>
-                  <p className="arcade-overlay-copy">Best {formatScore(best ?? finalScore)}</p>
-                  <div className="arcade-overlay-actions">
-                    <button type="button" className="arcade-overlay-btn" onClick={mount.playAgain}>
-                      PLAY AGAIN
-                    </button>
-                    <Link href="/play" className="arcade-overlay-btn">
-                      CHANGE GAME
-                    </Link>
-                    <Link href="/" className="arcade-overlay-btn">
-                      EXIT ARCADE
-                    </Link>
+            <PaddleSurface>
+              <div ref={mount.frameRef} className="arcade-stage-frame">
+                <canvas
+                  ref={mount.canvasRef}
+                  className={phase === 'playing' ? 'arcade-stage-canvas is-hidden-cursor' : 'arcade-stage-canvas'}
+                  aria-label="Breakout playfield"
+                />
+                {mount.loading ? <LoadingBreakout /> : null}
+                {showReady ? (
+                  <div className="arcade-overlay arcade-overlay-pass">
+                    <p className="arcade-overlay-title">{touchLaunch ? 'TAP TO LAUNCH' : 'CLICK OR SPACE TO LAUNCH'}</p>
+                    <p className="arcade-overlay-copy">Move: drag, mouse, arrows, or A D</p>
+                    {touchLaunch ? null : (
+                      <p className="arcade-overlay-mono">
+                        CLICK TO LOCK THE MOUSE TO THE PADDLE. ESC RELEASES IT.
+                      </p>
+                    )}
                   </div>
-                </div>
-              ) : null}
-              {phase === 'complete' ? (
-                <div className="arcade-overlay">
-                  <p className="arcade-overlay-title">SITE CLEARED</p>
-                  <p className="arcade-overlay-copy">Nothing left but the experience.</p>
-                  {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
-                  <p className="arcade-overlay-copy">Score {formatScore(finalScore)}</p>
-                  <div className="arcade-overlay-actions">
-                    <button type="button" className="arcade-overlay-btn" onClick={mount.playAgain}>
-                      PLAY AGAIN
-                    </button>
-                    <Link href="/play" className="arcade-overlay-btn">
-                      ARCADE
-                    </Link>
-                    <Link href="/" className="arcade-overlay-btn">
-                      EXIT ARCADE
-                    </Link>
+                ) : null}
+                {showClear ? (
+                  <div className="arcade-overlay arcade-overlay-pass">
+                    <p className="arcade-overlay-title">LEVEL {clearInfo?.level ?? 1} CLEAR</p>
+                    <p className="arcade-overlay-copy">Bonus 500 per remaining life</p>
                   </div>
-                </div>
-              ) : null}
-              {mount.showPause ? (
-                <div className="arcade-overlay">
-                  <p className="arcade-overlay-title">PAUSED</p>
-                  <button type="button" className="arcade-overlay-btn" onClick={mount.beginCountdown}>
-                    RESUME
-                  </button>
-                </div>
-              ) : null}
-              {mount.countdown ? (
-                <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-live="assertive">
-                  <p className="arcade-overlay-title">{mount.countdown}</p>
-                </div>
-              ) : null}
-            </div>
+                ) : null}
+                {phase === 'gameOver' ? (
+                  <div className="arcade-overlay">
+                    <p className="arcade-overlay-title">SIGNAL LOST</p>
+                    {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
+                    <p className="arcade-overlay-copy">Score {formatScore(finalScore)}</p>
+                    <p className="arcade-overlay-copy">Best {formatScore(best ?? finalScore)}</p>
+                    <div className="arcade-overlay-actions">
+                      <button type="button" className="arcade-overlay-btn" onClick={mount.playAgain}>
+                        PLAY AGAIN
+                      </button>
+                      <Link href="/play" className="arcade-overlay-btn">
+                        CHANGE GAME
+                      </Link>
+                      <Link href="/" className="arcade-overlay-btn">
+                        EXIT ARCADE
+                      </Link>
+                    </div>
+                  </div>
+                ) : null}
+                {phase === 'complete' ? (
+                  <div className="arcade-overlay">
+                    <p className="arcade-overlay-title">SITE CLEARED</p>
+                    <p className="arcade-overlay-copy">Nothing left but the experience.</p>
+                    {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
+                    <p className="arcade-overlay-copy">Score {formatScore(finalScore)}</p>
+                    <div className="arcade-overlay-actions">
+                      <button type="button" className="arcade-overlay-btn" onClick={mount.playAgain}>
+                        PLAY AGAIN
+                      </button>
+                      <Link href="/play" className="arcade-overlay-btn">
+                        ARCADE
+                      </Link>
+                      <Link href="/" className="arcade-overlay-btn">
+                        EXIT ARCADE
+                      </Link>
+                    </div>
+                  </div>
+                ) : null}
+                {mount.showPause ? (
+                  <div className="arcade-overlay">
+                    <p className="arcade-overlay-title">PAUSED</p>
+                    <button type="button" className="arcade-overlay-btn" onClick={mount.beginCountdown}>
+                      RESUME
+                    </button>
+                  </div>
+                ) : null}
+                {mount.countdown ? (
+                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-live="assertive">
+                    <p className="arcade-overlay-title">{mount.countdown}</p>
+                  </div>
+                ) : null}
+              </div>
+            </PaddleSurface>
           </>
         )
       }}

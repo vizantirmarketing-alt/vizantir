@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 import { GameMount, type GameMountCore } from '@/components/arcade/GameMount'
+import { PaddleSurface } from '@/components/arcade/PaddleTouchStrip'
 import { LoadingPong, PongFailed } from '@/components/arcade/PongChrome'
 import { useArcade } from '@/components/arcade/ArcadeProvider'
 import type { PongDifficulty } from '@/lib/arcade/storage'
@@ -176,80 +177,82 @@ export function PongStage() {
                 <span className="arcade-pong-match">{'\u00a0'}</span>
               </div>
             </div>
-            <div ref={mount.frameRef} className="arcade-stage-frame arcade-pong-board">
-              <canvas
-                ref={mount.canvasRef}
-                className={phase === 'playing' ? 'arcade-stage-canvas is-hidden-cursor' : 'arcade-stage-canvas'}
-                aria-label="Pong playfield"
-              />
-              {mount.loading ? <LoadingPong /> : null}
-              {showReady ? (
-                <div className="arcade-overlay arcade-overlay-pass">
-                  <p className="arcade-overlay-title">
-                    {touchServe ? 'TAP TO SERVE' : 'CLICK OR SPACE TO SERVE'}
-                  </p>
-                  <p className="arcade-overlay-copy">
-                    {touchServe
-                      ? 'Drag to move your paddle'
-                      : 'Move: drag, mouse, arrows, or A D. Up, Down, W, and S also work.'}
-                  </p>
-                  {touchServe ? null : (
-                    <p className="arcade-overlay-mono">
-                      CLICK TO LOCK THE MOUSE TO THE PADDLE. ESC RELEASES IT.
+            <PaddleSurface>
+              <div ref={mount.frameRef} className="arcade-stage-frame arcade-pong-board">
+                <canvas
+                  ref={mount.canvasRef}
+                  className={phase === 'playing' ? 'arcade-stage-canvas is-hidden-cursor' : 'arcade-stage-canvas'}
+                  aria-label="Pong playfield"
+                />
+                {mount.loading ? <LoadingPong /> : null}
+                {showReady ? (
+                  <div className="arcade-overlay arcade-overlay-pass">
+                    <p className="arcade-overlay-title">
+                      {touchServe ? 'TAP TO SERVE' : 'CLICK OR SPACE TO SERVE'}
                     </p>
-                  )}
-                  <div className="arcade-pong-diff" role="group" aria-label="Difficulty">
-                    {DIFFICULTIES.map((level) => (
-                      <button
-                        key={level}
-                        type="button"
-                        className={
-                          pongDifficulty === level ? 'arcade-pong-diff-btn is-on' : 'arcade-pong-diff-btn'
-                        }
-                        onClick={() => setPongDifficulty(level)}
-                        onPointerDown={(event) => event.stopPropagation()}
-                      >
-                        {level.toUpperCase()}
+                    <p className="arcade-overlay-copy">
+                      {touchServe
+                        ? 'Drag to move your paddle'
+                        : 'Move: drag, mouse, arrows, or A D. Up, Down, W, and S also work.'}
+                    </p>
+                    {touchServe ? null : (
+                      <p className="arcade-overlay-mono">
+                        CLICK TO LOCK THE MOUSE TO THE PADDLE. ESC RELEASES IT.
+                      </p>
+                    )}
+                    <div className="arcade-pong-diff" role="group" aria-label="Difficulty">
+                      {DIFFICULTIES.map((level) => (
+                        <button
+                          key={level}
+                          type="button"
+                          className={
+                            pongDifficulty === level ? 'arcade-pong-diff-btn is-on' : 'arcade-pong-diff-btn'
+                          }
+                          onClick={() => setPongDifficulty(level)}
+                          onPointerDown={(event) => event.stopPropagation()}
+                        >
+                          {level.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+                {phase === 'gameOver' ? (
+                  <div className="arcade-overlay">
+                    <p className="arcade-overlay-title">{playerWon ? 'YOU WIN' : 'CPU WINS'}</p>
+                    {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
+                    <p className="arcade-overlay-copy">
+                      {formatScore(finalPlayer)} to {formatScore(finalCpu)}
+                    </p>
+                    <p className="arcade-overlay-copy">Best {formatScore(best ?? finalPlayer)}</p>
+                    <div className="arcade-overlay-actions">
+                      <button type="button" className="arcade-overlay-btn" onClick={mount.playAgain}>
+                        PLAY AGAIN
                       </button>
-                    ))}
+                      <Link href="/play" className="arcade-overlay-btn">
+                        ARCADE
+                      </Link>
+                      <Link href="/" className="arcade-overlay-btn">
+                        EXIT ARCADE
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ) : null}
-              {phase === 'gameOver' ? (
-                <div className="arcade-overlay">
-                  <p className="arcade-overlay-title">{playerWon ? 'YOU WIN' : 'CPU WINS'}</p>
-                  {isNewBest ? <p className="arcade-overlay-best">NEW BEST</p> : null}
-                  <p className="arcade-overlay-copy">
-                    {formatScore(finalPlayer)} to {formatScore(finalCpu)}
-                  </p>
-                  <p className="arcade-overlay-copy">Best {formatScore(best ?? finalPlayer)}</p>
-                  <div className="arcade-overlay-actions">
-                    <button type="button" className="arcade-overlay-btn" onClick={mount.playAgain}>
-                      PLAY AGAIN
+                ) : null}
+                {mount.showPause ? (
+                  <div className="arcade-overlay">
+                    <p className="arcade-overlay-title">PAUSED</p>
+                    <button type="button" className="arcade-overlay-btn" onClick={mount.beginCountdown}>
+                      RESUME
                     </button>
-                    <Link href="/play" className="arcade-overlay-btn">
-                      ARCADE
-                    </Link>
-                    <Link href="/" className="arcade-overlay-btn">
-                      EXIT ARCADE
-                    </Link>
                   </div>
-                </div>
-              ) : null}
-              {mount.showPause ? (
-                <div className="arcade-overlay">
-                  <p className="arcade-overlay-title">PAUSED</p>
-                  <button type="button" className="arcade-overlay-btn" onClick={mount.beginCountdown}>
-                    RESUME
-                  </button>
-                </div>
-              ) : null}
-              {mount.countdown ? (
-                <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-live="assertive">
-                  <p className="arcade-overlay-title">{mount.countdown}</p>
-                </div>
-              ) : null}
-            </div>
+                ) : null}
+                {mount.countdown ? (
+                  <div className="arcade-overlay arcade-overlay-pass arcade-countdown" aria-live="assertive">
+                    <p className="arcade-overlay-title">{mount.countdown}</p>
+                  </div>
+                ) : null}
+              </div>
+            </PaddleSurface>
           </>
         )
       }}

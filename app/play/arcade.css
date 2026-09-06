@@ -814,6 +814,56 @@ html.arcade-active {
   padding: 0;
 }
 
+.arcade-paddle-surface {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  touch-action: none;
+}
+
+.arcade-touch-strip {
+  display: none;
+  position: relative;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 88px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.arcade-touch-strip-rail {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 50%;
+  height: 1px;
+  background: rgba(245, 241, 232, 0.15);
+}
+
+.arcade-touch-strip-label {
+  position: relative;
+  font-family: var(--arcade-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: rgba(245, 241, 232, 0.35);
+  transition: opacity 0.35s ease;
+}
+
+.arcade-touch-strip.is-used .arcade-touch-strip-label {
+  opacity: 0;
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  .arcade-touch-strip {
+    display: flex;
+  }
+}
+
 .arcade-pong-board {
   flex: 1;
   min-width: 0;
