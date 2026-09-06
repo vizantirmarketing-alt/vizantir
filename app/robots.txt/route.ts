@@ -37,7 +37,7 @@ async function buildRobotsTxt(): Promise<string> {
   const siteUrl =
     settings?.siteUrl ||
     process.env.NEXT_PUBLIC_SITE_URL ||
-    'https://vizantir.com'
+    'https://www.vizantir.com'
 
   const aiCrawlers = [
     'GPTBot',
