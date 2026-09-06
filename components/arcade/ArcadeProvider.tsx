@@ -16,15 +16,19 @@ import { usePathname } from 'next/navigation'
 
 import { trackArcadeOpen, trackFullscreenEnter, trackGameChange } from '@/lib/arcade/analytics'
 import { getGameFromPathname, type GameId } from '@/lib/arcade/games'
-import { readArcadeState, setBestScore, writeArcadeState } from '@/lib/arcade/storage'
+import { readArcadeState, setBestScore, writeArcadeState, type PongDifficulty } from '@/lib/arcade/storage'
 import { useReducedMotion } from '@/lib/arcade/useReducedMotion'
 
 const OPENED_FLAG = 'vizantir.arcade.opened'
 
 export interface ArcadeHud {
   score: number
-  lives: number
-  level: number
+  lives?: number
+  lines?: number
+  level?: number
+  length?: number
+  opponentScore?: number
+  matchPoint?: 'player' | 'cpu' | 'both' | null
 }
 
 interface ArcadeContextValue {
@@ -44,6 +48,9 @@ interface ArcadeContextValue {
   stageRef: RefObject<HTMLElement | null>
   hud: ArcadeHud | null
   setHud: (hud: ArcadeHud | null) => void
+  pongDifficulty: PongDifficulty
+  setPongDifficulty: (difficulty: PongDifficulty) => void
+  cyclePongDifficulty: () => void
 }
 
 const ArcadeContext = createContext<ArcadeContextValue | null>(null)
@@ -95,6 +102,7 @@ export function ArcadeProvider({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpenState] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [hud, setHud] = useState<ArcadeHud | null>(null)
+  const [pongDifficulty, setPongDifficultyState] = useState<PongDifficulty>('normal')
 
   useEffect(() => {
     currentGameRef.current = currentGame
@@ -105,6 +113,7 @@ export function ArcadeProvider({ children }: { children: ReactNode }) {
     const frame = window.requestAnimationFrame(() => {
       setSoundEnabled(state.sound)
       setBestScores(state.bestScores)
+      setPongDifficultyState(state.pongDifficulty)
     })
     return () => window.cancelAnimationFrame(frame)
   }, [])
@@ -165,6 +174,19 @@ export function ArcadeProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  const setPongDifficulty = useCallback((difficulty: PongDifficulty) => {
+    setPongDifficultyState(difficulty)
+    writeArcadeState({ pongDifficulty: difficulty })
+  }, [])
+
+  const cyclePongDifficulty = useCallback(() => {
+    setPongDifficultyState((current) => {
+      const next: PongDifficulty = current === 'easy' ? 'normal' : current === 'normal' ? 'hard' : 'easy'
+      writeArcadeState({ pongDifficulty: next })
+      return next
+    })
+  }, [])
+
   const recordScore = useCallback((gameId: GameId, score: number) => {
     const isBest = setBestScore(gameId, score)
     if (isBest) {
@@ -203,6 +225,9 @@ export function ArcadeProvider({ children }: { children: ReactNode }) {
       stageRef,
       hud,
       setHud,
+      pongDifficulty,
+      setPongDifficulty,
+      cyclePongDifficulty,
     }),
     [
       soundEnabled,
@@ -218,6 +243,9 @@ export function ArcadeProvider({ children }: { children: ReactNode }) {
       currentGame,
       reducedMotion,
       hud,
+      pongDifficulty,
+      setPongDifficulty,
+      cyclePongDifficulty,
     ],
   )
 

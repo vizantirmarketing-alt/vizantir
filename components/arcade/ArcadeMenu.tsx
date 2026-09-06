@@ -27,6 +27,8 @@ export function ArcadeMenu() {
     bestScores,
     paused,
     setPaused,
+    pongDifficulty,
+    cyclePongDifficulty,
   } = useArcade()
 
   const panelRef = useRef<HTMLDivElement>(null)
@@ -111,6 +113,12 @@ export function ArcadeMenu() {
           <span>Sound</span>
           <span className="arcade-menu-meta">{soundEnabled ? 'On' : 'Off'}</span>
         </button>
+        {currentGame === 'pong' ? (
+          <button type="button" className="arcade-menu-item" onClick={cyclePongDifficulty}>
+            <span>Difficulty</span>
+            <span className="arcade-menu-meta">{pongDifficulty.toUpperCase()}</span>
+          </button>
+        ) : null}
         {fullscreenSupported ? (
           <button type="button" className="arcade-menu-item" onClick={toggleFullscreen}>
             <span>Fullscreen</span>

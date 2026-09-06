@@ -28,22 +28,51 @@ export function ScoreDisplay() {
     <div className="arcade-score">
       {hud ? (
         <>
-          <span className="arcade-score-pair">
-            <span className="arcade-score-label">SCORE</span>
-            <span className="arcade-score-value">{formatArcadeScore(hud.score)}</span>
-          </span>
+          {hud.opponentScore !== undefined ? (
+            <>
+              <span className="arcade-score-pair">
+                <span className="arcade-score-label">YOU</span>
+                <span className="arcade-score-value">{formatArcadeScore(hud.score)}</span>
+              </span>
+              <span className="arcade-score-pair">
+                <span className="arcade-score-label">CPU</span>
+                <span className="arcade-score-value">{formatArcadeScore(hud.opponentScore)}</span>
+              </span>
+            </>
+          ) : (
+            <span className="arcade-score-pair">
+              <span className="arcade-score-label">SCORE</span>
+              <span className="arcade-score-value">{formatArcadeScore(hud.score)}</span>
+            </span>
+          )}
           <span className="arcade-score-pair">
             <span className="arcade-score-label">BEST</span>
             <span className="arcade-score-value">{formatArcadeScore(best)}</span>
           </span>
-          <span className="arcade-score-pair">
-            <span className="arcade-score-label">LIVES</span>
-            <LifeBars lives={hud.lives} />
-          </span>
-          <span className="arcade-score-pair">
-            <span className="arcade-score-label">LEVEL</span>
-            <span className="arcade-score-value">{hud.level}</span>
-          </span>
+          {hud.lives !== undefined ? (
+            <span className="arcade-score-pair">
+              <span className="arcade-score-label">LIVES</span>
+              <LifeBars lives={hud.lives} />
+            </span>
+          ) : null}
+          {hud.lines !== undefined ? (
+            <span className="arcade-score-pair">
+              <span className="arcade-score-label">LINES</span>
+              <span className="arcade-score-value">{formatArcadeScore(hud.lines)}</span>
+            </span>
+          ) : null}
+          {hud.length !== undefined ? (
+            <span className="arcade-score-pair">
+              <span className="arcade-score-label">LENGTH</span>
+              <span className="arcade-score-value">{formatArcadeScore(hud.length)}</span>
+            </span>
+          ) : null}
+          {hud.level !== undefined ? (
+            <span className="arcade-score-pair">
+              <span className="arcade-score-label">LEVEL</span>
+              <span className="arcade-score-value">{hud.level}</span>
+            </span>
+          ) : null}
         </>
       ) : (
         <>
@@ -68,13 +97,27 @@ export function StageHud() {
       <span>
         <span className="arcade-score-label">BEST</span> {formatArcadeScore(best)}
       </span>
-      <span className="arcade-stage-hud-lives">
-        <span className="arcade-score-label">LIVES</span>
-        <LifeBars lives={hud.lives} />
-      </span>
-      <span>
-        <span className="arcade-score-label">LEVEL</span> {hud.level}
-      </span>
+      {hud.lives !== undefined ? (
+        <span className="arcade-stage-hud-lives">
+          <span className="arcade-score-label">LIVES</span>
+          <LifeBars lives={hud.lives} />
+        </span>
+      ) : null}
+      {hud.lines !== undefined ? (
+        <span>
+          <span className="arcade-score-label">LINES</span> {formatArcadeScore(hud.lines)}
+        </span>
+      ) : null}
+      {hud.length !== undefined ? (
+        <span>
+          <span className="arcade-score-label">LENGTH</span> {formatArcadeScore(hud.length)}
+        </span>
+      ) : null}
+      {hud.level !== undefined ? (
+        <span>
+          <span className="arcade-score-label">LEVEL</span> {hud.level}
+        </span>
+      ) : null}
     </div>
   )
 }

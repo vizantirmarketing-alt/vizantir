@@ -193,10 +193,32 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
   let flashGate = 0
   let destroyed = false
   let lastScore = 0
+  let suppressLockMenu = false
+
+  const paddleRange = () => {
+    const half = paddle.w / 2
+    return { min: half, max: LOGICAL_W - half }
+  }
 
   const pointer = createPointerAxis(canvas, {
     axis: 'x',
     toLogical: (clientX, clientY) => clientToLogical(clientX, clientY, canvas.getBoundingClientRect(), view),
+    getScale: () => view.scale,
+    range: paddleRange,
+    onLockChange: (locked) => {
+      if (destroyed) return
+      if (locked) {
+        suppressLockMenu = false
+        return
+      }
+      if (suppressLockMenu) {
+        suppressLockMenu = false
+        return
+      }
+      if (phase === 'playing') {
+        host.onPointerLockChange?.(false)
+      }
+    },
   })
 
   const keyboard = createKeyboard(KEYS)
@@ -204,10 +226,23 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
   keyboard.onPress('KeyP', () => host.onPauseRequest?.())
 
   const unlock = () => audio.unlock()
-  canvas.addEventListener('pointerdown', unlock)
   window.addEventListener('keydown', unlock)
-  const onPointerLaunch = () => launch()
-  canvas.addEventListener('pointerdown', onPointerLaunch)
+
+  function lockPointer(): void {
+    if (pointer.target === null) pointer.target = paddle.x
+    pointer.requestLock()
+  }
+
+  function releasePointer(): void {
+    pointer.releaseLock()
+  }
+
+  const onCanvasPointerDown = (event: PointerEvent) => {
+    unlock()
+    if (event.pointerType !== 'touch') lockPointer()
+    launch()
+  }
+  canvas.addEventListener('pointerdown', onCanvasPointerDown)
 
   const emitScore = () => {
     if (score === lastScore) return
@@ -424,21 +459,34 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     enterReady()
   }
 
+  const keyboardDelta = (dt: number) => {
+    const left = keyboard.isDown('ArrowLeft') || keyboard.isDown('KeyA')
+    const right = keyboard.isDown('ArrowRight') || keyboard.isDown('KeyD')
+    let delta = 0
+    if (left) delta -= PADDLE_KEYBOARD_SPEED * dt
+    if (right) delta += PADDLE_KEYBOARD_SPEED * dt
+    return delta
+  }
+
   const updatePaddle = (dt: number) => {
     paddle.w = wideTimer > 0 ? PADDLE_WIDE : PADDLE_WIDTH
-    const half = paddle.w / 2
-    if (pointer.target !== null) {
-      const omega = 1 / PADDLE_FOLLOW_TAU
-      paddle.vx += (-2 * omega * paddle.vx + omega * omega * (pointer.target - paddle.x)) * dt
-      paddle.x += paddle.vx * dt
-    } else {
-      const left = keyboard.isDown('ArrowLeft') || keyboard.isDown('KeyA')
-      const right = keyboard.isDown('ArrowRight') || keyboard.isDown('KeyD')
+    const { min, max } = paddleRange()
+    const locked = pointer.isLocked
+
+    if (locked) {
+      if (pointer.target === null) pointer.target = paddle.x
+      pointer.target = clamp(pointer.target + keyboardDelta(dt), min, max)
+      paddle.x = pointer.target
       paddle.vx = 0
-      if (left) paddle.x -= PADDLE_KEYBOARD_SPEED * dt
-      if (right) paddle.x += PADDLE_KEYBOARD_SPEED * dt
+    } else if (pointer.target !== null) {
+      const desired = clamp(pointer.target, min, max)
+      paddle.x += (desired - paddle.x) * (1 - Math.exp(-dt / PADDLE_FOLLOW_TAU))
+      paddle.vx = 0
+      paddle.x = clamp(paddle.x, min, max)
+    } else {
+      paddle.vx = 0
+      paddle.x = clamp(paddle.x + keyboardDelta(dt), min, max)
     }
-    paddle.x = clamp(paddle.x, half, LOGICAL_W - half)
 
     if (phase === 'ready' && balls[0]) {
       balls[0].x = paddle.x
@@ -783,10 +831,13 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
       draw(0)
     },
     pause() {
+      if (pointer.isLocked) suppressLockMenu = true
+      releasePointer()
       loop.pause()
     },
     resume() {
       if (phase === 'gameOver' || phase === 'complete') return
+      suppressLockMenu = false
       if (!loop.isRunning()) loop.start()
       else loop.resume()
     },
@@ -806,18 +857,20 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
       draw(0)
     },
     launch,
+    lockPointer,
+    releasePointer,
     resize(width, height) {
       fit(width, height)
       draw(0)
     },
     destroy() {
       destroyed = true
+      suppressLockMenu = true
       loop.stop()
       keyboard.destroy()
       pointer.destroy()
       audio.destroy()
-      canvas.removeEventListener('pointerdown', unlock)
-      canvas.removeEventListener('pointerdown', onPointerLaunch)
+      canvas.removeEventListener('pointerdown', onCanvasPointerDown)
       window.removeEventListener('keydown', unlock)
       bricks = []
       balls = []
