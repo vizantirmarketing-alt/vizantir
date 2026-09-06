@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react'
-import Link from 'next/link'
 
 import { useArcade } from '@/components/arcade/ArcadeProvider'
 import { GAMES, getGame } from '@/lib/arcade/games'
@@ -103,7 +102,7 @@ export function MobileGameSelect() {
             const active = currentGame === game.id
             return (
               <li key={game.id} role="none">
-                <Link
+                <a
                   href={game.href}
                   role="menuitem"
                   className="arcade-select-option"
@@ -115,7 +114,7 @@ export function MobileGameSelect() {
                   onClick={() => setOpen(false)}
                 >
                   {game.title}
-                </Link>
+                </a>
               </li>
             )
           })}

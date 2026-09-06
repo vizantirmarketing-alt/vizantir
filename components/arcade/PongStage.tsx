@@ -229,9 +229,9 @@ export function PongStage() {
                       <button type="button" className="arcade-overlay-btn" onClick={mount.playAgain}>
                         PLAY AGAIN
                       </button>
-                      <Link href="/play" className="arcade-overlay-btn">
+                      <a href="/play" className="arcade-overlay-btn">
                         ARCADE
-                      </Link>
+                      </a>
                       <Link href="/" className="arcade-overlay-btn">
                         EXIT ARCADE
                       </Link>

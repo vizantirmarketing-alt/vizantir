@@ -1,7 +1,5 @@
 'use client'
 
-import Link from 'next/link'
-
 export function LoadingStack() {
   return (
     <div className="arcade-stage-placeholder">
@@ -23,9 +21,9 @@ export function StackFailed({ onRetry }: { onRetry: () => void }) {
         <button type="button" className="arcade-overlay-btn" onClick={onRetry}>
           RETRY
         </button>
-        <Link href="/play" className="arcade-overlay-btn">
+        <a href="/play" className="arcade-overlay-btn">
           BACK TO ARCADE
-        </Link>
+        </a>
       </div>
     </div>
   )

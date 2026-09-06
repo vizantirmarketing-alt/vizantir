@@ -1,7 +1,6 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import Link from 'next/link'
 
 import { useArcade } from '@/components/arcade/ArcadeProvider'
 import { GAMES } from '@/lib/arcade/games'
@@ -14,7 +13,7 @@ export function GameSelector() {
       {GAMES.map((game) => {
         const active = currentGame === game.id
         return (
-          <Link
+          <a
             key={game.id}
             href={game.href}
             className="arcade-game-tab"
@@ -22,7 +21,7 @@ export function GameSelector() {
             style={{ '--tab-accent': game.accent } as CSSProperties}
           >
             {game.title}
-          </Link>
+          </a>
         )
       })}
     </nav>
