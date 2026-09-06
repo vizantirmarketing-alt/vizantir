@@ -90,6 +90,8 @@ export function PongStage() {
         phaseRef.current = 'ready'
         setPhase('ready')
         setMatchPoint(null)
+        nextHud.matchPoint = null
+        setHudRef.current({ ...nextHud })
       },
       onGameOver: (value, extra) => {
         const best = recordRef.current('pong', value)

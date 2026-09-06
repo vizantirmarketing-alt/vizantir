@@ -159,6 +159,7 @@ export function GameMount({
   useLayoutEffect(() => {
     const node = frameRef.current
     if (!node) return
+    if (window.matchMedia('(min-width: 768px)').matches) return
     const previous = stageRef.current
     stageRef.current = node
     return () => {

@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
 import { ArcadeBackdrop } from '@/components/arcade/ArcadeBackdrop'
+import { ArcadeCabinet } from '@/components/arcade/ArcadeCabinet'
 import { ArcadeHeader } from '@/components/arcade/ArcadeHeader'
 import { ArcadeMenu } from '@/components/arcade/ArcadeMenu'
 import { useArcade } from '@/components/arcade/ArcadeProvider'
@@ -87,7 +88,9 @@ export function ArcadeShell({ children }: { children: ReactNode }) {
       </div>
       <ArcadeHeader />
       <HudLiveRegion />
-      <main className="arcade-main arcade-chrome">{children}</main>
+      <main className="arcade-main arcade-chrome">
+        <ArcadeCabinet>{children}</ArcadeCabinet>
+      </main>
       <ArcadeMenu />
     </div>
   )

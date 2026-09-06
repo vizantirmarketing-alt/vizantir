@@ -29,6 +29,9 @@ export interface ArcadeHud {
   length?: number
   opponentScore?: number
   matchPoint?: 'player' | 'cpu' | 'both' | null
+  power?: string | null
+  nextFamily?: number | null
+  holdFamily?: number | null
 }
 
 interface ArcadeContextValue {
@@ -173,6 +176,24 @@ export function ArcadeProvider({ children }: { children: ReactNode }) {
       return next
     })
   }, [])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.code !== 'KeyM' || event.repeat) return
+      if (event.metaKey || event.ctrlKey || event.altKey) return
+      if (!window.matchMedia('(min-width: 768px)').matches) return
+      const target = event.target
+      if (target instanceof HTMLElement) {
+        if (target.isContentEditable) return
+        const tag = target.tagName
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+      }
+      event.preventDefault()
+      toggleSound()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [toggleSound])
 
   const setPongDifficulty = useCallback((difficulty: PongDifficulty) => {
     setPongDifficultyState(difficulty)

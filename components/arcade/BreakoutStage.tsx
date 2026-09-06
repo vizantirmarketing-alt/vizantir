@@ -47,7 +47,7 @@ export function BreakoutStage() {
   }, [])
 
   const buildHost = useCallback((core: GameMountCore): ArcadeGameHost => {
-    const hud = { score: 0, lives: 3, level: 1 }
+    const hud = { score: 0, lives: 3, level: 1, power: null as string | null }
     return {
       canvas: core.canvas,
       soundEnabled: core.soundEnabled,
@@ -64,10 +64,15 @@ export function BreakoutStage() {
         hud.level = value
         setHudRef.current({ ...hud })
       },
+      onPowerUp: (name) => {
+        hud.power = name
+        setHudRef.current({ ...hud })
+      },
       onReady: () => {
         phaseRef.current = 'ready'
         setPhase('ready')
         setClearInfo(null)
+        setHudRef.current({ ...hud })
       },
       onLevelClear: (payload) => {
         setClearInfo({ level: payload.level, score: payload.score })

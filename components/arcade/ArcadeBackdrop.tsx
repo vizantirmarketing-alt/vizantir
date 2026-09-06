@@ -1,6 +1,6 @@
-export function ArcadeBackdrop() {
+export function ArcadeBackdrop({ contained = false }: { contained?: boolean }) {
   return (
-    <div className="arcade-backdrop" aria-hidden="true">
+    <div className={contained ? 'arcade-backdrop is-contained' : 'arcade-backdrop'} aria-hidden="true">
       <div className="arcade-backdrop-base" />
       <div className="arcade-backdrop-horizon" />
       <div className="arcade-backdrop-grid" />

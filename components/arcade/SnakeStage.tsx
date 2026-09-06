@@ -105,6 +105,7 @@ export function SnakeStage() {
       onReady: () => {
         phaseRef.current = 'ready'
         setPhase('ready')
+        setHudRef.current({ ...nextHud })
       },
       onGameOver: (value) => {
         const best = recordRef.current('snake', value)

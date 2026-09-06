@@ -121,7 +121,13 @@ export function StackStage() {
   }, [])
 
   const buildHost = useCallback((core: GameMountCore): ArcadeGameHost => {
-    const nextHud = { score: 0, lines: 0, level: 1 }
+    const nextHud = {
+      score: 0,
+      lines: 0,
+      level: 1,
+      nextFamily: null as number | null,
+      holdFamily: null as number | null,
+    }
     return {
       canvas: core.canvas,
       soundEnabled: core.soundEnabled,
@@ -141,11 +147,20 @@ export function StackStage() {
         linesRef.current = value
         setHudRef.current({ ...nextHud })
       },
-      onNext: (familyId) => setNextFamily(familyId),
-      onHold: (familyId) => setHoldFamily(familyId),
+      onNext: (familyId) => {
+        nextHud.nextFamily = familyId
+        setNextFamily(familyId)
+        setHudRef.current({ ...nextHud })
+      },
+      onHold: (familyId) => {
+        nextHud.holdFamily = familyId
+        setHoldFamily(familyId)
+        setHudRef.current({ ...nextHud })
+      },
       onReady: () => {
         phaseRef.current = 'ready'
         setPhase('ready')
+        setHudRef.current({ ...nextHud })
       },
       onGameOver: (value) => {
         const best = recordRef.current('stack', value)

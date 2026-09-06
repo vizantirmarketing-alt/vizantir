@@ -6,7 +6,6 @@ import { useArcade } from '@/components/arcade/ArcadeProvider'
 import { FullscreenToggle } from '@/components/arcade/FullscreenToggle'
 import { GameSelector } from '@/components/arcade/GameSelector'
 import { MobileGameSelect } from '@/components/arcade/MobileGameSelect'
-import { ScoreDisplay } from '@/components/arcade/ScoreDisplay'
 import { SoundToggle } from '@/components/arcade/SoundToggle'
 
 function ArcadeMark({ compact = false }: { compact?: boolean }) {
@@ -29,7 +28,6 @@ export function ArcadeHeader() {
         <ArcadeMark />
         <GameSelector />
         <div className="arcade-header-actions">
-          <ScoreDisplay />
           <SoundToggle />
           <FullscreenToggle />
           <button type="button" className="arcade-menu-btn" onClick={() => setMenuOpen(true)}>
