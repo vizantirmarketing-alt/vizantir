@@ -216,7 +216,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   const studioStudies = filteredStudies.filter((cs) => isStudioProject(cs.projectType))
 
   return (
-    <main className="min-h-screen pt-24 pb-20" style={{ background: colors.bg }}>
+    <div className="min-h-screen pt-24 pb-20" style={{ background: colors.bg }}>
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
@@ -438,7 +438,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
           </motion.div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 

@@ -54,7 +54,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
   }
 
   return (
-    <main className="min-h-screen transition-colors duration-500" style={{ background: colors.bg }}>
+    <div className="min-h-screen transition-colors duration-500" style={{ background: colors.bg }}>
       <AmbientHero
         variant="polygons"
         compact
@@ -186,6 +186,6 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

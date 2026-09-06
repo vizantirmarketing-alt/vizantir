@@ -38,7 +38,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
   const hasStack = Array.isArray(caseStudy.stack) && caseStudy.stack.length > 0
 
   return (
-    <main style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
+    <div style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
       <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-16 md:pb-20 overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
@@ -237,6 +237,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
           </Link>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

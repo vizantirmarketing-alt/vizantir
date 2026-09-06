@@ -48,7 +48,7 @@ export default function HowWeWorkPageClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
-    <main
+    <div
       className="min-h-screen transition-colors duration-500"
       style={{ background: colors.bg }}
     >
@@ -498,6 +498,6 @@ export default function HowWeWorkPageClient() {
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

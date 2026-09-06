@@ -31,7 +31,7 @@ export default function NextJsVsWordpressClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
-    <main className="bg-background text-foreground transition-colors duration-500">
+    <div className="bg-background text-foreground transition-colors duration-500">
       <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
@@ -357,6 +357,6 @@ export default function NextJsVsWordpressClient() {
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

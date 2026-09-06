@@ -40,7 +40,7 @@ export default function AboutPage() {
   return (
     <>
       <JsonLd id="ld-about" data={aboutGraph} />
-      <main className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground">
         <AmbientHero
           compact
           eyebrow="Our History"
@@ -108,7 +108,7 @@ export default function AboutPage() {
         })}
         <SectionDivider />
         <AboutCta content={aboutPageContent.finalCta} />
-      </main>
+      </div>
     </>
   )
 }

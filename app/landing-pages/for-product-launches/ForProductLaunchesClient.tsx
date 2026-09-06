@@ -25,7 +25,7 @@ export default function ForProductLaunchesClient({
   const v = variants.productLaunches
 
   return (
-    <main className="bg-background text-foreground transition-colors duration-500">
+    <div className="bg-background text-foreground transition-colors duration-500">
       {/* Atmosphere image slot: product launch day / offer-focused visual to be added in follow-up */}
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
@@ -39,6 +39,6 @@ export default function ForProductLaunchesClient({
       <LandingPagesFAQ faqs={v.faqs} />
       <RelatedServices />
       <ClosingCTA {...v.closingCta} />
-    </main>
+    </div>
   )
 }

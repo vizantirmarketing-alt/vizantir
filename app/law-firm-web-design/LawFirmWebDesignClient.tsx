@@ -171,7 +171,7 @@ const sectionReveal = {
 
 export default function LawFirmWebDesignClient() {
   return (
-    <main className="bg-background text-foreground transition-colors duration-500">
+    <div className="bg-background text-foreground transition-colors duration-500">
       {/* 1 — Hero */}
       <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
         <div
@@ -572,6 +572,6 @@ export default function LawFirmWebDesignClient() {
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

@@ -47,7 +47,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
   const hasRelated = service.relatedServices && service.relatedServices.length > 0
 
   return (
-    <main style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
+    <div style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
       {/* Hero */}
       <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-16 md:pb-20 overflow-hidden">
         <div
@@ -515,6 +515,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

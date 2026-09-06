@@ -9,7 +9,7 @@ export default function GetStartedPageClient() {
   const steps = getStartedSteps
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
+    <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
@@ -108,7 +108,7 @@ export default function GetStartedPageClient() {
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }
 

@@ -78,11 +78,11 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 
+            <p 
               className="font-bold mb-4 text-foreground"
             >
               Quick Links
-            </h4>
+            </p>
             <ul className="space-y-2">
               {[
                 { name: 'Services', href: '/services' },
@@ -106,11 +106,11 @@ const Footer = () => {
 
           {/* Industries */}
           <div>
-            <h4 
+            <p 
               className="font-bold mb-4 text-foreground"
             >
               Industries
-            </h4>
+            </p>
             <ul className="space-y-2">
               {[
                 { name: 'Hospitality Web Design', href: '/hospitality-web-design' },
@@ -133,11 +133,11 @@ const Footer = () => {
 
           {/* Resources */}
           <div>
-            <h4 
+            <p 
               className="font-bold mb-4 text-foreground"
             >
               Resources
-            </h4>
+            </p>
             <ul className="space-y-2">
               {[
                 { name: 'Blog', href: '/blog' },
@@ -162,11 +162,11 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 
+            <p 
               className="font-bold mb-4 text-foreground"
             >
               Contact Us
-            </h4>
+            </p>
             <ul className="space-y-3">
               <li 
                 className="flex items-start gap-2 text-muted-foreground"

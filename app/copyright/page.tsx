@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 export default function CopyrightNotice() {
   return (
-    <main className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
+    <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       <section className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -112,7 +112,7 @@ export default function CopyrightNotice() {
 
         </div>
       </section>
-    </main>
+    </div>
   )
 }
 

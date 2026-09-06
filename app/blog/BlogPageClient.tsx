@@ -65,7 +65,7 @@ export default function BlogPageClient({ posts }: Props) {
   }, [posts, searchQuery, activeCategory])
 
   return (
-    <main
+    <div
       className="min-h-screen"
       style={{
         backgroundColor: colors.bg,
@@ -366,6 +366,6 @@ export default function BlogPageClient({ posts }: Props) {
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

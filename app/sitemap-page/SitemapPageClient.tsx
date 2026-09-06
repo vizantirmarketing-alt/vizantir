@@ -55,7 +55,7 @@ export default function SitemapPageClient({
   const postCount = posts.length
 
   return (
-    <main className="min-h-screen bg-background text-foreground transition-colors duration-500">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <section className="px-4 pb-8 pt-32">
         <div className="mx-auto max-w-5xl">
           <motion.div
@@ -200,6 +200,6 @@ export default function SitemapPageClient({
           </div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

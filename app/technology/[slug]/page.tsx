@@ -83,7 +83,7 @@ export default async function TechnologyPage({ params }: PageProps) {
     <>
       <JsonLd id={`ld-technology-${tech.slug}`} data={pageGraph} />
 
-      <main style={{ background: 'var(--background)' }}>
+      <div style={{ background: 'var(--background)' }}>
         <section className="px-6 md:px-12 lg:px-20 py-16 md:py-20">
           <div className="max-w-4xl mx-auto">
             <Eyebrow align="start" className="mb-8">
@@ -134,7 +134,7 @@ export default async function TechnologyPage({ params }: PageProps) {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </>
   )
 }

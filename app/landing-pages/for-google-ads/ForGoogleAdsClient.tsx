@@ -25,7 +25,7 @@ export default function ForGoogleAdsClient({
   const v = variants.googleAds
 
   return (
-    <main className="bg-background text-foreground transition-colors duration-500">
+    <div className="bg-background text-foreground transition-colors duration-500">
       {/* Atmosphere image slot: Google Ads / paid traffic conversion context to be added in follow-up */}
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
@@ -39,6 +39,6 @@ export default function ForGoogleAdsClient({
       <LandingPagesFAQ faqs={v.faqs} />
       <RelatedServices />
       <ClosingCTA {...v.closingCta} />
-    </main>
+    </div>
   )
 }

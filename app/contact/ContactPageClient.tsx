@@ -46,7 +46,7 @@ export default function ContactPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const attributionRef = useRef<ClientAttribution | null>(null)
-  const successRef = useRef<HTMLElement>(null)
+  const successRef = useRef<HTMLDivElement>(null)
   const errorRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
@@ -158,7 +158,7 @@ export default function ContactPageClient() {
 
   if (isSubmitted) {
     return (
-      <main
+      <div
         ref={successRef}
         tabIndex={-1}
         className="min-h-screen flex items-center justify-center"
@@ -193,12 +193,12 @@ export default function ContactPageClient() {
             Back to Home
           </Link>
         </motion.div>
-      </main>
+      </div>
     )
   }
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
+    <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-32 pb-16 px-4">
@@ -487,6 +487,6 @@ export default function ContactPageClient() {
       </section>
 
       <SectionDivider />
-    </main>
+    </div>
   )
 }

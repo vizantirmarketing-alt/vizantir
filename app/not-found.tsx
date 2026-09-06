@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <main 
+    <div 
       className="min-h-screen transition-colors duration-500 flex items-center justify-center px-4"
       style={{ background: 'var(--background)' }}
     >
@@ -110,6 +110,6 @@ export default function NotFound() {
 
         </motion.div>
       </div>
-    </main>
+    </div>
   )
 }

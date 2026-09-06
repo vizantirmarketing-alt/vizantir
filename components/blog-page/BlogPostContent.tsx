@@ -93,7 +93,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
     new Date(post._updatedAt).getTime() > new Date(post.publishedAt).getTime()
 
   return (
-    <main style={{ background: colors.bg }}>
+    <div style={{ background: colors.bg }}>
       {/* Hero Section */}
       <section className="px-6 md:px-12 lg:px-20 pt-32 pb-12">
         <div className="max-w-4xl mx-auto">
@@ -200,6 +200,6 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
         </div>
       </section>
 
-    </main>
+    </div>
   )
 }

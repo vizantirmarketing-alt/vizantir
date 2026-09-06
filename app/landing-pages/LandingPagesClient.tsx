@@ -26,7 +26,7 @@ export default function LandingPagesClient({
   const v = variants.primary
 
   return (
-    <main className="bg-background text-foreground transition-colors duration-500">
+    <div className="bg-background text-foreground transition-colors duration-500">
       {/* Atmosphere image slot: focused campaign landing page / conversion surface visual to be added in follow-up */}
       <LandingPagesHero {...v.hero} />
       <HomepageProblem {...v.homepageProblem} />
@@ -41,6 +41,6 @@ export default function LandingPagesClient({
       <LandingPagesFAQ faqs={v.faqs} />
       <RelatedServices />
       <ClosingCTA {...v.closingCta} />
-    </main>
+    </div>
   )
 }

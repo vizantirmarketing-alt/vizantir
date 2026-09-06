@@ -90,7 +90,7 @@ export default function TechnologyHubPage() {
     <>
       <JsonLd id="ld-technology-hub" data={pageGraph} />
 
-      <main style={{ background: 'var(--background)' }}>
+      <div style={{ background: 'var(--background)' }}>
         <section className="px-6 md:px-12 lg:px-20 py-16 md:py-20">
           <div className="max-w-6xl mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
@@ -150,7 +150,7 @@ export default function TechnologyHubPage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </>
   )
 }
