@@ -14,6 +14,7 @@ import {
   CREAM,
   DEATH_FADE,
   DEATH_FLASH,
+  DESKTOP_FIT_H,
   FOOD_PULSE,
   LOGICAL_H,
   LOGICAL_W,
@@ -468,7 +469,14 @@ export const createSnakeGame: GameFactory = (host: ArcadeGameHost): SnakeGame =>
   })
 
   const fit = (width: number, height: number) => {
-    view = fitCanvas(canvas, width, height, LOGICAL_W, LOGICAL_H, 2)
+    const mobile = window.matchMedia('(max-width: 767px)').matches
+    const fitH = mobile ? LOGICAL_H : DESKTOP_FIT_H
+    view = fitCanvas(canvas, width, height, LOGICAL_W, fitH, 2)
+    if (!mobile) return
+    const slack = height - LOGICAL_H * view.scale
+    if (slack > 0) {
+      view = { ...view, offsetY: slack }
+    }
   }
 
   return {

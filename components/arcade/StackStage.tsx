@@ -1,14 +1,14 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
 import Link from 'next/link'
 
-import { GameMount, type GameMountCore } from '@/components/arcade/GameMount'
-import { MobileControls } from '@/components/arcade/MobileControls'
+import { GameMount, useGameActions, type GameMountCore } from '@/components/arcade/GameMount'
 import { PiecePreview } from '@/components/arcade/PiecePreview'
 import { StageHud } from '@/components/arcade/ScoreDisplay'
 import { LoadingStack, StackFailed } from '@/components/arcade/StackChrome'
 import { useArcade } from '@/components/arcade/ArcadeProvider'
+import { useStackGestures } from '@/components/arcade/useStackGestures'
 import type { ArcadeGameHost } from '@/lib/arcade/types'
 
 type OverlayPhase = 'boot' | 'ready' | 'playing' | 'gameOver'
@@ -17,9 +17,60 @@ function formatScore(score: number): string {
   return score.toLocaleString('en-US')
 }
 
+const GESTURE_HINT_KEY = 'vizantir.arcade.stack-gesture'
+
 function isTouchDevice(): boolean {
   if (typeof window === 'undefined') return false
   return window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0
+}
+
+function readGestureHintUsed(): boolean {
+  try {
+    return window.sessionStorage.getItem(GESTURE_HINT_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function writeGestureHintUsed(): void {
+  try {
+    window.sessionStorage.setItem(GESTURE_HINT_KEY, '1')
+  } catch {
+    // Ignore quota / private mode.
+  }
+}
+
+function StackGestures({
+  canvasRef,
+  padRef,
+  onEngage,
+  isReady,
+  onGesture,
+  enabled,
+}: {
+  canvasRef: RefObject<HTMLCanvasElement | null>
+  padRef: RefObject<HTMLDivElement | null>
+  onEngage: () => void
+  isReady: () => boolean
+  onGesture: () => void
+  enabled: boolean
+}) {
+  const actions = useGameActions()
+
+  useStackGestures(canvasRef, padRef, {
+    moveLeft: () => actions?.moveLeft(),
+    moveRight: () => actions?.moveRight(),
+    rotate: () => actions?.rotate(),
+    softDrop: (down) => actions?.softDrop(down),
+    hardDrop: () => actions?.hardDrop(),
+    launch: () => actions?.launch(),
+    isReady,
+    onEngage,
+    onGesture,
+    enabled,
+  })
+
+  return null
 }
 
 export function StackStage() {
@@ -39,14 +90,34 @@ export function StackStage() {
   const [finalLines, setFinalLines] = useState(0)
   const [isNewBest, setIsNewBest] = useState(false)
   const [touchStart, setTouchStart] = useState(false)
+  const [gesturesOn, setGesturesOn] = useState(false)
+  const [hintUsed, setHintUsed] = useState(false)
   const [nextFamily, setNextFamily] = useState<number | null>(null)
   const [holdFamily, setHoldFamily] = useState<number | null>(null)
   const phaseRef = useRef<OverlayPhase>('boot')
   const linesRef = useRef(0)
+  const padRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const id = window.setTimeout(() => setTouchStart(isTouchDevice()), 0)
-    return () => window.clearTimeout(id)
+    const coarse = window.matchMedia('(pointer: coarse)')
+    const mobile = window.matchMedia('(max-width: 767px)')
+    const sync = () => {
+      setTouchStart(isTouchDevice())
+      setGesturesOn(coarse.matches || mobile.matches)
+      setHintUsed(readGestureHintUsed())
+    }
+    sync()
+    coarse.addEventListener('change', sync)
+    mobile.addEventListener('change', sync)
+    return () => {
+      coarse.removeEventListener('change', sync)
+      mobile.removeEventListener('change', sync)
+    }
+  }, [])
+
+  const onGesture = useCallback(() => {
+    writeGestureHintUsed()
+    setHintUsed(true)
   }, [])
 
   const buildHost = useCallback((core: GameMountCore): ArcadeGameHost => {
@@ -155,7 +226,7 @@ export function StackStage() {
                     </p>
                     <p className="arcade-overlay-copy">
                       {touchStart
-                        ? 'Use the controls below.'
+                        ? 'Swipe to move. Tap to rotate. Flick down to drop.'
                         : 'Move: arrows. Rotate: up. Drop: space. Hold: C'}
                     </p>
                   </div>
@@ -209,7 +280,24 @@ export function StackStage() {
                 </div>
               </aside>
             </div>
-            <MobileControls game="stack" onEngage={markPlaying} />
+            <div
+              ref={padRef}
+              className={hintUsed ? 'arcade-stack-pad is-used' : 'arcade-stack-pad'}
+              aria-hidden="true"
+            >
+              <span className="arcade-touch-strip-rail" />
+              <span className="arcade-touch-strip-label">SWIPE  TAP TO ROTATE</span>
+            </div>
+            {!mount.loading ? (
+              <StackGestures
+                canvasRef={mount.canvasRef}
+                padRef={padRef}
+                onEngage={markPlaying}
+                isReady={() => phaseRef.current === 'ready'}
+                onGesture={onGesture}
+                enabled={gesturesOn && !paused && !mount.countdown && phase !== 'gameOver'}
+              />
+            ) : null}
           </>
         )
       }}

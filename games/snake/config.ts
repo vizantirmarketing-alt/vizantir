@@ -1,7 +1,7 @@
 import { DIR_VEC, type Cell, type Direction } from '@/games/snake/types'
 
 export const LOGICAL_W = 360
-export const LOGICAL_H = 640
+export const DESKTOP_FIT_H = 640
 
 export const COLS = 20
 export const ROWS = 28
@@ -11,6 +11,7 @@ export const BOARD_W = COLS * CELL
 export const BOARD_H = ROWS * CELL
 export const BOARD_X = 20
 export const BOARD_Y = 40
+export const LOGICAL_H = BOARD_Y + BOARD_H + 20
 
 export const START_LENGTH = 4
 export const START_INTERVAL = 0.16

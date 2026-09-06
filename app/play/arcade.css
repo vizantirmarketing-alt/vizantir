@@ -705,42 +705,21 @@ html.arcade-active {
 .arcade-piece-cell.is-on[data-family='6'] { background: var(--arcade-mint); }
 .arcade-piece-cell.is-on[data-family='7'] { background: var(--arcade-coral); }
 
-.arcade-stack-controls {
+.arcade-stack-pad {
   display: none;
-}
-
-.arcade-stack-controls-row {
-  display: flex;
-  gap: 8px;
-}
-
-.arcade-stack-ctrl {
-  flex: 1;
-  min-height: 56px;
-  padding: 0 0.4rem;
-  border: 1px solid var(--arcade-cyan);
-  border-radius: 8px;
-  background: rgba(24, 8, 40, 0.85);
-  color: var(--arcade-text);
-  font-family: var(--arcade-mono), ui-monospace, monospace;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  touch-action: manipulation;
+  position: relative;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 112px;
+  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.arcade-stack-ctrl-hold {
-  flex: 0 0 56px;
-  width: 56px;
-}
-
-.arcade-stack-ctrl:active,
-.arcade-stack-ctrl.is-held {
-  background: rgba(34, 240, 255, 0.28);
-  border-color: var(--arcade-mint);
-  color: #fff;
+.arcade-stack-pad.is-used .arcade-touch-strip-label {
+  opacity: 0;
 }
 
 @media (min-width: 768px) {
@@ -760,12 +739,9 @@ html.arcade-active {
   }
 }
 
-@media (max-width: 767px) {
-  .arcade-stack-controls {
+@media (max-width: 767px), (pointer: coarse) {
+  .arcade-stack-pad {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -787,8 +763,9 @@ html.arcade-active {
   display: grid;
   grid-template-columns: repeat(3, minmax(56px, 1fr));
   grid-template-rows: repeat(2, minmax(56px, auto));
-  gap: 8px;
-  min-height: 128px;
+  column-gap: 8px;
+  row-gap: 0;
+  min-height: 112px;
 }
 
 .arcade-snake-pad-up {
@@ -835,11 +812,15 @@ html.arcade-active {
 }
 
 @media (max-width: 767px) {
+  [data-game='snake'] .arcade-snake-board {
+    margin-bottom: 12px;
+  }
+
   .arcade-snake-controls {
     display: block;
     flex-shrink: 0;
-    min-height: 128px;
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+    min-height: 112px;
+    padding: 0 8px;
   }
 }
 
