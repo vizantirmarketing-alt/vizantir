@@ -1,7 +1,6 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import Link from 'next/link'
 
 import { GamePreview } from '@/components/arcade/GamePreview'
 import { useArcade } from '@/components/arcade/ArcadeProvider'
@@ -16,7 +15,7 @@ export function GameCard({ game }: { game: GameEntry }) {
   const { bestScores } = useArcade()
 
   return (
-    <Link
+    <a
       href={game.href}
       className="arcade-game-card"
       aria-label={`Play ${game.title}`}
@@ -31,6 +30,6 @@ export function GameCard({ game }: { game: GameEntry }) {
       <div className="arcade-game-card-preview">
         <GamePreview game={game.id} />
       </div>
-    </Link>
+    </a>
   )
 }

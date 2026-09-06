@@ -88,6 +88,17 @@ const nextConfig: NextConfig = {
 
     return [
       {
+        source: '/play-sw.js',
+        headers: [
+          {
+            // `/play/` cannot be a prefix of the lobby URL `/play`, so the
+            // allowed max-scope is `/play` (games stay under it; marketing does not).
+            key: 'Service-Worker-Allowed',
+            value: '/play',
+          },
+        ],
+      },
+      {
         // Cache static assets for 1 year
         source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
         headers: [
