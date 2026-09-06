@@ -147,6 +147,7 @@ const Footer = () => {
                 { name: 'Landing Pages', href: '/landing-pages' },
                 { name: 'Analytir', href: '/analytir' },
                 { name: 'Sitemap', href: '/sitemap-page' },
+                { name: 'Play', href: '/play' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link 

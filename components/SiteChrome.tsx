@@ -13,7 +13,9 @@ import { VizantirChat } from '@/components/chat/VizantirChat'
 export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const isBareDocument =
-    pathname.startsWith('/intel') || pathname.startsWith('/r/')
+    pathname.startsWith('/intel') ||
+    pathname.startsWith('/r/') ||
+    pathname.startsWith('/play')
 
   if (isBareDocument) {
     return <>{children}</>
