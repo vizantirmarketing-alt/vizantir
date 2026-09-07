@@ -36,6 +36,9 @@ function LinkList({ links }: { links: SitemapLink[] }) {
           >
             {link.name}
           </Link>
+          {link.description ? (
+            <p className="mt-1 text-sm text-muted-foreground">{link.description}</p>
+          ) : null}
         </li>
       ))}
     </ul>
