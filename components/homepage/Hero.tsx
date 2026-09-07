@@ -173,12 +173,12 @@ const Hero = () => {
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
             >
-              Las Vegas web design
+              We build websites
             </span>
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] mt-1 text-muted-foreground" style={{ textShadow: 'none' }}
             >
-              that makes people stop and say
+              that make people stop and say
             </span>
             <span className="block mt-3 sm:mt-4">
               <span
@@ -201,21 +201,9 @@ const Hero = () => {
           </h1>
 
           <p
-            className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500 text-muted-foreground"
+            className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg transition-colors duration-500 text-muted-foreground"
           >
             Vizantir is a design and development studio in Las Vegas building custom websites for established brands. Every site is built from scratch on Next.js, with no templates and no page builders. Projects start at $15,000 and typically run six to twelve weeks from kickoff to launch.
-          </p>
-
-          <p 
-            className="text-lg md:text-xl leading-relaxed mb-4 max-w-lg transition-colors duration-500 text-muted-foreground"
-          >
-            Not generated overnight.
-          </p>
-
-          <p 
-            className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg italic transition-colors duration-500 text-meta"
-          >
-            Built to last, perform, and represent you at your best.
           </p>
 
           <Button
