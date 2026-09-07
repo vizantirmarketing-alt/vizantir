@@ -43,7 +43,13 @@ const STATIC_PAGE_DATES: Record<string, string> = {
   '/industries': '2026-09-05',
   '/technology': '2026-08-15',
   '/llms.txt': '2026-09-05',
-  '/sitemap-page': '2026-09-05',
+  '/sitemap-page': '2026-09-06',
+  '/play': '2026-09-06',
+  '/play/breakout': '2026-09-06',
+  '/play/stack': '2026-09-06',
+  '/play/snake': '2026-09-06',
+  '/play/pong': '2026-09-06',
+  '/play/swarm': '2026-09-06',
 }
 
 type StaticRoute = {
@@ -99,6 +105,12 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/sitemap-page', changeFrequency: 'monthly', priority: 0.4 },
   { path: '/llms.txt', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/play', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/play/breakout', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/play/stack', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/play/snake', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/play/pong', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/play/swarm', changeFrequency: 'monthly', priority: 0.5 },
 ]
 
 function staticDate(path: string): Date {

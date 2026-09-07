@@ -1,6 +1,6 @@
 import { CORE_STACK, SPECIALIZED_TOOLS, type Technology } from '@/app/technology/_data'
 
-export type SitemapLink = { name: string; href: string }
+export type SitemapLink = { name: string; href: string; description?: string }
 
 const TECHNOLOGY_LABEL_OVERRIDES: Record<string, string> = {
   nextjs: 'Next.js Development',
@@ -42,6 +42,11 @@ export const sitemapMainPages: SitemapLink[] = [
   { name: 'Services', href: '/services' },
   { name: 'Blog', href: '/blog' },
   { name: 'FAQ', href: '/faq' },
+  {
+    name: 'Arcade',
+    href: '/play',
+    description: 'Five small browser games, local scores, works offline.',
+  },
   { name: 'Our Work', href: '/case-studies' },
   { name: 'Analytir', href: '/analytir' },
   { name: 'How We Work', href: '/how-we-work' },
