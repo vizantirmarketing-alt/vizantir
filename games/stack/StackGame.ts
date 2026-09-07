@@ -69,7 +69,7 @@ export const createStackGame: GameFactory = (host: ArcadeGameHost): StackGame =>
   const audio = createArcadeAudio(() => host.soundEnabled())
   const reduced = () => host.reducedMotion()
 
-  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 }
+  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1, width: 0, height: 0 }
   let phase: GamePhase = 'ready'
   let board = new Uint8Array(ROWS * COLS)
   let piece: ActivePiece | null = null
@@ -734,6 +734,9 @@ export const createStackGame: GameFactory = (host: ArcadeGameHost): StackGame =>
     resize(width, height) {
       fit(width, height)
       draw(0)
+    },
+    getFit() {
+      return view
     },
     destroy() {
       destroyed = true

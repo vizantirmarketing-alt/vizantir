@@ -173,7 +173,7 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
   const audio = createArcadeAudio(() => host.soundEnabled())
   const reduced = () => host.reducedMotion()
 
-  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 }
+  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1, width: 0, height: 0 }
   let phase: GamePhase = 'ready'
   let score = 0
   let lives = STARTING_LIVES
@@ -882,6 +882,9 @@ export const createBreakoutGame: GameFactory = (host: ArcadeGameHost): ArcadeGam
     resize(width, height) {
       fit(width, height)
       draw(0)
+    },
+    getFit() {
+      return view
     },
     destroy() {
       destroyed = true

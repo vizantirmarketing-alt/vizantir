@@ -23,9 +23,22 @@ export type ArcadeSoundName =
   | 'point'
   | 'pointCpu'
   | 'win'
+  | 'shot'
+  | 'wave'
+  | 'alienHit1'
+  | 'alienHit2'
+  | 'alienHit3'
+  | 'bomb'
+  | 'shieldHit'
+  | 'craft'
+  | 'craftHit'
+  | 'shipLost'
+  | 'breach'
 
 export interface ArcadeAudio {
   play(name: ArcadeSoundName): void
+  startLoop(name: ArcadeSoundName): void
+  stopLoop(name: ArcadeSoundName): void
   unlock(): void
   destroy(): void
 }
@@ -94,8 +107,10 @@ function tonesFor(name: ArcadeSoundName): Tone[] {
         { type: 'triangle', freq: 784, start: 0.11, duration: 0.05 },
       ]
     case 'life':
+    case 'shipLost':
       return [{ type: 'sawtooth', freq: 330, endFreq: 110, start: 0, duration: 0.3, peak: 0.2 }]
     case 'levelClear':
+    case 'wave':
       return [
         { type: 'triangle', freq: 392, start: 0, duration: 0.07 },
         { type: 'triangle', freq: 494, start: 0.07, duration: 0.07 },
@@ -171,6 +186,72 @@ function tonesFor(name: ArcadeSoundName): Tone[] {
         { type: 'triangle', freq: 698, start: 0.21, duration: 0.07 },
         { type: 'triangle', freq: 784, start: 0.28, duration: 0.1 },
       ]
+    case 'shot':
+      return [{ type: 'square', freq: 880, start: 0, duration: 0.03, peak: 0.08 }]
+    case 'alienHit1':
+      return [{ type: 'triangle', freq: 330, start: 0, duration: 0.06, peak: 0.18 }]
+    case 'alienHit2':
+      return [{ type: 'triangle', freq: 440, start: 0, duration: 0.06, peak: 0.18 }]
+    case 'alienHit3':
+      return [{ type: 'triangle', freq: 587, start: 0, duration: 0.06, peak: 0.18 }]
+    case 'bomb':
+      return [{ type: 'sawtooth', freq: 240, endFreq: 80, start: 0, duration: 0.08, peak: 0.16 }]
+    case 'shieldHit':
+      return [{ type: 'sine', freq: 140, start: 0, duration: 0.045, peak: 0.16 }]
+    case 'craft':
+      return []
+    case 'craftHit':
+      return [
+        { type: 'triangle', freq: 523, start: 0, duration: 0.05, peak: 0.18 },
+        { type: 'triangle', freq: 659, start: 0.055, duration: 0.05, peak: 0.18 },
+        { type: 'triangle', freq: 784, start: 0.11, duration: 0.06, peak: 0.2 },
+      ]
+    case 'breach':
+      return [
+        { type: 'sawtooth', freq: 160, endFreq: 90, start: 0, duration: 0.16, peak: 0.18 },
+        { type: 'sawtooth', freq: 110, endFreq: 55, start: 0.14, duration: 0.2, peak: 0.16 },
+      ]
+  }
+}
+
+interface LoopHandle {
+  stop: (when: number) => void
+}
+
+function startCraftWarble(ctx: AudioContext, dest: GainNode): LoopHandle {
+  const osc = ctx.createOscillator()
+  const lfo = ctx.createOscillator()
+  const lfoGain = ctx.createGain()
+  const gain = ctx.createGain()
+
+  osc.type = 'sine'
+  osc.frequency.setValueAtTime(360, ctx.currentTime)
+  lfo.type = 'sine'
+  lfo.frequency.setValueAtTime(5.5, ctx.currentTime)
+  lfoGain.gain.setValueAtTime(42, ctx.currentTime)
+  gain.gain.setValueAtTime(0.04, ctx.currentTime)
+
+  lfo.connect(lfoGain)
+  lfoGain.connect(osc.frequency)
+  osc.connect(gain)
+  gain.connect(dest)
+  osc.start()
+  lfo.start()
+
+  return {
+    stop(when) {
+      gain.gain.cancelScheduledValues(when)
+      gain.gain.setValueAtTime(Math.max(gain.gain.value, 0.0001), when)
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.08)
+      osc.stop(when + 0.1)
+      lfo.stop(when + 0.1)
+      osc.onended = () => {
+        osc.disconnect()
+        lfo.disconnect()
+        lfoGain.disconnect()
+        gain.disconnect()
+      }
+    },
   }
 }
 
@@ -178,6 +259,7 @@ export function createArcadeAudio(isEnabled: () => boolean): ArcadeAudio {
   let ctx: AudioContext | null = null
   let master: GainNode | null = null
   let closed = false
+  const loops = new Map<ArcadeSoundName, LoopHandle>()
 
   const ensure = (): AudioContext | null => {
     if (closed) return null
@@ -189,6 +271,14 @@ export function createArcadeAudio(isEnabled: () => boolean): ArcadeAudio {
     master.gain.value = 0.35
     master.connect(ctx.destination)
     return ctx
+  }
+
+  const stopNamedLoop = (name: ArcadeSoundName) => {
+    const handle = loops.get(name)
+    if (!handle) return
+    loops.delete(name)
+    const when = ctx?.currentTime ?? 0
+    handle.stop(when)
   }
 
   return {
@@ -206,8 +296,22 @@ export function createArcadeAudio(isEnabled: () => boolean): ArcadeAudio {
         scheduleTone(next, master, tone)
       }
     },
+    startLoop(name) {
+      if (!isEnabled() || closed || loops.has(name)) return
+      const next = ensure()
+      if (!next || next.state !== 'running' || !master) return
+      if (name === 'craft') {
+        loops.set(name, startCraftWarble(next, master))
+      }
+    },
+    stopLoop(name) {
+      stopNamedLoop(name)
+    },
     destroy() {
       closed = true
+      for (const name of [...loops.keys()]) {
+        stopNamedLoop(name)
+      }
       const current = ctx
       ctx = null
       master = null

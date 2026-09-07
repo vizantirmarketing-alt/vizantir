@@ -6,7 +6,7 @@ export function ArcadeLobby() {
     <section className="arcade-lobby">
       <p className="arcade-lobby-kicker">VIZANTIR</p>
       <h1 className="arcade-lobby-title">ARCADE</h1>
-      <p className="arcade-lobby-copy">Four games. Local scores. No excuses.</p>
+      <p className="arcade-lobby-copy">Five games. Local scores. No excuses.</p>
       <div className="arcade-lobby-grid">
         {GAMES.map((game) => (
           <GameCard key={game.id} game={game} />

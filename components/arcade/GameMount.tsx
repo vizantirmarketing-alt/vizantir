@@ -15,8 +15,14 @@ import {
 
 import { EngineErrorBoundary } from '@/components/arcade/EngineErrorBoundary'
 import { useArcade } from '@/components/arcade/ArcadeProvider'
+import { applyOverlayFit } from '@/lib/arcade/canvas'
 import type { GameId } from '@/lib/arcade/games'
 import type { ArcadeGame, ArcadeGameHost, GameFactory, SnakeActions, StackActions } from '@/lib/arcade/types'
+
+function syncOverlayFit(frame: HTMLElement | null, game: ArcadeGame | null): void {
+  if (!frame || !game) return
+  applyOverlayFit(frame, game.getFit())
+}
 
 export interface GameMountCore {
   canvas: HTMLCanvasElement
@@ -227,6 +233,7 @@ export function GameMount({
         gameRef.current = game
         const box = frameRef.current.getBoundingClientRect()
         game.resize(box.width, box.height, Math.min(window.devicePixelRatio || 1, 2))
+        syncOverlayFit(frameRef.current, game)
         game.start()
 
         observer = new ResizeObserver((entries) => {
@@ -234,6 +241,7 @@ export function GameMount({
           if (!entry || !gameRef.current) return
           const { width, height } = entry.contentRect
           gameRef.current.resize(width, height, Math.min(window.devicePixelRatio || 1, 2))
+          syncOverlayFit(frameRef.current, gameRef.current)
         })
         observer.observe(frameRef.current)
 

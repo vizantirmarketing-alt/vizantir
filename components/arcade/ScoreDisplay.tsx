@@ -89,6 +89,26 @@ export function StageHud() {
   if (!currentGame || !hud) return null
   const best = bestScores[currentGame]
 
+  if (currentGame === 'swarm') {
+    return (
+      <div className="arcade-stage-hud">
+        <span>
+          <span className="arcade-score-label">SCORE</span> {formatArcadeScore(hud.score)}
+        </span>
+        <span>
+          <span className="arcade-score-label">BEST</span> {formatArcadeScore(best)}
+        </span>
+        <span>
+          <span className="arcade-score-label">WAVE</span> {hud.level ?? 1}
+        </span>
+        <span className="arcade-stage-hud-lives">
+          <span className="arcade-score-label">LIVES</span>
+          <LifeBars lives={hud.lives ?? 3} />
+        </span>
+      </div>
+    )
+  }
+
   return (
     <div className="arcade-stage-hud">
       <span>

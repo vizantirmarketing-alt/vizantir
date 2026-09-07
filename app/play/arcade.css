@@ -476,12 +476,6 @@ html.arcade-active {
   }
 }
 
-@media (min-width: 1280px) {
-  .arcade-lobby-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
 .arcade-offline {
   display: flex;
   flex-direction: column;
@@ -598,6 +592,10 @@ html.arcade-active {
   animation: arcade-preview-pong 2.4s ease-in-out infinite alternate;
 }
 
+.arcade-preview-swarm {
+  animation: arcade-preview-swarm-drift 4.2s ease-in-out infinite alternate;
+}
+
 .arcade-stage {
   display: flex;
   flex-direction: column;
@@ -612,6 +610,10 @@ html.arcade-active {
 }
 
 .arcade-stage-frame {
+  --arcade-overlay-x: 0px;
+  --arcade-overlay-y: 0px;
+  --arcade-overlay-w: 100%;
+  --arcade-overlay-h: 100%;
   position: relative;
   flex: 1;
   min-height: 12rem;
@@ -620,6 +622,7 @@ html.arcade-active {
   border-top: 1px solid rgba(245, 241, 232, 0.06);
   touch-action: none;
   outline: none;
+  overflow: hidden;
 }
 
 .arcade-stage-canvas {
@@ -789,8 +792,17 @@ html.arcade-active {
   }
 }
 
-[data-game='snake'] .arcade-stage-frame {
+[data-game='snake'] .arcade-stage-frame,
+[data-game='swarm'] .arcade-stage-frame {
   min-height: 0;
+}
+
+[data-game='swarm'] .arcade-life-bar {
+  background: rgba(255, 158, 44, 0.2);
+}
+
+[data-game='swarm'] .arcade-life-bar.is-on {
+  background: var(--arcade-orange);
 }
 
 .arcade-snake-board {
@@ -970,6 +982,9 @@ html.arcade-active {
 
 .arcade-pong-diff {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
   pointer-events: auto;
   margin-top: 0.35rem;
   border: 1px solid rgba(245, 241, 232, 0.16);
@@ -1165,6 +1180,15 @@ html.arcade-active {
   }
 }
 
+@keyframes arcade-preview-swarm-drift {
+  from {
+    transform: translateX(-6px);
+  }
+  to {
+    transform: translateX(6px);
+  }
+}
+
 @keyframes arcade-preview-pulse {
   0%,
   100% {
@@ -1308,14 +1332,21 @@ html.arcade-active {
 
 .arcade-overlay {
   position: absolute;
-  inset: 0;
+  left: var(--arcade-overlay-x, 0px);
+  top: var(--arcade-overlay-y, 0px);
+  width: var(--arcade-overlay-w, 100%);
+  height: var(--arcade-overlay-h, 100%);
+  max-width: 100%;
+  box-sizing: border-box;
+  container-type: inline-size;
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  padding: 1rem;
+  padding: 1rem 24px;
+  overflow-x: hidden;
   text-align: center;
   background: rgba(9, 11, 26, 0.72);
 }
@@ -1325,36 +1356,52 @@ html.arcade-active {
   background: rgba(9, 11, 26, 0.28);
 }
 
+.arcade-overlay > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
 .arcade-overlay-title {
   margin: 0;
+  max-width: 100%;
   font-family: var(--arcade-mono), ui-monospace, monospace;
-  font-size: clamp(1.1rem, 4vw, 1.7rem);
-  letter-spacing: 0.16em;
+  font-size: clamp(18px, 6cqw, 32px);
+  letter-spacing: 0.12em;
   color: var(--arcade-text);
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .arcade-overlay-copy {
   margin: 0;
-  max-width: 22rem;
+  max-width: 100%;
   font-family: var(--arcade-display), system-ui, sans-serif;
   font-size: 14px;
+  line-height: 1.35;
   color: var(--arcade-muted);
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .arcade-overlay-mono {
   margin: 0;
-  max-width: 36rem;
+  max-width: 100%;
   font-family: var(--arcade-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   color: var(--arcade-muted);
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .arcade-overlay-best {
   margin: 0;
+  max-width: 100%;
   font-family: var(--arcade-mono), ui-monospace, monospace;
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   color: var(--arcade-yellow);
 }
 
@@ -1363,12 +1410,14 @@ html.arcade-active {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5rem;
+  max-width: 100%;
 }
 
 .arcade-overlay-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  max-width: 100%;
   min-height: 44px;
   padding: 0 0.9rem;
   border: 1px solid rgba(245, 241, 232, 0.16);
@@ -1379,6 +1428,8 @@ html.arcade-active {
   font-size: 12px;
   letter-spacing: 0.14em;
   text-decoration: none;
+  white-space: normal;
+  text-align: center;
   cursor: pointer;
 }
 
@@ -1388,7 +1439,7 @@ html.arcade-active {
 }
 
 .arcade-countdown .arcade-overlay-title {
-  font-size: clamp(2.4rem, 12vw, 4rem);
+  font-size: clamp(32px, 18cqw, 64px);
   color: var(--arcade-cyan);
 }
 
@@ -1430,6 +1481,7 @@ html.arcade-active {
   .arcade-preview-ball,
   .arcade-preview-pulse,
   .arcade-preview-pong-ball,
+  .arcade-preview-swarm,
   .arcade-menu-panel,
   .arcade-game-card,
   .arcade-loading-dots span,
@@ -1729,9 +1781,17 @@ html.arcade-active {
     flex: 1;
     width: 100%;
     min-height: 0;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-rows: 1fr 1fr;
     gap: 1.5rem;
+  }
+
+  .arcade-cab-stage .arcade-lobby-grid .arcade-game-card {
+    grid-column: span 2;
+  }
+
+  .arcade-cab-stage .arcade-lobby-grid .arcade-game-card:nth-child(4) {
+    grid-column: 2 / span 2;
   }
 
   .arcade-cab-stage .arcade-game-card {
@@ -1748,7 +1808,8 @@ html.arcade-active {
   .arcade-cab-stage .arcade-pong-hud,
   .arcade-cab-stage .arcade-stack-side,
   .arcade-cab-stage .arcade-stack-strip,
-  .arcade-cab-stage .arcade-stage-hud {
+  .arcade-cab-stage .arcade-stage-hud,
+  .arcade-cab-stage .arcade-mobile-controls {
     display: none;
   }
 

@@ -183,7 +183,7 @@ export const createPongGame: GameFactory = (host: ArcadeGameHost) => {
   const audio = createArcadeAudio(() => host.soundEnabled())
   const reduced = () => host.reducedMotion()
 
-  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 }
+  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1, width: 0, height: 0 }
   let phase: GamePhase = 'ready'
   let player = makePaddle(PLAYER_Y)
   let cpu = makePaddle(CPU_Y)
@@ -757,6 +757,9 @@ export const createPongGame: GameFactory = (host: ArcadeGameHost) => {
     resize(width, height) {
       fit(width, height)
       draw(0)
+    },
+    getFit() {
+      return view
     },
     destroy() {
       destroyed = true

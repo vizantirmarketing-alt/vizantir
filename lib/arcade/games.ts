@@ -1,8 +1,8 @@
-export type GameId = 'breakout' | 'stack' | 'snake' | 'pong'
+export type GameId = 'breakout' | 'stack' | 'snake' | 'pong' | 'swarm'
 
 export interface GameEntry {
   id: GameId
-  index: '01' | '02' | '03' | '04'
+  index: '01' | '02' | '03' | '04' | '05'
   title: string
   tagline: string
   href: string
@@ -41,6 +41,14 @@ export const GAMES: readonly GameEntry[] = [
     tagline: 'One paddle. One opponent. No excuses.',
     href: '/play/pong',
     accent: '#FFD447',
+  },
+  {
+    id: 'swarm',
+    index: '05',
+    title: 'SWARM',
+    tagline: 'They come in waves. Hold the line.',
+    href: '/play/swarm',
+    accent: '#FF9E2C',
   },
 ]
 

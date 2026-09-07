@@ -3,6 +3,8 @@ export interface CanvasFit {
   offsetX: number
   offsetY: number
   dpr: number
+  width: number
+  height: number
 }
 
 export function fitCanvas(
@@ -23,10 +25,19 @@ export function fitCanvas(
   canvas.style.height = `${height}px`
 
   const scale = Math.min(width / logicalW, height / logicalH)
-  const offsetX = (width - logicalW * scale) / 2
-  const offsetY = (height - logicalH * scale) / 2
+  const fittedWidth = logicalW * scale
+  const fittedHeight = logicalH * scale
+  const offsetX = (width - fittedWidth) / 2
+  const offsetY = (height - fittedHeight) / 2
 
-  return { scale, offsetX, offsetY, dpr }
+  return { scale, offsetX, offsetY, dpr, width: fittedWidth, height: fittedHeight }
+}
+
+export function applyOverlayFit(target: HTMLElement, fit: CanvasFit): void {
+  target.style.setProperty('--arcade-overlay-x', `${fit.offsetX}px`)
+  target.style.setProperty('--arcade-overlay-y', `${fit.offsetY}px`)
+  target.style.setProperty('--arcade-overlay-w', `${fit.width}px`)
+  target.style.setProperty('--arcade-overlay-h', `${fit.height}px`)
 }
 
 export function applyCanvasFit(

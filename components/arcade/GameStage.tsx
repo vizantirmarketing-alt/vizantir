@@ -6,6 +6,7 @@ import { LoadingBreakout } from '@/components/arcade/BreakoutChrome'
 import { LoadingPong } from '@/components/arcade/PongChrome'
 import { LoadingSnake } from '@/components/arcade/SnakeChrome'
 import { LoadingStack } from '@/components/arcade/StackChrome'
+import { LoadingSwarm } from '@/components/arcade/SwarmChrome'
 import type { GameId } from '@/lib/arcade/games'
 
 const BreakoutStage = dynamic(
@@ -28,9 +29,15 @@ const PongStage = dynamic(
   { ssr: false, loading: () => <LoadingPong /> },
 )
 
+const SwarmStage = dynamic(
+  () => import('@/components/arcade/SwarmStage').then((mod) => ({ default: mod.SwarmStage })),
+  { ssr: false, loading: () => <LoadingSwarm /> },
+)
+
 export function GameStage({ game }: { game: GameId }) {
   if (game === 'breakout') return <BreakoutStage />
   if (game === 'stack') return <StackStage />
   if (game === 'snake') return <SnakeStage />
+  if (game === 'swarm') return <SwarmStage />
   return <PongStage />
 }

@@ -1,6 +1,6 @@
 /* Vizantir Arcade service worker. Scoped to /play. Plain script. */
 
-const CACHE_VERSION = 'v1'
+const CACHE_VERSION = 'v3'
 const CACHE_NAME = `vizantir-arcade-${CACHE_VERSION}`
 const NAV_TIMEOUT_MS = 3000
 const OFFLINE_URL = '/play/offline'
@@ -12,6 +12,7 @@ const PRECACHE_URLS = [
   '/play/stack',
   '/play/snake',
   '/play/pong',
+  '/play/swarm',
   '/play/offline',
   '/play/manifest.webmanifest',
   '/play/icons/icon-192.png',
@@ -21,7 +22,7 @@ const PRECACHE_URLS = [
   '/play/icons/icon.svg',
 ]
 
-const GAME_PATHS = ['/play/breakout', '/play/stack', '/play/snake', '/play/pong']
+const GAME_PATHS = ['/play/breakout', '/play/stack', '/play/snake', '/play/pong', '/play/swarm']
 
 function normalizePath(pathname) {
   if (pathname.length > 1 && pathname.endsWith('/')) return pathname.slice(0, -1)

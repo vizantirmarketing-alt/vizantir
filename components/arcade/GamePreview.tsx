@@ -93,9 +93,37 @@ function PongPreview() {
   )
 }
 
+function SwarmPreview() {
+  const colors = ['#FF2E88', '#9D4EDD', '#32FF9C']
+  return (
+    <svg viewBox="0 0 160 90" aria-hidden="true">
+      <g className="arcade-preview-swarm">
+        {colors.flatMap((stroke, row) =>
+          [0, 1, 2, 3, 4].map((col) => {
+            const x = 34 + col * 23
+            const y = 14 + row * 14
+            return (
+              <polygon
+                key={`${row}-${col}`}
+                points={`${x},${y - 4} ${x + 4},${y} ${x},${y + 4} ${x - 4},${y}`}
+                fill="none"
+                stroke={stroke}
+                strokeWidth="1.2"
+              />
+            )
+          }),
+        )}
+      </g>
+      <line x1="80" y1="54" x2="80" y2="66" stroke="#22F0FF" strokeWidth="1.6" />
+      <polygon points="80,74 88,86 72,86" fill="#22F0FF" />
+    </svg>
+  )
+}
+
 export function GamePreview({ game }: { game: GameId }) {
   if (game === 'breakout') return <BreakoutPreview />
   if (game === 'stack') return <StackPreview />
   if (game === 'snake') return <SnakePreview />
+  if (game === 'swarm') return <SwarmPreview />
   return <PongPreview />
 }

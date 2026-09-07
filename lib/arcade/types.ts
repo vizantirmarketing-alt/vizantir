@@ -1,3 +1,5 @@
+import type { CanvasFit } from '@/lib/arcade/canvas'
+
 export interface ArcadeGame {
   start(): void
   pause(): void
@@ -5,6 +7,7 @@ export interface ArcadeGame {
   restart(): void
   destroy(): void
   resize(width: number, height: number, dpr: number): void
+  getFit(): CanvasFit
   launch(): void
   lockPointer?(): void
   releasePointer?(): void
@@ -35,6 +38,7 @@ export interface GameOverExtra {
   won?: boolean
   player?: number
   cpu?: number
+  reason?: 'breach' | 'lives'
 }
 
 export interface ArcadeGameHost {

@@ -94,7 +94,7 @@ export const createSnakeGame: GameFactory = (host: ArcadeGameHost): SnakeGame =>
   const audio = createArcadeAudio(() => host.soundEnabled())
   const reduced = () => host.reducedMotion()
 
-  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 }
+  let view: CanvasFit = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1, width: 0, height: 0 }
   let phase: GamePhase = 'ready'
   let segments: Cell[] = startCells('right')
   let heading: Direction = 'right'
@@ -528,6 +528,9 @@ export const createSnakeGame: GameFactory = (host: ArcadeGameHost): SnakeGame =>
     resize(width, height) {
       fit(width, height)
       draw(0)
+    },
+    getFit() {
+      return view
     },
     destroy() {
       destroyed = true

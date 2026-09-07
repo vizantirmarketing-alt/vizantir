@@ -45,6 +45,13 @@ const LEGENDS: Record<GameId | 'lobby', ReadonlyArray<{ keys: string; action: st
     { keys: 'P', action: 'PAUSE' },
     { keys: 'M', action: 'MUTE' },
   ],
+  swarm: [
+    { keys: '← →', action: 'MOVE' },
+    { keys: 'SPACE', action: 'START' },
+    { keys: 'CLICK', action: 'LOCK MOUSE' },
+    { keys: 'P', action: 'PAUSE' },
+    { keys: 'M', action: 'MUTE' },
+  ],
 }
 
 function padScore(value: number | undefined): string {
@@ -135,6 +142,14 @@ function CabinetHud() {
             <HudCell label="CPU" value={padScore(hud?.opponentScore ?? 0)} tone="magenta" />
             <HudCell label="BEST" value={padScore(best)} tone="mint" />
             <PongDiffCell />
+          </>
+        ) : null}
+        {currentGame === 'swarm' ? (
+          <>
+            <HudCell label="SCORE" value={padScore(hud?.score ?? 0)} />
+            <HudCell label="BEST" value={padScore(best)} tone="mint" />
+            <HudCell label="WAVE" value={hud?.level ?? 1} tone="purple" />
+            <HudCell label="LIVES" value={<PixelHearts lives={hud?.lives ?? 3} />} tone="magenta" />
           </>
         ) : null}
       </div>
