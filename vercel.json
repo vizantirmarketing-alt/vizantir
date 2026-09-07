@@ -11,6 +11,10 @@
   },
   "crons": [
     {
+      "path": "/api/cron/gbp-sync",
+      "schedule": "0 8 * * *"
+    },
+    {
       "path": "/api/cron/clarity-sync",
       "schedule": "0 9 * * *"
     },

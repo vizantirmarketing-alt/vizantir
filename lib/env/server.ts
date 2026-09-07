@@ -13,6 +13,8 @@ const serverEnvSchema = z.object({
   CRUX_API_KEY: z.string().min(1).optional(),
   /** UptimeRobot API key for getMonitors. */
   UPTIMEROBOT_API_KEY: z.string().min(1).optional(),
+  /** Google Places API key. Place Details and Text Search for GBP snapshots. */
+  PLACES_API_KEY: z.string().min(1).optional(),
   /** Comma-separated Intel allowlist. Documented value: vizantirmarketing@gmail.com */
   INTEL_ALLOWED_EMAILS: z.string().min(1).optional(),
   /** Dedicated Resend from-address for report delivery. Do not reuse RESEND_FROM_EMAIL. */
@@ -26,6 +28,7 @@ export const serverEnv = serverEnvSchema.parse({
   CLARITY_API_TOKEN: process.env.CLARITY_API_TOKEN,
   CRUX_API_KEY: process.env.CRUX_API_KEY,
   UPTIMEROBOT_API_KEY: process.env.UPTIMEROBOT_API_KEY,
+  PLACES_API_KEY: process.env.PLACES_API_KEY,
   INTEL_ALLOWED_EMAILS: process.env.INTEL_ALLOWED_EMAILS,
   REPORTS_FROM_EMAIL: process.env.REPORTS_FROM_EMAIL,
 })

@@ -31,6 +31,7 @@
     "seed:case-study-project-type": "tsx scripts/seed-case-study-project-type.ts",
     "create:post": "tsx scripts/create-post.ts",
     "export:post": "tsx scripts/export-post-body.ts",
+    "find:gbp": "tsx scripts/find-gbp-places.ts",
     "seed:elementor-posts": "tsx scripts/seed-elementor-posts.ts",
     "seed:landing-pages-service": "tsx scripts/seed-landing-pages-service.ts",
     "migrate:landing-pages-id": "tsx scripts/migrate-landing-pages-id.ts",
