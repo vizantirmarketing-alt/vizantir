@@ -10,6 +10,7 @@ import {
   OverviewStatStrip,
 } from '@/app/intel/_components/DecisionFeed'
 import { DecisionTriagedToggle } from '@/app/intel/_components/DecisionTriagedToggle'
+import { LocalPresencePanel } from '@/app/intel/_components/LocalPresencePanel'
 import { SyncHealthPanel } from '@/app/intel/_components/SyncHealthPanel'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
@@ -24,6 +25,7 @@ import {
   type DecisionFeedSection,
 } from '@/lib/intel/decisions/feed'
 import { fetchLeadDailySeriesInLastDays } from '@/lib/intel/leads'
+import { fetchLocalPresence } from '@/lib/intel/local-presence'
 import { fetchSiteRangeTotals } from '@/lib/intel/search'
 import { fetchSyncHealth } from '@/lib/intel/sync-health'
 
@@ -83,15 +85,23 @@ export default async function IntelOverviewPage({
 
   const { showTriaged } = parseOverviewPageParams(await searchParams)
 
-  const [result, siteTotals, leadSeries, activity, crawlers, syncHealth] =
-    await Promise.all([
-      fetchDecisionFeed({ includeHidden: showTriaged }),
-      fetchSiteRangeTotals('28d'),
-      fetchLeadDailySeriesInLastDays(28),
-      fetchActivity(),
-      fetchCrawlerPlatformOverview(),
-      fetchSyncHealth(),
-    ])
+  const [
+    result,
+    siteTotals,
+    leadSeries,
+    activity,
+    crawlers,
+    syncHealth,
+    localPresence,
+  ] = await Promise.all([
+    fetchDecisionFeed({ includeHidden: showTriaged }),
+    fetchSiteRangeTotals('28d'),
+    fetchLeadDailySeriesInLastDays(28),
+    fetchActivity(),
+    fetchCrawlerPlatformOverview(),
+    fetchSyncHealth(),
+    fetchLocalPresence(),
+  ])
 
   const syncHealthPanel = syncHealth.ok ? (
     <SyncHealthPanel providers={syncHealth.providers} nowMs={syncHealth.nowMs} />
@@ -103,6 +113,12 @@ export default async function IntelOverviewPage({
     <AiPlatformsPanel rows={crawlers.rows} nowMs={activity.nowMs} />
   ) : (
     <AiPlatformsPanel failed />
+  )
+
+  const localPresencePanel = localPresence.ok ? (
+    <LocalPresencePanel places={localPresence.places} />
+  ) : (
+    <LocalPresencePanel failed />
   )
 
   const activityFeed = activity.ok ? (
@@ -134,6 +150,7 @@ export default async function IntelOverviewPage({
         {stats}
         {syncHealthPanel}
         {aiPlatforms}
+        {localPresencePanel}
         {activityFeed}
         <Panel>
           <DecisionQueryError />
@@ -160,6 +177,7 @@ export default async function IntelOverviewPage({
         {stats}
         {syncHealthPanel}
         {aiPlatforms}
+        {localPresencePanel}
         {activityFeed}
         <Panel>
           <DecisionEmptyState hiddenCount={result.hiddenCount} />
@@ -174,6 +192,7 @@ export default async function IntelOverviewPage({
       {stats}
       {syncHealthPanel}
       {aiPlatforms}
+      {localPresencePanel}
       {activityFeed}
       <DecisionFeed sections={result.sections} />
     </div>
