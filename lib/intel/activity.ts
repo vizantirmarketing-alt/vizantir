@@ -35,7 +35,7 @@ type ActivitySourceResult =
   | { ok: true; items: ActivityItem[] }
   | { ok: false }
 
-type SyncProvider = 'ga4' | 'gsc' | 'clarity' | 'decisions'
+type SyncProvider = 'ga4' | 'gsc' | 'clarity' | 'decisions' | 'psi' | 'gbp'
 
 type SyncRunStatus = 'success' | 'partial' | 'failed'
 
@@ -823,26 +823,32 @@ function statusMoveTone(status: string): ActivityTone {
   return 'neutral'
 }
 
+/**
+ * Exhaustive by construction. A Record keyed on SyncProvider makes adding a
+ * provider a compile error here rather than a silent fall-through to the wrong
+ * label, which is how `psi` and `gbp` previously ended up written to sync_runs
+ * and then discarded unread by this feed.
+ *
+ * "Decision scan" is not called a sync because it emits findings rather than
+ * ingesting data.
+ */
+const SYNC_PROVIDER_LABELS: Record<SyncProvider, string> = {
+  ga4: 'GA4 sync',
+  gsc: 'GSC sync',
+  clarity: 'Clarity sync',
+  decisions: 'Decision scan',
+  psi: 'PageSpeed sync',
+  gbp: 'Business Profile sync',
+}
+
+const SYNC_PROVIDERS = Object.keys(SYNC_PROVIDER_LABELS) as SyncProvider[]
+
 function providerLabel(provider: SyncProvider): string {
-  if (provider === 'ga4') {
-    return 'GA4 sync'
-  }
-  if (provider === 'gsc') {
-    return 'GSC sync'
-  }
-  if (provider === 'clarity') {
-    return 'Clarity sync'
-  }
-  return 'Decision scan'
+  return SYNC_PROVIDER_LABELS[provider]
 }
 
 function isSyncProvider(value: string): value is SyncProvider {
-  return (
-    value === 'ga4' ||
-    value === 'gsc' ||
-    value === 'clarity' ||
-    value === 'decisions'
-  )
+  return SYNC_PROVIDERS.some((provider) => provider === value)
 }
 
 function isSyncRunStatus(value: string): value is SyncRunStatus {

@@ -2,7 +2,19 @@ import 'server-only'
 
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
-export const SYNC_PROVIDERS = ['gsc', 'ga4', 'clarity', 'decisions'] as const
+/**
+ * Every provider that writes sync_runs. A provider missing here is not merely
+ * unlabelled — it is never queried, so its failures are invisible on the health
+ * panel. `psi` and `gbp` were writing rows that nothing read until Phase 2a.
+ */
+export const SYNC_PROVIDERS = [
+  'gsc',
+  'ga4',
+  'clarity',
+  'decisions',
+  'psi',
+  'gbp',
+] as const
 
 export type SyncProvider = (typeof SYNC_PROVIDERS)[number]
 
@@ -13,6 +25,8 @@ export const SYNC_PROVIDER_LABELS: Record<SyncProvider, string> = {
   ga4: 'GA4',
   clarity: 'Clarity',
   decisions: 'Decisions',
+  psi: 'PageSpeed',
+  gbp: 'Business Profile',
 }
 
 export const SYNC_STALE_AFTER_MS = 48 * 60 * 60 * 1000

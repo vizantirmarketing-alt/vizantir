@@ -52,7 +52,8 @@
     "correct:akamai-claims": "tsx scripts/correct-akamai-claims.ts",
     "correct:stale-stats": "tsx scripts/correct-stale-stats.ts",
     "correct:cwv-ranking-claims": "tsx scripts/correct-cwv-ranking-claims.ts",
-    "link:wordpress-cluster-pillar": "tsx scripts/link-wordpress-cluster-to-pillar.ts"
+    "link:wordpress-cluster-pillar": "tsx scripts/link-wordpress-cluster-to-pillar.ts",
+    "record:methodology": "tsx scripts/record-methodology-change.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",

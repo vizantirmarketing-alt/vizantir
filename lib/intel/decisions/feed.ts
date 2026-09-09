@@ -37,6 +37,15 @@ const STATE_COLUMNS = [
   'completed_at',
 ].join(', ')
 
+/**
+ * Both tables are read in explicit pages. PostgREST caps an unpaginated select
+ * at its default row limit and returns the truncation silently, which for this
+ * feed would present as findings quietly disappearing rather than as an error.
+ * Hitting the cap fails closed instead, matching `fetchQueryPageDaily`.
+ */
+const PAGE_SIZE = 1000
+const PAGE_CAP = 80
+
 export type DecisionFeedItem = {
   findingKey: string
   detector: string
@@ -299,6 +308,113 @@ function groupSections(ranked: RankedItem[]): DecisionFeedSection[] {
   })
 }
 
+type ServiceClient = ReturnType<typeof createSupabaseServiceRole>
+
+async function fetchAllFindingState(
+  supabase: ServiceClient,
+): Promise<unknown[] | null> {
+  const rows: unknown[] = []
+
+  for (let page = 0; page < PAGE_CAP; page += 1) {
+    const from = page * PAGE_SIZE
+    const { data, error } = await supabase
+      .from('finding_state')
+      .select(STATE_COLUMNS)
+      .order('finding_key', { ascending: true })
+      .range(from, from + PAGE_SIZE - 1)
+
+    if (error || !Array.isArray(data)) {
+      return null
+    }
+
+    rows.push(...data)
+
+    if (data.length < PAGE_SIZE) {
+      return rows
+    }
+  }
+
+  return null
+}
+
+function coversAll(seen: ReadonlySet<string>, required: ReadonlySet<string>): boolean {
+  for (const key of required) {
+    if (!seen.has(key)) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Emissions ordered newest window first, so the first row seen for a
+ * `finding_key` is that finding's latest emission. Reading stops as soon as
+ * every finding in `trackedKeys` has been resolved, which bounds the read to
+ * the recent windows that can actually contribute to the feed rather than to
+ * the full emission history. Nothing is deleted to achieve this — emission
+ * history is the record of what was observed and when, and it is kept
+ * (invariant 14).
+ *
+ * `id` is the final sort key. Without a unique tiebreaker `range()` paging over
+ * rows sharing a `period_end` and `created_at` may repeat or skip rows.
+ */
+async function fetchEmissionsCoveringLatest(
+  supabase: ServiceClient,
+  trackedKeys: ReadonlySet<string>,
+): Promise<unknown[] | null> {
+  const rows: unknown[] = []
+  const seen = new Set<string>()
+
+  for (let page = 0; page < PAGE_CAP; page += 1) {
+    const from = page * PAGE_SIZE
+    const { data, error } = await supabase
+      .from('decision_items')
+      .select(EMISSION_COLUMNS)
+      .order('period_end', { ascending: false })
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: false })
+      .range(from, from + PAGE_SIZE - 1)
+
+    if (error || !Array.isArray(data)) {
+      return null
+    }
+
+    rows.push(...data)
+
+    for (const row of data) {
+      if (typeof row !== 'object' || row === null) {
+        continue
+      }
+      const key = readField(row, 'finding_key')
+      if (typeof key === 'string' && key.length > 0) {
+        seen.add(key)
+      }
+    }
+
+    if (data.length < PAGE_SIZE) {
+      return rows
+    }
+    if (trackedKeys.size > 0 && coversAll(seen, trackedKeys)) {
+      return rows
+    }
+  }
+
+  return null
+}
+
+async function countEmissions(
+  supabase: ServiceClient,
+): Promise<number | null> {
+  const { count, error } = await supabase
+    .from('decision_items')
+    .select('finding_key', { count: 'exact', head: true })
+
+  if (error || typeof count !== 'number') {
+    return null
+  }
+  return count
+}
+
 export type FetchDecisionFeedOptions = {
   includeHidden?: boolean
 }
@@ -309,36 +425,51 @@ export async function fetchDecisionFeed(
   const includeHidden = options.includeHidden === true
   try {
     const supabase = createSupabaseServiceRole()
-    const [emissionsResult, statesResult] = await Promise.all([
-      supabase
-        .from('decision_items')
-        .select(EMISSION_COLUMNS)
-        .order('period_end', { ascending: false }),
-      supabase.from('finding_state').select(STATE_COLUMNS),
-    ])
 
-    if (emissionsResult.error || statesResult.error) {
+    const stateRows = await fetchAllFindingState(supabase)
+    if (stateRows === null) {
       console.error('Intel decision feed query failed')
       return { ok: false }
     }
 
-    if (!Array.isArray(emissionsResult.data) || !Array.isArray(statesResult.data)) {
+    const stateByKey = new Map<string, FindingStateRow>()
+    for (const row of stateRows) {
+      const parsed = toFindingState(row)
+      if (parsed) {
+        stateByKey.set(parsed.findingKey, parsed)
+      }
+    }
+
+    // No operator state at all is only a valid empty feed if there are no
+    // emissions either. State present for nothing while emissions exist is the
+    // 0014-never-applied signature, and rendering an empty feed would hide it.
+    if (stateByKey.size === 0) {
+      const emissionCount = await countEmissions(supabase)
+      if (emissionCount === null) {
+        console.error('Intel decision feed query failed')
+        return { ok: false }
+      }
+      if (emissionCount > 0) {
+        console.error('Intel decision feed missing finding_state rows')
+        return { ok: false }
+      }
+      return { ok: true, sections: [], total: 0, hiddenCount: 0 }
+    }
+
+    const emissionRows = await fetchEmissionsCoveringLatest(
+      supabase,
+      new Set(stateByKey.keys()),
+    )
+    if (emissionRows === null) {
+      console.error('Intel decision feed query failed')
       return { ok: false }
     }
 
     const emissions: ParsedEmission[] = []
-    for (const row of emissionsResult.data) {
+    for (const row of emissionRows) {
       const parsed = toEmission(row)
       if (parsed) {
         emissions.push(parsed)
-      }
-    }
-
-    const stateByKey = new Map<string, FindingStateRow>()
-    for (const row of statesResult.data) {
-      const parsed = toFindingState(row)
-      if (parsed) {
-        stateByKey.set(parsed.findingKey, parsed)
       }
     }
 

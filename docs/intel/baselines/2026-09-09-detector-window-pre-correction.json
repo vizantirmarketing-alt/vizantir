@@ -1,0 +1,165 @@
+{
+  "captured_at": "2026-09-09T19:51:54.935Z",
+  "purpose": "Pre-correction baseline for the Phase 2a detector-window change (SEARCH_INTELLIGENCE_ARCHITECTURE.md 15.2). Detectors ran on a 28-day window ending today-2, which included the zero-filled trailing day. After the correction they end on today-3 via latestCompleteDay. Numbers below are the LAST OUTPUT OF THE OLD METHOD and are not comparable to anything produced after the cutover.",
+  "methodology": {
+    "before": "completedPeriodEnd(latest): today-1 cap, never binding; effective window end = max(gsc_site_daily.date) = today-2",
+    "after": "latestCompleteDay(rows): today-3 cap, shared with the display path",
+    "cutover_marker": "intel_events dedupe_key = methodology:detector-window-completed-day"
+  },
+  "observed": {
+    "decision_items_period_end": "2026-09-07",
+    "gsc_site_daily_latest": "2026-09-07",
+    "emissions_at_period_end": 4,
+    "finding_state_rows": 6
+  },
+  "emissions": [
+    {
+      "detector": "buried-demand",
+      "finding_key": "buried-demand:wordpress-security",
+      "emission_key": "wordpress-security:2026-09-07",
+      "category": "opportunity",
+      "confidence": "medium",
+      "score": 584.7240099947,
+      "period_start": "2026-08-11",
+      "period_end": "2026-09-07",
+      "created_at": "2026-09-09T10:00:18.638597+00:00"
+    },
+    {
+      "detector": "within-reach",
+      "finding_key": "within-reach:website-design",
+      "emission_key": "within-reach:website-design:2026-09-07",
+      "category": "opportunity",
+      "confidence": "medium",
+      "score": 220,
+      "period_start": "2026-08-11",
+      "period_end": "2026-09-07",
+      "created_at": "2026-09-09T10:00:18.735152+00:00"
+    },
+    {
+      "detector": "within-reach",
+      "finding_key": "within-reach:next-seo",
+      "emission_key": "within-reach:next-seo:2026-09-07",
+      "category": "opportunity",
+      "confidence": "exploratory",
+      "score": 107,
+      "period_start": "2026-08-11",
+      "period_end": "2026-09-07",
+      "created_at": "2026-09-09T10:00:18.735152+00:00"
+    },
+    {
+      "detector": "within-reach",
+      "finding_key": "within-reach:squarespace-vs-custom-website",
+      "emission_key": "within-reach:squarespace-vs-custom-website:2026-09-07",
+      "category": "opportunity",
+      "confidence": "medium",
+      "score": 80.9999999999998,
+      "period_start": "2026-08-11",
+      "period_end": "2026-09-07",
+      "created_at": "2026-09-09T10:00:18.735152+00:00"
+    }
+  ],
+  "finding_state": [
+    {
+      "finding_key": "buried-demand:law-firm",
+      "status": "new",
+      "completed_at": null
+    },
+    {
+      "finding_key": "buried-demand:wordpress-security",
+      "status": "new",
+      "completed_at": null
+    },
+    {
+      "finding_key": "geo-signal:reno",
+      "status": "seen",
+      "completed_at": null
+    },
+    {
+      "finding_key": "within-reach:next-seo",
+      "status": "new",
+      "completed_at": null
+    },
+    {
+      "finding_key": "within-reach:squarespace-vs-custom-website",
+      "status": "new",
+      "completed_at": null
+    },
+    {
+      "finding_key": "within-reach:website-design",
+      "status": "new",
+      "completed_at": null
+    }
+  ],
+  "recent_decisions_runs": [
+    {
+      "status": "success",
+      "data_through_date": "2026-09-07",
+      "records_processed": 4,
+      "started_at": "2026-09-09T10:00:17.796042+00:00",
+      "administrator_message": null
+    },
+    {
+      "status": "success",
+      "data_through_date": "2026-09-06",
+      "records_processed": 4,
+      "started_at": "2026-09-08T10:00:17.591926+00:00",
+      "administrator_message": null
+    },
+    {
+      "status": "success",
+      "data_through_date": "2026-09-05",
+      "records_processed": 5,
+      "started_at": "2026-09-07T10:00:17.764974+00:00",
+      "administrator_message": null
+    },
+    {
+      "status": "success",
+      "data_through_date": "2026-09-04",
+      "records_processed": 6,
+      "started_at": "2026-09-06T10:00:17.881724+00:00",
+      "administrator_message": null
+    },
+    {
+      "status": "success",
+      "data_through_date": "2026-09-03",
+      "records_processed": 5,
+      "started_at": "2026-09-05T10:00:17.804694+00:00",
+      "administrator_message": null
+    },
+    {
+      "status": "partial",
+      "data_through_date": "2026-09-02",
+      "records_processed": 3,
+      "started_at": "2026-09-04T20:20:15.331275+00:00",
+      "administrator_message": "Failed detectors: within-reach (upsert_error)"
+    },
+    {
+      "status": "partial",
+      "data_through_date": "2026-09-02",
+      "records_processed": 3,
+      "started_at": "2026-09-04T20:20:10.806746+00:00",
+      "administrator_message": "Failed detectors: within-reach (upsert_error)"
+    },
+    {
+      "status": "partial",
+      "data_through_date": "2026-09-02",
+      "records_processed": 3,
+      "started_at": "2026-09-04T10:01:11.837526+00:00",
+      "administrator_message": "Failed detectors: within-reach (upsert_error)"
+    },
+    {
+      "status": "partial",
+      "data_through_date": "2026-09-01",
+      "records_processed": 3,
+      "started_at": "2026-09-03T10:01:06.513385+00:00",
+      "administrator_message": "Failed detectors: within-reach (upsert_error)"
+    },
+    {
+      "status": "partial",
+      "data_through_date": "2026-08-31",
+      "records_processed": 3,
+      "started_at": "2026-09-02T10:01:11.192144+00:00",
+      "administrator_message": "Failed detectors: within-reach (upsert_error)"
+    }
+  ]
+}

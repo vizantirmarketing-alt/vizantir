@@ -8,8 +8,8 @@ import {
   type Finding,
 } from '@/lib/intel/decisions/types'
 import {
-  addUtcDays,
   isIsoDate,
+  latestCompleteDay,
   priorSpan,
   SEARCH_RANGE_DAYS,
   spanEndingOn,
@@ -42,16 +42,27 @@ function asIsoDate(value: unknown): string | null {
   return value
 }
 
-function utcToday(): string {
-  return new Date().toISOString().slice(0, 10)
-}
-
-function completedPeriodEnd(latest: string): string {
-  const today = utcToday()
-  if (latest >= today) {
-    return addUtcDays(today, -1)
-  }
-  return latest
+/**
+ * Detectors analyse the same completed-day window the dashboard displays.
+ *
+ * This previously capped at today−1, which never binds: the GSC sync writes
+ * through today−2, so the cap was inert and detectors ran on a window ending
+ * today−2 — the trailing edge of the sync window, and the day most likely to be
+ * holding zero-fill (see lib/gsc/sync.ts siteRowsForWindow). A zero-filled day
+ * inside a 28-day sum depresses group impressions and CTR and can move a
+ * finding across a threshold.
+ *
+ * `latestCompleteDay` is the display path's rule (today−3 UTC). Sharing it means
+ * there is one implementation of "which days are trustworthy", not two.
+ *
+ * Changing this shifted detector output once. That shift is recorded as a
+ * methodology change: see docs/intel/baselines/ for the pre-correction baseline
+ * and the intel_events row with dedupe_key
+ * `methodology:detector-window-completed-day`. Comparisons spanning the cutover
+ * are not like-for-like.
+ */
+function completedPeriodEnd(latest: string): string | null {
+  return latestCompleteDay([{ date: latest }])
 }
 
 async function fetchLatestSiteDate(
@@ -376,6 +387,16 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
     }
 
     const periodEnd = completedPeriodEnd(latestDate)
+    if (periodEnd === null) {
+      const message = 'No completed GSC days available.'
+      await finishRun(supabase, runId, {
+        status: 'success',
+        recordsProcessed: 0,
+        dataThroughDate,
+        message,
+      })
+      return { status: 'success', findings: 0, message }
+    }
     dataThroughDate = periodEnd
     const span = spanEndingOn(periodEnd, WINDOW_DAYS)
     const prior = priorSpan(span)
