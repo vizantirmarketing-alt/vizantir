@@ -14,6 +14,7 @@ export const SYNC_PROVIDERS = [
   'decisions',
   'psi',
   'gbp',
+  'scan',
 ] as const
 
 export type SyncProvider = (typeof SYNC_PROVIDERS)[number]
@@ -27,6 +28,7 @@ export const SYNC_PROVIDER_LABELS: Record<SyncProvider, string> = {
   decisions: 'Decisions',
   psi: 'PageSpeed',
   gbp: 'Business Profile',
+  scan: 'Site scan',
 }
 
 export const SYNC_STALE_AFTER_MS = 48 * 60 * 60 * 1000

@@ -193,6 +193,15 @@ const CATEGORY_ACCENT: Record<DecisionCategory, PanelAccent> = {
   opportunity: 'cobalt',
   working: 'positive',
   system: 'neutral',
+  // Cobalt, the new/selected wash, not warning-severe. Severity here is
+  // carried by score and confidence, and warning-severe is the register the
+  // needs-attention section owns — using it would visually equate the two.
+  // Green stays reserved for improvement and completion only.
+  //
+  // A dedicated non-severe `warning` accent would fit better (the
+  // --warning-soft token already exists), but PanelAccent offers only
+  // warning-severe, and widening a shared UI primitive is outside Phase 2b.
+  search_intelligence: 'cobalt',
 }
 
 export function DecisionFeed({ sections }: { sections: DecisionFeedSection[] }) {

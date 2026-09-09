@@ -2,6 +2,7 @@ import type {
   DecisionCategory,
   DecisionConfidence,
 } from '@/lib/intel/decision-params'
+import type { ScanWindow } from '@/lib/scan/types'
 
 export type MatchType = 'contains_any' | 'exact_any'
 
@@ -56,6 +57,13 @@ export type DetectorInput = {
   siteDaily: SiteDailyRow[]
   queries: QueryWindowStats[]
   comparisonAvailable: boolean
+  /**
+   * False until the first scan has run. Follows the `comparisonAvailable`
+   * idiom exactly rather than inventing a new one (architecture 16).
+   */
+  scanAvailable: boolean
+  /** The latest scan. Absent whenever scanAvailable is false. */
+  scan?: ScanWindow
 }
 
 export type Finding = {
@@ -73,6 +81,13 @@ export type Finding = {
 export type Detector = {
   name: string
   needsComparison?: boolean
+  /**
+   * Skipped entirely when no scan snapshot exists, the same way
+   * needsComparison detectors are skipped outside provider_coverage. Unlike
+   * needsComparison — which no detector sets, so that branch is dead — this is
+   * exercised from day one, including on the first run before any scan.
+   */
+  needsScan?: boolean
   detect(input: DetectorInput): Finding[]
 }
 

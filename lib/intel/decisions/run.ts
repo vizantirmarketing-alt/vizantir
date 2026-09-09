@@ -2,6 +2,7 @@ import 'server-only'
 
 import { DETECTORS } from '@/lib/intel/decisions/detectors'
 import { loadGroupingForSpan } from '@/lib/intel/decisions/grouping'
+import { detectorIdentity } from '@/lib/intel/decisions/registry'
 import {
   findingKeyFor,
   type DetectorInput,
@@ -14,6 +15,7 @@ import {
   SEARCH_RANGE_DAYS,
   spanEndingOn,
 } from '@/lib/intel/search-params'
+import { loadLatestScan } from '@/lib/scan/load'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 const WINDOW_DAYS = SEARCH_RANGE_DAYS['28d']
@@ -265,6 +267,9 @@ async function persistFindings(
   }
 
   const now = new Date().toISOString()
+  // Registry is the source of truth for sub-identity (17.4); the columns are a
+  // queryable copy. Null for the three GSC detectors, which is correct.
+  const identity = detectorIdentity(detector)
   const toInsert: Array<Record<string, unknown>> = []
   const toUpdate: Array<KeyedFinding> = []
 
@@ -277,6 +282,8 @@ async function persistFindings(
         emission_key: row.finding.emissionKey,
         finding_key: row.findingKey,
         category: row.finding.category,
+        discipline: identity?.discipline ?? null,
+        detector_family: identity?.family ?? null,
         title: row.finding.title,
         description: row.finding.description,
         evidence_json: row.finding.evidence,
@@ -310,6 +317,10 @@ async function persistFindings(
         score: row.finding.score,
         evidence_json: row.finding.evidence,
         description: row.finding.description,
+        // Denormalised copy of the registry; refreshed so a reclassified
+        // detector self-heals rather than leaving stale rows behind.
+        discipline: identity?.discipline ?? null,
+        detector_family: identity?.family ?? null,
         updated_at: now,
       })
       .eq('detector', detector)
@@ -403,6 +414,17 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
     const comparisonAvailable =
       coverageStartedOn !== null && prior.start >= coverageStartedOn
 
+    // A scan failure must NOT fail the whole run. The three GSC detectors do
+    // not use scan data, and stopping them because a scan table is missing or
+    // a scan query failed would be disproportionate — the same reasoning that
+    // makes a single failed GSC dimension set a partial rather than a failure
+    // (lib/gsc/sync.ts syncDailyWindow). needsScan detectors are skipped and
+    // the run reports partial with a typed message, so the problem is visible
+    // rather than silently rendered as "no scan yet".
+    const scanResult = await loadLatestScan()
+    const scanFailed = scanResult === 'error'
+    const scan = scanFailed ? null : scanResult
+
     const grouping = await loadGroupingForSpan(span)
     if (grouping === null) {
       console.error('Decision detectors failed')
@@ -426,13 +448,24 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
       siteDaily: grouping.siteDaily,
       queries: grouping.queries,
       comparisonAvailable,
+      // null before the first scan has ever run. Not an error: needsScan
+      // detectors are skipped, exactly as needsComparison ones are outside
+      // provider_coverage.
+      scanAvailable: scan !== null,
+      ...(scan === null ? {} : { scan }),
     }
 
     const failedSets: string[] = []
+    if (scanFailed) {
+      failedSets.push('scan snapshots (load_error)')
+    }
     let attempted = 0
 
     for (const detector of DETECTORS) {
       if (detector.needsComparison && !comparisonAvailable) {
+        continue
+      }
+      if (detector.needsScan === true && !input.scanAvailable) {
         continue
       }
 
@@ -467,10 +500,11 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
       }
     }
 
+    const detectorFailures = scanFailed ? failedSets.length - 1 : failedSets.length
     const status: RunDecisionDetectorsResult['status'] =
       failedSets.length === 0
         ? 'success'
-        : failedSets.length === attempted
+        : attempted > 0 && detectorFailures === attempted
           ? 'failed'
           : 'partial'
 

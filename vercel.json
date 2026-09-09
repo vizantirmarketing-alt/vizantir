@@ -7,9 +7,16 @@
     "app/api/cron/reports/route.ts": {
       "memory": 2048,
       "maxDuration": 300
+    },
+    "app/api/cron/scan/route.ts": {
+      "maxDuration": 300
     }
   },
   "crons": [
+    {
+      "path": "/api/cron/scan",
+      "schedule": "0 7 * * *"
+    },
     {
       "path": "/api/cron/gbp-sync",
       "schedule": "0 8 * * *"

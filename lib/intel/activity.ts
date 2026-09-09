@@ -35,7 +35,14 @@ type ActivitySourceResult =
   | { ok: true; items: ActivityItem[] }
   | { ok: false }
 
-type SyncProvider = 'ga4' | 'gsc' | 'clarity' | 'decisions' | 'psi' | 'gbp'
+type SyncProvider =
+  | 'ga4'
+  | 'gsc'
+  | 'clarity'
+  | 'decisions'
+  | 'psi'
+  | 'gbp'
+  | 'scan'
 
 type SyncRunStatus = 'success' | 'partial' | 'failed'
 
@@ -839,6 +846,7 @@ const SYNC_PROVIDER_LABELS: Record<SyncProvider, string> = {
   decisions: 'Decision scan',
   psi: 'PageSpeed sync',
   gbp: 'Business Profile sync',
+  scan: 'Site scan',
 }
 
 const SYNC_PROVIDERS = Object.keys(SYNC_PROVIDER_LABELS) as SyncProvider[]

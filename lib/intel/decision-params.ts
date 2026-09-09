@@ -3,6 +3,7 @@ export const DECISION_CATEGORIES = [
   'opportunity',
   'working',
   'system',
+  'search_intelligence',
 ] as const
 
 export type DecisionCategory = (typeof DECISION_CATEGORIES)[number]
@@ -12,7 +13,47 @@ export const DECISION_CATEGORY_LABELS: Record<DecisionCategory, string> = {
   opportunity: 'Opportunities',
   working: 'Working',
   system: 'System',
+  search_intelligence: 'Search Intelligence',
 }
+
+/**
+ * Sub-identity within `search_intelligence` (S11, architecture 17.4).
+ *
+ * Two orthogonal axes. `Discipline` decides which section a finding renders
+ * in; `DetectorFamily` describes what kind of work it implies. A `technical`
+ * finding can be SEO or GEO, so neither axis implies the other.
+ *
+ * These are TypeScript-only. The matching decision_items columns are
+ * unconstrained text on purpose — see lib/intel/decisions/registry.ts.
+ */
+export const DISCIPLINES = ['seo', 'aeo', 'geo'] as const
+
+export type Discipline = (typeof DISCIPLINES)[number]
+
+export const DISCIPLINE_LABELS: Record<Discipline, string> = {
+  seo: 'SEO',
+  aeo: 'AEO',
+  geo: 'GEO',
+}
+
+/**
+ * Open to extension. `internal-linking`, `cannibalization` and `performance`
+ * are reserved with no detector yet: their data sources already exist
+ * (scan_page_snapshots.internal_links, gsc_query_page_daily, psi_results
+ * respectively) and 17.4 names them as the next likely additions.
+ */
+export const DETECTOR_FAMILIES = [
+  'technical',
+  'metadata',
+  'schema',
+  'internal-linking',
+  'cannibalization',
+  'content',
+  'performance',
+  'ai-crawler-visibility',
+] as const
+
+export type DetectorFamily = (typeof DETECTOR_FAMILIES)[number]
 
 export const DECISION_CONFIDENCES = [
   'high',
