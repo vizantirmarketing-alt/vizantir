@@ -45,6 +45,25 @@ order by started_at desc
 limit 10;
 ```
 
-Then record the cutover with `scripts/record-methodology-change.ts` (see
-`--help`), which is idempotent — `intel_events.dedupe_key` is unique with
-`nulls not distinct`, so re-running cannot double-post.
+Then record the cutover:
+
+```bash
+npm run record:methodology -- --help            # options and known changes
+npm run record:methodology -- detector-window   # dry run, prints the payload
+npm run record:methodology -- detector-window --live
+```
+
+Run it **after** the change is deployed, not when the code is written — the row
+asserts that the method has changed, which is not yet true at authoring time.
+
+Re-running `--live` is safe. It cannot create a second event and cannot modify
+one that already exists, because the request names `dedupe_key` as its
+`on_conflict` target with `resolution=ignore-duplicates`, which resolves to
+`ON CONFLICT (dedupe_key) DO NOTHING`.
+
+Naming that target is the load-bearing part. `intel_events.dedupe_key` carries a
+unique constraint, but a constraint only guarantees that a duplicate *fails* —
+it does not make a repeated run a clean no-op. Without `on_conflict`, PostgREST
+infers the conflict target from the primary key; `id` is a generated identity
+the script never supplies, so the `DO NOTHING` never fires and the duplicate
+surfaces as Postgres `23505` instead of being skipped.

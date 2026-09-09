@@ -11,13 +11,18 @@
  * the code is written. The row asserts that the method changed; asserting it
  * before deploy would be false if the change never ships.
  *
- * Idempotent: intel_events.dedupe_key is unique with `nulls not distinct`, so
- * re-running cannot double-post.
+ * Idempotent. Re-running with --live cannot create a second event and cannot
+ * modify the existing one. Two independent mechanisms guarantee that; see
+ * CONFLICT_TARGET below for why both exist.
  *
  * Usage:
+ *   npx tsx scripts/record-methodology-change.ts --help
  *   npx tsx scripts/record-methodology-change.ts --list
  *   npx tsx scripts/record-methodology-change.ts detector-window --dry-run
  *   npx tsx scripts/record-methodology-change.ts detector-window --live
+ *
+ * Or via package.json:
+ *   npm run record:methodology -- detector-window --live
  */
 
 import { dirname, join } from 'node:path'
@@ -28,6 +33,30 @@ import { config as loadEnv } from 'dotenv'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const ROOT = join(__dirname, '..')
+
+/**
+ * The column PostgREST must use to detect the conflict.
+ *
+ * `Prefer: resolution=ignore-duplicates` alone is NOT enough. PostgREST infers
+ * the ON CONFLICT target from the primary key unless `on_conflict` names a
+ * different column. intel_events.id is a generated identity that this script
+ * never supplies, so a primary-key conflict can never occur: the DO NOTHING
+ * clause never fires, and the dedupe_key unique violation surfaces as
+ * Postgres 23505 / HTTP 409 instead of being skipped.
+ *
+ * Verified against the live database:
+ *   POST /intel_events                        -> 409 23505 (violation raised)
+ *   POST /intel_events?on_conflict=dedupe_key -> 201 []     (insert skipped)
+ *
+ * `ignore-duplicates` is DO NOTHING, not DO UPDATE — an existing event is left
+ * byte-for-byte untouched, which is what we want. Never switch this to
+ * `merge-duplicates`: that would rewrite the recorded cutover, and the whole
+ * point of the row is that it is a fixed historical marker.
+ */
+const CONFLICT_TARGET = 'dedupe_key'
+
+/** Postgres unique_violation. The fallback path below treats it as "already recorded". */
+const UNIQUE_VIOLATION = '23505'
 
 type MethodologyChange = {
   key: string
@@ -54,6 +83,14 @@ const CHANGES: readonly MethodologyChange[] = [
   },
 ]
 
+function readErrorCode(body: unknown): string | null {
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    return null
+  }
+  const code = Reflect.get(body, 'code')
+  return typeof code === 'string' ? code : null
+}
+
 function requireEnv(name: string, value: string | undefined): string {
   if (!value || !String(value).trim()) {
     console.error(`Missing required environment variable: ${name}`)
@@ -62,21 +99,29 @@ function requireEnv(name: string, value: string | undefined): string {
   return value.trim()
 }
 
-function usage(): never {
+function usage(exitCode: number): never {
   console.log('Usage: record-methodology-change.ts <key> [--live|--dry-run]')
   console.log('       record-methodology-change.ts --list')
+  console.log('       record-methodology-change.ts --help')
+  console.log('')
+  console.log('Default is --dry-run. --live writes one intel_events row.')
+  console.log('Running --live repeatedly is safe: it cannot create a duplicate')
+  console.log('and cannot modify an event that already exists.')
   console.log('')
   console.log('Known changes:')
   for (const change of CHANGES) {
     console.log(`  ${change.key.padEnd(20)} ${change.title}`)
   }
-  process.exit(1)
+  process.exit(exitCode)
 }
 
 async function main(): Promise<void> {
   loadEnv({ path: join(ROOT, '.env.local') })
 
   const args = process.argv.slice(2)
+  if (args.includes('--help')) {
+    usage(0)
+  }
   if (args.includes('--list')) {
     for (const change of CHANGES) {
       console.log(`${change.key}\n  ${change.title}\n  dedupe_key: ${change.dedupeKey}\n`)
@@ -86,13 +131,13 @@ async function main(): Promise<void> {
 
   const key = args.find((arg) => !arg.startsWith('--'))
   if (key === undefined) {
-    usage()
+    usage(1)
   }
 
   const change = CHANGES.find((candidate) => candidate.key === key)
   if (change === undefined) {
     console.error(`Unknown methodology change: ${key}`)
-    usage()
+    usage(1)
   }
 
   const live = args.includes('--live')
@@ -120,7 +165,8 @@ async function main(): Promise<void> {
     return
   }
 
-  const response = await fetch(`${url}/rest/v1/intel_events`, {
+  const endpoint = `${url}/rest/v1/intel_events?on_conflict=${CONFLICT_TARGET}`
+  const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
       apikey: serviceKey,
@@ -132,6 +178,15 @@ async function main(): Promise<void> {
   })
 
   const body: unknown = await response.json().catch(() => null)
+
+  // Second line of defence. With on_conflict set the server skips the insert and
+  // this branch should be unreachable, but if the unique index is ever renamed
+  // or reshaped so PostgREST cannot infer it, a duplicate run must still be a
+  // no-op that exits 0 rather than a hard failure.
+  if (response.status === 409 && readErrorCode(body) === UNIQUE_VIOLATION) {
+    console.log(`Already recorded (dedupe_key ${change.dedupeKey}). No change.`)
+    return
+  }
 
   if (!response.ok) {
     console.error(`Failed: ${response.status}`)
