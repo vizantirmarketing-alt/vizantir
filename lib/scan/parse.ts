@@ -180,23 +180,36 @@ function countWords(html: string): number {
   return text.split(' ').filter((token) => token.length > 0).length
 }
 
+function scriptElements(html: string): string[] {
+  return html.match(/<script\b[^>]*>[\s\S]*?<\/script>/gi) ?? []
+}
+
 /**
- * @type values from every application/ld+json block. Handles a bare object, an
- * array of objects, and an @graph wrapper. A block that does not parse is
- * skipped rather than failing the whole page — malformed JSON-LD is itself a
- * finding, but detecting it is Phase 2c's job, not this parser's.
+ * `@type` values from every `application/ld+json` block. A block may be a
+ * single object, an array of objects, or an `@graph` wrapper — and `@type`
+ * itself may be a string or an array (schema.org allows both; the site's
+ * layout Organization block uses the array form). A block that does not
+ * parse is skipped rather than failing the whole page: malformed JSON-LD is
+ * evidence for a later detector, not a reason to drop the rest of the parse.
+ *
+ * Only the block's own `@type` and each `@graph` node's `@type` are
+ * collected. Nested types (ListItem inside BreadcrumbList, Offer inside
+ * Service) are not — those are properties of a valid parent, not a separate
+ * rendered block.
  */
 function extractSchemaTypes(html: string): string[] {
-  const blocks = html.match(
-    /<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
-  )
-  if (blocks === null) {
-    return []
-  }
-
   const types = new Set<string>()
-  for (const block of blocks) {
-    const body = /<script\b[^>]*>([\s\S]*?)<\/script>/i.exec(block)?.[1]
+
+  for (const script of scriptElements(html)) {
+    const openTag = /<script\b[^>]*>/i.exec(script)?.[0]
+    if (openTag === undefined) {
+      continue
+    }
+    const type = attributeValue(openTag, 'type')
+    if (type === null || type.trim().toLowerCase() !== 'application/ld+json') {
+      continue
+    }
+    const body = /<script\b[^>]*>([\s\S]*?)<\/script>/i.exec(script)?.[1]
     if (body === undefined) {
       continue
     }
@@ -208,6 +221,7 @@ function extractSchemaTypes(html: string): string[] {
     }
     collectTypes(parsed, types)
   }
+
   return [...types].sort()
 }
 
