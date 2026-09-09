@@ -756,6 +756,20 @@ Rules that hold today and should be preserved deliberately rather than by accide
 12. **A new `sync_runs` provider requires widening the check constraint first.**
     The insert fails closed and the sync never runs.
 
+The following two take effect with Phase 2a and are stated here so they live with
+the rest of the invariants rather than only inside the proposal.
+
+13. **A change to how a metric is computed is a methodology change, and is
+    recorded as one.** Capture the prior baseline, write an
+    `intel_events` row of type `methodology_change` at the cutover date, and
+    treat the first comparison spanning that date as not like-for-like. A
+    silent change to method is indistinguishable from a change in the world,
+    which makes every comparison across it wrong in a way nobody can see.
+14. **Raw observations may be pruned; findings and their history may not.**
+    Retention applies to re-derivable source snapshots. `decision_items`,
+    `finding_state`, and resolution history are the record of what was observed
+    and what was decided about it, and are kept.
+
 ---
 
 ## Verification notes
@@ -860,12 +874,20 @@ the emission rate goes from single digits per day to potentially dozens.
 
 Two changes, both required:
 
-1. Page the query, or scope it to recent `period_end` values rather than loading
-   all history. The feed only ever uses the latest emission per `finding_key`,
-   so loading every historical emission to throw nearly all of them away is
-   wasted work regardless of the cap.
-2. Add retention. A finding whose latest emission is older than some window is
-   not being surfaced anyway; its emission history is audit data, not feed data.
+1. **Scope the query**, rather than loading all history. The feed only ever uses
+   the latest emission per `finding_key`, so loading every historical emission to
+   throw nearly all of them away is wasted work regardless of the cap. Restrict
+   to recent `period_end` values, or select the latest emission per finding in
+   the database rather than in memory.
+2. **Paginate whatever remains**, so the result is never silently truncated by
+   the PostgREST default.
+
+**Solve this by scoping and pagination, not by deleting emissions.** Per the
+retention decision in §17.6, `decision_items` is *not* subject to the 180-day
+prune — emission history is the record of when a finding was observed and how
+its score moved, which is exactly the historical intelligence worth keeping. The
+defect here is that the feed reads more than it needs, and the fix belongs in the
+query.
 
 This is the one item I would not start Phase 2 without. The failure mode is
 silent — findings stop appearing, the feed still renders, nothing errors.
@@ -883,6 +905,68 @@ rather than its own local helper, so there is one implementation of the rule.
 raises 28-day group impressions and CTR slightly, so findings sitting near a
 threshold may appear or disappear once. That is a visible change on a production
 surface and should be expected rather than treated as a regression.
+
+#### The shift is accepted, and must be recorded as a methodology change
+
+The one-time output shift is **accepted**. What is not acceptable is discovering
+it six months later and reading it as an organic change in the site's search
+performance. Three things are required, in this order.
+
+**1. Capture the baseline before changing anything.** Immediately before the
+§15.2 deploy, record what the current methodology produces:
+
+```sql
+-- Pre-migration baseline. Run against the live database and keep the output.
+select detector, finding_key, emission_key, score, period_start, period_end
+from public.decision_items
+where period_end = (select max(period_end) from public.decision_items)
+order by detector, score desc;
+
+select provider, status, data_through_date, records_processed, started_at
+from public.sync_runs
+where provider = 'decisions'
+order by started_at desc
+limit 10;
+```
+
+Keep the result. A dated file under `docs/intel/baselines/` is sufficient and is
+the lowest-friction option given there is no migrate runner and no test harness —
+the point is that the numbers exist somewhere durable and dated, not that they
+live in a particular system.
+
+**2. Mark the cutover in `intel_events`.** The `public.intel_events` table
+(`0012_intel_events.sql`) already exists and is read into the Overview activity
+feed by `fetchRecordedEvents`. That is exactly the right place: a methodology
+change should appear in the chronological record, at its date, where anyone
+comparing two periods across it will encounter it.
+
+```sql
+insert into public.intel_events (event_type, title, detail, source, dedupe_key)
+values (
+  'methodology_change',
+  'Detector window corrected to the completed-day rule',
+  'Detectors previously ran on a 28-day window ending today-2, which included '
+  || 'the zero-filled trailing day. They now end on today-3, matching the '
+  || 'display rule in latestCompleteDay. Group impressions and CTR rise '
+  || 'slightly as a result. Findings appearing or disappearing at this date '
+  || 'reflect the corrected method, not a change in site performance. '
+  || 'Comparisons spanning this date are not like-for-like.',
+  'system',
+  'methodology:detector-window-completed-day'
+);
+```
+
+`dedupe_key` is unique with `nulls not distinct`, so re-running this is safe and
+cannot double-post.
+
+**3. The corrected output is the new baseline.** From the cutover forward, the
+today−3 window is the method of record. The pre-migration capture is historical
+reference only and should not be used as a comparison baseline for any period
+after the cutover.
+
+**The first post-migration period comparison crosses a methodology change and is
+not like-for-like.** This is stated as invariant 13 in §13 so it is not
+rediscovered by inference later.
 
 ### 15.3 Teach the health panel and activity feed about new providers — blocking
 
@@ -1003,7 +1087,17 @@ alter table public.sync_runs add constraint sync_runs_provider_check
 alter table public.decision_items
   drop constraint if exists decision_items_category_check;
 alter table public.decision_items add constraint decision_items_category_check
-  check (category in ('needs_attention','working','opportunity','system','site_health'));
+  check (category in ('needs_attention','working','opportunity','system','search_intelligence'));
+
+-- Sub-identity within search_intelligence. Deliberately UNCONSTRAINED text.
+-- See 17.4: a check constraint here would mean a hand-applied migration
+-- before every new detector family, which is the invariant-12 landmine.
+alter table public.decision_items
+  add column if not exists discipline text,
+  add column if not exists detector_family text;
+
+create index if not exists decision_items_discipline_idx
+  on public.decision_items (discipline, detector_family);
 ```
 
 Note this restates `psi` and `gbp`, which per §9 may never have been applied.
@@ -1048,15 +1142,18 @@ create table if not exists public.scan_site_snapshots (
 );
 ```
 
+Plus the index the prune in §17.6 depends on:
+
+```sql
+create index if not exists scan_page_snapshots_captured_on_idx
+  on public.scan_page_snapshots (captured_on);
+```
+
 `unique (url, captured_on)` and `unique (captured_on)` mirror the
 `gbp_snapshots (gbp_place_id, captured_on)` pattern already in the codebase, so
 a re-run on the same day upserts rather than duplicating.
 
-**Retention is part of `0024`, not a later thought.** `scan_page_snapshots` grows
-by one row per URL per day forever. At ~60 sitemap URLs that is ~22 000 rows a
-year — not alarming, but it is the same unbounded shape as §12.3 and §4.4, and
-this is the moment to not repeat it. Either a scheduled delete or a documented
-retention window, decided in §20.
+Retention is specified in §17.6 and is part of `0024`, not a later thought.
 
 **`error_reason` is a column, not a dropped row.** A URL that failed to fetch
 must be storable as a failure rather than absent, or "the scan did not run" and
@@ -1112,23 +1209,133 @@ Bounded concurrency (4–6 parallel fetches) rather than sequential, and rather
 than unbounded — this is the site fetching itself, and an unbounded fan-out from
 a 2048MB function against your own origin is a self-inflicted load spike.
 
-### 17.4 The new category
+### 17.4 One category, structured sub-identity
 
-`site_health` is proposed for the new `DECISION_CATEGORIES` value.
+**One top-level `DECISION_CATEGORIES` value: `search_intelligence`.** There are
+no separate top-level `seo`, `aeo`, or `geo` categories.
 
-Being straight about what this is: the existing four categories are *semantic* —
-they describe what the operator should do (`needs_attention`, `opportunity`,
-`working`, `system`). `site_health` is closer to a *source* bucket, and adding
-it slightly breaks that scheme. Its real job is presentational: keeping scan
-findings from competing against GSC findings on incomparable score scales
-(§12.4, §15.4).
+```ts
+export const DECISION_CATEGORIES = [
+  'needs_attention',
+  'opportunity',
+  'working',
+  'system',
+  'search_intelligence',   // new
+] as const
+```
 
-That is a legitimate reason, but it is a workaround for a ranking problem, not a
-taxonomy improvement. Named `site_health` rather than `scan` it at least reads
-as a category an operator would recognize. Whether it should instead be three
-categories — `seo`, `aeo`, `geo` — is left open in §20; three would add seven
-total sections to the Overview, which is a lot of vertical space for a page that
-already fans out seven queries.
+Persistence and presentation are deliberately separated here. One category keeps
+the check constraint stable and the Overview from fragmenting into seven
+sections; the sub-identity below carries everything needed to render SEO, AEO,
+and GEO as distinct sections anyway.
+
+#### The taxonomy
+
+Two orthogonal axes beneath the category:
+
+```ts
+/** Which search surface the finding concerns. */
+export type Discipline = 'seo' | 'aeo' | 'geo'
+
+/** What kind of problem it is. Open to extension. */
+export type DetectorFamily =
+  | 'technical'
+  | 'metadata'
+  | 'schema'
+  | 'internal-linking'
+  | 'cannibalization'
+  | 'content'
+  | 'performance'
+  | 'ai-crawler-visibility'
+```
+
+Discipline answers "which section does this render in". Family answers "what kind
+of work does this imply". They are independent — a `technical` finding can be
+SEO (a 404 on a sitemap URL) or GEO (an AI crawler getting a non-200).
+
+#### Where it lives
+
+**A code-side registry is the source of truth**, with the values denormalized
+onto `decision_items` at persist time for queryability:
+
+```ts
+export const DETECTOR_REGISTRY = {
+  'sitemap-contradiction': { discipline: 'seo', family: 'technical' },
+  'metadata-gap':          { discipline: 'seo', family: 'metadata' },
+  'thin-page':             { discipline: 'seo', family: 'content' },
+  'indexed-but-broken':    { discipline: 'seo', family: 'technical' },
+  'demand-without-page':   { discipline: 'seo', family: 'technical' },
+  'schema-drift':          { discipline: 'aeo', family: 'schema' },
+  'llms-drift':            { discipline: 'geo', family: 'ai-crawler-visibility' },
+  'crawler-absence':       { discipline: 'geo', family: 'ai-crawler-visibility' },
+} as const satisfies Record<string, { discipline: Discipline; family: DetectorFamily }>
+```
+
+**The registry is deliberately not a database check constraint**, and that is the
+central design decision in this section. A constrained `discipline` or
+`detector_family` column would mean that every new detector family requires a
+migration hand-applied through the Supabase SQL editor *before* any code writes
+it — and if the order slips, the insert fails closed and the detector silently
+never runs. That is invariant 12, and it is the exact failure that left `psi` and
+`gbp` writing rows nothing could read (§12.2). Repeating it for a taxonomy that
+is expected to grow would be a self-inflicted wound.
+
+So the columns added in `0023` are plain `text`, unconstrained. Postgres accepts
+whatever the registry emits; the registry is where correctness is enforced, in
+TypeScript, at compile time, changeable in one deploy.
+
+The denormalized columns exist so `select … where discipline = 'aeo'` works in
+the SQL editor without reproducing the registry by hand. They are a convenience
+copy — the registry wins on any disagreement, and a backfill is a single `update`
+because `detector` is already on every row.
+
+#### How the UI uses it
+
+`fetchDecisionFeed` already loads everything and groups in memory
+(`groupSections`, `feed.ts:283`). Grouping search-intelligence findings by
+discipline is the same operation one level down, so **the UI may render SEO, AEO,
+and GEO as three sections despite one persistence category** with no schema
+change and no extra query.
+
+Family is not a section. It is a chip on the card and a filter — the axis you
+sort by when deciding what to work on, not the one you scan by.
+
+#### Room to grow
+
+Three families are named above with no detector yet. That is intentional — they
+mark where the next work goes and where the data already exists:
+
+| Family | First likely detector | Source, already present |
+|---|---|---|
+| `cannibalization` | Two URLs competing for one query, splitting impressions | `gsc_query_page_daily` alone — needs no scan at all |
+| `internal-linking` | Orphaned page: in the sitemap, zero internal links | `scan_page_snapshots.internal_links` from Phase 2b |
+| `performance` | A URL whose PSI score degrades across runs | `psi_results` (`0017_psi_results.sql`) |
+
+`cannibalization` is worth noting specifically: it is a pure GSC detector that
+needs none of the scan infrastructure, and could ship in Phase 2a alongside the
+fixes if it were wanted sooner.
+
+#### One naming collision, flagged deliberately
+
+The existing detector `geo-signal` (§6.3) means **geographic** — it fires on
+non-focus city names like Reno and Phoenix. The new discipline `geo` means
+**generative engine optimization**. These are unrelated concepts one hyphen
+apart, inside one system.
+
+`geo-signal` keeps category `opportunity` and is not registered as discipline
+`geo`, so nothing breaks — but a reader will trip over this, and it should be
+resolved rather than tolerated. Renaming the detector to `non-focus-geography`
+is the cleaner fix; it touches `finding_key` values, so it needs a small data
+migration and is out of scope for Phase 2. Recorded here so the collision is
+known rather than discovered.
+
+#### The existing three detectors are not reclassified
+
+`buried-demand`, `within-reach`, and `geo-signal` keep category `opportunity` in
+Phase 2. Moving them into `search_intelligence` would mean an `update` across
+live `decision_items` rows and a visible reshuffle of the Overview on top of the
+§15.2 shift. Consolidating them is a reasonable later step and is explicitly
+*not* blocking.
 
 ### 17.5 Verification after applying
 
@@ -1143,20 +1350,108 @@ select conname, pg_get_constraintdef(oid)
 from pg_constraint
 where conrelid = 'public.decision_items'::regclass and contype = 'c';
 
+select column_name, data_type
+from information_schema.columns
+where table_schema = 'public' and table_name = 'decision_items'
+  and column_name in ('discipline', 'detector_family');
+
 select count(*) from public.scan_page_snapshots;
 select count(*) from public.scan_site_snapshots;
 ```
 
-The first two must show `scan` and `site_health` respectively. If they do not,
-the scan cron will fail closed at its opening `sync_runs` insert and no scan
-will ever run.
+The first must show `scan`; the second must show `search_intelligence`. If either
+does not, the corresponding insert fails closed — the scan cron dies at its
+opening `sync_runs` insert, or every scan finding is rejected at persist time,
+and in both cases nothing runs and nothing says why.
+
+The third must return two rows, both `text`, and **neither may carry a check
+constraint** (§17.4).
+
+### 17.6 Retention — 180 days, raw snapshots only
+
+**`scan_page_snapshots` rows may be pruned after 180 days.** Nothing else is.
+
+#### What is pruned, and what is explicitly not
+
+| Table | Retention | Why |
+|---|---|---|
+| `scan_page_snapshots` | **180 days** | Raw observation. Re-derivable by scanning again; its value decays fast |
+| `scan_site_snapshots` | Indefinite | One row per day. ~365 rows/year. Not worth a policy |
+| `decision_items` | **Indefinite** | Emission history — when a finding was observed and how its score moved |
+| `finding_state` | **Indefinite** | Operator state, resolution notes, completion timestamps |
+| `gsc_site_daily`, `gsc_query_page_daily` | Indefinite | Not re-fetchable beyond Google's own retention |
+| `crawler_hits` | Indefinite in Phase 2 | Out of scope here; noted in §12 as unbounded |
+
+The line is between **raw source snapshots**, which can be regenerated, and
+**findings and their history**, which cannot. A `decision_items` row records that
+on a given date the system observed something and scored it; a `finding_state`
+row records what a human decided about it. Neither is re-derivable from a
+re-scan, and both are the historical intelligence the system exists to
+accumulate. This is invariant 14.
+
+Note the interaction with §15.1: the feed's pagination problem is **not** solved
+by deleting emissions. It is solved by scoping the query. Deleting findings to
+make a query faster would trade the thing of value for the thing that is cheap.
+
+#### The mechanism
+
+Prune inside the scan sync, at the end of each successful run:
+
+```ts
+const SCAN_SNAPSHOT_RETENTION_DAYS = 180
+
+// After a successful scan, before finishing the sync_runs row.
+const cutoff = addUtcDays(utcToday(), -SCAN_SNAPSHOT_RETENTION_DAYS)
+const { count } = await supabase
+  .from('scan_page_snapshots')
+  .delete({ count: 'exact' })
+  .lt('captured_on', cutoff)
+```
+
+Chosen over the alternatives for concrete reasons:
+
+- **Not `pg_cron`.** It may or may not be enabled on this project — unverified —
+  and it would put the retention rule somewhere no repo file describes, which is
+  precisely the divergence class that produced §12 and the `0012`/`0014`
+  migration failures.
+- **Not a separate cron route.** A seventh scheduled job to delete rows from a
+  table one other job writes, with its own auth, failure mode, and health-panel
+  absence. The write and its cleanup belong together.
+- **Inside the sync, after success only.** If the scan failed, the day's rows do
+  not exist and there is nothing to balance; pruning on a failed run would delete
+  history while adding none. Self-limiting: no scan, no prune, and the table
+  simply stops growing.
+
+Three implementation requirements:
+
+1. **Report the pruned count in the cron response body**, alongside
+   `recordsProcessed`. Vercel does not surface `console.error` from cron routes
+   (§3.4), so a silent delete is an invisible delete. This is the only way to
+   see it working — or to notice it deleting far more than expected.
+2. **A prune failure must not fail the run.** The scan succeeded; the data is
+   written. Wrap it, record the failure in `administrator_message`, and let the
+   run stand as `success`. A table growing past its retention window is a
+   nuisance; a scan marked failed because a cleanup query timed out is a false
+   alarm on the health panel.
+3. **The constant lives in code, next to the delete**, and is restated in the
+   `0024` migration as a comment. There is no migrate runner to enforce
+   agreement between them, so the comment is documentation, not a mechanism.
+
+#### First prune is 180 days out
+
+The delete is a no-op until the table holds rows older than the window, so it
+will do nothing for the first six months. That is worth stating plainly: **the
+first real prune is unobserved for 180 days**, and the day it first deletes
+something is the day a bug in it would first show. The count in the response body
+is what makes that day visible rather than silent.
 
 ---
 
 ## 18. The three scans
 
 Every proposed detector below is a pure function over snapshot rows, sets
-`needsScan: true`, and emits category `site_health`.
+`needsScan: true`, and emits category `search_intelligence` with the discipline
+and family assigned to it in the §17.4 registry.
 
 Sections map to phases: **§18.1 and §18.4 are Phase 2b**, **§18.2 is Phase 2c**,
 **§18.3 is Phase 2d**. See §14.1 for why that order is binding.
@@ -1333,7 +1628,10 @@ These exist only because scan rows and GSC rows arrive in the same
 `indexed-but-broken` is the single best argument for the architecture in §16.
 Neither data source can produce it alone, and it is the only proposed detector
 that would plausibly warrant category `needs_attention` rather than
-`site_health` — which is worth deciding rather than defaulting.
+`search_intelligence` — which is worth deciding rather than defaulting. Note that
+routing it to `needs_attention` would pull it out of the SEO section the §17.4
+taxonomy otherwise places it in; severity and discipline are different axes, and
+the category can only express one of them.
 
 ---
 
@@ -1378,37 +1676,30 @@ chosen rather than overlooked.
 | S6 | **Crawler activity is never presented as citation evidence.** Binding on all surfaces, titles, descriptions, and recommended actions. | §18.3 |
 | S7 | **Internal only.** No client report path is touched in any phase of Phase 2. | §14, §19 |
 | S8 | **Single-tenant.** No `client_id` on any new table. | §14 |
+| S9 | **The §15.2 output shift is accepted**, on condition that the prior baseline is captured, an `intel_events` `methodology_change` row marks the cutover, and the corrected output becomes the new baseline. Invariant 13. | §15.2 |
+| S10 | **`scan_page_snapshots` retains 180 days.** Pruned inside the scan sync after a successful run, count reported in the response body. Findings, finding state, and resolution history do **not** inherit this policy. Invariant 14. | §17.6 |
+| S11 | **One top-level category: `search_intelligence`.** No separate top-level `seo` / `aeo` / `geo`. Discipline and detector family carry the sub-identity via a code-side registry, denormalized to unconstrained `text` columns. The UI may still render SEO, AEO, and GEO as separate sections. | §17.4 |
 
-### 20.2 Open — needed before implementation starts
+**No blocking architecture decisions remain.** Implementation of Phase 2a can
+begin on approval.
 
-Five items. The first three are blocking.
+### 20.2 Open — none blocking
 
-**Blocking**
+Four items, all safely settled during Phase 2a as the relevant code is written.
 
-1. **Confirm Phase 2a's visible side effect is acceptable.** §15.2 will change
-   existing detector output once — findings sitting near a threshold will appear
-   or disappear when the zero-filled trailing day drops out of the window. That
-   is a live surface changing, and it should be expected rather than diagnosed
-   as a regression after the fact.
-2. **Retention on `scan_page_snapshots`, decided now.** A window (90 days? 180?)
-   or a scheduled delete, written into `0024` rather than added later. This is
-   the one chance not to repeat §4.4 and §12.3.
-3. **One category or three.** `site_health` alone, or `seo` / `aeo` / `geo`.
-   Three gives cleaner separation and worse Overview density — seven sections on
-   a page that already runs seven queries. I lean to one.
-
-**Non-blocking — can be settled during Phase 2a**
-
-4. **Crawl budget and concurrency.** 300s `maxDuration` and 4–6 parallel fetches
+1. **Crawl budget and concurrency.** 300s `maxDuration` and 4–6 parallel fetches
    against your own origin, on the Sanity-backed sitemap. Confirm the URL count
-   is what you expect before sizing this.
-5. **`indexed-but-broken` category.** It is the most severe finding in the
-   system and arguably belongs in `needs_attention`, not `site_health` — which
-   partly undercuts the clean source split in §17.4. Worth deciding deliberately.
-6. **`thin-page` threshold.** Needs a number, and the number is a judgment call
-   about your own content.
-7. **Score normalization (§15.4).** Ship on the pragmatic answer — categories
-   instead of comparable scores — or fix it properly first.
+   is what you expect before sizing this. Needed at the start of Phase 2b, not 2a.
+2. **`indexed-but-broken` category.** The most severe finding in the system, and
+   arguably `needs_attention` rather than `search_intelligence`. Severity and
+   discipline are different axes and `category` can only express one — see §18.4.
+   Phase 2b.
+3. **`thin-page` threshold.** Needs a number, and the number is a judgment call
+   about your own content. Phase 2b.
+4. **Score normalization (§15.4).** Ship on the pragmatic answer — the category
+   split — or fix it properly. The §17.4 taxonomy narrows this: findings now
+   compete within a discipline section rather than across all of
+   `search_intelligence`, which reduces the blast radius without solving it.
 
 **Known risks accepted by this plan**
 
