@@ -4,10 +4,14 @@ How Vizantir turns Search Console data into operator decisions. Written 2026-09-
 by reading the source at `bc1ab1e`. Every claim below is traceable to a file and
 line; claims that could not be confirmed in source are marked **unverified**.
 
-This document describes the system as built. For status, open risks, and
-priorities see `docs/intel/PLAN.md` — where the two disagree, this document was
-checked against source more recently and Section 12 lists the specific
-disagreements.
+This document is two things. **Sections 1–13 describe the system as built** and
+are verified against source. **Sections 14–20 are a Phase 2 proposal** — nothing
+in them exists yet, and no production code has been written against them. The
+boundary is marked explicitly.
+
+For status, open risks, and priorities see `docs/intel/PLAN.md` — where the two
+disagree, this document was checked against source more recently and Section 12
+lists the specific disagreements.
 
 ---
 
@@ -777,3 +781,644 @@ Rules that hold today and should be preserved deliberately rather than by accide
 | `0019_care_tier_growth` unapplied | **Unverified.** Same |
 | Row counts, backfill completeness | **Unverified.** Not in the repo |
 | Vercel env matrix | **Unverified.** Not in the repo |
+
+---
+---
+
+# Part II — Phase 2 proposal
+
+**Nothing below this line exists.** Sections 14–20 are a proposal, written
+2026-09-09. No production code has been written against them and none should be
+until Section 20 is signed off.
+
+---
+
+## 14. Scope and decisions of record
+
+Phase 2 adds three scan types — SEO, AEO, GEO — to the Intel pipeline. Four
+decisions were taken 2026-09-09 and are recorded here so later readers can see
+what was chosen and what was rejected.
+
+| Decision | Choice | Rejected alternative |
+|---|---|---|
+| Tenancy | **Vizantir-only.** Single-tenant, no `client_id` on any new table. | Multi-tenant from the start; schema-ready-but-unused `client_id` |
+| Findings storage | **Reuse `decision_items` + `finding_state`**, with a new category so scan findings render as their own section. | Separate `scan_findings` tables |
+| Client exposure | **Internal only.** No report path touched. | Add to Care/Growth reports; snapshot-shaped for later |
+| Scan types | **All three** — SEO, AEO, GEO | Any subset |
+
+Choosing all three makes Section 15 non-optional: the four defects in §12 are
+inherited and amplified by every detector added, and two of them become
+load-bearing rather than latent.
+
+### 14.1 Implementation order
+
+**This order is binding.** Each phase completes and is confirmed in production
+before the next begins. The sequence is not arbitrary: 2a removes defects that
+every later phase would inherit, and 2b builds the fetch-and-parse infrastructure
+that 2c and 2d both depend on.
+
+| Phase | Scope | Depends on | Section |
+|---|---|---|---|
+| **2a** | Fix the existing Intel defects found in the architecture review. No new detectors. | — | §15 |
+| **2b** | Deterministic **SEO** scanning and findings. Builds `lib/scan/*`, both snapshot tables, the cron, and the first detectors. | 2a | §18.1, §18.4 |
+| **2c** | Deterministic **AEO** scanning and findings. Adds schema extraction and the route-to-expected-types map. | 2b | §18.2 |
+| **2d** | **GEO** foundations and AI crawler visibility. | 2b | §18.3 |
+
+Why this order and not another:
+
+- **2a first** because §15.1 and §15.2 are silent failure modes. Adding detectors
+  on top of an unpaginated feed and a misaligned window means new findings that
+  quietly never appear, diagnosed later at much greater cost.
+- **2b before 2c and 2d** because SEO is the only scan that is purely
+  deterministic end to end. It builds the fetcher, the parser, the snapshot
+  tables, and the cron — infrastructure both later phases reuse. It is also the
+  phase whose findings are least arguable, which makes it the right place to
+  calibrate noise levels before adding anything with judgment in it.
+- **2c before 2d** only because AEO reuses the page-level parse output directly,
+  where GEO is mostly site-level and touches a separate existing table
+  (`crawler_hits`). The two are close to independent and could swap if
+  something forces it.
+
+Each phase is independently shippable. Stopping after 2b leaves a working,
+useful system — that is a deliberate property of the split, not a coincidence.
+
+---
+
+## 15. Phase 2a — prerequisite fixes
+
+These are the §12 defects that Phase 2 makes worse. They should land, and be
+confirmed in production, **before** any scan code is written. None of them are
+scan work; all of them are cheap relative to what they prevent.
+
+### 15.1 Paginate the decision feed — blocking
+
+`fetchDecisionFeed` (`feed.ts:313-317`) has no `.range()` and no `.limit()`, so
+PostgREST's 1 000-row default silently truncates, and nothing prunes
+`decision_items`. Phase 2 adds roughly six detectors to the existing three, and
+`scan_page_snapshots` will drive per-URL findings rather than per-group ones —
+the emission rate goes from single digits per day to potentially dozens.
+
+Two changes, both required:
+
+1. Page the query, or scope it to recent `period_end` values rather than loading
+   all history. The feed only ever uses the latest emission per `finding_key`,
+   so loading every historical emission to throw nearly all of them away is
+   wasted work regardless of the cap.
+2. Add retention. A finding whose latest emission is older than some window is
+   not being surfaced anyway; its emission history is audit data, not feed data.
+
+This is the one item I would not start Phase 2 without. The failure mode is
+silent — findings stop appearing, the feed still renders, nothing errors.
+
+### 15.2 Align the detector window with the display window — blocking
+
+`completedPeriodEnd` (`run.ts:49`) caps at today−1, which never binds; detectors
+run on a window ending today−2, the zero-filled day the display layer excludes
+(§12.1). Every new detector inherits this.
+
+Fix by having `run.ts` call `latestCompleteDay` from `lib/intel/search-params.ts`
+rather than its own local helper, so there is one implementation of the rule.
+
+**This changes existing detector output.** Dropping the zero-filled trailing day
+raises 28-day group impressions and CTR slightly, so findings sitting near a
+threshold may appear or disappear once. That is a visible change on a production
+surface and should be expected rather than treated as a regression.
+
+### 15.3 Teach the health panel and activity feed about new providers — blocking
+
+`SYNC_PROVIDERS` (`sync-health.ts:5`) and `SyncProvider` (`activity.ts:38`) are
+four-value unions; `psi` and `gbp` rows are already written and silently
+discarded (§12.2). A `scan` provider added the same way would be equally
+invisible — a scan cron could fail every day with nothing on the dashboard.
+
+Fix `psi` and `gbp` at the same time. They are the same one-line-per-file change
+and leaving them broken while adding a third instance of the same bug is not
+defensible.
+
+### 15.4 Decide what to do about score scales — not blocking
+
+§12.4: the three existing detectors emit incomparable scores into one ranked
+section. The chosen category split (§14) sidesteps this for scan findings by
+giving them their own section, but does **not** fix it for the existing three,
+and does not stop the six new scan detectors from being mutually incomparable
+within their own section.
+
+The principled fix is normalizing score to a common scale before ranking. The
+pragmatic fix is accepting that ranking is within-detector-ish and leaning on
+categories. Phase 2 can ship on the pragmatic answer; it should do so knowingly.
+
+---
+
+## 16. The central constraint
+
+**Invariant 1 says detectors are pure functions with no I/O. Scans are nothing
+but I/O.** This is the one real architectural problem in Phase 2, and the whole
+design follows from how it is resolved.
+
+The resolution is to not make scans detectors. Mirror the shape the GSC pipeline
+already uses:
+
+```
+                    ── existing ──                    ── proposed ──
+
+  I/O, cron      lib/gsc/sync.ts                  lib/scan/sync.ts
+                        │                                │
+  raw storage    gsc_site_daily                   scan_site_snapshots
+                 gsc_query_page_daily             scan_page_snapshots
+                        │                                │
+  pure load      grouping.ts                      lib/scan/load.ts
+                        └──────────┬─────────────────────┘
+                                   ▼
+  pure detect            detectors/*  ── detect(input): Finding[]
+                                   │
+                                   ▼
+                    decision_items ──FK──▶ finding_state
+                                   │
+                                   ▼
+                                /intel
+```
+
+Fetching, parsing, and HTTP failure handling happen in a cron-driven sync that
+writes observations to Postgres. Detectors then read those observations out of
+`DetectorInput` exactly as they read GSC rows today. No detector ever makes a
+network call.
+
+Two consequences worth stating:
+
+- **Detectors stay testable and deterministic.** A scan detector is a pure
+  function over a snapshot row, same as `buried-demand` is over a group rollup.
+- **Cross-source detectors become possible and cheap.** Because GSC rows and
+  scan rows arrive in the same `DetectorInput`, a detector can join them. §18.4
+  is where this pays off, and it is the strongest argument for the reuse
+  decision taken in §14.
+
+### `DetectorInput` extension
+
+Follow the `needsComparison` idiom exactly rather than inventing a new one:
+
+```ts
+type DetectorInput = {
+  // ... existing fields unchanged
+  scanAvailable: boolean
+  scan?: {
+    capturedOn: string
+    pages: PageSnapshot[]
+    site: SiteSnapshot
+  }
+}
+
+type Detector = {
+  name: string
+  needsComparison?: boolean
+  needsScan?: boolean          // new — skipped when scanAvailable is false
+  detect(input: DetectorInput): Finding[]
+}
+```
+
+`scan` is optional and `needsScan` defaults falsy, so the three existing
+detectors compile and behave unchanged. `run.ts` skips `needsScan` detectors when
+no snapshot exists for the period, the same way it already skips
+`needsComparison` ones (`run.ts:414`).
+
+Unlike `needsComparison` — which no detector currently sets, so the branch is
+dead — `needsScan` will be exercised from day one, including on the first run
+before any scan has happened.
+
+---
+
+## 17. New infrastructure
+
+### 17.1 Migrations
+
+Order is load-bearing. Per invariant 12, the constraint widening must be applied
+and **verified** before any code writes a row that depends on it.
+
+**`0023_scan_constraints.sql`** — constraints only, no tables:
+
+```sql
+alter table public.sync_runs drop constraint if exists sync_runs_provider_check;
+alter table public.sync_runs add constraint sync_runs_provider_check
+  check (provider in ('ga4','gsc','clarity','decisions','psi','gbp','scan'));
+
+alter table public.decision_items
+  drop constraint if exists decision_items_category_check;
+alter table public.decision_items add constraint decision_items_category_check
+  check (category in ('needs_attention','working','opportunity','system','site_health'));
+```
+
+Note this restates `psi` and `gbp`, which per §9 may never have been applied.
+Applying `0023` therefore also repairs that, and the verification query in
+§17.5 will show whether it was needed.
+
+**`0024_scan_snapshots.sql`** — tables, RLS, and explicit grants (invariant 10).
+
+```sql
+create table if not exists public.scan_page_snapshots (
+  id               bigint generated always as identity primary key,
+  captured_on      date    not null,
+  url              text    not null,
+  http_status      integer,
+  redirected_to    text,
+  title            text,
+  meta_description text,
+  h1               text,
+  canonical        text,
+  robots_noindex   boolean not null default false,
+  word_count       integer,
+  schema_types     text[]  not null default '{}',
+  internal_links   integer,
+  fetch_ms         integer,
+  error_reason     text,
+  created_at       timestamptz not null default now(),
+  constraint scan_page_snapshots_slice_key unique (url, captured_on)
+);
+
+create table if not exists public.scan_site_snapshots (
+  id                 bigint generated always as identity primary key,
+  captured_on        date    not null,
+  robots_status      integer,
+  sitemap_status     integer,
+  sitemap_url_count  integer,
+  llms_txt_status    integer,
+  llms_full_status   integer,
+  llms_missing_urls  integer,
+  error_reason       text,
+  created_at         timestamptz not null default now(),
+  constraint scan_site_snapshots_day_key unique (captured_on)
+);
+```
+
+`unique (url, captured_on)` and `unique (captured_on)` mirror the
+`gbp_snapshots (gbp_place_id, captured_on)` pattern already in the codebase, so
+a re-run on the same day upserts rather than duplicating.
+
+**Retention is part of `0024`, not a later thought.** `scan_page_snapshots` grows
+by one row per URL per day forever. At ~60 sitemap URLs that is ~22 000 rows a
+year — not alarming, but it is the same unbounded shape as §12.3 and §4.4, and
+this is the moment to not repeat it. Either a scheduled delete or a documented
+retention window, decided in §20.
+
+**`error_reason` is a column, not a dropped row.** A URL that failed to fetch
+must be storable as a failure rather than absent, or "the scan did not run" and
+"this page is down" become indistinguishable — the same distinction invariant 4
+protects for zero versus null.
+
+### 17.2 Modules
+
+Each mirrors an existing file so the patterns are already established:
+
+| New module | Mirrors | Responsibility |
+|---|---|---|
+| `lib/scan/frontier.ts` | — | URL list to crawl, read from the site's own `/sitemap.xml` |
+| `lib/scan/fetch.ts` | `lib/gsc/client.ts` | One page fetch, closed failure union, no throwing |
+| `lib/scan/parse.ts` | — | Pure HTML → `PageObservation`. No I/O, no network |
+| `lib/scan/sync.ts` | `lib/gsc/sync.ts` | Orchestration, `sync_runs`, chunked upserts, partial status |
+| `lib/scan/load.ts` | `decisions/grouping.ts` | Read snapshots for a date into `DetectorInput` |
+| `app/api/cron/scan/route.ts` | `app/api/cron/gsc-sync/route.ts` | Bearer auth, errors in the response body |
+
+**The frontier comes from `app/sitemap.ts`**, fetched over HTTP as
+`/sitemap.xml` rather than imported. Two reasons: it exercises the same artifact
+Google consumes, so a broken sitemap is itself a finding; and importing it would
+pull Sanity fetching into the scan process. `app/sitemap.ts` has
+`revalidate = 3600` and hand-maintained `lastmod` dates whose staleness the doc
+comment already flags as consequential — a scan is the natural place to detect
+that drift.
+
+`lib/scan/parse.ts` must be pure and separately testable. It is the only place
+in Phase 2 where a subtle bug produces plausible-looking wrong findings rather
+than a visible failure.
+
+### 17.3 Cron
+
+Add to `vercel.json`:
+
+```json
+{ "path": "/api/cron/scan", "schedule": "0 7 * * *" }
+```
+
+07:00 UTC, ahead of every existing job. It must complete before `/api/cron/decisions`
+at 10:00 so detectors see the same day's snapshot; three hours is generous
+headroom for the slowest job in the system.
+
+It also needs a `functions` entry. Page fetching is far slower than any existing
+sync — at ~60 URLs and a few hundred milliseconds each, sequential execution
+exceeds the default limit:
+
+```json
+"app/api/cron/scan/route.ts": { "maxDuration": 300 }
+```
+
+Bounded concurrency (4–6 parallel fetches) rather than sequential, and rather
+than unbounded — this is the site fetching itself, and an unbounded fan-out from
+a 2048MB function against your own origin is a self-inflicted load spike.
+
+### 17.4 The new category
+
+`site_health` is proposed for the new `DECISION_CATEGORIES` value.
+
+Being straight about what this is: the existing four categories are *semantic* —
+they describe what the operator should do (`needs_attention`, `opportunity`,
+`working`, `system`). `site_health` is closer to a *source* bucket, and adding
+it slightly breaks that scheme. Its real job is presentational: keeping scan
+findings from competing against GSC findings on incomparable score scales
+(§12.4, §15.4).
+
+That is a legitimate reason, but it is a workaround for a ranking problem, not a
+taxonomy improvement. Named `site_health` rather than `scan` it at least reads
+as a category an operator would recognize. Whether it should instead be three
+categories — `seo`, `aeo`, `geo` — is left open in §20; three would add seven
+total sections to the Overview, which is a lot of vertical space for a page that
+already fans out seven queries.
+
+### 17.5 Verification after applying
+
+Per invariant 11, applying a migration file does not prove every statement ran:
+
+```sql
+select conname, pg_get_constraintdef(oid)
+from pg_constraint
+where conrelid = 'public.sync_runs'::regclass and contype = 'c';
+
+select conname, pg_get_constraintdef(oid)
+from pg_constraint
+where conrelid = 'public.decision_items'::regclass and contype = 'c';
+
+select count(*) from public.scan_page_snapshots;
+select count(*) from public.scan_site_snapshots;
+```
+
+The first two must show `scan` and `site_health` respectively. If they do not,
+the scan cron will fail closed at its opening `sync_runs` insert and no scan
+will ever run.
+
+---
+
+## 18. The three scans
+
+Every proposed detector below is a pure function over snapshot rows, sets
+`needsScan: true`, and emits category `site_health`.
+
+Sections map to phases: **§18.1 and §18.4 are Phase 2b**, **§18.2 is Phase 2c**,
+**§18.3 is Phase 2d**. See §14.1 for why that order is binding.
+
+### 18.1 Phase 2b — SEO: technical and on-page
+
+Fully deterministic. No external API, no judgment, cheapest to verify.
+
+Per-page observations: HTTP status, redirect target, title, meta description,
+first `h1`, canonical, `robots` noindex, word count, internal link count.
+
+| Detector | Fires when | Why it matters |
+|---|---|---|
+| `sitemap-contradiction` | A URL in `sitemap.xml` returns non-200, redirects, or is `noindex` | The site is telling Google to crawl something it then refuses to serve. Unambiguous, and always a defect |
+| `metadata-gap` | Missing or empty title, meta description, or `h1`; duplicate title across URLs | Deterministic and directly actionable |
+| `thin-page` | Word count below a threshold on an indexable sitemap URL | Needs a threshold decision; noisier than the other two |
+
+`sitemap-contradiction` is the highest-value detector in Phase 2 and the one I
+would build first. It is unambiguous, cheap, and the sitemap is already
+hand-maintained in `app/sitemap.ts` in a way that invites drift.
+
+### 18.2 Phase 2c — AEO: structured data
+
+The site already generates JSON-LD centrally: `lib/schema/index.ts` exports 16
+builders (`faqSchema`, `articleSchema`, `breadcrumbSchema`, `serviceSchema`, and
+so on), and `/schema-debug/[[...path]]` already renders what a given path emits.
+
+That makes the valuable AEO check **drift between intent and output**, not
+presence:
+
+| Detector | Fires when | Why it matters |
+|---|---|---|
+| `schema-drift` | A page's rendered JSON-LD is absent, unparseable, or missing a type its route is built to emit | The builders exist; the failure mode is a page that stopped rendering one. Invisible without a scan |
+
+**`schema-drift` is in scope for Phase 2c and stays in scope**, including the
+work of building the route-to-expected-types map. That map is the largest single
+unknown in the plan and the most likely source of schedule slip — it is not
+derivable automatically and has to be written by reading the existing schema
+files: `app/landing-pages/_schema.tsx`, `app/las-vegas-web-design/_schema.tsx`,
+`app/website-redesign-las-vegas/_schema.tsx`,
+`app/landing-pages/_lib/build-schema.tsx`, and the call sites of the builders in
+`lib/schema/index.ts`.
+
+That cost is accepted deliberately. Without the map, `schema-drift` degrades to
+"is there any JSON-LD on this page", which the site would pass everywhere while
+still being broken in the way that matters — a route that silently stopped
+emitting `FAQPage` or `BlogPosting` renders valid, parseable JSON-LD of the
+wrong shape. Presence-only checking would report that as healthy. The map is
+what makes the detector worth building at all.
+
+Mitigation for the slip risk: the map can start partial. A route absent from the
+map is simply not checked, so Phase 2c can ship covering the highest-value routes
+(services, landing pages, blog posts, case studies) and grow coverage later
+without any schema or detector change.
+
+#### `answer-gap` is excluded from Phase 2
+
+Passage-level answerability — a heading phrased as a question with no answer
+paragraph nearby — was considered and is **out of scope for the whole of
+Phase 2**, not deferred within it.
+
+The reason is a standard this codebase already holds elsewhere. Every existing
+detector fires on a stated numeric threshold that can be argued about explicitly:
+impressions ≥ 100, position > 40, CTR < 0.5%. `answer-gap` has no equivalent.
+"Close proximity", "phrased as a question", and "answers it" are all judgment
+calls dressed as rules, and a detector that fires on judgment produces findings
+an operator cannot evaluate — which is precisely the noise the §6 design
+deliberately avoids.
+
+It becomes eligible for a later phase only if a defensible deterministic scoring
+method is established first — a stated rule, with stated bounds, that a person can
+disagree with concretely. Absent that, it stays out.
+
+### 18.3 Phase 2d — GEO: foundations and AI crawler visibility
+
+#### Crawler activity is not citation. This distinction is load-bearing.
+
+`crawler_hits` records that a named bot fetched `/robots.txt` (§11.1). Read
+precisely, one row is evidence of exactly one thing: **a crawler belonging to
+that platform made an HTTP request to this site.**
+
+It is not evidence, and must never be presented as evidence, that:
+
+- the site's pages were crawled beyond `/robots.txt`
+- any page was ingested into a training corpus or a retrieval index
+- an answer engine retrieved a Vizantir page while composing an answer
+- ChatGPT, Gemini, Perplexity, Google AI Overviews, or Bing Copilot **cited,
+  linked, quoted, or named Vizantir** in any response
+- any human being saw the brand in an AI-generated answer
+
+The chain from a robots.txt fetch to a citation a person actually reads has at
+least six links:
+
+```
+robots.txt fetch  →  page crawl  →  index/corpus inclusion  →
+retrieval at query time  →  citation in a rendered answer  →  user impression
+        ▲
+   crawler_hits observes THIS ONE ONLY
+```
+
+Every link after the first is unobserved by this system, and the drop-off across
+them is both large and unknowable from our side. A platform can crawl daily and
+cite never. A platform can cite from a corpus crawled months ago while showing
+no recent hits at all. **The correlation between the two ends of that chain is
+not established, and Phase 2 must not imply it is.**
+
+Measuring genuine citation visibility requires something categorically different
+from what Phase 2 builds — referral traffic attributed to AI surfaces, direct
+prompt testing against each platform on a fixed question set, or a third-party AI
+visibility API. **None of those are in Phase 2, and Phase 2 does not approximate
+them.**
+
+Two rules follow, and they are binding on implementation:
+
+1. **No GEO surface, detector title, description, or `recommendedAction` may use
+   the words "cited", "citation", "mentioned", or "AI visibility" to describe
+   `crawler_hits` data.** The honest vocabulary is "crawler activity", "crawler
+   visits", and "crawler accessibility".
+2. **The existing panel copy is the standard to hold.** `AiPlatformsPanel.tsx:19`
+   currently reads "Crawler visits to robots.txt in the last 30 days. A proxy for
+   AI…" — accurate about both the source and its status as a proxy. Anything
+   added in Phase 2d must be at least that careful.
+
+This restraint is the same one §1 describes for the detectors generally: the
+system surfaces facts that deserve a human decision, and refuses to dress a weak
+signal as a strong one. Presenting crawler hits as citation evidence would be the
+single most misleading thing this system could do — and the most tempting, because
+it is the number a client would most want to hear.
+
+#### What Phase 2d actually builds
+
+`app/llms.txt` and `app/llms-full.txt` both already exist, so presence checks are
+trivially satisfied and not worth building. The useful checks are consistency
+and accessibility.
+
+| Detector | Fires when | Why it matters |
+|---|---|---|
+| `llms-drift` | URLs present in `sitemap.xml` are absent from `llms-full.txt`, or either file returns non-200 | Two hand-maintained inventories of the same site drift apart silently |
+| `crawler-absence` | A platform with prior `crawler_hits` history records zero hits in the current 30-day window | A crawler that **stopped requesting robots.txt** is a signal worth a look. It says nothing about whether that platform ever cited the site, or still does |
+
+Note the wording of `crawler-absence` carefully. It detects a change in crawler
+request behaviour and nothing more. Its finding text must describe it that way —
+a platform going quiet is a prompt to investigate accessibility, not a report of
+lost citations.
+
+**Per-path crawler tracking stays deferred.** Doing it properly means widening
+`proxy.ts` — whose matcher is currently `'/'` — to every path, and calling
+`recordCrawlerHit` with a real path instead of the hardcoded `'/robots.txt'`
+(`crawlers.ts:98`). That puts a database write in the request path of every page
+view from a matched bot, on a table with no pruning, behind a proxy that
+currently does almost nothing.
+
+The cost is real and immediate; the payoff is incremental over the robots.txt
+proxy already in place. Critically, it would **not** close the gap described
+above — knowing which pages a crawler fetched still tells us nothing about
+retrieval or citation. It moves one link along a six-link chain. That is why it
+is deferred rather than prioritized: it is more expensive than it looks and
+buys less than it appears to.
+
+`crawler-absence` and `llms-drift` together extract most of the available value
+from `crawler_hits` as it already exists, with no ingest change at all.
+
+### 18.4 Phase 2b — cross-source detectors, the payoff
+
+These exist only because scan rows and GSC rows arrive in the same
+`DetectorInput`. They are the concrete return on the §14 decision to reuse
+`decision_items` rather than build a separate scan store.
+
+| Detector | Fires when | Why it matters |
+|---|---|---|
+| `indexed-but-broken` | A URL with GSC impressions in the window returns non-200 or `noindex` in the latest scan | Google is sending people to a page the site no longer serves. Highest-severity finding available in the whole system |
+| `demand-without-page` | A `within-reach` query's `topPage` fails its scan | Connects a ranking opportunity to a concrete technical cause |
+
+`indexed-but-broken` is the single best argument for the architecture in §16.
+Neither data source can produce it alone, and it is the only proposed detector
+that would plausibly warrant category `needs_attention` rather than
+`site_health` — which is worth deciding rather than defaulting.
+
+---
+
+## 19. What Phase 2 does not touch
+
+Stated explicitly because the isolation is the reason the plan is safe to ship
+incrementally.
+
+- **No client report changes.** No report code path reads `gsc_site_daily`,
+  `decision_items`, `finding_state`, or the new scan tables. `lib/reports/gsc.ts`
+  is an independent implementation (§10) and is not modified.
+- **No `REPORT_SNAPSHOT_VERSION` bump.** Snapshots stay at version 2 and remain
+  immutable. No regenerated report changes.
+- **No `clients` table changes.** `care_tier` is untouched; the
+  `essential`-skips-GSC behavior is unchanged.
+- **No `client_id` anywhere in Phase 2.** Both new tables are single-tenant, in
+  line with the §14 decision.
+- **No new external credential.** Scans fetch the public site over HTTP. No API
+  key, and no additional exposure on `GSC_SERVICE_ACCOUNT_KEY`.
+- **No change to the GSC ingest path.** `lib/gsc/*` is read-only from Phase 2's
+  perspective. §15.2 changes `run.ts`, not the sync.
+
+The one shared surface is `/intel` itself: the Overview grows a section, and the
+decision feed carries more findings. That is the intended change.
+
+---
+
+## 20. Decisions
+
+### 20.1 Settled — do not relitigate without a stated reason
+
+These are decided. They are recorded here so a later reader can see they were
+chosen rather than overlooked.
+
+| # | Decision | Where |
+|---|---|---|
+| S1 | **Implementation order is 2a → 2b → 2c → 2d**, each confirmed in production before the next starts. | §14.1 |
+| S2 | **Phase 2a fixes existing Intel defects first.** No new detectors until §15.1–§15.3 are live and verified. | §15 |
+| S3 | **`answer-gap` is out of Phase 2 entirely.** It becomes eligible only if a defensible deterministic scoring method — a stated rule with stated bounds — is established first. | §18.2 |
+| S4 | **`schema-drift` stays in scope**, including the cost of hand-building the route-to-expected-schema-type map from the existing schema files. The map may start partial and grow. | §18.2 |
+| S5 | **Per-path crawler tracking stays deferred.** It is more expensive than it looks and moves one link along a six-link chain. | §18.3 |
+| S6 | **Crawler activity is never presented as citation evidence.** Binding on all surfaces, titles, descriptions, and recommended actions. | §18.3 |
+| S7 | **Internal only.** No client report path is touched in any phase of Phase 2. | §14, §19 |
+| S8 | **Single-tenant.** No `client_id` on any new table. | §14 |
+
+### 20.2 Open — needed before implementation starts
+
+Five items. The first three are blocking.
+
+**Blocking**
+
+1. **Confirm Phase 2a's visible side effect is acceptable.** §15.2 will change
+   existing detector output once — findings sitting near a threshold will appear
+   or disappear when the zero-filled trailing day drops out of the window. That
+   is a live surface changing, and it should be expected rather than diagnosed
+   as a regression after the fact.
+2. **Retention on `scan_page_snapshots`, decided now.** A window (90 days? 180?)
+   or a scheduled delete, written into `0024` rather than added later. This is
+   the one chance not to repeat §4.4 and §12.3.
+3. **One category or three.** `site_health` alone, or `seo` / `aeo` / `geo`.
+   Three gives cleaner separation and worse Overview density — seven sections on
+   a page that already runs seven queries. I lean to one.
+
+**Non-blocking — can be settled during Phase 2a**
+
+4. **Crawl budget and concurrency.** 300s `maxDuration` and 4–6 parallel fetches
+   against your own origin, on the Sanity-backed sitemap. Confirm the URL count
+   is what you expect before sizing this.
+5. **`indexed-but-broken` category.** It is the most severe finding in the
+   system and arguably belongs in `needs_attention`, not `site_health` — which
+   partly undercuts the clean source split in §17.4. Worth deciding deliberately.
+6. **`thin-page` threshold.** Needs a number, and the number is a judgment call
+   about your own content.
+7. **Score normalization (§15.4).** Ship on the pragmatic answer — categories
+   instead of comparable scores — or fix it properly first.
+
+**Known risks accepted by this plan**
+
+- `schema-drift` needs a route-to-expected-types map derived from the existing
+  `_schema.tsx` files. This is the largest unknown in the plan and the most
+  likely source of schedule slip.
+- `lib/scan/parse.ts` is the one component where a bug yields plausible wrong
+  findings rather than a visible failure. It should be pure and tested — noting
+  that the repo currently has no test runner at all, which is itself a decision
+  to make rather than inherit.
+- Scan findings will initially be noisy. Every existing detector was tuned
+  against real data after first run; these will need the same, and the first
+  week of output should be read as calibration rather than a work queue.
