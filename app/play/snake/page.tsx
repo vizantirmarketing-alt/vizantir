@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 }
 
 export default function SnakePage() {
-  return <GameStage game="snake" />
+  return (
+    <>
+      <h1 className="arcade-sr-only">SNAKE</h1>
+      <GameStage game="snake" />
+    </>
+  )
 }

@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 }
 
 export default function PongPage() {
-  return <GameStage game="pong" />
+  return (
+    <>
+      <h1 className="arcade-sr-only">PONG</h1>
+      <GameStage game="pong" />
+    </>
+  )
 }

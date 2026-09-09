@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 }
 
 export default function BreakoutPage() {
-  return <GameStage game="breakout" />
+  return (
+    <>
+      <h1 className="arcade-sr-only">BREAKOUT</h1>
+      <GameStage game="breakout" />
+    </>
+  )
 }

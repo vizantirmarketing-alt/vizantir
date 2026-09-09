@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 }
 
 export default function SwarmPage() {
-  return <GameStage game="swarm" />
+  return (
+    <>
+      <h1 className="arcade-sr-only">SWARM</h1>
+      <GameStage game="swarm" />
+    </>
+  )
 }

@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 }
 
 export default function StackPage() {
-  return <GameStage game="stack" />
+  return (
+    <>
+      <h1 className="arcade-sr-only">STACK</h1>
+      <GameStage game="stack" />
+    </>
+  )
 }
