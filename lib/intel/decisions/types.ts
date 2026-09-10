@@ -1,3 +1,4 @@
+import type { CrawlerWindow } from '@/lib/intel/crawlers'
 import type {
   DecisionCategory,
   DecisionConfidence,
@@ -64,6 +65,13 @@ export type DetectorInput = {
   scanAvailable: boolean
   /** The latest scan. Absent whenever scanAvailable is false. */
   scan?: ScanWindow
+  /**
+   * False when the crawler_hits summary could not be loaded. Follows the
+   * `scanAvailable` idiom exactly rather than inventing a new one.
+   */
+  crawlerAvailable: boolean
+  /** The current 30-day crawler window. Absent whenever crawlerAvailable is false. */
+  crawler?: CrawlerWindow
 }
 
 export type Finding = {
@@ -88,6 +96,11 @@ export type Detector = {
    * exercised from day one, including on the first run before any scan.
    */
   needsScan?: boolean
+  /**
+   * Skipped entirely when the crawler_hits summary could not be loaded, the
+   * same way needsScan detectors are skipped when scanAvailable is false.
+   */
+  needsCrawler?: boolean
   detect(input: DetectorInput): Finding[]
 }
 

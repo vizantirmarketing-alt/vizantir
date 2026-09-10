@@ -1,4 +1,5 @@
 import { buriedDemandDetector } from '@/lib/intel/decisions/detectors/buried-demand'
+import { crawlerAbsenceDetector } from '@/lib/intel/decisions/detectors/crawler-absence'
 import { demandWithoutPageDetector } from '@/lib/intel/decisions/detectors/demand-without-page'
 import { geoSignalDetector } from '@/lib/intel/decisions/detectors/geo-signal'
 import { indexedButBrokenDetector } from '@/lib/intel/decisions/detectors/indexed-but-broken'
@@ -29,4 +30,5 @@ export const DETECTORS: readonly Detector[] = [
 
   // Phase 2d. Category `search_intelligence`, discipline `geo`.
   llmsDriftDetector,
+  crawlerAbsenceDetector,
 ]

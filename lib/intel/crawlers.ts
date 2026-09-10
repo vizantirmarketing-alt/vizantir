@@ -16,6 +16,30 @@ export const CRAWLER_PLATFORM_ORDER = [
 
 export type CrawlerPlatformId = (typeof CRAWLER_PLATFORM_ORDER)[number]
 
+export const CRAWLER_ABSENCE_PLATFORMS = [
+  'openai',
+  'perplexity',
+  'anthropic',
+  'google',
+  'microsoft',
+] as const satisfies readonly Exclude<CrawlerPlatformId, 'other'>[]
+
+export type CrawlerAbsencePlatformId = (typeof CRAWLER_ABSENCE_PLATFORMS)[number]
+
+export type CrawlerPlatformPresence = {
+  id: CrawlerPlatformId
+  label: string
+  hitsInWindow: number
+  hasPriorHistory: boolean
+  lastSeenBeforeWindowAt: string | null
+}
+
+export type CrawlerWindow = {
+  windowStart: string
+  windowEnd: string
+  platforms: CrawlerPlatformPresence[]
+}
+
 export const CRAWLER_PLATFORM_LABELS: Record<CrawlerPlatformId, string> = {
   openai: 'OpenAI',
   perplexity: 'Perplexity',
@@ -166,8 +190,44 @@ export async function fetchCrawlerFirstSeen(): Promise<FetchCrawlerFirstSeenResu
   }
 }
 
-function lookbackStartIso(): string {
-  return new Date(Date.now() - LOOKBACK_DAYS * DAY_MS).toISOString()
+function lookbackStartIso(nowMs: number = Date.now()): string {
+  return new Date(nowMs - LOOKBACK_DAYS * DAY_MS).toISOString()
+}
+
+const ABSENCE_BOTS: KnownBot[] = CRAWLER_ABSENCE_PLATFORMS.flatMap(
+  (platform) => [...BOTS_BY_PLATFORM[platform]],
+)
+
+export type LoadCrawlerWindowResult = CrawlerWindow | 'error'
+
+/**
+ * Current 30-day crawler window plus lifetime prior-history per named
+ * platform. Same LOOKBACK_DAYS / Date.now() bounds as
+ * fetchCrawlerPlatformOverview. Returns 'error' on query failure so run.ts
+ * can skip needsCrawler detectors the same way it skips needsScan ones.
+ */
+export async function loadCrawlerWindow(): Promise<LoadCrawlerWindowResult> {
+  const nowMs = Date.now()
+  const windowStart = lookbackStartIso(nowMs)
+  const windowEnd = new Date(nowMs).toISOString()
+
+  try {
+    const [current, prior] = await Promise.all([
+      fetchHitsSince(windowStart),
+      fetchHitsBefore(windowStart),
+    ])
+    if (current === null || prior === null) {
+      return 'error'
+    }
+    return {
+      windowStart,
+      windowEnd,
+      platforms: summarizeAbsencePlatforms(current, prior),
+    }
+  } catch {
+    console.error('Intel crawler query failed')
+    return 'error'
+  }
 }
 
 type ServiceClient = ReturnType<typeof createSupabaseServiceRole>
@@ -191,6 +251,34 @@ async function fetchHitsSince(since: string): Promise<CrawlerHitRow[] | null> {
     return null
   }
 
+  return parseHitRows(data)
+}
+
+/**
+ * One query for all five named platforms: every bot in those buckets with
+ * occurred_at before the window, newest first, same 10k cap as the current
+ * window. Folded in memory into per-platform last-seen. Not one query per
+ * platform and not the per-bot N+1 that botHasHitBefore uses.
+ */
+async function fetchHitsBefore(before: string): Promise<CrawlerHitRow[] | null> {
+  const supabase = createSupabaseServiceRole()
+  const { data, error } = await supabase
+    .from('crawler_hits')
+    .select('bot, occurred_at')
+    .in('bot', ABSENCE_BOTS)
+    .lt('occurred_at', before)
+    .order('occurred_at', { ascending: false })
+    .limit(RECENT_HIT_LIMIT)
+
+  if (error || !Array.isArray(data)) {
+    console.error('Intel crawler query failed')
+    return null
+  }
+
+  return parseHitRows(data)
+}
+
+function parseHitRows(data: readonly unknown[]): CrawlerHitRow[] {
   const hits: CrawlerHitRow[] = []
   for (const row of data) {
     if (typeof row !== 'object' || row === null) {
@@ -204,6 +292,56 @@ async function fetchHitsSince(since: string): Promise<CrawlerHitRow[] | null> {
     hits.push({ bot, occurredAt })
   }
   return hits
+}
+
+function summarizeAbsencePlatforms(
+  current: readonly CrawlerHitRow[],
+  prior: readonly CrawlerHitRow[],
+): CrawlerPlatformPresence[] {
+  const hitsInWindow: Record<CrawlerAbsencePlatformId, number> = {
+    openai: 0,
+    perplexity: 0,
+    anthropic: 0,
+    google: 0,
+    microsoft: 0,
+  }
+  const lastSeenBeforeWindowAt: Record<
+    CrawlerAbsencePlatformId,
+    string | null
+  > = {
+    openai: null,
+    perplexity: null,
+    anthropic: null,
+    google: null,
+    microsoft: null,
+  }
+
+  for (const hit of current) {
+    const platform = BOT_TO_PLATFORM[hit.bot]
+    if (platform === 'other') {
+      continue
+    }
+    hitsInWindow[platform] += 1
+  }
+
+  for (const hit of prior) {
+    const platform = BOT_TO_PLATFORM[hit.bot]
+    if (platform === 'other') {
+      continue
+    }
+    const currentLast = lastSeenBeforeWindowAt[platform]
+    if (currentLast === null || hit.occurredAt > currentLast) {
+      lastSeenBeforeWindowAt[platform] = hit.occurredAt
+    }
+  }
+
+  return CRAWLER_ABSENCE_PLATFORMS.map((id) => ({
+    id,
+    label: CRAWLER_PLATFORM_LABELS[id],
+    hitsInWindow: hitsInWindow[id],
+    hasPriorHistory: lastSeenBeforeWindowAt[id] !== null,
+    lastSeenBeforeWindowAt: lastSeenBeforeWindowAt[id],
+  }))
 }
 
 function aggregatePlatformRows(

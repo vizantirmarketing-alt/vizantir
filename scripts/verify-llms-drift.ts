@@ -87,6 +87,7 @@ function inputFor(scan: ScanWindow): DetectorInput {
     comparisonAvailable: true,
     scanAvailable: true,
     scan,
+    crawlerAvailable: false,
   }
 }
 
@@ -320,8 +321,9 @@ function main(): void {
     identity?.discipline === 'geo' && identity.family === 'ai-crawler-visibility',
   )
   assert(
-    'registry: crawler-absence is not registered',
-    detectorIdentity('crawler-absence') === null,
+    'registry: crawler-absence is geo / ai-crawler-visibility',
+    detectorIdentity('crawler-absence')?.discipline === 'geo' &&
+      detectorIdentity('crawler-absence')?.family === 'ai-crawler-visibility',
   )
   assert(
     'wiring: llms-drift is in DETECTORS once',

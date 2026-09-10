@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { loadCrawlerWindow } from '@/lib/intel/crawlers'
 import { DETECTORS } from '@/lib/intel/decisions/detectors'
 import { loadGroupingForSpan } from '@/lib/intel/decisions/grouping'
 import { detectorIdentity } from '@/lib/intel/decisions/registry'
@@ -414,16 +415,22 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
     const comparisonAvailable =
       coverageStartedOn !== null && prior.start >= coverageStartedOn
 
-    // A scan failure must NOT fail the whole run. The three GSC detectors do
-    // not use scan data, and stopping them because a scan table is missing or
-    // a scan query failed would be disproportionate — the same reasoning that
-    // makes a single failed GSC dimension set a partial rather than a failure
-    // (lib/gsc/sync.ts syncDailyWindow). needsScan detectors are skipped and
-    // the run reports partial with a typed message, so the problem is visible
-    // rather than silently rendered as "no scan yet".
-    const scanResult = await loadLatestScan()
+    // A scan or crawler_hits load failure must NOT fail the whole run. The
+    // three GSC detectors use neither, and stopping them because a scan table
+    // is missing or a crawler query failed would be disproportionate — the
+    // same reasoning that makes a single failed GSC dimension set a partial
+    // rather than a failure (lib/gsc/sync.ts syncDailyWindow). needsScan and
+    // needsCrawler detectors are skipped and the run reports partial with a
+    // typed message, so the problem is visible rather than silently rendered
+    // as "no scan yet" / no crawler data.
+    const [scanResult, crawlerResult] = await Promise.all([
+      loadLatestScan(),
+      loadCrawlerWindow(),
+    ])
     const scanFailed = scanResult === 'error'
     const scan = scanFailed ? null : scanResult
+    const crawlerFailed = crawlerResult === 'error'
+    const crawler = crawlerFailed ? null : crawlerResult
 
     const grouping = await loadGroupingForSpan(span)
     if (grouping === null) {
@@ -453,11 +460,18 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
       // provider_coverage.
       scanAvailable: scan !== null,
       ...(scan === null ? {} : { scan }),
+      // Query failure only. An empty crawler_hits table is valid data:
+      // every platform has no prior history, and the detector fires nothing.
+      crawlerAvailable: crawler !== null,
+      ...(crawler === null ? {} : { crawler }),
     }
 
     const failedSets: string[] = []
     if (scanFailed) {
       failedSets.push('scan snapshots (load_error)')
+    }
+    if (crawlerFailed) {
+      failedSets.push('crawler hits (load_error)')
     }
     let attempted = 0
 
@@ -466,6 +480,9 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
         continue
       }
       if (detector.needsScan === true && !input.scanAvailable) {
+        continue
+      }
+      if (detector.needsCrawler === true && !input.crawlerAvailable) {
         continue
       }
 
@@ -500,7 +517,8 @@ export async function runDecisionDetectors(): Promise<RunDecisionDetectorsResult
       }
     }
 
-    const detectorFailures = scanFailed ? failedSets.length - 1 : failedSets.length
+    const loadFailureCount = (scanFailed ? 1 : 0) + (crawlerFailed ? 1 : 0)
+    const detectorFailures = failedSets.length - loadFailureCount
     const status: RunDecisionDetectorsResult['status'] =
       failedSets.length === 0
         ? 'success'

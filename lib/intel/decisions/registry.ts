@@ -23,8 +23,8 @@ import type { DetectorFamily, Discipline } from '@/lib/intel/decision-params'
  * carries its own taxonomy and the two cannot drift apart.
  *
  * Only detectors that exist are registered. Phase 2c added `schema-drift`
- * (aeo/schema); Phase 2d added `llms-drift` (geo/ai-crawler-visibility).
- * `crawler-absence` is not registered yet. See §18.2 and §18.3.
+ * (aeo/schema); Phase 2d added `llms-drift` and `crawler-absence`
+ * (geo/ai-crawler-visibility). See §18.2 and §18.3.
  *
  * The three pre-existing GSC detectors — buried-demand, within-reach and
  * geo-signal — are intentionally absent. §17.4: they keep category
@@ -52,6 +52,7 @@ export const DETECTOR_REGISTRY = {
   'demand-without-page': { discipline: 'seo', family: 'technical' },
   'schema-drift': { discipline: 'aeo', family: 'schema' },
   'llms-drift': { discipline: 'geo', family: 'ai-crawler-visibility' },
+  'crawler-absence': { discipline: 'geo', family: 'ai-crawler-visibility' },
 } as const satisfies Record<string, DetectorIdentity>
 
 export type RegisteredDetector = keyof typeof DETECTOR_REGISTRY
