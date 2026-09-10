@@ -21,6 +21,14 @@ function tagsForType(type: unknown): string[] {
     return ['caseStudy']
   }
 
+  if (type === 'service') {
+    return ['service']
+  }
+
+  if (type === 'faq') {
+    return ['faq']
+  }
+
   return ['post']
 }
 
