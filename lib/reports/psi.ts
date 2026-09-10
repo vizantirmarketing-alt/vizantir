@@ -5,6 +5,9 @@ import type { ReportSourceFailure } from '@/lib/reports/google-credentials';
 const PSI_ENDPOINT =
   'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
 
+const PSI_TIMEOUT_MS = 90_000;
+const PSI_RETRY_BUDGET_MS = 15_000;
+
 const THRESHOLDS = {
   lcp: 2500,
   tbt: 200,
@@ -49,12 +52,24 @@ export async function fetchPsiReport(params: {
   url.searchParams.set('category', 'performance');
   url.searchParams.set('key', apiKey);
 
+  const started = Date.now();
+  const first = await requestPsiReport(url);
+  if (first.ok || !isRetryablePsiFailure(first)) {
+    return first;
+  }
+  if (Date.now() - started >= PSI_RETRY_BUDGET_MS) {
+    return first;
+  }
+  return requestPsiReport(url);
+}
+
+async function requestPsiReport(url: URL): Promise<FetchPsiReportResult> {
   let response: Response;
   try {
     response = await fetch(url, {
       method: 'GET',
       cache: 'no-store',
-      signal: AbortSignal.timeout(90000),
+      signal: AbortSignal.timeout(PSI_TIMEOUT_MS),
     });
   } catch {
     console.error('PSI request failed');
@@ -93,6 +108,14 @@ export async function fetchPsiReport(params: {
   }
 
   return { ok: true, data };
+}
+
+function isRetryablePsiFailure(result: ReportSourceFailure): boolean {
+  return (
+    result.reason === 'http_error' ||
+    result.reason === 'network_error' ||
+    result.reason === 'invalid_json'
+  );
 }
 
 function parsePsiResult(value: unknown): PsiReportData | null {
