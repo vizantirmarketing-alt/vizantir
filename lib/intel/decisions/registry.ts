@@ -22,7 +22,7 @@ import type { DetectorFamily, Discipline } from '@/lib/intel/decision-params'
  * Applied at persist time in run.ts by detector name, so a detector never
  * carries its own taxonomy and the two cannot drift apart.
  *
- * Only detectors that exist are registered. Phase 2c adds `schema-drift`
+ * Only detectors that exist are registered. Phase 2c added `schema-drift`
  * (aeo/schema); Phase 2d adds `llms-drift` and `crawler-absence`
  * (geo/ai-crawler-visibility). See §18.2 and §18.3.
  *
@@ -50,6 +50,7 @@ export const DETECTOR_REGISTRY = {
   'thin-page': { discipline: 'seo', family: 'content' },
   'indexed-but-broken': { discipline: 'seo', family: 'technical' },
   'demand-without-page': { discipline: 'seo', family: 'technical' },
+  'schema-drift': { discipline: 'aeo', family: 'schema' },
 } as const satisfies Record<string, DetectorIdentity>
 
 export type RegisteredDetector = keyof typeof DETECTOR_REGISTRY

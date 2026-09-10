@@ -3,6 +3,7 @@ import { demandWithoutPageDetector } from '@/lib/intel/decisions/detectors/deman
 import { geoSignalDetector } from '@/lib/intel/decisions/detectors/geo-signal'
 import { indexedButBrokenDetector } from '@/lib/intel/decisions/detectors/indexed-but-broken'
 import { metadataGapDetector } from '@/lib/intel/decisions/detectors/metadata-gap'
+import { schemaDriftDetector } from '@/lib/intel/decisions/detectors/schema-drift'
 import { sitemapContradictionDetector } from '@/lib/intel/decisions/detectors/sitemap-contradiction'
 import { thinPageDetector } from '@/lib/intel/decisions/detectors/thin-page'
 import { withinReachDetector } from '@/lib/intel/decisions/detectors/within-reach'
@@ -21,4 +22,7 @@ export const DETECTORS: readonly Detector[] = [
   thinPageDetector,
   indexedButBrokenDetector,
   demandWithoutPageDetector,
+
+  // Phase 2c AEO. Category `search_intelligence`, discipline `aeo`.
+  schemaDriftDetector,
 ]
