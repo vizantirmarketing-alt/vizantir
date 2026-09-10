@@ -20,6 +20,8 @@ export type ScanTarget = {
   origin: string
   sitemapUrl: string
   robotsUrl: string
+  llmsTxtUrl: string
+  llmsFullUrl: string
 }
 
 export type FrontierResult =
@@ -53,6 +55,8 @@ export function resolveScanTarget(): ScanTarget | null {
     origin,
     sitemapUrl: `${origin}/sitemap.xml`,
     robotsUrl: `${origin}/robots.txt`,
+    llmsTxtUrl: `${origin}/llms.txt`,
+    llmsFullUrl: `${origin}/llms-full.txt`,
   }
 }
 
