@@ -17,6 +17,10 @@ function tagsForType(type: unknown): string[] {
     return ['siteSettings']
   }
 
+  if (type === 'caseStudy') {
+    return ['caseStudy']
+  }
+
   return ['post']
 }
 
