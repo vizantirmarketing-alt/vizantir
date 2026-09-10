@@ -2,6 +2,7 @@ import { buriedDemandDetector } from '@/lib/intel/decisions/detectors/buried-dem
 import { demandWithoutPageDetector } from '@/lib/intel/decisions/detectors/demand-without-page'
 import { geoSignalDetector } from '@/lib/intel/decisions/detectors/geo-signal'
 import { indexedButBrokenDetector } from '@/lib/intel/decisions/detectors/indexed-but-broken'
+import { llmsDriftDetector } from '@/lib/intel/decisions/detectors/llms-drift'
 import { metadataGapDetector } from '@/lib/intel/decisions/detectors/metadata-gap'
 import { schemaDriftDetector } from '@/lib/intel/decisions/detectors/schema-drift'
 import { sitemapContradictionDetector } from '@/lib/intel/decisions/detectors/sitemap-contradiction'
@@ -25,4 +26,7 @@ export const DETECTORS: readonly Detector[] = [
 
   // Phase 2c AEO. Category `search_intelligence`, discipline `aeo`.
   schemaDriftDetector,
+
+  // Phase 2d. Category `search_intelligence`, discipline `geo`.
+  llmsDriftDetector,
 ]

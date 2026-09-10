@@ -70,11 +70,13 @@ export type SiteSnapshot = {
   robotsStatus: number | null
   sitemapStatus: number | null
   sitemapUrlCount: number | null
-  /** Populated in Phase 2d (GEO). Null throughout Phase 2b. */
   llmsTxtStatus: number | null
-  /** Populated in Phase 2d (GEO). Null throughout Phase 2b. */
   llmsFullStatus: number | null
-  /** Populated in Phase 2d (GEO). Null throughout Phase 2b. */
+  /**
+   * Count of sitemap URLs absent from llms-full.txt. Null when the diff was
+   * not measured (llms-full.txt was not a 200, or the sitemap was unavailable).
+   * 0 means measured and every sitemap URL was present.
+   */
   llmsMissingUrls: number | null
   errorReason: string | null
 }

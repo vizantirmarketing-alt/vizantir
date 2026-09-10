@@ -1,7 +1,8 @@
 import 'server-only'
 
-import { fetchPage, fetchStatus } from '@/lib/scan/fetch'
+import { fetchPage, fetchStatus, fetchText } from '@/lib/scan/fetch'
 import { loadFrontier, resolveScanTarget, type ScanTarget } from '@/lib/scan/frontier'
+import { parseLlmsFullUrls, sitemapUrlsMissingFromLlms } from '@/lib/scan/llms'
 import { parseHtml } from '@/lib/scan/parse'
 import { utcToday } from '@/lib/intel/search-params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
@@ -105,13 +106,14 @@ export async function syncScan(): Promise<SyncScanResult> {
       const message = `Sitemap unavailable (${frontier.reason}${
         frontier.sitemapStatus === null ? '' : ` ${frontier.sitemapStatus}`
       })`
+      const llms = await observeLlms(target, null)
       await writeSiteSnapshot(supabase, {
         captured_on: capturedOn,
         robots_status: await fetchStatus(target.robotsUrl),
         sitemap_status: frontier.sitemapStatus,
         sitemap_url_count: null,
-        llms_txt_status: null,
-        llms_full_status: null,
+        llms_txt_status: llms.txtStatus,
+        llms_full_status: llms.fullStatus,
         llms_missing_urls: null,
         error_reason: frontier.reason,
       })
@@ -131,7 +133,10 @@ export async function syncScan(): Promise<SyncScanResult> {
       }
     }
 
-    const robotsStatus = await fetchStatus(target.robotsUrl)
+    const [robotsStatus, llms] = await Promise.all([
+      fetchStatus(target.robotsUrl),
+      observeLlms(target, frontier.urls),
+    ])
 
     const rows = await scanPages(target, frontier.urls, capturedOn)
     const pagesFailed = rows.filter((row) => row.error_reason !== null).length
@@ -142,9 +147,9 @@ export async function syncScan(): Promise<SyncScanResult> {
       robots_status: robotsStatus,
       sitemap_status: frontier.sitemapStatus,
       sitemap_url_count: frontier.urls.length,
-      llms_txt_status: null,
-      llms_full_status: null,
-      llms_missing_urls: null,
+      llms_txt_status: llms.txtStatus,
+      llms_full_status: llms.fullStatus,
+      llms_missing_urls: llms.missingCount,
       error_reason: null,
     })
 
@@ -235,6 +240,50 @@ export async function syncScan(): Promise<SyncScanResult> {
       prunedSnapshots: null,
       message: 'Scan failed',
     }
+  }
+}
+
+type LlmsObservation = {
+  txtStatus: number | null
+  fullStatus: number | null
+  missingCount: number | null
+}
+
+/**
+ * Status of both llms files, plus the sitemap-vs-llms-full diff when the
+ * full file returned 200 and the sitemap URL list is in hand. Null count
+ * means the diff was not measured — not that zero URLs are missing.
+ */
+async function observeLlms(
+  target: ScanTarget,
+  sitemapUrls: readonly string[] | null,
+): Promise<LlmsObservation> {
+  const [txtStatus, full] = await Promise.all([
+    fetchStatus(target.llmsTxtUrl),
+    fetchText(target.llmsFullUrl),
+  ])
+
+  const fullStatus = full.ok ? full.status : null
+
+  if (
+    sitemapUrls === null ||
+    !full.ok ||
+    full.status !== 200 ||
+    full.body === null
+  ) {
+    return {
+      txtStatus,
+      fullStatus,
+      missingCount: null,
+    }
+  }
+
+  const llmsUrls = parseLlmsFullUrls(full.body, target.origin)
+  const missingUrls = sitemapUrlsMissingFromLlms(sitemapUrls, llmsUrls)
+  return {
+    txtStatus,
+    fullStatus,
+    missingCount: missingUrls.length,
   }
 }
 
