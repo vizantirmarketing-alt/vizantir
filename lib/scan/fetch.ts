@@ -1,6 +1,6 @@
 import 'server-only'
 
-import type { PageFetch } from '@/lib/scan/types'
+import type { PageFetch, ScanFetchFailure } from '@/lib/scan/types'
 
 /**
  * One page fetch. Mirrors lib/gsc/client.ts: closed failure union, never
@@ -113,6 +113,77 @@ function normalizeForCompare(value: string): string {
     return `${url.protocol}//${url.host}${path}${url.search}`
   } catch {
     return value
+  }
+}
+
+/**
+ * Status plus body for a non-HTML document (llms.txt, llms-full.txt).
+ *
+ * Same closed union as fetchPage: a non-2xx is `ok: true` with that status
+ * and no body — the status is the observation. `ok: false` means the origin
+ * was never reached. fetchPage cannot be reused here: it discards 2xx bodies
+ * that are not HTML, and these files are text/plain.
+ */
+export type TextFetch =
+  | {
+      ok: true
+      status: number
+      body: string | null
+      fetchMs: number
+    }
+  | { ok: false; reason: ScanFetchFailure; fetchMs: number }
+
+const MAX_TEXT_BYTES = 5_000_000
+
+export async function fetchText(url: string): Promise<TextFetch> {
+  const startedAt = Date.now()
+
+  let response: Response
+  try {
+    response = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      cache: 'no-store',
+      headers: { 'User-Agent': USER_AGENT },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    })
+  } catch (error) {
+    const reason =
+      error instanceof Error && error.name === 'TimeoutError'
+        ? 'timeout'
+        : 'network_error'
+    return { ok: false, reason, fetchMs: Date.now() - startedAt }
+  }
+
+  if (!response.ok) {
+    return {
+      ok: true,
+      status: response.status,
+      body: null,
+      fetchMs: Date.now() - startedAt,
+    }
+  }
+
+  let body: string
+  try {
+    body = await response.text()
+  } catch {
+    return {
+      ok: false,
+      reason: 'invalid_response',
+      fetchMs: Date.now() - startedAt,
+    }
+  }
+
+  if (body.length > MAX_TEXT_BYTES) {
+    body = body.slice(0, MAX_TEXT_BYTES)
+  }
+
+  return {
+    ok: true,
+    status: response.status,
+    body,
+    fetchMs: Date.now() - startedAt,
   }
 }
 
