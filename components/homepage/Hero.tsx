@@ -3,7 +3,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { trackBookStrategyCallIntent, trackCTAClick } from '@/lib/analytics';
+import { trackCTAClick } from '@/lib/analytics';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 
 // Lazy load the heavy 3D component
@@ -188,23 +188,13 @@ const Hero = () => {
             Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
           </p>
 
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap">
-            <Button
-              size="lg"
-              asChild
-              className="bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
-            >
-              <Link href="/case-studies" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="cobaltOutline"
-              asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold text-foreground transition-all duration-300 hover:border-border hover:opacity-80"
-            >
-              <Link href="/contact" onClick={() => trackBookStrategyCallIntent('hero')}>Book a Strategy Call</Link>
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            asChild
+            className="bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
+          >
+            <Link href="/case-studies" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
+          </Button>
         </div>
       </div>
 
