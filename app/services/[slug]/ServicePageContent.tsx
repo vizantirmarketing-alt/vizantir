@@ -11,7 +11,94 @@ import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { serviceHref } from '@/lib/service-href'
 import type { Service } from '@/lib/sanity/types'
+
+type ServiceHeadingSet = {
+  overview: string
+  benefits: string
+  process: string
+  offerings: string
+  deliverables: string
+  faqs: string
+  related: string
+}
+
+const SERVICE_HEADINGS: Record<string, ServiceHeadingSet> = {
+  'website-strategy': {
+    overview: 'How we map the site before design',
+    benefits: 'What strategy work covers',
+    process: 'How a strategy engagement runs',
+    offerings: "What's in the strategy map",
+    deliverables: 'What you leave the strategy with',
+    faqs: 'Questions about website strategy',
+    related: 'Services that follow strategy',
+  },
+  'web-design': {
+    overview: 'How we design around the brand and the buyer',
+    benefits: 'What custom design includes',
+    process: 'How design and build happen together',
+    offerings: "What's in a design engagement",
+    deliverables: 'Design you can review in the browser',
+    faqs: 'Questions about web design',
+    related: 'Services around the design',
+  },
+  'web-development': {
+    overview: 'How we build on Next.js',
+    benefits: 'What a custom Next.js build includes',
+    process: 'How development runs from kickoff to launch',
+    offerings: "What's in the development stack",
+    deliverables: 'Code and CMS you receive',
+    faqs: 'Questions about web development',
+    related: 'Services around the build',
+  },
+  'landing-pages': {
+    overview: 'How we build conversion pages',
+    benefits: 'What a landing page engagement includes',
+    process: 'How a landing page is scoped',
+    offerings: "What's in each landing page tier",
+    deliverables: 'Pages and tracking you receive',
+    faqs: 'Questions about landing pages',
+    related: 'Services around campaign pages',
+  },
+  'website-refreshes': {
+    overview: 'How we decide what to fix versus rebuild',
+    benefits: 'What a refresh can change',
+    process: 'How an audit-led refresh runs',
+    offerings: "What's in a refresh engagement",
+    deliverables: 'Fixes you keep from the current site',
+    faqs: 'Questions about website refreshes',
+    related: 'Services around a refresh',
+  },
+  'cms-integrations': {
+    overview: 'How we set up Sanity for editors',
+    benefits: 'What a Sanity setup includes',
+    process: 'How the CMS engagement runs',
+    offerings: "What's in the Studio configuration",
+    deliverables: 'Schemas and training you receive',
+    faqs: 'Questions about CMS integrations',
+    related: 'Services around the CMS',
+  },
+  'website-care': {
+    overview: 'How we keep the site working after launch',
+    benefits: 'What a care retainer covers',
+    process: 'How monthly care runs',
+    offerings: "What's in each care tier",
+    deliverables: 'Reports and work you receive each month',
+    faqs: 'Questions about website care',
+    related: 'Services around ongoing care',
+  },
+}
+
+const FALLBACK_HEADINGS: ServiceHeadingSet = {
+  overview: 'How we approach this',
+  benefits: 'What you get',
+  process: 'How it works',
+  offerings: "What's included",
+  deliverables: 'Tangible outputs',
+  faqs: 'Common questions',
+  related: 'More services',
+}
 
 interface ServicePageContentProps {
   service: Service
@@ -45,6 +132,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
   const hasDeliverables = service.deliverables && service.deliverables.length > 0
   const hasFaqs = service.faqs && service.faqs.length > 0
   const hasRelated = service.relatedServices && service.relatedServices.length > 0
+  const headings = SERVICE_HEADINGS[service.slug] ?? FALLBACK_HEADINGS
 
   return (
     <div style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
@@ -135,7 +223,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   Overview
                 </span>
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  How we approach this
+                  {headings.overview}
                 </h2>
                 <PortableText value={service.overview!} components={vizantirPortableTextComponents} />
               </motion.div>
@@ -164,7 +252,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   Benefits
                 </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  What you get
+                  {headings.benefits}
                 </h2>
               </motion.div>
               <ul className="mx-auto max-w-2xl space-y-4">
@@ -209,7 +297,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   Process
                 </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  How it works
+                  {headings.process}
                 </h2>
               </motion.div>
               <div className="grid gap-6 md:grid-cols-2">
@@ -263,7 +351,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   Offerings
                 </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  What&apos;s included
+                  {headings.offerings}
                 </h2>
               </motion.div>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -315,7 +403,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   Deliverables
                 </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  Tangible outputs
+                  {headings.deliverables}
                 </h2>
               </motion.div>
               <ul className="mx-auto max-w-2xl space-y-3">
@@ -360,7 +448,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   FAQs
                 </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  Common questions
+                  {headings.faqs}
                 </h2>
               </motion.div>
               <div className="space-y-4">
@@ -445,7 +533,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   Related
                 </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
-                  More services
+                  {headings.related}
                 </h2>
               </motion.div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -458,7 +546,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     transition={{ duration: 0.4, delay: index * 0.05 }}
                   >
                     <Link
-                      href={`/services/${rel.slug}`}
+                      href={serviceHref(rel.slug)}
                       className="card-interactive group flex h-full flex-col rounded-2xl border p-6"
                       style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
                     >

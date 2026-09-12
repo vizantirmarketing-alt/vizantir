@@ -27,8 +27,6 @@ const aboutGraph = graphSchema([
       'Founder of Vizantir Design Studio, a Las Vegas web design and development studio building custom Next.js websites for established businesses. James spent 25 years operating businesses before moving into engineering.',
     sameAs: [
       'https://www.linkedin.com/in/james-tram-vizantir',
-      'https://clutch.co/profile/vizantir-design-studio-0',
-      'https://maps.google.com/?cid=7927126809305841776',
       'https://github.com/vizantirmarketing-alt',
     ],
   }),

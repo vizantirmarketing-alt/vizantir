@@ -1,10 +1,14 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { sanityFetch } from '@/lib/sanity/client'
-import { allPostsQuery, postBySlugQuery, siteSettingsQuery } from '@/lib/sanity/queries'
+import { allPostsQuery, postBySlugQuery, relatedPostsQuery, siteSettingsQuery } from '@/lib/sanity/queries'
+import { pickRelatedPosts, type RelatedPostsQueryResult } from '@/lib/blog-related'
+import { resolveArticleCta } from '@/data/blog-commercial-links'
 import { getCanonicalUrl, getOgImage } from '@/lib/utils/metadata'
 import type { SiteSettings } from '@/lib/sanity/types'
+import { ArticleCta } from '@/components/blog-page/ArticleCta'
 import BlogPostContent, { type SanityBlogPost } from '@/components/blog-page/BlogPostContent'
+import { RelatedPosts } from '@/components/blog-page/RelatedPosts'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { blogPostSchema, breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
 
@@ -72,6 +76,14 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound()
   }
 
+  const relatedBundle = await sanityFetch<RelatedPostsQueryResult>(
+    relatedPostsQuery,
+    { slug: post.slug, category: post.category ?? '' },
+    { tags: ['post'] },
+  )
+  const relatedPosts = pickRelatedPosts(relatedBundle)
+  const articleCta = resolveArticleCta(post.slug, post.category)
+
   const postUrl = getCanonicalUrl(settings, `/blog/${post.slug}`)
   const siteUrl = getCanonicalUrl(settings, '')
 
@@ -97,7 +109,10 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <>
       <JsonLd id="ld-blog-post" data={postGraph} />
-      <BlogPostContent post={post} />
+      <BlogPostContent post={post}>
+        <ArticleCta href={articleCta.href} label={articleCta.label} />
+        <RelatedPosts posts={relatedPosts} />
+      </BlogPostContent>
     </>
   )
 }

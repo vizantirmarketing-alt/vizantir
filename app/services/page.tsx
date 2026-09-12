@@ -4,6 +4,7 @@ import { allServicesQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { collectionPageSchema, breadcrumbSchema, graphSchema, servicesOfferCatalogSchema } from '@/lib/schema'
 import type { ServiceListItem, SiteSettings } from '@/lib/sanity/types'
+import { serviceAbsoluteUrl } from '@/lib/service-href'
 import { getCanonicalUrl } from '@/lib/utils/metadata'
 import ServicesPageClient from './ServicesPageClient'
 
@@ -49,7 +50,7 @@ export default async function ServicesPage() {
       description:
         'Custom website strategy, design, development, and ongoing growth for established businesses.',
       siteUrl: settings.siteUrl,
-      items: list.map((s) => ({ name: s.title, url: `${settings.siteUrl}/services/${s.slug}` })),
+      items: list.map((s) => ({ name: s.title, url: serviceAbsoluteUrl(settings.siteUrl, s.slug) })),
     }),
     servicesOfferCatalogSchema(settings.siteUrl),
     breadcrumbSchema([

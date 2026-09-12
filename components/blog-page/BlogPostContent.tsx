@@ -34,6 +34,7 @@ export type SanityBlogPost = {
 
 interface BlogPostContentProps {
   post: SanityBlogPost
+  children?: React.ReactNode
 }
 
 const BYLINE_DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -74,7 +75,7 @@ function authorByline(author?: SanityBlogPost['author']) {
   return label
 }
 
-export default function BlogPostContent({ post }: BlogPostContentProps) {
+export default function BlogPostContent({ post, children }: BlogPostContentProps) {
   const colors = {
     bg: 'var(--background)',
     text: 'var(--foreground)',
@@ -198,6 +199,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               <PortableTextRenderer value={post.body} />
             </div>
           </article>
+          {children}
         </div>
       </section>
 

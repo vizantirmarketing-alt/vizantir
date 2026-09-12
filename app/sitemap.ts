@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { sanityFetch } from '@/lib/sanity/client'
 import { sitemapQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import type { SitemapData, SiteSettings } from '@/lib/sanity/types'
+import { serviceHref } from '@/lib/service-href'
 
 export const revalidate = 3600
 
@@ -20,7 +21,7 @@ export const revalidate = 3600
  * to discount lastmod as a scheduling signal.
  */
 const STATIC_PAGE_DATES: Record<string, string> = {
-  '': '2026-09-05',
+  '': '2026-09-11',
   '/about': '2026-08-15',
   '/contact': '2026-09-04',
   '/services': '2026-09-05',
@@ -44,12 +45,6 @@ const STATIC_PAGE_DATES: Record<string, string> = {
   '/technology': '2026-08-15',
   '/llms.txt': '2026-09-05',
   '/sitemap-page': '2026-09-06',
-  '/play': '2026-09-06',
-  '/play/breakout': '2026-09-06',
-  '/play/stack': '2026-09-06',
-  '/play/snake': '2026-09-06',
-  '/play/pong': '2026-09-06',
-  '/play/swarm': '2026-09-06',
 }
 
 type StaticRoute = {
@@ -71,6 +66,12 @@ type StaticRoute = {
  *     /technology and /sitemap-page, so internal link equity and topical
  *     signal are preserved. Already-indexed ones will not be dropped;
  *     sitemap omission is not a deindex request.
+ *
+ *   /services/landing-pages
+ *     Canonical is /landing-pages (`serviceHref` in lib/service-href.ts).
+ *     The service loop omits slugs whose public href is not /services/{slug}.
+ *     /landing-pages and its two children stay in STATIC_ROUTES. The
+ *     /services/landing-pages route stays live and indexable.
  */
 const STATIC_ROUTES: StaticRoute[] = [
   { path: '', changeFrequency: 'weekly', priority: 1 },
@@ -105,12 +106,6 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/sitemap-page', changeFrequency: 'monthly', priority: 0.4 },
   { path: '/llms.txt', changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/play', changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/play/breakout', changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/play/stack', changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/play/snake', changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/play/pong', changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/play/swarm', changeFrequency: 'monthly', priority: 0.5 },
 ]
 
 function staticDate(path: string): Date {
@@ -146,12 +141,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  const servicePages: MetadataRoute.Sitemap = (data?.services || []).map((s) => ({
-    url: `${baseUrl}/services/${s.slug}`,
-    lastModified: new Date(s._updatedAt),
-    changeFrequency: 'monthly',
-    priority: 0.9,
-  }))
+  const servicePages: MetadataRoute.Sitemap = (data?.services || [])
+    .filter((s) => serviceHref(s.slug) === `/services/${s.slug}`)
+    .map((s) => ({
+      url: `${baseUrl}${serviceHref(s.slug)}`,
+      lastModified: new Date(s._updatedAt),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    }))
 
   const caseStudyPages: MetadataRoute.Sitemap = (data?.caseStudies || []).map((c) => ({
     url: `${baseUrl}/case-studies/${c.slug}`,

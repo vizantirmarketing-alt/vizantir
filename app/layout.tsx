@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
+import { getOpeningHoursSpecification } from '@/data/contact'
 import { sanityFetch } from '@/lib/sanity/client'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { founderId } from '@/lib/schema/ids'
@@ -104,9 +105,11 @@ async function BusinessJsonLd() {
       '@type': 'Country',
       name: 'United States',
     },
+    openingHoursSpecification: getOpeningHoursSpecification(),
     sameAs: [
       'https://www.linkedin.com/company/vizantir/',
       'https://www.instagram.com/vizantirdesignstudio',
+      'https://clutch.co/profile/vizantir-design-studio-0',
       'https://maps.google.com/?cid=7927126809305841776',
     ],
     founder: {

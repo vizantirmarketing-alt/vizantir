@@ -48,6 +48,17 @@ export const allPostsQuery = groq`
   }
 `
 
+export const relatedPostsQuery = groq`{
+  "sameCategory": *[_type == "post" && slug.current != $slug && category == $category && (!defined(seo.noIndex) || seo.noIndex == false)] | order(publishedAt desc)[0...3] {
+    title,
+    "slug": slug.current
+  },
+  "recent": *[_type == "post" && slug.current != $slug && (!defined(seo.noIndex) || seo.noIndex == false)] | order(publishedAt desc)[0...6] {
+    title,
+    "slug": slug.current
+  }
+}`
+
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
     _id,

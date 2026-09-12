@@ -77,26 +77,28 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                   variants={itemVariants}
                   className="rounded-xl overflow-hidden transition-all duration-300 border border-border bg-card"
                 >
-                  <button
-                    id={triggerId}
-                    type="button"
-                    onClick={() => setOpenIndex(isOpen ? null : index)}
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200 hover:bg-[#F9FAFB]"
-                    style={{ background: '#FFFFFF' }}
-                  >
-                    <span
-                      className="text-lg font-semibold pr-8 text-foreground"
+                  <h3 className="m-0">
+                    <button
+                      id={triggerId}
+                      type="button"
+                      onClick={() => setOpenIndex(isOpen ? null : index)}
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
+                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200 hover:bg-[#F9FAFB]"
+                      style={{ background: '#FFFFFF' }}
                     >
-                      {faq.question}
-                    </span>
-                    <AccordionIndicator
-                      isOpen={isOpen}
-                      className="w-5 h-5"
-                      style={{ color: 'var(--cobalt-accent)' }}
-                    />
-                  </button>
+                      <span
+                        className="text-lg font-semibold pr-8 text-foreground"
+                      >
+                        {faq.question}
+                      </span>
+                      <AccordionIndicator
+                        isOpen={isOpen}
+                        className="w-5 h-5"
+                        style={{ color: 'var(--cobalt-accent)' }}
+                      />
+                    </button>
+                  </h3>
 
                   <div
                     id={panelId}

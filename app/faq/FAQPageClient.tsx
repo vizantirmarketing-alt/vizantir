@@ -108,21 +108,23 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                       border: `1px solid ${'rgba(0,0,0,0.08)'}`
                     }}
                   >
-                    <button
-                      id={triggerId}
-                      type="button"
-                      onClick={() => toggleFAQ(faq._id)}
-                      aria-expanded={isOpen}
-                      aria-controls={panelId}
-                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
-                    >
-                      <span className="text-lg font-semibold pr-8">{faq.question}</span>
-                      <AccordionIndicator
-                        isOpen={isOpen}
-                        className="w-5 h-5"
-                        style={{ color: 'var(--cobalt-accent)' }}
-                      />
-                    </button>
+                    <h2 className="m-0">
+                      <button
+                        id={triggerId}
+                        type="button"
+                        onClick={() => toggleFAQ(faq._id)}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
+                      >
+                        <span className="text-lg font-semibold pr-8">{faq.question}</span>
+                        <AccordionIndicator
+                          isOpen={isOpen}
+                          className="w-5 h-5"
+                          style={{ color: 'var(--cobalt-accent)' }}
+                        />
+                      </button>
+                    </h2>
                     <div
                       id={panelId}
                       role="region"

@@ -3,7 +3,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { trackCTAClick } from '@/lib/analytics';
+import { trackBookStrategyCallIntent, trackCTAClick } from '@/lib/analytics';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 
 // Lazy load the heavy 3D component
@@ -173,46 +173,38 @@ const Hero = () => {
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
             >
-              We build websites
+              We build custom websites{' '}
             </span>
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] mt-1 text-muted-foreground" style={{ textShadow: 'none' }}
             >
-              that make people stop and say
-            </span>
-            <span className="block mt-3 sm:mt-4">
-              <span
-                className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
-              >
-                —
-              </span>
-              <span className="block lg:whitespace-nowrap">
-                <span
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
-                >
-                  who did this?
-                </span>
-                <span
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
-                >
-                </span>
-              </span>
+              for brands that have outgrown theirs
             </span>
           </h1>
 
           <p
             className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg transition-colors duration-500 text-muted-foreground"
           >
-            Vizantir is a design and development studio in Las Vegas building custom websites for established brands. Every site is built from scratch on Next.js, with no templates and no page builders. Projects start at $15,000 and typically run six to twelve weeks from kickoff to launch.
+            Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
           </p>
 
-          <Button
-            size="lg"
-            asChild
-            className="bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
-          >
-            <Link href="/case-studies" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
-          </Button>
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap">
+            <Button
+              size="lg"
+              asChild
+              className="bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
+            >
+              <Link href="/case-studies" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="cobaltOutline"
+              asChild
+              className="rounded-xl px-8 py-4 text-base font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:[background:var(--cobalt-gradient)] hover:text-white hover:shadow-cobalt"
+            >
+              <Link href="/contact" onClick={() => trackBookStrategyCallIntent('hero')}>Book a Strategy Call</Link>
+            </Button>
+          </div>
         </div>
       </div>
 

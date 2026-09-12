@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import type { SitemapLink } from '@/data/sitemap-page'
 import type { SitemapPageItem } from '@/lib/sanity/types'
+import { serviceHref } from '@/lib/service-href'
 
 type Props = {
   mainPages: SitemapLink[]
@@ -125,7 +126,7 @@ export default function SitemapPageClient({
                 {services.map((service) => (
                   <li key={service.slug}>
                     <Link
-                      href={`/services/${service.slug}`}
+                      href={serviceHref(service.slug)}
                       className="link-cobalt text-muted-foreground"
                     >
                       {service.title}

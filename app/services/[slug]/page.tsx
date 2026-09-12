@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: socialTitle,
       description: service.metaDescription || service.description,
-      url: pageUrl,
+      url: canonicalUrl,
       type: 'website',
       images: getOgImage({ pageImage: service.ogImageUrl, settings, alt: service.title }),
     },

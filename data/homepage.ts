@@ -1,0 +1,3 @@
+export const homepageAnswerBlock = {
+  body: 'Vizantir is a design and development studio in Las Vegas building custom websites for established brands. We work with businesses whose customers judge them on how they present, and whose current site was built for a version of the business they have outgrown. The studio is in Las Vegas and works with clients across the United States. Projects start at $15,000 for Essentials, $30,000 for Growth, and $60,000+ for Enterprise. A typical project runs six to twelve weeks from kickoff to launch. James Tram founded the studio after 25 years operating businesses, the last decade of it building for the web. The person you meet on the first call is the person doing the work.',
+} as const

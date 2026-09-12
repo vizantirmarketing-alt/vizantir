@@ -6,6 +6,8 @@ import type { CaseStudyListItem } from '@/lib/sanity/types';
 import type { Faq } from '@/components/homepage/FAQSection';
 import { JsonLd } from '@/components/seo/JsonLd'
 import { faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
+import { homepageAnswerBlock } from '@/data/homepage'
+import { AnswerBlock } from '@/components/homepage/AnswerBlock'
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -105,6 +107,7 @@ export default async function Home() {
     <>
       <JsonLd id="ld-home" data={pageGraph} />
       <Hero />
+      <AnswerBlock body={homepageAnswerBlock.body} />
       <Marquee />
       <EditorialStatement />
       <AboutStory />

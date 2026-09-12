@@ -36,6 +36,7 @@ import {
   type LandingPageTier,
   type PricingTier,
 } from '@/data/pricing'
+import { serviceHref } from '@/lib/service-href'
 import { cn } from '@/lib/utils'
 
 const CARE_REFRAME = {
@@ -430,7 +431,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
       ) : null}
       {service.slug ? (
         <Link
-          href={`/services/${service.slug}`}
+          href={serviceHref(service.slug)}
           className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
         >
           Learn more

@@ -122,3 +122,9 @@ Vercel does not surface `console.error` output from cron routes in either the CL
 APIs table shows outbound method and status codes, which is enough to tell a
 Supabase POST 403 from a Google API failure, but not the message. To see an
 actual error, return it in the route's JSON response instead of logging it.
+
+## New blog posts
+
+Any new blog post needs a slug entry in `data/blog-clusters.ts`. Without one,
+the article CTA falls back to the post's Sanity category, then to `/services`.
+The cluster-to-destination map lives in `data/blog-commercial-links.ts`.
