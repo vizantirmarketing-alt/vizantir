@@ -200,7 +200,7 @@ const Hero = () => {
               size="lg"
               variant="cobaltOutline"
               asChild
-              className="rounded-xl px-8 py-4 text-base font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:[background:var(--cobalt-gradient)] hover:text-white hover:shadow-cobalt"
+              className="rounded-xl px-8 py-4 text-base font-semibold text-foreground transition-all duration-300 hover:border-border hover:opacity-80"
             >
               <Link href="/contact" onClick={() => trackBookStrategyCallIntent('hero')}>Book a Strategy Call</Link>
             </Button>
