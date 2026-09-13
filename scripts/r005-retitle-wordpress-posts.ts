@@ -4,7 +4,7 @@
  *
  * Schema (sanity/schemaTypes/post.ts + sanity/schemaTypes/seo.ts):
  *   title                 string   H1
- *   excerpt               text     not patched; app fallback for meta description
+ *   excerpt               text     /blog cards + BlogPosting JSON-LD description
  *   seo                   object
  *     seo.metaTitle       string   <title> via metaTitle || title
  *     seo.metaDescription text     meta description via metaDescription || excerpt
@@ -17,9 +17,11 @@
  * (lib/sanity/queries.ts postBySlugQuery). A top-level metaTitle patch would
  * create an orphan field nothing reads.
  *
- * This script patches only title, seo.metaTitle, and seo.metaDescription.
+ * This script patches title, excerpt, seo.metaTitle, and seo.metaDescription.
  * title and seo.metaTitle are always set to the same proposed string so they
  * cannot drift (post 4 already has a live <title> that differs from its H1).
+ * excerpt is live on /blog cards and in BlogPosting JSON-LD with no fallback
+ * to seo.metaDescription (lib/schema/index.ts). That fallback is out of scope.
  *
  * Match: slug.current only. Zero or more than one published document → skip.
  * Never guess by title.
@@ -50,6 +52,7 @@ type SeoFields = {
 type PostDoc = {
   _id: string
   title: string | null
+  excerpt: string | null
   slug: string
   seo: SeoFields | null
 }
@@ -57,10 +60,11 @@ type PostDoc = {
 type Retitle = {
   slug: string
   title: string
+  excerpt: string
   meta: string
 }
 
-type FieldName = 'title' | 'seo.metaTitle' | 'seo.metaDescription'
+type FieldName = 'title' | 'excerpt' | 'seo.metaTitle' | 'seo.metaDescription'
 
 type FieldDiff = {
   field: FieldName
@@ -80,21 +84,29 @@ const RETITLES: Retitle[] = [
   {
     slug: 'hidden-wordpress-costs-agencies-dont-tell-you',
     title: 'The WordPress Quote Looks Reasonable. Then the Bills Start.',
+    excerpt:
+      'The quote looks reasonable. Then the plugin renewals, managed hosting, maintenance, and the occasional security incident start arriving. Here is what to ask about before you sign.',
     meta: 'Plugin licenses, managed hosting, maintenance, and security incidents sit outside the WordPress build quote. Those are the costs that start after launch.',
   },
   {
     slug: 'the-page-builder-stack-your-wordpress-agency-didnt-explain',
     title: 'The Page Builder Stack That Turns Leaving Into a Rebuild',
+    excerpt:
+      'Most WordPress sites run six or seven paid plugins a year, and the layouts live inside the page builder. Renewals add up, and moving off is a rebuild rather than an export.',
     meta: 'Elementor, Divi, Bricks, WPBakery: the layouts live in the plugin. Annual renewals run $400 to $800 before hosting. Leaving is a rebuild, not an export.',
   },
   {
     slug: 'what-a-vizantir-engagement-discloses-that-a-wordpress-agency-engagement-usually-doesnt',
     title: 'What a Vizantir Engagement Puts on the Table Up Front',
+    excerpt:
+      'Build cost is the easy question. The harder one is what the site costs to run, and who you are paying. Here is what Vizantir puts on the table before a build starts.',
     meta: "None of it is hidden. It just isn't usually in the conversation when a site is being sold. Here's what Vizantir puts on the table before a build starts.",
   },
   {
     slug: 'why-most-agencies-still-use-wordpress',
     title: 'Why WordPress Is Still the Default (And Why We Build on Next.js)',
+    excerpt:
+      'WordPress powers 40.7% of the web because it fits volume work: reusable themes, a broad hiring pool, fast delivery. Next.js needs engineers and longer builds. Here is why we took that trade.',
     meta: 'WordPress fits volume work: reusable themes, a broad hiring pool, two to four week delivery. Next.js needs engineers and longer builds. We took that trade.',
   },
 ]
@@ -143,6 +155,12 @@ function buildDiffs(post: PostDoc, proposed: Retitle): FieldDiff[] {
       changed: (post.title ?? '') !== proposed.title,
     },
     {
+      field: 'excerpt',
+      current: post.excerpt ?? '',
+      proposed: proposed.excerpt,
+      changed: (post.excerpt ?? '') !== proposed.excerpt,
+    },
+    {
       field: 'seo.metaTitle',
       current: post.seo?.metaTitle ?? '',
       proposed: proposed.title,
@@ -165,7 +183,7 @@ function fieldStatus(diff: FieldDiff, isApply: boolean): string {
 function printSchemaReport(): void {
   console.log('Post schema fields')
   console.log('  title                    string   H1')
-  console.log('  excerpt                  text     not patched (app fallback for meta description)')
+  console.log('  excerpt                  text     /blog cards + BlogPosting JSON-LD description')
   console.log('  seo                      object')
   console.log('    seo.metaTitle          string   <title> via metaTitle || title')
   console.log('    seo.metaDescription    text     meta description via metaDescription || excerpt')
@@ -173,7 +191,7 @@ function printSchemaReport(): void {
   console.log('    seo.noIndex            boolean  not patched')
   console.log('    seo.ogImage            image    not patched')
   console.log('  No top-level metaTitle, metaDescription, or description on post.')
-  console.log('  This script patches: title, seo.metaTitle, seo.metaDescription.')
+  console.log('  This script patches: title, excerpt, seo.metaTitle, seo.metaDescription.')
   console.log('')
 }
 
@@ -208,6 +226,7 @@ async function fetchPublishedBySlug(client: SanityClient, slug: string): Promise
     `*[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))]{
       _id,
       title,
+      excerpt,
       "slug": slug.current,
       seo
     }`,
