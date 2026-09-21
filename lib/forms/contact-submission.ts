@@ -23,6 +23,7 @@ export type ContactSubmissionRow = {
   utmCampaign: string | null;
   initialChannel: string | null;
   enrichment: ContactEnrichment;
+  status?: 'spam';
 };
 
 function escapeHtml(s: string): string {
@@ -234,6 +235,7 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
       service: row.service,
       budget: row.budget,
       message: row.message,
+      ...(row.status === 'spam' ? { status: 'spam' } : {}),
       ip_hash: row.ipHash,
       landing_page: emptyToNull(row.landingPage),
       referrer:
@@ -270,6 +272,10 @@ export async function submitContactForm(row: ContactSubmissionRow): Promise<void
   if (error) {
     console.error('contact_submissions insert failed:', error);
     throw new Error('Database insert failed');
+  }
+
+  if (row.status === 'spam') {
+    return;
   }
 
   const submissionId = readInsertedId(data);

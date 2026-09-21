@@ -25,6 +25,7 @@ import {
 } from '@/lib/forms/email-validation';
 import { checkRateLimit, getClientIp, hashIp } from '@/lib/forms/rate-limit';
 import { verifyTurnstile } from '@/lib/forms/turnstile';
+import { scoreLead, SPAM_SCORE_THRESHOLD } from '@/lib/leads/spam-score';
 
 const serviceEnum = z.enum(CONTACT_SERVICES);
 const websiteBudgetEnum = z.enum(CONTACT_BUDGETS);
@@ -113,7 +114,8 @@ function toSubmissionRow(
   req: Request,
   body: ParsedContactBody,
   ipHash: string,
-  enrichment: ContactEnrichment
+  enrichment: ContactEnrichment,
+  status?: 'spam'
 ): ContactSubmissionRow {
   return {
     name: body.name,
@@ -135,6 +137,7 @@ function toSubmissionRow(
       requestOrigin: resolveRequestOrigin(req),
     }),
     enrichment,
+    ...(status ? { status } : {}),
   };
 }
 
@@ -205,8 +208,19 @@ export async function POST(req: Request) {
     );
   }
 
+  const spam = scoreLead({
+    name: body.name,
+    email: body.email,
+    phone: body.phone,
+    company: body.company,
+    message: body.message,
+  });
+  const status = spam.score >= SPAM_SCORE_THRESHOLD ? 'spam' : undefined;
+
   try {
-    await submitContactForm(toSubmissionRow(req, body, ipHash, enrichment));
+    await submitContactForm(
+      toSubmissionRow(req, body, ipHash, enrichment, status)
+    );
   } catch {
     return NextResponse.json(
       { ok: false, error: 'Could not save your message. Please try again.' },
