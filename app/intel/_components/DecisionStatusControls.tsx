@@ -3,14 +3,13 @@
 import { useState, useTransition, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { Select } from '@/components/ui/select'
 import {
   DECISION_STATUSES,
   DECISION_STATUS_LABELS,
   RESULT_NOTE_MAX_LENGTH,
   type DecisionStatus,
 } from '@/lib/intel/decision-params'
-import { cn } from '@/lib/utils'
-
 import { updateDecisionStatus } from '@/app/intel/(app)/actions'
 
 const fieldClassName =
@@ -62,7 +61,7 @@ export function DecisionStatusControls({
         Status
       </label>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <select
+        <Select
           id={`decision-status-${findingKey}`}
           name="status"
           value={selected}
@@ -77,14 +76,14 @@ export function DecisionStatusControls({
               }
             }
           }}
-          className={cn(fieldClassName, 'sm:flex-1')}
+          className="w-full sm:flex-1"
         >
           {DECISION_STATUSES.map((status) => (
             <option key={status} value={status}>
               {DECISION_STATUS_LABELS[status]}
             </option>
           ))}
-        </select>
+        </Select>
         <Button
           type="submit"
           variant="outline"

@@ -3,6 +3,7 @@
 import { useState, useTransition, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { Select } from '@/components/ui/select'
 import {
   LEAD_STATUSES,
   LEAD_STATUS_LABELS,
@@ -97,7 +98,7 @@ function StatusForm({
         Status
       </label>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <select
+        <Select
           id="intel-lead-status"
           name="status"
           value={selected}
@@ -112,14 +113,14 @@ function StatusForm({
               }
             }
           }}
-          className={cn(fieldClassName, 'sm:flex-1')}
+          className="w-full sm:flex-1"
         >
           {LEAD_STATUSES.map((status) => (
             <option key={status} value={status}>
               {LEAD_STATUS_LABELS[status]}
             </option>
           ))}
-        </select>
+        </Select>
         <Button
           type="submit"
           variant="outline"

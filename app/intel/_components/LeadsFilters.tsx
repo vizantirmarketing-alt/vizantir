@@ -5,6 +5,7 @@ import { type FormEvent } from 'react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
+import { Select } from '@/components/ui/select'
 import {
   LEAD_CHANNELS,
   LEAD_CHANNEL_LABELS,
@@ -15,7 +16,6 @@ import {
   parseLeadsListParams,
   type LeadsListParams,
 } from '@/lib/intel/lead-params'
-import { cn } from '@/lib/utils'
 
 const fieldClassName =
   'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
@@ -69,11 +69,11 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
           >
             Status
           </label>
-          <select
+          <Select
             id="intel-leads-status"
             name="status"
             defaultValue={params.status}
-            className={fieldClassName}
+            className="w-full"
             onChange={(event) => onControlChange(event.currentTarget.form)}
           >
             <option value="all">All</option>
@@ -82,7 +82,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
                 {LEAD_STATUS_LABELS[status]}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div>
@@ -92,11 +92,11 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
           >
             Channel
           </label>
-          <select
+          <Select
             id="intel-leads-channel"
             name="channel"
             defaultValue={params.channel}
-            className={fieldClassName}
+            className="w-full"
             onChange={(event) => onControlChange(event.currentTarget.form)}
           >
             <option value="all">All</option>
@@ -105,7 +105,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
                 {LEAD_CHANNEL_LABELS[channel]}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div className="sm:col-span-2">
@@ -133,16 +133,18 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
           <label htmlFor="intel-leads-sort" className="sr-only">
             Sort
           </label>
-          <select
-            id="intel-leads-sort"
-            name="sort"
-            defaultValue={params.sort}
-            className={cn(fieldClassName, 'w-auto')}
-            onChange={(event) => onControlChange(event.currentTarget.form)}
-          >
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-          </select>
+          <div className="w-fit">
+            <Select
+              id="intel-leads-sort"
+              name="sort"
+              defaultValue={params.sort}
+              className="w-auto"
+              onChange={(event) => onControlChange(event.currentTarget.form)}
+            >
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+            </Select>
+          </div>
         </div>
 
         <Button

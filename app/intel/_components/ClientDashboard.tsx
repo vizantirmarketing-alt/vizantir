@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import {
   Activity,
   ChartNoAxesColumn,
-  ChevronDown,
   Eye,
   Gauge,
   HeartPulse,
@@ -18,6 +17,7 @@ import {
   Users,
 } from 'lucide-react'
 
+import { Select } from '@/components/ui/select'
 import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
 import type { MetricDeltaDirection } from '@/app/intel/_components/ui/MetricCard'
 import { Panel } from '@/app/intel/_components/ui/Panel'
@@ -48,9 +48,6 @@ import {
   formatUptime,
 } from '@/lib/reports/format'
 import { cn } from '@/lib/utils'
-
-const SELECT_CLASS =
-  'w-full appearance-none rounded-lg border border-black/10 bg-white py-2.5 pl-3 pr-7 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus sm:w-auto'
 
 const SOURCE_LABELS = {
   ga4: 'GA4',
@@ -275,26 +272,20 @@ function ClientSwitcher({
       <label htmlFor={selectId} className="sr-only">
         Client
       </label>
-      <div className="relative">
-        <select
-          id={selectId}
-          value={currentId}
-          className={SELECT_CLASS}
-          onChange={(event) => {
-            router.push(`/intel/clients/${event.target.value}`)
-          }}
-        >
-          {options.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.name}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          className="pointer-events-none absolute right-2 top-1/2 size-3.5 -translate-y-1/2 text-meta"
-          aria-hidden
-        />
-      </div>
+      <Select
+        id={selectId}
+        value={currentId}
+        className="w-full sm:w-auto"
+        onChange={(event) => {
+          router.push(`/intel/clients/${event.target.value}`)
+        }}
+      >
+        {options.map((option) => (
+          <option key={option.id} value={option.id}>
+            {option.name}
+          </option>
+        ))}
+      </Select>
     </div>
   )
 }
