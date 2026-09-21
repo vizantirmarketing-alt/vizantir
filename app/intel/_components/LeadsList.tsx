@@ -10,6 +10,7 @@ import {
   type LeadsListParams,
 } from '@/lib/intel/lead-params'
 
+import { LeadDeleteControl } from '@/app/intel/_components/LeadDeleteControl'
 import { LeadDeliveryMark } from '@/app/intel/_components/LeadDeliveryMark'
 import { LeadStatusBadge } from '@/app/intel/_components/LeadStatusBadge'
 import { MetricCard } from '@/app/intel/_components/ui/MetricCard'
@@ -35,7 +36,10 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
     <div>
       <ul className="divide-y divide-black/8 lg:hidden">
         {rows.map((row) => (
-          <li key={row.id} className="py-2">
+          <li
+            key={row.id}
+            className="py-2 data-pending:pointer-events-none data-pending:opacity-60"
+          >
             <div className="flex items-start justify-between gap-4">
               <Link
                 href={leadDetailHref(row.id, listParams)}
@@ -44,7 +48,18 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
               >
                 {row.name}
               </Link>
-              <LeadStatusBadge status={row.status} />
+              {row.status === 'spam' ? (
+                <div className="flex items-center gap-1">
+                  <LeadStatusBadge status={row.status} />
+                  <LeadDeleteControl
+                    leadId={row.id}
+                    name={row.name}
+                    company={row.company}
+                  />
+                </div>
+              ) : (
+                <LeadStatusBadge status={row.status} />
+              )}
             </div>
             <p className="mt-1 text-sm text-body">{row.company ?? '—'}</p>
             <p className="mt-2 text-sm text-meta">
@@ -88,11 +103,17 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
               <th className="py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
                 Delivery
               </th>
+              <th className="w-px whitespace-nowrap p-0">
+                <span className="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.id} className="border-b border-black/8">
+              <tr
+                key={row.id}
+                className="border-b border-black/8 data-pending:pointer-events-none data-pending:opacity-60"
+              >
                 <td className="whitespace-nowrap py-[5px] pr-4 text-meta">
                   <SubmittedCell iso={row.created_at} nowMs={nowMs} />
                 </td>
@@ -119,6 +140,15 @@ export function LeadsList({ rows, nowMs, listParams }: LeadsListProps) {
                 </td>
                 <td className="py-[5px]">
                   <LeadDeliveryMark status={row.notify_status} />
+                </td>
+                <td className="w-px whitespace-nowrap py-0 pr-0 pl-2 text-right align-middle">
+                  {row.status === 'spam' ? (
+                    <LeadDeleteControl
+                      leadId={row.id}
+                      name={row.name}
+                      company={row.company}
+                    />
+                  ) : null}
                 </td>
               </tr>
             ))}

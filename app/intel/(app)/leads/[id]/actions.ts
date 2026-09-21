@@ -63,6 +63,14 @@ function readStatus(value: unknown): string | null {
   return typeof status === 'string' && status.length > 0 ? status : null
 }
 
+function readDeletedId(value: unknown): string | null {
+  if (typeof value !== 'object' || value === null) {
+    return null
+  }
+  const id = Reflect.get(value, 'id')
+  return typeof id === 'string' && id.length > 0 ? id : null
+}
+
 export async function updateLeadStatus(
   leadId: string,
   newStatus: string,
@@ -207,6 +215,62 @@ export async function updateLeadNotes(
     return { ok: true }
   } catch {
     console.error('Intel lead notes update failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+export async function deleteLead(leadId: string): Promise<LeadMutationResult> {
+  await requireIntelUser()
+
+  const idParsed = leadIdSchema.safeParse(leadId)
+  if (!idParsed.success) {
+    return { ok: false, error: 'Inquiry not found.' }
+  }
+
+  try {
+    const supabase = createSupabaseServiceRole()
+    const { data, error } = await supabase
+      .from('contact_submissions')
+      .select('status')
+      .eq('id', idParsed.data)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Intel lead delete read failed')
+      return { ok: false, error: GENERIC_ERROR }
+    }
+
+    const current = readStatus(data)
+    if (current === null) {
+      return { ok: false, error: 'Inquiry not found.' }
+    }
+
+    if (current !== 'spam') {
+      return { ok: false, error: 'Only spam inquiries can be deleted.' }
+    }
+
+    const { data: deleted, error: deleteError } = await supabase
+      .from('contact_submissions')
+      .delete()
+      .eq('id', idParsed.data)
+      .eq('status', 'spam')
+      .select('id')
+      .maybeSingle()
+
+    if (deleteError) {
+      console.error('Intel lead delete failed')
+      return { ok: false, error: GENERIC_ERROR }
+    }
+
+    if (readDeletedId(deleted) === null) {
+      revalidateLead(idParsed.data)
+      return { ok: false, error: 'Only spam inquiries can be deleted.' }
+    }
+
+    revalidateLead(idParsed.data)
+    return { ok: true }
+  } catch {
+    console.error('Intel lead delete failed')
     return { ok: false, error: GENERIC_ERROR }
   }
 }
