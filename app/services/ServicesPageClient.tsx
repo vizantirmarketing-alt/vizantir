@@ -174,7 +174,7 @@ function CarePricingCard({ tier }: { tier: CareTier }) {
       title={tier.name}
       price={
         <>
-          ${tier.priceMin.toLocaleString()}
+          ${tier.priceMin.toLocaleString('en-US')}
           <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
         </>
       }
@@ -191,7 +191,7 @@ function LandingPagePricingCard({ tier }: { tier: LandingPageTier }) {
   return (
     <ServicePricingCard
       title={tier.name}
-      price={`Starting at $${tier.priceMin.toLocaleString()}`}
+      price={`Starting at $${tier.priceMin.toLocaleString('en-US')}`}
       tagline={tier.tagline}
       description={tier.description}
       items={tier.includes}
@@ -294,7 +294,7 @@ function AiExperienceBlock() {
       <CardHeader>
         <CardTitle>Ongoing usage and management</CardTitle>
         <CardPrice>
-          {`from $${CHATBOT_USAGE_FROM.toLocaleString()}`}
+          {`from $${CHATBOT_USAGE_FROM.toLocaleString('en-US')}`}
           <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
         </CardPrice>
       </CardHeader>

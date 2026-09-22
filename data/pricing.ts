@@ -430,5 +430,5 @@ export const EXISTING_SITE_PAGE_RATE_DISPLAY = `$${EXISTING_SITE_PAGE_RATE.toLoc
 
 export function formatCareClientPrice(priceMin: number): string {
   const discounted = Math.round(priceMin * (1 - 0.15))
-  return `$${discounted.toLocaleString()}`
+  return `$${discounted.toLocaleString('en-US')}`
 }
