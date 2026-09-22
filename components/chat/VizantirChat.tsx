@@ -34,11 +34,27 @@ const QUICK_ACTIONS = [
 const VIZANTIR_URL_PATTERN =
   /(?:https?:\/\/|\/\/)?(?:www\.)?vizantir\.com(?![A-Za-z0-9-])(?!\.[A-Za-z0-9-])(?:(?:\/|[?#])[^\s<>"'`]*)?/gi;
 
+const EMAIL_PATTERN = /[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?![A-Za-z0-9._+-])/;
+
+const PHONE_PATTERN =
+  /\+\d{1,3}[ \t\u00a0]*\(?\d{3}\)?[ \t\u00a0.-]*\d{3}[ \t\u00a0.-]*\d{4}(?!\d)/;
+
+const LINKIFY_PATTERN = new RegExp(
+  `(?<email>${EMAIL_PATTERN.source})|(?<phone>${PHONE_PATTERN.source})|(?<url>${VIZANTIR_URL_PATTERN.source})`,
+  'gi',
+);
+
 const TRAILING_URL_PUNCTUATION = /[.,;:!?…]+$/;
+
+const EMAIL_HOST = 'vizantir.com';
+
+const MESSAGE_LINK_CLASS =
+  'break-words text-cobalt-primary underline decoration-cobalt-primary/60 underline-offset-2 transition-colors hover:decoration-cobalt-primary';
 
 type AssistantTextPart =
   | { type: 'text'; value: string }
-  | { type: 'link'; value: string; href: string };
+  | { type: 'link'; value: string; href: string }
+  | { type: 'external'; value: string; href: string };
 
 function countChar(value: string, char: string): number {
   let count = 0;
@@ -69,6 +85,29 @@ function hasSafeUrlBoundary(text: string, start: number): boolean {
   return !/[A-Za-z0-9@./-]/.test(text.charAt(start - 1));
 }
 
+function hasSafePhoneBoundary(text: string, start: number): boolean {
+  if (start === 0) return true;
+  return !/[0-9+]/.test(text.charAt(start - 1));
+}
+
+function toMailtoHref(rawEmail: string): string | null {
+  const atIndex = rawEmail.lastIndexOf('@');
+  if (atIndex <= 0) return null;
+
+  const local = rawEmail.slice(0, atIndex);
+  const host = rawEmail.slice(atIndex + 1).toLowerCase();
+  if (host !== EMAIL_HOST) return null;
+  if (local.startsWith('.') || local.endsWith('.') || local.includes('..')) return null;
+
+  return `mailto:${local}@${host}`;
+}
+
+function toTelHref(rawPhone: string): string | null {
+  const digits = rawPhone.replace(/\D/g, '');
+  if (digits.length < 7 || digits.length > 15) return null;
+  return `tel:+${digits}`;
+}
+
 function toInternalPath(rawUrl: string): string | null {
   const withProtocol = /^https?:\/\//i.test(rawUrl)
     ? rawUrl
@@ -97,32 +136,67 @@ function toInternalPath(rawUrl: string): string | null {
   return null;
 }
 
-function linkifyVizantirUrls(content: string, streaming: boolean): AssistantTextPart[] {
+function resolveMatchPart(
+  content: string,
+  streaming: boolean,
+  start: number,
+  raw: string,
+  groups: Record<string, string | undefined> | undefined,
+): AssistantTextPart | null {
+  const rawEnd = start + raw.length;
+
+  if (groups?.email !== undefined) {
+    if (!hasSafeUrlBoundary(content, start)) return null;
+    if (streaming && rawEnd === content.length) return null;
+
+    const href = toMailtoHref(raw);
+    if (!href) return null;
+
+    return { type: 'external', value: raw, href };
+  }
+
+  if (groups?.phone !== undefined) {
+    if (!hasSafePhoneBoundary(content, start)) return null;
+    if (streaming && rawEnd === content.length) return null;
+
+    const href = toTelHref(raw);
+    if (!href) return null;
+
+    return { type: 'external', value: raw, href };
+  }
+
+  if (!hasSafeUrlBoundary(content, start)) return null;
+
+  const label = trimUrlTail(raw);
+  if (!label) return null;
+
+  const stillGrowing = streaming && rawEnd === content.length && label.length === raw.length;
+  if (stillGrowing) return null;
+
+  const href = toInternalPath(label);
+  if (!href) return null;
+
+  return { type: 'link', value: label, href };
+}
+
+function linkifyAssistantText(content: string, streaming: boolean): AssistantTextPart[] {
   const parts: AssistantTextPart[] = [];
-  const pattern = new RegExp(VIZANTIR_URL_PATTERN.source, 'gi');
+  const pattern = new RegExp(LINKIFY_PATTERN.source, 'gi');
   let cursor = 0;
 
   for (const match of content.matchAll(pattern)) {
     const start = match.index;
-    if (start === undefined || !hasSafeUrlBoundary(content, start)) continue;
+    if (start === undefined || start < cursor) continue;
 
-    const raw = match[0];
-    const label = trimUrlTail(raw);
-    if (!label) continue;
-
-    const rawEnd = start + raw.length;
-    const stillGrowing = streaming && rawEnd === content.length && label.length === raw.length;
-    if (stillGrowing) continue;
-
-    const href = toInternalPath(label);
-    if (!href) continue;
+    const part = resolveMatchPart(content, streaming, start, match[0], match.groups);
+    if (part === null) continue;
 
     if (start > cursor) {
       parts.push({ type: 'text', value: content.slice(cursor, start) });
     }
 
-    parts.push({ type: 'link', value: label, href });
-    cursor = start + label.length;
+    parts.push(part);
+    cursor = start + part.value.length;
   }
 
   if (cursor < content.length) {
@@ -153,19 +227,25 @@ function findQuickActionAnchorIndex(messages: readonly ChatMessage[], isStreamin
 }
 
 function AssistantMessageBody({ content, streaming }: { content: string; streaming: boolean }) {
-  return linkifyVizantirUrls(content, streaming).map((part, index) =>
-    part.type === 'text' ? (
-      <span key={index}>{part.value}</span>
-    ) : (
-      <Link
-        key={index}
-        href={part.href}
-        className="break-words text-cobalt-primary underline decoration-cobalt-primary/60 underline-offset-2 transition-colors hover:decoration-cobalt-primary"
-      >
+  return linkifyAssistantText(content, streaming).map((part, index) => {
+    if (part.type === 'text') {
+      return <span key={index}>{part.value}</span>;
+    }
+
+    if (part.type === 'external') {
+      return (
+        <a key={index} href={part.href} className={MESSAGE_LINK_CLASS}>
+          {part.value}
+        </a>
+      );
+    }
+
+    return (
+      <Link key={index} href={part.href} className={MESSAGE_LINK_CLASS}>
         {part.value}
       </Link>
-    ),
-  );
+    );
+  });
 }
 
 function QuickActionChips() {
