@@ -407,6 +407,7 @@ export const CONTACT_BUDGET_FROM_PRICING = [
   `${growthTier.price} – ${enterpriseTier.price}`,
   `${enterpriseTier.price}`,
   'Not Sure Yet',
+  'Under $15,000',
 ] as const
 
 export const CONTACT_BUDGET_FROM_LANDING_PAGES = [
