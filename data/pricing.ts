@@ -381,7 +381,7 @@ export const pricingFAQs = {
   cost: `Project pricing starts at ${essentialsTier.price} for Essentials, ${growthTier.price} for Growth, and ${enterpriseTier.price} for Enterprise. Timelines are ${essentialsTier.timeline}, ${growthTier.timeline}, and ${enterpriseTier.timeline} respectively.`,
   retainer: `After launch, care retainers start at ${essentialCareTier.price} for ${essentialCareTier.name}, ${websiteCareTier.price} for ${websiteCareTier.name}, and ${growthCareTier.price} for ${growthCareTier.name}.`,
   timeline: `${essentialsTier.name} projects take ${essentialsTier.timeline} from kickoff. ${growthTier.name} projects run ${growthTier.timeline}. ${enterpriseTier.name} builds can stretch ${enterpriseTier.timeline} depending on scope.`,
-  budgetPositioning: `Projects start at ${essentialsTier.price} and scale to ${enterpriseTier.price} depending on scope. Smaller projects come up too. A two or three page site or a single landing page falls outside the tiers, and we quote those individually. Tell us what you're working on.`,
+  budgetPositioning: `Projects start at ${essentialsTier.price} and scale to ${enterpriseTier.price} depending on scope. Smaller projects come up too. A two or three page site or a single landing page falls outside the tiers, and we price those around what the project actually needs. Tell us what you're working on.`,
 } as const
 
 /** Industry landing pages — pass vertical label and scope detail for the second sentence. */

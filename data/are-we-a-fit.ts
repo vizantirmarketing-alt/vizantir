@@ -131,7 +131,7 @@ export const areWeAFitPageContent: AreWeAFitPageContent = {
         link: { label: 'Campaign landing pages', href: '/landing-pages' },
         after: ` start at ${campaignLandingPageFloor}, for a business that needs one page to do one job. After launch, Website Care is optional ongoing work — content, conversion, search, and related improvements. Monthly plans range from ${carePricing[0].price} to ${carePricing[2].price}; see the Services page.`,
       },
-      "Not every project needs a full build. If the scope is smaller than the tiers, we quote it individually. We're a fit when the website has real work to do.",
+      "Not every project needs a full build. If the scope is smaller than the tiers, we price it around what the project actually needs. We're a fit when the website has real work to do.",
       "If we don't think a project at this level will pay for itself in your business, we'll say so on the call before you spend anything.",
     ],
   },
