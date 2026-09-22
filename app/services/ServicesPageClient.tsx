@@ -79,6 +79,12 @@ const CLOSING_CTA = {
   body: 'Describe where the business is going, what the current site is failing to do, and what needs to change. That is the material the conversation needs.',
 } as const
 
+const SMALLER_PROJECTS = {
+  heading: 'Something smaller?',
+  body: "Some projects are simpler. A two or three page site, a single landing page, a clean launch without a CMS behind it. If that's closer to what you need, tell us what you're working on and we'll quote it.",
+  cta: 'Tell us about the project',
+} as const
+
 const CARE_CLIENT_DISCOUNT = 'Care plan clients get 15% off.'
 
 const [essentialCare, websiteCare, growthCare] = carePricing
@@ -520,6 +526,21 @@ function ProjectPricingSection() {
       <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-muted-foreground">
         {careFooterText}
       </p>
+      <div className="mx-auto mt-16 max-w-2xl rounded-xl border border-border bg-card px-7 py-10 text-center shadow-sm md:px-10 md:py-12">
+        <h3 className="text-balance text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+          {SMALLER_PROJECTS.heading}
+        </h3>
+        <p className="mx-auto mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
+          {SMALLER_PROJECTS.body}
+        </p>
+        <Button
+          asChild
+          variant="cobaltOutline"
+          className="mt-6 rounded-xl px-6 py-3 text-sm font-semibold text-foreground hover:border-border hover:bg-background"
+        >
+          <Link href="/contact">{SMALLER_PROJECTS.cta}</Link>
+        </Button>
+      </div>
     </PricingSection>
   )
 }
