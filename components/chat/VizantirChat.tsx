@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageCircle, Send, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,6 +25,164 @@ const MAX_INPUT_LENGTH = 2000;
 const ERROR_MESSAGE = 'Something went wrong, please try again.';
 const GREETING_TOOLTIP_SESSION_KEY = 'vizantir-chat-greeting-seen';
 const SCROLL_GREETING_THRESHOLD = 0.5;
+
+const QUICK_ACTIONS = [
+  { label: 'Services', href: '/services' },
+  { label: 'Landing page pricing', href: '/landing-pages' },
+] as const;
+
+const VIZANTIR_URL_PATTERN =
+  /(?:https?:\/\/|\/\/)?(?:www\.)?vizantir\.com(?![A-Za-z0-9-])(?!\.[A-Za-z0-9-])(?:(?:\/|[?#])[^\s<>"'`]*)?/gi;
+
+const TRAILING_URL_PUNCTUATION = /[.,;:!?…]+$/;
+
+type AssistantTextPart =
+  | { type: 'text'; value: string }
+  | { type: 'link'; value: string; href: string };
+
+function countChar(value: string, char: string): number {
+  let count = 0;
+  for (const current of value) {
+    if (current === char) count += 1;
+  }
+  return count;
+}
+
+function trimUrlTail(raw: string): string {
+  let value = raw.replace(TRAILING_URL_PUNCTUATION, '');
+
+  while (value.endsWith(')') && countChar(value, ')') > countChar(value, '(')) {
+    value = value.slice(0, -1);
+  }
+  while (value.endsWith(']') && countChar(value, ']') > countChar(value, '[')) {
+    value = value.slice(0, -1);
+  }
+  while (value.endsWith('}') && countChar(value, '}') > countChar(value, '{')) {
+    value = value.slice(0, -1);
+  }
+
+  return value.replace(TRAILING_URL_PUNCTUATION, '');
+}
+
+function hasSafeUrlBoundary(text: string, start: number): boolean {
+  if (start === 0) return true;
+  return !/[A-Za-z0-9@./-]/.test(text.charAt(start - 1));
+}
+
+function toInternalPath(rawUrl: string): string | null {
+  const withProtocol = /^https?:\/\//i.test(rawUrl)
+    ? rawUrl
+    : rawUrl.startsWith('//')
+      ? `https:${rawUrl}`
+      : `https://${rawUrl}`;
+
+  let parsed: URL;
+  try {
+    parsed = new URL(withProtocol);
+  } catch {
+    return null;
+  }
+
+  const host = parsed.hostname.toLowerCase();
+  if (host !== 'vizantir.com' && host !== 'www.vizantir.com') return null;
+
+  const hostIndex = withProtocol.toLowerCase().indexOf(host);
+  if (hostIndex === -1) return null;
+
+  const suffix = withProtocol.slice(hostIndex + host.length);
+  if (suffix.includes('\\') || suffix.startsWith('//')) return null;
+  if (suffix === '') return '/';
+  if (suffix.startsWith('/')) return suffix;
+  if (suffix.startsWith('?') || suffix.startsWith('#')) return `/${suffix}`;
+  return null;
+}
+
+function linkifyVizantirUrls(content: string, streaming: boolean): AssistantTextPart[] {
+  const parts: AssistantTextPart[] = [];
+  const pattern = new RegExp(VIZANTIR_URL_PATTERN.source, 'gi');
+  let cursor = 0;
+
+  for (const match of content.matchAll(pattern)) {
+    const start = match.index;
+    if (start === undefined || !hasSafeUrlBoundary(content, start)) continue;
+
+    const raw = match[0];
+    const label = trimUrlTail(raw);
+    if (!label) continue;
+
+    const rawEnd = start + raw.length;
+    const stillGrowing = streaming && rawEnd === content.length && label.length === raw.length;
+    if (stillGrowing) continue;
+
+    const href = toInternalPath(label);
+    if (!href) continue;
+
+    if (start > cursor) {
+      parts.push({ type: 'text', value: content.slice(cursor, start) });
+    }
+
+    parts.push({ type: 'link', value: label, href });
+    cursor = start + label.length;
+  }
+
+  if (cursor < content.length) {
+    parts.push({ type: 'text', value: content.slice(cursor) });
+  }
+
+  if (parts.length === 0) {
+    parts.push({ type: 'text', value: content });
+  }
+
+  return parts;
+}
+
+function findQuickActionAnchorIndex(messages: readonly ChatMessage[], isStreaming: boolean): number {
+  let anchor = -1;
+  let hasCompletedAssistantReply = false;
+
+  for (let index = 0; index < messages.length; index += 1) {
+    const message = messages[index];
+    if (message === undefined || message.role !== 'assistant' || message.content === '') continue;
+
+    const isLiveReply = isStreaming && index === messages.length - 1;
+    if (!isLiveReply) hasCompletedAssistantReply = true;
+    anchor = index;
+  }
+
+  return hasCompletedAssistantReply ? anchor : -1;
+}
+
+function AssistantMessageBody({ content, streaming }: { content: string; streaming: boolean }) {
+  return linkifyVizantirUrls(content, streaming).map((part, index) =>
+    part.type === 'text' ? (
+      <span key={index}>{part.value}</span>
+    ) : (
+      <Link
+        key={index}
+        href={part.href}
+        className="break-words text-cobalt-primary underline decoration-cobalt-primary/60 underline-offset-2 transition-colors hover:decoration-cobalt-primary"
+      >
+        {part.value}
+      </Link>
+    ),
+  );
+}
+
+function QuickActionChips() {
+  return (
+    <div className="flex w-full flex-wrap gap-2">
+      {QUICK_ACTIONS.map((action) => (
+        <Link
+          key={action.href}
+          href={action.href}
+          className="rounded-full border border-cobalt-muted-border bg-cobalt-muted-subtle px-3 py-1 text-xs text-foreground transition-colors hover:border-cobalt-primary hover:bg-cobalt-primary/20"
+        >
+          {action.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export function VizantirChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -215,6 +374,8 @@ export function VizantirChat() {
     }
   };
 
+  const quickActionAnchorIndex = findQuickActionAnchorIndex(messages, isStreaming);
+
   if (!mounted) return null;
 
   const showEmptyState = messages.length === 0;
@@ -292,10 +453,16 @@ export function VizantirChat() {
               message.content === '';
             if (isEmptyStreaming) return null;
 
+            const isLiveAssistantMessage =
+              isStreaming && index === messages.length - 1 && message.role === 'assistant';
+
             return (
               <div
                 key={`${message.role}-${index}`}
-                className={cn('flex', message.role === 'user' ? 'justify-end' : 'justify-start')}
+                className={cn(
+                  'flex flex-col gap-2',
+                  message.role === 'user' ? 'items-end' : 'items-start'
+                )}
               >
                 <div
                   className={cn(
@@ -305,8 +472,16 @@ export function VizantirChat() {
                       : 'rounded-bl-md bg-muted text-foreground'
                   )}
                 >
-                  {message.content}
+                  {message.role === 'assistant' ? (
+                    <AssistantMessageBody
+                      content={message.content}
+                      streaming={isLiveAssistantMessage}
+                    />
+                  ) : (
+                    message.content
+                  )}
                 </div>
+                {index === quickActionAnchorIndex ? <QuickActionChips /> : null}
               </div>
             );
           })}
