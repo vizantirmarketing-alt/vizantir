@@ -81,7 +81,8 @@ const CLOSING_CTA = {
 
 const SMALLER_PROJECTS = {
   heading: 'Something smaller?',
-  body: "Some projects are simpler. A two or three page site, a single landing page, a clean launch without a CMS behind it. If that's closer to what you need, tell us what you're working on and we'll quote it.",
+  body: "Some projects are simpler. A two or three page site, a single landing page, a clean launch without a CMS behind it. If that's closer to what you need, tell us what you're working on and we'll price it around what the project actually needs. Landing page pricing is already published.",
+  landingCta: 'See landing page pricing',
   cta: 'Tell us about the project',
 } as const
 
@@ -533,13 +534,22 @@ function ProjectPricingSection() {
         <p className="mx-auto mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
           {SMALLER_PROJECTS.body}
         </p>
-        <Button
-          asChild
-          variant="cobaltOutline"
-          className="mt-6 rounded-xl px-6 py-3 text-sm font-semibold text-foreground hover:border-border hover:bg-background"
-        >
-          <Link href="/contact">{SMALLER_PROJECTS.cta}</Link>
-        </Button>
+        <div className="mt-6 flex flex-col items-center gap-3 md:flex-row md:justify-center">
+          <Button
+            asChild
+            variant="default"
+            className="rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt"
+          >
+            <Link href="/landing-pages">{SMALLER_PROJECTS.landingCta}</Link>
+          </Button>
+          <Button
+            asChild
+            variant="cobaltOutline"
+            className="rounded-xl px-6 py-3 text-sm font-semibold text-foreground hover:border-border hover:bg-background"
+          >
+            <Link href="/contact">{SMALLER_PROJECTS.cta}</Link>
+          </Button>
+        </div>
       </div>
     </PricingSection>
   )
