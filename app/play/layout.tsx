@@ -19,6 +19,7 @@ const arcadePixel = Press_Start_2P({
 export const metadata: Metadata = {
   title: { absolute: 'Vizantir Arcade | Play' },
   description: 'A small collection of retro inspired browser games built by Vizantir.',
+  robots: { index: false, follow: true },
   manifest: '/play/manifest.webmanifest',
   appleWebApp: {
     capable: true,

@@ -205,17 +205,9 @@ export async function generateMetadata(): Promise<Metadata> {
       address: false,
       telephone: false,
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
+    // A string renders one <meta name="robots"> tag. The object form with googleBot
+    // renders a second <meta name="googlebot"> tag with the same directives.
+    robots: 'index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1',
     openGraph: {
       type: 'website',
       locale: 'en_US',

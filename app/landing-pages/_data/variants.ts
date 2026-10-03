@@ -168,7 +168,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
   googleAds: {
     slug: 'googleAds',
     route: '/landing-pages/for-google-ads',
-    metaTitle: 'Google Ads Landing Pages | Custom Built on Next.js | Vizantir',
+    metaTitle: 'Google Ads Landing Pages Built on Next.js | Vizantir',
     metaDescription:
       'Custom landing pages for Google Ads campaigns. Built for conversion, not templates. Campaign Landing Page and Conversion System tiers from $3,500.',
     hero: {
@@ -250,7 +250,7 @@ export const variants: Record<VariantSlug, LandingPageVariant> = {
   productLaunches: {
     slug: 'productLaunches',
     route: '/landing-pages/for-product-launches',
-    metaTitle: 'Product Launch Landing Pages | Custom Next.js Builds | Vizantir',
+    metaTitle: 'Product Launch Landing Pages on Next.js | Vizantir',
     metaDescription:
       'Custom landing pages for product launches. Built to convert launch traffic on day one. Campaign Landing Page and Conversion System tiers from $3,500.',
     hero: {

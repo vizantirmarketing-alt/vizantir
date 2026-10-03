@@ -9,7 +9,7 @@ import { CORE_STACK, SITE_URL, SPECIALIZED_TOOLS, type Technology } from './_dat
 const PAGE_URL = `${SITE_URL}/technology`
 
 const PAGE_DESCRIPTION =
-  'Vizantir builds on Next.js, Sanity, Vercel, Tailwind, and TypeScript. We bring in tools like Supabase, Stripe, Resend, Cloudflare, GSAP, and Framer Motion when the project needs them.'
+  'Vizantir builds on Next.js, Sanity, Vercel, Tailwind, and TypeScript, and adds Supabase, Stripe, Resend, and more when a project needs them.'
 
 export const metadata: Metadata = {
   title: {

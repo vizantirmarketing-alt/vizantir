@@ -13,7 +13,7 @@ import {
 import { pageServiceId } from '@/lib/schema/ids'
 
 const META_DESCRIPTION =
-  'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings, establish credibility, and generate qualified leads.'
+  'Custom websites for commercial real estate firms, brokerages, and property groups. Built to showcase listings and generate qualified leads.'
 
 export const metadata: Metadata = {
   title: { absolute: 'Commercial Real Estate Web Design That Converts | Vizantir' },

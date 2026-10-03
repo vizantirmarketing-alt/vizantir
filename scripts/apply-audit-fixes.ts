@@ -35,7 +35,7 @@ const client = createClient({
   perspective: 'raw',
 })
 
-type Target = { type: 'post' | 'faq' | 'caseStudy' | 'page'; slug?: string; id?: string }
+type Target = { type: 'post' | 'faq' | 'caseStudy' | 'page' | 'service'; slug?: string; id?: string }
 
 /** `body` edits match inside portable-text span text. Other fields are dotted paths to a string. */
 type Edit = { target: Target; field: string; old: string; new: string; batch?: number }
@@ -379,12 +379,37 @@ const BATCH_4: Edit[] = [
   ),
 ]
 
+/** Batch 5: meta descriptions over 160 characters that live in Sanity. */
+const caseStudy = (slug: string, old: string, next: string): Edit => ({
+  target: { type: 'caseStudy', slug },
+  field: 'seo.metaDescription',
+  old,
+  new: next,
+})
+const BATCH_5: Edit[] = [
+  // No seo object yet: the page falls back to `summary`, which is left alone.
+  caseStudy('beacon-of-light-music', UNSET, 'A worship music website for Michael Aaron Dreyer. Every track with its story, and he adds new songs himself with no developer.'),
+  caseStudy('evolve-dance-center', UNSET, 'A Las Vegas dance studio moved from Wix to Next.js and Sanity. Faster pages, better search visibility, and email that never went down.'),
+  caseStudy(
+    'golden-era-integra',
+    'How Vizantir built an editorial platform for a 1995 Acura Integra GS-R restoration, with documented build journal, parts archive, and full Sanity CMS integration.',
+    'How Vizantir built an editorial platform for a 1995 Acura Integra GS-R restoration, with a build journal, parts archive, and Sanity CMS.',
+  ),
+  {
+    target: { type: 'service', slug: 'website-care' },
+    field: 'seo.metaDescription',
+    old: 'Ongoing website improvement after launch. Content changes, performance and analytics review, conversion, search visibility, and technical upkeep. Plans start at $295/month.',
+    new: 'Ongoing website care after launch: content changes, performance review, search visibility, and technical upkeep. Plans start at $295/month.',
+  },
+]
+
 const EDITS: Edit[] = [
   ...BATCH_1.map((e) => ({ ...e, batch: 1 })),
   ...BATCH_2.map((e) => ({ ...e, batch: 2 })),
   ...BATCH_3_COST.map((e) => ({ ...e, batch: 3 })),
   ...BATCH_3_TITLES.map((e) => ({ ...e, batch: 3 })),
   ...BATCH_4.map((e) => ({ ...e, batch: 4 })),
+  ...BATCH_5.map((e) => ({ ...e, batch: 5 })),
 ]
 
 // ---------------------------------------------------------------------------
@@ -530,7 +555,7 @@ async function main() {
     console.log(`BATCH ${p.edit.batch}`)
     console.log(`DOC   ${p.docId}   (${targetLabel(p.edit.target)})`)
     console.log(`FIELD ${p.edit.field}`)
-    console.log(`OLD   ${p.edit.old === '' ? '(unset: falls back to post title)' : show(p.edit.old)}`)
+    console.log(`OLD   ${p.edit.old === '' ? '(unset: page falls back to another field)' : show(p.edit.old)}`)
     console.log(`NEW   ${show(p.edit.new)}${p.edit.field === 'seo.metaTitle' ? `  [${p.edit.new.length} chars, ${p.edit.new.length + 11} with suffix]` : ''}${/—/.test(p.edit.new) ? '  [WARNING: em-dash in new text]' : ''}`)
     console.log('')
   }
@@ -586,7 +611,16 @@ async function main() {
   for (const doc of affected.values()) {
     const sets: Record<string, string> = {}
     for (const p of planned.filter((x) => x.docId === doc._id)) sets[p.path] = p.after
-    await client.transaction().patch(doc._id, (patch) => patch.ifRevisionId(doc._rev).set(sets)).commit()
+    const tx = client.transaction()
+    // A document with no seo object needs one before seo.* fields can be set. This is a
+    // separate patch so it is applied before the set, regardless of operation ordering.
+    if (doc.seo == null && Object.keys(sets).some((k) => k.startsWith('seo.'))) {
+      tx.patch(doc._id, (patch) => patch.ifRevisionId(doc._rev).setIfMissing({ seo: { _type: 'seo' } }))
+      tx.patch(doc._id, (patch) => patch.set(sets))
+    } else {
+      tx.patch(doc._id, (patch) => patch.ifRevisionId(doc._rev).set(sets))
+    }
+    await tx.commit()
     console.log(`Patched ${doc._id} (${Object.keys(sets).length} field(s))`)
   }
 }

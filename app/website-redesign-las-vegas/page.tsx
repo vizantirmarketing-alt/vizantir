@@ -4,7 +4,7 @@ import { WebsiteRedesignPageSchema } from './_schema'
 
 const META_TITLE = 'Website Redesign Las Vegas | Vizantir Design Studio'
 const META_DESCRIPTION =
-  'SEO-safe website redesigns in Las Vegas. Every URL mapped, rankings preserved, content migrated cleanly. Fixed-scope Next.js rebuilds for established businesses that can\'t afford to lose traffic.'
+  'SEO-safe website redesigns in Las Vegas. Every URL mapped, rankings preserved, content migrated cleanly. Fixed-scope Next.js rebuilds.'
 
 export const metadata: Metadata = {
   title: {
