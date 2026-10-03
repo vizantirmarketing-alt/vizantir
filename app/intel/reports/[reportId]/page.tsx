@@ -8,10 +8,13 @@ import { ReportReviewControls } from '@/app/intel/reports/_components/ReportRevi
 import { loadReviewFields } from '@/app/intel/reports/data'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { isReportId, loadReport } from '@/lib/reports/load'
+import { EMPTY_MANUAL_METRICS_FORM } from '@/lib/reports/manual-metrics'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60
+// Sending re-renders the PDF through a server action on this route. The PDF
+// route allows 90 seconds, so this matches it.
+export const maxDuration = 90
 
 export const metadata: Metadata = {
   title: 'Report',
@@ -88,6 +91,11 @@ export default async function IntelReportPreviewPage({
             reportId={result.document.reportId}
             analysis={review?.ok ? review.fields.analysis : ''}
             workCompleted={review?.ok ? review.fields.workCompleted : ''}
+            manualMetrics={
+              review?.ok
+                ? review.fields.manualMetrics
+                : EMPTY_MANUAL_METRICS_FORM
+            }
           />
         ) : null
       }

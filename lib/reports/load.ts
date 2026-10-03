@@ -1,13 +1,15 @@
 import 'server-only';
 
 import { isCareTier, type CareTier, type ReportSnapshot } from '@/lib/reports/generate';
+import { parseManualMetrics, type ManualMetrics } from '@/lib/reports/manual-metrics';
 import { parseReportSnapshot } from '@/lib/reports/parse-snapshot';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 const REPORT_ID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-const REPORT_COLUMNS = 'id, client_id, period, tier, status, snapshot';
+const REPORT_COLUMNS =
+  'id, client_id, period, tier, status, snapshot, work_completed, manual_metrics';
 const CLIENT_COLUMNS = 'id, name, slug, site_url, care_tier';
 
 export type ReportStatus = 'pending' | 'draft' | 'sent' | 'failed';
@@ -27,6 +29,10 @@ export type ReportDocument = {
   status: ReportStatus;
   client: ReportClient;
   snapshot: ReportSnapshot;
+  /** Operator-written note for the month. Null when empty. */
+  workCompleted: string | null;
+  /** Operator-entered metrics. Null when nothing valid was entered. */
+  manualMetrics: ManualMetrics | null;
 };
 
 export type LoadReportResult =
@@ -91,6 +97,8 @@ export async function loadReport(reportId: string): Promise<LoadReportResult> {
         status: report.status,
         client,
         snapshot: report.snapshot,
+        workCompleted: report.workCompleted,
+        manualMetrics: report.manualMetrics,
       },
     };
   } catch {
@@ -106,6 +114,8 @@ type ParsedReportRow = {
   tier: CareTier;
   status: ReportStatus;
   snapshot: ReportSnapshot;
+  workCompleted: string | null;
+  manualMetrics: ManualMetrics | null;
 };
 
 function parseReportRow(value: unknown): ParsedReportRow | null {
@@ -128,7 +138,16 @@ function parseReportRow(value: unknown): ParsedReportRow | null {
   ) {
     return null;
   }
-  return { id, clientId, period, tier, status, snapshot };
+  return {
+    id,
+    clientId,
+    period,
+    tier,
+    status,
+    snapshot,
+    workCompleted: asNonEmptyString(value.work_completed),
+    manualMetrics: parseManualMetrics(value.manual_metrics),
+  };
 }
 
 function parseClientRow(value: unknown): ReportClient | null {

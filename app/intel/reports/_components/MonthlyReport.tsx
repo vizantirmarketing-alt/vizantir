@@ -7,6 +7,7 @@ import {
   formatCtr,
   formatDuration,
   formatInp,
+  formatHours,
   formatInteger,
   formatLabCls,
   formatLabLcp,
@@ -26,6 +27,7 @@ import type { ReportClient, ReportDocument } from '@/lib/reports/load'
 import type { CruxMetric } from '@/lib/reports/crux'
 import type { EngagementReportData } from '@/lib/reports/engagement'
 import type { GscMovedRow } from '@/lib/reports/gsc'
+import type { ManualMetrics } from '@/lib/reports/manual-metrics'
 import type { PsiReportData } from '@/lib/reports/psi'
 import { buildReportSummary } from '@/lib/reports/summary'
 import { cn } from '@/lib/utils'
@@ -35,7 +37,7 @@ type MonthlyReportProps = {
 }
 
 export function MonthlyReport({ document }: MonthlyReportProps) {
-  const { snapshot, client, status } = document
+  const { snapshot, client, status, workCompleted, manualMetrics } = document
   const month = formatMonth(snapshot.period.start)
   const summary = buildReportSummary(snapshot)
   const showSearch = snapshot.gsc.ok && !snapshot.gsc.skipped
@@ -71,6 +73,10 @@ export function MonthlyReport({ document }: MonthlyReportProps) {
         </div>
       </ReportSection>
 
+      {workCompleted !== null && workCompleted.trim().length > 0 ? (
+        <WorkCompletedSection text={workCompleted} />
+      ) : null}
+
       {showHealth ? (
         <SiteHealthSection snapshot={snapshot} month={month} />
       ) : null}
@@ -94,6 +100,12 @@ export function MonthlyReport({ document }: MonthlyReportProps) {
       ) : null}
 
       <InquiriesSection snapshot={snapshot} />
+
+      <CallsAndLeadsSection metrics={manualMetrics} />
+
+      <BusinessProfileSection metrics={manualMetrics} />
+
+      <YouTubeSection metrics={manualMetrics} />
     </article>
   )
 }
@@ -571,6 +583,127 @@ function InquiriesSection({
           ])}
         />
       )}
+    </ReportSection>
+  )
+}
+
+function WorkCompletedSection({ text }: { text: string }) {
+  const paragraphs = text
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0)
+
+  return (
+    <ReportSection title="What I did this month">
+      <div className="space-y-4">
+        {paragraphs.map((paragraph, index) => (
+          <p
+            key={index}
+            className="whitespace-pre-line text-[0.95rem] leading-[1.65] text-body"
+          >
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </ReportSection>
+  )
+}
+
+function CallsAndLeadsSection({ metrics }: { metrics: ManualMetrics | null }) {
+  if (metrics === null) {
+    return null
+  }
+  const { calls, formLeads } = metrics
+  if (calls === undefined && formLeads === undefined) {
+    return null
+  }
+
+  return (
+    <ReportSection title="Calls and form leads">
+      <MetricGrid>
+        {calls !== undefined ? (
+          <Metric label="Phone calls" value={formatInteger(calls)} />
+        ) : null}
+        {formLeads !== undefined ? (
+          <Metric label="Form leads" value={formatInteger(formLeads)} />
+        ) : null}
+      </MetricGrid>
+    </ReportSection>
+  )
+}
+
+function BusinessProfileSection({
+  metrics,
+}: {
+  metrics: ManualMetrics | null
+}) {
+  const gbp = metrics?.gbp
+  if (gbp === undefined) {
+    return null
+  }
+  const { calls, directionRequests, websiteClicks } = gbp
+  if (
+    calls === undefined &&
+    directionRequests === undefined &&
+    websiteClicks === undefined
+  ) {
+    return null
+  }
+
+  return (
+    <ReportSection title="Google Business Profile">
+      <MetricGrid>
+        {calls !== undefined ? (
+          <Metric label="Calls" value={formatInteger(calls)} />
+        ) : null}
+        {directionRequests !== undefined ? (
+          <Metric
+            label="Direction requests"
+            value={formatInteger(directionRequests)}
+          />
+        ) : null}
+        {websiteClicks !== undefined ? (
+          <Metric label="Website clicks" value={formatInteger(websiteClicks)} />
+        ) : null}
+      </MetricGrid>
+    </ReportSection>
+  )
+}
+
+function YouTubeSection({ metrics }: { metrics: ManualMetrics | null }) {
+  const youtube = metrics?.youtube
+  if (youtube === undefined) {
+    return null
+  }
+  const { views, watchTimeHours, videosPublished } = youtube
+  if (
+    views === undefined &&
+    watchTimeHours === undefined &&
+    videosPublished === undefined
+  ) {
+    return null
+  }
+
+  return (
+    <ReportSection title="YouTube">
+      <MetricGrid>
+        {views !== undefined ? (
+          <Metric label="Views" value={formatInteger(views)} />
+        ) : null}
+        {watchTimeHours !== undefined ? (
+          <Metric
+            label="Watch time"
+            value={formatHours(watchTimeHours)}
+            valueNote="hours"
+          />
+        ) : null}
+        {videosPublished !== undefined ? (
+          <Metric
+            label="Videos published"
+            value={formatInteger(videosPublished)}
+          />
+        ) : null}
+      </MetricGrid>
     </ReportSection>
   )
 }

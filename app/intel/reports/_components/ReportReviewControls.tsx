@@ -3,11 +3,13 @@
 import { useState, useTransition, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/button'
+import type { ManualMetricsFormValues } from '@/lib/reports/manual-metrics'
 import { cn } from '@/lib/utils'
 
 import {
   generateReportAnalysis,
   sendReviewedReport,
+  updateReportManualMetrics,
   updateReportReviewFields,
 } from '@/app/intel/reports/actions'
 
@@ -18,15 +20,49 @@ type ReportReviewControlsProps = {
   reportId: string
   analysis: string
   workCompleted: string
+  manualMetrics: ManualMetricsFormValues
 }
+
+const METRIC_FIELDS: ReadonlyArray<{
+  key: keyof ManualMetricsFormValues
+  label: string
+  group: string
+  decimal?: boolean
+}> = [
+  { key: 'calls', label: 'Phone calls', group: 'Calls and form leads' },
+  { key: 'formLeads', label: 'Form leads', group: 'Calls and form leads' },
+  { key: 'gbpCalls', label: 'Calls', group: 'Google Business Profile' },
+  {
+    key: 'gbpDirectionRequests',
+    label: 'Direction requests',
+    group: 'Google Business Profile',
+  },
+  {
+    key: 'gbpWebsiteClicks',
+    label: 'Website clicks',
+    group: 'Google Business Profile',
+  },
+  { key: 'youtubeViews', label: 'Views', group: 'YouTube' },
+  {
+    key: 'youtubeWatchTimeHours',
+    label: 'Watch time (hours)',
+    group: 'YouTube',
+    decimal: true,
+  },
+  { key: 'youtubeVideosPublished', label: 'Videos published', group: 'YouTube' },
+]
+
+const METRIC_GROUPS = ['Calls and form leads', 'Google Business Profile', 'YouTube']
 
 export function ReportReviewControls({
   reportId,
   analysis,
   workCompleted,
+  manualMetrics,
 }: ReportReviewControlsProps) {
   const [analysisValue, setAnalysisValue] = useState(analysis)
   const [workValue, setWorkValue] = useState(workCompleted)
+  const [metricsValue, setMetricsValue] = useState(manualMetrics)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [sendError, setSendError] = useState<string | null>(null)
   const [generateError, setGenerateError] = useState<string | null>(null)
@@ -56,6 +92,14 @@ export function ReportReviewControls({
         setSaveError(result.error)
         return
       }
+      const metricsResult = await updateReportManualMetrics(
+        reportId,
+        metricsValue,
+      )
+      if (!metricsResult.ok) {
+        setSaveError(metricsResult.error)
+        return
+      }
       setSaved(true)
     })
   }
@@ -76,6 +120,14 @@ export function ReportReviewControls({
       )
       if (!savedFields.ok) {
         setSendError(savedFields.error)
+        return
+      }
+      const savedMetrics = await updateReportManualMetrics(
+        reportId,
+        metricsValue,
+      )
+      if (!savedMetrics.ok) {
+        setSendError(savedMetrics.error)
         return
       }
 
@@ -172,6 +224,53 @@ export function ReportReviewControls({
           }}
           className={cn(fieldClassName, 'min-h-[8rem] resize-y')}
         />
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-sm leading-relaxed text-body">
+          Numbers from outside Google Analytics. Leave a field blank to leave it
+          out of the report.
+        </p>
+        {METRIC_GROUPS.map((group) => (
+          <fieldset key={group} className="space-y-2" disabled={pending}>
+            <legend className="mb-1 text-sm font-medium text-body">
+              {group}
+            </legend>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              {METRIC_FIELDS.filter((field) => field.group === group).map(
+                (field) => (
+                  <div key={field.key}>
+                    <label
+                      htmlFor={`report-metric-${field.key}`}
+                      className="mb-1 block text-xs text-meta"
+                    >
+                      {field.label}
+                    </label>
+                    <input
+                      id={`report-metric-${field.key}`}
+                      name={field.key}
+                      type="text"
+                      inputMode={field.decimal ? 'decimal' : 'numeric'}
+                      autoComplete="off"
+                      maxLength={20}
+                      value={metricsValue[field.key]}
+                      onChange={(event) => {
+                        const next = event.target.value
+                        setMetricsValue((current) => ({
+                          ...current,
+                          [field.key]: next,
+                        }))
+                        setSaved(false)
+                        setSaveError(null)
+                      }}
+                      className={fieldClassName}
+                    />
+                  </div>
+                ),
+              )}
+            </div>
+          </fieldset>
+        ))}
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

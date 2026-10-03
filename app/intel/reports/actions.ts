@@ -10,6 +10,11 @@ import {
   type GenerateAnalysisDraftResult,
 } from '@/lib/reports/analysis'
 import { isReportId } from '@/lib/reports/load'
+import {
+  manualMetricsFromForm,
+  type ManualMetricsFormValues,
+} from '@/lib/reports/manual-metrics'
+import { renderReportPdf } from '@/lib/reports/pdf'
 import { parseReportSnapshot } from '@/lib/reports/parse-snapshot'
 import { sendReport } from '@/lib/reports/send'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
@@ -25,6 +30,7 @@ export type ReportAnalysisResult =
 const GENERIC_ERROR = 'Unable to save. Try again shortly.'
 const SEND_ERROR = 'Unable to send. Try again shortly.'
 const DRAFT_ERROR = 'Unable to draft. Try again shortly.'
+const PDF_ERROR = 'Unable to refresh the PDF. Try again shortly.'
 const FIELD_MAX = 20_000
 
 const reportIdSchema = z
@@ -35,6 +41,20 @@ const reviewFieldsSchema = z.object({
   reportId: reportIdSchema,
   analysis: z.string().max(FIELD_MAX, 'Analysis is too long.'),
   workCompleted: z.string().max(FIELD_MAX, 'Work completed is too long.'),
+})
+
+const manualMetricsSchema = z.object({
+  reportId: reportIdSchema,
+  values: z.object({
+    calls: z.string().max(20),
+    formLeads: z.string().max(20),
+    gbpCalls: z.string().max(20),
+    gbpDirectionRequests: z.string().max(20),
+    gbpWebsiteClicks: z.string().max(20),
+    youtubeViews: z.string().max(20),
+    youtubeWatchTimeHours: z.string().max(20),
+    youtubeVideosPublished: z.string().max(20),
+  }),
 })
 
 type ReviewableReport = {
@@ -103,6 +123,55 @@ export async function updateReportReviewFields(
     return { ok: true }
   } catch {
     console.error('Report review fields update failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+export async function updateReportManualMetrics(
+  reportId: string,
+  values: ManualMetricsFormValues,
+): Promise<ReportMutationResult> {
+  await requireIntelUser()
+
+  const parsed = manualMetricsSchema.safeParse({ reportId, values })
+  if (!parsed.success) {
+    return { ok: false, error: 'Check the numbers and try again.' }
+  }
+
+  const metrics = manualMetricsFromForm(parsed.data.values)
+  if (!metrics.ok) {
+    return { ok: false, error: metrics.error }
+  }
+
+  try {
+    const located = await loadReviewableReport(parsed.data.reportId)
+    if (!located.ok) {
+      return located
+    }
+
+    const supabase = createSupabaseServiceRole()
+    const updated = await supabase
+      .from('reports')
+      .update({ manual_metrics: metrics.metrics })
+      .eq('id', located.report.id)
+      .eq('client_id', located.report.clientId)
+      .eq('tier', 'care')
+      .eq('status', 'pending')
+      .select('id')
+      .maybeSingle()
+
+    if (updated.error) {
+      console.error('Report manual metrics update failed')
+      return { ok: false, error: GENERIC_ERROR }
+    }
+    if (updated.data === null) {
+      return { ok: false, error: 'This report is no longer awaiting review.' }
+    }
+
+    revalidateReport(located.report.id)
+    return { ok: true }
+  } catch {
+    console.error('Report manual metrics update failed')
     return { ok: false, error: GENERIC_ERROR }
   }
 }
@@ -185,6 +254,14 @@ export async function sendReviewedReport(
     const located = await loadReviewableReport(parsed.data)
     if (!located.ok) {
       return located
+    }
+
+    // The stored PDF is rendered at generation time, before the work note and
+    // manual metrics exist. Re-render so the PDF matches what the client sees.
+    const pdf = await renderReportPdf(located.report.id)
+    if (!pdf.ok) {
+      console.error('Report PDF refresh before send failed')
+      return { ok: false, error: PDF_ERROR }
     }
 
     const result = await sendReport(located.report.id)

@@ -8,6 +8,10 @@ import {
   type ReportDocument,
   type ReportStatus,
 } from '@/lib/reports/load';
+import {
+  parseManualMetrics,
+  type ManualMetrics,
+} from '@/lib/reports/manual-metrics';
 import { parseReportSnapshot } from '@/lib/reports/parse-snapshot';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
@@ -50,7 +54,9 @@ export async function loadPublicReport(
 
     const confirmed = await supabase
       .from('reports')
-      .select('id, client_id, period, tier, status, snapshot, pdf_path, token')
+      .select(
+        'id, client_id, period, tier, status, snapshot, pdf_path, token, work_completed, manual_metrics'
+      )
       .eq('id', located.id)
       .eq('client_id', located.clientId)
       .eq('token', token)
@@ -103,6 +109,8 @@ export async function loadPublicReport(
       status: report.status,
       client,
       snapshot: report.snapshot,
+      workCompleted: report.workCompleted,
+      manualMetrics: report.manualMetrics,
     };
 
     return {
@@ -175,6 +183,8 @@ type ConfirmedRow = DeliveryRow & {
   tier: CareTier;
   status: ReportStatus;
   snapshot: NonNullable<ReturnType<typeof parseReportSnapshot>>;
+  workCompleted: string | null;
+  manualMetrics: ManualMetrics | null;
 };
 
 function parseDeliveryRow(value: unknown): DeliveryRow | null {
@@ -226,6 +236,8 @@ function parseConfirmedRow(value: unknown): ConfirmedRow | null {
     tier,
     status: row.status,
     snapshot,
+    workCompleted: asNonEmptyString(value.work_completed),
+    manualMetrics: parseManualMetrics(value.manual_metrics),
   };
 }
 

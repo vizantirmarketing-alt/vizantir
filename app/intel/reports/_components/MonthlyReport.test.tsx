@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import type { ReactNode } from 'react';
 import { MonthlyReport } from './MonthlyReport';
+import { parseManualMetrics } from '@/lib/reports/manual-metrics';
 import { parseReportSnapshot } from '@/lib/reports/parse-snapshot';
 import type { ReportDocument } from '@/lib/reports/load';
 
@@ -45,7 +46,10 @@ function snapshot(version: number, extra: Record<string, unknown>) {
   };
 }
 
-function render(raw: Record<string, unknown>): string {
+function render(
+  raw: Record<string, unknown>,
+  extras: { workCompleted?: string | null; manualMetrics?: unknown } = {},
+): string {
   const parsed = parseReportSnapshot(raw);
   assert.notEqual(parsed, null);
   if (parsed === null) {
@@ -64,6 +68,8 @@ function render(raw: Record<string, unknown>): string {
       careTier: 'care',
     },
     snapshot: parsed,
+    workCompleted: extras.workCompleted ?? null,
+    manualMetrics: parseManualMetrics(extras.manualMetrics),
   };
   return textOf(MonthlyReport({ document }));
 }
@@ -174,5 +180,94 @@ describe('MonthlyReport', () => {
     assert.equal(html.includes('vs August 2026'), false);
     assert.equal(html.includes('Devices'), false);
     assert.equal(html.includes('PageSpeed Insights'), false);
+  });
+
+  it('hides the work note and manual sections when there is no data', () => {
+    for (const extras of [
+      {},
+      { workCompleted: '   ', manualMetrics: {} },
+      { workCompleted: null, manualMetrics: { gbp: {}, youtube: {} } },
+    ]) {
+      const html = render(snapshot(4, {}), extras);
+      assert.equal(html.includes('What I did this month'), false);
+      assert.equal(html.includes('Calls and form leads'), false);
+      assert.equal(html.includes('Google Business Profile'), false);
+      assert.equal(html.includes('YouTube'), false);
+    }
+  });
+
+  it('renders the work note right after the summary', () => {
+    const html = render(snapshot(4, {}), {
+      workCompleted: 'Rebuilt the pricing page.\n\nFixed the contact form.',
+    });
+    assert.equal(html.includes('What I did this month'), true);
+    assert.equal(html.includes('Rebuilt the pricing page.'), true);
+    assert.equal(html.includes('Fixed the contact form.'), true);
+    assert.equal(
+      html.indexOf('Summary') < html.indexOf('What I did this month'),
+      true,
+    );
+    assert.equal(
+      html.indexOf('What I did this month') < html.indexOf('Traffic'),
+      true,
+    );
+  });
+
+  it('renders manual sections with only the values that were entered', () => {
+    const html = render(snapshot(4, {}), {
+      manualMetrics: {
+        calls: 0,
+        gbp: { directionRequests: 12 },
+        youtube: { views: 3400, watchTimeHours: 12.5 },
+      },
+    });
+    assert.equal(html.includes('Calls and form leads'), true);
+    assert.equal(html.includes('Phone calls'), true);
+    assert.equal(html.includes('Form leads'), false);
+    assert.equal(html.includes('Google Business Profile'), true);
+    assert.equal(html.includes('Direction requests'), true);
+    assert.equal(html.includes('Website clicks'), false);
+    assert.equal(html.includes('YouTube'), true);
+    assert.equal(html.includes('3,400'), true);
+    assert.equal(html.includes('12.5'), true);
+    assert.equal(html.includes('Videos published'), false);
+  });
+
+  it('shows one manual section without the others', () => {
+    const html = render(snapshot(4, {}), { manualMetrics: { formLeads: 6 } });
+    assert.equal(html.includes('Calls and form leads'), true);
+    assert.equal(html.includes('Form leads'), true);
+    assert.equal(html.includes('Google Business Profile'), false);
+    assert.equal(html.includes('YouTube'), false);
+  });
+
+  it('drops malformed manual metrics without breaking the report', () => {
+    const html = render(snapshot(4, {}), {
+      manualMetrics: {
+        calls: -5,
+        formLeads: 'many',
+        gbp: { calls: 1.5 },
+        youtube: 'bad',
+      },
+    });
+    assert.equal(html.includes('Calls and form leads'), false);
+    assert.equal(html.includes('Google Business Profile'), false);
+    assert.equal(html.includes('YouTube'), false);
+    assert.equal(html.includes('Sessions by channel'), true);
+  });
+
+  it('keeps client-facing manual copy free of em dashes', () => {
+    const html = render(snapshot(4, {}), {
+      workCompleted: 'Updated the site.',
+      manualMetrics: {
+        calls: 3,
+        formLeads: 2,
+        gbp: { calls: 1, directionRequests: 2, websiteClicks: 3 },
+        youtube: { views: 4, watchTimeHours: 5, videosPublished: 6 },
+      },
+    });
+    const start = html.indexOf('What I did this month');
+    assert.notEqual(start, -1);
+    assert.equal(html.slice(start).includes('\u2014'), false);
   });
 });

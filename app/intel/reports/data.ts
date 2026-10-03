@@ -2,6 +2,11 @@ import 'server-only'
 
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 import { isCareTier, type CareTier } from '@/lib/reports/generate'
+import {
+  manualMetricsToFormValues,
+  parseManualMetrics,
+  type ManualMetricsFormValues,
+} from '@/lib/reports/manual-metrics'
 import type { ReportStatus } from '@/lib/reports/load'
 
 export type QueueReportRow = {
@@ -22,6 +27,7 @@ export type LoadQueueResult =
 export type ReviewFields = {
   analysis: string
   workCompleted: string
+  manualMetrics: ManualMetricsFormValues
 }
 
 export type LoadReviewFieldsResult =
@@ -114,7 +120,7 @@ export async function loadReviewFields(
     const supabase = createSupabaseServiceRole()
     const result = await supabase
       .from('reports')
-      .select('analysis, work_completed')
+      .select('analysis, work_completed, manual_metrics')
       .eq('id', reportId)
       .eq('client_id', clientId)
       .maybeSingle()
@@ -133,6 +139,11 @@ export async function loadReviewFields(
         analysis: asText(isPlainObject(result.data) ? result.data.analysis : null),
         workCompleted: asText(
           isPlainObject(result.data) ? result.data.work_completed : null,
+        ),
+        manualMetrics: manualMetricsToFormValues(
+          parseManualMetrics(
+            isPlainObject(result.data) ? result.data.manual_metrics : null,
+          ),
         ),
       },
     }

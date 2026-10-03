@@ -11,6 +11,13 @@ export function formatInteger(value: number): string {
   );
 }
 
+/** Hours with at most one decimal, for example 12.5 or 40. */
+export function formatHours(value: number): string {
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(
+    value
+  );
+}
+
 export function formatMonth(isoDate: string): string {
   const date = parseUtcDate(isoDate);
   if (date === null) {
