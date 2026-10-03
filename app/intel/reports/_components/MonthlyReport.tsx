@@ -1,12 +1,16 @@
 import type { ReactNode } from 'react'
 
 import {
+  countDelta,
   displaySiteUrl,
   formatCls,
   formatCtr,
   formatDuration,
   formatInp,
   formatInteger,
+  formatLabCls,
+  formatLabLcp,
+  formatLabTbt,
   formatLcp,
   formatLongDate,
   formatMonth,
@@ -16,11 +20,13 @@ import {
   formatUptime,
   humanizeEventName,
   meaningfulComparisonDelta,
+  type CountDelta,
 } from '@/lib/reports/format'
 import type { ReportClient, ReportDocument } from '@/lib/reports/load'
 import type { CruxMetric } from '@/lib/reports/crux'
 import type { EngagementReportData } from '@/lib/reports/engagement'
 import type { GscMovedRow } from '@/lib/reports/gsc'
+import type { PsiReportData } from '@/lib/reports/psi'
 import { buildReportSummary } from '@/lib/reports/summary'
 import { cn } from '@/lib/utils'
 
@@ -37,6 +43,8 @@ export function MonthlyReport({ document }: MonthlyReportProps) {
     snapshot.crux.ok && snapshot.crux.kind === 'metrics'
   const showHealth = snapshot.uptime.ok
   const engagementData = readableEngagement(snapshot)
+  const psiData =
+    snapshot.psi !== undefined && snapshot.psi.ok ? snapshot.psi.data : null
 
   return (
     <article className="report-document mx-auto w-full min-w-0 max-w-[40rem] px-5 py-10 sm:px-8 sm:py-14">
@@ -69,6 +77,10 @@ export function MonthlyReport({ document }: MonthlyReportProps) {
 
       {showSpeed && snapshot.crux.ok && snapshot.crux.kind === 'metrics' ? (
         <SpeedSection data={snapshot.crux.data} month={month} />
+      ) : null}
+
+      {!showSpeed && psiData !== null ? (
+        <LabSpeedSection data={psiData} />
       ) : null}
 
       <TrafficSection snapshot={snapshot} />
@@ -261,18 +273,67 @@ function TrafficSection({
   }
 
   const data = snapshot.ga4.data
+  const prior =
+    snapshot.ga4Prior !== undefined && snapshot.ga4Prior.ok
+      ? snapshot.ga4Prior.data
+      : null
+  const priorMonth = formatMonth(snapshot.period.priorStart)
+  const deviceRows = buildDeviceRows(snapshot)
+  const sessionsDelta = countDelta(data.sessions, prior?.sessions)
+  const usersDelta = countDelta(data.totalUsers, prior?.totalUsers)
+  const newUsersDelta = countDelta(data.newUsers, prior?.newUsers)
+  const returningUsersDelta = countDelta(
+    data.returningUsers,
+    prior?.returningUsers,
+  )
 
   return (
     <ReportSection title="Traffic">
       <MetricGrid>
-        <Metric label="Sessions" value={formatInteger(data.sessions)} />
-        <Metric label="Users" value={formatInteger(data.totalUsers)} />
+        <Metric
+          label="Sessions"
+          value={formatInteger(data.sessions)}
+          detail={deltaDetail(sessionsDelta, priorMonth)}
+          detailClassName={deltaClass(sessionsDelta)}
+        />
+        <Metric
+          label="Users"
+          value={formatInteger(data.totalUsers)}
+          detail={deltaDetail(usersDelta, priorMonth)}
+          detailClassName={deltaClass(usersDelta)}
+        />
         <Metric
           label="New / returning"
           value={`${formatInteger(data.newUsers)} / ${formatInteger(data.returningUsers)}`}
           valueNote="users"
           detail={`${formatInteger(data.newUserSessions)} / ${formatInteger(data.returningUserSessions)} sessions`}
-        />
+        >
+          {newUsersDelta !== undefined || returningUsersDelta !== undefined ? (
+            <p className="mt-1 text-sm leading-snug text-meta">
+              {newUsersDelta !== undefined ? (
+                <>
+                  New{' '}
+                  <span className={deltaClass(newUsersDelta)}>
+                    {newUsersDelta.deltaLabel}
+                  </span>
+                </>
+              ) : null}
+              {newUsersDelta !== undefined &&
+              returningUsersDelta !== undefined
+                ? ' · '
+                : null}
+              {returningUsersDelta !== undefined ? (
+                <>
+                  Returning{' '}
+                  <span className={deltaClass(returningUsersDelta)}>
+                    {returningUsersDelta.deltaLabel}
+                  </span>
+                </>
+              ) : null}{' '}
+              vs {priorMonth}
+            </p>
+          ) : null}
+        </Metric>
       </MetricGrid>
 
       <div className="mt-8">
@@ -319,6 +380,19 @@ function TrafficSection({
           />
         )}
       </div>
+
+      {deviceRows !== null ? (
+        <div className="mt-8">
+          <h3 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+            Devices
+          </h3>
+          <SimpleTable
+            caption="Sessions by device"
+            columns={['Device', 'Sessions', 'Share']}
+            rows={deviceRows}
+          />
+        </div>
+      ) : null}
     </ReportSection>
   )
 }
@@ -543,12 +617,14 @@ function Metric({
   valueNote,
   detail,
   detailClassName,
+  children,
 }: {
   label: string
   value: string
   valueNote?: string
   detail?: string
   detailClassName?: string
+  children?: ReactNode
 }) {
   return (
     <div className="report-metric min-w-0">
@@ -573,6 +649,7 @@ function Metric({
           {detail}
         </p>
       ) : null}
+      {children}
     </div>
   )
 }
@@ -943,4 +1020,99 @@ function rankSearchRows(rows: GscMovedRow[]): GscMovedRow[] {
   return [...rows]
     .sort((a, b) => b.impressions - a.impressions)
     .slice(0, SEARCH_TABLE_LIMIT)
+}
+
+function deltaDetail(
+  delta: CountDelta | undefined,
+  priorMonth: string,
+): string | undefined {
+  if (delta === undefined) {
+    return undefined
+  }
+  return `${delta.deltaLabel} vs ${priorMonth}`
+}
+
+function deltaClass(delta: CountDelta | undefined): string {
+  if (delta === undefined || delta.deltaDirection === 'flat') {
+    return 'text-meta'
+  }
+  return delta.deltaDirection === 'up' ? 'text-positive' : 'text-warning'
+}
+
+function buildDeviceRows(
+  snapshot: ReportDocument['snapshot'],
+): string[][] | null {
+  if (snapshot.audience === undefined || !snapshot.audience.ok) {
+    return null
+  }
+  const devices = [...snapshot.audience.data.devices].sort(
+    (a, b) => b.sessions - a.sessions,
+  )
+  const total = devices.reduce((sum, row) => sum + row.sessions, 0)
+  if (devices.length === 0 || total <= 0) {
+    return null
+  }
+  return devices.map((row) => [
+    capitalize(row.label),
+    formatInteger(row.sessions),
+    `${Math.round((row.sessions / total) * 100)}%`,
+  ])
+}
+
+function capitalize(value: string): string {
+  return value.length === 0
+    ? value
+    : `${value.charAt(0).toUpperCase()}${value.slice(1)}`
+}
+
+function LabSpeedSection({ data }: { data: PsiReportData }) {
+  return (
+    <ReportSection title="Speed">
+      <p className="text-[0.95rem] leading-[1.65] text-body">
+        PageSpeed Insights lab test, phone, run on{' '}
+        {formatLongDate(data.fetchedAt)}. This is a lab test, not real visitor
+        data.
+      </p>
+      <MetricGrid className="mt-6">
+        <Metric
+          label="Performance score"
+          value={formatInteger(data.performanceScore)}
+        />
+        <LabMetricBlock
+          label="Largest contentful paint"
+          metric={data.lcp}
+          format={formatLabLcp}
+        />
+        <LabMetricBlock
+          label="Total blocking time"
+          metric={data.tbt}
+          format={formatLabTbt}
+        />
+        <LabMetricBlock
+          label="Cumulative layout shift"
+          metric={data.cls}
+          format={formatLabCls}
+        />
+      </MetricGrid>
+    </ReportSection>
+  )
+}
+
+function LabMetricBlock({
+  label,
+  metric,
+  format,
+}: {
+  label: string
+  metric: PsiReportData['lcp']
+  format: (value: number) => string
+}) {
+  return (
+    <Metric
+      label={label}
+      value={format(metric.value)}
+      detail={`${metric.passed ? 'Met' : 'Missed'} the ${format(metric.threshold)} threshold`}
+      detailClassName={metric.passed ? 'text-meta' : 'text-warning'}
+    />
+  )
 }

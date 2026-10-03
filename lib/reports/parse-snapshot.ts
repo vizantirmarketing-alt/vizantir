@@ -8,6 +8,11 @@ import type {
   FetchEngagementReportResult,
 } from '@/lib/reports/engagement';
 import type {
+  FetchGa4AudienceResult,
+  Ga4AudienceData,
+  Ga4DimensionRow,
+} from '@/lib/reports/ga4-audience';
+import type {
   FetchGa4ReportResult,
   Ga4ChannelRow,
   Ga4ConversionRow,
@@ -28,6 +33,7 @@ import type {
   GscReportData,
   GscTotals,
 } from '@/lib/reports/gsc';
+import type { FetchPsiReportResult, PsiMetric } from '@/lib/reports/psi';
 import type {
   FetchUptimeReportResult,
   UptimeIncident,
@@ -45,6 +51,9 @@ const WARNINGS: readonly ReportWarning[] = [
   'crux_failed',
   'uptime_failed',
   'engagement_failed',
+  'ga4_prior_failed',
+  'audience_failed',
+  'psi_unavailable',
 ];
 const FAILURE_REASONS: readonly ReportSourceFailureReason[] = [
   'not_configured',
@@ -75,6 +84,11 @@ export function parseReportSnapshot(value: unknown): ReportSnapshot | null {
   const blockers = parseLiteralArray(value.blockers, isBlocker);
   const warnings = parseLiteralArray(value.warnings, isWarning);
   const engagement = parseOptionalEngagement(value.engagement, version);
+  // Version 4 additions are optional and best effort: a missing or malformed
+  // field is dropped, never a reason to reject the snapshot.
+  const ga4Prior = version === 4 ? parseOptionalGa4Prior(value.ga4Prior) : undefined;
+  const audience = version === 4 ? parseOptionalAudience(value.audience) : undefined;
+  const psi = version === 4 ? parseOptionalPsi(value.psi) : undefined;
 
   if (
     generatedAt === null ||
@@ -101,6 +115,9 @@ export function parseReportSnapshot(value: unknown): ReportSnapshot | null {
     crux,
     uptime,
     ...(engagement !== undefined ? { engagement } : {}),
+    ...(ga4Prior !== undefined ? { ga4Prior } : {}),
+    ...(audience !== undefined ? { audience } : {}),
+    ...(psi !== undefined ? { psi } : {}),
     blockers,
     warnings,
   };
@@ -438,7 +455,7 @@ function parseUptime(value: unknown): FetchUptimeReportResult | null {
 
 function parseOptionalEngagement(
   value: unknown,
-  version: 2 | 3
+  version: ReportSnapshot['version']
 ): FetchEngagementReportResult | undefined | null {
   if (version === 2) {
     return undefined;
@@ -447,6 +464,121 @@ function parseOptionalEngagement(
     return undefined;
   }
   return parseEngagement(value);
+}
+
+function parseOptionalGa4Prior(
+  value: unknown
+): FetchGa4ReportResult | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return parseGa4(value) ?? undefined;
+}
+
+function parseOptionalAudience(
+  value: unknown
+): FetchGa4AudienceResult | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return parseAudience(value) ?? undefined;
+}
+
+function parseAudience(value: unknown): FetchGa4AudienceResult | null {
+  const failure = parseSourceFailure(value);
+  if (failure !== null) {
+    return failure;
+  }
+  if (!isPlainObject(value) || value.ok !== true) {
+    return null;
+  }
+  const data = parseAudienceData(value.data);
+  return data === null ? null : { ok: true, data };
+}
+
+function parseAudienceData(value: unknown): Ga4AudienceData | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+  const countries = parseArray(value.countries, parseDimensionRow);
+  const devices = parseArray(value.devices, parseDimensionRow);
+  const browsers = parseArray(value.browsers, parseDimensionRow);
+  if (countries === null || devices === null || browsers === null) {
+    return null;
+  }
+  return { countries, devices, browsers };
+}
+
+function parseDimensionRow(value: unknown): Ga4DimensionRow | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+  const label = asNonEmptyString(value.label);
+  const sessions = asFiniteNumber(value.sessions);
+  if (label === null || sessions === null) {
+    return null;
+  }
+  return { label, sessions };
+}
+
+function parseOptionalPsi(value: unknown): FetchPsiReportResult | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return parsePsi(value) ?? undefined;
+}
+
+function parsePsi(value: unknown): FetchPsiReportResult | null {
+  const failure = parseSourceFailure(value);
+  if (failure !== null) {
+    return failure;
+  }
+  if (!isPlainObject(value) || value.ok !== true || !isPlainObject(value.data)) {
+    return null;
+  }
+  const data = value.data;
+  const fetchedAt = asNonEmptyString(data.fetchedAt);
+  const performanceScore = asFiniteNumber(data.performanceScore);
+  const lcp = parsePsiMetric(data.lcp);
+  const tbt = parsePsiMetric(data.tbt);
+  const cls = parsePsiMetric(data.cls);
+  if (
+    data.strategy !== 'mobile' ||
+    fetchedAt === null ||
+    performanceScore === null ||
+    lcp === null ||
+    tbt === null ||
+    cls === null
+  ) {
+    return null;
+  }
+  return {
+    ok: true,
+    data: {
+      strategy: 'mobile',
+      fetchedAt,
+      performanceScore,
+      lcp,
+      tbt,
+      cls,
+    },
+  };
+}
+
+function parsePsiMetric(value: unknown): PsiMetric | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+  const metricValue = asFiniteNumber(value.value);
+  const threshold = asFiniteNumber(value.threshold);
+  if (
+    metricValue === null ||
+    threshold === null ||
+    typeof value.passed !== 'boolean'
+  ) {
+    return null;
+  }
+  return { value: metricValue, threshold, passed: value.passed };
 }
 
 function parseEngagement(value: unknown): FetchEngagementReportResult | null {
@@ -661,7 +793,7 @@ function asFiniteNumber(value: unknown): number | null {
 function isSnapshotVersion(
   value: unknown
 ): value is ReportSnapshot['version'] {
-  return value === 2 || value === 3;
+  return value === 2 || value === 3 || value === 4;
 }
 
 function isBlocker(value: unknown): value is ReportBlocker {

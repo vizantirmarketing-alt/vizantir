@@ -7,13 +7,21 @@ import {
   type FetchEngagementReportResult,
 } from '@/lib/reports/engagement';
 import { fetchGa4Report, type FetchGa4ReportResult } from '@/lib/reports/ga4';
+import {
+  fetchGa4Audience,
+  type FetchGa4AudienceResult,
+} from '@/lib/reports/ga4-audience';
 import { fetchGscReport, type FetchGscReportResult } from '@/lib/reports/gsc';
+import {
+  loadStoredPsiReport,
+  type FetchPsiReportResult,
+} from '@/lib/reports/psi';
 import {
   fetchUptimeReport,
   type FetchUptimeReportResult,
 } from '@/lib/reports/uptime';
 
-export const REPORT_SNAPSHOT_VERSION = 3 as const;
+export const REPORT_SNAPSHOT_VERSION = 4 as const;
 
 const PERIOD_RE = /^\d{4}-\d{2}-01$/;
 const CLIENT_COLUMNS = [
@@ -39,7 +47,13 @@ export type ReportBlocker =
   | 'gsc_failed'
   | 'gsc_empty_rows';
 
-export type ReportWarning = 'crux_failed' | 'uptime_failed' | 'engagement_failed';
+export type ReportWarning =
+  | 'crux_failed'
+  | 'uptime_failed'
+  | 'engagement_failed'
+  | 'ga4_prior_failed'
+  | 'audience_failed'
+  | 'psi_unavailable';
 
 export type SourceSummary = {
   ga4: 'ok' | 'failed';
@@ -50,7 +64,7 @@ export type SourceSummary = {
 };
 
 export type ReportSnapshot = {
-  version: 2 | typeof REPORT_SNAPSHOT_VERSION;
+  version: 2 | 3 | typeof REPORT_SNAPSHOT_VERSION;
   generatedAt: string;
   period: {
     start: string;
@@ -70,6 +84,12 @@ export type ReportSnapshot = {
   crux: FetchCruxReportResult;
   uptime: FetchUptimeReportResult;
   engagement?: FetchEngagementReportResult;
+  /** GA4 totals for the prior calendar month (version 4+). */
+  ga4Prior?: FetchGa4ReportResult;
+  /** GA4 audience breakdowns for the report month (version 4+). */
+  audience?: FetchGa4AudienceResult;
+  /** Latest stored mobile PageSpeed Insights lab result at generation time (version 4+). */
+  psi?: FetchPsiReportResult;
   blockers: ReportBlocker[];
   warnings: ReportWarning[];
 };
@@ -150,7 +170,8 @@ export async function generateReport(
       client.client.engagementMetrics
     );
 
-    const [ga4, gsc, crux, uptime, engagement] = await Promise.all([
+    const [ga4, gsc, crux, uptime, engagement, ga4Prior, audience, psi] =
+      await Promise.all([
       isolate(
         () =>
           fetchGa4Report({
@@ -197,10 +218,39 @@ export async function generateReport(
               }),
             { ok: false, reason: 'http_error' } as const
           ),
+      isolate(
+        () =>
+          fetchGa4Report({
+            propertyId: client.client.ga4PropertyId,
+            startDate: window.priorStartDate,
+            endDate: window.priorEndDate,
+          }),
+        { ok: false, reason: 'http_error' } as const
+      ),
+      isolate(
+        () =>
+          fetchGa4Audience({
+            propertyId: client.client.ga4PropertyId,
+            startDate: window.startDate,
+            endDate: window.endDate,
+          }),
+        { ok: false, reason: 'http_error' } as const
+      ),
+      isolate(
+        () => loadStoredPsiReport(clientId),
+        { ok: false, reason: 'http_error' } as const
+      ),
     ]);
 
     const blockers = collectBlockers({ ga4, gsc });
-    const warnings = collectWarnings({ crux, uptime, engagement });
+    const warnings = collectWarnings({
+      crux,
+      uptime,
+      engagement,
+      ga4Prior,
+      audience,
+      psi,
+    });
     const status: 'pending' | 'failed' =
       blockers.length === 0 ? 'pending' : 'failed';
     const sources = toSourceSummary({ ga4, gsc, crux, uptime, engagement });
@@ -226,6 +276,9 @@ export async function generateReport(
       crux,
       uptime,
       ...(engagement !== null ? { engagement } : {}),
+      ga4Prior,
+      audience,
+      psi,
       blockers,
       warnings,
     };
@@ -370,6 +423,9 @@ function collectWarnings(params: {
   crux: FetchCruxReportResult;
   uptime: FetchUptimeReportResult;
   engagement: FetchEngagementReportResult | null;
+  ga4Prior: FetchGa4ReportResult;
+  audience: FetchGa4AudienceResult;
+  psi: FetchPsiReportResult;
 }): ReportWarning[] {
   const warnings: ReportWarning[] = [];
 
@@ -383,6 +439,18 @@ function collectWarnings(params: {
 
   if (params.engagement !== null && !params.engagement.ok) {
     warnings.push('engagement_failed');
+  }
+
+  if (!params.ga4Prior.ok) {
+    warnings.push('ga4_prior_failed');
+  }
+
+  if (!params.audience.ok) {
+    warnings.push('audience_failed');
+  }
+
+  if (!params.psi.ok) {
+    warnings.push('psi_unavailable');
   }
 
   return warnings;

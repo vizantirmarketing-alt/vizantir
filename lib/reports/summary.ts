@@ -1,6 +1,7 @@
 import 'server-only';
 
 import {
+  countDelta,
   formatCtr,
   formatInteger,
   formatLongDate,
@@ -66,6 +67,15 @@ function trafficSentence(
 
   let sentence = `${snapshot.client.name} recorded ${formatInteger(sessions)} ${plural(sessions, 'session', 'sessions')} from ${formatInteger(users)} ${plural(users, 'person', 'people')} in ${month}`;
 
+  const priorSessions =
+    snapshot.ga4Prior !== undefined && snapshot.ga4Prior.ok
+      ? snapshot.ga4Prior.data.sessions
+      : null;
+  const change = countDelta(data.sessions, priorSessions);
+  if (change !== undefined) {
+    sentence += `, ${describeSessionChange(change)} from ${formatMonth(snapshot.period.priorStart)}`;
+  }
+
   const newUsers = Math.round(data.newUsers);
   const returningUsers = Math.round(data.returningUsers);
   if (newUsers > 0 && returningUsers === 0) {
@@ -86,6 +96,22 @@ function trafficSentence(
   }
 
   return `${sentence}.`;
+}
+
+function describeSessionChange(change: {
+  deltaLabel: string;
+  deltaDirection: 'up' | 'down' | 'flat';
+}): string {
+  if (change.deltaDirection === 'flat') {
+    return 'unchanged';
+  }
+  const direction = change.deltaDirection === 'up' ? 'up' : 'down';
+  const amount = change.deltaLabel.replace(/^[+−-]/, '');
+  if (amount.endsWith('%')) {
+    return `${direction} ${amount}`;
+  }
+  const count = Number(amount.replace(/,/g, ''));
+  return `${direction} ${amount} ${plural(count, 'session', 'sessions')}`;
 }
 
 function searchSentence(snapshot: ReportSnapshot): string | null {
