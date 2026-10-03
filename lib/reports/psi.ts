@@ -1,6 +1,7 @@
 import 'server-only';
 import { serverEnv } from '@/lib/env/server';
 import type { ReportSourceFailure } from '@/lib/reports/google-credentials';
+import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
 const PSI_ENDPOINT =
   'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
@@ -108,6 +109,102 @@ async function requestPsiReport(url: URL): Promise<FetchPsiReportResult> {
   }
 
   return { ok: true, data };
+}
+
+const PSI_RESULT_COLUMNS = [
+  'strategy',
+  'fetched_at',
+  'performance_score',
+  'lcp_ms',
+  'tbt_ms',
+  'cls',
+].join(', ');
+
+/**
+ * Latest stored mobile PageSpeed Insights result for a client, as written by the
+ * psi-sync cron. Reads psi_results only; it never calls the PageSpeed API.
+ */
+export async function loadStoredPsiReport(
+  clientId: string
+): Promise<FetchPsiReportResult> {
+  try {
+    const supabase = createSupabaseServiceRole();
+    const result = await supabase
+      .from('psi_results')
+      .select(PSI_RESULT_COLUMNS)
+      .eq('client_id', clientId)
+      .eq('strategy', 'mobile')
+      .maybeSingle();
+
+    if (result.error) {
+      console.error('Stored PSI lookup failed');
+      return { ok: false, reason: 'http_error' };
+    }
+    if (result.data === null) {
+      return { ok: false, reason: 'not_configured' };
+    }
+
+    const data = parsePsiResultRow(result.data);
+    if (data === null) {
+      return { ok: false, reason: 'invalid_json' };
+    }
+    return { ok: true, data };
+  } catch {
+    console.error('Stored PSI lookup failed');
+    return { ok: false, reason: 'http_error' };
+  }
+}
+
+export function parsePsiResultRow(value: unknown): PsiReportData | null {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+
+  const strategy = value.strategy;
+  const fetchedAt =
+    typeof value.fetched_at === 'string' && value.fetched_at.trim().length > 0
+      ? value.fetched_at.trim()
+      : null;
+  const performanceScore = strictNumber(value.performance_score);
+  const lcpValue = strictNumber(value.lcp_ms);
+  const tbtValue = strictNumber(value.tbt_ms);
+  const clsValue = strictNumber(value.cls);
+
+  if (
+    strategy !== 'mobile' ||
+    fetchedAt === null ||
+    performanceScore === null ||
+    lcpValue === null ||
+    tbtValue === null ||
+    clsValue === null
+  ) {
+    return null;
+  }
+
+  return {
+    strategy,
+    fetchedAt,
+    performanceScore,
+    lcp: {
+      value: lcpValue,
+      threshold: THRESHOLDS.lcp,
+      passed: lcpValue <= THRESHOLDS.lcp,
+    },
+    tbt: {
+      value: tbtValue,
+      threshold: THRESHOLDS.tbt,
+      passed: tbtValue <= THRESHOLDS.tbt,
+    },
+    cls: {
+      value: clsValue,
+      threshold: THRESHOLDS.cls,
+      passed: clsValue <= THRESHOLDS.cls,
+    },
+  };
+}
+
+function strictNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
 function isRetryablePsiFailure(result: ReportSourceFailure): boolean {

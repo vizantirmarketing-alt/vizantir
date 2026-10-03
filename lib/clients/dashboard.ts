@@ -17,7 +17,7 @@ import {
   type GscReportData,
   type GscTotals,
 } from '@/lib/reports/gsc';
-import type { PsiReportData } from '@/lib/reports/psi';
+import { parsePsiResultRow, type PsiReportData } from '@/lib/reports/psi';
 import { fetchUptimeReport, type UptimeReportData } from '@/lib/reports/uptime';
 import { createSupabaseServiceRole } from '@/lib/supabase/service';
 
@@ -406,51 +406,6 @@ async function loadStoredPsi(clientId: string): Promise<DashboardCruxResult> {
   }
 }
 
-function parsePsiResultRow(value: unknown): PsiReportData | null {
-  if (!isPlainObject(value)) {
-    return null;
-  }
-
-  const strategy = value.strategy;
-  const fetchedAt = asNonEmptyString(value.fetched_at);
-  const performanceScore = toFiniteNumber(value.performance_score);
-  const lcpValue = toFiniteNumber(value.lcp_ms);
-  const tbtValue = toFiniteNumber(value.tbt_ms);
-  const clsValue = toFiniteNumber(value.cls);
-
-  if (
-    strategy !== 'mobile' ||
-    fetchedAt === null ||
-    performanceScore === null ||
-    lcpValue === null ||
-    tbtValue === null ||
-    clsValue === null
-  ) {
-    return null;
-  }
-
-  return {
-    strategy,
-    fetchedAt,
-    performanceScore,
-    lcp: {
-      value: lcpValue,
-      threshold: 2500,
-      passed: lcpValue <= 2500,
-    },
-    tbt: {
-      value: tbtValue,
-      threshold: 200,
-      passed: tbtValue <= 200,
-    },
-    cls: {
-      value: clsValue,
-      threshold: 0.1,
-      passed: clsValue <= 0.1,
-    },
-  };
-}
-
 async function loadCachedUptime(
   clientId: string,
   monitorId: string,
@@ -502,23 +457,4 @@ function formatUtcYmd(date: Date): string {
 
 function pad2(value: number): string {
   return String(value).padStart(2, '0');
-}
-
-function asNonEmptyString(value: unknown): string | null {
-  if (typeof value !== 'string') {
-    return null;
-  }
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : null;
-}
-
-function toFiniteNumber(value: unknown): number | null {
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return value;
-  }
-  return null;
-}
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

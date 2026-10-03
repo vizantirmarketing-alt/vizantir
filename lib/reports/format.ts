@@ -1,4 +1,7 @@
-import { MEANINGFUL_COMPARISON_BASE } from '@/lib/intel/format-change';
+import {
+  MEANINGFUL_COMPARISON_BASE,
+  formatPercentAgainstMeaningfulBase,
+} from '@/lib/intel/format-change';
 
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})/;
 
@@ -108,6 +111,72 @@ export function formatSignedCtr(value: number): string {
     return `−${abs} pts`;
   }
   return '—';
+}
+
+export type DeltaDirection = 'up' | 'down' | 'flat';
+
+export type CountDelta = {
+  deltaLabel: string;
+  deltaDirection: DeltaDirection;
+};
+
+export function numericDirection(
+  current: number,
+  previous: number
+): DeltaDirection {
+  if (current > previous) {
+    return 'up';
+  }
+  if (current < previous) {
+    return 'down';
+  }
+  return 'flat';
+}
+
+export function formatSignedCount(value: number): string {
+  const abs = formatInteger(Math.abs(value));
+  if (value > 0) {
+    return `+${abs}`;
+  }
+  if (value < 0) {
+    return `−${abs}`;
+  }
+  return '0';
+}
+
+/**
+ * Change in a count against the prior period. A relative percent when the prior
+ * value is large enough to make one meaningful, otherwise the signed absolute
+ * difference. Nothing when there is no usable prior value.
+ */
+export function countDelta(
+  current: number,
+  previous: number | null | undefined
+): CountDelta | undefined {
+  if (previous === null || previous === undefined || previous <= 0) {
+    return undefined;
+  }
+
+  const relative = formatPercentAgainstMeaningfulBase(current, previous);
+  return {
+    deltaLabel:
+      current === previous
+        ? '0%'
+        : (relative ?? formatSignedCount(current - previous)),
+    deltaDirection: numericDirection(current, previous),
+  };
+}
+
+export function formatLabLcp(ms: number): string {
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
+export function formatLabTbt(ms: number): string {
+  return `${Math.round(ms)}ms`;
+}
+
+export function formatLabCls(value: number): string {
+  return value.toFixed(3);
 }
 
 export function meaningfulComparisonDelta(

@@ -33,19 +33,23 @@ import type {
   DashboardWindow,
 } from '@/lib/clients/dashboard'
 import type { ClientSources, IntelClient } from '@/lib/clients/load'
-import { formatPercentAgainstMeaningfulBase } from '@/lib/intel/format-change'
 import { formatSpanLabel } from '@/lib/intel/search-params'
 import {
+  countDelta,
   displaySiteUrl,
   formatCls,
   formatCtr,
   formatDuration,
   formatInp,
   formatInteger,
+  formatLabCls,
+  formatLabLcp,
+  formatLabTbt,
   formatLcp,
   formatLongDate,
   formatPosition,
   formatUptime,
+  numericDirection,
 } from '@/lib/reports/format'
 import { cn } from '@/lib/utils'
 
@@ -858,22 +862,6 @@ function switcherOptions(
   return [{ id: currentId, name: currentName }, ...options]
 }
 
-function countDelta(
-  current: number,
-  previous: number | null | undefined,
-): DeltaFields | undefined {
-  if (previous === null || previous === undefined || previous <= 0) {
-    return undefined
-  }
-
-  const relative = formatPercentAgainstMeaningfulBase(current, previous)
-  return {
-    deltaLabel:
-      current === previous ? '0%' : (relative ?? formatSignedCount(current - previous)),
-    deltaDirection: numericDirection(current, previous),
-  }
-}
-
 function ratioPointDelta(
   current: number,
   previous: number | null | undefined,
@@ -905,30 +893,6 @@ function unitDelta(
   }
 }
 
-function numericDirection(
-  current: number,
-  previous: number,
-): MetricDeltaDirection {
-  if (current > previous) {
-    return 'up'
-  }
-  if (current < previous) {
-    return 'down'
-  }
-  return 'flat'
-}
-
-function formatSignedCount(value: number): string {
-  const abs = formatInteger(Math.abs(value))
-  if (value > 0) {
-    return `+${abs}`
-  }
-  if (value < 0) {
-    return `−${abs}`
-  }
-  return '0'
-}
-
 function formatSignedNumber(value: number, digits: number): string {
   const abs = Math.abs(value).toFixed(digits)
   if (value > 0) {
@@ -938,16 +902,4 @@ function formatSignedNumber(value: number, digits: number): string {
     return `−${abs}`
   }
   return (0).toFixed(digits)
-}
-
-function formatLabLcp(ms: number): string {
-  return `${(ms / 1000).toFixed(1)}s`
-}
-
-function formatLabTbt(ms: number): string {
-  return `${Math.round(ms)}ms`
-}
-
-function formatLabCls(value: number): string {
-  return value.toFixed(3)
 }
