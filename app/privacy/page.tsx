@@ -50,7 +50,10 @@ export default function PrivacyPolicy() {
             "Website usage analytics",
             "User preferences and settings",
             "Website analytics and performance data",
-            "Performance and functionality metrics"
+            "Performance and functionality metrics",
+            "Vercel Analytics: aggregate page views and web performance metrics, such as the page visited, referring site, country, device, and browser type",
+            "Google Analytics 4: pages viewed, traffic source, approximate location, device and browser details, and interactions such as form submissions. Google Analytics uses cookies to tell visits apart",
+            "Microsoft Clarity: session recordings and heatmaps showing how visitors move through the site, including clicks, scrolling, mouse movement, and pages viewed"
           ]
         }
       ]
@@ -102,7 +105,7 @@ export default function PrivacyPolicy() {
           subtitle: "Service Providers",
           content: "We may share information with trusted third parties who assist us:",
           list: [
-            "Analytics Providers: Vercel Analytics and related website performance tools",
+            "Analytics Providers: Vercel (Vercel Analytics), Google (Google Analytics 4), and Microsoft (Clarity session recordings and heatmaps)",
             "Hosting and technical providers: Web hosting, deployment, security, and maintenance partners",
             "Communication Tools: Email and client communication systems",
             "Payment Processors: Secure payment handling services",
@@ -134,7 +137,7 @@ export default function PrivacyPolicy() {
           list: [
             "Client Data: Duration of business relationship plus 7 years",
             "Marketing Data: 3 years from last interaction",
-            "Website Analytics: Retained according to our analytics provider's policies",
+            "Website Analytics: Retained according to each analytics provider's policies (Vercel, Google, and Microsoft)",
             "Communication Records: 3-7 years depending on type"
           ]
         }
@@ -297,7 +300,7 @@ export default function PrivacyPolicy() {
             </motion.div>
           ))}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
-            <p className="text-sm text-meta">Last Updated: January 1, 2025</p>
+            <p className="text-sm text-meta">Last Updated: October 2, 2026</p>
           </motion.div>
         </div>
       </section>

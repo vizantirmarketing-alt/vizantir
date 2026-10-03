@@ -44,6 +44,8 @@ export default function CookiePolicy() {
           content: "These cookies help us understand how visitors interact with our website:",
           list: [
             "Vercel Analytics: Aggregate traffic and web vitals metrics",
+            "Google Analytics 4: Cookies that count visits and show which pages are viewed and how visitors found the site",
+            "Microsoft Clarity: Cookies that support session recordings and heatmaps of clicks, scrolling, and mouse movement",
             "Page Load Times: Monitors website performance",
             "Error Tracking: Identifies and fixes technical issues"
           ]
@@ -61,9 +63,6 @@ export default function CookiePolicy() {
           subtitle: "4. Marketing and Advertising Cookies",
           content: "These cookies are used for marketing purposes:",
           list: [
-            "Google Ads: Track ad performance and conversions",
-            "Facebook Pixel: Measure advertising effectiveness",
-            "Retargeting: Show relevant ads on other websites",
             "Lead Tracking: Monitor conversion and lead generation"
           ]
         },
@@ -72,7 +71,6 @@ export default function CookiePolicy() {
           content: "These cookies enable social media features:",
           list: [
             "Social Sharing: Allow sharing content on social platforms",
-            "Social Login: Enable login through social media accounts",
             "Embedded Content: Display social media feeds or posts"
           ]
         }
@@ -85,16 +83,8 @@ export default function CookiePolicy() {
           subtitle: "Analytics Services",
           list: [
             "Vercel Analytics: Web analytics provided by our hosting platform",
-            "Hotjar: User behavior analytics"
-          ]
-        },
-        {
-          subtitle: "Marketing Platforms",
-          list: [
-            "Google Ads: Advertising platform",
-            "Facebook: Social media advertising",
-            "LinkedIn: Professional network advertising",
-            "Microsoft Advertising: Bing advertising platform"
+            "Google Analytics 4: Website traffic and usage analytics provided by Google",
+            "Microsoft Clarity: Session recordings and heatmaps provided by Microsoft"
           ]
         },
         {
@@ -153,8 +143,8 @@ export default function CookiePolicy() {
           subtitle: "Opt-Out Options",
           content: "You can opt out of specific tracking:",
           list: [
-            "Google Ads: Ad Settings",
-            "Facebook: Ad Preferences"
+            "Google Analytics: Google Analytics Opt-out Browser Add-on",
+            "Microsoft Clarity: Microsoft Privacy Dashboard"
           ]
         },
         {
@@ -281,7 +271,7 @@ export default function CookiePolicy() {
             </motion.div>
           ))}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }} className="pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
-            <p className="text-sm text-meta">Last Updated: January 1, 2025</p>
+            <p className="text-sm text-meta">Last Updated: October 2, 2026</p>
           </motion.div>
         </div>
       </section>
