@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from 'react'
 import { ArrowRight, FileText } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import ServicesHero from './ServicesHero'
 import { trackCTAClick } from '@/lib/analytics'
@@ -705,22 +705,19 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                       />
                     </div>
 
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          key={`${service._id}-content`}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                          className="overflow-hidden"
-                        >
-                          <div className="mt-6 pt-1 transition-colors duration-500">
-                            <SanityServiceExpandedBody service={service} />
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    {/* Always rendered so every "Learn more" link is in the server HTML.
+                        A closed row is collapsed and inert: not focusable, hidden from screen readers. */}
+                    <motion.div
+                      initial={false}
+                      animate={isOpen ? { opacity: 1, height: 'auto' } : { opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                      className="overflow-hidden"
+                      inert={!isOpen}
+                    >
+                      <div className="mt-6 pt-1 transition-colors duration-500">
+                        <SanityServiceExpandedBody service={service} />
+                      </div>
+                    </motion.div>
                   </button>
                 </motion.div>
               )
