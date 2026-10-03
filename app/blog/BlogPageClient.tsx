@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, type CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -116,9 +116,8 @@ export default function BlogPageClient({ posts }: Props) {
                   borderColor: colors.cardBorder,
                   color: colors.text,
                   transition: themeBgColorTransition,
-                  // @ts-ignore
                   '--tw-ring-color': colors.accent,
-                }}
+                } as CSSProperties}
               />
               <svg
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-500"

@@ -79,7 +79,7 @@ export default function GetStartedPageClient() {
               Next step: a real conversation
             </h2>
             <p className="text-lg mb-8 max-w-xl mx-auto text-muted-foreground">
-              Book a discovery call. We'll see if the project and timeline line up. No pressure, no hard sell.
+              Book a discovery call. We&apos;ll see if the project and timeline line up. No pressure, no hard sell.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

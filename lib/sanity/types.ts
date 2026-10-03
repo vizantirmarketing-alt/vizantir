@@ -1,3 +1,4 @@
+import type { PortableTextBlock } from '@portabletext/types'
 // ============================================
 // Site Settings (Singleton)
 // ============================================
@@ -67,7 +68,7 @@ interface PageListItem {
 
 interface Page extends PageListItem, SEOFields {
   description?: string
-  content?: any[] // PortableText
+  content?: PortableTextBlock[]
   faqs?: FAQ[]
 }
 
@@ -85,7 +86,7 @@ interface PostListItem {
 }
 
 export interface Post extends PostListItem, SEOFields {
-  body?: any[] // PortableText
+  body?: PortableTextBlock[]
   author?: Author
 }
 
@@ -94,7 +95,7 @@ interface Author {
   name: string
   slug: string
   role?: string
-  bio?: any[] // PortableText
+  bio?: PortableTextBlock[]
   imageUrl?: string
   linkedin?: string
   twitter?: string
@@ -119,7 +120,7 @@ export interface ServiceListItem {
 export interface Service extends ServiceListItem, SEOFields {
   heroHeadline?: string
   heroSubheadline?: string
-  overview?: any[] // PortableText
+  overview?: PortableTextBlock[]
   benefits?: string[]
   process?: {
     step: number
@@ -162,9 +163,9 @@ export interface CaseStudyListItem {
   stack?: string[]
   featured?: boolean
   siteUrl?: string
-  challenge?: any[] // PortableText
-  solution?: any[] // PortableText
-  results?: any[] // PortableText
+  challenge?: PortableTextBlock[]
+  solution?: PortableTextBlock[]
+  results?: PortableTextBlock[]
 }
 
 export interface CaseStudy extends CaseStudyListItem, SEOFields {

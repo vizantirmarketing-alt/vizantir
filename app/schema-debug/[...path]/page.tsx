@@ -3,6 +3,7 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { serviceBySlugQuery, postBySlugQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { webPageSchema, serviceSchema, blogPostSchema, faqSchema, breadcrumbSchema, graphSchema } from '@/lib/schema'
 import { serviceId, articleId } from '@/lib/schema/ids'
+import type { Post, Service, SiteSettings } from '@/lib/sanity/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,7 +30,7 @@ export default async function SchemaDebugPage({ params }: Props) {
     )
   }
 
-  const settings = await sanityFetch<any>(siteSettingsQuery, {}, {
+  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, {
     fresh: true,
     tags: ['siteSettings'],
   })
@@ -42,12 +43,12 @@ export default async function SchemaDebugPage({ params }: Props) {
     )
   }
 
-  let schemaData: any = null
+  let schemaData: ReturnType<typeof graphSchema> | null = null
   let pageUrl = ''
 
   switch (type) {
     case 'service':
-      const service = await sanityFetch<any>(serviceBySlugQuery, { slug }, {
+      const service = await sanityFetch<Service | null>(serviceBySlugQuery, { slug }, {
         fresh: true,
         tags: ['service'],
       })
@@ -61,7 +62,7 @@ export default async function SchemaDebugPage({ params }: Props) {
       ])
       break
     case 'post':
-      const post = await sanityFetch<any>(postBySlugQuery, { slug }, {
+      const post = await sanityFetch<Post | null>(postBySlugQuery, { slug }, {
         fresh: true,
         tags: ['post'],
       })
@@ -106,15 +107,15 @@ export default async function SchemaDebugPage({ params }: Props) {
   )
 }
 
-function validateGraph(schema: any, siteUrl: string): { valid: boolean; issues: string[] } {
+function validateGraph(schema: { '@graph'?: Record<string, unknown>[] }, siteUrl: string): { valid: boolean; issues: string[] } {
   const issues: string[] = []
   const ids = new Set<string>()
   const nodes = schema['@graph'] || []
   
-  nodes.forEach((node: any) => {
+  nodes.forEach((node) => {
     if (node['@id']) {
-      if (ids.has(node['@id'])) issues.push(`Duplicate @id: ${node['@id']}`)
-      ids.add(node['@id'])
+      if (ids.has(String(node['@id']))) issues.push(`Duplicate @id: ${node['@id']}`)
+      ids.add(String(node['@id']))
     }
   })
   

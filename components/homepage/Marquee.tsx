@@ -1,46 +1,46 @@
 'use client'
 
-const Marquee = () => {
-  const items = [
-    "WEBSITE DESIGN",
-    "CUSTOM DEVELOPMENT",
-    "NEXT.JS BUILDS",
-    "MOBILE FIRST",
-    "PREMIUM DESIGN",
-    "BUILT TO CONVERT",
-    "STRATEGY LED",
-  ];
+const items = [
+  "WEBSITE DESIGN",
+  "CUSTOM DEVELOPMENT",
+  "NEXT.JS BUILDS",
+  "MOBILE FIRST",
+  "PREMIUM DESIGN",
+  "BUILT TO CONVERT",
+  "STRATEGY LED",
+];
 
-  const MarqueeContent = () => (
-    <>
-      {items.map((item, index) => (
-        <div 
-          key={index}
-          className="flex items-center flex-shrink-0"
+const MarqueeContent = () => (
+  <>
+    {items.map((item, index) => (
+      <div 
+        key={index}
+        className="flex items-center flex-shrink-0"
+      >
+        <span 
+          suppressHydrationWarning
+          className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight whitespace-nowrap"
+          style={{ 
+            color: 'rgba(0,0,0,0.35)',
+          }}
         >
-          <span 
-            suppressHydrationWarning
-            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight whitespace-nowrap"
-            style={{ 
-              color: 'rgba(0,0,0,0.35)',
-            }}
-          >
-            {item}
-          </span>
-          
-          <span 
-            className="text-2xl md:text-3xl mx-6 flex-shrink-0"
-            style={{ 
-              color: 'rgba(0,0,0,0.35)'
-            }}
-          >
-            ❖
-          </span>
-        </div>
-      ))}
-    </>
-  );
+          {item}
+        </span>
+        
+        <span 
+          className="text-2xl md:text-3xl mx-6 flex-shrink-0"
+          style={{ 
+            color: 'rgba(0,0,0,0.35)'
+          }}
+        >
+          ❖
+        </span>
+      </div>
+    ))}
+  </>
+);
 
+const Marquee = () => {
   return (
     <section
       suppressHydrationWarning

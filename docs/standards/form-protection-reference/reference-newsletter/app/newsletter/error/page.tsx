@@ -5,8 +5,8 @@ export default function NewsletterErrorPage() {
         Something went wrong.
       </h1>
       <p className="text-[16px] leading-relaxed text-stone-600">
-        We couldn't confirm that link. It may have already been used or
-        cancelled. Please subscribe again if you'd like to receive emails.
+        We couldn&apos;t confirm that link. It may have already been used or
+        cancelled. Please subscribe again if you&apos;d like to receive emails.
       </p>
     </main>
   );

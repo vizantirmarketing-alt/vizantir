@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useState, useSyncExternalStore } from 'react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
@@ -10,26 +10,26 @@ type StageProps = {
   background?: string
 }
 
+function useMediaQuery(query: string): boolean {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const mq = window.matchMedia(query)
+      mq.addEventListener('change', onChange)
+      return () => mq.removeEventListener('change', onChange)
+    },
+    [query],
+  )
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => false,
+  )
+}
+
 export function Stage({ children, className, background }: StageProps) {
   const [revealed, setRevealed] = useState(false)
-  const [reducedMotion, setReducedMotion] = useState(false)
-  const [isFinePointer, setIsFinePointer] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
-    setIsFinePointer(mq.matches)
-    const onChange = (e: MediaQueryListEvent) => setIsFinePointer(e.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReducedMotion(mq.matches)
-    const onChange = (event: MediaQueryListEvent) => setReducedMotion(event.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+  const isFinePointer = useMediaQuery('(hover: hover) and (pointer: fine)')
 
   return (
     <div

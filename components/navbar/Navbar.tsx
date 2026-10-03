@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -25,16 +25,16 @@ type NavbarProps = {
   minimal?: boolean;
 };
 
+const subscribeNoop = () => () => {};
+const getMountedClient = () => true;
+const getMountedServer = () => false;
+
 const Navbar = ({ minimal }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribeNoop, getMountedClient, getMountedServer);
   const pathname = usePathname();
   const isMinimal = minimal ?? MINIMAL_NAV_PATHS.has(pathname);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,11 +57,9 @@ const Navbar = ({ minimal }: NavbarProps) => {
   }, [isMobileMenuOpen]);
 
   // Close mobile menu when switching into minimal mode
-  useEffect(() => {
-    if (isMinimal) {
-      setIsMobileMenuOpen(false);
-    }
-  }, [isMinimal]);
+  if (isMinimal && isMobileMenuOpen) {
+    setIsMobileMenuOpen(false);
+  }
 
   const handleStrategyCallClick = (location: string) => {
     if (isMinimal) {

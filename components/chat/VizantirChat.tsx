@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -264,16 +264,22 @@ function QuickActionChips() {
   );
 }
 
+const subscribeNoop = () => () => {};
+const getMountedClient = () => true;
+const getMountedServer = () => false;
+
 export function VizantirChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribeNoop, getMountedClient, getMountedServer);
   const [isMobile, setIsMobile] = useState(false);
   const [showGreetingTooltip, setShowGreetingTooltip] = useState(false);
-  const [greetingBlocked, setGreetingBlocked] = useState(true);
+  const [greetingBlocked, setGreetingBlocked] = useState(() =>
+    typeof window === 'undefined' ? true : sessionStorage.getItem(GREETING_TOOLTIP_SESSION_KEY) === '1',
+  );
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -282,11 +288,6 @@ export function VizantirChat() {
     sessionStorage.setItem(GREETING_TOOLTIP_SESSION_KEY, '1');
     setGreetingBlocked(true);
     setShowGreetingTooltip(false);
-  }, []);
-
-  useEffect(() => {
-    setMounted(true);
-    setGreetingBlocked(sessionStorage.getItem(GREETING_TOOLTIP_SESSION_KEY) === '1');
   }, []);
 
   useEffect(() => {
@@ -329,10 +330,6 @@ export function VizantirChat() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isStreaming]);
-
-  useEffect(() => {
-    if (isOpen) markGreetingSeen();
-  }, [isOpen, markGreetingSeen]);
 
   useEffect(() => {
     if (greetingBlocked || isOpen) return;
