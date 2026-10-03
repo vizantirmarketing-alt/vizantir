@@ -15,7 +15,7 @@ const CONTACT_URL = 'https://www.vizantir.com/contact'
 const CONTACT_TITLE =
   'Contact Vizantir Web Design Studio Las Vegas | Start Your Project'
 const CONTACT_DESCRIPTION =
-  'Get in touch to discuss your custom website project, book a consultation or learn how our Las Vegas studio can elevate your online presence.'
+  'Get in touch to discuss your custom website project, book a consultation or learn how our Las Vegas studio can improve your website.'
 const ROOT_OG_IMAGES = [
   {
     url: 'https://www.vizantir.com/og-image.png',

@@ -3,6 +3,7 @@ import { sanityFetch } from '@/lib/sanity/client'
 import { sitemapQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import type { SitemapData, SiteSettings } from '@/lib/sanity/types'
 import { serviceHref } from '@/lib/service-href'
+import { ALL_TECHNOLOGIES } from '@/app/technology/_data'
 
 export const revalidate = 3600
 
@@ -59,13 +60,6 @@ type StaticRoute = {
  *   /privacy, /terms, /cookies, /copyright
  *     Legal boilerplate. Carries a noindex directive; submitting it wastes
  *     crawl allocation on pages that will never earn an impression.
- *
- *   /technology/{slug} (14 URLs)
- *     Stack reference pages. No commercial search intent — nobody hires a
- *     studio by searching "tailwind". Pages stay live and remain linked from
- *     /technology and /sitemap-page, so internal link equity and topical
- *     signal are preserved. Already-indexed ones will not be dropped;
- *     sitemap omission is not a deindex request.
  *
  *   /services/landing-pages
  *     Canonical is /landing-pages (`serviceHref` in lib/service-href.ts).
@@ -134,6 +128,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route.priority,
   }))
 
+  const technologyPages: MetadataRoute.Sitemap = ALL_TECHNOLOGIES.map((t) => ({
+    url: `${baseUrl}/technology/${t.slug}`,
+    lastModified: staticDate('/technology'),
+    changeFrequency: 'monthly',
+    priority: 0.5,
+  }))
+
   const postPages: MetadataRoute.Sitemap = (data?.posts || []).map((p) => ({
     url: `${baseUrl}/blog/${p.slug}`,
     lastModified: new Date(p._updatedAt),
@@ -159,6 +160,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...technologyPages,
     ...postPages,
     ...servicePages,
     ...caseStudyPages,
