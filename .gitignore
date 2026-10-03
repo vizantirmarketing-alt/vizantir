@@ -55,3 +55,6 @@ knowledge-dump.txt
 .env*.local
 .pnpm-store/
 data/seed/
+
+# local Sanity backups written by scripts/apply-audit-fixes.ts
+backups/

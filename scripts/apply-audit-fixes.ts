@@ -363,11 +363,28 @@ const BATCH_3_TITLES: Edit[] = [
   mt('wordpress-vs-nextjs-3-year-cost-comparison', UNSET, 'WordPress vs Next.js: The True 3-Year Cost'),
 ]
 
+/** Batch 4: WP Engine Essential regular price (about $35/month) and one meta description. */
+const BATCH_4: Edit[] = [
+  body(
+    'how-to-speed-up-wordpress',
+    'starts at $24/month Essential plan',
+    'Essential plan starts at about $35/month at the regular rate',
+  ),
+  body('vercel-vs-wp-engine', 'Essential: $24/month', 'Essential: about $35/month at the regular rate'),
+  seo(
+    'why-15000-website-cheaper-than-5000',
+    'metaDescription',
+    'Why a $15,000 custom website is often cheaper than a $5,000 WordPress build. The ROI argument that changes how business owners think about website investment.',
+    'Required three-year costs for a $15,000 Next.js site and a $5,000 WordPress site are close, and a care plan is optional. Here is the math.',
+  ),
+]
+
 const EDITS: Edit[] = [
   ...BATCH_1.map((e) => ({ ...e, batch: 1 })),
   ...BATCH_2.map((e) => ({ ...e, batch: 2 })),
   ...BATCH_3_COST.map((e) => ({ ...e, batch: 3 })),
   ...BATCH_3_TITLES.map((e) => ({ ...e, batch: 3 })),
+  ...BATCH_4.map((e) => ({ ...e, batch: 4 })),
 ]
 
 // ---------------------------------------------------------------------------
