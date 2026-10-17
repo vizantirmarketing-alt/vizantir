@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { ArrowUpRight } from 'lucide-react'
 
 import { JsonLd } from '@/components/seo/JsonLd'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import {
   ANALYTIR_DATE,
   ANALYTIR_PATH,
@@ -98,7 +97,6 @@ export default function AnalytirPage() {
       <Hero />
 
       <Section
-        eyebrow="Reconciliation"
         headline="The number your processor reports is not the number that reaches your bank."
         body="Fees, tips, and financing withholdings all move between the sale and the deposit. Analytir accounts for every one of them, line by line."
       >
@@ -111,7 +109,6 @@ export default function AnalytirPage() {
 
       <Section
         flip
-        eyebrow="Settlement"
         headline="Every payout, traced back to the day it was earned."
         body="Payouts arrive in batches that match no sales period. Analytir groups them by the week they settle and shows exactly what each batch contains."
       >
@@ -123,7 +120,6 @@ export default function AnalytirPage() {
       </Section>
 
       <Section
-        eyebrow="Vigilance"
         headline="It noticed the register had gone quiet before the owner did."
         body="Forty-eight hours without a transaction is either a closed shop or a broken payment terminal. Analytir cannot tell which, so it does not guess. It reports the silence, ranks it against the last three months, and lists what to check first."
       >
@@ -136,7 +132,6 @@ export default function AnalytirPage() {
 
       <Section
         flip
-        eyebrow="Explanation"
         headline="The answer, in the language the owner actually uses."
         body="Not a chart to interpret. A sentence that says where the money went, and why the deposit is smaller than the sale."
       >
@@ -148,7 +143,6 @@ export default function AnalytirPage() {
       </Section>
 
       <Section
-        eyebrow="Judgment"
         headline="A gap that widened tenfold in three months, and nobody noticed."
         body="Thursday was quietly losing money against every other day of the week. No dashboard surfaces that, because no dashboard is looking for it. Analytir found the pattern, priced it, and prescribed the fix with a deadline attached."
       >
@@ -162,8 +156,7 @@ export default function AnalytirPage() {
       <section className="py-20 md:py-28" style={{ background: 'var(--secondary)' }}>
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
-            <Eyebrow align="start">Why this is here</Eyebrow>
-            <h2 className="mt-6 text-4xl font-black tracking-tight text-foreground md:text-5xl lg:text-6xl">
+            <h2 className="text-4xl font-black tracking-tight text-foreground md:text-5xl lg:text-6xl">
               We built this because we wanted to know how far we could take it.
             </h2>
             <p

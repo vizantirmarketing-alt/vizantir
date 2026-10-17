@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { CheckCircle2 } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
 
@@ -19,7 +18,6 @@ export function HomepageProblem({ heading, body, bullets }: HomepageProblemProps
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="homepage-problem-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal}>
-            <Eyebrow>The Problem</Eyebrow>
             <h2
               id="homepage-problem-heading"
               className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

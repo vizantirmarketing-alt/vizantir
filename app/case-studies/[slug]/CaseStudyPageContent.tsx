@@ -7,7 +7,6 @@ import { PortableText } from '@portabletext/react'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 
 import { hasPortableTextContent, vizantirPortableTextComponents } from '@/components/portable-text'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { formatCaseStudyMetadataLine } from '@/lib/case-studies/metadata'
 import type { CaseStudy } from '@/lib/sanity/types'
 
@@ -56,9 +55,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             All case studies
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <Eyebrow align="start" className="mb-4">
-              Case Study
-            </Eyebrow>
             <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
               {caseStudy.title}
             </h1>
@@ -120,9 +116,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
-                  Challenge
-                </span>
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   The problem to solve
                 </h2>
@@ -144,9 +137,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
-                  Solution
-                </span>
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   What we built
                 </h2>
@@ -168,9 +158,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
-                  Results
-                </span>
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   Impact and outcomes
                 </h2>
@@ -193,9 +180,6 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 transition={{ duration: 0.45 }}
                 className="mb-10 text-center md:text-left"
               >
-                <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
-                  Stack
-                </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   Technologies used
                 </h2>

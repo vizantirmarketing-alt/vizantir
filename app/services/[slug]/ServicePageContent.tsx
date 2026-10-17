@@ -10,7 +10,6 @@ import { TierComparison } from '@/components/landing-pages/TierComparison'
 import { vizantirPortableTextComponents } from '@/components/portable-text'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { serviceHref } from '@/lib/service-href'
 import type { Service } from '@/lib/sanity/types'
 
@@ -154,9 +153,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             All services
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <Eyebrow align="start" className="mb-4">
-              Service
-            </Eyebrow>
             <h1
               className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl"
               style={{ color: colors.text }}
@@ -216,12 +212,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <span
-                  className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-                  style={{ color: colors.accent }}
-                >
-                  Overview
-                </span>
                 <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.overview}
                 </h2>
@@ -245,12 +235,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 transition={{ duration: 0.45 }}
                 className="mb-10 text-center md:text-left"
               >
-                <span
-                  className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-                  style={{ color: colors.accent }}
-                >
-                  Benefits
-                </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.benefits}
                 </h2>
@@ -290,12 +274,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 transition={{ duration: 0.45 }}
                 className="mb-12 text-center"
               >
-                <span
-                  className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-                  style={{ color: colors.accent }}
-                >
-                  Process
-                </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.process}
                 </h2>
@@ -344,12 +322,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 transition={{ duration: 0.45 }}
                 className="mb-12 text-center"
               >
-                <span
-                  className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-                  style={{ color: colors.accent }}
-                >
-                  Offerings
-                </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.offerings}
                 </h2>
@@ -396,12 +368,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 transition={{ duration: 0.45 }}
                 className="mb-10 text-center md:text-left"
               >
-                <span
-                  className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-                  style={{ color: colors.accent }}
-                >
-                  Deliverables
-                </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.deliverables}
                 </h2>
@@ -441,12 +407,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 transition={{ duration: 0.45 }}
                 className="mb-10 text-center"
               >
-                <span
-                  className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-                  style={{ color: colors.accent }}
-                >
-                  FAQs
-                </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.faqs}
                 </h2>
@@ -526,12 +486,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 transition={{ duration: 0.45 }}
                 className="mb-12 text-center"
               >
-                <span
-                  className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.25em]"
-                  style={{ color: colors.accent }}
-                >
-                  Related
-                </span>
                 <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.related}
                 </h2>

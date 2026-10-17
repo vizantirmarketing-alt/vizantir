@@ -4,7 +4,6 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { trackCTAClick } from '@/lib/analytics';
-import { Eyebrow } from '@/components/ui/Eyebrow';
 
 // Lazy load the heavy 3D component
 const LiquidMetalTorus = lazy(() => import('./LiquidMetalTorus'));
@@ -163,9 +162,6 @@ const Hero = () => {
         <div
           className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left"
         >
-          <div className="mb-4">
-            <Eyebrow align="start">Vizantir Design Studio · Las Vegas</Eyebrow>
-          </div>
 
           <h1 
             className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500 text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
@@ -185,7 +181,7 @@ const Hero = () => {
           <p
             className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg transition-colors duration-500 text-muted-foreground"
           >
-            Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
+            Vizantir is a Las Vegas design studio. Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
           </p>
 
           <Button

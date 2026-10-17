@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import {
   ArrowRight,
@@ -252,7 +251,6 @@ export default function CREWebDesignClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="problem-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal}>
-            <Eyebrow>The Problem</Eyebrow>
             <h2
               id="problem-heading"
               className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -284,7 +282,6 @@ export default function CREWebDesignClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="what-we-build-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>What We Build</Eyebrow>
             <h2
               id="what-we-build-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -327,7 +324,6 @@ export default function CREWebDesignClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="differentiation-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>Differentiation</Eyebrow>
             <h2
               id="differentiation-heading"
               className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -397,7 +393,6 @@ export default function CREWebDesignClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="proof-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>Proof</Eyebrow>
             <h2
               id="proof-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -454,7 +449,6 @@ export default function CREWebDesignClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="process-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>Process</Eyebrow>
             <h2
               id="process-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -502,7 +496,6 @@ export default function CREWebDesignClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-4xl">
           <motion.div {...sectionReveal} className="mb-12 text-center">
-            <Eyebrow>FAQ</Eyebrow>
             <h2
               id="faq-heading"
               className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

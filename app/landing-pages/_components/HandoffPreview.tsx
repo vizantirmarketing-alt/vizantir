@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { trackEvent } from '@/lib/analytics'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
@@ -55,7 +54,6 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
       >
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
-            <Eyebrow>Handoff</Eyebrow>
             <h2
               id="handoff-preview-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

@@ -5,7 +5,6 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { trackBookStrategyCallIntent } from '@/lib/analytics'
@@ -39,14 +38,6 @@ export default function NextJsVsWordpressClient() {
         />
 
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className="mb-8"
-          >
-            <Eyebrow>{nextjsVsWordpressHero.eyebrow}</Eyebrow>
-          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -105,7 +96,6 @@ export default function NextJsVsWordpressClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="comparison-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>{nextjsVsWordpressComparison.eyebrow}</Eyebrow>
             <h2
               id="comparison-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -165,7 +155,6 @@ export default function NextJsVsWordpressClient() {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <motion.div {...sectionReveal}>
-              <Eyebrow align="start">{nextjsVsWordpressNextBetter.eyebrow}</Eyebrow>
               <h2
                 id="nextjs-better-heading"
                 className="mb-5 text-3xl font-bold text-foreground md:text-4xl"
@@ -197,7 +186,6 @@ export default function NextJsVsWordpressClient() {
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.08 }}
             >
-              <Eyebrow align="start">{nextjsVsWordpressWordpressBetter.eyebrow}</Eyebrow>
               <h2
                 id="wordpress-better-heading"
                 className="mb-5 text-3xl font-bold text-foreground md:text-4xl"
@@ -231,7 +219,6 @@ export default function NextJsVsWordpressClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="criteria-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>{nextjsVsWordpressCriteria.eyebrow}</Eyebrow>
             <h2
               id="criteria-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -262,7 +249,6 @@ export default function NextJsVsWordpressClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal} className="mb-12 text-center">
-            <Eyebrow>FAQ</Eyebrow>
             <h2
               id="faq-heading"
               className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

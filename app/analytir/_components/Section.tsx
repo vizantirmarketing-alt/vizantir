@@ -2,11 +2,9 @@
 
 import { motion } from 'framer-motion'
 
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { cn } from '@/lib/utils'
 
 type SectionProps = {
-  eyebrow: string
   headline: string
   body: string
   flip?: boolean
@@ -14,7 +12,6 @@ type SectionProps = {
 }
 
 export function Section({
-  eyebrow,
   headline,
   body,
   flip = false,
@@ -33,8 +30,7 @@ export function Section({
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className={cn('max-w-xl lg:col-span-5', flip && 'lg:order-2')}
         >
-          <Eyebrow align="start">{eyebrow}</Eyebrow>
-          <h2 className="mt-6 text-4xl font-black tracking-tight text-foreground md:text-5xl lg:text-6xl">
+          <h2 className="text-4xl font-black tracking-tight text-foreground md:text-5xl lg:text-6xl">
             {headline}
           </h2>
           <motion.p

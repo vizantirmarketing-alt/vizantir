@@ -4,14 +4,12 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { trackBookStrategyCallIntent } from '@/lib/analytics'
 import { itemVariants } from './motion'
 
 const STRATEGY_CALL_HREF = '/contact'
 
 type LandingPagesHeroProps = {
-  eyebrow: string
   headline: string
   subheadline: string
   ctaLabel: string
@@ -19,7 +17,6 @@ type LandingPagesHeroProps = {
 }
 
 export function LandingPagesHero({
-  eyebrow,
   headline,
   subheadline,
   ctaLabel,
@@ -34,9 +31,6 @@ export function LandingPagesHero({
       />
 
       <div className="relative z-10 mx-auto max-w-4xl text-center">
-        <motion.div variants={itemVariants} initial="visible" className="mb-8">
-          <Eyebrow>{eyebrow}</Eyebrow>
-        </motion.div>
 
         <motion.h1
           variants={itemVariants}

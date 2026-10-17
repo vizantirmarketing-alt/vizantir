@@ -17,7 +17,6 @@ export default function ServicesHero() {
     <AmbientHero
       variant="contour"
       compact
-      eyebrow="Services"
       headline="Strategy-led websites for established businesses"
       subhead="We figure out what the site needs to do before we design a single page — the business goals, how customers actually behave, the content structure, the conversion paths, and the technical requirements that follow."
     >

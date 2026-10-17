@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
 
@@ -32,7 +31,6 @@ export function RelatedServices() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="related-services-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>Related</Eyebrow>
             <h2
               id="related-services-heading"
               className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { trackEvent } from '@/lib/analytics'
 import {
@@ -48,7 +47,6 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
       >
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
-            <Eyebrow>What changes per variant</Eyebrow>
             <h2
               id="variant-comparison-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

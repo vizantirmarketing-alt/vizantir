@@ -41,7 +41,6 @@ export default function AboutPage() {
       <div className="min-h-screen bg-background text-foreground">
         <AmbientHero
           compact
-          eyebrow="Our History"
           headline="A studio for brands that have outgrown their website"
           subhead={aboutPageContent.hero.body}
         />

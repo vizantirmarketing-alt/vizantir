@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
@@ -60,10 +59,9 @@ export default function IndustriesHubPage() {
       <JsonLd id="ld-industries-hub" data={pageGraph} />
 
       <div style={{ background: 'var(--background)' }}>
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-20">
+        <section className="px-6 md:px-12 lg:px-20 pt-32 pb-16 md:pt-36 md:pb-20">
           <div className="max-w-6xl mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-              <Eyebrow className="mb-8">Industries</Eyebrow>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 Industries We Serve
               </h1>

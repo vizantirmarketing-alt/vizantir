@@ -4,7 +4,6 @@ import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import type { AmbientVariant } from './AmbientHeroCanvas'
 
 export interface AmbientHeroProps {
-  eyebrow: string
   headline: ReactNode
   subhead?: string
   variant?: AmbientVariant
@@ -20,7 +19,6 @@ function CanvasPlaceholder() {
 }
 
 export function AmbientHero({
-  eyebrow,
   headline,
   subhead,
   variant = 'plane',
@@ -74,9 +72,6 @@ export function AmbientHero({
         }
       >
         <div className="mx-auto w-full max-w-5xl">
-          <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.24em] text-meta">
-            {eyebrow}
-          </p>
           <h1
             className={
               compact

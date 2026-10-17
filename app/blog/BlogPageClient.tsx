@@ -3,7 +3,6 @@
 import { useState, useMemo, type CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { blogCategories } from '@/lib/blog-categories'
 
 const themeBgColorTransition = 'background-color 0.3s ease, color 0.3s ease'
@@ -81,7 +80,6 @@ export default function BlogPageClient({ posts }: Props) {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <Eyebrow className="mb-4">Blog</Eyebrow>
             <h1
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6 transition-colors duration-500"
               style={{ color: colors.text }}

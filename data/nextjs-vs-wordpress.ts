@@ -6,7 +6,6 @@ export const nextjsVsWordpressDescription =
   'A comparison of Next.js and WordPress on performance, security, editing, hosting cost, developers, plugins, upgrades, and total cost of ownership.'
 
 export const nextjsVsWordpressHero = {
-  eyebrow: 'Comparison',
   heading: 'Should I Use Next.js or WordPress?',
   lastUpdatedIso: NEXTJS_VS_WORDPRESS_DATE,
   lastUpdatedLabel: 'September 5, 2026',
@@ -17,7 +16,6 @@ export const nextjsVsWordpressDirectAnswer =
   'Next.js is the better default for an established business whose site is a revenue asset. A headless CMS ships with the build, so the team edits content without a developer. WordPress still fits tight budgets, existing WordPress teams, a large plugin catalog, and owners who will change structure from the admin. Choose Next.js when control of the frontend and the release path matters more than starting price.'
 
 export const nextjsVsWordpressComparison = {
-  eyebrow: 'At a glance',
   heading: 'Next.js vs WordPress, side by side',
   intro:
     'Same criteria for both. Read the row that matches what you actually care about, then the sections below if you want the reasoning.',
@@ -84,7 +82,6 @@ export const nextjsVsWordpressComparison = {
 } as const
 
 export const nextjsVsWordpressNextBetter = {
-  eyebrow: 'When Next.js wins',
   heading: 'Next.js is the better choice when',
   intro:
     'Next.js wins when the frontend is designed around the business, content stays editable in a CMS, and structural changes stay in an engineering workflow.',
@@ -109,7 +106,6 @@ export const nextjsVsWordpressNextBetter = {
 } as const
 
 export const nextjsVsWordpressWordpressBetter = {
-  eyebrow: 'When WordPress wins',
   heading: 'When WordPress still makes sense',
   intro:
     'WordPress is the right stack in several common situations. The advantages below are real. Keep the ones that match how the site will actually be run.',
@@ -134,7 +130,6 @@ export const nextjsVsWordpressWordpressBetter = {
 } as const
 
 export const nextjsVsWordpressCriteria = {
-  eyebrow: 'The criteria',
   heading: 'How Next.js and WordPress compare on each point',
   intro:
     'The table is the short version. These are the same eight criteria, written out so you can quote a single section.',

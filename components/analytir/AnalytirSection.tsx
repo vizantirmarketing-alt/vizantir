@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { ReportPageScreen } from '@/app/analytir/_screens/ReportPageScreen'
 
 const AnalytirSection = () => {
@@ -21,9 +20,6 @@ const AnalytirSection = () => {
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
-            <Eyebrow align="start" className="mb-6">
-              In house
-            </Eyebrow>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-5 tracking-tight text-foreground">
               We built software to find out how far we could take it.
             </h2>

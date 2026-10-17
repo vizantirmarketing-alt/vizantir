@@ -55,7 +55,6 @@ export default function HowWeWorkPageClient() {
       <AmbientHero
         variant="helix"
         compact
-        eyebrow="How We Work"
         headline="You know the price before we start."
         subhead="A clear process with defined scope, fixed pricing, and milestone check-ins. You know exactly what you're getting before we start."
       />
@@ -132,12 +131,6 @@ export default function HowWeWorkPageClient() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <span
-              className="inline-block text-xs tracking-[0.25em] uppercase font-semibold mb-4"
-              style={{ color: colors.accent }}
-            >
-              Comparison
-            </span>
             <h2
             className="text-2xl md:text-3xl font-bold text-balance transition-colors duration-500"
             style={{ color: colors.text }}

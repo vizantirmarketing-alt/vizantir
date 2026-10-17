@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 
 const project = {
   name: 'Projext NeXt',
@@ -24,9 +23,6 @@ const InProgress = () => {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="max-w-7xl mx-auto"
         >
-          <div className="mb-3 flex justify-center">
-            <Eyebrow>Currently building</Eyebrow>
-          </div>
 
           <div className="max-w-4xl mx-auto">
             <div
@@ -46,7 +42,7 @@ const InProgress = () => {
               {project.name}
             </h3>
             <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-              {project.description}
+              Currently in development. {project.description}
             </p>
           </div>
         </motion.div>

@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbSchema, graphSchema } from '@/lib/schema'
 import {
@@ -84,12 +83,8 @@ export default async function TechnologyPage({ params }: PageProps) {
       <JsonLd id={`ld-technology-${tech.slug}`} data={pageGraph} />
 
       <div style={{ background: 'var(--background)' }}>
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-20">
+        <section className="px-6 md:px-12 lg:px-20 pt-32 pb-16 md:pt-36 md:pb-20">
           <div className="max-w-4xl mx-auto">
-            <Eyebrow align="start" className="mb-8">
-              Technology · {tech.name}
-            </Eyebrow>
-
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
               {tech.keyword}
             </h1>

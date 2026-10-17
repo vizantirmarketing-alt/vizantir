@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
 
@@ -21,7 +20,6 @@ export function LandingPagesFAQ({ faqs }: LandingPagesFAQProps) {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-4xl">
           <motion.div {...sectionReveal} className="mb-12 text-center">
-            <Eyebrow>FAQ</Eyebrow>
             <h2
               id="faq-heading"
               className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

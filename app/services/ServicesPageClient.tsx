@@ -40,7 +40,6 @@ import { serviceHref } from '@/lib/service-href'
 import { cn } from '@/lib/utils'
 
 const CARE_REFRAME = {
-  eyebrow: 'Website Care',
   heading: 'Ongoing improvement after launch',
   body: [
     'Launch is the start of the relationship, not the end of the work. Website Care is the usual continuation of a Vizantir website project.',
@@ -49,21 +48,18 @@ const CARE_REFRAME = {
 } as const
 
 const LANDING_PAGE_PRICING = {
-  eyebrow: 'Landing Pages',
   heading: 'Scoped conversion work',
   intro:
-    'Campaign, offer, or traffic-source pages built inside the same website strategy — not a separate way to start working with Vizantir. Conversion System is for businesses spending $5,000 or more per month on paid traffic, or an offer that has to work across more than one audience.',
+    'Landing pages for a campaign, offer, or traffic source, built inside the same website strategy — not a separate way to start working with Vizantir. Conversion System is for businesses spending $5,000 or more per month on paid traffic, or an offer that has to work across more than one audience.',
 } as const
 
 const CONTENT_GROWTH = {
-  eyebrow: 'Search & Content Growth',
   heading: 'Strategy, implementation, and publishing into the site',
   intro:
-    'Search opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility — published directly into the site. Plans below describe the engagement, not a quantity of posts for sale.',
+    'Search and content growth work: opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility — published directly into the site. Plans below describe the engagement, not a quantity of posts for sale.',
 } as const
 
 const AI_EXPERIENCE = {
-  eyebrow: 'AI Experience Integration',
   heading: 'Built into the existing website and its data',
   intro:
     'Custom AI experiences built into the website and connected to approved business content, data, and workflows — not a widget dropped on the page. Integration scope depends on the site, data sources, CRM requirements, lead flow, and use case.',
@@ -452,23 +448,16 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
 }
 
 function SectionHeading({
-  eyebrow,
   heading,
   children,
   compact = false,
 }: {
-  eyebrow?: string
   heading: string
   children?: ReactNode
   compact?: boolean
 }) {
   return (
     <div className={compact ? 'mb-8 text-center' : 'mb-12 text-center'}>
-      {eyebrow ? (
-        <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-[0.25em] text-cobalt-text">
-          {eyebrow}
-        </span>
-      ) : null}
       <h2
         className={cn(
           'text-balance font-bold leading-tight tracking-tight text-foreground',
@@ -507,7 +496,7 @@ function PricingSection({
 function ProjectPricingSection() {
   return (
     <PricingSection>
-      <SectionHeading eyebrow="Website Projects" heading="Fixed scope. Fixed price. One engagement.">
+      <SectionHeading heading="Fixed scope. Fixed price. One engagement.">
         <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
           Strategy, custom design, development, and launch priced as a complete website project,{' '}
           <Link
@@ -562,7 +551,7 @@ function OngoingCapabilities() {
         <p className="mx-auto mb-10 max-w-[55ch] text-center text-pretty text-base leading-relaxed text-muted-foreground">
           {AFTER_LAUNCH_TRANSITION}
         </p>
-        <SectionHeading compact eyebrow={CARE_REFRAME.eyebrow} heading={CARE_REFRAME.heading}>
+        <SectionHeading compact heading={CARE_REFRAME.heading}>
           <div className="mx-auto mt-3 max-w-[55ch] space-y-3.5 text-pretty text-base leading-relaxed text-muted-foreground">
             {CARE_REFRAME.body.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -578,7 +567,7 @@ function OngoingCapabilities() {
       </PricingSection>
 
       <PricingSection delay={0.05} compact>
-        <SectionHeading compact eyebrow={CONTENT_GROWTH.eyebrow} heading={CONTENT_GROWTH.heading}>
+        <SectionHeading compact heading={CONTENT_GROWTH.heading}>
           <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
             {CONTENT_GROWTH.intro}
           </p>
@@ -594,7 +583,7 @@ function OngoingCapabilities() {
       </PricingSection>
 
       <PricingSection delay={0.1} compact>
-        <SectionHeading compact eyebrow={LANDING_PAGE_PRICING.eyebrow} heading={LANDING_PAGE_PRICING.heading}>
+        <SectionHeading compact heading={LANDING_PAGE_PRICING.heading}>
           <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
             {LANDING_PAGE_PRICING.intro}
           </p>
@@ -607,7 +596,7 @@ function OngoingCapabilities() {
       </PricingSection>
 
       <PricingSection delay={0.15} compact>
-        <SectionHeading compact eyebrow={AI_EXPERIENCE.eyebrow} heading={AI_EXPERIENCE.heading}>
+        <SectionHeading compact heading={AI_EXPERIENCE.heading}>
           <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
             {AI_EXPERIENCE.intro}
           </p>

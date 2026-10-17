@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { trackCTAClick } from '@/lib/analytics'
 import type { CaseStudyListItem } from '@/lib/sanity/types'
 
@@ -216,7 +215,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
   const studioStudies = filteredStudies.filter((cs) => isStudioProject(cs.projectType))
 
   return (
-    <div className="min-h-screen pt-24 pb-20" style={{ background: colors.bg }}>
+    <div className="min-h-screen pt-32 pb-20" style={{ background: colors.bg }}>
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
@@ -226,7 +225,6 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             transition={{ duration: 0.5 }}
             className="mb-14"
           >
-            <Eyebrow className="mb-5">Our Work</Eyebrow>
             <h1
               className="mb-6 max-w-[16ch] text-5xl font-black leading-[1.02] tracking-[-0.035em] md:text-6xl lg:text-7xl"
               style={{ color: colors.text }}

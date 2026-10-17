@@ -1,6 +1,5 @@
 'use client'
 
-import { Eyebrow } from '@/components/ui/Eyebrow'
 
 export function Hero() {
   return (
@@ -10,8 +9,7 @@ export function Hero() {
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl">
-          <Eyebrow align="start">In house</Eyebrow>
-          <h1 className="mt-6 text-[2.25rem] font-black leading-[1.08] tracking-tight text-foreground md:text-5xl lg:text-6xl">
+          <h1 className="text-[2.25rem] font-black leading-[1.08] tracking-tight text-foreground md:text-5xl lg:text-6xl">
             Most studios ship a website. We shipped software that finds the difference
             between what a business sold and what it kept.
           </h1>

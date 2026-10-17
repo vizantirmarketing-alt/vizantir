@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { Code2, Palette, Target } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
 
@@ -31,7 +30,6 @@ export function ProductDefinition() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="product-definition-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
-            <Eyebrow>The Product</Eyebrow>
             <h2
               id="product-definition-heading"
               className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

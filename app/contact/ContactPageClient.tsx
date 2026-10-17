@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { trackFormSubmission, trackPhoneClick } from '@/lib/analytics'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { Honeypot } from '@/components/forms/Honeypot'
 import { TurnstileWidget } from '@/components/forms/TurnstileWidget'
@@ -216,9 +215,6 @@ export default function ContactPageClient() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <div className="mb-6">
-              <Eyebrow>Contact</Eyebrow>
-            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Start the Conversation
             </h1>

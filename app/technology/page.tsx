@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbSchema, graphSchema, webPageSchema } from '@/lib/schema'
 import { CORE_STACK, SITE_URL, SPECIALIZED_TOOLS, type Technology } from './_data'
@@ -91,10 +90,9 @@ export default function TechnologyHubPage() {
       <JsonLd id="ld-technology-hub" data={pageGraph} />
 
       <div style={{ background: 'var(--background)' }}>
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-20">
+        <section className="px-6 md:px-12 lg:px-20 pt-32 pb-16 md:pt-36 md:pb-20">
           <div className="max-w-6xl mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-              <Eyebrow className="mb-8">Our Stack</Eyebrow>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 The Technology Behind Every Vizantir Build
               </h1>

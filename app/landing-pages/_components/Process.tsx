@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { Code2, Palette, Rocket, Search } from 'lucide-react'
-import { Eyebrow } from '@/components/ui/Eyebrow'
 import SectionDivider from '@/components/ui/SectionDivider'
 import type { ProcessEmphasisStep } from '../_data/variants'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
@@ -52,7 +51,6 @@ export function Process({ emphasis }: ProcessProps) {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="process-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
-            <Eyebrow>Process</Eyebrow>
             <h2
               id="process-heading"
               className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"

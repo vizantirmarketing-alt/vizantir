@@ -58,7 +58,6 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
       <AmbientHero
         variant="polygons"
         compact
-        eyebrow="Before You Book"
         headline="We're not for everyone."
         subhead="Honest criteria to help you decide before you book a Strategy Call."
       />

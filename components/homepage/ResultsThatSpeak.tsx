@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { motion } from 'framer-motion';
-import { Eyebrow } from '@/components/ui/Eyebrow';
 import type { CaseStudyListItem } from '@/lib/sanity/types';
 
 /** next/image requires an absolute URL; Sanity may return protocol-relative `//cdn...` */
@@ -33,9 +32,6 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
           className="max-w-7xl mx-auto"
         >
           <div className="text-center mb-10 md:mb-12">
-            <div className="mb-3 flex justify-center">
-              <Eyebrow>Our Work</Eyebrow>
-            </div>
             <h2 
               className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-foreground"
             >

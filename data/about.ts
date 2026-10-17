@@ -56,7 +56,6 @@ export interface AboutFinalCtaContent {
 }
 
 export interface AboutPageContent {
-  eyebrow: string
   hero: AboutHeroContent
   intro: AboutIntroContent
   sections: readonly AboutNarrativeSection[]
@@ -64,7 +63,6 @@ export interface AboutPageContent {
 }
 
 export const aboutPageContent: AboutPageContent = {
-  eyebrow: 'Our History',
   hero: {
     heading: 'A studio for brands that have outgrown their website',
     body: 'Vizantir is a design and development studio based in Las Vegas. We build websites for brands whose business has moved past what their current site can carry.',

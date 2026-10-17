@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { motion } from 'framer-motion';
-import { Eyebrow } from '@/components/ui/Eyebrow';
 
 const AboutStory = () => {
   return (
@@ -23,9 +22,6 @@ const AboutStory = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <div className="mb-6">
-                <Eyebrow align="start">The Difference</Eyebrow>
-              </div>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
               >
