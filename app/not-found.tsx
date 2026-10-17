@@ -19,7 +19,7 @@ export default function NotFound() {
           <motion.h1 
             className="text-[150px] md:text-[200px] font-bold leading-none mb-0"
             style={{ 
-              color: 'var(--cobalt-primary)',
+              color: 'var(--cobalt-text)',
               textShadow: 'none'
             }}
             initial={{ scale: 0.8, opacity: 0 }}
@@ -100,7 +100,7 @@ export default function NotFound() {
                   key={index}
                   href={link.href}
                   className="link-cobalt text-sm font-medium"
-                  style={{ color: 'var(--cobalt-primary)' }}
+                  style={{ color: 'var(--cobalt-text)' }}
                 >
                   {link.name}
                 </Link>

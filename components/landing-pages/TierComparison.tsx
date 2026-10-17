@@ -32,19 +32,19 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
       }`}
     >
       {tier.featured ? (
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cobalt-accent">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cobalt-text">
           Popular
         </p>
       ) : null}
       <h3 className="text-xl font-bold text-foreground">{tier.name}</h3>
       <p className="mt-2 text-2xl font-black text-foreground">{tier.price}</p>
-      <p className="mt-2 text-sm font-medium text-cobalt-accent">{tier.tagline}</p>
+      <p className="mt-2 text-sm font-medium text-cobalt-text">{tier.tagline}</p>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
 
       <ul className="mt-6 flex-1 space-y-3">
         {includes.map((item) => (
           <li key={item} className="flex items-start gap-2.5">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent" aria-hidden />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text" aria-hidden />
             <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
           </li>
         ))}

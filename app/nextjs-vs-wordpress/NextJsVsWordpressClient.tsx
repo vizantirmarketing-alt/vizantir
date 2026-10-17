@@ -179,7 +179,7 @@ export default function NextJsVsWordpressClient() {
                 {nextjsVsWordpressNextBetter.items.map((item) => (
                   <li key={item.title} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
                     <div>
@@ -211,7 +211,7 @@ export default function NextJsVsWordpressClient() {
                 {nextjsVsWordpressWordpressBetter.items.map((item) => (
                   <li key={item.title} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
                     <div>
@@ -301,7 +301,7 @@ export default function NextJsVsWordpressClient() {
                       <AccordionIndicator
                         isOpen={isOpen}
                         className="h-5 w-5 flex-shrink-0"
-                        style={{ color: 'var(--cobalt-accent)' }}
+                        style={{ color: 'var(--cobalt-text)' }}
                       />
                     </div>
                   </button>
@@ -344,7 +344,7 @@ export default function NextJsVsWordpressClient() {
             <Button
               size="lg"
               asChild
-              className="group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-primary shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
+              className="btn-inverse group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-text shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
             >
               <Link
                 href={nextjsVsWordpressCta.href}

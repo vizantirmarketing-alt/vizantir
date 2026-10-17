@@ -50,7 +50,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               transition={{ duration: 0.5 }}
               className="text-4xl md:text-5xl font-bold mb-4 text-foreground"
             >
-              Questions? <span style={{ color: 'var(--cobalt-accent)' }}>Answered.</span>
+              Questions? <span style={{ color: 'var(--cobalt-text)' }}>Answered.</span>
             </motion.h2>
             <p 
               className="text-xl text-muted-foreground"
@@ -95,7 +95,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
                       <AccordionIndicator
                         isOpen={isOpen}
                         className="w-5 h-5"
-                        style={{ color: 'var(--cobalt-accent)' }}
+                        style={{ color: 'var(--cobalt-text)' }}
                       />
                     </button>
                   </h3>
@@ -130,7 +130,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               href="/contact" 
               onClick={() => trackCTAClick('schedule_a_call', 'faq_section')}
               className="group inline-flex items-center gap-2 font-semibold transition-opacity duration-300 hover:opacity-85"
-              style={{ color: 'var(--cobalt-accent)' }}
+              style={{ color: 'var(--cobalt-text)' }}
             >
               <span>Book a Strategy Call</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -65,7 +65,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
                 {fitItems.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
                     <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
@@ -91,7 +91,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
                       {item.link ? (
                         <Link
                           href={item.link.href}
-                          className="font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                          className="font-medium text-cobalt-text underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                         >
                           {item.link.label}
                         </Link>

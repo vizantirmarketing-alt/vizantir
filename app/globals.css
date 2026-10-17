@@ -37,6 +37,7 @@
   --color-card: var(--card);
   --color-cobalt-primary: var(--cobalt-primary);
   --color-cobalt-accent: var(--cobalt-accent);
+  --color-cobalt-text: var(--cobalt-text);
   --color-cobalt-gradient-end: var(--cobalt-gradient-end);
   --color-cobalt-muted: var(--cobalt-muted);
   --color-cobalt-muted-subtle: var(--cobalt-muted-subtle);
@@ -98,6 +99,8 @@
   /* Vizantir brand cobalt */
   --cobalt-primary: #0070F3;
   --cobalt-accent: #0070F3;
+  /* Typographic blue: #0070F3 is 4.3:1 on cream; this is the lightest value that clears 4.5:1 on #FAF9F5, #F9F8F5 and #EBF1F5. Fills stay #0070F3. */
+  --cobalt-text: #0068E3;
   --cobalt-gradient: linear-gradient(135deg, #0070F3 0%, #0070F3 100%);
   --cobalt-gradient-end: #0070F3;
   --cobalt-muted: rgba(0, 112, 243, 0.3);
@@ -346,7 +349,7 @@
   }
 
   .link-cobalt:hover {
-    color: #0070F3;
+    color: var(--cobalt-text);
   }
 
   .link-cobalt:hover::after {

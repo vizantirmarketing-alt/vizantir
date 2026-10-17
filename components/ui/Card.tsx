@@ -88,7 +88,7 @@ function Card({
       <div className="mb-4 flex min-h-[22px] items-center justify-end">
         <span
           className={cn(
-            'rounded-full bg-cobalt-gradient px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white',
+            'rounded-full bg-cobalt-gradient px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-white',
             !showBadge && 'invisible',
           )}
           aria-hidden={!showBadge}
@@ -141,7 +141,7 @@ function CardPrice({ className, children }: CardPriceProps) {
   return (
     <p
       className={cn(
-        'whitespace-nowrap text-xl font-bold text-cobalt-accent md:text-[22px]',
+        'whitespace-nowrap text-xl font-bold text-cobalt-text md:text-[22px]',
         className,
       )}
     >
@@ -190,7 +190,7 @@ interface CardTaglineProps {
 
 function CardTagline({ className, children }: CardTaglineProps) {
   return (
-    <p className={cn('mb-4 text-pretty text-sm font-semibold text-cobalt-accent', className)}>
+    <p className={cn('mb-4 text-pretty text-sm font-semibold text-cobalt-text', className)}>
       {children}
     </p>
   )
@@ -207,7 +207,7 @@ function CardPriceBlock({ compareAt, price, suffix, className }: CardPriceBlockP
   return (
     <div className={cn('mb-5 border-y border-border py-5', className)}>
       <div className="mb-1 text-sm text-muted-foreground line-through">{compareAt}</div>
-      <div className="text-[28px] font-bold leading-none text-cobalt-accent">
+      <div className="text-[28px] font-bold leading-none text-cobalt-text">
         {price}
         {suffix ? (
           <span className="ml-1 text-sm font-medium text-muted-foreground">{suffix}</span>
@@ -238,7 +238,7 @@ function CardCheckItem({ children }: CardCheckItemProps) {
   return (
     <li className="flex items-start gap-2.5 text-pretty text-sm text-foreground/80">
       <CheckCircle2
-        className="mt-[2px] h-4 w-4 flex-shrink-0 text-cobalt-accent"
+        className="mt-[2px] h-4 w-4 flex-shrink-0 text-cobalt-text"
         aria-hidden
       />
       <span className="min-w-0">{children}</span>

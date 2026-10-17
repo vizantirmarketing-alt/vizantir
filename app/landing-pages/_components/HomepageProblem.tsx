@@ -39,7 +39,7 @@ export function HomepageProblem({ heading, body, bullets }: HomepageProblemProps
             {bullets.map((bullet) => (
               <motion.li key={bullet} variants={itemVariants} className="flex items-start gap-3">
                 <CheckCircle2
-                  className="mt-0.5 h-5 w-5 shrink-0 text-cobalt-accent"
+                  className="mt-0.5 h-5 w-5 shrink-0 text-cobalt-text"
                   aria-hidden
                 />
                 <span className="text-base leading-relaxed text-muted-foreground">{bullet}</span>

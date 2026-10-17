@@ -135,9 +135,9 @@ const Navbar = ({ minimal }: NavbarProps) => {
                     key={link.path}
                     href={link.path}
                     title={link.description}
-                    className="relative text-sm font-semibold text-foreground transition-colors duration-200 hover:text-[#0070F3]"
+                    className="relative text-sm font-semibold text-foreground transition-colors duration-200 hover:text-cobalt-text"
                     style={{
-                      color: pathname === link.path ? 'var(--cobalt-primary)' : undefined,
+                      color: pathname === link.path ? 'var(--cobalt-text)' : undefined,
                     }}
                   >
                     {link.name}
@@ -258,7 +258,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`link-cobalt block py-3 sm:py-4 ${
                     idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
-                  } ${mounted && pathname === link.path ? 'text-cobalt-primary' : 'text-foreground'}`}
+                  } ${mounted && pathname === link.path ? 'text-cobalt-text' : 'text-foreground'}`}
                 >
                   <span className="text-xl sm:text-2xl font-medium">{link.name}</span>
                 </Link>

@@ -39,7 +39,7 @@ export function ClosingCTA({
           <Button
             size="lg"
             asChild
-            className="group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-primary shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
+            className="btn-inverse group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-text shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
           >
             <Link
               href={STRATEGY_CALL_HREF}

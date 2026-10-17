@@ -22,7 +22,7 @@ export default function ServicesHero() {
       subhead="We figure out what the site needs to do before we design a single page — the business goals, how customers actually behave, the content structure, the conversion paths, and the technical requirements that follow."
     >
       <div className="mt-8 max-w-xl md:mt-8">
-        <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-cobalt-accent">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-cobalt-text">
           The engagement
         </p>
 
@@ -42,7 +42,7 @@ export default function ServicesHero() {
                     Development on a{' '}
                     <Link
                       href="/nextjs-vs-wordpress"
-                      className="font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                      className="font-medium text-cobalt-text underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                     >
                       hand-coded Next.js stack
                     </Link>

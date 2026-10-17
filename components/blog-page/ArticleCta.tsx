@@ -19,7 +19,7 @@ export function ArticleCta({ href, label }: ArticleCtaProps) {
         <Link
           href={href}
           className="link-cobalt font-medium"
-          style={{ color: 'var(--cobalt-accent)' }}
+          style={{ color: 'var(--cobalt-text)' }}
         >
           {label}
         </Link>

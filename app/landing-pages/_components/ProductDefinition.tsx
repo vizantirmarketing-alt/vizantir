@@ -61,7 +61,7 @@ export function ProductDefinition() {
                 className="rounded-2xl border border-border bg-muted p-6"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
-                  <column.icon size={24} className="text-cobalt-accent" aria-hidden />
+                  <column.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{column.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{column.description}</p>

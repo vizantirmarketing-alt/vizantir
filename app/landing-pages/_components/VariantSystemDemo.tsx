@@ -89,7 +89,7 @@ export function VariantSystemDemo() {
                 >
                   <div className="mb-5 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-accent">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                         {tile.label}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">{tile.audience}</p>

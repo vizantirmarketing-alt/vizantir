@@ -1,7 +1,7 @@
 export default function PublicReportNotFound() {
   return (
     <div className="mx-auto w-full max-w-[40rem] px-5 py-16 sm:px-8">
-      <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-cobalt-primary">
+      <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-cobalt-text">
         Vizantir
       </p>
       <h1 className="mt-6 text-[1.65rem] font-medium tracking-tight text-foreground">

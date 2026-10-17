@@ -262,7 +262,7 @@ export default function CookiePolicy() {
                   )}
                   {subsection.contactEmail && (
                     <div className="mt-3">
-                      <a href={`mailto:${subsection.contactEmail}`} className="font-medium transition-colors hover:opacity-80 block" style={{ color: 'var(--cobalt-primary)' }}>{subsection.contactEmail}</a>
+                      <a href={`mailto:${subsection.contactEmail}`} className="font-medium transition-colors hover:opacity-80 block" style={{ color: 'var(--cobalt-text)' }}>{subsection.contactEmail}</a>
                       {subsection.phone && <p className="mt-1 text-body">{subsection.phone}</p>}
                     </div>
                   )}

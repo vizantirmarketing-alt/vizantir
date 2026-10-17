@@ -72,7 +72,7 @@ export function ProofBand({ clients, callout }: ProofBandProps) {
                     className="group flex items-center justify-between rounded-2xl border border-border bg-muted/40 px-5 py-4 transition-colors hover:border-cobalt-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                   >
                     <span className="text-sm font-semibold text-foreground">{client.title}</span>
-                    <ArrowRight className="h-4 w-4 text-cobalt-accent transition-transform group-hover:translate-x-0.5" />
+                    <ArrowRight className="h-4 w-4 text-cobalt-text transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </motion.div>
               ))}

@@ -82,13 +82,13 @@ export default function IndustriesHubPage() {
                     className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
                   >
                     <h2 className="text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
-                    <p className="text-cobalt-accent font-medium mb-4">{vertical.tagline}</p>
+                    <p className="text-cobalt-text font-medium mb-4">{vertical.tagline}</p>
                     <p className="mb-6 flex-1 text-sm text-body leading-relaxed">
                       {vertical.description}
                     </p>
                     <Link
                       href={vertical.href}
-                      className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-accent"
+                      className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-text"
                     >
                       {vertical.title}
                       <ArrowRight className="h-4 w-4" />

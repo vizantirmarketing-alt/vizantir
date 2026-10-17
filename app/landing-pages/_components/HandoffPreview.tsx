@@ -97,7 +97,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
                     key={section.number}
                     className="grid grid-cols-[auto_1fr] gap-4 border-b border-border/70 pb-4 last:border-b-0 last:pb-0"
                   >
-                    <span className="font-mono text-xs font-semibold text-cobalt-accent">
+                    <span className="font-mono text-xs font-semibold text-cobalt-text">
                       {section.number}
                     </span>
                     <div>

@@ -482,7 +482,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                         <AccordionIndicator
                           isOpen={isOpen}
                           className="w-5 h-5 flex-shrink-0"
-                          style={{ color: 'var(--cobalt-accent)' }}
+                          style={{ color: 'var(--cobalt-text)' }}
                         />
                       </button>
                       <div

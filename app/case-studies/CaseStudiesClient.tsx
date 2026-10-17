@@ -134,7 +134,7 @@ function CaseStudyIndexRow({
 
         <div className="min-w-0">
           <h2
-            className="mb-2 text-2xl font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-primary md:text-[2.35rem]"
+            className="mb-2 text-2xl font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-text md:text-[2.35rem]"
             style={{ color: colors.text }}
           >
             {study.title}

@@ -20,7 +20,7 @@ const idealHeading = "You're a fit if..."
 const notIdealHeading = "You're not a fit if..."
 
 const inlineLinkClassName =
-  'font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2'
+  'font-medium text-cobalt-text underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2'
 
 function AreWeAFitInlineCopy({ paragraph }: { paragraph: AreWeAFitParagraph }) {
   if (typeof paragraph === 'string') return paragraph

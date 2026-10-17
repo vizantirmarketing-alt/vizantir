@@ -60,7 +60,7 @@ export function RelatedServices() {
                 </p>
                 <Link
                   href={service.href}
-                  className="group inline-flex items-center text-sm font-semibold text-cobalt-accent underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                  className="group inline-flex items-center text-sm font-semibold text-cobalt-text underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                 >
                   Learn more
                   <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />

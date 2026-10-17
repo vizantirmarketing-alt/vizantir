@@ -211,7 +211,7 @@ export default function TermsAndConditions() {
                       ))}
                     </ul>
                   )}
-                  {subsection.contactEmail && <a href={`mailto:${subsection.contactEmail}`} className="inline-block mt-2 font-medium transition-colors hover:opacity-80" style={{ color: 'var(--cobalt-primary)' }}>{subsection.contactEmail}</a>}
+                  {subsection.contactEmail && <a href={`mailto:${subsection.contactEmail}`} className="inline-block mt-2 font-medium transition-colors hover:opacity-80" style={{ color: 'var(--cobalt-text)' }}>{subsection.contactEmail}</a>}
                 </div>
               ))}
             </motion.div>

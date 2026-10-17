@@ -85,11 +85,11 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
                     />
                   ) : null}
                 </Link>
-                <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-primary mb-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text mb-1">
                   {item.industry}
                 </p>
                 <h3 
-                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-cobalt-primary transition-colors text-foreground"
+                  className="text-xl md:text-2xl font-bold mb-2 group-hover:text-cobalt-text transition-colors text-foreground"
                 >
                   {item.title}
                 </h3>
@@ -101,7 +101,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
                 <Link
                   href={caseStudyHref}
                   className="link-cobalt group inline-flex items-center gap-2 text-sm font-semibold"
-                  style={{ color: 'var(--cobalt-accent)' }}
+                  style={{ color: 'var(--cobalt-text)' }}
                 >
                   <span>Read case study</span>
                   <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />

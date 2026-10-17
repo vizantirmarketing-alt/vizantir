@@ -219,7 +219,7 @@ export default function WebsiteRedesignLasVegasClient() {
             transition={{ duration: 0.45 }}
             className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2"
           >
-            <MapPin size={16} className="text-cobalt-accent" aria-hidden />
+            <MapPin size={16} className="text-cobalt-text" aria-hidden />
             <span className="text-sm text-muted-foreground">Website Redesign · Las Vegas</span>
           </motion.div>
 
@@ -231,7 +231,7 @@ export default function WebsiteRedesignLasVegasClient() {
           >
             Website Redesign in Las Vegas
             <br />
-            <span className="text-cobalt-accent">
+            <span className="text-cobalt-text">
               Built to Protect Your Rankings, Not Break Them
             </span>
           </motion.h1>
@@ -338,7 +338,7 @@ export default function WebsiteRedesignLasVegasClient() {
                 className="card-interactive rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
-                  <block.icon size={24} className="text-cobalt-accent" aria-hidden />
+                  <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{block.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{block.description}</p>
@@ -355,7 +355,7 @@ export default function WebsiteRedesignLasVegasClient() {
               <span key={link.href}>
                 <Link
                   href={link.href}
-                  className="font-medium text-cobalt-accent underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                  className="font-medium text-cobalt-text underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                 >
                   {link.label}
                 </Link>
@@ -435,7 +435,7 @@ export default function WebsiteRedesignLasVegasClient() {
                 {vizantirCompare.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
                     <span className="text-sm leading-relaxed text-foreground/90">{item}</span>
@@ -445,7 +445,7 @@ export default function WebsiteRedesignLasVegasClient() {
               <div className="grid grid-cols-3 gap-4 border-t border-border pt-6">
                 {vizantirProofPoints.map((stat) => (
                   <div key={stat.label} className="text-center">
-                    <div className="text-xl font-bold text-cobalt-accent md:text-2xl">
+                    <div className="text-xl font-bold text-cobalt-text md:text-2xl">
                       {stat.value}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground md:text-sm">
@@ -491,13 +491,13 @@ export default function WebsiteRedesignLasVegasClient() {
                 className="card-interactive flex flex-col rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
               >
                 <h3 className="mb-1 text-lg font-bold text-foreground">{client.name}</h3>
-                <p className="mb-4 text-sm text-cobalt-accent">{client.context}</p>
+                <p className="mb-4 text-sm text-cobalt-text">{client.context}</p>
                 <p className="mb-5 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {client.description}
                 </p>
                 <Link
                   href={client.href}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-cobalt-accent transition-colors hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-cobalt-text transition-colors hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                 >
                   View case study
                   <ArrowRight className="h-4 w-4" aria-hidden />
@@ -530,7 +530,7 @@ export default function WebsiteRedesignLasVegasClient() {
                 className="rounded-2xl border border-border bg-muted p-6"
               >
                 <div className="mb-3 flex items-center gap-3">
-                  <ShieldCheck size={20} className="text-cobalt-accent" aria-hidden />
+                  <ShieldCheck size={20} className="text-cobalt-text" aria-hidden />
                   <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
@@ -588,9 +588,9 @@ export default function WebsiteRedesignLasVegasClient() {
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
-                    <step.icon size={22} className="text-cobalt-accent" aria-hidden />
+                    <step.icon size={22} className="text-cobalt-text" aria-hidden />
                   </div>
-                  <span className="text-xs font-semibold tracking-wider text-cobalt-accent">
+                  <span className="text-xs font-semibold tracking-wider text-cobalt-text">
                     {step.step}
                   </span>
                 </div>
@@ -680,7 +680,7 @@ export default function WebsiteRedesignLasVegasClient() {
             <Button
               size="lg"
               asChild
-              className="group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-primary shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
+              className="btn-inverse group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-text shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
             >
               <Link
                 href={STRATEGY_CALL_HREF}

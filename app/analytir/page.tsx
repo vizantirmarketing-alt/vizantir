@@ -187,7 +187,7 @@ export default function AnalytirPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  color: 'var(--cobalt-accent)',
+                  color: 'var(--cobalt-text)',
                   borderBottom: '1px solid color-mix(in srgb, currentColor 30%, transparent)',
                   paddingBottom: 2,
                 }}
@@ -201,7 +201,7 @@ export default function AnalytirPage() {
                   display: 'inline',
                   marginLeft: 6,
                   verticalAlign: 'middle',
-                  color: 'var(--cobalt-accent)',
+                  color: 'var(--cobalt-text)',
                 }}
               />
             </p>

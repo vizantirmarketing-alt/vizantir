@@ -98,7 +98,7 @@ export default function CopyrightNotice() {
             <p className="leading-relaxed mb-3 text-body">
               For questions regarding copyright permissions or to report unauthorized use of our content, please contact:
             </p>
-            <a href="mailto:info@vizantir.com" className="font-medium transition-colors hover:opacity-80" style={{ color: 'var(--cobalt-primary)' }}>
+            <a href="mailto:info@vizantir.com" className="font-medium transition-colors hover:opacity-80" style={{ color: 'var(--cobalt-text)' }}>
               info@vizantir.com
             </a>
           </motion.div>

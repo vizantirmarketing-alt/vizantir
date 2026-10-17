@@ -59,7 +59,7 @@ function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
           className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
         >
           <h3 className="text-2xl font-bold text-foreground mb-3">{tech.name}</h3>
-          <p className="text-cobalt-accent font-medium mb-4">{tech.tagline}</p>
+          <p className="text-cobalt-text font-medium mb-4">{tech.tagline}</p>
           <ul className="mb-6 space-y-3 flex-1">
             {tech.whyWeUseIt.slice(0, 2).map((item) => (
               <li key={item} className="flex gap-3 text-sm text-body leading-relaxed">
@@ -74,7 +74,7 @@ function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
           </ul>
           <Link
             href={`/technology/${tech.slug}`}
-            className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-accent"
+            className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-text"
           >
             Learn more
             <ArrowRight className="h-4 w-4" />

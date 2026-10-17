@@ -239,7 +239,7 @@ function ConversationAllowances({ copy }: { copy: string }) {
         className="flex w-full items-center justify-between gap-4 py-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
       >
         <span className="text-sm font-medium text-foreground">Conversation allowances</span>
-        <AccordionIndicator isOpen={open} className="h-4 w-4 text-cobalt-accent" />
+        <AccordionIndicator isOpen={open} className="h-4 w-4 text-cobalt-text" />
       </button>
       <p
         id="ai-conversation-allowances"
@@ -265,7 +265,7 @@ function CareTermsLegend() {
         className="flex w-full items-center justify-between gap-4 py-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
       >
         <span className="text-sm font-medium text-foreground">What these terms mean</span>
-        <AccordionIndicator isOpen={open} className="h-4 w-4 text-cobalt-accent" />
+        <AccordionIndicator isOpen={open} className="h-4 w-4 text-cobalt-text" />
       </button>
       <div id="website-care-terms" hidden={!open} className="mt-3 space-y-5">
         {CARE_LEGEND_GROUPS.map((group) => (
@@ -439,7 +439,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
       {service.slug ? (
         <Link
           href={serviceHref(service.slug)}
-          className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-accent"
+          className="link-cobalt inline-flex items-center gap-2 font-semibold text-cobalt-text"
         >
           Learn more
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -465,7 +465,7 @@ function SectionHeading({
   return (
     <div className={compact ? 'mb-8 text-center' : 'mb-12 text-center'}>
       {eyebrow ? (
-        <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-[0.25em] text-cobalt-accent">
+        <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-[0.25em] text-cobalt-text">
           {eyebrow}
         </span>
       ) : null}
@@ -508,11 +508,11 @@ function ProjectPricingSection() {
   return (
     <PricingSection>
       <SectionHeading eyebrow="Website Projects" heading="Fixed scope. Fixed price. One engagement.">
-        <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+        <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
           Strategy, custom design, development, and launch priced as a complete website project,{' '}
           <Link
             href="/get-started"
-            className="font-medium text-cobalt-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+            className="font-medium text-cobalt-text underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
           >
             from first call to launch
           </Link>
@@ -524,7 +524,7 @@ function ProjectPricingSection() {
           <ProjectPricingCard key={tier.slug} tier={tier} />
         ))}
       </div>
-      <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-muted-foreground">
+      <p className="mx-auto mt-10 max-w-[55ch] text-center text-sm text-muted-foreground">
         {careFooterText}
       </p>
       <div className="mx-auto mt-16 max-w-2xl rounded-xl border border-border bg-card px-7 py-10 text-center shadow-sm md:px-10 md:py-12">
@@ -559,11 +559,11 @@ function OngoingCapabilities() {
   return (
     <>
       <PricingSection compact>
-        <p className="mx-auto mb-10 max-w-2xl text-center text-pretty text-base leading-relaxed text-muted-foreground">
+        <p className="mx-auto mb-10 max-w-[55ch] text-center text-pretty text-base leading-relaxed text-muted-foreground">
           {AFTER_LAUNCH_TRANSITION}
         </p>
         <SectionHeading compact eyebrow={CARE_REFRAME.eyebrow} heading={CARE_REFRAME.heading}>
-          <div className="mx-auto mt-3 max-w-2xl space-y-3.5 text-pretty text-base leading-relaxed text-muted-foreground">
+          <div className="mx-auto mt-3 max-w-[55ch] space-y-3.5 text-pretty text-base leading-relaxed text-muted-foreground">
             {CARE_REFRAME.body.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
@@ -579,7 +579,7 @@ function OngoingCapabilities() {
 
       <PricingSection delay={0.05} compact>
         <SectionHeading compact eyebrow={CONTENT_GROWTH.eyebrow} heading={CONTENT_GROWTH.heading}>
-          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
             {CONTENT_GROWTH.intro}
           </p>
         </SectionHeading>
@@ -588,14 +588,14 @@ function OngoingCapabilities() {
             <ContentGrowthCard key={tier.slug} tier={tier} />
           ))}
         </div>
-        <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground">
+        <p className="mt-6 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
           {CONTENT_GROWTH_AVAILABILITY} {CARE_CLIENT_DISCOUNT}
         </p>
       </PricingSection>
 
       <PricingSection delay={0.1} compact>
         <SectionHeading compact eyebrow={LANDING_PAGE_PRICING.eyebrow} heading={LANDING_PAGE_PRICING.heading}>
-          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
             {LANDING_PAGE_PRICING.intro}
           </p>
         </SectionHeading>
@@ -608,7 +608,7 @@ function OngoingCapabilities() {
 
       <PricingSection delay={0.15} compact>
         <SectionHeading compact eyebrow={AI_EXPERIENCE.eyebrow} heading={AI_EXPERIENCE.heading}>
-          <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
             {AI_EXPERIENCE.intro}
           </p>
         </SectionHeading>
@@ -651,7 +651,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             transition={{ duration: 0.6 }}
           >
             <SectionHeading heading="What the engagement covers">
-              <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+              <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
                 Strategy, design, development, launch, and ongoing growth — one website project, not a menu of
                 disconnected offerings.
               </p>
@@ -681,7 +681,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                         <div
                           className={cn(
                             'mt-0.5 flex-shrink-0 transition-colors duration-500',
-                            isOpen ? 'text-cobalt-accent' : 'text-muted-foreground',
+                            isOpen ? 'text-cobalt-text' : 'text-muted-foreground',
                           )}
                         >
                           <Icon />
@@ -692,7 +692,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                             {service.title}
                           </h3>
                           {service.description ? (
-                            <p className="mt-1 text-pretty text-sm text-muted-foreground transition-colors duration-500">
+                            <p className="mt-1 max-w-[55ch] text-pretty text-sm text-muted-foreground transition-colors duration-500">
                               {service.description}
                             </p>
                           ) : null}
@@ -701,7 +701,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
 
                       <AccordionIndicator
                         isOpen={isOpen}
-                        className="w-5 h-5 flex-shrink-0 text-cobalt-accent"
+                        className="w-5 h-5 flex-shrink-0 text-cobalt-text"
                       />
                     </div>
 
@@ -741,7 +741,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             transition={{ delay: 0.3 }}
           >
             <SectionHeading compact heading={CLOSING_CTA.heading}>
-              <p className="mx-auto mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+              <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
                 {CLOSING_CTA.body}
               </p>
             </SectionHeading>

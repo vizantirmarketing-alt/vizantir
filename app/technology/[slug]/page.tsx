@@ -94,7 +94,7 @@ export default async function TechnologyPage({ params }: PageProps) {
               {tech.keyword}
             </h1>
 
-            <p className="text-lg md:text-xl text-cobalt-accent font-medium mb-8">{tech.tagline}</p>
+            <p className="text-lg md:text-xl text-cobalt-text font-medium mb-8">{tech.tagline}</p>
 
             <p className="text-base md:text-lg text-body leading-relaxed mb-16">{tech.intro}</p>
 

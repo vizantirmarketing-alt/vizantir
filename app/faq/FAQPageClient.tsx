@@ -85,7 +85,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 <button
                   onClick={() => setSearchQuery('')}
                   className="mt-4 text-sm font-medium hover:opacity-80 transition-opacity"
-                  style={{ color: 'var(--cobalt-primary)' }}
+                  style={{ color: 'var(--cobalt-text)' }}
                 >
                   Clear search
                 </button>
@@ -121,7 +121,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                         <AccordionIndicator
                           isOpen={isOpen}
                           className="w-5 h-5"
-                          style={{ color: 'var(--cobalt-accent)' }}
+                          style={{ color: 'var(--cobalt-text)' }}
                         />
                       </button>
                     </h2>

@@ -39,9 +39,9 @@ const ServicesPreview = () => {
   };
 
   const numberStyles = [
-    { color: 'var(--cobalt-primary)', rgb: '0, 112, 243', class: 'number-glow-teal' },
-    { color: 'var(--cobalt-primary)', rgb: '0, 112, 243', class: 'number-glow-purple' },
-    { color: 'var(--cobalt-primary)', rgb: '0, 112, 243', class: 'number-glow-blue' },
+    { color: 'var(--cobalt-text)', rgb: '0, 112, 243', class: 'number-glow-teal' },
+    { color: 'var(--cobalt-text)', rgb: '0, 112, 243', class: 'number-glow-purple' },
+    { color: 'var(--cobalt-text)', rgb: '0, 112, 243', class: 'number-glow-blue' },
   ];
 
   const services = [
@@ -197,7 +197,7 @@ const ServicesPreview = () => {
                 </span>
 
                 <h3
-                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-cobalt-primary text-foreground" style={{ lineHeight: '1.2' }}
+                  className="text-3xl md:text-4xl font-extrabold mb-6 whitespace-normal transition-all duration-300 group-hover:translate-x-2 group-hover:text-cobalt-text text-foreground" style={{ lineHeight: '1.2' }}
                 >
                   {service.title}
                 </h3>
@@ -218,7 +218,7 @@ const ServicesPreview = () => {
                   <span
                     className="text-xs font-semibold uppercase tracking-wider mb-2 block"
                     style={{
-                      color: 'var(--cobalt-accent)',
+                      color: 'var(--cobalt-text)',
                     }}
                   >
                     Output:
@@ -239,7 +239,7 @@ const ServicesPreview = () => {
                   <span
                     className="text-xs font-semibold uppercase tracking-wider mb-2 block"
                     style={{
-                      color: 'var(--cobalt-accent)',
+                      color: 'var(--cobalt-text)',
                     }}
                   >
                     Outcome:
@@ -263,7 +263,7 @@ const ServicesPreview = () => {
           <Link
             href="/services"
             className="link-cobalt group inline-flex items-center gap-2 font-semibold"
-            style={{ color: 'var(--cobalt-accent)' }}
+            style={{ color: 'var(--cobalt-text)' }}
           >
             <span>View All Services</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

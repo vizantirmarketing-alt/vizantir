@@ -38,7 +38,7 @@ function DeliverableColumn({
       <ul className="space-y-3">
         {items.map((item) => (
           <li key={item} className="flex items-start gap-3">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent" aria-hidden />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text" aria-hidden />
             <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
           </li>
         ))}

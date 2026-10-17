@@ -87,14 +87,14 @@ export function Process({ emphasis }: ProcessProps) {
                 >
                   <div className="mb-4 flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
-                      <step.icon size={22} className="text-cobalt-accent" aria-hidden />
+                      <step.icon size={22} className="text-cobalt-text" aria-hidden />
                     </div>
-                    <span className="text-xs font-semibold tracking-wider text-cobalt-accent">
+                    <span className="text-xs font-semibold tracking-wider text-cobalt-text">
                       {step.step}
                     </span>
                   </div>
                   {isEmphasized ? (
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cobalt-accent">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                       Emphasized for this audience
                     </p>
                   ) : null}

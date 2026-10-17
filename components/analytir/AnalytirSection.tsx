@@ -36,7 +36,7 @@ const AnalytirSection = () => {
             <Link
               href="/analytir"
               className="group inline-flex items-center gap-2 mt-8 text-base"
-              style={{ color: 'var(--cobalt-accent)' }}
+              style={{ color: 'var(--cobalt-text)' }}
             >
               <span>See what we built</span>
               <ArrowRight

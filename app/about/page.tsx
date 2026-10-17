@@ -91,7 +91,7 @@ export default function AboutPage() {
                       <Link
                         href="/technology"
                         className="link-cobalt inline-flex items-center gap-2 text-sm font-medium md:text-base"
-                        style={{ color: 'var(--cobalt-accent)' }}
+                        style={{ color: 'var(--cobalt-text)' }}
                       >
                         <span>See the full stack</span>
                         <ArrowRight className="h-4 w-4" />

@@ -66,7 +66,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
               {...sectionReveal}
               className="rounded-2xl border border-cobalt-accent/40 bg-cobalt-muted-subtle p-6 md:p-8"
             >
-              <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-accent">
+              <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                 This variant is optimized for
               </p>
               <p className="mt-4 text-xl font-bold leading-snug text-foreground md:text-2xl">
@@ -95,7 +95,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold text-foreground">{row.label}</p>
                     <ArrowRight
-                      className="h-4 w-4 shrink-0 text-cobalt-accent opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
+                      className="h-4 w-4 shrink-0 text-cobalt-text opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
                       aria-hidden
                     />
                   </div>
@@ -107,7 +107,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                         <li key={slug}>
                           {isCurrent ? (
                             <div className="rounded-xl border border-cobalt-accent/30 bg-background/80 px-3 py-2">
-                              <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-accent">
+                              <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                                 Current · {variant.hero.eyebrow}
                               </p>
                               <p className="mt-1 text-sm leading-relaxed text-foreground">

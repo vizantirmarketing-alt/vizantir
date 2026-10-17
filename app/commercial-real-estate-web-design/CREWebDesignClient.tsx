@@ -192,7 +192,7 @@ export default function CREWebDesignClient() {
             transition={{ duration: 0.45 }}
             className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2"
           >
-            <Building2 size={16} className="text-cobalt-accent" aria-hidden />
+            <Building2 size={16} className="text-cobalt-text" aria-hidden />
             <span className="text-sm text-muted-foreground">
               CRE Firms · Brokerages · Property Groups
             </span>
@@ -206,7 +206,7 @@ export default function CREWebDesignClient() {
           >
             Commercial Real Estate Web Design
             <br />
-            <span className="text-cobalt-accent">That Converts</span>
+            <span className="text-cobalt-text">That Converts</span>
           </motion.h1>
 
           <motion.p
@@ -311,7 +311,7 @@ export default function CREWebDesignClient() {
                 className="card-interactive rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
-                  <block.icon size={24} className="text-cobalt-accent" aria-hidden />
+                  <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{block.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{block.description}</p>
@@ -369,7 +369,7 @@ export default function CREWebDesignClient() {
                 {vizantirCompare.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-accent"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
                     <span className="text-sm leading-relaxed text-foreground/90">{item}</span>
@@ -379,7 +379,7 @@ export default function CREWebDesignClient() {
               <div className="grid grid-cols-3 gap-4 border-t border-border pt-6">
                 {vizantirProofPoints.map((stat) => (
                   <div key={stat.label} className="text-center">
-                    <div className="text-xl font-bold text-cobalt-accent md:text-2xl">
+                    <div className="text-xl font-bold text-cobalt-text md:text-2xl">
                       {stat.value}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground md:text-sm">{stat.label}</div>
@@ -424,7 +424,7 @@ export default function CREWebDesignClient() {
                 className="rounded-2xl border border-border bg-muted p-6"
               >
                 <div className="mb-3 flex items-center gap-3">
-                  <Building2 size={20} className="text-cobalt-accent" aria-hidden />
+                  <Building2 size={20} className="text-cobalt-text" aria-hidden />
                   <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
@@ -482,9 +482,9 @@ export default function CREWebDesignClient() {
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
-                    <step.icon size={22} className="text-cobalt-accent" aria-hidden />
+                    <step.icon size={22} className="text-cobalt-text" aria-hidden />
                   </div>
-                  <span className="text-xs font-semibold tracking-wider text-cobalt-accent">
+                  <span className="text-xs font-semibold tracking-wider text-cobalt-text">
                     {step.step}
                   </span>
                 </div>
@@ -551,7 +551,7 @@ export default function CREWebDesignClient() {
             <Button
               size="lg"
               asChild
-              className="group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-primary shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
+              className="btn-inverse group rounded-xl bg-white px-8 py-4 text-base font-semibold text-cobalt-text shadow-lg hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
             >
               <Link
                 href={STRATEGY_CALL_HREF}
