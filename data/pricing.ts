@@ -119,7 +119,7 @@ export const projectPricing: PricingTier[] = [
     priceNumeric: 60000,
     timeline: '12–16+ weeks',
     description:
-      'Custom systems, integrations, and larger organizational requirements — multi-location architecture, member tools, and applications beyond a marketing site.',
+      'Custom systems, integrations, and larger organizational requirements. Multi-location architecture, member tools, and applications beyond a marketing site.',
     includes: [
       'Unlimited pages within agreed scope',
       'Custom functionality and API work',

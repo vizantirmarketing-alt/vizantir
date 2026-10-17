@@ -34,7 +34,6 @@ import {
   type CareTier,
   type ChatbotTier,
   type LandingPageTier,
-  type PricingTier,
 } from '@/data/pricing'
 import { serviceHref } from '@/lib/service-href'
 import { cn } from '@/lib/utils'
@@ -309,33 +308,62 @@ function AiExperienceBlock() {
   )
 }
 
-function ProjectPricingCard({ tier }: { tier: PricingTier }) {
+function ProjectPricingRows() {
   return (
-    <ServicePricingCard
-      title={tier.name}
-      price={tier.price}
-      tagline={tier.timeline}
-      description={tier.description}
-      items={tier.includes}
-      featured={tier.featured}
-      badge={tier.featured ? 'Recommended' : false}
-      footer={
+    <div>
+      {projectPricing.map((tier) => (
+        <div key={tier.slug}>
+          <SectionDivider />
+          <div className="grid gap-6 py-12 md:grid-cols-3 md:gap-12 md:py-16">
+            <div>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 className="text-balance text-xl font-bold text-foreground">{tier.name}</h3>
+                {tier.featured ? (
+                  <span className="text-sm font-medium text-muted-foreground">Recommended</span>
+                ) : null}
+              </div>
+              <p
+                className={cn(
+                  'mt-4 text-5xl font-bold leading-none tracking-[-0.04em] md:text-[56px]',
+                  tier.featured ? 'text-cobalt-text' : 'text-foreground',
+                )}
+              >
+                {tier.price}
+              </p>
+              <p className="mt-3 text-pretty text-sm text-muted-foreground">{tier.timeline}</p>
+            </div>
+            <div className="md:col-span-2">
+              <p className="max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
+                {tier.description}
+              </p>
+              <ul className="mt-6 grid gap-x-8 gap-y-3 md:grid-cols-2">
+                {tier.includes.map((line) => (
+                  <li
+                    key={line}
+                    className="relative text-pretty pl-4 text-sm text-foreground/80 before:absolute before:left-0 before:content-['–']"
+                  >
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))}
+      <SectionDivider />
+      <div className="mt-12 flex justify-center">
         <Button
           asChild
-          variant={tier.featured ? 'default' : 'cobaltOutline'}
-          className={
-            tier.featured
-              ? 'group w-full rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt'
-              : 'group w-full rounded-xl px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:[background:var(--cobalt-gradient)] hover:text-white hover:shadow-cobalt'
-          }
+          variant="default"
+          className="group rounded-xl bg-cobalt-gradient px-8 py-4 text-base font-semibold text-white shadow-cobalt"
         >
           <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
             Book a Strategy Call
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </Button>
-      }
-    />
+      </div>
+    </div>
   )
 }
 
@@ -508,11 +536,7 @@ function ProjectPricingSection() {
           . Growth is the engagement most established businesses need.
         </p>
       </SectionHeading>
-      <div className="grid items-stretch gap-6 md:grid-cols-3">
-        {projectPricing.map((tier) => (
-          <ProjectPricingCard key={tier.slug} tier={tier} />
-        ))}
-      </div>
+      <ProjectPricingRows />
       <p className="mx-auto mt-10 max-w-[55ch] text-center text-sm text-muted-foreground">
         {careFooterText}
       </p>
