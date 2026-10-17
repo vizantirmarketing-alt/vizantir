@@ -9,7 +9,7 @@ export function AnswerBlock({ body }: AnswerBlockProps) {
       style={{ background: 'var(--background)' }}
     >
       <div className="container mx-auto px-4">
-        <p className="mx-auto max-w-3xl text-base md:text-lg leading-relaxed text-muted-foreground">
+        <p className="mx-auto max-w-[55ch] text-base md:text-lg leading-relaxed text-muted-foreground">
           {body}
         </p>
       </div>

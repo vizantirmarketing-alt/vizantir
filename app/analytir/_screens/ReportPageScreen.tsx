@@ -11,7 +11,7 @@ const monoLabel: React.CSSProperties = {
   fontSize: 11,
   letterSpacing: '0.1em',
   textTransform: 'uppercase',
-  color: '#a1a1aa',
+  color: 'var(--muted-foreground)',
 }
 
 const numericCell: React.CSSProperties = {
@@ -58,7 +58,7 @@ export function ReportPageScreen() {
           style={{
             fontFamily: 'var(--font-analytir-mono)',
             fontSize: 12,
-            color: '#a1a1aa',
+            color: 'var(--muted-foreground)',
           }}
         >
           July 9, 2026
@@ -70,7 +70,7 @@ export function ReportPageScreen() {
           fontFamily: 'var(--font-analytir-mono)',
           fontSize: 11,
           letterSpacing: '0.14em',
-          color: '#a1a1aa',
+          color: 'var(--muted-foreground)',
           marginBottom: 10,
         }}
       >
@@ -220,7 +220,7 @@ export function ReportPageScreen() {
                 fontFamily: 'var(--font-analytir-mono)',
                 fontSize: 11,
                 textTransform: 'uppercase',
-                color: '#a1a1aa',
+                color: 'var(--muted-foreground)',
               }}
             >
               Deadline
@@ -235,7 +235,7 @@ export function ReportPageScreen() {
                 fontFamily: 'var(--font-analytir-mono)',
                 fontSize: 11,
                 textTransform: 'uppercase',
-                color: '#a1a1aa',
+                color: 'var(--muted-foreground)',
               }}
             >
               Impact
@@ -244,7 +244,7 @@ export function ReportPageScreen() {
               style={{
                 fontFamily: 'var(--font-analytir-mono)',
                 fontSize: 13,
-                color: '#16a34a',
+                color: 'var(--positive)',
               }}
             >
               +$223/month
@@ -259,7 +259,7 @@ export function ReportPageScreen() {
           paddingTop: 14,
           borderTop: '1px solid #e8e8ea',
           fontSize: 11,
-          color: '#a1a1aa',
+          color: 'var(--muted-foreground)',
         }}
       >
         Analysis based on transaction data. Month-over-month uses same calendar

@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "components/homepage/WhatHappensNext.tsx"
+        ],
+        "createdAt": "2026-10-17T08:21:38.516Z",
+        "reason": "Decorative 01/02/03 step numerals (aria-hidden); the step headings carry the meaning"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "components/homepage/Marquee.tsx"
+        ],
+        "createdAt": "2026-10-17T15:28:42.405Z",
+        "reason": "intentional, pauses on hover, static under reduced motion"
+      }
+    ]
+  }
+}

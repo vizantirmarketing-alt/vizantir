@@ -89,6 +89,7 @@ const WhatHappensNext = () => {
             >
               {/* Step Number */}
               <div 
+                aria-hidden="true"
                 className="text-6xl md:text-7xl font-black mb-4 leading-none"
                 style={{ 
                   color: 'rgba(0, 112, 243, 0.2)',
