@@ -161,18 +161,56 @@
 
   .bg-cobalt-gradient:hover {
     background: linear-gradient(135deg, #1E85FF 0%, #1E85FF 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 14px 32px rgba(0, 112, 243, 0.28);
   }
 
   .bg-cobalt-gradient:hover::before {
     transform: translateX(100%);
   }
 
-  .bg-cobalt-gradient:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(0, 112, 243, 0.18);
-    transition-duration: 100ms;
+  /* Tactile primary CTA: links and buttons only (badge pills share the class).
+     Shadow layers derive from --btn-bg. The ring vars are composed in so a
+     Tailwind focus ring stacks with the shadow instead of replacing it. */
+  .bg-cobalt-gradient:is(a, button) {
+    --btn-bg: #0070F3;
+    --btn-glow: color-mix(in oklch, var(--btn-bg) 55%, transparent);
+    --btn-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.30),
+      inset 0 -1px 0 rgb(0 0 0 / 0.15),
+      0 1px 2px rgb(0 0 0 / 0.25),
+      0 8px 24px -6px var(--btn-glow);
+    box-shadow:
+      var(--btn-shadow),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000);
+    transition: box-shadow 150ms ease-out,
+                transform 150ms ease-out,
+                background 200ms ease-out;
+  }
+
+  .bg-cobalt-gradient:is(a, button):hover {
+    --btn-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.30),
+      inset 0 -1px 0 rgb(0 0 0 / 0.15),
+      0 1px 2px rgb(0 0 0 / 0.25),
+      0 12px 32px -6px color-mix(in oklch, var(--btn-bg) 70%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .bg-cobalt-gradient:is(a, button):active {
+    --btn-shadow:
+      inset 0 2px 4px rgb(0 0 0 / 0.25),
+      inset 0 -1px 0 rgb(255 255 255 / 0.10),
+      0 1px 2px rgb(0 0 0 / 0.20),
+      0 2px 8px -4px color-mix(in oklch, var(--btn-bg) 30%, transparent);
+    transform: translateY(1px);
+  }
+
+  /* Beats a Tailwind focus-visible:ring box-shadow so the shadow persists */
+  .bg-cobalt-gradient:is(a, button):focus-visible {
+    box-shadow:
+      var(--btn-shadow),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000);
   }
 
   .bg-cobalt-gradient:focus-visible {
@@ -181,15 +219,64 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bg-cobalt-gradient,
     .bg-cobalt-gradient::before {
       transition: none;
     }
-    .bg-cobalt-gradient:hover {
-      transform: none;
-    }
     .bg-cobalt-gradient:hover::before {
       transform: translateX(-100%);
+    }
+    .bg-cobalt-gradient:is(a, button):hover,
+    .bg-cobalt-gradient:is(a, button):active {
+      transform: none;
+    }
+  }
+
+  /* Tactile inverse CTA: white button on a cobalt surface. Same structure as
+     the cobalt rule above, with white-tuned layers. */
+  .btn-inverse:is(a, button) {
+    --btn-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      inset 0 -1px 0 rgb(0 0 0 / 0.08),
+      0 1px 2px rgb(0 0 0 / 0.25),
+      0 8px 24px -6px rgb(255 255 255 / 0.25);
+    box-shadow:
+      var(--btn-shadow),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000);
+    transition: box-shadow 150ms ease-out,
+                transform 150ms ease-out,
+                background 200ms ease-out;
+  }
+
+  .btn-inverse:is(a, button):hover {
+    --btn-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      inset 0 -1px 0 rgb(0 0 0 / 0.08),
+      0 1px 2px rgb(0 0 0 / 0.25),
+      0 12px 32px -6px rgb(255 255 255 / 0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn-inverse:is(a, button):active {
+    --btn-shadow:
+      inset 0 2px 4px rgb(0 0 0 / 0.12),
+      inset 0 -1px 0 rgb(255 255 255 / 0.6),
+      0 1px 2px rgb(0 0 0 / 0.2),
+      0 2px 8px -4px rgb(255 255 255 / 0.15);
+    transform: translateY(1px);
+  }
+
+  .btn-inverse:is(a, button):focus-visible {
+    box-shadow:
+      var(--btn-shadow),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-inverse:is(a, button):hover,
+    .btn-inverse:is(a, button):active {
+      transform: none;
     }
   }
 
