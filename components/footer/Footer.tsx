@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { HomeLogoLink } from "@/components/ui/HomeLogoLink"
 import { Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 import MadeInUSA from "@/components/ui/MadeInUSA"
@@ -23,7 +24,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Company Info */}
           <div>
-            <Link href="/" className="inline-block mb-4">
+            <HomeLogoLink className="inline-block mb-4">
               <Image 
                 src="/logo/logo-light.svg" 
                 alt="Vizantir Logo" 
@@ -32,7 +33,7 @@ const Footer = () => {
                 priority
                 className="h-5 md:h-7 w-auto transition-opacity duration-300"
               />
-            </Link>
+            </HomeLogoLink>
             <p 
               className="mb-4 text-muted-foreground"
             >

@@ -4,6 +4,7 @@ import { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { HomeLogoLink } from "@/components/ui/HomeLogoLink";
 import { X } from "lucide-react";
 import { trackBookStrategyCallIntent, trackCTAClick } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
@@ -112,7 +113,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center cursor-pointer">
+            <HomeLogoLink className="flex items-center cursor-pointer">
               {!mounted ? (
                 <div className="h-5 md:h-7 w-24" />
               ) : (
@@ -125,7 +126,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
                   className="h-5 md:h-7 w-auto transition-opacity duration-300"
                 />
               )}
-            </Link>
+            </HomeLogoLink>
 
             {/* Desktop Navigation — hidden in minimal mode */}
             {!isMinimal && (
