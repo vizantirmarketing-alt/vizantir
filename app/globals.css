@@ -735,6 +735,7 @@ html, body {
    button itself uses overflow:hidden and ::before for the cobalt sheen. */
 .chat-launcher-ring {
   position: relative;
+  isolation: isolate;
   border-radius: 50%;
   flex-shrink: 0;
   transition: transform 150ms ease-out;
@@ -757,16 +758,35 @@ html, body {
 .chat-launcher-ring::before {
   content: '';
   position: absolute;
-  inset: -3px;
+  inset: -4px;
+  z-index: 1;
   border-radius: 50%;
-  padding: 1.5px;
-  background: conic-gradient(from var(--lap), transparent 0deg 300deg, #9CC9FF 335deg, var(--cobalt-primary) 352deg, transparent 360deg);
+  padding: 2px;
+  background: conic-gradient(from var(--lap), transparent 0deg 280deg, #BFDCFF 325deg, #FFFFFF 345deg, #FFFFFF 352deg, var(--cobalt-primary) 357deg, transparent 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
   pointer-events: none;
   animation: chat-launcher-loop 4s linear infinite;
+}
+
+/* Neon tube: always lit, sits under the button and the running light. */
+.chat-launcher-ring::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  border-radius: 50%;
+  padding: 2px;
+  background: rgba(0, 112, 243, 0.5);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  box-shadow: 0 0 12px rgba(0, 112, 243, 0.45);
+  pointer-events: none;
 }
 
 @keyframes chat-launcher-loop {
