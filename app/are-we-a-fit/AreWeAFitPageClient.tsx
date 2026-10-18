@@ -145,7 +145,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {content.budgetSection.paragraphs?.map((paragraph) => (
                 <p
                   key={flattenAreWeAFitParagraph(paragraph)}
-                  className="text-base leading-relaxed md:text-lg"
+                  className="max-w-[48ch] text-base leading-relaxed md:text-lg"
                   style={{ color: colors.textMuted }}
                 >
                   <AreWeAFitInlineCopy paragraph={paragraph} />
@@ -170,7 +170,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {content.closingSection.heading}
             </h2>
             <p
-              className="mx-auto mb-8 max-w-6xl text-base leading-relaxed md:text-lg"
+              className="mx-auto mb-8 max-w-[48ch] text-base leading-relaxed md:text-lg"
               style={{ color: colors.textMuted }}
             >
               {content.closingSection.body}
