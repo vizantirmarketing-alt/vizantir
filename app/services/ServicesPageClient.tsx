@@ -10,17 +10,6 @@ import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardCheckItem,
-  CardCheckList,
-  CardDescription,
-  CardDivider,
-  CardHeader,
-  CardPrice,
-  CardTagline,
-  CardTitle,
-} from '@/components/ui/Card'
-import {
   careBenefitTooltips,
   carePricing,
   chatbotPricing,
@@ -32,7 +21,6 @@ import {
   publicBlogPricing,
   type BlogTier,
   type ChatbotTier,
-  type LandingPageTier,
 } from '@/data/pricing'
 import { serviceHref } from '@/lib/service-href'
 import { cn } from '@/lib/utils'
@@ -75,8 +63,7 @@ const CLOSING_CTA = {
 
 const SMALLER_PROJECTS = {
   heading: 'Something smaller?',
-  body: "Some projects are simpler. A two or three page site, a single landing page, a clean launch without a CMS behind it. If that's closer to what you need, tell us what you're working on and we'll price it around what the project actually needs. Landing page pricing is already published.",
-  landingCta: 'See landing page pricing',
+  body: "Some projects are simpler. A two or three page site, a single landing page, a clean launch without a CMS behind it. If that's closer to what you need, tell us what you're working on and we'll price it around what the project actually needs.",
   cta: 'Tell us about the project',
 } as const
 
@@ -94,7 +81,9 @@ function SectionDivider() {
   return (
     <div
       className="h-px w-full"
-      style={{ background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243, 0.3), transparent)' }}
+      style={{
+        background: 'linear-gradient(90deg, transparent, rgba(0, 112, 243, 0.3), transparent)',
+      }}
       aria-hidden
     />
   )
@@ -110,55 +99,66 @@ const CARE_LEGEND_GROUPS = carePricing
   }))
   .filter((group) => group.entries.length > 0)
 
-function ServicePricingCard({
-  title,
+function PricingRow({
+  name,
   price,
-  tagline,
+  priceNote,
+  suffix,
+  muted,
   description,
-  detail,
-  items = [],
+  items,
   featured = false,
-  badge,
-  as,
-  footer,
+  as: Wrapper = 'div',
 }: {
-  title: string
-  price: ReactNode
-  tagline: string
-  description?: string
-  detail?: string
-  items?: readonly string[]
+  name: string
+  price: string
+  priceNote?: string
+  suffix?: string
+  muted?: string
+  description: string
+  items: readonly string[]
   featured?: boolean
-  badge?: string | false
   as?: 'div' | 'article'
-  footer?: ReactNode
 }) {
   return (
-    <Card as={as} variant="muted-30" featured={featured} badge={badge}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardPrice>{price}</CardPrice>
-      </CardHeader>
-
-      <CardTagline>{tagline}</CardTagline>
-      {description ? <CardDescription className="mb-4">{description}</CardDescription> : null}
-      {detail ? (
-        <CardDescription size="xs" className="mb-4">
-          {detail}
-        </CardDescription>
-      ) : null}
-      <CardDivider />
-
-      {items.length > 0 ? (
-        <CardCheckList>
-          {items.map((line) => (
-            <CardCheckItem key={line}>{line}</CardCheckItem>
-          ))}
-        </CardCheckList>
-      ) : null}
-
-      {footer}
-    </Card>
+    <Wrapper>
+      <SectionDivider />
+      <div className="grid gap-6 py-12 md:grid-cols-3 md:gap-12 md:py-16">
+        <div>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h3 className="text-balance text-xl font-bold text-foreground">{name}</h3>
+            {featured ? <span className="text-sm font-medium text-muted-foreground">Recommended</span> : null}
+          </div>
+          {priceNote ? <p className="mt-4 text-sm text-muted-foreground">{priceNote}</p> : null}
+          <p
+            className={cn(
+              'text-5xl font-bold leading-none tracking-[-0.04em] md:text-[56px]',
+              priceNote ? 'mt-1' : 'mt-4',
+              featured ? 'text-cobalt-text' : 'text-foreground',
+            )}
+          >
+            {price}
+            {suffix ? (
+              <span className="ml-1 text-base font-medium tracking-normal text-muted-foreground">{suffix}</span>
+            ) : null}
+          </p>
+          {muted ? <p className="mt-3 text-pretty text-sm text-muted-foreground">{muted}</p> : null}
+        </div>
+        <div className="md:col-span-2">
+          <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground">{description}</p>
+          <ul className="mt-6 grid gap-x-8 gap-y-3 md:grid-cols-2">
+            {items.map((line) => (
+              <li
+                key={line}
+                className="relative text-pretty pl-4 text-sm text-foreground/80 before:absolute before:left-0 before:content-['–']"
+              >
+                {line}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Wrapper>
   )
 }
 
@@ -172,9 +172,7 @@ function CarePricingRows() {
             <div>
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <h3 className="text-balance text-xl font-bold text-foreground">{tier.name}</h3>
-                {tier.featured ? (
-                  <span className="text-sm font-medium text-muted-foreground">Recommended</span>
-                ) : null}
+                {tier.featured ? <span className="text-sm font-medium text-muted-foreground">Recommended</span> : null}
               </div>
               <p
                 className={cn(
@@ -222,28 +220,43 @@ function CarePricingRows() {
   )
 }
 
-function LandingPagePricingCard({ tier }: { tier: LandingPageTier }) {
+function ContentGrowthRows() {
   return (
-    <ServicePricingCard
-      title={tier.name}
-      price={`Starting at $${tier.priceMin.toLocaleString('en-US')}`}
-      tagline={tier.tagline}
-      description={tier.description}
-      items={tier.includes}
-    />
+    <div>
+      {publicBlogPricing.map((tier) => (
+        <PricingRow
+          key={tier.slug}
+          as="article"
+          name={tier.name}
+          price={`$${tier.priceMin.toLocaleString('en-US')}`}
+          suffix="/mo"
+          muted={getContentPlanDetail(tier)}
+          description={tier.tagline}
+          items={tier.includes}
+        />
+      ))}
+      <SectionDivider />
+    </div>
   )
 }
 
-function ContentGrowthCard({ tier }: { tier: BlogTier }) {
+function LandingPageRows() {
   return (
-    <ServicePricingCard
-      as="article"
-      title={tier.name}
-      price={tier.price}
-      tagline={tier.tagline}
-      detail={getContentPlanDetail(tier)}
-      items={tier.includes}
-    />
+    <div>
+      {landingPagePricing.map((tier) => (
+        <PricingRow
+          key={tier.slug}
+          as="article"
+          name={tier.name}
+          priceNote="Starting at"
+          price={`$${tier.priceMin.toLocaleString('en-US')}`}
+          muted={tier.tagline}
+          description={tier.description}
+          items={tier.includes}
+        />
+      ))}
+      <SectionDivider />
+    </div>
   )
 }
 
@@ -254,10 +267,7 @@ function conversationAllowanceCopy(tiers: readonly ChatbotTier[]): string {
   if (counts.length === 0) {
     return 'Usage is metered. Allowances are sized during scoping.'
   }
-  const listed =
-    counts.length === 1
-      ? counts[0]
-      : `${counts.slice(0, -1).join(', ')}, or ${counts[counts.length - 1]}`
+  const listed = counts.length === 1 ? counts[0] : `${counts.slice(0, -1).join(', ')}, or ${counts[counts.length - 1]}`
   return `Usage is metered. Allowances are sized during scoping — currently up to ${listed} conversations per month depending on the integration.`
 }
 
@@ -276,11 +286,7 @@ function ConversationAllowances({ copy }: { copy: string }) {
         <span className="text-sm font-medium text-foreground">Conversation allowances</span>
         <AccordionIndicator isOpen={open} className="h-4 w-4 text-cobalt-text" />
       </button>
-      <p
-        id="ai-conversation-allowances"
-        hidden={!open}
-        className="mt-3 text-pretty text-[13px] text-muted-foreground"
-      >
+      <p id="ai-conversation-allowances" hidden={!open} className="mt-3 text-pretty text-[13px] text-muted-foreground">
         {copy}
       </p>
     </div>
@@ -378,9 +384,7 @@ function ProjectPricingRows() {
             <div>
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <h3 className="text-balance text-xl font-bold text-foreground">{tier.name}</h3>
-                {tier.featured ? (
-                  <span className="text-sm font-medium text-muted-foreground">Recommended</span>
-                ) : null}
+                {tier.featured ? <span className="text-sm font-medium text-muted-foreground">Recommended</span> : null}
               </div>
               <p
                 className={cn(
@@ -492,15 +496,7 @@ const SERVICE_ICON_BY_SLUG: Record<string, typeof StrategyIcon> = {
   'website-care': CareIcon,
 }
 
-const SERVICE_ICON_FALLBACK = [
-  StrategyIcon,
-  DesignIcon,
-  WebIcon,
-  LandingIcon,
-  RefreshIcon,
-  CmsIcon,
-  CareIcon,
-]
+const SERVICE_ICON_FALLBACK = [StrategyIcon, DesignIcon, WebIcon, LandingIcon, RefreshIcon, CmsIcon, CareIcon]
 
 function iconForService(slug: string, index: number) {
   return SERVICE_ICON_BY_SLUG[slug] ?? SERVICE_ICON_FALLBACK[index % SERVICE_ICON_FALLBACK.length]
@@ -563,18 +559,23 @@ function PricingSection({
   children,
   delay = 0,
   compact = false,
+  id,
+  className,
 }: {
   children: ReactNode
   delay?: number
   compact?: boolean
+  id?: string
+  className?: string
 }) {
   return (
     <motion.section
+      id={id}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay }}
-      className={compact ? 'px-6 py-12 md:px-12 lg:px-20' : 'px-6 py-20 md:px-12 lg:px-20'}
+      className={cn(compact ? 'px-6 py-12 md:px-12 lg:px-20' : 'px-6 py-20 md:px-12 lg:px-20', className)}
     >
       <div className="mx-auto max-w-5xl">{children}</div>
     </motion.section>
@@ -583,48 +584,47 @@ function PricingSection({
 
 function ProjectPricingSection() {
   return (
-    <PricingSection>
-      <SectionHeading heading="Fixed scope. Fixed price. One engagement.">
-        <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
-          Strategy, custom design, development, and launch priced as a complete website project,{' '}
-          <Link
-            href="/get-started"
-            className="font-medium text-cobalt-text underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
-          >
-            from first call to launch
-          </Link>
-          . Growth is the engagement most established businesses need.
+    <>
+      <PricingSection>
+        <SectionHeading heading="Fixed scope. Fixed price. One engagement.">
+          <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
+            Strategy, custom design, development, and launch priced as a complete website project,{' '}
+            <Link
+              href="/get-started"
+              className="font-medium text-cobalt-text underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+            >
+              from first call to launch
+            </Link>
+            . Growth is the engagement most established businesses need.
+          </p>
+        </SectionHeading>
+        <ProjectPricingRows />
+        <p className="mx-auto mt-6 max-w-[48ch] text-pretty text-center text-sm text-muted-foreground">
+          {careFooterText}
         </p>
-      </SectionHeading>
-      <ProjectPricingRows />
-      <p className="mx-auto mt-10 max-w-[55ch] text-center text-sm text-muted-foreground">
-        {careFooterText}
-      </p>
-      <div className="mx-auto mt-16 max-w-2xl rounded-xl border border-border bg-card px-7 py-10 text-center shadow-sm md:px-10 md:py-12">
-        <h3 className="text-balance text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-          {SMALLER_PROJECTS.heading}
-        </h3>
-        <p className="mx-auto mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
-          {SMALLER_PROJECTS.body}
-        </p>
-        <div className="mt-6 flex flex-col items-center gap-3 md:flex-row md:justify-center">
-          <Button
-            asChild
-            variant="default"
-            className="rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt"
-          >
-            <Link href="/landing-pages">{SMALLER_PROJECTS.landingCta}</Link>
-          </Button>
-          <Button
-            asChild
-            variant="cobaltOutline"
-            className="rounded-xl px-6 py-3 text-sm font-semibold text-foreground hover:border-border hover:bg-background"
-          >
-            <Link href="/contact">{SMALLER_PROJECTS.cta}</Link>
-          </Button>
+      </PricingSection>
+      <section className="bg-[color-mix(in_oklab,var(--background),var(--foreground)_4%)] px-6 py-14 md:px-12 md:py-20 lg:px-20">
+        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3 md:gap-12">
+          <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+            {SMALLER_PROJECTS.heading}
+          </h2>
+          <div className="md:col-span-2">
+            <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground">
+              {SMALLER_PROJECTS.body}
+            </p>
+            <div className="mt-8">
+              <Button
+                asChild
+                variant="default"
+                className="rounded-xl bg-cobalt-gradient px-6 py-3 text-sm font-semibold text-white shadow-cobalt"
+              >
+                <Link href="/contact">{SMALLER_PROJECTS.cta}</Link>
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
-    </PricingSection>
+      </section>
+    </>
   )
 }
 
@@ -652,27 +652,19 @@ function OngoingCapabilities() {
             {CONTENT_GROWTH.intro}
           </p>
         </SectionHeading>
-        <div className="grid items-stretch gap-6 lg:grid-cols-2">
-          {publicBlogPricing.map((tier) => (
-            <ContentGrowthCard key={tier.slug} tier={tier} />
-          ))}
-        </div>
+        <ContentGrowthRows />
         <p className="mt-6 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
           {CONTENT_GROWTH_AVAILABILITY} {CARE_CLIENT_DISCOUNT}
         </p>
       </PricingSection>
 
-      <PricingSection delay={0.1} compact>
+      <PricingSection delay={0.1} compact id="landing-pages" className="scroll-mt-32">
         <SectionHeading compact heading={LANDING_PAGE_PRICING.heading}>
           <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
             {LANDING_PAGE_PRICING.intro}
           </p>
         </SectionHeading>
-        <div className="grid items-stretch gap-6 lg:grid-cols-2">
-          {landingPagePricing.map((tier) => (
-            <LandingPagePricingCard key={tier.slug} tier={tier} />
-          ))}
-        </div>
+        <LandingPageRows />
       </PricingSection>
 
       <PricingSection delay={0.15} compact>
@@ -738,7 +730,12 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 30, delay: index * 0.05 }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 30,
+                    delay: index * 0.05,
+                  }}
                 >
                   <button
                     type="button"
@@ -768,10 +765,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                         </div>
                       </div>
 
-                      <AccordionIndicator
-                        isOpen={isOpen}
-                        className="w-5 h-5 flex-shrink-0 text-cobalt-text"
-                      />
+                      <AccordionIndicator isOpen={isOpen} className="w-5 h-5 flex-shrink-0 text-cobalt-text" />
                     </div>
 
                     {/* Always rendered so every "Learn more" link is in the server HTML.
