@@ -154,7 +154,7 @@ export default function NextJsVsWordpressClient() {
       <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="nextjs-better-heading">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            <motion.div {...sectionReveal}>
+            <motion.div {...sectionReveal} className="max-w-[48ch]">
               <h2
                 id="nextjs-better-heading"
                 className="mb-5 text-3xl font-bold text-foreground md:text-4xl"
@@ -185,6 +185,7 @@ export default function NextJsVsWordpressClient() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.08 }}
+              className="max-w-[48ch]"
             >
               <h2
                 id="wordpress-better-heading"
@@ -230,7 +231,7 @@ export default function NextJsVsWordpressClient() {
             </p>
           </motion.div>
 
-          <div className="space-y-14">
+          <div className="mx-auto max-w-[48ch] space-y-14">
             {nextjsVsWordpressCriteria.sections.map((section) => (
               <motion.article key={section.id} {...sectionReveal} id={section.id}>
                 <h3 className="mb-4 text-2xl font-bold text-foreground md:text-3xl">
@@ -326,7 +327,7 @@ export default function NextJsVsWordpressClient() {
             >
               {nextjsVsWordpressCta.heading}
             </h2>
-            <p className="mb-10 text-lg text-white/80">{nextjsVsWordpressCta.body}</p>
+            <p className="mb-10 text-lg text-white">{nextjsVsWordpressCta.body}</p>
             <Button
               size="lg"
               asChild
