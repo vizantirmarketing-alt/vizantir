@@ -124,20 +124,20 @@ function buildAbout(): string {
 function buildPricing(): string {
   const tiers = projectPricing
     .map((t) =>
-      `### ${t.name} — ${t.price}\nTimeline: ${t.timeline}\n${t.description}\nIncludes:\n${bullets(t.includes)}`
+      `### ${t.name}: ${t.price}\nTimeline: ${t.timeline}\n${t.description}\nIncludes:\n${bullets(t.includes)}`
     )
     .join('\n\n')
   const care = carePricing
     .map((c) => {
       const includes = c.includes.map((line) => {
         const note = careBenefitTooltips[line]
-        return note ? `${line} — ${note}` : line
+        return note ? `${line}: ${note}` : line
       })
-      return `### ${c.name} — ${c.price}\n${c.description}\nIncludes:\n${bullets(includes)}`
+      return `### ${c.name}: ${c.price}\n${c.description}\nIncludes:\n${bullets(includes)}`
     })
     .join('\n\n')
   const landingPages = landingPagePricing
-    .map((t) => `### ${t.name} — ${t.price}\n${t.description}\nIncludes:\n${bullets(t.includes)}`)
+    .map((t) => `### ${t.name}: ${t.price}\n${t.description}\nIncludes:\n${bullets(t.includes)}`)
     .join('\n\n')
   const blogIntro = [
     'Vizantir offers Search & Content Growth for Vizantir website and care clients.',
@@ -162,7 +162,7 @@ function buildPricing(): string {
     .join('\n\n')
   const blogBlock = `${blogIntro}\n\n${blogTiers}`
   const chatbotIntro = [
-    'Vizantir offers AI Experience Integration: custom AI experiences built into the website and connected to approved business content, data, and workflows — not a generic widget.',
+    'Vizantir offers AI Experience Integration: custom AI experiences built into the website and connected to approved business content, data, and workflows, not a generic widget.',
     'Integration scope depends on the site, data sources, CRM requirements, lead flow, and use case. Custom integration is scoped separately.',
     `Ongoing usage and management starts at $${CHATBOT_USAGE_FROM.toLocaleString()}/month.`,
     `One-time setup is ${CHATBOT_SETUP_FEE.display}. Care plan clients get 15% off usage (${formatCareClientPrice(CHATBOT_USAGE_FROM)}/month).`,
@@ -289,7 +289,7 @@ function buildFaqs(items: AnyRec[]): string {
 function buildAuthor(a: AnyRec | null): string {
   if (!a) return ''
   const body = [
-    a.name && `${a.name}${a.role ? ` — ${a.role}` : ''}`,
+    a.name && `${a.name}${a.role ? `, ${a.role}` : ''}`,
     a.bio,
     Array.isArray(a.credentials) && a.credentials.length ? `Credentials: ${(a.credentials as string[]).join(', ')}` : '',
   ].filter(Boolean).join('\n')
@@ -315,9 +315,9 @@ function buildTechnology(): string {
   const specializedItems = SPECIALIZED_TOOLS.map(formatTechItem).join('\n\n')
   const body = [
     'Vizantir has a dedicated /technology hub at vizantir.com/technology that explains every technology used in our builds.',
-    '### Core Stack — used on every Vizantir site',
+    '### Core Stack: used on every Vizantir site',
     coreItems,
-    '### Specialized Tools — used when the project calls for it',
+    '### Specialized Tools: used when the project calls for it',
     specializedItems,
   ].join('\n\n')
   return section('Technology Pages', body)
@@ -334,7 +334,7 @@ function buildIndustries(): string {
     '- Law Firms: vizantir.com/law-firm-web-design',
     '- Commercial Real Estate: vizantir.com/commercial-real-estate-web-design',
     '',
-    'These three landing pages are SEO entry points, not specialty claims — Vizantir\'s work spans all the sectors listed above.',
+    'These three landing pages are SEO entry points, not specialty claims. Vizantir\'s work spans all the sectors listed above.',
   ].join('\n')
   const faqs = industryPricingFaqGroups
     .map((group) => {

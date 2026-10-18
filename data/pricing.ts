@@ -208,7 +208,7 @@ export const landingPagePricing: LandingPageTier[] = [
     priceMin: 3500,
     tagline: 'One campaign. One offer. One job.',
     description:
-      'A conversion page built around a specific campaign, offer, or traffic source — connected to the same website strategy, not a separate way in.',
+      'A conversion page built around a specific campaign, offer, or traffic source, connected to the same website strategy rather than a separate way in.',
     includes: [
       '1 focused strategy session',
       'Up to 7 primary sections',
@@ -229,7 +229,7 @@ export const landingPagePricing: LandingPageTier[] = [
     priceMin: 8000,
     tagline: 'Built around the traffic source.',
     description:
-      'For businesses spending $5,000 or more per month on paid traffic, or an offer that has to work across more than one audience — scoped conversion work, not a substitute for a full website project.',
+      'For businesses spending $5,000 or more per month on paid traffic, or an offer that has to work across more than one audience. This is scoped conversion work, not a substitute for a full website project.',
     includes: [
       'Everything in Campaign Landing Page',
       'Audience and competitor research',

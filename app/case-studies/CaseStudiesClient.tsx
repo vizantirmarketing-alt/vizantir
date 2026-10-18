@@ -333,7 +333,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                   className="mb-2 max-w-[54ch] text-[0.95rem] leading-relaxed md:text-base"
                   style={{ color: colors.textMuted }}
                 >
-                  Projects the studio builds on its own initiative — to explore a brand, a
+                  Projects the studio builds on its own initiative, to explore a brand, a
                   category, or a technical problem. Each one ships to production on its own
                   domain.
                 </p>

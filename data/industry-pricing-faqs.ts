@@ -152,7 +152,7 @@ export const redesignPricingFaqs = {
   timeline:
     `Redesigns take ${projectTimelineRange} from kickoff to launch, depending on content volume, custom features, and existing site complexity. We scope timelines in discovery based on your actual site.`,
   existingPlatform:
-    'Vizantir migrates existing sites onto Next.js and Sanity — including WordPress and Wix. Content is exported, audited, and rebuilt in Sanity CMS. Redirects are mapped from your existing URLs to the new site structure. Rankings and referral traffic survive because we plan the migration before we touch the design.',
+    'Vizantir migrates existing sites onto Next.js and Sanity, including WordPress and Wix. Content is exported, audited, and rebuilt in Sanity CMS. Redirects are mapped from your existing URLs to the new site structure. Rankings and referral traffic survive because we plan the migration before we touch the design.',
 } as const
 
 export const redesignPricingFaqItems = [

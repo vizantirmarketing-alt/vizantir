@@ -13,7 +13,7 @@ export const contactDetails = {
     'United States',
   ],
   serviceArea:
-    'Remote-first studio based in Las Vegas — including Henderson, Summerlin, and Paradise — serving Southern Nevada and clients nationwide',
+    'Remote-first studio based in Las Vegas, including Henderson, Summerlin, and Paradise, and serving Southern Nevada and clients nationwide',
   hours: [
     { days: 'Monday - Friday', hours: '9:00 AM - 6:00 PM PST' },
     { days: 'Saturday', hours: 'By appointment' },

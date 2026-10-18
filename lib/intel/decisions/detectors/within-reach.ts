@@ -71,7 +71,7 @@ export const withinReachDetector: Detector = {
         },
         recommendedAction: commercial
           ? 'This query has comparison intent. Review whether the listed page addresses the comparison directly. This does not establish that changes would increase clicks.'
-          : 'Review the listed page for query alignment — title, heading, and whether the page actually answers this query. This does not establish that changes would increase clicks.',
+          : 'Review the listed page for query alignment: title, heading, and whether the page actually answers this query. This does not establish that changes would increase clicks.',
         confidence:
           position <= MEDIUM_CONFIDENCE_MAX_POSITION ? 'medium' : 'exploratory',
         score: (31 - position) * row.impressions,

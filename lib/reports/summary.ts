@@ -144,7 +144,7 @@ function searchSentence(snapshot: ReportSnapshot): string | null {
     return `${reach}, while ${position}. That is more reach across a wider mix of queries, not a drop in performance.`;
   }
   if (impressionsChange > 0 && positionChange < 0) {
-    return `${reach}, and ${position} — more visibility, closer to the top of results.`;
+    return `${reach}, and ${position}. That is more visibility, closer to the top of results.`;
   }
   if (impressionsChange < 0 && positionChange > 0) {
     return `${reach}, and ${position}. Fewer appearances, further from the top.`;
@@ -192,8 +192,8 @@ function speedSentence(snapshot: ReportSnapshot): string | null {
   const { lcp, inp, cls } = snapshot.crux.data;
   const passed = lcp.passed && inp.passed && cls.passed;
   return passed
-    ? 'Phone speed met Google\'s recommended thresholds in Chrome\'s latest 28-day field sample — a rolling window, not this reporting month.'
-    : 'Phone speed missed at least one of Google\'s recommended thresholds in Chrome\'s latest 28-day field sample — a rolling window, not this reporting month.';
+    ? 'Phone speed met Google\'s recommended thresholds in Chrome\'s latest 28-day field sample. This is a rolling window, not this reporting month.'
+    : 'Phone speed missed at least one of Google\'s recommended thresholds in Chrome\'s latest 28-day field sample. This is a rolling window, not this reporting month.';
 }
 
 function inquiriesSentence(

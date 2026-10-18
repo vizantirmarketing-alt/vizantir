@@ -66,7 +66,7 @@ export const thinPageDetector: Detector = {
         description:
           `The scan on ${scan.capturedOn} counted ${page.wordCount} words on ${page.url}, ` +
           `below the ${threshold}-word threshold. Word count is a proxy for depth, not a ` +
-          `measure of quality — a short page can be the right answer.`,
+          `measure of quality. A short page can be the right answer.`,
         evidence: {
           url: page.url,
           wordCount: page.wordCount,

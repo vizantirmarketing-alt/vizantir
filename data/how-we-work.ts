@@ -57,7 +57,7 @@ export const howWeWorkFaqs = [
   {
     question: 'What happens after launch?',
     answer:
-      `Launch support is included. After launch, Website Care is optional ongoing work — content, conversion, search, and related improvements. Monthly plans range from ${carePricing[0].price} to ${carePricing[2].price}; see the Services page.`,
+      `Launch support is included. After launch, Website Care is optional ongoing work: content, conversion, search, and related improvements. Monthly plans range from ${carePricing[0].price} to ${carePricing[2].price}; see the Services page.`,
   },
 ] as const
 

@@ -30,26 +30,26 @@ const CARE_REFRAME = {
   heading: 'Ongoing improvement after launch',
   body: [
     'Launch is where most projects end. Some clients want help after that, so we offer it. Website Care is optional. Most clients continue with it, but a finished site is yours either way.',
-    'The work is content changes, performance monitoring, analytics review, conversion improvements, search visibility, technical upkeep, new functionality, and strategic support — so the site keeps earning after it goes live.',
+    'The work is content changes, performance monitoring, analytics review, conversion improvements, search visibility, technical upkeep, new functionality, and strategic support, so the site keeps earning after it goes live.',
   ],
 } as const
 
 const LANDING_PAGE_PRICING = {
   heading: 'Scoped conversion work',
   intro:
-    'Landing pages for a campaign, offer, or traffic source, built inside the same website strategy — not a separate way to start working with Vizantir. Conversion System is for businesses spending $5,000 or more per month on paid traffic, or an offer that has to work across more than one audience.',
+    'Landing pages for a campaign, offer, or traffic source, built inside the same website strategy, not a separate way to start working with Vizantir. Conversion System is for businesses spending $5,000 or more per month on paid traffic, or an offer that has to work across more than one audience.',
 } as const
 
 const CONTENT_GROWTH = {
   heading: 'Strategy, implementation, and publishing into the site',
   intro:
-    'Search and content growth work: opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility — published directly into the site. Plans below describe the engagement, not a quantity of posts for sale.',
+    'Search and content growth work: opportunity research, service page expansion, location content where it applies, editorial content, internal linking, structured data, content updates, search visibility, and AI search visibility, all published directly into the site. Plans below describe the engagement, not a quantity of posts for sale.',
 } as const
 
 const AI_EXPERIENCE = {
   heading: 'Built into the existing website and its data',
   intro:
-    'Custom AI experiences built into the website and connected to approved business content, data, and workflows — not a widget dropped on the page. Integration scope depends on the site, data sources, CRM requirements, lead flow, and use case.',
+    'Custom AI experiences built into the website and connected to approved business content, data, and workflows, not a widget dropped on the page. Integration scope depends on the site, data sources, CRM requirements, lead flow, and use case.',
 } as const
 
 const AFTER_LAUNCH_TRANSITION =
@@ -269,7 +269,7 @@ function conversationAllowanceCopy(tiers: readonly ChatbotTier[]): string {
     return 'Usage is metered. Allowances are sized during scoping.'
   }
   const listed = counts.length === 1 ? counts[0] : `${counts.slice(0, -1).join(', ')}, or ${counts[counts.length - 1]}`
-  return `Usage is metered. Allowances are sized during scoping — currently up to ${listed} conversations per month depending on the integration.`
+  return `Usage is metered. Allowances are sized during scoping, currently up to ${listed} conversations per month depending on the integration.`
 }
 
 function ConversationAllowances({ copy }: { copy: string }) {
@@ -715,7 +715,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
           >
             <SectionHeading heading="What the engagement covers">
               <p className="mx-auto mt-3 max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
-                Strategy, design, development, launch, and ongoing growth — one website project, not a menu of
+                Strategy, design, development, launch, and ongoing growth. One website project, not a menu of
                 disconnected offerings.
               </p>
             </SectionHeading>
