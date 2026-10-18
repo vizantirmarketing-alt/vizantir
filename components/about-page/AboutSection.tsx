@@ -18,7 +18,7 @@ export default function AboutSection({ section, children }: AboutSectionProps) {
           {section.paragraphs.map((paragraph) => (
             <p
               key={paragraph}
-              className="text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
+              className="max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
             >
               {paragraph}
             </p>
