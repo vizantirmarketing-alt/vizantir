@@ -8,6 +8,7 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
 import { homepageAnswerBlock } from '@/data/homepage'
 import { AnswerBlock } from '@/components/homepage/AnswerBlock'
+import { PricingOverview } from '@/components/homepage/PricingOverview'
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -15,7 +16,6 @@ import dynamic from 'next/dynamic'
 
 const EditorialStatement = dynamic(() => import('@/components/homepage/EditorialStatement'))
 const AboutStory = dynamic(() => import('@/components/homepage/AboutStory'))
-const ServicesPreview = dynamic(() => import('@/components/homepage/ServicesPreview'))
 const WhoWeWorkWith = dynamic(() => import('@/components/homepage/WhoWeWorkWith'))
 const OperatorStatement = dynamic(() => import('@/components/homepage/OperatorStatement'))
 const WhyVizantir = dynamic(() => import('@/components/homepage/WhyVizantir'))
@@ -108,11 +108,11 @@ export default async function Home() {
       <JsonLd id="ld-home" data={pageGraph} />
       <Hero />
       <AnswerBlock body={homepageAnswerBlock.body} />
+      <PricingOverview />
       <Marquee />
       <EditorialStatement />
       <AboutStory />
       <SectionDivider />
-      <ServicesPreview />
       <WhoWeWorkWith />
       <OperatorStatement />
       <WhyVizantir />
