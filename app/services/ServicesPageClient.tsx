@@ -28,7 +28,7 @@ import { cn } from '@/lib/utils'
 const CARE_REFRAME = {
   heading: 'Ongoing improvement after launch',
   body: [
-    'Launch is the start of the relationship, not the end of the work. Website Care is the usual continuation of a Vizantir website project.',
+    'Launch is the start of the relationship, not the end of the work. Website Care is optional. Most clients continue with it, but a finished site is yours either way.',
     'The work is content changes, performance monitoring, analytics review, conversion improvements, search visibility, technical upkeep, new functionality, and strategic support — so the site keeps earning after it goes live.',
   ],
 } as const
@@ -70,7 +70,7 @@ const SMALLER_PROJECTS = {
 const CARE_CLIENT_DISCOUNT = 'Care plan clients get 15% off.'
 
 const [essentialCare, websiteCare, growthCare] = carePricing
-const careFooterText = `After launch, care retainers start at ${essentialCare.price} for ${essentialCare.name}, ${websiteCare.price} for ${websiteCare.name}, and ${growthCare.price} for ${growthCare.name}.`
+const careFooterText = `After launch, an optional care retainer is available, starting at ${essentialCare.price} for ${essentialCare.name}, ${websiteCare.price} for ${websiteCare.name}, and ${growthCare.price} for ${growthCare.name}.`
 
 function getContentPlanDetail(tier: BlogTier): string {
   if (tier.postsPerMonth === 0) return 'One-time plan'
