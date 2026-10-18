@@ -103,7 +103,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
           {/* Back Link */}
           <Link
             href="/blog"
-            className="link-cobalt inline-flex items-center gap-2 mb-8 text-sm font-medium"
+            className="link-ui inline-flex items-center gap-2 mb-8 text-sm font-medium"
             style={{ color: colors.accentText }}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

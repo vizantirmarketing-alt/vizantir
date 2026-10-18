@@ -87,7 +87,7 @@ export default function IndustriesHubPage() {
                     </p>
                     <Link
                       href={vertical.href}
-                      className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-text"
+                      className="link-ui inline-flex items-center gap-1 text-sm font-semibold text-cobalt-text"
                     >
                       {vertical.title}
                       <ArrowRight className="h-4 w-4" />

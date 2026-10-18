@@ -389,7 +389,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                 </span>
                 <Link
                   href="/analytir"
-                  className="link-cobalt mt-4 inline-flex items-center gap-2 text-sm font-semibold md:text-base"
+                  className="link-ui mt-4 inline-flex items-center gap-2 text-sm font-semibold md:text-base"
                   style={{ color: colors.accentText }}
                 >
                   See what we built

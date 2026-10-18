@@ -99,7 +99,7 @@ export default function NotFound() {
                 <Link
                   key={index}
                   href={link.href}
-                  className="link-cobalt text-sm font-medium"
+                  className="link-ui text-sm font-medium"
                   style={{ color: 'var(--cobalt-text)' }}
                 >
                   {link.name}

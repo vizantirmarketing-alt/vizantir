@@ -73,7 +73,7 @@ function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
           </ul>
           <Link
             href={`/technology/${tech.slug}`}
-            className="link-cobalt inline-flex items-center gap-1 text-sm font-semibold text-cobalt-text"
+            className="link-ui inline-flex items-center gap-1 text-sm font-semibold text-cobalt-text"
           >
             Learn more
             <ArrowRight className="h-4 w-4" />

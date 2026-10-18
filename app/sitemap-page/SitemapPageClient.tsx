@@ -33,7 +33,7 @@ function LinkList({ links }: { links: SitemapLink[] }) {
         <li key={link.href}>
           <Link
             href={link.href}
-            className="link-cobalt text-muted-foreground"
+            className="link-ui text-muted-foreground"
           >
             {link.name}
           </Link>
@@ -127,7 +127,7 @@ export default function SitemapPageClient({
                   <li key={service.slug}>
                     <Link
                       href={serviceHref(service.slug)}
-                      className="link-cobalt text-muted-foreground"
+                      className="link-ui text-muted-foreground"
                     >
                       {service.title}
                     </Link>
@@ -147,7 +147,7 @@ export default function SitemapPageClient({
                   <li key={study.slug}>
                     <Link
                       href={`/case-studies/${study.slug}`}
-                      className="link-cobalt text-muted-foreground"
+                      className="link-ui text-muted-foreground"
                     >
                       {study.title}
                     </Link>
@@ -175,7 +175,7 @@ export default function SitemapPageClient({
                     <li key={post.slug}>
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="link-cobalt text-sm text-muted-foreground"
+                        className="link-ui text-sm text-muted-foreground"
                       >
                         {post.title}
                       </Link>
@@ -186,7 +186,7 @@ export default function SitemapPageClient({
               <p className="mt-3 text-sm">
                 <Link
                   href="/blog"
-                  className="link-cobalt text-muted-foreground"
+                  className="link-ui text-muted-foreground"
                 >
                   View blog index →
                 </Link>

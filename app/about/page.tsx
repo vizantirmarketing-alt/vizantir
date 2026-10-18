@@ -89,7 +89,7 @@ export default function AboutPage() {
                     <div className="mt-10 text-center">
                       <Link
                         href="/technology"
-                        className="link-cobalt inline-flex items-center gap-2 text-sm font-medium md:text-base"
+                        className="link-ui inline-flex items-center gap-2 text-sm font-medium md:text-base"
                         style={{ color: 'var(--cobalt-text)' }}
                       >
                         <span>See the full stack</span>

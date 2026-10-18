@@ -89,7 +89,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
                       {item.link ? (
                         <Link
                           href={item.link.href}
-                          className="font-medium text-cobalt-text underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
+                          className="link-ui font-medium text-cobalt-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
                         >
                           {item.link.label}
                         </Link>

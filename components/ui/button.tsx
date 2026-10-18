@@ -20,7 +20,7 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground",
         cobaltOutline:
           "btn-outline border border-border bg-transparent shadow-none hover:border-transparent",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary transition-colors hover:text-primary/80",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

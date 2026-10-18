@@ -550,7 +550,7 @@ export default function LawFirmWebDesignClient() {
               <Link
                 href="tel:+17022890758"
                 onClick={trackPhoneClick}
-                className="text-white underline underline-offset-2 transition-colors hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
+                className="text-white -mx-2 -my-0.5 rounded-full px-2 py-0.5 transition-colors duration-150 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
               >
                 (702) 289-0758
               </Link>

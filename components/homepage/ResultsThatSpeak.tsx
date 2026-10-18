@@ -96,7 +96,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
                 </p>
                 <Link
                   href={caseStudyHref}
-                  className="link-cobalt group inline-flex items-center gap-2 text-sm font-semibold"
+                  className="link-ui group inline-flex items-center gap-2 text-sm font-semibold"
                   style={{ color: 'var(--cobalt-text)' }}
                 >
                   <span>Read case study</span>

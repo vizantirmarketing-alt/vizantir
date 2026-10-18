@@ -379,54 +379,117 @@
     transition-duration: 120ms;
   }
 
-  /* ===== Tier 3 — text/inline links ===== */
-  .link-cobalt {
-    color: inherit;
-    position: relative;
-    transition: color 200ms ease-out;
+  /* ===== Tier 3: text/inline links. Color shift only, never an underline. ===== */
+  .link-ui {
+    text-decoration: none;
+    transition: color 150ms ease-out, opacity 150ms ease-out;
   }
 
-  .link-cobalt::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1px;
-    background: #0070F3;
-    transform: scaleX(0);
-    transform-origin: right center;
-    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .link-cobalt:hover {
+  .link-ui:hover {
     color: var(--cobalt-text);
   }
 
-  .link-cobalt:hover::after {
-    transform: scaleX(1);
-    transform-origin: left center;
+  /* Links that already sit in the cobalt text color have no color to shift to. */
+  .link-ui.text-cobalt-text:hover {
+    opacity: 0.75;
   }
 
-  .link-cobalt:focus-visible {
+  /* Inline links in running text get weight so color is not the only cue. */
+  :is(p, li, blockquote) .link-ui {
+    font-weight: 500;
+  }
+
+  .link-ui:focus-visible {
     outline: 2px solid #0070F3;
     outline-offset: 3px;
     border-radius: 2px;
   }
 
+  /* ===== Sliding glass lens: nav and footer link groups (see GlassLens.tsx) ===== */
+  .glass-lens {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: 0;
+    border-radius: 999px;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.28) 0%,
+      rgba(255, 255, 255, 0.06) 55%,
+      rgba(255, 255, 255, 0.14) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6) brightness(1.06);
+    backdrop-filter: blur(14px) saturate(1.6) brightness(1.06);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.35),
+      inset 1px 0 0 rgba(255, 255, 255, 0.45),
+      inset -1px 0 0 rgba(255, 255, 255, 0.45),
+      0 1px 1px rgba(0, 0, 0, 0.06),
+      0 10px 24px -12px rgba(0, 60, 140, 0.35);
+    transition: left 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                top 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                width 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                height 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                opacity 160ms ease-out;
+  }
+
+  .glass-lens::after {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 30%;
+    top: 2px;
+    height: 38%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.75), transparent);
+    filter: blur(1px);
+  }
+
+  .glass-lens[data-active='true'] {
+    opacity: 1;
+  }
+
+  /* First entry places the lens without sliding in from its last position. */
+  .glass-lens[data-snap='true'] {
+    transition: opacity 160ms ease-out;
+  }
+
+  .glass-lens-group a {
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+    transition: color 180ms;
+  }
+
+  .glass-lens-group a:hover,
+  .glass-lens-group a:focus-visible {
+    color: var(--cobalt-text);
+  }
+
+  /* Pill padding offset by an equal negative margin, so links stay where they were. */
+  .glass-lens-group:not(.glass-lens-group--flush) a {
+    display: inline-block;
+    padding: 7px 13px;
+    margin: -7px -13px;
+    border-radius: 999px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .btn-dark,
     .card-interactive,
-    .link-cobalt,
-    .link-cobalt::after {
+    .link-ui {
       transition: none;
     }
     .btn-dark:hover,
     .card-interactive:hover {
       transform: none;
     }
-    .link-cobalt:hover::after {
-      transform: scaleX(1);
+    .glass-lens {
+      transition: opacity 160ms ease-out;
     }
   }
 }
@@ -621,10 +684,9 @@ html, body {
 
 /* Links */
 .blog-content a {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: currentColor;
-  text-underline-offset: 2px;
+  color: var(--cobalt-text);
+  font-weight: 500;
+  text-decoration: none;
   transition: opacity 0.2s;
 }
 

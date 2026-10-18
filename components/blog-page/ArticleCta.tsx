@@ -18,7 +18,7 @@ export function ArticleCta({ href, label }: ArticleCtaProps) {
         Related service:{' '}
         <Link
           href={href}
-          className="link-cobalt font-medium"
+          className="link-ui font-medium"
           style={{ color: 'var(--cobalt-text)' }}
         >
           {label}

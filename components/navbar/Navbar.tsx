@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HomeLogoLink } from "@/components/ui/HomeLogoLink";
+import GlassLens from "@/components/ui/GlassLens";
 import { X } from "lucide-react";
 import { trackBookStrategyCall } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
@@ -126,7 +127,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
 
             {/* Desktop Navigation — hidden in minimal mode */}
             {!isMinimal && (
-              <div className="hidden xl:flex items-center gap-8">
+              <GlassLens className="hidden xl:flex items-center gap-8">
                 {mainNavLinks.map((link) => (
                   <Link
                     key={link.path}
@@ -139,11 +140,11 @@ const Navbar = ({ minimal }: NavbarProps) => {
                   >
                     {link.name}
                     {pathname === link.path && (
-                      <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary rounded-full" />
+                      <span className="absolute bottom-[3px] left-[13px] right-[13px] h-0.5 bg-primary rounded-full" />
                     )}
                   </Link>
                 ))}
-              </div>
+              </GlassLens>
             )}
 
             <div
@@ -247,20 +248,20 @@ const Navbar = ({ minimal }: NavbarProps) => {
 
           {/* Navigation Links */}
           <nav className="flex flex-1 flex-col min-h-0 overflow-y-auto overscroll-contain px-6 pb-8">
-            <div className="flex flex-1 flex-col justify-evenly short-landscape:justify-start short-landscape:gap-4 min-h-0">
+            <GlassLens orientation="column" padded={false} className="flex flex-1 flex-col justify-evenly short-landscape:justify-start short-landscape:gap-4 min-h-0">
               {mainNavLinks.map((link, idx) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`link-cobalt block py-3 sm:py-4 ${
+                  className={`block py-3 sm:py-4 ${
                     idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
                   } ${mounted && pathname === link.path ? 'text-cobalt-text' : 'text-foreground'}`}
                 >
                   <span className="text-xl sm:text-2xl font-medium">{link.name}</span>
                 </Link>
               ))}
-            </div>
+            </GlassLens>
           </nav>
 
           {mounted && (

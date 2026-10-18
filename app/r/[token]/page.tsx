@@ -30,7 +30,7 @@ export default async function PublicReportPage({
         <div className="print:hidden mx-auto flex w-full min-w-0 max-w-[40rem] px-5 pt-8 sm:px-8">
           <a
             href={result.pdfDownloadUrl}
-            className="text-sm font-medium text-cobalt-text underline-offset-4 hover:underline"
+            className="link-ui text-sm font-medium text-cobalt-text"
             rel="noreferrer"
           >
             Download PDF

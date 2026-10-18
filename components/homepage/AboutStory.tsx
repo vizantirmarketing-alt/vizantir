@@ -59,7 +59,7 @@ const AboutStory = () => {
             <div className="mt-5">
               <Link
                 href="/how-we-work"
-                className="link-cobalt group inline-flex items-center gap-2 font-medium"
+                className="link-ui group inline-flex items-center gap-2 font-medium"
                 style={{ color: 'var(--cobalt-text)' }}
               >
                 <span>How We Work</span>

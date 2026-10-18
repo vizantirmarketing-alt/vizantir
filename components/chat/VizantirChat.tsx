@@ -49,7 +49,7 @@ const TRAILING_URL_PUNCTUATION = /[.,;:!?…]+$/;
 const EMAIL_HOST = 'vizantir.com';
 
 const MESSAGE_LINK_CLASS =
-  'break-words text-cobalt-text underline decoration-cobalt-primary/60 underline-offset-2 transition-colors hover:decoration-cobalt-primary';
+  'link-ui break-words text-cobalt-text';
 
 type AssistantTextPart =
   | { type: 'text'; value: string }

@@ -252,7 +252,7 @@ export default function ContactPageClient() {
                     </div>
                     <div>
                       <p className="font-semibold mb-1 text-foreground">Email</p>
-                      <a href={`mailto:${contactDetails.email}`} className="link-cobalt" style={{ color: 'var(--cobalt-text)' }}>
+                      <a href={`mailto:${contactDetails.email}`} className="link-ui" style={{ color: 'var(--cobalt-text)' }}>
                         {contactDetails.email}
                       </a>
                     </div>
@@ -268,7 +268,7 @@ export default function ContactPageClient() {
                       <a 
                         href={`tel:${contactDetails.phoneTel}`} 
                         onClick={trackPhoneClick}
-                        className="link-cobalt text-body"
+                        className="link-ui text-body"
                       >
                         {contactDetails.phoneDisplay}
                       </a>
@@ -470,9 +470,9 @@ export default function ContactPageClient() {
                   </button>
                   <p className="text-xs text-center text-meta">
                     By submitting this form, you agree to our{' '}
-                    <Link href="/privacy" className="link-cobalt">Privacy Policy</Link>
+                    <Link href="/privacy" className="link-ui">Privacy Policy</Link>
                     {' '}and{' '}
-                    <Link href="/terms" className="link-cobalt">Terms of Service</Link>.
+                    <Link href="/terms" className="link-ui">Terms of Service</Link>.
                   </p>
                 </form>
               </div>

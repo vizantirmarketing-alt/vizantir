@@ -79,7 +79,7 @@ export const vizantirPortableTextComponents: PortableTextComponents = {
     link: ({ value, children }) => {
       const href = typeof value?.href === 'string' ? value.href : ''
       if (!href) return <span>{children}</span>
-      const className = 'link-cobalt'
+      const className = 'link-ui text-cobalt-text'
       if (isInternalHref(href)) {
         return (
           <Link href={toInternalLinkHref(href)} className={className}>
