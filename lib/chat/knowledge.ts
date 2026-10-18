@@ -175,7 +175,7 @@ function buildPricing(): string {
   const chatbotBlock = `${chatbotIntro}\n\n${chatbotShared}\n\nOne-time setup: ${CHATBOT_SETUP_FEE.display} \u2014 ${CHATBOT_SETUP_FEE.description}\n\nPlan detail only (not public products): ${chatbotPlanDetail}`
   const faqBlock = Object.values(pricingFAQs).filter((v) => typeof v === 'string').join('\n\n')
   const existingSiteRate = `Existing Vizantir website clients get an existing-site page rate starting at ${EXISTING_SITE_PAGE_RATE_DISPLAY} for a single Campaign Landing Page-scope page on the existing stack. That rate applies in place of care preferred rates rather than on top of them.`
-  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (optional monthly retainers):\n\nCare retainers are optional. A finished site belongs to the client. No retainer is required; hosting is billed separately.\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nSEARCH & CONTENT GROWTH (monthly, for Vizantir website and care clients):\n\n${blogBlock}\n\nAI EXPERIENCE INTEGRATION (scoped custom integration):\n\n${chatbotBlock}\n\n${faqBlock}`
+  const body = `PROJECT PRICING (one-time builds):\n\n${tiers}\n\nWEBSITE CARE (optional monthly retainers):\n\nCare retainers are optional. A finished site belongs to the client. No retainer is required.\n\n${care}\n\nLANDING PAGES (one-time):\n\n${landingPages}\n\n${existingSiteRate}\n\nSEARCH & CONTENT GROWTH (monthly, for Vizantir website and care clients):\n\n${blogBlock}\n\nAI EXPERIENCE INTEGRATION (scoped custom integration):\n\n${chatbotBlock}\n\n${faqBlock}`
   return section('PRICING', body)
 }
 
