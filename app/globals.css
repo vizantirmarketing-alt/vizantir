@@ -426,21 +426,6 @@ html, body {
   transition: background-color 500ms ease;
 }
 
-.group:hover .number-glow-teal {
-  opacity: 0.35 !important;
-  text-shadow: 0 0 40px rgba(14, 165, 165, 0.5);
-}
-
-.group:hover .number-glow-purple {
-  opacity: 0.35 !important;
-  text-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
-}
-
-.group:hover .number-glow-blue {
-  opacity: 0.35 !important;
-  text-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
-}
-
 @keyframes scroll-wheel {
   0% {
     opacity: 1;
