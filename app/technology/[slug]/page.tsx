@@ -91,7 +91,7 @@ export default async function TechnologyPage({ params }: PageProps) {
 
             <p className="text-lg md:text-xl text-cobalt-text font-medium mb-8">{tech.tagline}</p>
 
-            <p className="text-base md:text-lg text-body leading-relaxed mb-16">{tech.intro}</p>
+            <p className="max-w-[48ch] text-base md:text-lg text-body leading-relaxed mb-16">{tech.intro}</p>
 
             <div className="mb-16">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
@@ -115,7 +115,7 @@ export default async function TechnologyPage({ params }: PageProps) {
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
                 What this means for your business
               </h2>
-              <p className="text-base md:text-lg text-body leading-relaxed">{tech.businessOutcome}</p>
+              <p className="max-w-[48ch] text-base md:text-lg text-body leading-relaxed">{tech.businessOutcome}</p>
             </div>
 
             <div className="pt-4 border-t border-border">

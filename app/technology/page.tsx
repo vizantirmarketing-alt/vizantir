@@ -96,7 +96,7 @@ export default function TechnologyHubPage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 The Technology Behind Every Vizantir Build
               </h1>
-              <p className="text-base md:text-lg text-body leading-relaxed">
+              <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
                 Every tool in our stack was chosen for the same reason: to compound into a site that
                 loads faster, breaks less, and stays maintainable for years. These aren&apos;t buzzwords on
                 a proposal. They&apos;re the actual systems running your project from day one.
@@ -129,7 +129,7 @@ export default function TechnologyHubPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
                 Why stack choices matter
               </h2>
-              <p className="text-base md:text-lg text-body leading-relaxed">
+              <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
                 A website is only as reliable as the systems underneath it. WordPress plugins conflict.
                 Shared hosting slows down under traffic. Page builders lock you into templates. Our stack
                 avoids those tradeoffs by design, so performance, security, and editability improve
