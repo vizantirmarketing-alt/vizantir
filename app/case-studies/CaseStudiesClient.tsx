@@ -81,6 +81,7 @@ type IndexColors = {
   text: string
   textMuted: string
   accent: string
+  accentText: string
   rule: string
   cardBg: string
   cardBorder: string
@@ -172,7 +173,7 @@ function CaseStudyIndexRow({
           </span>
           <span
             className="absolute right-0 top-0 inline-flex -translate-x-2.5 items-center gap-2 whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-            style={{ color: colors.accent }}
+            style={{ color: colors.accentText }}
           >
             View project
             <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
@@ -192,6 +193,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
       text: 'var(--foreground)',
       textMuted: 'var(--muted-foreground)',
       accent: 'var(--cobalt-primary)',
+      accentText: 'var(--cobalt-text)',
       rule: 'rgba(0,0,0,0.09)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
@@ -251,7 +253,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                 onChange={(event) => setSelectedCategory(event.target.value)}
                 className="w-full cursor-pointer appearance-none bg-transparent pr-7 text-sm outline-none"
                 style={{
-                  color: selectedCategory === 'All' ? colors.textMuted : colors.accent,
+                  color: selectedCategory === 'All' ? colors.textMuted : colors.accentText,
                   fontWeight: selectedCategory === 'All' ? 400 : 600,
                 }}
               >
@@ -283,7 +285,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     onClick={() => setSelectedCategory(category)}
                     className="text-sm transition-colors duration-200"
                     style={{
-                      color: isActive ? colors.accent : colors.textMuted,
+                      color: isActive ? colors.accentText : colors.textMuted,
                       fontWeight: isActive ? 600 : 400,
                     }}
                   >
@@ -371,10 +373,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             </div>
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
               <div>
-                <p className="text-sm uppercase tracking-[0.2em]" style={{ color: colors.accent }}>
-                  In-house
-                </p>
-                <h2 className="mt-3 text-3xl font-black tracking-tight md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="text-3xl font-black tracking-tight md:text-4xl" style={{ color: colors.text }}>
                   Analytir
                 </h2>
                 <p className="mt-4 leading-relaxed" style={{ color: colors.textMuted }}>
@@ -382,10 +381,16 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                   Square ingestion through merchant-timezone reconciliation to natural-language SQL. The
                   same engineering goes into every site on this page.
                 </p>
+                <span
+                  className="mt-3 block text-xs uppercase tracking-[0.16em]"
+                  style={{ color: colors.textMuted }}
+                >
+                  In-house
+                </span>
                 <Link
                   href="/analytir"
-                  className="link-cobalt mt-6 inline-flex items-center gap-2 text-sm font-semibold md:text-base"
-                  style={{ color: colors.accent }}
+                  className="link-cobalt mt-4 inline-flex items-center gap-2 text-sm font-semibold md:text-base"
+                  style={{ color: colors.accentText }}
                 >
                   See what we built
                   <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
