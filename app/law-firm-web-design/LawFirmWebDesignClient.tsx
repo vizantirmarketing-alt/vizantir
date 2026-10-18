@@ -114,28 +114,24 @@ const methodologyItems = [
 const processSteps = [
   {
     icon: Search,
-    step: '01',
     title: 'Discovery',
     description:
       'Practice area audit, competitor teardown, and keyword mapping so the site targets the searches that actually drive consultations.',
   },
   {
     icon: Palette,
-    step: '02',
     title: 'Design',
     description:
       'Custom brand direction, not templates. Photography guidance when the practice needs visuals that match its standing.',
   },
   {
     icon: Code2,
-    step: '03',
     title: 'Build',
     description:
       'Next.js + Sanity: practice pages, attorney bios, schema markup, and an intake flow ready for real traffic.',
   },
   {
     icon: Rocket,
-    step: '04',
     title: 'Launch',
     description:
       'Conversion tracking wired, analytics baseline set, and a clear handoff so your team can publish without calling a developer.',
@@ -251,7 +247,7 @@ export default function LawFirmWebDesignClient() {
             >
               Your site may be costing you the clients you want most
             </h2>
-            <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
+            <div className="max-w-[48ch] space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
                 Most law firm websites still look like every other firm on the block. A stock hero,
                 a stock practice grid, and a contact form that could belong to anyone. Prospective
@@ -432,7 +428,7 @@ export default function LawFirmWebDesignClient() {
             <p className="text-base font-semibold tracking-wide text-foreground md:text-lg">
               Vizantir Design Studio · Las Vegas
             </p>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-3 max-w-[48ch] text-sm leading-relaxed text-muted-foreground">
               Custom Next.js websites for established practices. Fixed-scope engagements, local SEO
               structure, and consultation-focused builds from Southern Nevada and nationwide.
             </p>
@@ -471,13 +467,10 @@ export default function LawFirmWebDesignClient() {
                 variants={itemVariants}
                 className="rounded-2xl border border-border bg-muted p-6"
               >
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
                     <step.icon size={22} className="text-cobalt-text" aria-hidden />
                   </div>
-                  <span className="text-xs font-semibold tracking-wider text-cobalt-text">
-                    {step.step}
-                  </span>
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
@@ -515,7 +508,7 @@ export default function LawFirmWebDesignClient() {
                 className="rounded-2xl border border-border bg-muted p-6"
               >
                 <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
+                <p className="max-w-[48ch] text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -535,7 +528,7 @@ export default function LawFirmWebDesignClient() {
             >
               Ready to build a site that reflects the caliber of your firm?
             </h2>
-            <p className="mb-10 text-lg text-white/80">
+            <p className="mb-10 text-lg text-white">
               Strategy calls are 30 minutes, no pitch, just fit.
             </p>
             <Button
@@ -551,13 +544,13 @@ export default function LawFirmWebDesignClient() {
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <p className="mt-6 text-sm text-white/70">
+            <p className="mt-6 text-sm text-white">
               Vizantir Design Studio · Las Vegas
-              <span className="mx-2 text-white/40">·</span>
+              <span className="mx-2 text-white">·</span>
               <Link
                 href="tel:+17022890758"
                 onClick={trackPhoneClick}
-                className="text-white/90 underline-offset-2 transition-colors hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
+                className="text-white underline underline-offset-2 transition-colors hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt-primary"
               >
                 (702) 289-0758
               </Link>
