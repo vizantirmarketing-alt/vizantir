@@ -1,4 +1,5 @@
 import { PricingOverviewCta } from '@/components/homepage/PricingOverviewCta'
+import { ProjectProvenance } from '@/components/pricing/ProjectProvenance'
 import { carePricing, projectPricing } from '@/data/pricing'
 import { cn } from '@/lib/utils'
 
@@ -11,6 +12,8 @@ export function PricingOverview() {
         <h2 className="text-balance text-3xl font-black tracking-tight text-foreground md:text-4xl">
           Fixed scope. Fixed price. One engagement.
         </h2>
+
+        <ProjectProvenance className="mt-6" />
 
         <div className="mt-10">
           {projectPricing.map((tier) => (

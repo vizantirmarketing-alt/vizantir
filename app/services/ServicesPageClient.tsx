@@ -9,6 +9,7 @@ import { trackBookStrategyCall } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
+import { ProjectProvenance } from '@/components/pricing/ProjectProvenance'
 import {
   careBenefitTooltips,
   carePricing,
@@ -397,7 +398,7 @@ function ProjectPricingRows() {
               <p className="mt-3 text-pretty text-sm text-muted-foreground">{tier.timeline}</p>
             </div>
             <div className="md:col-span-2">
-              <p className="max-w-[55ch] text-pretty text-base leading-relaxed text-muted-foreground">
+              <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground">
                 {tier.description}
               </p>
               <ul className="mt-6 grid gap-x-8 gap-y-3 md:grid-cols-2">
@@ -598,6 +599,7 @@ function ProjectPricingSection() {
             . Growth is the engagement most established businesses need.
           </p>
         </SectionHeading>
+        <ProjectProvenance className="mx-auto mb-4" />
         <ProjectPricingRows />
         <p className="mx-auto mt-6 max-w-[48ch] text-pretty text-center text-sm text-muted-foreground">
           {careFooterText}

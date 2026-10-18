@@ -69,6 +69,12 @@ export type BlogTier = {
   includes: string[]
 }
 
+/** How every project is built. Shown under the project pricing heading and sent to the chatbot. */
+export const projectProvenance: readonly string[] = [
+  "Every project here is built the same way. One person does the work, from the first call to launch. There's no theme underneath and no page builder; every component is written for your site. It runs on Next.js, you edit it in Sanity, and it's hosted on Vercel. When it's done, the code and the site are yours.",
+  "You see real pages as they're built, not mockups. Strategy call first, then discovery, design, build, and launch, with a fixed price agreed before any of it starts.",
+]
+
 export const projectPricing: PricingTier[] = [
   {
     slug: 'essentials',
@@ -77,7 +83,7 @@ export const projectPricing: PricingTier[] = [
     priceNumeric: 15000,
     timeline: '6–8 weeks',
     description:
-      'A complete custom website for a focused presence: core pages, a clear contact path, CMS, and the technical foundation the business needs to operate online.',
+      'A complete custom website for a focused presence: core pages, a clear contact path, CMS, and the technical foundation the business needs to operate online. For a business that needs its first serious site, or needs to replace one that stopped working.',
     includes: [
       'Up to 8 custom pages',
       'Mobile-first responsive design',
@@ -97,7 +103,7 @@ export const projectPricing: PricingTier[] = [
     priceNumeric: 30000,
     timeline: '8–12 weeks',
     description:
-      'The recommended engagement for established companies: service lines, richer content, conversion paths, and the integrations that support how leads actually move.',
+      'The recommended engagement for established companies: service lines, richer content, conversion paths, and the integrations that support how leads actually move. For a company with several service lines and leads that need somewhere to go.',
     includes: [
       'Up to 20 custom pages',
       'Blog or resources section',
@@ -119,7 +125,7 @@ export const projectPricing: PricingTier[] = [
     priceNumeric: 60000,
     timeline: '12–16+ weeks',
     description:
-      'Custom systems, integrations, and larger organizational requirements. Multi-location architecture, member tools, and applications beyond a marketing site.',
+      'Custom systems, integrations, and larger organizational requirements. Multi-location architecture, member tools, and applications beyond a marketing site. For an organization whose site has to do more than market.',
     includes: [
       'Unlimited pages within agreed scope',
       'Custom functionality and API work',
