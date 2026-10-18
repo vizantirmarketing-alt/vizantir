@@ -75,6 +75,7 @@
     "next": "^16.0.10",
     "next-sanity": "^11.6.10",
     "playwright-core": "1.56.1",
+    "posthog-js": "^1.438.12",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "resend": "^6.12.2",

@@ -8,6 +8,9 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   trailingSlash: false,
 
+  // PostHog calls POST to trailing-slash URLs; do not redirect them.
+  skipTrailingSlashRedirect: true,
+
   typescript: {
     ignoreBuildErrors: false,
   },
@@ -39,6 +42,19 @@ const nextConfig: NextConfig = {
     'playwright-core',
     '@sparticuz/chromium-min',
   ],
+
+  async rewrites() {
+    return [
+      {
+        source: '/ingest/static/:path*',
+        destination: 'https://us-assets.i.posthog.com/static/:path*',
+      },
+      {
+        source: '/ingest/:path*',
+        destination: 'https://us.i.posthog.com/:path*',
+      },
+    ];
+  },
 
   async redirects() {
     return [
