@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { trackBookStrategyCall, trackCTAClick } from '@/lib/analytics'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { carePricing, projectPricing } from '@/data/pricing'
@@ -21,6 +24,8 @@ export interface PricingCardsProps {
 
 const [essentialCare, websiteCare, growthCare] = carePricing
 
+const DEFAULT_CTA_HREF = '/contact'
+
 const careFooterText = `After launch, an optional care retainer is available, starting at ${essentialCare.price} for ${essentialCare.name}, ${websiteCare.price} for ${websiteCare.name}, and ${growthCare.price} for ${growthCare.name}.`
 
 export function PricingCards({
@@ -28,7 +33,7 @@ export function PricingCards({
   intro,
   showCareFooter = true,
   ctaText = 'Book a Strategy Call',
-  ctaHref = '/contact',
+  ctaHref = DEFAULT_CTA_HREF,
   align = 'center',
 }: PricingCardsProps) {
   const isStart = align === 'start'
@@ -108,7 +113,14 @@ export function PricingCards({
                   : 'group w-full rounded-xl px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-transparent hover:[background:var(--cobalt-gradient)] hover:text-white hover:shadow-cobalt'
               }
             >
-              <Link href={ctaHref}>
+              <Link
+                href={ctaHref}
+                onClick={() => {
+                  const location = `pricing_cards_${tier.slug}`
+                  if (ctaHref === DEFAULT_CTA_HREF) trackBookStrategyCall(location)
+                  else trackCTAClick('pricing_card_cta', location)
+                }}
+              >
                 {ctaText}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>

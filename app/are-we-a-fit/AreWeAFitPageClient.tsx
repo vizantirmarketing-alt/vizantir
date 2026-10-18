@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 
 import { AmbientHero } from '@/components/hero/AmbientHero'
-import { trackCTAClick } from '@/lib/analytics'
+import { trackBookStrategyCall } from '@/lib/analytics'
 import {
   flattenAreWeAFitParagraph,
   type AreWeAFitPageContent,
@@ -177,7 +177,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             </p>
             <Link
               href={content.closingCta.href}
-              onClick={() => trackCTAClick('book_strategy_call', 'are_we_a_fit')}
+              onClick={() => trackBookStrategyCall('are_we_a_fit')}
               className="bg-cobalt-gradient inline-block rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
             >
               {content.closingCta.label}

@@ -22,7 +22,7 @@ import {
   Rocket,
 } from 'lucide-react'
 import { lawFirmPricingFaqItems } from '@/data/industry-pricing-faqs'
-import { trackBookStrategyCallIntent, trackPhoneClick } from '@/lib/analytics'
+import { trackBookStrategyCall, trackPhoneClick } from '@/lib/analytics'
 
 const STRATEGY_CALL_HREF = '/contact'
 
@@ -222,7 +222,7 @@ export default function LawFirmWebDesignClient() {
             >
               <Link
                 href={STRATEGY_CALL_HREF}
-                onClick={() => trackBookStrategyCallIntent('hero')}
+                onClick={() => trackBookStrategyCall('law_firm_hero')}
               >
                 Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -538,7 +538,7 @@ export default function LawFirmWebDesignClient() {
             >
               <Link
                 href={STRATEGY_CALL_HREF}
-                onClick={() => trackBookStrategyCallIntent('closing_cta')}
+                onClick={() => trackBookStrategyCall('law_firm_closing')}
               >
                 Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />

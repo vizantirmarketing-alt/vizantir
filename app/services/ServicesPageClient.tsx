@@ -5,7 +5,7 @@ import { ArrowRight, FileText } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import ServicesHero from './ServicesHero'
-import { trackCTAClick } from '@/lib/analytics'
+import { trackBookStrategyCall } from '@/lib/analytics'
 import type { ServiceListItem } from '@/lib/sanity/types'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
@@ -210,7 +210,7 @@ function CarePricingRows() {
           variant="default"
           className="group rounded-xl bg-cobalt-gradient px-8 py-4 text-base font-semibold text-white shadow-cobalt"
         >
-          <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
+          <Link href="/contact" onClick={() => trackBookStrategyCall('services')}>
             Book a Strategy Call
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
@@ -421,7 +421,7 @@ function ProjectPricingRows() {
           variant="default"
           className="group rounded-xl bg-cobalt-gradient px-8 py-4 text-base font-semibold text-white shadow-cobalt"
         >
-          <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
+          <Link href="/contact" onClick={() => trackBookStrategyCall('services')}>
             Book a Strategy Call
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
@@ -810,7 +810,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             </SectionHeading>
             <Link
               href="/contact"
-              onClick={() => trackCTAClick('get_started', 'services')}
+              onClick={() => trackBookStrategyCall('services')}
               className="bg-cobalt-gradient inline-flex items-center justify-center rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
             >
               Book a Strategy Call

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HomeLogoLink } from "@/components/ui/HomeLogoLink";
 import { X } from "lucide-react";
-import { trackCTAClick } from "@/lib/analytics";
+import { trackBookStrategyCall } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
 
 /** Paths that use logo + CTA only (no menu links). */
@@ -63,7 +63,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
   }
 
   const handleStrategyCallClick = (location: string) => {
-    trackCTAClick('book_strategy_call', location);
+    trackBookStrategyCall(location);
   };
 
   return (
@@ -268,7 +268,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
               <Link
                 href="/contact"
                 onClick={() => {
-                  trackCTAClick('book_strategy_call', 'mobile_menu');
+                  trackBookStrategyCall('mobile_menu');
                   setIsMobileMenuOpen(false);
                 }}
                 className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt transition-all duration-300 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"

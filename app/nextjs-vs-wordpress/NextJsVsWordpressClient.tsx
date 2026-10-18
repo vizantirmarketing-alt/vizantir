@@ -7,7 +7,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
-import { trackBookStrategyCallIntent } from '@/lib/analytics'
+import { trackBookStrategyCall } from '@/lib/analytics'
 import {
   nextjsVsWordpressComparison,
   nextjsVsWordpressCriteria,
@@ -81,7 +81,7 @@ export default function NextJsVsWordpressClient() {
             >
               <Link
                 href={nextjsVsWordpressCta.href}
-                onClick={() => trackBookStrategyCallIntent('hero')}
+                onClick={() => trackBookStrategyCall('nextjs_vs_wordpress_hero')}
               >
                 {nextjsVsWordpressCta.buttonLabel}
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -335,7 +335,7 @@ export default function NextJsVsWordpressClient() {
             >
               <Link
                 href={nextjsVsWordpressCta.href}
-                onClick={() => trackBookStrategyCallIntent('closing_cta')}
+                onClick={() => trackBookStrategyCall('nextjs_vs_wordpress_closing')}
               >
                 {nextjsVsWordpressCta.buttonLabel}
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
-import { trackCTAClick } from '@/lib/analytics';
+import { trackBookStrategyCall } from '@/lib/analytics';
 
 const CTA = () => {
   return (
@@ -50,7 +50,7 @@ const CTA = () => {
               asChild
               className="bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
             >
-              <Link href="/contact" onClick={() => trackCTAClick('schedule_a_call', 'cta_section')}>Book a Strategy Call</Link>
+              <Link href="/contact" onClick={() => trackBookStrategyCall('cta_section')}>Book a Strategy Call</Link>
             </Button>
           </motion.div>
         </motion.div>

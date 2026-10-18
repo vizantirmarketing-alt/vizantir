@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator';
 import { motion } from 'framer-motion';
-import { trackCTAClick } from '@/lib/analytics';
+import { trackBookStrategyCall } from '@/lib/analytics';
 
 export type Faq = { _id: string; question: string; answer: string }
 
@@ -128,7 +128,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
             </p>
             <Link 
               href="/contact" 
-              onClick={() => trackCTAClick('schedule_a_call', 'faq_section')}
+              onClick={() => trackBookStrategyCall('faq_section')}
               className="group inline-flex items-center gap-2 font-semibold transition-opacity duration-300 hover:opacity-85"
               style={{ color: 'var(--cobalt-text)' }}
             >

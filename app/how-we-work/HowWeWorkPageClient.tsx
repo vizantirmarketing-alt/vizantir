@@ -13,6 +13,7 @@ import {
 } from '@/data/how-we-work'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { trackBookStrategyCall } from '@/lib/analytics'
 import { Check, X } from 'lucide-react'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { AmbientHero } from '@/components/hero/AmbientHero'
@@ -450,6 +451,7 @@ export default function HowWeWorkPageClient() {
           >
             <Link
               href="/contact"
+              onClick={() => trackBookStrategyCall('how_we_work')}
               className="bg-cobalt-gradient inline-flex items-center justify-center rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
             >
               Book a Strategy Call

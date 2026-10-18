@@ -5,6 +5,7 @@ import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
+import { trackBookStrategyCall } from '@/lib/analytics'
 
 export interface FAQPageClientProps {
   faqs: Faq[]
@@ -167,6 +168,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             </p>
             <Link
               href="/contact"
+              onClick={() => trackBookStrategyCall('faq_page')}
               className="bg-cobalt-gradient inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-lg"
             >
               Book a Strategy Call

@@ -20,7 +20,7 @@ import {
   X,
 } from 'lucide-react'
 import { commercialRealEstatePricingFaqItems } from '@/data/industry-pricing-faqs'
-import { trackBookStrategyCallIntent, trackPhoneClick } from '@/lib/analytics'
+import { trackBookStrategyCall, trackPhoneClick } from '@/lib/analytics'
 
 const STRATEGY_CALL_HREF = '/contact'
 
@@ -228,7 +228,7 @@ export default function CREWebDesignClient() {
             >
               <Link
                 href={STRATEGY_CALL_HREF}
-                onClick={() => trackBookStrategyCallIntent('hero')}
+                onClick={() => trackBookStrategyCall('commercial_real_estate_hero')}
               >
                 Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -541,7 +541,7 @@ export default function CREWebDesignClient() {
             >
               <Link
                 href={STRATEGY_CALL_HREF}
-                onClick={() => trackBookStrategyCallIntent('closing_cta')}
+                onClick={() => trackBookStrategyCall('commercial_real_estate_closing')}
               >
                 Book a Strategy Call
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />

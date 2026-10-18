@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { getStartedDescription, getStartedSteps } from '@/data/get-started'
-import { trackCTAClick } from '@/lib/analytics'
+import { trackBookStrategyCall, trackCTAClick } from '@/lib/analytics'
 
 export default function GetStartedPageClient() {
   const steps = getStartedSteps
@@ -84,7 +84,7 @@ export default function GetStartedPageClient() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
-                onClick={() => trackCTAClick('schedule_a_call', 'get_started')}
+                onClick={() => trackBookStrategyCall('get_started')}
                 className="bg-cobalt-gradient inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-lg"
               >
                 Book a Strategy Call

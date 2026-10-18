@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { trackBookStrategyCallIntent } from '@/lib/analytics'
+import { trackBookStrategyCall } from '@/lib/analytics'
 import { itemVariants } from './motion'
 
 const STRATEGY_CALL_HREF = '/contact'
@@ -56,7 +56,7 @@ export function LandingPagesHero({
           >
             <Link
               href={STRATEGY_CALL_HREF}
-              onClick={() => trackBookStrategyCallIntent(trackingLocation)}
+              onClick={() => trackBookStrategyCall(trackingLocation)}
             >
               {ctaLabel}
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />

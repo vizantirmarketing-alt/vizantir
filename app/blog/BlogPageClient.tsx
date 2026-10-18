@@ -3,6 +3,7 @@
 import { useState, useMemo, type CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { trackBookStrategyCall } from '@/lib/analytics'
 import { blogCategories } from '@/lib/blog-categories'
 
 const themeBgColorTransition = 'background-color 0.3s ease, color 0.3s ease'
@@ -348,6 +349,7 @@ export default function BlogPageClient({ posts }: Props) {
           >
             <Link
               href="/contact"
+              onClick={() => trackBookStrategyCall('blog')}
               className="btn-dark inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-bold group"
             >
               <span>Book a Strategy Call</span>

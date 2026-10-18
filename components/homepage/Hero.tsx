@@ -3,7 +3,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { trackCTAClick } from '@/lib/analytics';
+import { trackBookStrategyCall, trackCTAClick } from '@/lib/analytics';
 
 // Lazy load the heavy 3D component
 const LiquidMetalTorus = lazy(() => import('./LiquidMetalTorus'));
@@ -190,7 +190,7 @@ const Hero = () => {
               asChild
               className="w-full bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt sm:w-auto"
             >
-              <Link href="/contact" onClick={() => trackCTAClick('book_strategy_call', 'hero')}>Book a Strategy Call</Link>
+              <Link href="/contact" onClick={() => trackBookStrategyCall('hero')}>Book a Strategy Call</Link>
             </Button>
             <Button
               size="lg"

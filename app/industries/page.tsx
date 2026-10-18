@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { StrategyCallLink } from './StrategyCallLink'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/seo/JsonLd'
@@ -130,10 +131,10 @@ export default function IndustriesHubPage() {
                 asChild
                 className="rounded-xl px-8 py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt group"
               >
-                <Link href="/contact">
+                <StrategyCallLink>
                   Book a Strategy Call
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Link>
+                </StrategyCallLink>
               </Button>
             </div>
           </div>

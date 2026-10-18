@@ -14,7 +14,7 @@ const GA4_EVENT_NAMES = {
   phone_click: 'phone_click',
   contact_click: 'contact_click',
   cta_click: 'cta_click',
-  book_strategy_call_intent: 'consultation_click',
+  book_strategy_call: 'book_strategy_call',
   landing_pages_handoff_preview_view: 'handoff_preview_view',
   landing_pages_variant_system_demo_view: 'variant_system_demo_view',
   landing_pages_variant_comparison_navigate: 'variant_comparison_navigate',
@@ -87,7 +87,7 @@ export function trackCTAClick(buttonName: string, location: string): void {
   trackToBoth('cta_click', { button_name: buttonName, location })
 }
 
-/** Primary conversion intent — Book a Strategy Call CTAs. */
-export function trackBookStrategyCallIntent(location: string): void {
-  trackToBoth('book_strategy_call_intent', { location })
+/** Single sitewide event for every Book a Strategy Call button. */
+export function trackBookStrategyCall(location: string): void {
+  trackToBoth('book_strategy_call', { location })
 }
