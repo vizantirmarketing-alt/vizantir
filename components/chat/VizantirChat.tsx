@@ -568,7 +568,7 @@ export function VizantirChat() {
               messages[messages.length - 1]?.role !== 'assistant' ||
               messages[messages.length - 1]?.content === '') && (
               <div className="flex justify-start">
-                <div className="rounded-2xl rounded-bl-md bg-muted px-4 py-3">
+                <div className="chat-composing rounded-2xl rounded-bl-md bg-muted px-4 py-3">
                   <div className="flex gap-1">
                     {[0, 150, 300].map((delay) => (
                       <div
@@ -665,14 +665,16 @@ export function VizantirChat() {
         </AnimatePresence>
 
         {!isOpen && (
-          <button
-            type="button"
-            onClick={handleToggle}
-            className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-cobalt-primary text-white shadow-cobalt transition-all hover:scale-105 hover:brightness-105 active:scale-95"
-            aria-label="Open chat"
-          >
-            <MessageCircle className="size-6" />
-          </button>
+          <span className="chat-launcher-ring pointer-events-none block">
+            <button
+              type="button"
+              onClick={handleToggle}
+              className="pointer-events-auto flex aspect-square size-14 shrink-0 items-center justify-center rounded-full bg-cobalt-gradient"
+              aria-label="Open chat"
+            >
+              <MessageCircle className="size-6" />
+            </button>
+          </span>
         )}
       </div>
 
