@@ -31,7 +31,6 @@ import {
   projectPricing,
   publicBlogPricing,
   type BlogTier,
-  type CareTier,
   type ChatbotTier,
   type LandingPageTier,
 } from '@/data/pricing'
@@ -163,22 +162,63 @@ function ServicePricingCard({
   )
 }
 
-function CarePricingCard({ tier }: { tier: CareTier }) {
+function CarePricingRows() {
   return (
-    <ServicePricingCard
-      title={tier.name}
-      price={
-        <>
-          ${tier.priceMin.toLocaleString('en-US')}
-          <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
-        </>
-      }
-      tagline={tier.tagline}
-      description={tier.description}
-      items={tier.includes}
-      featured={Boolean(tier.featured)}
-      badge={false}
-    />
+    <div>
+      {carePricing.map((tier) => (
+        <div key={tier.slug}>
+          <SectionDivider />
+          <div className="grid gap-6 py-12 md:grid-cols-3 md:gap-12 md:py-16">
+            <div>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 className="text-balance text-xl font-bold text-foreground">{tier.name}</h3>
+                {tier.featured ? (
+                  <span className="text-sm font-medium text-muted-foreground">Recommended</span>
+                ) : null}
+              </div>
+              <p
+                className={cn(
+                  'mt-4 text-5xl font-bold leading-none tracking-[-0.04em] md:text-[56px]',
+                  tier.featured ? 'text-cobalt-text' : 'text-foreground',
+                )}
+              >
+                ${tier.priceMin.toLocaleString('en-US')}
+                <span className="ml-1 text-base font-medium tracking-normal text-muted-foreground">/mo</span>
+              </p>
+              <p className="mt-3 text-pretty text-sm text-muted-foreground">{tier.tagline}</p>
+            </div>
+            <div className="md:col-span-2">
+              <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground">
+                {tier.description}
+              </p>
+              <ul className="mt-6 grid gap-x-8 gap-y-3 md:grid-cols-2">
+                {tier.includes.map((line) => (
+                  <li
+                    key={line}
+                    className="relative text-pretty pl-4 text-sm text-foreground/80 before:absolute before:left-0 before:content-['–']"
+                  >
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))}
+      <SectionDivider />
+      <div className="mt-12 flex justify-center">
+        <Button
+          asChild
+          variant="default"
+          className="group rounded-xl bg-cobalt-gradient px-8 py-4 text-base font-semibold text-white shadow-cobalt"
+        >
+          <Link href="/contact" onClick={() => trackCTAClick('get_started', 'services')}>
+            Book a Strategy Call
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </Button>
+      </div>
+    </div>
   )
 }
 
@@ -225,7 +265,7 @@ function ConversationAllowances({ copy }: { copy: string }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="mt-4 border-t border-border pt-4">
+    <div className="mt-4">
       <button
         type="button"
         aria-expanded={open}
@@ -285,26 +325,46 @@ function CareTermsLegend() {
 
 function AiExperienceBlock() {
   return (
-    <Card as="article" variant="muted-30" className="mx-auto max-w-3xl">
-      <CardHeader>
-        <CardTitle>Ongoing usage and management</CardTitle>
-        <CardPrice>
-          {`from $${CHATBOT_USAGE_FROM.toLocaleString('en-US')}`}
-          <span className="ml-0.5 text-[13px] font-medium text-muted-foreground">/mo</span>
-        </CardPrice>
-      </CardHeader>
-      <CardTagline>Custom integration is scoped separately.</CardTagline>
-      <CardDivider />
-      <CardCheckList>
-        {chatbotSharedIncludes.map((line) => (
-          <CardCheckItem key={line}>{line}</CardCheckItem>
-        ))}
-      </CardCheckList>
-      <p className="text-pretty text-sm text-muted-foreground">
-        {CHATBOT_SETUP_FEE.display} one-time setup. {CARE_CLIENT_DISCOUNT}
-      </p>
-      <ConversationAllowances copy={conversationAllowanceCopy(chatbotPricing)} />
-    </Card>
+    <article>
+      <SectionDivider />
+      <div className="grid gap-6 py-12 md:grid-cols-3 md:gap-12 md:py-16">
+        <div>
+          <h3 className="text-balance text-xl font-bold text-foreground">Ongoing usage and management</h3>
+          <div className="mt-4 flex flex-wrap items-baseline gap-x-8 gap-y-4">
+            <div>
+              <p className="text-5xl font-bold leading-none tracking-[-0.04em] text-foreground md:text-[56px]">
+                {CHATBOT_SETUP_FEE.display}
+              </p>
+              <p className="mt-3 text-sm text-muted-foreground">one-time setup</p>
+            </div>
+            <div>
+              <p className="text-5xl font-bold leading-none tracking-[-0.04em] text-foreground md:text-[56px]">
+                {`from $${CHATBOT_USAGE_FROM.toLocaleString('en-US')}`}
+                <span className="ml-1 text-base font-medium tracking-normal text-muted-foreground">/mo</span>
+              </p>
+            </div>
+          </div>
+          <p className="mt-3 text-pretty text-sm text-muted-foreground">{CARE_CLIENT_DISCOUNT}</p>
+        </div>
+        <div className="md:col-span-2">
+          <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground">
+            Custom integration is scoped separately.
+          </p>
+          <ul className="mt-6 grid gap-x-8 gap-y-3 md:grid-cols-2">
+            {chatbotSharedIncludes.map((line) => (
+              <li
+                key={line}
+                className="relative text-pretty pl-4 text-sm text-foreground/80 before:absolute before:left-0 before:content-['–']"
+              >
+                {line}
+              </li>
+            ))}
+          </ul>
+          <ConversationAllowances copy={conversationAllowanceCopy(chatbotPricing)} />
+        </div>
+      </div>
+      <SectionDivider />
+    </article>
   )
 }
 
@@ -582,11 +642,7 @@ function OngoingCapabilities() {
             ))}
           </div>
         </SectionHeading>
-        <div className="grid items-stretch gap-6 lg:grid-cols-3">
-          {carePricing.map((tier) => (
-            <CarePricingCard key={tier.slug} tier={tier} />
-          ))}
-        </div>
+        <CarePricingRows />
         <CareTermsLegend />
       </PricingSection>
 
