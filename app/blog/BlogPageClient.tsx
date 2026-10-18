@@ -35,9 +35,10 @@ export default function BlogPageClient({ posts }: Props) {
   const colors = {
     bg: 'var(--background)',
     text: 'var(--foreground)',
-    textMuted: '#6B7280',
-    textSubtle: '#9CA3AF',
+    textMuted: 'var(--muted-foreground)',
+    textSubtle: 'var(--muted-foreground)',
     accent: 'var(--cobalt-accent)',
+    accentText: 'var(--cobalt-text)',
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
     inputBg: '#FFFFFF',
@@ -108,7 +109,7 @@ export default function BlogPageClient({ posts }: Props) {
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-5 py-4 pl-12 rounded-xl border outline-none transition-all duration-300 focus:ring-2"
+                className="w-full px-5 py-4 pl-12 rounded-xl border outline-none transition-all duration-300 placeholder:text-muted-foreground focus:ring-2"
                 style={{
                   backgroundColor: colors.inputBg,
                   borderColor: colors.cardBorder,
@@ -199,7 +200,7 @@ export default function BlogPageClient({ posts }: Props) {
                   setActiveCategory('All')
                 }}
                 className="mt-4 text-sm font-medium transition-colors duration-300"
-                style={{ color: colors.accent }}
+                style={{ color: colors.accentText }}
               >
                 Clear filters
               </button>
@@ -226,8 +227,8 @@ export default function BlogPageClient({ posts }: Props) {
                         <span
                           className="text-xs font-medium px-3 py-1 rounded-full transition-colors duration-500"
                           style={{
-                            background: 'rgba(0, 112, 243,0.1)',
-                            color: colors.accent,
+                            background: 'var(--cobalt-muted-subtle)',
+                            color: colors.accentText,
                             transition: themeBgColorTransition,
                           }}
                         >
@@ -286,7 +287,7 @@ export default function BlogPageClient({ posts }: Props) {
                       {/* Read More */}
                       <div
                         className="flex items-center gap-2 text-sm font-medium transition-colors duration-300"
-                        style={{ color: colors.accent }}
+                        style={{ color: colors.accentText }}
                       >
                         <span>Read article</span>
                         <svg
