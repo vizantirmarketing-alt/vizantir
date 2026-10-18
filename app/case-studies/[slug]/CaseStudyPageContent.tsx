@@ -20,7 +20,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
       bg: 'var(--background)',
       text: 'var(--foreground)',
       textMuted: 'var(--muted-foreground)',
-      accent: 'var(--cobalt-primary)',
+      accent: 'var(--cobalt-text)',
       cardBg: '#FFFFFF',
       cardBorder: 'rgba(0,0,0,0.08)',
       divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
@@ -67,7 +67,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
               </p>
             ) : null}
             {caseStudy.summary ? (
-              <p className="mt-6 max-w-3xl text-lg leading-relaxed" style={{ color: colors.textMuted }}>
+              <p className="mt-6 max-w-[48ch] text-lg leading-relaxed" style={{ color: colors.textMuted }}>
                 {caseStudy.summary}
               </p>
             ) : null}
