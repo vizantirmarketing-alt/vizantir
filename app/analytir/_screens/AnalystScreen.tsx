@@ -49,11 +49,11 @@ export function AnalystScreen() {
           <div className="font-semibold" style={{ fontSize: 15, color: '#0a0a0a' }}>
             AI Analyst
           </div>
-          <div style={{ fontSize: 12.5, color: '#71717a' }}>
+          <div style={{ fontSize: 12.5, color: '#686870' }}>
             Ask me anything about your data
           </div>
         </div>
-        <X size={16} style={{ color: '#a1a1aa' }} aria-hidden />
+        <X size={16} style={{ color: 'var(--muted-foreground)' }} aria-hidden />
       </div>
 
       <div className="flex flex-col gap-4 px-[15px] pt-[3px] pb-1.5 md:px-5 md:pt-1 md:pb-2">
@@ -100,7 +100,7 @@ export function AnalystScreen() {
               borderRadius: 12,
               padding: '0 14px',
               fontSize: 13.5,
-              color: '#a1a1aa',
+              color: 'var(--muted-foreground)',
             }}
           >
             Ask about your data...

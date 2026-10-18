@@ -60,12 +60,12 @@ export function DepositsScreen() {
   return (
     <div style={{ width: '100%', padding: '26px 30px', boxSizing: 'border-box' }}>
       <div
-        className="uppercase tracking-[0.16em] text-[10px] md:text-[11px]"
-        style={{ ...mono, color: '#a1a1aa' }}
+        className="uppercase tracking-[0.16em] text-[12px]"
+        style={{ ...mono, color: 'var(--muted-foreground)' }}
       >
         DEPOSITS
       </div>
-      <div className="text-[13px] md:text-[14px]" style={{ color: '#71717a' }}>
+      <div className="text-[13px] md:text-[14px]" style={{ color: '#686870' }}>
         72 payouts · sent May 7–Aug 4, arriving May 8–Aug 5
       </div>
 
@@ -86,18 +86,18 @@ export function DepositsScreen() {
                       <ChevronRight
                         size={14}
                         className="md:hidden"
-                        style={{ color: '#a1a1aa' }}
+                        style={{ color: 'var(--muted-foreground)' }}
                         aria-hidden
                       />
                       <Chevron
                         size={14}
                         className="hidden md:block"
-                        style={{ color: '#a1a1aa' }}
+                        style={{ color: 'var(--muted-foreground)' }}
                         aria-hidden
                       />
                     </>
                   ) : (
-                    <Chevron size={14} style={{ color: '#a1a1aa' }} aria-hidden />
+                    <Chevron size={14} style={{ color: 'var(--muted-foreground)' }} aria-hidden />
                   )}
                   <span
                     className="font-medium text-[14px] md:text-[15px]"
@@ -107,7 +107,7 @@ export function DepositsScreen() {
                   </span>
                   <span
                     className="text-[13px] md:text-[14px]"
-                    style={{ color: '#a1a1aa' }}
+                    style={{ color: 'var(--muted-foreground)' }}
                   >
                     {week.count}
                   </span>
@@ -134,7 +134,7 @@ export function DepositsScreen() {
                       className="flex items-center justify-between py-2.5 pl-4 pr-3 text-[13px] md:text-[14px]"
                     >
                       <div className="flex items-center gap-2">
-                        <ChevronRight size={12} style={{ color: '#a1a1aa' }} aria-hidden />
+                        <ChevronRight size={12} style={{ color: 'var(--muted-foreground)' }} aria-hidden />
                         <span style={{ color: '#0a0a0a' }}>{child.label}</span>
                       </div>
                       <span

@@ -44,11 +44,11 @@ export function LedgerScreen() {
       <div className="flex items-baseline justify-between">
         <span
           className="uppercase tracking-[0.16em]"
-          style={{ ...mono, fontSize: 11, color: '#a1a1aa' }}
+          style={{ ...mono, fontSize: 12, color: 'var(--muted-foreground)' }}
         >
           CASH FLOW
         </span>
-        <span style={{ ...mono, fontSize: 13, color: '#71717a' }}>
+        <span style={{ ...mono, fontSize: 13, color: '#686870' }}>
           Jul 29 – Aug 4, 2026
         </span>
       </div>
@@ -56,11 +56,11 @@ export function LedgerScreen() {
       <div className="mt-6">
         <div
           className="uppercase"
-          style={{ ...mono, fontSize: 11, color: '#a1a1aa' }}
+          style={{ ...mono, fontSize: 12, color: 'var(--muted-foreground)' }}
         >
           SALES
         </div>
-        <div style={{ fontSize: 14, color: '#71717a' }}>Jul 29 – Aug 4, 2026</div>
+        <div style={{ fontSize: 14, color: '#686870' }}>Jul 29 – Aug 4, 2026</div>
       </div>
 
       <div className="mt-2">
@@ -70,7 +70,7 @@ export function LedgerScreen() {
           value={
             <>
               <span style={{ color: '#b91c1c' }}>-$29.66</span>
-              <span style={{ color: '#a1a1aa' }}> · 2.5%</span>
+              <span style={{ color: 'var(--muted-foreground)' }}> · 2.5%</span>
             </>
           }
         />
@@ -79,7 +79,7 @@ export function LedgerScreen() {
           value={
             <>
               <span style={{ color: '#b91c1c' }}>-$181.17</span>
-              <span style={{ color: '#a1a1aa' }}> · 15.0%</span>
+              <span style={{ color: 'var(--muted-foreground)' }}> · 15.0%</span>
             </>
           }
         />
@@ -98,7 +98,7 @@ export function LedgerScreen() {
             style={{
               ...mono,
               fontSize: 16,
-              color: '#16a34a',
+              color: 'var(--positive)',
               fontWeight: 700,
               marginLeft: 16,
             }}

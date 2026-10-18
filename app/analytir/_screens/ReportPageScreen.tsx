@@ -8,7 +8,7 @@ const rows = [
 
 const monoLabel: React.CSSProperties = {
   fontFamily: 'var(--font-analytir-mono)',
-  fontSize: 11,
+  fontSize: 12,
   letterSpacing: '0.1em',
   textTransform: 'uppercase',
   color: 'var(--muted-foreground)',
@@ -52,7 +52,7 @@ export function ReportPageScreen() {
             unoptimized
             style={{ width: 80, height: 'auto', display: 'block' }}
           />
-          <span style={{ fontSize: 13, color: '#71717a' }}>Willow & Vine</span>
+          <span style={{ fontSize: 13, color: '#686870' }}>Willow & Vine</span>
         </div>
         <span
           style={{
@@ -68,7 +68,7 @@ export function ReportPageScreen() {
       <div
         style={{
           fontFamily: 'var(--font-analytir-mono)',
-          fontSize: 11,
+          fontSize: 12,
           letterSpacing: '0.14em',
           color: 'var(--muted-foreground)',
           marginBottom: 10,
@@ -218,7 +218,7 @@ export function ReportPageScreen() {
             <div
               style={{
                 fontFamily: 'var(--font-analytir-mono)',
-                fontSize: 11,
+                fontSize: 12,
                 textTransform: 'uppercase',
                 color: 'var(--muted-foreground)',
               }}
@@ -233,7 +233,7 @@ export function ReportPageScreen() {
             <div
               style={{
                 fontFamily: 'var(--font-analytir-mono)',
-                fontSize: 11,
+                fontSize: 12,
                 textTransform: 'uppercase',
                 color: 'var(--muted-foreground)',
               }}
@@ -258,7 +258,7 @@ export function ReportPageScreen() {
           marginTop: 30,
           paddingTop: 14,
           borderTop: '1px solid #e8e8ea',
-          fontSize: 11,
+          fontSize: 12,
           color: 'var(--muted-foreground)',
         }}
       >

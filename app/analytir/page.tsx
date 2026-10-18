@@ -226,7 +226,7 @@ export default function AnalytirPage() {
                   <p
                     style={{
                       fontFamily: 'var(--font-analytir-mono)',
-                      fontSize: 11,
+                      fontSize: 12,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
                       color: 'var(--text-meta)',
@@ -242,7 +242,7 @@ export default function AnalytirPage() {
             <p
               style={{
                 fontFamily: 'var(--font-analytir-mono)',
-                fontSize: 11,
+                fontSize: 12,
                 letterSpacing: '0.16em',
                 textTransform: 'uppercase',
                 color: 'var(--text-meta)',
@@ -252,6 +252,7 @@ export default function AnalytirPage() {
               What shipped
             </p>
             <p
+              className="max-w-[48ch]"
               style={{
                 fontSize: 16,
                 lineHeight: 2.0,

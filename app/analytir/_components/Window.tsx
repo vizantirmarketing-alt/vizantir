@@ -48,7 +48,7 @@ export function Window({ title, children, className, style }: WindowProps) {
             left: '50%',
             transform: 'translateX(-50%)',
             fontSize: 12.5,
-            color: '#71717a',
+            color: '#686870',
           }}
         >
           {title}

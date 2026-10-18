@@ -55,7 +55,7 @@ export function AlertEmailScreen() {
         >
           Business Alert
         </div>
-        <p style={{ fontSize: 14, color: '#71717a', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: 14, color: '#686870', lineHeight: 1.5, margin: 0 }}>
           One metric has crossed a review threshold. Details below.
         </p>
       </div>
@@ -158,7 +158,7 @@ export function AlertEmailScreen() {
               className="flex justify-between"
               style={{ fontSize: 13.5, padding: '5px 0' }}
             >
-              <span style={{ color: '#71717a' }}>{row.label}</span>
+              <span style={{ color: '#686870' }}>{row.label}</span>
               <span style={{ ...mono, color: '#18181b' }}>{row.value}</span>
             </div>
           ))}
@@ -184,7 +184,7 @@ export function AlertEmailScreen() {
             marginTop: 12,
             marginBottom: 0,
             fontSize: 12,
-            color: '#a1a1aa',
+            color: 'var(--muted-foreground)',
             lineHeight: 1.5,
           }}
         >

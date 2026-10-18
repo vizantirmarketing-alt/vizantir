@@ -20,6 +20,33 @@
         ],
         "createdAt": "2026-10-17T15:28:42.405Z",
         "reason": "intentional, pauses on hover, static under reduced motion"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/analytir/_screens/AlertEmailScreen.tsx"
+        ],
+        "createdAt": "2026-10-18T05:30:17.000Z",
+        "reason": "mirrors current Analytir product UI; fix in product first."
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "app/analytir/_screens/AlertEmailScreen.tsx"
+        ],
+        "createdAt": "2026-10-18T05:30:17.000Z",
+        "reason": "mirrors current Analytir product UI; fix in product first."
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "app/analytir/_screens/AnalystScreen.tsx"
+        ],
+        "createdAt": "2026-10-18T05:30:17.000Z",
+        "reason": "mirrors current Analytir product UI; fix in product first."
       }
     ]
   }
