@@ -64,7 +64,7 @@ const CLOSING_CTA = {
 
 const SMALLER_PROJECTS = {
   heading: 'Something smaller?',
-  body: "Some projects are simpler. A two or three page site, a single landing page, a clean launch without a CMS behind it. If that's closer to what you need, tell us what you're working on and we'll price it around what the project actually needs.",
+  body: "Some projects are simpler. A two or three page site, a clean launch without a CMS behind it. If that's closer to what you need, tell us what you're working on and we'll price it around what the project actually needs.",
   cta: 'Tell us about the project',
 } as const
 
