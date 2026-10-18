@@ -65,7 +65,7 @@ export default function IndustriesHubPage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 Industries We Serve
               </h1>
-              <p className="text-base md:text-lg text-body leading-relaxed">
+              <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
                 Vizantir builds custom websites for established businesses across all sectors,
                 wherever the website is a serious touchpoint between you and the people who decide
                 whether to work with you.
@@ -117,7 +117,7 @@ export default function IndustriesHubPage() {
             </div>
 
             <div className="max-w-3xl mx-auto text-center mb-16">
-              <p className="text-base md:text-lg text-body leading-relaxed">
+              <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
                 Industry isn&apos;t the qualifier. Established business and premium budget are. If you
                 operate in a sector that isn&apos;t listed here, the work looks the same: a custom site
                 built to be fast, durable, and uniquely yours.
