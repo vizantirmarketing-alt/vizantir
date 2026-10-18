@@ -184,13 +184,23 @@ const Hero = () => {
             Vizantir is a Las Vegas design studio. Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
           </p>
 
-          <Button
-            size="lg"
-            asChild
-            className="bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
-          >
-            <Link href="/case-studies" onClick={() => trackCTAClick('schedule_a_call', 'hero')}>View Our Work →</Link>
-          </Button>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <Button
+              size="lg"
+              asChild
+              className="w-full bg-cobalt-gradient rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt sm:w-auto"
+            >
+              <Link href="/contact" onClick={() => trackCTAClick('book_strategy_call', 'hero')}>Book a Strategy Call</Link>
+            </Button>
+            <Button
+              size="lg"
+              asChild
+              variant="cobaltOutline"
+              className="w-full rounded-xl px-8 py-4 text-base font-semibold text-foreground hover:border-border hover:bg-background sm:w-auto"
+            >
+              <Link href="/case-studies" onClick={() => trackCTAClick('view_work', 'hero')}>View Our Work →</Link>
+            </Button>
+          </div>
         </div>
       </div>
 
