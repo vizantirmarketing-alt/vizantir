@@ -32,6 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Vizantir Arcade | Play',
     description: 'A small collection of retro inspired browser games built by Vizantir.',
+    images: [{ url: 'https://www.vizantir.com/og-image.png', width: 1200, height: 630, alt: 'Vizantir Design Studio - Premium Web Design Las Vegas' }],
   },
 }
 

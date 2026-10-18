@@ -248,10 +248,6 @@ export default async function RootLayout({
       className={`${satoshi.variable} ${analytirSans.variable} ${analytirMono.variable}`}
     >
       <head>
-        <meta property="og:image" content="https://www.vizantir.com/og-image.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta name="twitter:image" content="https://www.vizantir.com/og-image.png" />
         <meta name="msvalidate.01" content="2CBE6E049F1819DD41157125787904CB" />
         <meta name="google-site-verification" content="9fHYiqVv9NBxjFJVchlxgtrDMuObpUK8eKuUEsGTkFo" />
         <meta name="dcterms.creator" content="Vizantir Design Studio" />

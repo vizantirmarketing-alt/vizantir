@@ -11,11 +11,13 @@ export const metadata: Metadata = {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
     type: 'website',
+    images: [{ url: 'https://www.vizantir.com/og-image.png', width: 1200, height: 630, alt: 'Vizantir Design Studio - Premium Web Design Las Vegas' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
+    images: ['https://www.vizantir.com/og-image.png'],
   },
 }
 

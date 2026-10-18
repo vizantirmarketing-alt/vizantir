@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: 'How Vizantir Design Studio uses cookies and similar technologies.',
     url: 'https://www.vizantir.com/cookies',
     type: 'website',
+    images: [{ url: 'https://www.vizantir.com/og-image.png', width: 1200, height: 630, alt: 'Vizantir Design Studio - Premium Web Design Las Vegas' }],
   },
 }
 

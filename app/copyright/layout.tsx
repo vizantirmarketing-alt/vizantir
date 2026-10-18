@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: 'Copyright and image usage terms for Vizantir Design Studio.',
     url: 'https://www.vizantir.com/copyright',
     type: 'website',
+    images: [{ url: 'https://www.vizantir.com/og-image.png', width: 1200, height: 630, alt: 'Vizantir Design Studio - Premium Web Design Las Vegas' }],
   },
 }
 

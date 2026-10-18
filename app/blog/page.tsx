@@ -24,6 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: PAGE_DESCRIPTION,
       url,
       type: 'website',
+      images: [{ url: 'https://www.vizantir.com/og-image.png', width: 1200, height: 630, alt: 'Vizantir Design Studio - Premium Web Design Las Vegas' }],
     },
   }
 }

@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: 'How Vizantir Design Studio collects, uses, and protects personal information.',
     url: 'https://www.vizantir.com/privacy',
     type: 'website',
+    images: [{ url: 'https://www.vizantir.com/og-image.png', width: 1200, height: 630, alt: 'Vizantir Design Studio - Premium Web Design Las Vegas' }],
   },
 }
 
