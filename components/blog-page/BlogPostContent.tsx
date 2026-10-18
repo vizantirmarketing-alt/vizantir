@@ -79,9 +79,10 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
   const colors = {
     bg: 'var(--background)',
     text: 'var(--foreground)',
-    textMuted: '#6B7280',
-    textSubtle: '#9CA3AF',
+    textMuted: 'var(--muted-foreground)',
+    textSubtle: 'var(--muted-foreground)',
     accent: 'var(--cobalt-accent)',
+    accentText: 'var(--cobalt-text)',
     cardBg: '#FFFFFF',
     cardBorder: 'rgba(0,0,0,0.08)',
   }
@@ -103,28 +104,13 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
           <Link
             href="/blog"
             className="link-cobalt inline-flex items-center gap-2 mb-8 text-sm font-medium"
-            style={{ color: colors.accent }}
+            style={{ color: colors.accentText }}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back to Blog
           </Link>
-
-          {/* Category Badge */}
-          {post.category ? (
-            <div className="mb-6">
-              <span
-                className="inline-block text-xs tracking-[0.25em] uppercase font-medium px-3 py-1 rounded-full transition-colors duration-500"
-                style={{
-                  background: 'rgba(0, 112, 243,0.1)',
-                  color: colors.accent,
-                }}
-              >
-                {post.category}
-              </span>
-            </div>
-          ) : null}
 
           {/* Title */}
           <motion.h1
@@ -149,6 +135,12 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
               <>
                 <span>•</span>
                 <time dateTime={post._updatedAt}>Last updated {updatedLabel}</time>
+              </>
+            ) : null}
+            {post.category ? (
+              <>
+                <span>•</span>
+                <span>{post.category}</span>
               </>
             ) : null}
             {post.readTime ? (
@@ -193,7 +185,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none">
             <div
-              className={`blog-content transition-colors duration-500 blog-content-light`}
+              className={`blog-content max-w-[48ch] transition-colors duration-500 blog-content-light`}
               style={{ color: colors.textMuted }}
             >
               <PortableTextRenderer value={post.body} />

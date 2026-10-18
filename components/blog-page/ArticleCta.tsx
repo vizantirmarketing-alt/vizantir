@@ -14,7 +14,7 @@ export function ArticleCta({ href, label }: ArticleCtaProps) {
         borderColor: 'rgba(0,0,0,0.08)',
       }}
     >
-      <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
+      <p className="text-sm leading-relaxed" style={{ color: 'var(--muted-foreground)' }}>
         Related service:{' '}
         <Link
           href={href}
