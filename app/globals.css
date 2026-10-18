@@ -283,6 +283,57 @@
     }
   }
 
+  /* Tactile outline CTA: transparent button on cream. Same structure as the
+     cobalt and inverse rules, with neutral shadow layers. The 1px border comes
+     from the cobaltOutline variant. */
+  .btn-outline:is(a, button) {
+    --btn-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.8),
+      inset 0 -1px 0 rgb(0 0 0 / 0.06),
+      0 1px 2px rgb(0 0 0 / 0.12),
+      0 8px 24px -8px rgb(0 0 0 / 0.12);
+    box-shadow:
+      var(--btn-shadow),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000);
+    transition: box-shadow 150ms ease-out,
+                transform 150ms ease-out,
+                background 200ms ease-out;
+  }
+
+  .btn-outline:is(a, button):hover {
+    --btn-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.8),
+      inset 0 -1px 0 rgb(0 0 0 / 0.06),
+      0 1px 2px rgb(0 0 0 / 0.12),
+      0 12px 32px -8px rgb(0 0 0 / 0.18);
+    background-color: color-mix(in srgb, var(--background), black 4%);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline:is(a, button):active {
+    --btn-shadow:
+      inset 0 2px 4px rgb(0 0 0 / 0.10),
+      inset 0 -1px 0 rgb(255 255 255 / 0.6),
+      0 1px 2px rgb(0 0 0 / 0.10),
+      0 2px 8px -6px rgb(0 0 0 / 0.08);
+    transform: translateY(1px);
+  }
+
+  .btn-outline:is(a, button):focus-visible {
+    box-shadow:
+      var(--btn-shadow),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-outline:is(a, button):hover,
+    .btn-outline:is(a, button):active {
+      transform: none;
+    }
+  }
+
   /* ===== Tier 1 Dark — for dark CTAs (#1A1A1A backgrounds) ===== */
   .btn-dark {
     background: #1A1A1A;
