@@ -20,8 +20,8 @@ const WhatHappensNext = () => {
     },
     {
       number: '03',
-      title: 'We Launch and Keep Tuning',
-      description: 'We build, refine, and launch, then support the site so it keeps performing.',
+      title: 'We Launch',
+      description: 'We build, refine, and launch. Launch support is included; how long depends on the tier. Ongoing care after that is optional.',
     },
   ];
 

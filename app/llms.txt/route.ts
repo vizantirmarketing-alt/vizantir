@@ -91,7 +91,7 @@ Complete site knowledge: [llms-full.txt](https://www.vizantir.com/llms-full.txt)
 - [Landing Pages](https://www.vizantir.com/landing-pages): Conversion-focused pages built to turn traffic into leads.
 - [Website Refreshes](https://www.vizantir.com/services/website-refreshes): Fixing what's holding an existing site back without rebuilding what already works.
 - [CMS Integrations](https://www.vizantir.com/services/cms-integrations): Sanity setup so teams can update content, add pages, and make changes without touching code.
-- [Website Care](https://www.vizantir.com/services/website-care): Ongoing improvement after launch — content, conversion, search, and related work on a monthly retainer.
+- [Website Care](https://www.vizantir.com/services/website-care): Optional. Ongoing improvement after launch — content, conversion, search, and related work on a monthly retainer.
 
 ## Who we work with
 Established businesses where trust and presentation affect revenue — beauty and wellness, creative studios, professional services, retail, luxury brands, and financial services. Dedicated SEO entry pages exist for several verticals, though active client work spans broader sectors. Best fit for companies whose current website is holding the brand back, who want a custom site over a template, and who are ready to invest ${customWebsiteFloor} or more in a custom website build, or ${campaignLandingPageFloor} or more for a campaign landing page. Not a fit for pre-launch ideas, lowest-bid shoppers, hourly or unlimited-revision arrangements, full-service marketing needs (Vizantir does not run Google Ads or manage social media), or two-week timelines.
@@ -104,7 +104,7 @@ Custom website projects. Not the cheapest option in the Las Vegas market, by des
 - ${growthProjectTier.name}: ${growthProjectTier.price} — ${growthProjectTier.timeline}. ${growthProjectTier.description}
 - ${enterpriseProjectTier.name}: ${enterpriseProjectTier.price} — ${enterpriseProjectTier.timeline}. ${enterpriseProjectTier.description}
 
-### Website Care (monthly)
+### Website Care (optional, monthly)
 - ${essentialCareTier.name}: ${essentialCareTier.price}. ${essentialCareTier.description}
 - ${websiteCareTier.name}: ${websiteCareTier.price}. ${websiteCareTier.description}
 - ${growthPartnerTier.name}: ${growthPartnerTier.price}. ${growthPartnerTier.description}

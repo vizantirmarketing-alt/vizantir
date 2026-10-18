@@ -28,7 +28,7 @@ import { cn } from '@/lib/utils'
 const CARE_REFRAME = {
   heading: 'Ongoing improvement after launch',
   body: [
-    'Launch is the start of the relationship, not the end of the work. Website Care is optional. Most clients continue with it, but a finished site is yours either way.',
+    'Launch is where most projects end. Some clients want help after that, so we offer it. Website Care is optional. Most clients continue with it, but a finished site is yours either way.',
     'The work is content changes, performance monitoring, analytics review, conversion improvements, search visibility, technical upkeep, new functionality, and strategic support — so the site keeps earning after it goes live.',
   ],
 } as const
@@ -52,7 +52,7 @@ const AI_EXPERIENCE = {
 } as const
 
 const AFTER_LAUNCH_TRANSITION =
-  'After launch, the work continues through Website Care, search and content growth, campaign work, and AI experience integration.'
+  'After launch, optional work is available: Website Care, search and content growth, campaign work, and AI experience integration.'
 
 const CONTENT_GROWTH_AVAILABILITY = 'Available for Vizantir website and care clients.'
 
