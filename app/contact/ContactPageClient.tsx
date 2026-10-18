@@ -309,7 +309,6 @@ export default function ContactPageClient() {
 
               {/* Response Time */}
               <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
-                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <p className="text-sm text-body">
                   Average response time: <strong>{contactDetails.responseTimeAverage}</strong>
                 </p>
@@ -338,9 +337,9 @@ export default function ContactPageClient() {
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground placeholder:text-muted-foreground"
                         style={inputStyle}
-                        placeholder="John Smith"
+                        placeholder="Full name"
                       />
                     </div>
                     <div>
@@ -351,9 +350,9 @@ export default function ContactPageClient() {
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground placeholder:text-muted-foreground"
                         style={inputStyle}
-                        placeholder="john@company.com"
+                        placeholder="name@company.com"
                       />
                     </div>
                   </div>
@@ -365,9 +364,9 @@ export default function ContactPageClient() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground placeholder:text-muted-foreground"
                         style={inputStyle}
-                        placeholder="(555) 123-4567"
+                        placeholder="(702) 555-0100"
                       />
                     </div>
                     <div>
@@ -377,9 +376,9 @@ export default function ContactPageClient() {
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground"
+                        className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all text-foreground placeholder:text-muted-foreground"
                         style={inputStyle}
-                        placeholder="Your Company"
+                        placeholder="Company name"
                       />
                     </div>
                   </div>
@@ -424,9 +423,9 @@ export default function ContactPageClient() {
                       rows={5}
                       value={formData.message}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all resize-none text-foreground"
+                      className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cobalt-focus transition-all resize-none text-foreground placeholder:text-muted-foreground"
                       style={inputStyle}
-                      placeholder="What are your goals? What challenges are you facing? Any specific requirements?"
+                      placeholder="What are you looking to build?"
                     />
                   </div>
                   <input type="hidden" name="startedAt" value={String(startedAt)} />
