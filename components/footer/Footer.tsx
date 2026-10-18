@@ -6,7 +6,6 @@ import { HomeLogoLink } from "@/components/ui/HomeLogoLink"
 import { Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 import MadeInUSA from "@/components/ui/MadeInUSA"
-import GlassLens from "@/components/ui/GlassLens"
 import { America250 } from "@/components/footer/America250"
 
 const Footer = () => {
@@ -85,7 +84,6 @@ const Footer = () => {
             >
               Quick Links
             </p>
-            <GlassLens orientation="column">
             <ul className="space-y-2">
               {[
                 { name: 'Services', href: '/services' },
@@ -98,14 +96,13 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
-                    className="text-muted-foreground"
+                    className="link-lift text-muted-foreground"
                   >
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-            </GlassLens>
           </div>
 
           {/* Industries */}
@@ -115,7 +112,6 @@ const Footer = () => {
             >
               Industries
             </p>
-            <GlassLens orientation="column">
             <ul className="space-y-2">
               {[
                 { name: 'Hospitality Web Design', href: '/hospitality-web-design' },
@@ -127,14 +123,13 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
-                    className="text-muted-foreground"
+                    className="link-lift text-muted-foreground"
                   >
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-            </GlassLens>
           </div>
 
           {/* Resources */}
@@ -144,7 +139,6 @@ const Footer = () => {
             >
               Resources
             </p>
-            <GlassLens orientation="column">
             <ul className="space-y-2">
               {[
                 { name: 'Blog', href: '/blog' },
@@ -159,14 +153,13 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
-                    className="text-muted-foreground"
+                    className="link-lift text-muted-foreground"
                   >
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-            </GlassLens>
           </div>
 
           {/* Contact Info */}
@@ -176,7 +169,6 @@ const Footer = () => {
             >
               Contact Us
             </p>
-            <GlassLens orientation="column">
             <ul className="space-y-3">
               <li 
                 className="flex items-start gap-2 text-muted-foreground"
@@ -186,7 +178,7 @@ const Footer = () => {
                   <Link
                     href="/contact"
                     onClick={() => trackEvent('contact_click', { event_category: 'contact', event_label: 'footer_contact' })}
-                    className="text-muted-foreground"
+                    className="link-lift text-muted-foreground"
                   >
                     Contact
                   </Link>
@@ -196,7 +188,7 @@ const Footer = () => {
                 className="flex items-start gap-2 text-muted-foreground"
               >
                 <Phone size={18} className="mt-1 flex-shrink-0" />
-                <a href="tel:+17022890758" onClick={() => trackPhoneClick()}>
+                <a href="tel:+17022890758" onClick={() => trackPhoneClick()} className="link-lift">
                   +1 (702) 289-0758
                 </a>
               </li>
@@ -207,7 +199,6 @@ const Footer = () => {
                 <span>Las Vegas, NV 89139</span>
               </li>
             </ul>
-            </GlassLens>
           </div>
         </div>
 
@@ -226,7 +217,7 @@ const Footer = () => {
               <MadeInUSA />
               <America250 />
             </div>
-            <GlassLens className="flex gap-6">
+            <div className="flex gap-6">
               {[
                 { name: 'Privacy Policy', href: '/privacy' },
                 { name: 'Terms of Service', href: '/terms' },
@@ -236,12 +227,12 @@ const Footer = () => {
                 <Link 
                   key={link.href}
                   href={link.href} 
-                  className="text-sm text-muted-foreground"
+                  className="link-lift text-sm text-muted-foreground"
                 >
                   {link.name}
                 </Link>
               ))}
-            </GlassLens>
+            </div>
           </div>
         </div>
       </div>

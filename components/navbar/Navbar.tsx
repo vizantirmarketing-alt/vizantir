@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HomeLogoLink } from "@/components/ui/HomeLogoLink";
-import GlassLens from "@/components/ui/GlassLens";
 import { X } from "lucide-react";
 import { trackBookStrategyCall } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
@@ -127,24 +126,24 @@ const Navbar = ({ minimal }: NavbarProps) => {
 
             {/* Desktop Navigation — hidden in minimal mode */}
             {!isMinimal && (
-              <GlassLens className="hidden xl:flex items-center gap-8">
+              <div className="hidden xl:flex items-center gap-8">
                 {mainNavLinks.map((link) => (
                   <Link
                     key={link.path}
                     href={link.path}
                     title={link.description}
-                    className="relative text-sm font-semibold text-foreground transition-colors duration-200 hover:text-cobalt-text"
+                    className="link-lift relative text-sm font-semibold text-foreground"
                     style={{
                       color: pathname === link.path ? 'var(--cobalt-text)' : undefined,
                     }}
                   >
                     {link.name}
                     {pathname === link.path && (
-                      <span className="absolute bottom-[3px] left-[13px] right-[13px] h-0.5 bg-primary rounded-full" />
+                      <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary rounded-full" />
                     )}
                   </Link>
                 ))}
-              </GlassLens>
+              </div>
             )}
 
             <div
@@ -248,7 +247,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
 
           {/* Navigation Links */}
           <nav className="flex flex-1 flex-col min-h-0 overflow-y-auto overscroll-contain px-6 pb-8">
-            <GlassLens orientation="column" padded={false} className="flex flex-1 flex-col justify-evenly short-landscape:justify-start short-landscape:gap-4 min-h-0">
+            <div className="flex flex-1 flex-col justify-evenly short-landscape:justify-start short-landscape:gap-4 min-h-0">
               {mainNavLinks.map((link, idx) => (
                 <Link
                   key={link.path}
@@ -258,10 +257,10 @@ const Navbar = ({ minimal }: NavbarProps) => {
                     idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
                   } ${mounted && pathname === link.path ? 'text-cobalt-text' : 'text-foreground'}`}
                 >
-                  <span className="text-xl sm:text-2xl font-medium">{link.name}</span>
+                  <span className="link-lift text-xl sm:text-2xl font-medium">{link.name}</span>
                 </Link>
               ))}
-            </GlassLens>
+            </div>
           </nav>
 
           {mounted && (
