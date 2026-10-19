@@ -43,16 +43,46 @@ function offerPriceFields(name: string) {
   }
 }
 
+type OfferPricing =
+  | { kind: 'fixed'; price: number }
+  | { kind: 'from'; minPrice: number }
+  | { kind: 'monthly'; price: number }
+
+function offerPriceFieldsFor(pricing: OfferPricing) {
+  switch (pricing.kind) {
+    case 'fixed':
+      return { price: pricing.price.toString(), priceCurrency: 'USD' }
+    case 'from':
+      return {
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          minPrice: pricing.minPrice,
+          priceCurrency: 'USD',
+        },
+      }
+    case 'monthly':
+      return {
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: pricing.price,
+          priceCurrency: 'USD',
+          billingDuration: 1,
+          billingIncrement: 1,
+          unitCode: 'MON',
+        },
+      }
+  }
+}
+
 function pricedOffer(tier: {
   name: string
-  price: number
+  pricing: OfferPricing
   description: string
 }) {
   return {
     '@type': 'Offer',
     name: tier.name,
-    price: tier.price.toString(),
-    priceCurrency: 'USD',
+    ...offerPriceFieldsFor(tier.pricing),
     description: tier.description,
     itemOffered: {
       '@type': 'Service',
@@ -389,6 +419,8 @@ export function servicesOfferCatalogSchema(siteUrl: string) {
     '@type': 'Service',
     '@id': `${url}#pricing`,
     name: 'Website Design Services',
+    description:
+      'Fixed-scope custom website projects, optional monthly care retainers, and campaign landing pages for established businesses.',
     url,
     provider: refOrganization(siteUrl),
     areaServed: { '@type': 'Country', name: 'United States' },
@@ -399,21 +431,25 @@ export function servicesOfferCatalogSchema(siteUrl: string) {
         ...projectPricing.map((tier) =>
           pricedOffer({
             name: tier.name,
-            price: tier.priceNumeric,
+            // Enterprise is "$60,000+", so it is a floor, not a fixed price.
+            pricing:
+              tier.slug === 'enterprise'
+                ? { kind: 'from', minPrice: tier.priceNumeric }
+                : { kind: 'fixed', price: tier.priceNumeric },
             description: tier.description,
           }),
         ),
         ...carePricing.map((tier) =>
           pricedOffer({
             name: tier.name,
-            price: tier.priceMin,
+            pricing: { kind: 'monthly', price: tier.priceMin },
             description: tier.description,
           }),
         ),
         ...landingPagePricing.map((tier) =>
           pricedOffer({
             name: tier.name,
-            price: tier.priceMin,
+            pricing: { kind: 'from', minPrice: tier.priceMin },
             description: tier.description,
           }),
         ),
