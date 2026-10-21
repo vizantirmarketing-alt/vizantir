@@ -33,6 +33,8 @@
     "export:post": "tsx scripts/export-post-body.ts",
     "find:gbp": "tsx scripts/find-gbp-places.ts",
     "find-em-dashes": "tsx scripts/find-em-dashes.ts",
+    "export-em-dashes": "tsx scripts/export-em-dashes.ts",
+    "apply-em-dashes": "tsx scripts/apply-em-dashes.ts",
     "seed:elementor-posts": "tsx scripts/seed-elementor-posts.ts",
     "seed:landing-pages-service": "tsx scripts/seed-landing-pages-service.ts",
     "migrate:landing-pages-id": "tsx scripts/migrate-landing-pages-id.ts",

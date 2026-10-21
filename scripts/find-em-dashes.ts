@@ -11,8 +11,7 @@ import { config as loadEnv } from 'dotenv'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const EM_DASH = '\u2014'
-const EN_DASH = '\u2013'
+import { isDashHit, isSpace } from './lib/em-dash'
 
 const STRING_FIELDS = ['title', 'excerpt', 'metaTitle', 'metaDescription'] as const
 
@@ -42,17 +41,6 @@ const POSTS_QUERY = `*[_type == "post" && !(_id in path("drafts.**"))] | order(s
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function isSpace(char: string | undefined): boolean {
-  return char !== undefined && /\p{Zs}/u.test(char)
-}
-
-function isDashHit(text: string, index: number): boolean {
-  const char = text[index]
-  if (char === EM_DASH) return true
-  if (char !== EN_DASH) return false
-  return isSpace(text[index - 1]) && isSpace(text[index + 1])
 }
 
 function isDecimalPoint(text: string, index: number): boolean {
