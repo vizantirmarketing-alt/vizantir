@@ -123,7 +123,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     <>
       <JsonLd id="ld-blog-post" data={postGraph} />
       <BlogPostContent post={post}>
-        <ShareBar title={post.title} url={canonicalUrl} />
+        <ShareBar title={post.metaTitle || post.title} url={canonicalUrl} />
         <ArticleCta href={articleCta.href} label={articleCta.label} />
         <RelatedPosts posts={relatedPosts} />
       </BlogPostContent>

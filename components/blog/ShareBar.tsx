@@ -232,10 +232,11 @@ export function ShareBar({ title, url }: ShareBarProps) {
             type="button"
             data-share-channel="native"
             className={pillClassName}
+            aria-label="More sharing options"
             onClick={onNativeShare}
           >
             <IconShare />
-            Share
+            More
           </button>
         ) : null}
       </div>
