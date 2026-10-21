@@ -6,6 +6,7 @@ import { pickRelatedPosts, type RelatedPostsQueryResult } from '@/lib/blog-relat
 import { resolveArticleCta } from '@/data/blog-commercial-links'
 import { getCanonicalUrl, getOgImage } from '@/lib/utils/metadata'
 import type { SiteSettings } from '@/lib/sanity/types'
+import { ShareBar } from '@/components/blog/ShareBar'
 import { ArticleCta } from '@/components/blog-page/ArticleCta'
 import BlogPostContent, { type SanityBlogPost } from '@/components/blog-page/BlogPostContent'
 import { RelatedPosts } from '@/components/blog-page/RelatedPosts'
@@ -40,6 +41,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = post.metaDescription || post.excerpt || ''
   const url = getCanonicalUrl(settings, `/blog/${post.slug}`)
   const pageTitle = post.metaTitle || post.title
+  const ogImage = getOgImage({
+    pageImage: post.ogImageUrl,
+    settings: settings ?? null,
+    alt: post.title,
+  }) ?? [
+    {
+      url: '/og-image.png',
+      width: 1200,
+      height: 630,
+      alt: post.title,
+    },
+  ]
 
   return {
     title: { absolute: `${pageTitle} | Vizantir` },
@@ -51,7 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: 'article',
       publishedTime: post.publishedAt,
       url,
-      images: getOgImage({ pageImage: post.ogImageUrl, settings: settings ?? null, alt: post.title }),
+      images: ogImage,
       authors: post.author?.name ? [post.author.name] : undefined,
       tags: post.tags,
     },
@@ -59,7 +72,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
-      images: getOgImage({ pageImage: post.ogImageUrl, settings: settings ?? null, alt: post.title }),
+      images: ogImage,
     },
   }
 }
@@ -84,16 +97,16 @@ export default async function BlogPostPage({ params }: PageProps) {
   const relatedPosts = pickRelatedPosts(relatedBundle)
   const articleCta = resolveArticleCta(post.slug, post.category)
 
-  const postUrl = getCanonicalUrl(settings, `/blog/${post.slug}`)
+  const canonicalUrl = getCanonicalUrl(settings, `/blog/${post.slug}`)
   const siteUrl = getCanonicalUrl(settings, '')
 
   const postGraph = graphSchema([
     webPageSchema({
-      url: postUrl,
+      url: canonicalUrl,
       name: post.title,
       description: post.metaDescription || post.excerpt,
       siteUrl,
-      mainEntity: { '@id': `${postUrl}#article` },
+      mainEntity: { '@id': `${canonicalUrl}#article` },
       imageUrl: post.ogImageUrl,
       datePublished: post.publishedAt,
       dateModified: post._updatedAt,
@@ -102,7 +115,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     breadcrumbSchema([
       { name: 'Home', url: siteUrl },
       { name: 'Blog', url: `${siteUrl}/blog` },
-      { name: post.title, url: postUrl },
+      { name: post.title, url: canonicalUrl },
     ]),
   ])
 
@@ -110,6 +123,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     <>
       <JsonLd id="ld-blog-post" data={postGraph} />
       <BlogPostContent post={post}>
+        <ShareBar title={post.title} url={canonicalUrl} />
         <ArticleCta href={articleCta.href} label={articleCta.label} />
         <RelatedPosts posts={relatedPosts} />
       </BlogPostContent>
