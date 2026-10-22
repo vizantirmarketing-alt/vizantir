@@ -87,7 +87,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     { tags: ['post'] },
   )
   const relatedPosts = pickRelatedPosts(relatedBundle)
-  const articleCta = resolveArticleCta(post.slug, post.category)
+  const articleCta = resolveArticleCta(post.category, post.tags)
 
   const canonicalUrl = getCanonicalUrl(settings, `/blog/${post.slug}`)
   const siteUrl = getCanonicalUrl(settings, '')
