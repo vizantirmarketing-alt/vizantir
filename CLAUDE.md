@@ -125,6 +125,9 @@ actual error, return it in the route's JSON response instead of logging it.
 
 ## New blog posts
 
-Any new blog post needs a slug entry in `data/blog-clusters.ts`. Without one,
-the article CTA falls back to the post's Sanity category, then to `/services`.
-The cluster-to-destination map lives in `data/blog-commercial-links.ts`.
+The end-of-article service link resolves in `data/blog-commercial-links.ts`
+from the post's category and tags. Security, performance, WordPress, and
+maintenance link to `/services/website-care`. Cost and pricing link to
+`/services/web-development`. Design, hospitality, law, and real estate link
+to `/services/web-design`. Strategy and SEO link to
+`/services/website-strategy`. Anything else links to `/services`.

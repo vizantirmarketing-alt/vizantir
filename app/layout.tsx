@@ -3,10 +3,11 @@ import { Inter, JetBrains_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import { getOpeningHoursSpecification } from '@/data/contact'
+import { toLinkedServices } from '@/lib/linked-services'
 import { sanityFetch } from '@/lib/sanity/client'
-import { siteSettingsQuery } from '@/lib/sanity/queries'
+import { allServicesQuery, siteSettingsQuery } from '@/lib/sanity/queries'
 import { founderId } from '@/lib/schema/ids'
-import type { SiteSettings } from '@/lib/sanity/types'
+import type { ServiceListItem, SiteSettings } from '@/lib/sanity/types'
 
 import { SiteChrome } from '@/components/SiteChrome'
 
@@ -242,6 +243,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const services = await sanityFetch<ServiceListItem[]>(allServicesQuery, {}, { tags: ['service'] })
+  const serviceLinks = toLinkedServices(services ?? []).map((service) => ({
+    name: service.title,
+    href: service.href,
+  }))
+
   return (
     <html
       lang="en"
@@ -260,7 +267,7 @@ export default async function RootLayout({
       <body>
         <BusinessJsonLd />
         <WebSiteJsonLd />
-        <SiteChrome>{children}</SiteChrome>
+        <SiteChrome serviceLinks={serviceLinks}>{children}</SiteChrome>
         <Analytics />
         <GoogleAnalytics />
         <ClarityScript />

@@ -10,7 +10,18 @@ import ScrollProgress from '@/components/ScrollProgress'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { VizantirChat } from '@/components/chat/VizantirChat'
 
-export function SiteChrome({ children }: { children: ReactNode }) {
+type ServiceLink = {
+  name: string
+  href: string
+}
+
+export function SiteChrome({
+  children,
+  serviceLinks,
+}: {
+  children: ReactNode
+  serviceLinks: ServiceLink[]
+}) {
   const pathname = usePathname()
   const isBareDocument =
     pathname.startsWith('/intel') ||
@@ -28,7 +39,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         <ScrollProgress />
         <Navbar />
         <main>{children}</main>
-        <Footer />
+        <Footer serviceLinks={serviceLinks} />
       </SmoothScroll>
       <VizantirChat />
     </>

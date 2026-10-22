@@ -8,7 +8,12 @@ import { trackPhoneClick, trackEvent } from "@/lib/analytics"
 import MadeInUSA from "@/components/ui/MadeInUSA"
 import { America250 } from "@/components/footer/America250"
 
-const Footer = () => {
+type FooterServiceLink = {
+  name: string
+  href: string
+}
+
+const Footer = ({ serviceLinks }: { serviceLinks: FooterServiceLink[] }) => {
   const calendarYear = new Date().getFullYear()
   const currentYear = Math.max(calendarYear, 2026)
 
@@ -21,7 +26,13 @@ const Footer = () => {
       }}
     >
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+        <div
+          className={
+            serviceLinks.length > 0
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8 mb-8'
+              : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8'
+          }
+        >
           {/* Company Info */}
           <div>
             <HomeLogoLink className="inline-block mb-4">
@@ -104,6 +115,28 @@ const Footer = () => {
               ))}
             </ul>
           </div>
+
+          {serviceLinks.length > 0 ? (
+            <div>
+              <p
+                className="font-bold mb-4 text-foreground"
+              >
+                Services
+              </p>
+              <ul className="space-y-2">
+                {serviceLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="link-lift text-muted-foreground"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           {/* Industries */}
           <div>

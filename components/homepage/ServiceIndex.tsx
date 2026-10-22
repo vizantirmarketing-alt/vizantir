@@ -1,0 +1,44 @@
+import Link from 'next/link'
+
+import type { LinkedService } from '@/lib/linked-services'
+
+type ServiceIndexProps = {
+  services: LinkedService[]
+}
+
+export function ServiceIndex({ services }: ServiceIndexProps) {
+  if (services.length === 0) return null
+
+  return (
+    <section className="px-6 py-16 transition-colors duration-500 md:px-12 md:py-20 lg:px-20 short-landscape:py-8">
+      <div className="mx-auto max-w-5xl">
+        <h2
+          id="services-heading"
+          className="text-balance text-3xl font-black tracking-tight text-foreground md:text-4xl"
+        >
+          Services
+        </h2>
+
+        <div className="mt-10">
+          {services.map((service) => (
+            <div
+              key={service.href}
+              className="grid gap-4 border-t border-border py-8 md:grid-cols-3 md:gap-12 md:py-10"
+            >
+              <h3 className="text-balance text-xl font-bold text-foreground">
+                <Link href={service.href} className="link-ui">
+                  {service.title}
+                </Link>
+              </h3>
+              {service.description ? (
+                <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground md:col-span-2">
+                  {service.description}
+                </p>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

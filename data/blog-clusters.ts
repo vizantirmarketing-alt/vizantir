@@ -26,15 +26,8 @@ type BlogCategory = (typeof blogCategories)[number]
  * resolve in `blogClustersBySlug` (majority, or the single occupant).
  *
  * Strategy is a mixed bucket in Studio (verticals, cost, vendor, studio).
- * New Strategy posts get the studio cluster rather than hospitality, which
- * is the plurality only because of the current vertical set.
- *
- * SEO does not use performance: that cluster's commercial URL is
- * /services/web-development, which is not an SEO subject. New SEO posts
- * use the seo cluster (/services). Technology does not use
- * wordpress-platform: that cluster's URL is /nextjs-vs-wordpress, and the
- * category includes Next.js vs React material. New Technology posts use
- * the web-development cluster.
+ * The in-article service link does not read this map. See
+ * data/blog-commercial-links.ts.
  */
 export const blogClustersByCategory: Record<BlogCategory, BlogCluster> = {
   Platform: 'wordpress-platform',
@@ -51,9 +44,10 @@ export const blogClustersByCategory: Record<BlogCategory, BlogCluster> = {
 }
 
 /**
- * Explicit slug → cluster map for all 49 published posts in SEO-RECON §5.
- * Used to pick the in-article commercial CTA. Related posts resolve by
- * Sanity `category` via GROQ, not from this map.
+ * Explicit slug → cluster map for published posts in SEO-RECON §5.
+ * Related posts resolve by Sanity `category` via GROQ, not from this map.
+ * The in-article service link does not read this file. It resolves from
+ * category and tags in data/blog-commercial-links.ts.
  */
 export const blogClustersBySlug: Record<string, BlogCluster> = {
   'billion-dollar-companies-use-nextjs': 'wordpress-platform',

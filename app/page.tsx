@@ -1,14 +1,17 @@
 import { getPageSeo } from '@/sanity/lib/seo';
 import type { Metadata } from 'next';
 import { sanityFetch } from '@/lib/sanity/client';
-import { caseStudiesBySlugsQuery, homepageFaqsQuery } from '@/lib/sanity/queries';
-import type { CaseStudyListItem } from '@/lib/sanity/types';
+import { allPostsQuery, allServicesQuery, caseStudiesBySlugsQuery, homepageFaqsQuery } from '@/lib/sanity/queries';
+import type { CaseStudyListItem, ServiceListItem } from '@/lib/sanity/types';
+import { toLinkedServices } from '@/lib/linked-services';
 import type { Faq } from '@/components/homepage/FAQSection';
 import { JsonLd } from '@/components/seo/JsonLd'
 import { faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
 import { homepageAnswerBlock } from '@/data/homepage'
 import { AnswerBlock } from '@/components/homepage/AnswerBlock'
 import { PricingOverview } from '@/components/homepage/PricingOverview'
+import { ServiceIndex } from '@/components/homepage/ServiceIndex'
+import { FromTheBlog, type HomepageBlogPost } from '@/components/homepage/FromTheBlog'
 import Hero from '@/components/homepage/Hero'
 import Marquee from '@/components/homepage/Marquee'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -77,13 +80,15 @@ const FEATURED_CASE_STUDY_SLUGS = [
 ] as const
 
 export default async function Home() {
-  const [faqs, featuredCaseStudies] = await Promise.all([
+  const [faqs, featuredCaseStudies, services, posts] = await Promise.all([
     sanityFetch<Faq[]>(homepageFaqsQuery, {}, { tags: ['faq'] }),
     sanityFetch<CaseStudyListItem[]>(
       caseStudiesBySlugsQuery,
       { slugs: FEATURED_CASE_STUDY_SLUGS },
       { tags: ['caseStudy'] },
     ),
+    sanityFetch<ServiceListItem[]>(allServicesQuery, {}, { tags: ['service'] }),
+    sanityFetch<HomepageBlogPost[]>(allPostsQuery, {}, { tags: ['post', 'author'] }),
   ])
 
   const bySlug = new Map(featuredCaseStudies.map((study) => [study.slug, study]))
@@ -109,6 +114,7 @@ export default async function Home() {
       <Hero />
       <AnswerBlock body={homepageAnswerBlock.body} />
       <PricingOverview />
+      <ServiceIndex services={toLinkedServices(services ?? [])} />
       <Marquee />
       <EditorialStatement />
       <AboutStory />
@@ -121,6 +127,7 @@ export default async function Home() {
       <InProgress />
       <AnalytirSection />
       <FAQSection faqs={faqs} />
+      <FromTheBlog posts={(posts ?? []).slice(0, 3)} />
 
       <SectionDivider />
       <CTA />

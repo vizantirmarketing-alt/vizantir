@@ -522,7 +522,7 @@ function SanityServiceExpandedBody({ service }: { service: ServiceListItem }) {
           href={serviceHref(service.slug)}
           className="link-ui inline-flex items-center gap-2 font-semibold text-cobalt-text"
         >
-          Learn more
+          Explore {service.title}
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
@@ -770,7 +770,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
                       <AccordionIndicator isOpen={isOpen} className="w-5 h-5 flex-shrink-0 text-cobalt-text" />
                     </div>
 
-                    {/* Always rendered so every "Learn more" link is in the server HTML.
+                    {/* Always rendered so every service link is in the server HTML.
                         A closed row is collapsed and inert: not focusable, hidden from screen readers. */}
                     <motion.div
                       initial={false}
