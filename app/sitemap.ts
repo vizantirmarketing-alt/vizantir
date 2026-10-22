@@ -46,6 +46,7 @@ const STATIC_PAGE_DATES: Record<string, string> = {
   '/technology': '2026-08-15',
   '/llms.txt': '2026-09-05',
   '/sitemap-page': '2026-09-06',
+  '/privacy': '2026-10-02',
 }
 
 type StaticRoute = {
@@ -57,9 +58,9 @@ type StaticRoute = {
 /**
  * Excluded from the XML sitemap by design:
  *
- *   /privacy, /terms, /cookies, /copyright
- *     Legal boilerplate. Carries a noindex directive; submitting it wastes
- *     crawl allocation on pages that will never earn an impression.
+ *   /terms, /cookies, /copyright
+ *     Indexable through the root robots directive. Left out of this file;
+ *     only /privacy is submitted.
  *
  *   /services/landing-pages
  *     Canonical is /landing-pages (`serviceHref` in lib/service-href.ts).
@@ -100,6 +101,7 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/sitemap-page', changeFrequency: 'monthly', priority: 0.4 },
   { path: '/llms.txt', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
 ]
 
 function staticDate(path: string): Date {
