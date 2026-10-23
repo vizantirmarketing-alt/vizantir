@@ -50,10 +50,8 @@ export const blogClustersByCategory: Record<BlogCategory, BlogCluster> = {
  * category and tags in data/blog-commercial-links.ts.
  */
 export const blogClustersBySlug: Record<string, BlogCluster> = {
-  'billion-dollar-companies-use-nextjs': 'wordpress-platform',
   'do-i-need-a-custom-website': 'wordpress-platform',
   'do-you-need-yoast-seo': 'wordpress-platform',
-  'is-wordpress-still-relevant-2026': 'wordpress-platform',
   'nextjs-vs-react-business-website': 'wordpress-platform',
   'squarespace-vs-custom-website': 'wordpress-platform',
   'the-page-builder-stack-your-wordpress-agency-didnt-explain': 'wordpress-platform',
@@ -64,22 +62,17 @@ export const blogClustersBySlug: Record<string, BlogCluster> = {
   'why-most-agencies-still-use-wordpress': 'wordpress-platform',
 
   'hidden-wordpress-costs-agencies-dont-tell-you': 'website-cost',
-  'how-much-does-a-website-cost-las-vegas': 'website-cost',
   'how-much-does-website-cost-2026': 'website-cost',
   'how-much-does-website-maintenance-cost-2026': 'website-cost',
   'launch-website-weekend-what-it-costs': 'website-cost',
   'the-elementor-renewal-charge-that-wasnt-supposed-to-happen': 'website-cost',
-  'true-cost-of-wordpress-website': 'website-cost',
   'what-is-a-website-care-plan': 'website-cost',
-  'what-youre-paying-for-30k-website': 'website-cost',
   'why-15000-website-cheaper-than-5000': 'website-cost',
   'wordpress-vs-nextjs-3-year-cost-comparison': 'website-cost',
 
   'is-wordpress-secure': 'wordpress-security',
   'real-cost-wordpress-security-breach': 'wordpress-security',
-  'why-wordpress-gets-hacked': 'wordpress-security',
 
-  'faster-website-makes-you-more-money': 'performance',
   'how-to-speed-up-wordpress': 'performance',
   'nextjs-seo-guide': 'performance',
   'website-speed-matters-business': 'performance',

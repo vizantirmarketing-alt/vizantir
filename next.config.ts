@@ -89,6 +89,41 @@ const nextConfig: NextConfig = {
         destination: '/nextjs-vs-wordpress',
         statusCode: 301,
       },
+      {
+        source: '/blog/how-much-does-a-website-cost-las-vegas',
+        destination: '/blog/how-much-does-website-cost-2026',
+        permanent: true,
+      },
+      {
+        source: '/blog/what-youre-paying-for-30k-website',
+        destination: '/blog/how-much-does-website-cost-2026',
+        permanent: true,
+      },
+      {
+        source: '/blog/why-wordpress-gets-hacked',
+        destination: '/blog/is-wordpress-secure',
+        permanent: true,
+      },
+      {
+        source: '/blog/true-cost-of-wordpress-website',
+        destination: '/blog/hidden-wordpress-costs-agencies-dont-tell-you',
+        permanent: true,
+      },
+      {
+        source: '/blog/is-wordpress-still-relevant-2026',
+        destination: '/blog/why-most-agencies-still-use-wordpress',
+        permanent: true,
+      },
+      {
+        source: '/blog/billion-dollar-companies-use-nextjs',
+        destination: '/blog/nextjs-vs-react-business-website',
+        permanent: true,
+      },
+      {
+        source: '/blog/faster-website-makes-you-more-money',
+        destination: '/blog/website-speed-matters-business',
+        permanent: true,
+      },
     ];
   },
 
