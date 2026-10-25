@@ -88,3 +88,4 @@ The block is wrapped in `# impeccable-ignore-start` / `# impeccable-ignore-end` 
 .agents/skills/impeccable/
 .codex/
 findings.txt
+scripts/data/
