@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { Code2, Palette, Target } from 'lucide-react'
@@ -51,20 +52,19 @@ export function ProductDefinition() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-3"
           >
             {columns.map((column) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={column.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
                   <column.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{column.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{column.description}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>

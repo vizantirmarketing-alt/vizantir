@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -71,13 +72,13 @@ const WhatHappensNext = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-10"
+          className="grid md:grid-cols-3 gap-[var(--stack)] max-w-6xl mx-auto mb-10"
         >
           {steps.map((step, index) => (
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               key={index}
               variants={cardVariants}
-              className="relative p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+              className="block h-auto rounded-2xl transition-all duration-300 hover:-translate-y-1"
               style={{
                 background: 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
@@ -107,7 +108,7 @@ const WhatHappensNext = () => {
               >
                 {step.description}
               </p>
-            </motion.div>
+            </MotionCard>
           ))}
         </motion.div>
 

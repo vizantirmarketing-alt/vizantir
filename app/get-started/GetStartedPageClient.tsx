@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -29,14 +30,14 @@ export default function GetStartedPageClient() {
       {/* Process Steps */}
       <Section size="sm" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="space-y-8">
+          <div className="space-y-[var(--stack)]">
             {steps.map((step, index) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex gap-6 p-6 rounded-2xl"
+                className="h-auto flex-row gap-6 rounded-2xl"
                 style={{ 
                   background: '#FFFFFF',
                   border: '1px solid rgba(0,0,0,0.08)',
@@ -57,7 +58,7 @@ export default function GetStartedPageClient() {
                     {step.description}
                   </p>
                 </div>
-              </motion.div>
+              </MotionCard>
             ))}
           </div>
         </div>
@@ -66,11 +67,11 @@ export default function GetStartedPageClient() {
       {/* CTA Section */}
       <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <MotionCard variant="plain" pad="lg" badge={false}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-center p-8 md:p-12 rounded-2xl"
+            className="block h-auto text-center rounded-2xl"
             style={{ 
               background: 'rgba(0, 112, 243,0.15)',
               border: '1px solid rgba(0, 112, 243,0.3)'
@@ -106,7 +107,7 @@ export default function GetStartedPageClient() {
                 View Services
               </Link>
             </div>
-          </motion.div>
+          </MotionCard>
         </div>
       </Section>
     </div>

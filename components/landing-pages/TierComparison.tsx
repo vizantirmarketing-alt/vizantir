@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
@@ -23,14 +24,13 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
   const showLiveText = isSystem && isSystemLive
 
   return (
-    <motion.div
+    <MotionCard variant="plain" badge={false}
       variants={itemVariants}
-      className={`flex h-full flex-col rounded-2xl border p-6 md:p-8 ${
+      className={`flex h-full flex-col rounded-2xl border ${
         tier.featured
           ? 'border-cobalt-muted-border bg-cobalt-muted-subtle'
           : 'border-border bg-muted/30'
-      }`}
-    >
+      }`}>
       {tier.featured ? (
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cobalt-text">
           Popular
@@ -57,7 +57,7 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
           </p>
         </div>
       ) : null}
-    </motion.div>
+    </MotionCard>
   )
 }
 

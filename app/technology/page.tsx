@@ -1,3 +1,4 @@
+import { Card } from '@/components/ui/Card'
 import { Section } from '@/components/ui/Section'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -52,12 +53,11 @@ const pageGraph = graphSchema([
 
 function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3">
       {technologies.map((tech) => (
-        <article
+        <Card as="article" variant="plain" badge={false}
           key={tech.slug}
-          className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
-        >
+          className="h-auto flex flex-col rounded-2xl border border-border bg-background">
           <h3 className="text-2xl font-bold text-foreground mb-3">{tech.name}</h3>
           <p className="text-cobalt-text font-medium mb-4">{tech.tagline}</p>
           <ul className="mb-6 space-y-3 flex-1">
@@ -79,7 +79,7 @@ function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
             Learn more
             <ArrowRight className="h-4 w-4" />
           </Link>
-        </article>
+        </Card>
       ))}
     </div>
   )

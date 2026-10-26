@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -72,10 +73,9 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
             viewport={{ once: true, margin: '-40px' }}
             className="mx-auto max-w-3xl"
           >
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               variants={itemVariants}
-              className="rounded-2xl border border-border bg-muted/30 p-6 shadow-sm md:p-8"
-            >
+              className="block h-auto rounded-2xl border border-border bg-muted/30 shadow-sm">
               <p className="mb-6 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Sample handoff document
               </p>
@@ -108,7 +108,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
                   </li>
                 ))}
               </ol>
-            </motion.div>
+            </MotionCard>
           </motion.div>
         </div>
       </Section>

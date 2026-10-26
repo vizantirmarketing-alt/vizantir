@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion';
 
@@ -69,13 +70,13 @@ const WhyVizantir = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto"
+          className="grid md:grid-cols-2 gap-[var(--stack)] max-w-6xl mx-auto"
         >
           {trustPoints.map((point, index) => (
-            <motion.div
+            <MotionCard variant="plain" interactive badge={false}
               key={index}
               variants={cardVariants}
-              className="card-interactive group relative p-8 lg:p-10 rounded-2xl overflow-hidden"
+              className="group block h-auto rounded-2xl overflow-hidden"
               style={{
                 background: 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
@@ -94,7 +95,7 @@ const WhyVizantir = () => {
               >
                 {point.description}
               </p>
-            </motion.div>
+            </MotionCard>
           ))}
         </motion.div>
       </div>

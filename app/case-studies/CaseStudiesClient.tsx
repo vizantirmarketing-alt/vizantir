@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { memo, useMemo, useState } from 'react'
 import Link from 'next/link'
@@ -352,14 +353,13 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
           </div>
 
           {/* In-house — Analytir */}
-          <motion.div
+          <MotionCard variant="plain" pad="lg" badge={false}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
-            className="mt-24 rounded-2xl border p-8 md:p-12"
-            style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
-          >
+            className="block h-auto mt-24 rounded-2xl border"
+            style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
             <div
               className="relative mb-10 aspect-[21/9] overflow-hidden rounded-xl border"
               style={{ borderColor: colors.cardBorder }}
@@ -419,7 +419,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                 ))}
               </dl>
             </div>
-          </motion.div>
+          </MotionCard>
 
           {/* Bottom CTA */}
           <motion.div

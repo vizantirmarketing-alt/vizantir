@@ -71,6 +71,8 @@
   --hero-top: 128px;
   --stack: 12px;
   --card-pad: 20px;
+  --card-pad-lg: 32px;
+  --card-pad-sm: 16px;
   --heading-gap: 24px;
   --para-gap: 20px;
   --cta-gap: 32px;
@@ -85,6 +87,8 @@
     --section-y-sm: 64px;
     --stack: 24px;
     --card-pad: 32px;
+    --card-pad-lg: 48px;
+    --card-pad-sm: 20px;
     --heading-gap: 32px;
     --cta-gap: 40px;
     --gutter: 16px;

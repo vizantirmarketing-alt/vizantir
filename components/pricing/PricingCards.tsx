@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { trackBookStrategyCall, trackCTAClick } from '@/lib/analytics'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/button'
 import { carePricing, projectPricing } from '@/data/pricing'
 import { cn } from '@/lib/utils'
@@ -66,28 +67,19 @@ export function PricingCards({
         </p>
       ) : null}
 
-      <div className="mb-10 grid items-stretch gap-6 md:grid-cols-3 lg:grid-cols-3">
+      <div className="mb-10 grid items-stretch gap-[var(--stack)] md:grid-cols-3 lg:grid-cols-3">
         {projectPricing.map((tier) => (
-          <div
+          <Card
             key={tier.slug}
+            variant="plain"
+            featured={tier.featured}
             className={cn(
-              'relative flex h-full flex-col rounded-2xl border bg-muted p-8',
+              'rounded-2xl bg-muted',
               tier.featured
                 ? 'border-cobalt-muted-border shadow-[0_0_40px_rgba(0,112,243,0.08)]'
                 : 'border-border',
             )}
           >
-            <div className="mb-4 flex min-h-[22px] items-center justify-end">
-              <span
-                className={cn(
-                  'rounded-full bg-cobalt-gradient px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-white',
-                  !tier.featured && 'invisible',
-                )}
-                aria-hidden={!tier.featured}
-              >
-                Popular
-              </span>
-            </div>
             <h3 className="mb-1 text-balance text-xl font-bold text-foreground">{tier.name}</h3>
             <p className="mb-1 text-3xl font-black text-cobalt-text">{tier.price}</p>
             <p className="mb-4 text-pretty text-sm text-muted-foreground">{tier.timeline}</p>
@@ -125,7 +117,7 @@ export function PricingCards({
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-          </div>
+          </Card>
         ))}
       </div>
 

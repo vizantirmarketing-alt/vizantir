@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -45,14 +46,13 @@ export function RelatedServices() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-3"
           >
             {relatedServices.map((service) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={service.href}
                 variants={itemVariants}
-                className="flex h-full flex-col rounded-2xl border border-border bg-muted/40 p-6"
-              >
+                className="flex h-full flex-col rounded-2xl border border-border bg-muted/40">
                 <h3 className="mb-3 text-lg font-bold text-foreground">{service.title}</h3>
                 <p className="mb-6 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {service.description}
@@ -64,7 +64,7 @@ export function RelatedServices() {
                   Learn more
                   <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>

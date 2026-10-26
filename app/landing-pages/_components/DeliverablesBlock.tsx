@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { CheckCircle2 } from 'lucide-react'
@@ -30,10 +31,9 @@ function DeliverableColumn({
   items: readonly string[]
 }) {
   return (
-    <motion.div
+    <MotionCard variant="plain" badge={false}
       variants={itemVariants}
-      className="rounded-2xl border border-border bg-muted/40 p-6 md:p-8"
-    >
+      className="block h-auto rounded-2xl border border-border bg-muted/40">
       <h3 className="mb-6 text-xl font-bold text-foreground">{title}</h3>
       <ul className="space-y-3">
         {items.map((item) => (
@@ -43,7 +43,7 @@ function DeliverableColumn({
           </li>
         ))}
       </ul>
-    </motion.div>
+    </MotionCard>
   )
 }
 

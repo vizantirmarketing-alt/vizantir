@@ -1,3 +1,4 @@
+import { Card } from '@/components/ui/Card'
 import Link from 'next/link'
 
 type ArticleCtaProps = {
@@ -7,8 +8,8 @@ type ArticleCtaProps = {
 
 export function ArticleCta({ href, label }: ArticleCtaProps) {
   return (
-    <aside
-      className="mt-12 p-6 rounded-2xl border"
+    <Card as="aside" variant="plain" badge={false}
+      className="mt-12 block h-auto rounded-2xl border"
       style={{
         backgroundColor: '#FFFFFF',
         borderColor: 'rgba(0,0,0,0.08)',
@@ -24,6 +25,6 @@ export function ArticleCta({ href, label }: ArticleCtaProps) {
           {label}
         </Link>
       </p>
-    </aside>
+    </Card>
   )
 }

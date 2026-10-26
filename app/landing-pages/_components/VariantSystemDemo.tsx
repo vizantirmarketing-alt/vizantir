@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
@@ -74,16 +75,15 @@ export function VariantSystemDemo() {
             {DEMO_TILES.map((tile, index) => {
               const isActive = index === activeIndex
               return (
-                <motion.div
+                <MotionCard variant="plain" badge={false}
                   key={tile.label}
                   variants={itemVariants}
-                  className={`relative rounded-2xl border p-6 transition-colors duration-500 ${
+                  className={`block h-auto relative rounded-2xl border transition-colors duration-500 ${
                     isActive
                       ? 'border-cobalt-accent bg-cobalt-muted-subtle'
                       : 'border-border bg-muted/40'
                   }`}
-                  aria-current={isActive ? 'true' : undefined}
-                >
+                  aria-current={isActive ? 'true' : undefined}>
                   <div className="mb-5 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
@@ -117,7 +117,7 @@ export function VariantSystemDemo() {
                       />
                     </div>
                   </div>
-                </motion.div>
+                </MotionCard>
               )
             })}
           </motion.div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -292,20 +293,19 @@ export default function HospitalityWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3"
           >
             {offeringBlocks.map((block) => (
-              <motion.div
+              <MotionCard variant="plain" interactive badge={false}
                 key={block.title}
                 variants={itemVariants}
-                className="card-interactive rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
                   <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{block.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{block.description}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
@@ -325,11 +325,10 @@ export default function HospitalityWebDesignClient() {
             </h2>
           </motion.div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <motion.div
+          <div className="grid gap-[var(--stack)] lg:grid-cols-2">
+            <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="rounded-2xl border border-border bg-muted/60 p-8"
-            >
+              className="block h-auto rounded-2xl border border-border bg-muted/60">
               <h3 className="mb-6 text-xl font-bold text-foreground">
                 How most agencies build hospitality sites
               </h3>
@@ -344,15 +343,14 @@ export default function HospitalityWebDesignClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="rounded-2xl border border-cobalt-accent/25 bg-muted p-8 shadow-[0_0_0_1px_rgba(0,112,243,0.06)]"
-            >
+              className="block h-auto rounded-2xl border border-cobalt-accent/25 bg-muted shadow-[0_0_0_1px_rgba(0,112,243,0.06)]">
               <h3 className="mb-6 text-xl font-bold text-foreground">How Vizantir builds them</h3>
               <ul className="mb-8 space-y-3">
                 {vizantirCompare.map((item) => (
@@ -375,7 +373,7 @@ export default function HospitalityWebDesignClient() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </MotionCard>
           </div>
         </div>
       </Section>
@@ -403,20 +401,19 @@ export default function HospitalityWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="mb-12 grid gap-6 md:grid-cols-2"
+            className="mb-12 grid gap-[var(--stack)] md:grid-cols-2"
           >
             {methodologyItems.map((item) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={item.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-3 flex items-center gap-3">
                   <UtensilsCrossed size={20} className="text-cobalt-text" aria-hidden />
                   <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
 
@@ -459,14 +456,13 @@ export default function HospitalityWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid gap-[var(--stack)] sm:grid-cols-2 lg:grid-cols-4"
           >
             {processSteps.map((step) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={step.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-4">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
                     <step.icon size={22} className="text-cobalt-text" aria-hidden />
@@ -474,7 +470,7 @@ export default function HospitalityWebDesignClient() {
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
@@ -499,17 +495,16 @@ export default function HospitalityWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="space-y-4"
+            className="space-y-[var(--stack)]"
           >
             {faqs.map((faq) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={faq.question}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
                 <p className="max-w-[48ch] text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>

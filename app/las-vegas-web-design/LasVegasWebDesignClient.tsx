@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -333,20 +334,19 @@ export default function LasVegasWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3"
           >
             {offeringBlocks.map((block) => (
-              <motion.div
+              <MotionCard variant="plain" interactive badge={false}
                 key={block.title}
                 variants={itemVariants}
-                className="card-interactive rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
                   <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{block.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{block.description}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
 
@@ -386,11 +386,10 @@ export default function LasVegasWebDesignClient() {
             </h2>
           </motion.div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
-            <motion.div
+          <div className="grid gap-[var(--stack)] lg:grid-cols-3">
+            <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="rounded-2xl border border-border bg-muted/60 p-8"
-            >
+              className="block h-auto rounded-2xl border border-border bg-muted/60">
               <h3 className="mb-6 text-xl font-bold text-foreground">Out-of-Town Agency</h3>
               <ul className="space-y-3">
                 {outOfTownCompare.map((item) => (
@@ -403,15 +402,14 @@ export default function LasVegasWebDesignClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.04 }}
-              className="rounded-2xl border border-border bg-muted/60 p-8"
-            >
+              className="block h-auto rounded-2xl border border-border bg-muted/60">
               <h3 className="mb-6 text-xl font-bold text-foreground">Cheap Local Shop</h3>
               <ul className="space-y-3">
                 {cheapLocalCompare.map((item) => (
@@ -424,15 +422,14 @@ export default function LasVegasWebDesignClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="rounded-2xl border border-cobalt-accent/25 bg-muted p-8 shadow-[0_0_0_1px_rgba(0,112,243,0.06)]"
-            >
+              className="block h-auto rounded-2xl border border-cobalt-accent/25 bg-muted shadow-[0_0_0_1px_rgba(0,112,243,0.06)]">
               <h3 className="mb-6 text-xl font-bold text-foreground">Vizantir</h3>
               <ul className="mb-8 space-y-3">
                 {vizantirCompare.map((item) => (
@@ -457,7 +454,7 @@ export default function LasVegasWebDesignClient() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </MotionCard>
           </div>
         </div>
       </Section>
@@ -485,14 +482,13 @@ export default function LasVegasWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="mb-16 grid gap-6 md:grid-cols-3"
+            className="mb-16 grid gap-[var(--stack)] md:grid-cols-3"
           >
             {realClients.map((client) => (
-              <motion.div
+              <MotionCard variant="plain" interactive badge={false}
                 key={client.name}
                 variants={itemVariants}
-                className="card-interactive flex flex-col rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
-              >
+                className="h-auto flex flex-col rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
                 <h3 className="mb-1 text-lg font-bold text-foreground">{client.name}</h3>
                 <p className="mb-4 text-sm text-cobalt-text">{client.context}</p>
                 <p className="mb-5 flex-1 text-sm leading-relaxed text-muted-foreground">
@@ -505,7 +501,7 @@ export default function LasVegasWebDesignClient() {
                   View case study
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
 
@@ -523,20 +519,19 @@ export default function LasVegasWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="mb-12 grid gap-6 md:grid-cols-3"
+            className="mb-12 grid gap-[var(--stack)] md:grid-cols-3"
           >
             {methodologyItems.map((item) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={item.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-3 flex items-center gap-3">
                   <MapPin size={20} className="text-cobalt-text" aria-hidden />
                   <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
 
@@ -578,14 +573,13 @@ export default function LasVegasWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid gap-[var(--stack)] sm:grid-cols-2 lg:grid-cols-4"
           >
             {processSteps.map((step) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={step.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-4">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
                     <step.icon size={22} className="text-cobalt-text" aria-hidden />
@@ -593,7 +587,7 @@ export default function LasVegasWebDesignClient() {
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
@@ -640,17 +634,16 @@ export default function LasVegasWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="space-y-4"
+            className="space-y-[var(--stack)]"
           >
             {faqs.map((faq) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={faq.question}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
                 <p className="max-w-[48ch] text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>

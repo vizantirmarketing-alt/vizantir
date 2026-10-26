@@ -1,3 +1,4 @@
+import { Card } from '@/components/ui/Card'
 import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 
@@ -21,20 +22,19 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
       <div className="grid md:grid-cols-3 gap-6">
         {posts.map((post) => (
           <Link key={post.slug} href={`/blog/${post.slug}`}>
-            <div
-              className="card-interactive group h-full p-6 rounded-2xl border"
+            <Card variant="plain" interactive badge={false}
+              className="block group h-full rounded-2xl border"
               style={{
                 backgroundColor: '#FFFFFF',
                 borderColor: 'rgba(0,0,0,0.08)',
-              }}
-            >
+              }}>
               <h3
                 className="text-xl font-bold leading-snug transition-colors duration-500 group-hover:opacity-80"
                 style={{ color: 'var(--foreground)' }}
               >
                 {post.title}
               </h3>
-            </div>
+            </Card>
           </Link>
         ))}
       </div>

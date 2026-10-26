@@ -1,5 +1,9 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
+import { cardSurfaceVariants } from '@/components/ui/Card'
+import { cn } from '@/lib/utils'
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
@@ -9,7 +13,6 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
 import { TierComparison } from '@/components/landing-pages/TierComparison'
 import { vizantirPortableTextComponents } from '@/components/portable-text'
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
 import { serviceHref } from '@/lib/service-href'
 import type { Service } from '@/lib/sanity/types'
@@ -279,17 +282,16 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   {headings.process}
                 </h2>
               </motion.div>
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-[var(--stack)] md:grid-cols-2">
                 {sortedProcess.map((step, index) => (
-                  <motion.div
+                  <MotionCard variant="plain" badge={false}
                     key={`${step.step}-${index}`}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.06 }}
-                    className="rounded-2xl border p-6 md:p-8"
-                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
-                  >
+                    className="block h-auto rounded-2xl border"
+                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
                     <div
                       className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold"
                       style={{ background: `${colors.accent}22`, color: colors.accent }}
@@ -302,7 +304,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <p className="leading-relaxed" style={{ color: colors.textMuted }}>
                       {step.description}
                     </p>
-                  </motion.div>
+                  </MotionCard>
                 ))}
               </div>
             </div>
@@ -327,24 +329,23 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   {headings.offerings}
                 </h2>
               </motion.div>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3">
                 {service.offerings!.map((offering, index) => (
-                  <motion.div
+                  <MotionCard variant="plain" interactive badge={false}
                     key={index}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="card-interactive rounded-2xl border p-6"
-                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
-                  >
+                    className="block h-auto rounded-2xl border"
+                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
                     <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
                       {offering.name}
                     </h3>
                     <p className="text-sm leading-relaxed" style={{ color: colors.textMuted }}>
                       {offering.description}
                     </p>
-                  </motion.div>
+                  </MotionCard>
                 ))}
               </div>
             </div>
@@ -412,60 +413,28 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   {headings.faqs}
                 </h2>
               </motion.div>
-              <div className="space-y-4">
+              <div className="space-y-[var(--stack)]">
                 {service.faqs!.map((faq, index) => {
                   const isOpen = openFaqIndex === index
                   const triggerId = `service-faq-trigger-${service.slug}-${index}`
                   const panelId = `service-faq-panel-${service.slug}-${index}`
 
                   return (
-                    <motion.div
+                    <AccordionItem
                       key={index}
                       initial={{ opacity: 0, y: 12 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: index * 0.04 }}
-                      className="overflow-hidden rounded-xl"
-                      style={{
-                        background: 'rgba(0,0,0,0.02)',
-                        border: `1px solid rgba(0,0,0,0.08)`,
-                      }}
+                      triggerId={triggerId}
+                      panelId={panelId}
+                      isOpen={isOpen}
+                      onToggle={() => setOpenFaqIndex(isOpen ? null : index)}
+                      question={faq.question}
+                      style={{ background: 'rgba(0,0,0,0.02)', borderColor: 'rgba(0,0,0,0.08)' }}
                     >
-                      <button
-                        id={triggerId}
-                        type="button"
-                        onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                        aria-expanded={isOpen}
-                        aria-controls={panelId}
-                        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
-                      >
-                        <span className="pr-4 text-lg font-semibold">{faq.question}</span>
-                        <AccordionIndicator
-                          isOpen={isOpen}
-                          className="w-5 h-5 flex-shrink-0"
-                          style={{ color: 'var(--cobalt-text)' }}
-                        />
-                      </button>
-                      <div
-                        id={panelId}
-                        role="region"
-                        aria-labelledby={triggerId}
-                        aria-hidden={!isOpen}
-                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <div className="px-6 pb-6">
-                            <p
-                              className="leading-relaxed whitespace-pre-wrap text-body"
-                            >
-                              {faq.answer}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
+                      <p className="leading-relaxed whitespace-pre-wrap text-body">{faq.answer}</p>
+                    </AccordionItem>
                   )
                 })}
               </div>
@@ -502,7 +471,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   >
                     <Link
                       href={serviceHref(rel.slug)}
-                      className="card-interactive group flex h-full flex-col rounded-2xl border p-6"
+                      className={cn(cardSurfaceVariants({ variant: 'plain', interactive: true }), 'group rounded-2xl')}
                       style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
                     >
                       <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
@@ -528,12 +497,12 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* CTA */}
       <Section size="lg" className="px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-3xl text-center">
-          <motion.div
+          <MotionCard variant="plain" pad="lg" badge={false}
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-2xl p-8 md:p-12"
+            className="block h-auto rounded-2xl"
             style={{
               background: 'rgba(0, 112, 243,0.15)',
               border: '1px solid rgba(0, 112, 243,0.3)',
@@ -555,7 +524,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-          </motion.div>
+          </MotionCard>
         </div>
       </Section>
     </div>

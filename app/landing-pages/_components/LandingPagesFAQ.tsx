@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -34,17 +35,16 @@ export function LandingPagesFAQ({ faqs }: LandingPagesFAQProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="space-y-4"
+            className="space-y-[var(--stack)]"
           >
             {faqs.map((faq) => (
-              <motion.div
+              <MotionCard variant="plain" badge={false}
                 key={faq.question}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>

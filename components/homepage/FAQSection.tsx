@@ -1,10 +1,10 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
 import { Section } from '@/components/ui/Section'
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator';
 import { motion } from 'framer-motion';
 import { trackBookStrategyCall } from '@/lib/analytics';
 
@@ -62,7 +62,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="space-y-4"
+            className="space-y-[var(--stack)]"
           >
             {faqs.map((faq, index) => {
               const isOpen = openIndex === index
@@ -70,50 +70,19 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               const panelId = `homepage-faq-panel-${faq._id}`
 
               return (
-                <motion.div
+                <AccordionItem
                   key={faq._id}
                   variants={itemVariants}
-                  className="rounded-xl overflow-hidden transition-all duration-300 border border-border bg-card"
+                  triggerId={triggerId}
+                  panelId={panelId}
+                  headingAs="h3"
+                  isOpen={isOpen}
+                  onToggle={() => setOpenIndex(isOpen ? null : index)}
+                  question={faq.question}
+                  className="border-border bg-card"
                 >
-                  <h3 className="m-0">
-                    <button
-                      id={triggerId}
-                      type="button"
-                      onClick={() => setOpenIndex(isOpen ? null : index)}
-                      aria-expanded={isOpen}
-                      aria-controls={panelId}
-                      className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors duration-200 hover:bg-[#F9FAFB]"
-                      style={{ background: '#FFFFFF' }}
-                    >
-                      <span
-                        className="text-lg font-semibold pr-8 text-foreground"
-                      >
-                        {faq.question}
-                      </span>
-                      <AccordionIndicator
-                        isOpen={isOpen}
-                        className="w-5 h-5"
-                        style={{ color: 'var(--cobalt-text)' }}
-                      />
-                    </button>
-                  </h3>
-
-                  <div
-                    id={panelId}
-                    role="region"
-                    aria-labelledby={triggerId}
-                    aria-hidden={!isOpen}
-                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <p className="px-6 pb-5 leading-relaxed text-body">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+                  <p className="leading-relaxed text-body">{faq.answer}</p>
+                </AccordionItem>
               )
             })}
           </motion.div>

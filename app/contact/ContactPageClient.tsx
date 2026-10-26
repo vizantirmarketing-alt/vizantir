@@ -1,5 +1,6 @@
 'use client'
 
+import { Card } from '@/components/ui/Card'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
@@ -296,7 +297,7 @@ export default function ContactPageClient() {
               </div>
 
               {/* Business Hours */}
-              <div className="p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+              <Card variant="plain" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <h3 className="font-semibold mb-4 text-foreground">Business Hours</h3>
                 <div className="space-y-2 text-sm text-body">
                   {contactDetails.hours.map((row) => (
@@ -306,14 +307,14 @@ export default function ContactPageClient() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
 
               {/* Response Time */}
-              <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+              <Card variant="plain" badge={false} className="h-auto flex-row items-center gap-3 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <p className="text-sm text-body">
                   Average response time: <strong>{contactDetails.responseTimeAverage}</strong>
                 </p>
-              </div>
+              </Card>
             </motion.div>
 
             {/* Contact Form */}
@@ -323,7 +324,7 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-3"
             >
-              <div className="p-6 md:p-8 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+              <Card variant="plain" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
                 <h2 className="text-2xl font-bold mb-6 text-foreground">
                   Start Your Project
                 </h2>
@@ -476,7 +477,7 @@ export default function ContactPageClient() {
                     <Link href="/terms" className="link-ui">Terms of Service</Link>.
                   </p>
                 </form>
-              </div>
+              </Card>
             </motion.div>
       </div>
     </div>

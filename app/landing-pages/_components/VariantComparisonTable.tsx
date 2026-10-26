@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -59,10 +60,9 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
           </motion.div>
 
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="rounded-2xl border border-cobalt-accent/40 bg-cobalt-muted-subtle p-6 md:p-8"
-            >
+              className="block h-auto rounded-2xl border border-cobalt-accent/40 bg-cobalt-muted-subtle">
               <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                 This variant is optimized for
               </p>
@@ -74,21 +74,20 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                 for this audience. Shared product, process, and deliverables stay consistent across
                 the family.
               </p>
-            </motion.div>
+            </MotionCard>
 
             <motion.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
-              className="space-y-3"
+              className="space-y-[var(--stack)]"
             >
               {ROW_KEYS.map((row) => (
-                <motion.div
+                <MotionCard variant="plain" pad="sm" badge={false}
                   key={row.key}
                   variants={itemVariants}
-                  className="group rounded-2xl border border-border bg-muted/30 p-4 transition-colors hover:border-cobalt-accent/40 hover:bg-cobalt-muted-subtle/50 md:p-5"
-                >
+                  className="block h-auto group rounded-2xl border border-border bg-muted/30 transition-colors hover:border-cobalt-accent/40 hover:bg-cobalt-muted-subtle/50">
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold text-foreground">{row.label}</p>
                     <ArrowRight
@@ -135,7 +134,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                       )
                     })}
                   </ul>
-                </motion.div>
+                </MotionCard>
               ))}
             </motion.div>
           </div>

@@ -1,3 +1,4 @@
+import { Card } from '@/components/ui/Card'
 import { Section } from '@/components/ui/Section'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -75,12 +76,11 @@ export default function IndustriesHubPage() {
             </div>
 
             <div className="mb-20 md:mb-28">
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-[var(--stack)] md:grid-cols-2">
                 {PRIMARY_VERTICALS.map((vertical) => (
-                  <article
+                  <Card as="article" variant="plain" badge={false}
                     key={vertical.href}
-                    className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
-                  >
+                    className="h-auto flex flex-col rounded-2xl border border-border bg-background">
                     <h2 className="text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
                     <p className="text-cobalt-text font-medium mb-4">{vertical.tagline}</p>
                     <p className="mb-6 flex-1 text-sm text-body leading-relaxed">
@@ -93,7 +93,7 @@ export default function IndustriesHubPage() {
                       {vertical.title}
                       <ArrowRight className="h-4 w-4" />
                     </Link>
-                  </article>
+                  </Card>
                 ))}
               </div>
             </div>

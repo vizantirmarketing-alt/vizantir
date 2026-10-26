@@ -1,5 +1,7 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { useState } from 'react'
 import {
@@ -16,7 +18,6 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { trackBookStrategyCall } from '@/lib/analytics'
 import { Check, X } from 'lucide-react'
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { AmbientHero } from '@/components/hero/AmbientHero'
 
 function RecommendedBadge({ visible }: { visible: boolean }) {
@@ -144,17 +145,16 @@ export default function HowWeWorkPageClient() {
           {/* Comparison Cards */}
           <div className="grid items-stretch md:grid-cols-3 gap-6">
             {/* Traditional Agencies */}
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="relative h-full overflow-hidden p-6 rounded-2xl border"
+              className="block h-full overflow-hidden rounded-2xl border"
               style={{
                 background: colors.cardBg,
                 borderColor: colors.cardBorder,
-              }}
-            >
+              }}>
               <RecommendedBadge visible={false} />
 
               <h3
@@ -172,20 +172,19 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
             {/* Hourly Dev Shops */}
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative h-full overflow-hidden p-6 rounded-2xl border"
+              className="block h-full overflow-hidden rounded-2xl border"
               style={{
                 background: colors.cardBg,
                 borderColor: colors.cardBorder,
-              }}
-            >
+              }}>
               <RecommendedBadge visible={false} />
 
               <h3
@@ -203,20 +202,19 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
             {/* Vizantir */}
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative h-full overflow-hidden p-6 rounded-2xl border"
+              className="block h-full overflow-hidden rounded-2xl border"
               style={{
                 background: 'linear-gradient(135deg, rgba(0, 112, 243,0.1) 0%, rgba(0, 112, 243,0.02) 100%)',
                 borderColor: 'rgba(0, 112, 243,0.3)',
-              }}
-            >
+              }}>
               <RecommendedBadge visible />
 
               <h3
@@ -234,7 +232,7 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
           </div>
 
           {/* One-liner */}
@@ -345,71 +343,38 @@ export default function HowWeWorkPageClient() {
             Questions
           </motion.h2>
 
-          <div className="space-y-3">
+          <div className="space-y-[var(--stack)]">
             {howWeWorkFaqs.map((faq, index) => {
               const isOpen = openFaq === index
               const triggerId = `how-we-work-faq-trigger-${index}`
               const panelId = `how-we-work-faq-panel-${index}`
 
               return (
-                <motion.div
+                <AccordionItem
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className={`rounded-xl border px-6 py-5 transition-all duration-300 ${
-                    isOpen ? '' : 'hover:bg-[#F9FAFB]'
-                  }`}
+                  triggerId={triggerId}
+                  panelId={panelId}
+                  isOpen={isOpen}
+                  onToggle={() => setOpenFaq(isOpen ? null : index)}
+                  question={faq.question}
+                  questionClassName="text-base font-medium"
+                  questionStyle={{ color: colors.text }}
                   style={{
                     background: colors.cardBg,
-                    borderColor: isOpen
-                      ? 'rgba(0, 112, 243,0.3)'
-                      : colors.cardBorder,
+                    borderColor: isOpen ? 'rgba(0, 112, 243,0.3)' : colors.cardBorder,
                   }}
                 >
-                  <button
-                    id={triggerId}
-                    type="button"
-                    onClick={() => setOpenFaq(isOpen ? null : index)}
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    className="w-full text-left"
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: colors.textMuted }}
                   >
-                    <div className="flex items-center justify-between gap-4">
-                      <span
-                        className="font-medium"
-                        style={{ color: colors.text }}
-                      >
-                        {faq.question}
-                      </span>
-                      <AccordionIndicator
-                        isOpen={isOpen}
-                        className="w-5 h-5 flex-shrink-0"
-                        style={{ color: 'var(--cobalt-text)' }}
-                      />
-                    </div>
-                  </button>
-
-                  <div
-                    id={panelId}
-                    role="region"
-                    aria-labelledby={triggerId}
-                    aria-hidden={!isOpen}
-                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <p
-                        className="mt-4 text-sm leading-relaxed"
-                        style={{ color: colors.textMuted }}
-                      >
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+                    {faq.answer}
+                  </p>
+                </AccordionItem>
               )
             })}
           </div>

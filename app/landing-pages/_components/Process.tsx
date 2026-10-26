@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
 import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { Code2, Palette, Rocket, Search } from 'lucide-react'
@@ -75,15 +76,14 @@ export function Process({ emphasis }: ProcessProps) {
             {processSteps.map((step) => {
               const isEmphasized = emphasis?.step === step.key
               return (
-                <motion.div
+                <MotionCard variant="plain" badge={false}
                   key={step.title}
                   variants={itemVariants}
-                  className={`rounded-2xl border p-6 ${
+                  className={`block h-auto rounded-2xl border ${
                     isEmphasized
                       ? 'border-cobalt-accent bg-cobalt-muted-subtle'
                       : 'border-border bg-muted'
-                  }`}
-                >
+                  }`}>
                   <div className="mb-4 flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
                       <step.icon size={22} className="text-cobalt-text" aria-hidden />
@@ -99,7 +99,7 @@ export function Process({ emphasis }: ProcessProps) {
                   ) : null}
                   <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-                </motion.div>
+                </MotionCard>
               )
             })}
           </motion.div>

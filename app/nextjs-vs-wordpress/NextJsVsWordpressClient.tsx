@@ -1,5 +1,6 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
 import { Section } from '@/components/ui/Section'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -7,7 +8,6 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import SectionDivider from '@/components/ui/SectionDivider'
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { trackBookStrategyCall } from '@/lib/analytics'
 import {
   nextjsVsWordpressComparison,
@@ -259,57 +259,29 @@ export default function NextJsVsWordpressClient() {
             </h2>
           </motion.div>
 
-          <div className="space-y-3">
+          <div className="space-y-[var(--stack)]">
             {nextjsVsWordpressFaqs.map((faq, index) => {
               const isOpen = openFaq === index
               const triggerId = `nextjs-vs-wordpress-faq-trigger-${index}`
               const panelId = `nextjs-vs-wordpress-faq-panel-${index}`
 
               return (
-                <motion.div
+                <AccordionItem
                   key={faq.question}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className={`rounded-xl border bg-card px-6 py-5 transition-all duration-300 ${
-                    isOpen ? 'border-cobalt-accent/30' : 'border-border hover:bg-[#F9FAFB]'
-                  }`}
+                  triggerId={triggerId}
+                  panelId={panelId}
+                  isOpen={isOpen}
+                  onToggle={() => setOpenFaq(isOpen ? null : index)}
+                  question={faq.question}
+                  questionClassName="text-base font-medium"
+                  className={isOpen ? 'border-cobalt-accent/30 bg-card' : 'border-border bg-card'}
                 >
-                  <button
-                    id={triggerId}
-                    type="button"
-                    onClick={() => setOpenFaq(isOpen ? null : index)}
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    className="w-full text-left"
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="font-medium text-foreground">{faq.question}</span>
-                      <AccordionIndicator
-                        isOpen={isOpen}
-                        className="h-5 w-5 flex-shrink-0"
-                        style={{ color: 'var(--cobalt-text)' }}
-                      />
-                    </div>
-                  </button>
-
-                  <div
-                    id={panelId}
-                    role="region"
-                    aria-labelledby={triggerId}
-                    aria-hidden={!isOpen}
-                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
+                </AccordionItem>
               )
             })}
           </div>
