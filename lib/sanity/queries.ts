@@ -48,6 +48,27 @@ export const allPostsQuery = groq`
   }
 `
 
+export const searchPostsQuery = groq`
+  *[_type == "post" && (!defined(seo.noIndex) || seo.noIndex == false) && (
+    title match $q || excerpt match $q || $q in tags || pt::text(body) match $q
+  )] | order(publishedAt desc) {
+    _id,
+    _updatedAt,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    excerpt,
+    category,
+    tags,
+    readTime,
+    "metaDescription": seo.metaDescription,
+    "author": author-> {
+      name,
+      "slug": slug.current
+    }
+  }
+`
+
 export const relatedPostsQuery = groq`{
   "sameCategory": *[_type == "post" && slug.current != $slug && category == $category && (!defined(seo.noIndex) || seo.noIndex == false)] | order(publishedAt desc)[0...3] {
     title,

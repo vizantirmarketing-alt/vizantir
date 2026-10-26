@@ -1,7 +1,7 @@
 'use client'
 
 import { Section } from '@/components/ui/Section'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { trackBookStrategyCall } from '@/lib/analytics'
@@ -98,6 +98,46 @@ function groupPostsByMonth(posts: SanityBlogPostPreview[]): MonthGroup[] {
 export default function BlogPageClient({ posts }: Props) {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
+  const [resultsState, setResultsState] = useState<{
+    query: string
+    posts: SanityBlogPostPreview[] | null
+  } | null>(null)
+
+  const trimmedQuery = searchQuery.trim()
+  const searchActive = trimmedQuery.length >= 2
+  const searchResults = searchActive ? (resultsState?.posts ?? null) : null
+  const searching = searchActive && resultsState?.query !== trimmedQuery
+
+  useEffect(() => {
+    if (!searchActive) return
+
+    const controller = new AbortController()
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/blog/search?q=${encodeURIComponent(trimmedQuery)}`, {
+          signal: controller.signal,
+        })
+        if (!res.ok) throw new Error(`Search failed: ${res.status}`)
+        const data: { posts: SanityBlogPostPreview[] } = await res.json()
+        setResultsState({ query: trimmedQuery, posts: data.posts })
+      } catch (error) {
+        if ((error as Error).name === 'AbortError') return
+        // Failed request: stop the spinner and fall back to the unfiltered list
+        setResultsState({ query: trimmedQuery, posts: null })
+      }
+    }, 250)
+
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
+  }, [searchActive, trimmedQuery])
+
+  const clearSearch = () => {
+    setSearchQuery('')
+    setResultsState(null)
+  }
 
   const colors = {
     bg: 'var(--background)',
@@ -109,24 +149,12 @@ export default function BlogPageClient({ posts }: Props) {
   }
 
   const filteredPosts = useMemo(() => {
-    return posts.filter((post) => {
-      const excerpt = post.excerpt ?? ''
-      const tags = post.tags ?? []
+    const source = searchResults ?? posts
+    return source.filter((post) => activeCategory === 'All' || post.category === activeCategory)
+  }, [posts, searchResults, activeCategory])
 
-      const matchesSearch =
-        searchQuery === '' ||
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-
-      const matchesCategory =
-        activeCategory === 'All' || post.category === activeCategory
-
-      return matchesSearch && matchesCategory
-    })
-  }, [posts, searchQuery, activeCategory])
-
-  const showLead = activeCategory === 'All' && searchQuery === '' && filteredPosts.length > 0
+  const showLead =
+    activeCategory === 'All' && searchQuery === '' && searchResults === null && filteredPosts.length > 0
   const leadPost = showLead ? filteredPosts[0] : undefined
 
   const listPosts = useMemo(
@@ -198,7 +226,7 @@ export default function BlogPageClient({ posts }: Props) {
                 {searchQuery ? (
                   <button
                     type="button"
-                    onClick={() => setSearchQuery('')}
+                    onClick={clearSearch}
                     aria-label="Clear search"
                     className="shrink-0"
                     style={{ color: colors.textSubtle }}
@@ -287,7 +315,17 @@ export default function BlogPageClient({ posts }: Props) {
             </motion.div>
           ) : null}
 
-          {filteredPosts.length === 0 ? (
+          {trimmedQuery.length >= 2 && (searching || searchResults !== null) ? (
+            <p className="pt-6 text-sm" style={{ color: colors.textMuted }} aria-live="polite">
+              {searching
+                ? 'Searching…'
+                : filteredPosts.length > 0
+                  ? `${filteredPosts.length} ${filteredPosts.length === 1 ? 'result' : 'results'} for “${trimmedQuery}”`
+                  : null}
+            </p>
+          ) : null}
+
+          {filteredPosts.length === 0 && !searching ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -299,7 +337,7 @@ export default function BlogPageClient({ posts }: Props) {
               <button
                 type="button"
                 onClick={() => {
-                  setSearchQuery('')
+                  clearSearch()
                   setActiveCategory('All')
                 }}
                 className="mt-4 text-sm font-medium"
