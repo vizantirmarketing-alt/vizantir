@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -19,11 +20,9 @@ interface ResultsThatSpeakProps {
 const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
 
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -31,9 +30,9 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="max-w-7xl mx-auto"
         >
-          <div className="text-center mb-10 md:mb-12">
+          <div className="text-center mb-[var(--heading-gap)]">
             <h2 
-              className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-foreground"
+              className="md:text-5xl font-black mb-4 tracking-tight text-foreground"
             >
               Selected Work
             </h2>
@@ -107,7 +106,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
             })}
           </div>
 
-          <div className="text-center mt-10 md:mt-12">
+          <div className="text-center mt-[var(--cta-gap)]">
             <Link
               href="/case-studies"
               className="bg-cobalt-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"
@@ -118,7 +117,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
           </div>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

@@ -1,4 +1,5 @@
 'use client'
+import { Section } from '@/components/ui/Section'
 
 const items = [
   "WEBSITE DESIGN",
@@ -43,11 +44,9 @@ const MarqueeContent = () => (
 
 const Marquee = () => {
   return (
-    <section
-      suppressHydrationWarning
-      className="py-10 md:py-12 short-landscape:py-6 overflow-hidden relative"
-      style={{ background: 'var(--background)' }}
-    >
+    <Section size="sm" suppressHydrationWarning
+      className="overflow-hidden relative"
+      style={{ background: 'var(--background)' }}>
       {/* Gradient fade on left */}
       <div 
         className="marquee-fade absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
@@ -116,7 +115,7 @@ const Marquee = () => {
           }
         }
       `}</style>
-    </section>
+    </Section>
   );
 };
 

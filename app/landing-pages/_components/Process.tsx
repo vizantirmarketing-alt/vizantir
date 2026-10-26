@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { Code2, Palette, Rocket, Search } from 'lucide-react'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -48,12 +50,12 @@ export function Process({ emphasis }: ProcessProps) {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="process-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="process-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="process-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               How we build a landing page.
             </h2>
@@ -74,15 +76,14 @@ export function Process({ emphasis }: ProcessProps) {
             {processSteps.map((step) => {
               const isEmphasized = emphasis?.step === step.key
               return (
-                <motion.div
+                <MotionCard variant="plain" pad="sm" badge={false}
                   key={step.title}
                   variants={itemVariants}
-                  className={`rounded-2xl border p-6 ${
+                  className={`block h-auto rounded-2xl border ${
                     isEmphasized
                       ? 'border-cobalt-accent bg-cobalt-muted-subtle'
                       : 'border-border bg-muted'
-                  }`}
-                >
+                  }`}>
                   <div className="mb-4 flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
                       <step.icon size={22} className="text-cobalt-text" aria-hidden />
@@ -97,13 +98,13 @@ export function Process({ emphasis }: ProcessProps) {
                     </p>
                   ) : null}
                   <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-                </motion.div>
+                  <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{step.description}</p>
+                </MotionCard>
               )
             })}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

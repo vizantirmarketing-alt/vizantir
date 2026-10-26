@@ -123,6 +123,52 @@ APIs table shows outbound method and status codes, which is enough to tell a
 Supabase POST 403 from a Google API failure, but not the message. To see an
 actual error, return it in the route's JSON response instead of logging it.
 
+## Spacing
+
+Spacing is defined once, as CSS custom properties in `app/globals.css`, with mobile
+defaults and `md` (768px) overrides. Pages never set their own section, card or
+list spacing.
+
+| Token | Mobile | md+ | Used for |
+|---|---|---|---|
+| `--section-y` | 48px | 80px | default section padding |
+| `--section-y-lg` | 64px | 96px | hero and final CTA only |
+| `--section-y-sm` | 32px | 64px | blog teaser, marquee, minor sections |
+| `--hero-top` | 128px | 128px | page hero top padding, clears the fixed navbar |
+| `--stack` | 12px | 24px | gap between stacked cards or list items |
+| `--card-pad` | 20px | 32px | Card padding (`pad="lg"` uses `--card-pad-lg` 32/48 for CTA panels; `pad="sm"` uses `--card-pad-sm` 20/24 for lighter cards) |
+| `--heading-gap` | 24px | 32px | bottom margin of the section heading wrapper |
+| `--para-gap` | 20px | 20px | prose paragraph spacing outside `.blog-content` |
+| `--cta-gap` | 32px | 40px | last body text to the section CTA |
+| `--btn-stack` | 12px | 12px | between stacked buttons |
+| `--gutter` | 20px | 16px | container side padding, via `px-gutter` |
+
+Type: body 17px / 1.55 mobile, 16px / 1.6 at md+. Card and accordion content is 16px / 1.5 on mobile. h1 36px / 1.1 and h2 28px / 1.15
+on mobile come from the global base styles. Headings only carry `sm:`/`md:`/`lg:`
+size classes; do not add an unprefixed `text-*xl` to an h1 or h2.
+
+Rules:
+
+- Section elements use `<Section>` from `components/ui/Section.tsx`, never raw
+  `py-*`, `pt-*` or `pb-*`. Use `size="lg"` or `size="sm"`, `edge` for one-sided
+  padding, and `hero` for page heroes. `short-landscape` tightening is built in.
+- Cards use `<Card>` (or `<MotionCard>` for framer-motion props) from
+  `components/ui`. Padding comes from `--card-pad`; do not pass `p-*`. Surface
+  colors go in `className`. For link-shaped cards use `cardSurfaceVariants()`.
+- FAQ and accordion rows use `<AccordionItem>`. Trigger padding is `px-5 py-4`,
+  `md:px-6 md:py-5`.
+- Vertical lists or grids of cards and accordion rows use
+  `gap-[var(--stack)]` or `space-y-[var(--stack)]`. Inline `gap-2`/`gap-3` on
+  buttons, pills and icon rows stays as is.
+- Section heading wrappers use `mb-[var(--heading-gap)]`, the paragraph above a section
+  CTA uses `mb-[var(--cta-gap)]`, stacked button groups use `gap-[var(--btn-stack)]`,
+  and legal and rich-text paragraphs use `--para-gap`. Body copy inside a card that
+  would be `text-sm` is `text-base md:text-sm`; `text-sm` stays only on meta lines.
+- A deliberate exception to any of this gets a one-line comment saying why.
+
+Out of scope for these rules: `app/intel`, `app/studio`, `components/arcade`,
+`app/play`, `app/analytir` and `components/analytir`. They keep their own spacing.
+
 ## New blog posts
 
 The end-of-article service link resolves in `data/blog-commercial-links.ts`

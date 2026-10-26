@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
@@ -67,11 +68,11 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
       <div className="px-6 py-14 md:px-12 md:py-16 lg:px-20">
         <div className="mx-auto grid max-w-6xl items-start gap-12 md:grid-cols-2 md:gap-x-16 md:gap-y-0 lg:gap-x-20">
           {/* Ideal fit */}
-          <section aria-labelledby="ideal-fit-heading">
+          <Section edge="none" aria-labelledby="ideal-fit-heading">
             <motion.div {...sectionMotion}>
               <h2
                 id="ideal-fit-heading"
-                className="mb-9 text-center text-balance text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+                className="mb-9 text-center text-balance font-bold tracking-tight md:mb-10 md:text-3xl"
                 style={{ color: colors.text }}
               >
                 {idealHeading}
@@ -95,14 +96,14 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
                 ))}
               </ul>
             </motion.div>
-          </section>
+          </Section>
 
           {/* Not a fit */}
-          <section aria-labelledby="not-fit-heading">
+          <Section edge="none" aria-labelledby="not-fit-heading">
             <motion.div {...sectionMotion}>
               <h2
                 id="not-fit-heading"
-                className="mb-9 text-center text-balance text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+                className="mb-9 text-center text-balance font-bold tracking-tight md:mb-10 md:text-3xl"
                 style={{ color: colors.text }}
               >
                 {notIdealHeading}
@@ -126,17 +127,17 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
                 ))}
               </ul>
             </motion.div>
-          </section>
+          </Section>
         </div>
       </div>
 
       {/* Budget */}
-      <section className="px-6 py-14 md:px-12 md:py-16 lg:px-20" aria-labelledby="budget-heading">
+      <Section size="sm" className="px-6 md:px-12 lg:px-20" aria-labelledby="budget-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionMotion}>
             <h2
               id="budget-heading"
-              className="mb-5 text-2xl font-bold tracking-tight md:text-3xl"
+              className="mb-5 font-bold tracking-tight md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.budgetSection.heading}
@@ -154,23 +155,23 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             </div>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <div className="h-px w-full" style={{ background: colors.divider }} />
 
       {/* Closing CTA */}
-      <section className="px-6 py-14 md:px-12 md:pb-20 lg:px-20" aria-labelledby="closing-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="closing-heading">
         <div className="mx-auto max-w-6xl text-center">
           <motion.div {...sectionMotion}>
             <h2
               id="closing-heading"
-              className="mb-6 text-balance text-2xl font-bold tracking-tight md:text-3xl"
+              className="mb-6 text-balance font-bold tracking-tight md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.closingSection.heading}
             </h2>
             <p
-              className="mx-auto mb-8 max-w-[48ch] text-base leading-relaxed md:text-lg"
+              className="mx-auto mb-[var(--cta-gap)] max-w-[48ch] text-base leading-relaxed md:text-lg"
               style={{ color: colors.textMuted }}
             >
               {content.closingSection.body}
@@ -184,7 +185,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             </Link>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

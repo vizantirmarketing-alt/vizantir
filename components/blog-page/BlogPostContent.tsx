@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -98,7 +99,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
   return (
     <div style={{ background: colors.bg }}>
       {/* Hero Section */}
-      <section className="px-6 md:px-12 lg:px-20 pt-32 pb-12">
+      <Section size="sm" hero className="px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl mx-auto">
           {/* Back Link */}
           <Link
@@ -117,7 +118,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 transition-colors duration-500"
+            className="sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 transition-colors duration-500"
             style={{ color: colors.text }}
           >
             {post.title}
@@ -170,7 +171,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
             </div>
           ) : null}
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div
@@ -181,7 +182,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
       />
 
       {/* Content Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-12 md:py-16">
+      <Section size="sm" className="px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none">
             <div
@@ -193,7 +194,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
           </article>
           {children}
         </div>
-      </section>
+      </Section>
 
     </div>
   )

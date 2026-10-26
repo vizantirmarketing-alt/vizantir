@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -57,12 +58,10 @@ const Hero = () => {
             `;
 
   return (
-    <section
-      className="hero-section relative min-h-[100svh] short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
-      style={{ 
+    <Section edge="none" className="hero-section relative min-h-[85svh] md:min-h-[100svh] short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
+      style={{
         background: 'var(--background)',
-      }}
-    >
+      }}>
       {/* Background gradient - purple/amber glow on LEFT side */}
       <div 
         className="absolute inset-0 pointer-events-none transition-opacity duration-700"
@@ -142,7 +141,7 @@ const Hero = () => {
       />
 
       <div 
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-[100svh] short-landscape:min-h-0 py-16 lg:py-16 short-landscape:py-10"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-[85svh] md:min-h-[100svh] short-landscape:min-h-0"
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}
@@ -160,11 +159,11 @@ const Hero = () => {
 
         {/* RIGHT SIDE - Content */}
         <div
-          className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left"
+          className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left pb-[var(--section-y-lg)] lg:py-[var(--section-y-lg)] short-landscape:py-6"
         >
 
           <h1 
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500 text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
+            className="sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500 text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
           >
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}
@@ -179,12 +178,12 @@ const Hero = () => {
           </h1>
 
           <p
-            className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg transition-colors duration-500 text-muted-foreground"
+            className="text-lg md:text-xl leading-relaxed mb-[var(--cta-gap)] max-w-lg transition-colors duration-500 text-muted-foreground"
           >
             Vizantir is a Las Vegas design studio. Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
           </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex flex-col gap-[var(--btn-stack)] sm:flex-row sm:items-center sm:gap-4">
             <Button
               size="lg"
               asChild
@@ -204,7 +203,7 @@ const Hero = () => {
         </div>
       </div>
 
-    </section>
+    </Section>
   );
 };
 

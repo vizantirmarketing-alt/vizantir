@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -168,7 +170,7 @@ export default function LawFirmWebDesignClient() {
   return (
     <div className="bg-background text-foreground transition-colors duration-500">
       {/* 1 — Hero */}
-      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+      <Section hero className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 md:px-12 lg:px-20">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
           aria-hidden
@@ -191,7 +193,7 @@ export default function LawFirmWebDesignClient() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+            className="mb-6 font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
           >
             Law Firm Web Design
             <br />
@@ -213,7 +215,7 @@ export default function LawFirmWebDesignClient() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.24 }}
-            className="flex flex-col items-center gap-4"
+            className="flex flex-col items-center gap-[var(--btn-stack)]"
           >
             <Button
               size="lg"
@@ -233,17 +235,17 @@ export default function LawFirmWebDesignClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 2 — The Problem */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="problem-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="problem-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal}>
             <h2
               id="problem-heading"
-              className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-8 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Your site may be costing you the clients you want most
             </h2>
@@ -268,17 +270,17 @@ export default function LawFirmWebDesignClient() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 3 — What We Build */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="what-we-build-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="what-we-build-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="what-we-build-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Built for How Legal Clients Decide
             </h2>
@@ -293,44 +295,42 @@ export default function LawFirmWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3"
           >
             {offeringBlocks.map((block) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" interactive badge={false}
                 key={block.title}
                 variants={itemVariants}
-                className="card-interactive rounded-2xl border border-border bg-muted p-6 transition-colors duration-300 hover:border-cobalt-accent/30"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
                   <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{block.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{block.description}</p>
-              </motion.div>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{block.description}</p>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 4 — Differentiation */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="differentiation-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="differentiation-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="differentiation-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               How Most Agencies Build vs. How Vizantir Builds
             </h2>
           </motion.div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <motion.div
+          <div className="grid gap-[var(--stack)] lg:grid-cols-2">
+            <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="rounded-2xl border border-border bg-muted/60 p-8"
-            >
+              className="block h-auto rounded-2xl border border-border bg-muted/60">
               <h3 className="mb-6 text-xl font-bold text-foreground">
                 How most agencies build law firm sites
               </h3>
@@ -341,19 +341,18 @@ export default function LawFirmWebDesignClient() {
                       className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70"
                       aria-hidden
                     />
-                    <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
+                    <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="rounded-2xl border border-cobalt-accent/25 bg-muted p-8 shadow-[0_0_0_1px_rgba(0,112,243,0.06)]"
-            >
+              className="block h-auto rounded-2xl border border-cobalt-accent/25 bg-muted shadow-[0_0_0_1px_rgba(0,112,243,0.06)]">
               <h3 className="mb-6 text-xl font-bold text-foreground">How Vizantir builds them</h3>
               <ul className="mb-8 space-y-3">
                 {vizantirCompare.map((item) => (
@@ -362,7 +361,7 @@ export default function LawFirmWebDesignClient() {
                       className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
-                    <span className="text-sm leading-relaxed text-foreground/90">{item}</span>
+                    <span className="text-base md:text-sm leading-normal md:leading-relaxed text-foreground/90">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -376,20 +375,20 @@ export default function LawFirmWebDesignClient() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </MotionCard>
           </div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 5 — Proof (methodology + credential band) */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="proof-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="proof-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="proof-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Process-Driven Proof, Not Invented Case Studies
             </h2>
@@ -404,20 +403,19 @@ export default function LawFirmWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="mb-12 grid gap-6 md:grid-cols-2"
+            className="mb-12 grid gap-[var(--stack)] md:grid-cols-2"
           >
             {methodologyItems.map((item) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={item.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-3 flex items-center gap-3">
                   <Scale size={20} className="text-cobalt-text" aria-hidden />
                   <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
-              </motion.div>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item.detail}</p>
+              </MotionCard>
             ))}
           </motion.div>
 
@@ -434,17 +432,17 @@ export default function LawFirmWebDesignClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 6 — Process */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="process-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="process-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="process-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What Happens When We Build Your Site
             </h2>
@@ -459,36 +457,35 @@ export default function LawFirmWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid gap-[var(--stack)] sm:grid-cols-2 lg:grid-cols-4"
           >
             {processSteps.map((step) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={step.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-4">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/[0.02]">
                     <step.icon size={22} className="text-cobalt-text" aria-hidden />
                   </div>
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-              </motion.div>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{step.description}</p>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 8 — FAQ (after Process, before closing CTA) */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-4xl">
-          <motion.div {...sectionReveal} className="mb-12 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="faq-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Law Firm Web Design Questions
             </h2>
@@ -499,36 +496,33 @@ export default function LawFirmWebDesignClient() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="space-y-4"
+            className="space-y-[var(--stack)]"
           >
             {faqs.map((faq) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={faq.question}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
-                <p className="max-w-[48ch] text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-              </motion.div>
+                <p className="max-w-[48ch] text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{faq.answer}</p>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* 7 — Closing CTA band */}
-      <section
-        className="relative overflow-hidden bg-cobalt-primary px-6 py-24 md:px-12 lg:px-20"
-        aria-labelledby="closing-cta-heading"
-      >
+      <Section size="lg" className="relative overflow-hidden bg-cobalt-primary px-6 md:px-12 lg:px-20"
+        aria-labelledby="closing-cta-heading">
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <motion.div {...sectionReveal}>
             <h2
               id="closing-cta-heading"
-              className="mb-5 text-3xl font-bold text-white md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-white md:text-4xl lg:text-5xl"
             >
               Ready to build a site that reflects the caliber of your firm?
             </h2>
-            <p className="mb-10 text-lg text-white">
+            <p className="mb-[var(--cta-gap)] text-lg text-white">
               Strategy calls are 30 minutes, no pitch, just fit.
             </p>
             <Button
@@ -557,7 +551,7 @@ export default function LawFirmWebDesignClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

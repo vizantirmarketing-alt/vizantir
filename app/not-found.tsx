@@ -36,7 +36,7 @@ export default function NotFound() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <h2 
-              className="text-2xl md:text-3xl font-bold mb-4 text-foreground"
+              className="md:text-3xl font-bold mb-4 text-foreground"
             >
               Page Not Found
             </h2>
@@ -52,7 +52,7 @@ export default function NotFound() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-[var(--btn-stack)] sm:gap-4 justify-center"
           >
             <Link
               href="/"

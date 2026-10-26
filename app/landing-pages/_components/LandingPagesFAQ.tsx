@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
@@ -17,12 +19,12 @@ export function LandingPagesFAQ({ faqs }: LandingPagesFAQProps) {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-4xl">
-          <motion.div {...sectionReveal} className="mb-12 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="faq-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Landing page questions
             </h2>
@@ -33,21 +35,20 @@ export function LandingPagesFAQ({ faqs }: LandingPagesFAQProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="space-y-4"
+            className="space-y-[var(--stack)]"
           >
             {faqs.map((faq) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={faq.question}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-              </motion.div>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{faq.answer}</p>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

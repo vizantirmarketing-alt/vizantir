@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -28,12 +30,12 @@ export function RelatedServices() {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="related-services-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="related-services-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="related-services-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Related services.
             </h2>
@@ -44,16 +46,15 @@ export function RelatedServices() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-3"
           >
             {relatedServices.map((service) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={service.href}
                 variants={itemVariants}
-                className="flex h-full flex-col rounded-2xl border border-border bg-muted/40 p-6"
-              >
+                className="flex h-full flex-col rounded-2xl border border-border bg-muted/40">
                 <h3 className="mb-3 text-lg font-bold text-foreground">{service.title}</h3>
-                <p className="mb-6 flex-1 text-sm leading-relaxed text-muted-foreground">
+                <p className="mb-6 flex-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                   {service.description}
                 </p>
                 <Link
@@ -63,11 +64,11 @@ export function RelatedServices() {
                   Learn more
                   <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
-              </motion.div>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

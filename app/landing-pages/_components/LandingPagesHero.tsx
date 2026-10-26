@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -23,7 +24,7 @@ export function LandingPagesHero({
   trackingLocation,
 }: LandingPagesHeroProps) {
   return (
-    <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+    <Section hero className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 md:px-12 lg:px-20">
       <div className="pointer-events-none absolute inset-0" aria-hidden data-atmosphere-slot />
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
@@ -35,7 +36,7 @@ export function LandingPagesHero({
         <motion.h1
           variants={itemVariants}
           initial="visible"
-          className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+          className="mb-6 font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
         >
           {headline}
         </motion.h1>
@@ -48,7 +49,7 @@ export function LandingPagesHero({
           {subheadline}
         </motion.p>
 
-        <motion.div variants={itemVariants} initial="visible" className="flex flex-col items-center gap-4">
+        <motion.div variants={itemVariants} initial="visible" className="flex flex-col items-center gap-[var(--btn-stack)]">
           <Button
             size="lg"
             asChild
@@ -64,6 +65,6 @@ export function LandingPagesHero({
           </Button>
         </motion.div>
       </div>
-    </section>
+    </Section>
   )
 }

@@ -62,6 +62,43 @@
 /* Short landscape (rotated phones): tighten vertical rhythm without affecting portrait or desktop */
 @custom-variant short-landscape (@media (orientation: landscape) and (max-height: 600px));
 
+/* Spacing scale. Mobile defaults here, md+ overrides in the media query below.
+   Consume through <Section>, <Card> and <AccordionItem>; see CLAUDE.md "Spacing". */
+:root {
+  --section-y: 48px;
+  --section-y-lg: 64px;
+  --section-y-sm: 32px;
+  --hero-top: 128px;
+  --stack: 12px;
+  --card-pad: 20px;
+  --card-pad-lg: 32px;
+  --card-pad-sm: 20px;
+  --heading-gap: 24px;
+  --para-gap: 20px;
+  --cta-gap: 32px;
+  --btn-stack: 12px;
+  --gutter: 20px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --section-y: 80px;
+    --section-y-lg: 96px;
+    --section-y-sm: 64px;
+    --stack: 24px;
+    --card-pad: 32px;
+    --card-pad-lg: 48px;
+    --card-pad-sm: 24px;
+    --heading-gap: 32px;
+    --cta-gap: 40px;
+    --gutter: 16px;
+  }
+}
+
+@utility px-gutter {
+  padding-inline: var(--gutter);
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(0.982 0.0054 95);
@@ -477,6 +514,31 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-satoshi, system-ui, -apple-system, sans-serif);
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  /* Mobile heading baseline. Elements that set md:/lg: sizes take over from md up. */
+  h1 {
+    font-size: 36px;
+    line-height: 1.1;
+  }
+  h2 {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    /* Desktop heading sizes stay with each element's md:/lg: classes. */
+    h1,
+    h2 {
+      font-size: inherit;
+      line-height: inherit;
+    }
   }
 }
 

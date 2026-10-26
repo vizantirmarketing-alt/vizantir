@@ -1,7 +1,9 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import type { Faq } from '@/components/homepage/FAQSection'
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -26,10 +28,10 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
-      <section className="pt-32 pb-16 px-4">
+      <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Frequently Asked Questions
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
@@ -73,11 +75,11 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             </div>
           </div>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="space-y-4">
+          <div className="space-y-[var(--stack)]">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-meta">
@@ -98,69 +100,38 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 const panelId = `faq-page-panel-${faq._id}`
 
                 return (
-                  <motion.div
+                  <AccordionItem
                     key={faq._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.05 }}
-                    className="rounded-xl overflow-hidden"
-                    style={{ 
-                      background: 'rgba(0,0,0,0.02)',
-                      border: `1px solid ${'rgba(0,0,0,0.08)'}`
-                    }}
+                    triggerId={triggerId}
+                    panelId={panelId}
+                    headingAs="h2"
+                    isOpen={isOpen}
+                    onToggle={() => toggleFAQ(faq._id)}
+                    question={faq.question}
+                    style={{ background: 'rgba(0,0,0,0.02)', borderColor: 'rgba(0,0,0,0.08)' }}
                   >
-                    <h2 className="m-0">
-                      <button
-                        id={triggerId}
-                        type="button"
-                        onClick={() => toggleFAQ(faq._id)}
-                        aria-expanded={isOpen}
-                        aria-controls={panelId}
-                        className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
-                      >
-                        <span className="text-lg font-semibold pr-8">{faq.question}</span>
-                        <AccordionIndicator
-                          isOpen={isOpen}
-                          className="w-5 h-5"
-                          style={{ color: 'var(--cobalt-text)' }}
-                        />
-                      </button>
-                    </h2>
-                    <div
-                      id={panelId}
-                      role="region"
-                      aria-labelledby={triggerId}
-                      aria-hidden={!isOpen}
-                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                      }`}
-                    >
-                      <div className="overflow-hidden">
-                        <div className="px-6 pb-6">
-                          <p className="leading-relaxed text-body">
-                            {faq.answer}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
+                    <p className="leading-relaxed text-body">{faq.answer}</p>
+                  </AccordionItem>
                 )
               })
             )}
           </div>
 
           {/* CTA Section */}
-          <motion.div
+          <MotionCard variant="plain" pad="lg" badge={false}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-16 text-center p-8 md:p-12 rounded-2xl"
+            className="mt-16 block h-auto text-center rounded-2xl"
             style={{ 
               background: 'rgba(0, 112, 243,0.15)',
               border: '1px solid rgba(0, 112, 243,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+            <h2 className="md:text-3xl font-bold mb-4 text-foreground">
               Still have questions?
             </h2>
             <p className="text-lg mb-6 text-muted-foreground">
@@ -176,9 +147,9 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
-          </motion.div>
+          </MotionCard>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

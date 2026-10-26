@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -60,14 +61,14 @@ export default function SitemapPageClient({
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-      <section className="px-4 pb-8 pt-32">
+      <Section size="sm" hero className="px-4">
         <div className="mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">Sitemap</h1>
+            <h1 className="mb-6 font-bold md:text-5xl lg:text-6xl">Sitemap</h1>
             <p className="max-w-2xl text-lg text-muted-foreground">
               This page lists every public page on Vizantir&apos;s site, organized by section.
               Marketing pages, industries, technology, services, case studies, blog posts,
@@ -75,9 +76,9 @@ export default function SitemapPageClient({
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="mx-auto max-w-5xl">
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
             <motion.div
@@ -163,6 +164,7 @@ export default function SitemapPageClient({
               className="md:col-span-2 lg:col-span-3"
             >
               <SectionHeading label="Blog" />
+              {/* Raw p-4: compact disclosure row, smaller than any Card pad */}
               <details className="group rounded-lg border border-border bg-card/50 p-4">
                 <summary className="cursor-pointer list-none text-muted-foreground transition-colors hover:text-cobalt-text [&::-webkit-details-marker]:hidden">
                   <span className="font-medium text-foreground">
@@ -203,7 +205,7 @@ export default function SitemapPageClient({
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

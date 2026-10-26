@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
@@ -46,21 +48,19 @@ const WhatHappensNext = () => {
   };
 
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-12"
+          className="text-center mb-[var(--heading-gap)]"
         >
           <h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
+            className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
           >
             What Happens Next
           </h2>
@@ -72,13 +72,13 @@ const WhatHappensNext = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-10"
+          className="grid md:grid-cols-3 gap-[var(--stack)] max-w-6xl mx-auto mb-10"
         >
           {steps.map((step, index) => (
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               key={index}
               variants={cardVariants}
-              className="relative p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+              className="block h-auto rounded-2xl transition-all duration-300 hover:-translate-y-1"
               style={{
                 background: 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
@@ -90,7 +90,7 @@ const WhatHappensNext = () => {
               {/* Step Number */}
               <div 
                 aria-hidden="true"
-                className="text-6xl md:text-7xl font-black mb-4 leading-none"
+                className="text-[28px] md:text-6xl font-black mb-4 leading-none"
                 style={{ 
                   color: 'rgba(0, 112, 243, 0.2)',
                 }}
@@ -108,7 +108,7 @@ const WhatHappensNext = () => {
               >
                 {step.description}
               </p>
-            </motion.div>
+            </MotionCard>
           ))}
         </motion.div>
 
@@ -134,7 +134,7 @@ const WhatHappensNext = () => {
           </p>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useRef, useState, useSyncExternalStore } from 'react'
 import posthog from 'posthog-js'
 
@@ -198,7 +199,7 @@ export function ShareBar({ title, url }: ShareBarProps) {
   }
 
   return (
-    <section className="mt-12">
+    <Section edge="none" className="mt-12">
       <p className="mb-3 text-sm text-muted-foreground transition-colors duration-500">
         Share this article
       </p>
@@ -240,6 +241,6 @@ export function ShareBar({ title, url }: ShareBarProps) {
           </button>
         ) : null}
       </div>
-    </section>
+    </Section>
   )
 }

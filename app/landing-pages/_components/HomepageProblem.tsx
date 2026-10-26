@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { CheckCircle2 } from 'lucide-react'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -15,12 +16,12 @@ export function HomepageProblem({ heading, body, bullets }: HomepageProblemProps
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="homepage-problem-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="homepage-problem-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal}>
             <h2
               id="homepage-problem-heading"
-              className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-8 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               {heading}
             </h2>
@@ -45,7 +46,7 @@ export function HomepageProblem({ heading, body, bullets }: HomepageProblemProps
             ))}
           </motion.ul>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

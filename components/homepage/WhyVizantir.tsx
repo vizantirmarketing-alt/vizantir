@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion';
 
 const WhyVizantir = () => {
@@ -44,21 +46,19 @@ const WhyVizantir = () => {
   };
 
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" as const }}
-          className="text-center mb-12"
+          className="text-center mb-[var(--heading-gap)]"
         >
           <h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
+            className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
           >
             Why businesses choose Vizantir
           </h2>
@@ -70,13 +70,13 @@ const WhyVizantir = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto"
+          className="grid md:grid-cols-2 gap-[var(--stack)] max-w-6xl mx-auto"
         >
           {trustPoints.map((point, index) => (
-            <motion.div
+            <MotionCard variant="plain" interactive badge={false}
               key={index}
               variants={cardVariants}
-              className="card-interactive group relative p-8 lg:p-10 rounded-2xl overflow-hidden"
+              className="group block h-auto rounded-2xl overflow-hidden"
               style={{
                 background: 'rgba(0, 0, 0, 0.02)',
                 backdropFilter: 'blur(10px)',
@@ -95,11 +95,11 @@ const WhyVizantir = () => {
               >
                 {point.description}
               </p>
-            </motion.div>
+            </MotionCard>
           ))}
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

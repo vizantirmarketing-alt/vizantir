@@ -1,33 +1,34 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 
 export default function CopyrightNotice() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
-      <section className="pt-32 pb-16 px-4">
+      <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Copyright Notice</h1>
+            <h1 className="md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Copyright Notice</h1>
             <p className="text-xl font-medium text-body">Vizantir.com – All Rights Reserved</p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-4 pb-8">
+      <Section size="sm" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed text-body">
             © 2026 Vizantir.com. All rights reserved.
           </motion.p>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto space-y-12">
           
           {/* Image Copyright Protection */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">Image Copyright Protection</h2>
+            <h2 className="md:text-3xl font-bold mb-6 text-foreground">Image Copyright Protection</h2>
             <p className="leading-relaxed text-body">
               All images, photographs, graphics, illustrations, and visual content displayed on this website are the exclusive property of Vizantir.com and are protected by United States and international copyright laws.
             </p>
@@ -35,8 +36,8 @@ export default function CopyrightNotice() {
 
           {/* Prohibited Uses */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">Prohibited Uses</h2>
-            <p className="leading-relaxed mb-4 text-body">
+            <h2 className="md:text-3xl font-bold mb-6 text-foreground">Prohibited Uses</h2>
+            <p className="leading-relaxed mb-[var(--para-gap)] text-body">
               The following activities are strictly prohibited without express written permission:
             </p>
             <ul className="space-y-3 ml-6">
@@ -57,7 +58,7 @@ export default function CopyrightNotice() {
 
           {/* Permission Requests */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}>
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">Permission Requests</h2>
+            <h2 className="md:text-3xl font-bold mb-6 text-foreground">Permission Requests</h2>
             <p className="leading-relaxed text-body">
               If you wish to use any content from this website, you must obtain written permission in advance. Please contact us through our official channels to discuss licensing opportunities.
             </p>
@@ -65,8 +66,8 @@ export default function CopyrightNotice() {
 
           {/* Legal Enforcement */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">Legal Enforcement</h2>
-            <p className="leading-relaxed mb-4 text-body">
+            <h2 className="md:text-3xl font-bold mb-6 text-foreground">Legal Enforcement</h2>
+            <p className="leading-relaxed mb-[var(--para-gap)] text-body">
               Unauthorized use of any copyrighted material from this website may result in:
             </p>
             <ul className="space-y-3 ml-6">
@@ -86,7 +87,7 @@ export default function CopyrightNotice() {
 
           {/* Digital Rights Management */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35 }}>
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">Digital Rights Management</h2>
+            <h2 className="md:text-3xl font-bold mb-6 text-foreground">Digital Rights Management</h2>
             <p className="leading-relaxed text-body">
               Please note that all images on this website may contain digital watermarks and metadata for tracking and identification purposes.
             </p>
@@ -94,8 +95,8 @@ export default function CopyrightNotice() {
 
           {/* Contact Information */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">Contact Information</h2>
-            <p className="leading-relaxed mb-3 text-body">
+            <h2 className="md:text-3xl font-bold mb-6 text-foreground">Contact Information</h2>
+            <p className="leading-relaxed mb-[var(--para-gap)] text-body">
               For questions regarding copyright permissions or to report unauthorized use of our content, please contact:
             </p>
             <a href="mailto:info@vizantir.com" className="font-medium transition-colors hover:opacity-80" style={{ color: 'var(--cobalt-text)' }}>
@@ -111,7 +112,7 @@ export default function CopyrightNotice() {
           </motion.div>
 
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

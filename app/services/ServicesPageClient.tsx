@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState, type ReactNode } from 'react'
 import { ArrowRight, FileText } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -205,7 +206,7 @@ function CarePricingRows() {
         </div>
       ))}
       <SectionDivider />
-      <div className="mt-12 flex justify-center">
+      <div className="mt-[var(--cta-gap)] flex justify-center">
         <Button
           asChild
           variant="default"
@@ -416,7 +417,7 @@ function ProjectPricingRows() {
         </div>
       ))}
       <SectionDivider />
-      <div className="mt-12 flex justify-center">
+      <div className="mt-[var(--cta-gap)] flex justify-center">
         <Button
           asChild
           variant="default"
@@ -546,7 +547,7 @@ function SectionHeading({
       <h2
         className={cn(
           'text-balance font-bold leading-tight tracking-tight text-foreground',
-          compact ? 'text-2xl md:text-3xl' : 'text-3xl md:text-4xl',
+          compact ? 'md:text-3xl' : 'md:text-4xl',
         )}
       >
         {heading}
@@ -605,16 +606,16 @@ function ProjectPricingSection() {
           {careFooterText}
         </p>
       </PricingSection>
-      <section className="bg-[color-mix(in_oklab,var(--background),var(--foreground)_4%)] px-6 py-14 md:px-12 md:py-20 lg:px-20">
+      <Section className="bg-[color-mix(in_oklab,var(--background),var(--foreground)_4%)] px-6 md:px-12 lg:px-20">
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3 md:gap-12">
-          <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+          <h2 className="text-balance font-bold leading-tight tracking-tight text-foreground md:text-4xl">
             {SMALLER_PROJECTS.heading}
           </h2>
           <div className="md:col-span-2">
             <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground">
               {SMALLER_PROJECTS.body}
             </p>
-            <div className="mt-8">
+            <div className="mt-[var(--cta-gap)]">
               <Button
                 asChild
                 variant="default"
@@ -625,7 +626,7 @@ function ProjectPricingSection() {
             </div>
           </div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }
@@ -702,10 +703,8 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
 
       <SectionDivider />
 
-      <section
-        id="services"
-        className="relative bg-background px-6 py-20 transition-colors duration-500 md:px-12 lg:px-20"
-      >
+      <Section id="services"
+        className="relative bg-background px-6 transition-colors duration-500 md:px-12 lg:px-20">
         <div className="mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -789,7 +788,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             })}
           </div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
@@ -797,7 +796,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 md:py-24 lg:px-20">
+      <Section size="lg" className="px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-5xl text-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -819,7 +818,7 @@ export default function ServicesPageClient({ services }: ServicesPageClientProps
             </Link>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

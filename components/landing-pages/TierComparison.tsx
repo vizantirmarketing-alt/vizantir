@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { CheckCircle2 } from 'lucide-react'
@@ -22,14 +24,13 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
   const showLiveText = isSystem && isSystemLive
 
   return (
-    <motion.div
+    <MotionCard variant="plain" badge={false}
       variants={itemVariants}
-      className={`flex h-full flex-col rounded-2xl border p-6 md:p-8 ${
+      className={`flex h-full flex-col rounded-2xl border ${
         tier.featured
           ? 'border-cobalt-muted-border bg-cobalt-muted-subtle'
           : 'border-border bg-muted/30'
-      }`}
-    >
+      }`}>
       {tier.featured ? (
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cobalt-text">
           Popular
@@ -38,13 +39,13 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
       <h3 className="text-xl font-bold text-foreground">{tier.name}</h3>
       <p className="mt-2 text-2xl font-black text-foreground">{tier.price}</p>
       <p className="mt-2 text-sm font-medium text-cobalt-text">{tier.tagline}</p>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
+      <p className="mt-3 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{tier.description}</p>
 
       <ul className="mt-6 flex-1 space-y-3">
         {includes.map((item) => (
           <li key={item} className="flex items-start gap-2.5">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text" aria-hidden />
-            <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
+            <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item}</span>
           </li>
         ))}
       </ul>
@@ -56,7 +57,7 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
           </p>
         </div>
       ) : null}
-    </motion.div>
+    </MotionCard>
   )
 }
 
@@ -73,12 +74,12 @@ export function TierComparison({
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="tier-comparison-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="tier-comparison-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="tier-comparison-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Two tiers. One craft standard.
             </h2>
@@ -100,7 +101,7 @@ export function TierComparison({
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

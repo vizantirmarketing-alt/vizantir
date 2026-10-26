@@ -1,5 +1,7 @@
 'use client'
 
+import { Card } from '@/components/ui/Card'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -179,10 +181,10 @@ export default function ContactPageClient() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </motion.div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+          <h1 className="md:text-4xl font-bold mb-4 text-foreground">
             Message Sent!
           </h1>
-          <p className="text-lg mb-8 text-muted-foreground">
+          <p className="text-lg mb-[var(--cta-gap)] text-muted-foreground">
             Thank you for reaching out. We&apos;ll get back to you within 24 hours.
           </p>
           <Link
@@ -200,7 +202,7 @@ export default function ContactPageClient() {
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 pb-16 px-4">
+      <Section size="sm" hero className="relative overflow-hidden px-4">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -215,7 +217,7 @@ export default function ContactPageClient() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Start the Conversation
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
@@ -223,12 +225,12 @@ export default function ContactPageClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* Contact Section */}
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
             
@@ -240,7 +242,7 @@ export default function ContactPageClient() {
               className="lg:col-span-2 space-y-8"
             >
               <div>
-                <h2 className="text-2xl font-bold mb-6 text-foreground">
+                <h2 className="md:text-2xl font-bold mb-6 text-foreground">
                   Contact Information
                 </h2>
                 <div className="space-y-6">
@@ -295,9 +297,9 @@ export default function ContactPageClient() {
               </div>
 
               {/* Business Hours */}
-              <div className="p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+              <Card variant="plain" pad="sm" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <h3 className="font-semibold mb-4 text-foreground">Business Hours</h3>
-                <div className="space-y-2 text-sm text-body">
+                <div className="space-y-2 text-base md:text-sm text-body">
                   {contactDetails.hours.map((row) => (
                     <div key={row.days} className="flex justify-between">
                       <span>{row.days}</span>
@@ -305,14 +307,14 @@ export default function ContactPageClient() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
 
               {/* Response Time */}
-              <div className="flex items-center gap-3 p-6 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
-                <p className="text-sm text-body">
+              <Card variant="plain" pad="sm" badge={false} className="h-auto flex-row items-center gap-3 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+                <p className="text-base md:text-sm text-body">
                   Average response time: <strong>{contactDetails.responseTimeAverage}</strong>
                 </p>
-              </div>
+              </Card>
             </motion.div>
 
             {/* Contact Form */}
@@ -322,8 +324,8 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-3"
             >
-              <div className="p-6 md:p-8 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-                <h2 className="text-2xl font-bold mb-6 text-foreground">
+              <Card variant="plain" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+                <h2 className="md:text-2xl font-bold mb-6 text-foreground">
                   Start Your Project
                 </h2>
                 
@@ -441,7 +443,7 @@ export default function ContactPageClient() {
                     <p
                       ref={errorRef}
                       tabIndex={-1}
-                      className="text-sm mt-2 text-body"
+                      className="text-base md:text-sm mt-2 text-body"
                     >
                       {submitError}
                     </p>
@@ -475,11 +477,11 @@ export default function ContactPageClient() {
                     <Link href="/terms" className="link-ui">Terms of Service</Link>.
                   </p>
                 </form>
-              </div>
+              </Card>
             </motion.div>
       </div>
     </div>
-      </section>
+      </Section>
 
       <SectionDivider />
     </div>

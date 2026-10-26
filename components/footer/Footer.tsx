@@ -25,7 +25,7 @@ const Footer = ({ serviceLinks }: { serviceLinks: FooterServiceLink[] }) => {
         borderColor: 'rgba(0,0,0,0.1)',
       }}
     >
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-gutter py-12">
         <div
           className={
             serviceLinks.length > 0

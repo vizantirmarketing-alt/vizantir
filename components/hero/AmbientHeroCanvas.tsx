@@ -22,6 +22,9 @@ const PLANE_SCROLL_DRIFT = 2.4
 const CONTOUR_RING_COUNT = 26
 const CONTOUR_SEGMENTS = 140
 const CONTOUR_BASE_Y = -0.4
+// Scales ring radii (and wobble) so the tilted disc overruns the canvas edges. Sized in world
+// units like the plane mesh, so it tracks canvas height through the camera's vertical fov.
+const CONTOUR_RADIUS_SCALE = 3.4
 const CONTOUR_SCROLL_DRIFT = 2.4
 
 const HELIX_STRAND_COUNT = 14
@@ -112,7 +115,7 @@ function createContourScene(scene: THREE.Scene, cobalt: string): AmbientScene {
   }[] = []
 
   for (let i = 0; i < CONTOUR_RING_COUNT; i++) {
-    const baseRadius = 0.7 + i * 0.36
+    const baseRadius = (0.7 + i * 0.36) * CONTOUR_RADIUS_SCALE
     const baseOpacity = 0.3 * (1 - i / CONTOUR_RING_COUNT) + 0.1
     const positions = new Float32Array((CONTOUR_SEGMENTS + 1) * 3)
     const geometry = new THREE.BufferGeometry()
@@ -141,8 +144,9 @@ function createContourScene(scene: THREE.Scene, cobalt: string): AmbientScene {
 
       if (withWobble) {
         const wob =
-          Math.sin(a * 3 + time * 1.6 + ringIndex * 0.35) * 0.09 +
-          Math.cos(a * 5 - time * 1.1 + ringIndex * 0.2) * 0.05
+          (Math.sin(a * 3 + time * 1.6 + ringIndex * 0.35) * 0.09 +
+            Math.cos(a * 5 - time * 1.1 + ringIndex * 0.2) * 0.05) *
+          CONTOUR_RADIUS_SCALE
         radius = baseRadius + wob
       }
 

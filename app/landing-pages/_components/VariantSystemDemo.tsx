@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -46,15 +48,13 @@ export function VariantSystemDemo() {
   return (
     <>
       <SectionDivider />
-      <section
-        className="px-6 py-20 md:px-12 lg:px-20"
-        aria-labelledby="variant-system-demo-heading"
-      >
+      <Section className="px-6 md:px-12 lg:px-20"
+        aria-labelledby="variant-system-demo-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="variant-system-demo-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               One system. Three audiences. Shared infrastructure.
             </h2>
@@ -75,16 +75,15 @@ export function VariantSystemDemo() {
             {DEMO_TILES.map((tile, index) => {
               const isActive = index === activeIndex
               return (
-                <motion.div
+                <MotionCard variant="plain" pad="sm" badge={false}
                   key={tile.label}
                   variants={itemVariants}
-                  className={`relative rounded-2xl border p-6 transition-colors duration-500 ${
+                  className={`block h-auto relative rounded-2xl border transition-colors duration-500 ${
                     isActive
                       ? 'border-cobalt-accent bg-cobalt-muted-subtle'
                       : 'border-border bg-muted/40'
                   }`}
-                  aria-current={isActive ? 'true' : undefined}
-                >
+                  aria-current={isActive ? 'true' : undefined}>
                   <div className="mb-5 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
@@ -100,6 +99,7 @@ export function VariantSystemDemo() {
                     />
                   </div>
 
+                  {/* Raw p-4: inline code block, not a Card */}
                   <div className="space-y-3 rounded-xl border border-border/80 bg-background/70 p-4 font-mono text-sm">
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">CPC</span>
@@ -118,7 +118,7 @@ export function VariantSystemDemo() {
                       />
                     </div>
                   </div>
-                </motion.div>
+                </MotionCard>
               )
             })}
           </motion.div>
@@ -143,7 +143,7 @@ export function VariantSystemDemo() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

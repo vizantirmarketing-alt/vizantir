@@ -1,5 +1,10 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
+import { cardSurfaceVariants } from '@/components/ui/Card'
+import { cn } from '@/lib/utils'
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -8,7 +13,6 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
 import { TierComparison } from '@/components/landing-pages/TierComparison'
 import { vizantirPortableTextComponents } from '@/components/portable-text'
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { Button } from '@/components/ui/button'
 import { serviceHref } from '@/lib/service-href'
 import type { Service } from '@/lib/sanity/types'
@@ -136,7 +140,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
   return (
     <div style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
       {/* Hero */}
-      <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-16 md:pb-20 overflow-hidden">
+      <Section hero className="relative px-6 md:px-12 lg:px-20 overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
@@ -154,7 +158,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
             <h1
-              className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl"
+              className="font-bold tracking-tight md:text-5xl lg:text-6xl"
               style={{ color: colors.text }}
             >
               {service.heroHeadline || service.title}
@@ -175,6 +179,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             {service.slug === 'landing-pages' ? (
               <Link
                 href="/landing-pages"
+                // Raw p-5 md:p-6: banner link, not a Card
                 className="mt-8 flex items-center justify-between gap-4 rounded-2xl border p-5 no-underline transition-opacity hover:opacity-90 md:p-6"
                 style={{
                   background: 'rgba(0, 112, 243, 0.08)',
@@ -197,14 +202,14 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             ) : null}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <div className="h-px w-full" style={{ background: colors.divider }} />
 
       {/* Overview */}
       {hasOverview ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-3xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -212,13 +217,13 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="mb-8 font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.overview}
                 </h2>
                 <PortableText value={service.overview!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -226,16 +231,16 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Benefits */}
       {hasBenefits ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center md:text-left"
+                className="mb-[var(--heading-gap)] text-center md:text-left"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.benefits}
                 </h2>
               </motion.div>
@@ -257,7 +262,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </ul>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -265,30 +270,29 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Process */}
       {hasProcess ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-12 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.process}
                 </h2>
               </motion.div>
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-[var(--stack)] md:grid-cols-2">
                 {sortedProcess.map((step, index) => (
-                  <motion.div
+                  <MotionCard variant="plain" badge={false}
                     key={`${step.step}-${index}`}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.06 }}
-                    className="rounded-2xl border p-6 md:p-8"
-                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
-                  >
+                    className="block h-auto rounded-2xl border"
+                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
                     <div
                       className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold"
                       style={{ background: `${colors.accent}22`, color: colors.accent }}
@@ -301,11 +305,11 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <p className="leading-relaxed" style={{ color: colors.textMuted }}>
                       {step.description}
                     </p>
-                  </motion.div>
+                  </MotionCard>
                 ))}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -313,41 +317,40 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Offerings */}
       {hasOfferings ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-12 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.offerings}
                 </h2>
               </motion.div>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3">
                 {service.offerings!.map((offering, index) => (
-                  <motion.div
+                  <MotionCard variant="plain" pad="sm" interactive badge={false}
                     key={index}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="card-interactive rounded-2xl border p-6"
-                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
-                  >
+                    className="block h-auto rounded-2xl border"
+                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
                     <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
                       {offering.name}
                     </h3>
-                    <p className="text-sm leading-relaxed" style={{ color: colors.textMuted }}>
+                    <p className="text-base md:text-sm leading-normal md:leading-relaxed" style={{ color: colors.textMuted }}>
                       {offering.description}
                     </p>
-                  </motion.div>
+                  </MotionCard>
                 ))}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -359,16 +362,16 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Deliverables */}
       {hasDeliverables ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center md:text-left"
+                className="mb-[var(--heading-gap)] text-center md:text-left"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.deliverables}
                 </h2>
               </motion.div>
@@ -390,7 +393,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </ul>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -398,78 +401,46 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* FAQs */}
       {hasFaqs ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.faqs}
                 </h2>
               </motion.div>
-              <div className="space-y-4">
+              <div className="space-y-[var(--stack)]">
                 {service.faqs!.map((faq, index) => {
                   const isOpen = openFaqIndex === index
                   const triggerId = `service-faq-trigger-${service.slug}-${index}`
                   const panelId = `service-faq-panel-${service.slug}-${index}`
 
                   return (
-                    <motion.div
+                    <AccordionItem
                       key={index}
                       initial={{ opacity: 0, y: 12 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: index * 0.04 }}
-                      className="overflow-hidden rounded-xl"
-                      style={{
-                        background: 'rgba(0,0,0,0.02)',
-                        border: `1px solid rgba(0,0,0,0.08)`,
-                      }}
+                      triggerId={triggerId}
+                      panelId={panelId}
+                      isOpen={isOpen}
+                      onToggle={() => setOpenFaqIndex(isOpen ? null : index)}
+                      question={faq.question}
+                      style={{ background: 'rgba(0,0,0,0.02)', borderColor: 'rgba(0,0,0,0.08)' }}
                     >
-                      <button
-                        id={triggerId}
-                        type="button"
-                        onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                        aria-expanded={isOpen}
-                        aria-controls={panelId}
-                        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[#F9FAFB] text-foreground"
-                      >
-                        <span className="pr-4 text-lg font-semibold">{faq.question}</span>
-                        <AccordionIndicator
-                          isOpen={isOpen}
-                          className="w-5 h-5 flex-shrink-0"
-                          style={{ color: 'var(--cobalt-text)' }}
-                        />
-                      </button>
-                      <div
-                        id={panelId}
-                        role="region"
-                        aria-labelledby={triggerId}
-                        aria-hidden={!isOpen}
-                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <div className="px-6 pb-6">
-                            <p
-                              className="leading-relaxed whitespace-pre-wrap text-body"
-                            >
-                              {faq.answer}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
+                      <p className="leading-relaxed whitespace-pre-wrap text-body">{faq.answer}</p>
+                    </AccordionItem>
                   )
                 })}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -477,16 +448,16 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Related services */}
       {hasRelated ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-12 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.related}
                 </h2>
               </motion.div>
@@ -501,7 +472,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   >
                     <Link
                       href={serviceHref(rel.slug)}
-                      className="card-interactive group flex h-full flex-col rounded-2xl border p-6"
+                      className={cn(cardSurfaceVariants({ variant: 'plain', interactive: true, pad: 'sm' }), 'group rounded-2xl')}
                       style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
                     >
                       <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
@@ -519,29 +490,29 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
 
       {/* CTA */}
-      <section className="px-6 py-16 md:px-12 md:pb-24 lg:px-20">
+      <Section size="lg" className="px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-3xl text-center">
-          <motion.div
+          <MotionCard variant="plain" pad="lg" badge={false}
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-2xl p-8 md:p-12"
+            className="block h-auto rounded-2xl"
             style={{
               background: 'rgba(0, 112, 243,0.15)',
               border: '1px solid rgba(0, 112, 243,0.3)',
             }}
           >
-            <h2 className="mb-4 text-2xl font-bold md:text-3xl" style={{ color: colors.text }}>
+            <h2 className="mb-4 font-bold md:text-3xl" style={{ color: colors.text }}>
               Ready to talk about {service.title}?
             </h2>
-            <p className="mb-8 text-lg" style={{ color: colors.textMuted }}>
+            <p className="mb-[var(--cta-gap)] text-lg" style={{ color: colors.textMuted }}>
               Book a strategy call and we&apos;ll walk through goals, scope, and fit. No pitch deck required.
             </p>
             <Button
@@ -554,9 +525,9 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-          </motion.div>
+          </MotionCard>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

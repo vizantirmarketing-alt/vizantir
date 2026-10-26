@@ -1,5 +1,8 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { useState } from 'react'
 import {
   howWeWorkComparisonColumns,
@@ -15,7 +18,6 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { trackBookStrategyCall } from '@/lib/analytics'
 import { Check, X } from 'lucide-react'
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { AmbientHero } from '@/components/hero/AmbientHero'
 
 function RecommendedBadge({ visible }: { visible: boolean }) {
@@ -64,14 +66,14 @@ export default function HowWeWorkPageClient() {
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* Process Steps Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
+      <Section className="px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-16 text-center text-balance transition-colors duration-500"
+            className="md:text-3xl font-bold mb-16 text-center text-balance transition-colors duration-500"
             style={{ color: colors.text }}
           >
             The Process
@@ -117,23 +119,23 @@ export default function HowWeWorkPageClient() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* Why Vizantir Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
+      <Section className="px-6 md:px-12 lg:px-20">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-16"
+            className="text-center mb-[var(--heading-gap)]"
           >
             <h2
-            className="text-2xl md:text-3xl font-bold text-balance transition-colors duration-500"
+            className="md:text-3xl font-bold text-balance transition-colors duration-500"
             style={{ color: colors.text }}
             >
               Why Vizantir
@@ -143,17 +145,16 @@ export default function HowWeWorkPageClient() {
           {/* Comparison Cards */}
           <div className="grid items-stretch md:grid-cols-3 gap-6">
             {/* Traditional Agencies */}
-            <motion.div
+            <MotionCard variant="plain" pad="sm" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="relative h-full overflow-hidden p-6 rounded-2xl border"
+              className="block h-full overflow-hidden rounded-2xl border"
               style={{
                 background: colors.cardBg,
                 borderColor: colors.cardBorder,
-              }}
-            >
+              }}>
               <RecommendedBadge visible={false} />
 
               <h3
@@ -163,7 +164,7 @@ export default function HowWeWorkPageClient() {
                 {howWeWorkComparisonColumns[0].name}
               </h3>
 
-              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-base md:text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {howWeWorkComparisonColumns[0].items.map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
@@ -171,20 +172,19 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
             {/* Hourly Dev Shops */}
-            <motion.div
+            <MotionCard variant="plain" pad="sm" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative h-full overflow-hidden p-6 rounded-2xl border"
+              className="block h-full overflow-hidden rounded-2xl border"
               style={{
                 background: colors.cardBg,
                 borderColor: colors.cardBorder,
-              }}
-            >
+              }}>
               <RecommendedBadge visible={false} />
 
               <h3
@@ -194,7 +194,7 @@ export default function HowWeWorkPageClient() {
                 {howWeWorkComparisonColumns[1].name}
               </h3>
 
-              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-base md:text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {howWeWorkComparisonColumns[1].items.map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
@@ -202,20 +202,19 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
 
             {/* Vizantir */}
-            <motion.div
+            <MotionCard variant="plain" pad="sm" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative h-full overflow-hidden p-6 rounded-2xl border"
+              className="block h-full overflow-hidden rounded-2xl border"
               style={{
                 background: 'linear-gradient(135deg, rgba(0, 112, 243,0.1) 0%, rgba(0, 112, 243,0.02) 100%)',
                 borderColor: 'rgba(0, 112, 243,0.3)',
-              }}
-            >
+              }}>
               <RecommendedBadge visible />
 
               <h3
@@ -225,7 +224,7 @@ export default function HowWeWorkPageClient() {
                 {howWeWorkComparisonColumns[2].name}
               </h3>
 
-              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-base md:text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {howWeWorkComparisonColumns[2].items.map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-cobalt-text flex-shrink-0 mt-[2px]" aria-hidden />
@@ -233,7 +232,7 @@ export default function HowWeWorkPageClient() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionCard>
           </div>
 
           {/* One-liner */}
@@ -249,20 +248,20 @@ export default function HowWeWorkPageClient() {
 
           </motion.p>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* What's Included Section */}
-      <section className="px-6 md:px-12 lg:px-20 pt-20 pb-10">
+      <Section edge="top" className="px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-12 text-center text-balance"
+            className="md:text-3xl font-bold mb-12 text-center text-balance"
             style={{ color: colors.text }}
           >
             What to Expect
@@ -325,108 +324,75 @@ export default function HowWeWorkPageClient() {
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* FAQ Section */}
-      <section className="px-6 md:px-12 lg:px-20 pt-10 pb-20">
+      <Section size="sm" className="px-6 md:px-12 lg:px-20">
         <div className="max-w-3xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-12 text-center text-balance"
+            className="md:text-3xl font-bold mb-12 text-center text-balance"
             style={{ color: colors.text }}
           >
             Questions
           </motion.h2>
 
-          <div className="space-y-3">
+          <div className="space-y-[var(--stack)]">
             {howWeWorkFaqs.map((faq, index) => {
               const isOpen = openFaq === index
               const triggerId = `how-we-work-faq-trigger-${index}`
               const panelId = `how-we-work-faq-panel-${index}`
 
               return (
-                <motion.div
+                <AccordionItem
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className={`rounded-xl border px-6 py-5 transition-all duration-300 ${
-                    isOpen ? '' : 'hover:bg-[#F9FAFB]'
-                  }`}
+                  triggerId={triggerId}
+                  panelId={panelId}
+                  isOpen={isOpen}
+                  onToggle={() => setOpenFaq(isOpen ? null : index)}
+                  question={faq.question}
+                  questionClassName="text-base font-medium"
+                  questionStyle={{ color: colors.text }}
                   style={{
                     background: colors.cardBg,
-                    borderColor: isOpen
-                      ? 'rgba(0, 112, 243,0.3)'
-                      : colors.cardBorder,
+                    borderColor: isOpen ? 'rgba(0, 112, 243,0.3)' : colors.cardBorder,
                   }}
                 >
-                  <button
-                    id={triggerId}
-                    type="button"
-                    onClick={() => setOpenFaq(isOpen ? null : index)}
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    className="w-full text-left"
+                  <p
+                    className="text-base md:text-sm leading-normal md:leading-relaxed"
+                    style={{ color: colors.textMuted }}
                   >
-                    <div className="flex items-center justify-between gap-4">
-                      <span
-                        className="font-medium"
-                        style={{ color: colors.text }}
-                      >
-                        {faq.question}
-                      </span>
-                      <AccordionIndicator
-                        isOpen={isOpen}
-                        className="w-5 h-5 flex-shrink-0"
-                        style={{ color: 'var(--cobalt-text)' }}
-                      />
-                    </div>
-                  </button>
-
-                  <div
-                    id={panelId}
-                    role="region"
-                    aria-labelledby={triggerId}
-                    aria-hidden={!isOpen}
-                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <p
-                        className="mt-4 text-sm leading-relaxed"
-                        style={{ color: colors.textMuted }}
-                      >
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+                    {faq.answer}
+                  </p>
+                </AccordionItem>
               )
             })}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* CTA Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20 md:py-24">
+      <Section size="lg" className="px-6 md:px-12 lg:px-20">
         <div className="max-w-2xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-6 text-balance transition-colors duration-500"
+            className="md:text-4xl font-bold mb-6 text-balance transition-colors duration-500"
             style={{ color: colors.text }}
           >
             Ready to start?
@@ -458,7 +424,7 @@ export default function HowWeWorkPageClient() {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

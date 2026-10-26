@@ -41,7 +41,7 @@ export function hasPortableTextContent(value: unknown): value is PortableTextBlo
 export const vizantirPortableTextComponents: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
-      <h2 className="text-2xl md:text-3xl font-bold mt-12 mb-4 text-foreground">{children}</h2>
+      <h2 className="md:text-3xl font-bold mt-12 mb-4 text-foreground">{children}</h2>
     ),
     h3: ({ children }) => (
       <h3 className="text-xl md:text-2xl font-semibold mt-8 mb-3 text-foreground">{children}</h3>
@@ -50,7 +50,7 @@ export const vizantirPortableTextComponents: PortableTextComponents = {
       <h4 className="text-lg md:text-xl font-semibold mt-6 mb-3 text-foreground">{children}</h4>
     ),
     normal: ({ children }) => (
-      <p className="my-4 max-w-[48ch] text-base md:text-lg leading-relaxed text-foreground/90">{children}</p>
+      <p className="my-[var(--para-gap)] max-w-[48ch] text-base md:text-lg leading-relaxed text-foreground/90">{children}</p>
     ),
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-primary pl-4 my-6 italic text-foreground/80">

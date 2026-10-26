@@ -1,3 +1,5 @@
+import { Card } from '@/components/ui/Card'
+import { Section } from '@/components/ui/Section'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -51,17 +53,16 @@ const pageGraph = graphSchema([
 
 function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3">
       {technologies.map((tech) => (
-        <article
+        <Card as="article" variant="plain" badge={false}
           key={tech.slug}
-          className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
-        >
+          className="h-auto flex flex-col rounded-2xl border border-border bg-background">
           <h3 className="text-2xl font-bold text-foreground mb-3">{tech.name}</h3>
           <p className="text-cobalt-text font-medium mb-4">{tech.tagline}</p>
           <ul className="mb-6 space-y-3 flex-1">
             {tech.whyWeUseIt.slice(0, 2).map((item) => (
-              <li key={item} className="flex gap-3 text-sm text-body leading-relaxed">
+              <li key={item} className="flex gap-3 text-base md:text-sm text-body leading-normal md:leading-relaxed">
                 <span
                   className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{ background: 'var(--cobalt-accent)' }}
@@ -78,7 +79,7 @@ function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
             Learn more
             <ArrowRight className="h-4 w-4" />
           </Link>
-        </article>
+        </Card>
       ))}
     </div>
   )
@@ -90,10 +91,10 @@ export default function TechnologyHubPage() {
       <JsonLd id="ld-technology-hub" data={pageGraph} />
 
       <div style={{ background: 'var(--background)' }}>
-        <section className="px-6 md:px-12 lg:px-20 pt-32 pb-16 md:pt-36 md:pb-20">
+        <Section hero className="px-6 md:px-12 lg:px-20">
           <div className="max-w-6xl mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
+              <h1 className="md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 The Technology Behind Every Vizantir Build
               </h1>
               <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
@@ -104,8 +105,8 @@ export default function TechnologyHubPage() {
             </div>
 
             <div className="mb-16 md:mb-20">
-              <div className="max-w-3xl mb-10">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Core Stack</h2>
+              <div className="max-w-3xl mb-[var(--heading-gap)]">
+                <h2 className="md:text-3xl font-bold text-foreground mb-4">Core Stack</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
                   The foundation under every Vizantir build.
                 </p>
@@ -114,8 +115,8 @@ export default function TechnologyHubPage() {
             </div>
 
             <div className="mb-16 md:mb-20">
-              <div className="max-w-3xl mb-10">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              <div className="max-w-3xl mb-[var(--heading-gap)]">
+                <h2 className="md:text-3xl font-bold text-foreground mb-4">
                   When the Project Calls for It
                 </h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
@@ -125,8 +126,8 @@ export default function TechnologyHubPage() {
               <TechnologyGrid technologies={SPECIALIZED_TOOLS} />
             </div>
 
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+            <div className="max-w-3xl mx-auto text-center mb-[var(--heading-gap)]">
+              <h2 className="md:text-3xl font-bold text-foreground mb-6">
                 Why stack choices matter
               </h2>
               <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
@@ -147,7 +148,7 @@ export default function TechnologyHubPage() {
               </Link>
             </div>
           </div>
-        </section>
+        </Section>
       </div>
     </>
   )

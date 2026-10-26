@@ -5,17 +5,31 @@ import { cva } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const cardSurfaceVariants = cva(
-  'relative flex h-full flex-col rounded-xl p-7 transition-colors duration-300 md:p-8',
+  // Mobile card body is 16px / 1.5; md+ inherits the page baseline.
+  'relative flex h-full flex-col rounded-xl text-[16px] leading-[1.5] transition-colors duration-300 md:text-[length:inherit] md:leading-[inherit]',
   {
     variants: {
       variant: {
         glass: 'card-surface-glass',
         'muted-30': 'border',
         'muted-20': 'border',
+        /** Border only. Colors come from className (themed or per-page surfaces). */
+        plain: 'border',
       },
       featured: {
         true: '',
         false: '',
+      },
+      /** Lift on hover. Hover colors only apply to interactive cards. */
+      interactive: {
+        true: 'card-interactive',
+        false: '',
+      },
+      /** Padding comes from --card-pad* in globals.css. lg = CTA panels, sm = compact rows. */
+      pad: {
+        default: 'p-[var(--card-pad)]',
+        lg: 'p-[var(--card-pad-lg)]',
+        sm: 'p-[var(--card-pad-sm)]',
       },
     },
     compoundVariants: [
@@ -23,38 +37,50 @@ const cardSurfaceVariants = cva(
       {
         variant: 'muted-30',
         featured: false,
-        class: 'border-border bg-muted/30 hover:border-cobalt-muted-border hover:bg-muted/50',
+        class: 'border-border bg-muted/30',
       },
       {
         variant: 'muted-30',
         featured: true,
-        class:
-          'border-cobalt-muted-border bg-cobalt-muted-subtle hover:border-cobalt-muted hover:bg-[rgba(0,112,243,0.1)]',
+        class: 'border-cobalt-muted-border bg-cobalt-muted-subtle',
       },
       {
         variant: 'muted-20',
         featured: false,
-        class: 'border-border bg-muted/20 hover:border-cobalt-muted-border hover:bg-muted/40',
+        class: 'border-border bg-muted/20',
       },
       {
         variant: 'muted-20',
         featured: true,
-        class:
-          'border-cobalt-muted-border bg-cobalt-muted-subtle hover:border-cobalt-muted hover:bg-[rgba(0,112,243,0.1)]',
+        class: 'border-cobalt-muted-border bg-cobalt-muted-subtle',
+      },
+      {
+        variant: ['muted-30', 'muted-20'],
+        featured: false,
+        interactive: true,
+        class: 'hover:border-cobalt-muted-border hover:bg-muted/50',
+      },
+      {
+        variant: ['muted-30', 'muted-20'],
+        featured: true,
+        interactive: true,
+        class: 'hover:border-cobalt-muted hover:bg-[rgba(0,112,243,0.1)]',
       },
     ],
     defaultVariants: {
       variant: 'muted-30',
       featured: false,
+      interactive: false,
+      pad: 'default',
     },
   },
 )
 
-type CardElement = 'div' | 'article'
+type CardElement = 'div' | 'article' | 'aside'
 
 interface CardProps extends React.ComponentPropsWithoutRef<'div'> {
   /** Surface treatment — not page/business context */
-  variant?: 'glass' | 'muted-30' | 'muted-20'
+  variant?: 'glass' | 'muted-30' | 'muted-20' | 'plain'
   /** Applies featured surface (cobalt tint). Default badge: "Popular" */
   featured?: boolean
   /**
@@ -62,6 +88,10 @@ interface CardProps extends React.ComponentPropsWithoutRef<'div'> {
    * `false` → no badge. string → custom label.
    */
   badge?: string | false
+  /** Hover lift (and hover colors on muted variants) */
+  interactive?: boolean
+  /** Padding size token. Default --card-pad */
+  pad?: 'default' | 'lg' | 'sm'
   /** Semantic root element. Blog/Chatbot use "article". Default: "div" */
   as?: CardElement
   className?: string
@@ -71,6 +101,8 @@ interface CardProps extends React.ComponentPropsWithoutRef<'div'> {
 function Card({
   variant = 'muted-30',
   featured = false,
+  interactive = false,
+  pad = 'default',
   badge,
   as: Component = 'div',
   className,
@@ -79,23 +111,27 @@ function Card({
 }: CardProps) {
   const showBadge = featured && badge !== false
   const badgeLabel = typeof badge === 'string' ? badge : 'Popular'
+  // `badge={false}` drops the reserved badge row entirely so the card has no dead top space.
+  const renderBadgeRow = badge !== false
 
   return (
     <Component
-      className={cn(cardSurfaceVariants({ variant, featured }), className)}
+      className={cn(cardSurfaceVariants({ variant, featured, interactive, pad }), className)}
       {...props}
     >
-      <div className="mb-4 flex min-h-[22px] items-center justify-end">
-        <span
-          className={cn(
-            'rounded-full bg-cobalt-gradient px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-white',
-            !showBadge && 'invisible',
-          )}
-          aria-hidden={!showBadge}
-        >
-          {badgeLabel}
-        </span>
-      </div>
+      {renderBadgeRow ? (
+        <div className="mb-4 flex min-h-[22px] items-center justify-end">
+          <span
+            className={cn(
+              'rounded-full bg-cobalt-gradient px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-white',
+              !showBadge && 'invisible',
+            )}
+            aria-hidden={!showBadge}
+          >
+            {badgeLabel}
+          </span>
+        </div>
+      ) : null}
       {children}
     </Component>
   )
@@ -266,6 +302,7 @@ function CardFooter({ className, children }: CardFooterProps) {
 
 export {
   Card,
+  cardSurfaceVariants,
   CardHeader,
   CardTitle,
   CardPrice,

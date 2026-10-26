@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { Code2, Palette, Target } from 'lucide-react'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -27,12 +29,12 @@ export function ProductDefinition() {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="product-definition-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="product-definition-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="product-definition-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What a Vizantir landing page actually is.
             </h2>
@@ -50,24 +52,23 @@ export function ProductDefinition() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-3"
           >
             {columns.map((column) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={column.title}
                 variants={itemVariants}
-                className="rounded-2xl border border-border bg-muted p-6"
-              >
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
                   <column.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{column.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{column.description}</p>
-              </motion.div>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{column.description}</p>
+              </MotionCard>
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

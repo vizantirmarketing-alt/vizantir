@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -38,7 +39,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
 
   return (
     <div style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
-      <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-16 md:pb-20 overflow-hidden">
+      <Section hero className="relative px-6 md:px-12 lg:px-20 overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
@@ -55,7 +56,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             All case studies
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
+            <h1 className="font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
               {caseStudy.title}
             </h1>
             {isStudio || metadataLine ? (
@@ -102,13 +103,13 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             </motion.div>
           ) : null}
         </div>
-      </section>
+      </Section>
 
       <div className="h-px w-full" style={{ background: colors.divider }} />
 
       {hasChallenge ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-3xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -116,20 +117,20 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="mb-8 font-bold md:text-4xl" style={{ color: colors.text }}>
                   The problem to solve
                 </h2>
                 <PortableText value={caseStudy.challenge!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
 
       {hasSolution ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-3xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -137,20 +138,20 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="mb-8 font-bold md:text-4xl" style={{ color: colors.text }}>
                   What we built
                 </h2>
                 <PortableText value={caseStudy.solution!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
 
       {hasResults ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-3xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -158,29 +159,29 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="mb-8 font-bold md:text-4xl" style={{ color: colors.text }}>
                   Impact and outcomes
                 </h2>
                 <PortableText value={caseStudy.results!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
 
       {hasStack ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center md:text-left"
+                className="mb-[var(--heading-gap)] text-center md:text-left"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   Technologies used
                 </h2>
               </motion.div>
@@ -204,12 +205,12 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 ))}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
 
-      <section className="px-6 py-16 md:px-12 md:pb-24 lg:px-20">
+      <Section size="lg" className="px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-3xl text-center">
           <Link
             href="/case-studies"
@@ -220,7 +221,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

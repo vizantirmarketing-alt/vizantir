@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -7,11 +8,9 @@ import { motion } from 'framer-motion';
 
 const AboutStory = () => {
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         <div className="grid lg:grid-cols-2 gap-5 lg:gap-14 items-center">
           {/* Left Content */}
           <div className="max-w-xl">
@@ -23,7 +22,7 @@ const AboutStory = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <h2 
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
+                className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
               >
                 Your business has outgrown what you started with.
               </h2>
@@ -102,7 +101,7 @@ const AboutStory = () => {
           </motion.div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 

@@ -1,3 +1,5 @@
+import { Card } from '@/components/ui/Card'
+import { Section } from '@/components/ui/Section'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { StrategyCallLink } from './StrategyCallLink'
@@ -60,10 +62,10 @@ export default function IndustriesHubPage() {
       <JsonLd id="ld-industries-hub" data={pageGraph} />
 
       <div style={{ background: 'var(--background)' }}>
-        <section className="px-6 md:px-12 lg:px-20 pt-32 pb-16 md:pt-36 md:pb-20">
+        <Section hero className="px-6 md:px-12 lg:px-20">
           <div className="max-w-6xl mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
+              <h1 className="md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 Industries We Serve
               </h1>
               <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
@@ -74,15 +76,14 @@ export default function IndustriesHubPage() {
             </div>
 
             <div className="mb-20 md:mb-28">
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-[var(--stack)] md:grid-cols-2">
                 {PRIMARY_VERTICALS.map((vertical) => (
-                  <article
+                  <Card as="article" variant="plain" badge={false}
                     key={vertical.href}
-                    className="flex flex-col rounded-2xl border border-border bg-background p-6 md:p-8"
-                  >
-                    <h2 className="text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
+                    className="h-auto flex flex-col rounded-2xl border border-border bg-background">
+                    <h2 className="md:text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
                     <p className="text-cobalt-text font-medium mb-4">{vertical.tagline}</p>
-                    <p className="mb-6 flex-1 text-sm text-body leading-relaxed">
+                    <p className="mb-6 flex-1 text-base md:text-sm text-body leading-normal md:leading-relaxed">
                       {vertical.description}
                     </p>
                     <Link
@@ -92,14 +93,14 @@ export default function IndustriesHubPage() {
                       {vertical.title}
                       <ArrowRight className="h-4 w-4" />
                     </Link>
-                  </article>
+                  </Card>
                 ))}
               </div>
             </div>
 
             <div className="mb-20 md:mb-28">
-              <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
+              <div className="max-w-3xl mx-auto text-center mb-[var(--heading-gap)]">
+                <h2 className="md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
                   Vizantir takes projects across the broader market. Any established business that
                   wants a premium, custom-built site over a templated solution.
@@ -138,7 +139,7 @@ export default function IndustriesHubPage() {
               </Button>
             </div>
           </div>
-        </section>
+        </Section>
       </div>
     </>
   )

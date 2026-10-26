@@ -1,12 +1,13 @@
 'use client'
 
+import { AccordionItem } from '@/components/ui/AccordionItem'
+import { Section } from '@/components/ui/Section'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import SectionDivider from '@/components/ui/SectionDivider'
-import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { trackBookStrategyCall } from '@/lib/analytics'
 import {
   nextjsVsWordpressComparison,
@@ -31,7 +32,7 @@ export default function NextJsVsWordpressClient() {
 
   return (
     <div className="bg-background text-foreground transition-colors duration-500">
-      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+      <Section hero className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 md:px-12 lg:px-20">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
           aria-hidden
@@ -43,7 +44,7 @@ export default function NextJsVsWordpressClient() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+            className="mb-6 font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
           >
             {nextjsVsWordpressHero.heading}
           </motion.h1>
@@ -89,16 +90,16 @@ export default function NextJsVsWordpressClient() {
             </Button>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="comparison-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="comparison-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="comparison-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               {nextjsVsWordpressComparison.heading}
             </h2>
@@ -147,17 +148,17 @@ export default function NextJsVsWordpressClient() {
             </table>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="nextjs-better-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="nextjs-better-heading">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <motion.div {...sectionReveal} className="max-w-[48ch]">
               <h2
                 id="nextjs-better-heading"
-                className="mb-5 text-3xl font-bold text-foreground md:text-4xl"
+                className="mb-5 font-bold text-foreground md:text-4xl"
               >
                 {nextjsVsWordpressNextBetter.heading}
               </h2>
@@ -189,7 +190,7 @@ export default function NextJsVsWordpressClient() {
             >
               <h2
                 id="wordpress-better-heading"
-                className="mb-5 text-3xl font-bold text-foreground md:text-4xl"
+                className="mb-5 font-bold text-foreground md:text-4xl"
               >
                 {nextjsVsWordpressWordpressBetter.heading}
               </h2>
@@ -213,16 +214,16 @@ export default function NextJsVsWordpressClient() {
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="criteria-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="criteria-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="criteria-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               {nextjsVsWordpressCriteria.heading}
             </h2>
@@ -243,91 +244,61 @@ export default function NextJsVsWordpressClient() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionReveal} className="mb-12 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="faq-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Questions people ask about Next.js vs WordPress
             </h2>
           </motion.div>
 
-          <div className="space-y-3">
+          <div className="space-y-[var(--stack)]">
             {nextjsVsWordpressFaqs.map((faq, index) => {
               const isOpen = openFaq === index
               const triggerId = `nextjs-vs-wordpress-faq-trigger-${index}`
               const panelId = `nextjs-vs-wordpress-faq-panel-${index}`
 
               return (
-                <motion.div
+                <AccordionItem
                   key={faq.question}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className={`rounded-xl border bg-card px-6 py-5 transition-all duration-300 ${
-                    isOpen ? 'border-cobalt-accent/30' : 'border-border hover:bg-[#F9FAFB]'
-                  }`}
+                  triggerId={triggerId}
+                  panelId={panelId}
+                  isOpen={isOpen}
+                  onToggle={() => setOpenFaq(isOpen ? null : index)}
+                  question={faq.question}
+                  questionClassName="text-base font-medium"
+                  className={isOpen ? 'border-cobalt-accent/30 bg-card' : 'border-border bg-card'}
                 >
-                  <button
-                    id={triggerId}
-                    type="button"
-                    onClick={() => setOpenFaq(isOpen ? null : index)}
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    className="w-full text-left"
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="font-medium text-foreground">{faq.question}</span>
-                      <AccordionIndicator
-                        isOpen={isOpen}
-                        className="h-5 w-5 flex-shrink-0"
-                        style={{ color: 'var(--cobalt-text)' }}
-                      />
-                    </div>
-                  </button>
-
-                  <div
-                    id={panelId}
-                    role="region"
-                    aria-labelledby={triggerId}
-                    aria-hidden={!isOpen}
-                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+                  <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{faq.answer}</p>
+                </AccordionItem>
               )
             })}
           </div>
         </div>
-      </section>
+      </Section>
 
-      <section
-        className="relative overflow-hidden bg-cobalt-primary px-6 py-24 md:px-12 lg:px-20"
-        aria-labelledby="closing-cta-heading"
-      >
+      <Section size="lg" className="relative overflow-hidden bg-cobalt-primary px-6 md:px-12 lg:px-20"
+        aria-labelledby="closing-cta-heading">
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <motion.div {...sectionReveal}>
             <h2
               id="closing-cta-heading"
-              className="mb-5 text-3xl font-bold text-white md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-white md:text-4xl lg:text-5xl"
             >
               {nextjsVsWordpressCta.heading}
             </h2>
-            <p className="mb-10 text-lg text-white">{nextjsVsWordpressCta.body}</p>
+            <p className="mb-[var(--cta-gap)] text-lg text-white">{nextjsVsWordpressCta.body}</p>
             <Button
               size="lg"
               asChild
@@ -343,7 +314,7 @@ export default function NextJsVsWordpressClient() {
             </Button>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

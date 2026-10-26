@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -48,15 +50,13 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
   return (
     <>
       <SectionDivider />
-      <section
-        className="px-6 py-20 md:px-12 lg:px-20"
-        aria-labelledby="handoff-preview-heading"
-      >
+      <Section className="px-6 md:px-12 lg:px-20"
+        aria-labelledby="handoff-preview-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="handoff-preview-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Documentation you can run the campaign with.
             </h2>
@@ -73,10 +73,9 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
             viewport={{ once: true, margin: '-40px' }}
             className="mx-auto max-w-3xl"
           >
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               variants={itemVariants}
-              className="rounded-2xl border border-border bg-muted/30 p-6 shadow-sm md:p-8"
-            >
+              className="block h-auto rounded-2xl border border-border bg-muted/30 shadow-sm">
               <p className="mb-6 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Sample handoff document
               </p>
@@ -102,17 +101,17 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
                       <p className="font-mono text-sm font-semibold text-foreground">
                         {section.title}
                       </p>
-                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                         {section.detail}
                       </p>
                     </div>
                   </li>
                 ))}
               </ol>
-            </motion.div>
+            </MotionCard>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

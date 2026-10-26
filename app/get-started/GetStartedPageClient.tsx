@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { getStartedDescription, getStartedSteps } from '@/data/get-started'
@@ -12,10 +14,10 @@ export default function GetStartedPageClient() {
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4">
+      <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Ready to start?
             </h1>
             <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
@@ -23,19 +25,19 @@ export default function GetStartedPageClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* Process Steps */}
-      <section className="px-4 pb-16">
+      <Section size="sm" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="space-y-8">
+          <div className="space-y-[var(--stack)]">
             {steps.map((step, index) => (
-              <motion.div
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex gap-6 p-6 rounded-2xl"
+                className="h-auto flex-row gap-6 rounded-2xl"
                 style={{ 
                   background: '#FFFFFF',
                   border: '1px solid rgba(0,0,0,0.08)',
@@ -56,32 +58,32 @@ export default function GetStartedPageClient() {
                     {step.description}
                   </p>
                 </div>
-              </motion.div>
+              </MotionCard>
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* CTA Section */}
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <MotionCard variant="plain" pad="lg" badge={false}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-center p-8 md:p-12 rounded-2xl"
+            className="block h-auto text-center rounded-2xl"
             style={{ 
               background: 'rgba(0, 112, 243,0.15)',
               border: '1px solid rgba(0, 112, 243,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+            <h2 className="md:text-3xl font-bold mb-4 text-foreground">
               Next step: a real conversation
             </h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto text-muted-foreground">
+            <p className="text-lg mb-[var(--cta-gap)] max-w-xl mx-auto text-muted-foreground">
               Book a discovery call. We&apos;ll see if the project and timeline line up. No pressure, no hard sell.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-[var(--btn-stack)] sm:gap-4 justify-center">
               <Link
                 href="/contact"
                 onClick={() => trackBookStrategyCall('get_started')}
@@ -105,9 +107,9 @@ export default function GetStartedPageClient() {
                 View Services
               </Link>
             </div>
-          </motion.div>
+          </MotionCard>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
@@ -41,15 +43,13 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
   return (
     <>
       <SectionDivider />
-      <section
-        className="px-6 py-20 md:px-12 lg:px-20"
-        aria-labelledby="variant-comparison-heading"
-      >
+      <Section className="px-6 md:px-12 lg:px-20"
+        aria-labelledby="variant-comparison-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="variant-comparison-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Same system. Different job per URL.
             </h2>
@@ -60,36 +60,34 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
           </motion.div>
 
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
-            <motion.div
+            <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="rounded-2xl border border-cobalt-accent/40 bg-cobalt-muted-subtle p-6 md:p-8"
-            >
+              className="block h-auto rounded-2xl border border-cobalt-accent/40 bg-cobalt-muted-subtle">
               <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                 This variant is optimized for
               </p>
               <p className="mt-4 text-xl font-bold leading-snug text-foreground md:text-2xl">
                 {current.optimizedFor}
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-4 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                 Hero, problem framing, proof callout, fit criteria, and FAQ answers are all tuned
                 for this audience. Shared product, process, and deliverables stay consistent across
                 the family.
               </p>
-            </motion.div>
+            </MotionCard>
 
             <motion.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
-              className="space-y-3"
+              className="space-y-[var(--stack)]"
             >
               {ROW_KEYS.map((row) => (
-                <motion.div
+                <MotionCard variant="plain" pad="sm" badge={false}
                   key={row.key}
                   variants={itemVariants}
-                  className="group rounded-2xl border border-border bg-muted/30 p-4 transition-colors hover:border-cobalt-accent/40 hover:bg-cobalt-muted-subtle/50 md:p-5"
-                >
+                  className="block h-auto group rounded-2xl border border-border bg-muted/30 transition-colors hover:border-cobalt-accent/40 hover:bg-cobalt-muted-subtle/50">
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold text-foreground">{row.label}</p>
                     <ArrowRight
@@ -108,7 +106,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                               <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                                 Current · {variant.hero.eyebrow}
                               </p>
-                              <p className="mt-1 text-sm leading-relaxed text-foreground">
+                              <p className="mt-1 text-base md:text-sm leading-normal md:leading-relaxed text-foreground">
                                 {highlightFor(variant, row.key)}
                               </p>
                             </div>
@@ -127,7 +125,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                                 {variant.hero.eyebrow}
                               </p>
-                              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                              <p className="mt-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                                 {highlightFor(variant, row.key)}
                               </p>
                             </Link>
@@ -136,12 +134,12 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                       )
                     })}
                   </ul>
-                </motion.div>
+                </MotionCard>
               ))}
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

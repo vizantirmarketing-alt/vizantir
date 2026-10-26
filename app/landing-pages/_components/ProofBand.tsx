@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -29,7 +30,7 @@ export function ProofBand({ clients, callout }: ProofBandProps) {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="proof-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="proof-heading">
         <div className="mx-auto max-w-6xl">
           {callout ? (
             <motion.div {...sectionReveal} className="mb-10">
@@ -41,10 +42,10 @@ export function ProofBand({ clients, callout }: ProofBandProps) {
             </motion.div>
           ) : null}
 
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="proof-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Process-driven proof.
             </h2>
@@ -77,7 +78,7 @@ export function ProofBand({ clients, callout }: ProofBandProps) {
             </motion.div>
           ) : null}
         </div>
-      </section>
+      </Section>
     </>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -155,7 +156,7 @@ export default function BlogPageClient({ posts }: Props) {
         transition: themeBgColorTransition,
       }}
     >
-      <section className="px-6 pt-32 md:px-12 lg:px-20">
+      <Section size="sm" hero className="px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0 }}
@@ -164,7 +165,7 @@ export default function BlogPageClient({ posts }: Props) {
           >
             <div className="flex flex-wrap items-end justify-between gap-12">
               <div className="min-w-0 max-w-[720px] flex-1">
-                <h1 className="max-w-[720px] text-5xl font-bold leading-[1.02] tracking-tight md:text-6xl">
+                <h1 className="max-w-[720px] font-bold leading-[1.02] tracking-tight md:text-6xl">
                   Web design insights for business owners
                 </h1>
                 <p className="mt-6 text-lg" style={{ color: colors.textMuted }}>
@@ -239,9 +240,9 @@ export default function BlogPageClient({ posts }: Props) {
             </div>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-6 md:px-12 lg:px-20">
+      <Section edge="none" className="px-6 md:px-12 lg:px-20">
         <div className={`mx-auto max-w-6xl pb-24 ${leadPost ? 'pt-14' : ''}`}>
           {leadPost ? (
             <motion.div
@@ -270,7 +271,7 @@ export default function BlogPageClient({ posts }: Props) {
                   ) : null}
                 </div>
                 <div className="min-w-0">
-                  <h2 className="max-w-[820px] text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl">
+                  <h2 className="max-w-[820px] font-bold leading-[1.08] tracking-tight md:text-5xl">
                     {leadPost.title}
                   </h2>
                   {postExcerpt(leadPost) ? (
@@ -371,18 +372,16 @@ export default function BlogPageClient({ posts }: Props) {
             ))
           )}
         </div>
-      </section>
+      </Section>
 
-      <section
-        className="border-t border-[rgba(20,20,19,0.14)] px-6 py-20 md:px-12 lg:px-20"
-      >
+      <Section className="border-t border-[rgba(20,20,19,0.14)] px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-2xl text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="mb-6 text-3xl font-bold md:text-4xl"
+            className="mb-6 font-bold md:text-4xl"
             style={{ color: colors.text }}
           >
             Want to talk through your project?
@@ -423,7 +422,7 @@ export default function BlogPageClient({ posts }: Props) {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

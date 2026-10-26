@@ -1,5 +1,7 @@
 'use client'
 
+import { MotionCard } from '@/components/ui/MotionCard'
+import { Section } from '@/components/ui/Section'
 import { memo, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -134,7 +136,7 @@ function CaseStudyIndexRow({
 
         <div className="min-w-0">
           <h2
-            className="mb-2 text-2xl font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-text md:text-[2.35rem]"
+            className="mb-2 font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-text md:text-[2.35rem]"
             style={{ color: colors.text }}
           >
             {study.title}
@@ -218,7 +220,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
 
   return (
     <div className="min-h-screen pt-32 pb-20" style={{ background: colors.bg }}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-gutter">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <motion.div
@@ -228,7 +230,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             className="mb-14"
           >
             <h1
-              className="mb-6 max-w-[16ch] text-5xl font-black leading-[1.02] tracking-[-0.035em] md:text-6xl lg:text-7xl"
+              className="mb-6 max-w-[16ch] font-black leading-[1.02] tracking-[-0.035em] md:text-6xl lg:text-7xl"
               style={{ color: colors.text }}
             >
               Websites We Have Launched
@@ -302,7 +304,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
           {/* Index */}
           <div className="relative">
             {clientStudies.length > 0 ? (
-              <section>
+              <Section edge="none">
                 <h2
                   className="mb-2 mt-10 text-xl font-bold tracking-tight md:text-2xl"
                   style={{ color: colors.text }}
@@ -318,11 +320,11 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     showStudioMarker={false}
                   />
                 ))}
-              </section>
+              </Section>
             ) : null}
 
             {studioStudies.length > 0 ? (
-              <section className={clientStudies.length > 0 ? 'mt-16' : 'mt-10'}>
+              <Section edge="none" className={clientStudies.length > 0 ? 'mt-16' : 'mt-10'}>
                 <h2
                   className="mb-3 text-xl font-bold tracking-tight md:text-2xl"
                   style={{ color: colors.text }}
@@ -346,19 +348,18 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     showStudioMarker
                   />
                 ))}
-              </section>
+              </Section>
             ) : null}
           </div>
 
           {/* In-house — Analytir */}
-          <motion.div
+          <MotionCard variant="plain" pad="lg" badge={false}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
-            className="mt-24 rounded-2xl border p-8 md:p-12"
-            style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
-          >
+            className="block h-auto mt-24 rounded-2xl border"
+            style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
             <div
               className="relative mb-10 aspect-[21/9] overflow-hidden rounded-xl border"
               style={{ borderColor: colors.cardBorder }}
@@ -373,7 +374,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             </div>
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
               <div>
-                <h2 className="text-3xl font-black tracking-tight md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-black tracking-tight md:text-4xl" style={{ color: colors.text }}>
                   Analytir
                 </h2>
                 <p className="mt-4 leading-relaxed" style={{ color: colors.textMuted }}>
@@ -418,7 +419,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                 ))}
               </dl>
             </div>
-          </motion.div>
+          </MotionCard>
 
           {/* Bottom CTA */}
           <motion.div
@@ -427,7 +428,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-20 text-center"
           >
-            <p className="mb-8 text-xl" style={{ color: colors.textMuted }}>
+            <p className="mb-[var(--cta-gap)] text-xl" style={{ color: colors.textMuted }}>
               Ready to grow with a partner who values transparency and measurable results?
             </p>
             <Link
