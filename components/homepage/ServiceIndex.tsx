@@ -24,9 +24,9 @@ export function ServiceIndex({ services }: ServiceIndexProps) {
           {services.map((service) => (
             <div
               key={service.href}
-              className="grid gap-4 border-t border-border py-8 md:grid-cols-3 md:gap-12 md:py-10"
+              className="grid gap-2 border-t border-border py-[var(--list-item-y)] md:grid-cols-3 md:gap-12"
             >
-              <h3 className="text-balance text-xl font-bold text-foreground">
+              <h3 className="text-balance text-[22px] leading-[1.2] md:text-xl md:leading-7 font-bold text-foreground">
                 <Link href={service.href} className="link-ui">
                   {service.title}
                 </Link>

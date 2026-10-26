@@ -99,7 +99,7 @@ const WhatHappensNext = () => {
               </div>
 
               <h3 
-                className="text-xl md:text-2xl font-bold mb-3 text-foreground"
+                className="text-[22px] leading-[1.2] md:text-2xl md:leading-8 font-bold mb-2 md:mb-3 text-foreground"
               >
                 {step.title}
               </h3>

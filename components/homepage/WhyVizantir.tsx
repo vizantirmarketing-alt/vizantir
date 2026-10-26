@@ -86,7 +86,7 @@ const WhyVizantir = () => {
               }}
             >
               <h3 
-                className="text-xl md:text-2xl font-bold mb-3 transition-colors duration-300 text-foreground"
+                className="text-[22px] leading-[1.2] md:text-2xl md:leading-8 font-bold mb-2 md:mb-3 transition-colors duration-300 text-foreground"
               >
                 {point.title}
               </h3>

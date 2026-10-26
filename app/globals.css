@@ -73,6 +73,7 @@
   --card-pad: 20px;
   --card-pad-lg: 32px;
   --card-pad-sm: 20px;
+  --list-item-y: 20px;
   --heading-gap: 24px;
   --para-gap: 20px;
   --cta-gap: 32px;
@@ -89,6 +90,7 @@
     --card-pad: 32px;
     --card-pad-lg: 48px;
     --card-pad-sm: 24px;
+    --list-item-y: 32px;
     --heading-gap: 32px;
     --cta-gap: 40px;
     --gutter: 16px;

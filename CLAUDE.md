@@ -137,6 +137,7 @@ list spacing.
 | `--hero-top` | 128px | 128px | page hero top padding, clears the fixed navbar |
 | `--stack` | 12px | 24px | gap between stacked cards or list items |
 | `--card-pad` | 20px | 32px | Card padding (`pad="lg"` uses `--card-pad-lg` 32/48 for CTA panels; `pad="sm"` uses `--card-pad-sm` 20/24 for lighter cards) |
+| `--list-item-y` | 20px | 32px | vertical padding of each row in divider lists (homepage Services, blog) |
 | `--heading-gap` | 24px | 32px | bottom margin of the section heading wrapper |
 | `--para-gap` | 20px | 20px | prose paragraph spacing outside `.blog-content` |
 | `--cta-gap` | 32px | 40px | last body text to the section CTA |

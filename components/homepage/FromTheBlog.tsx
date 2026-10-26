@@ -38,9 +38,9 @@ export function FromTheBlog({ posts }: FromTheBlogProps) {
           {posts.map((post) => (
             <article
               key={post.slug}
-              className="border-t border-border py-8 md:py-10"
+              className="border-t border-border py-[var(--list-item-y)]"
             >
-              <h3 className="text-balance text-xl font-bold text-foreground">
+              <h3 className="text-balance text-xl leading-tight md:leading-7 font-bold text-foreground">
                 <Link href={`/blog/${post.slug}`} className="link-ui">
                   {post.title}
                 </Link>
