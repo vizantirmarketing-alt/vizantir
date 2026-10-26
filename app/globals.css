@@ -72,7 +72,7 @@
   --stack: 12px;
   --card-pad: 20px;
   --card-pad-lg: 32px;
-  --card-pad-sm: 16px;
+  --card-pad-sm: 20px;
   --heading-gap: 24px;
   --para-gap: 20px;
   --cta-gap: 32px;
@@ -88,7 +88,7 @@
     --stack: 24px;
     --card-pad: 32px;
     --card-pad-lg: 48px;
-    --card-pad-sm: 20px;
+    --card-pad-sm: 24px;
     --heading-gap: 32px;
     --cta-gap: 40px;
     --gutter: 16px;
@@ -530,7 +530,7 @@
 
   @media (min-width: 768px) {
     body {
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1.6;
     }
     /* Desktop heading sizes stay with each element's md:/lg: classes. */

@@ -86,7 +86,7 @@ export default function AboutPage() {
                         </Link>
                       ))}
                     </div>
-                    <div className="mt-10 text-center">
+                    <div className="mt-[var(--cta-gap)] text-center">
                       <Link
                         href="/technology"
                         className="link-ui inline-flex items-center gap-2 text-sm font-medium md:text-base"

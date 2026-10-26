@@ -178,12 +178,12 @@ const Hero = () => {
           </h1>
 
           <p
-            className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg transition-colors duration-500 text-muted-foreground"
+            className="text-lg md:text-xl leading-relaxed mb-[var(--cta-gap)] max-w-lg transition-colors duration-500 text-muted-foreground"
           >
             Vizantir is a Las Vegas design studio. Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
           </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex flex-col gap-[var(--btn-stack)] sm:flex-row sm:items-center sm:gap-4">
             <Button
               size="lg"
               asChild

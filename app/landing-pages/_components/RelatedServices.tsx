@@ -32,7 +32,7 @@ export function RelatedServices() {
       <SectionDivider />
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="related-services-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="related-services-heading"
               className="font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -49,12 +49,12 @@ export function RelatedServices() {
             className="grid gap-[var(--stack)] md:grid-cols-3"
           >
             {relatedServices.map((service) => (
-              <MotionCard variant="plain" badge={false}
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={service.href}
                 variants={itemVariants}
                 className="flex h-full flex-col rounded-2xl border border-border bg-muted/40">
                 <h3 className="mb-3 text-lg font-bold text-foreground">{service.title}</h3>
-                <p className="mb-6 flex-1 text-sm leading-relaxed text-muted-foreground">
+                <p className="mb-6 flex-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                   {service.description}
                 </p>
                 <Link

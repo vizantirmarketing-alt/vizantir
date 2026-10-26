@@ -37,7 +37,7 @@ export default function CopyrightNotice() {
           {/* Prohibited Uses */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
             <h2 className="md:text-3xl font-bold mb-6 text-foreground">Prohibited Uses</h2>
-            <p className="leading-relaxed mb-4 text-body">
+            <p className="leading-relaxed mb-[var(--para-gap)] text-body">
               The following activities are strictly prohibited without express written permission:
             </p>
             <ul className="space-y-3 ml-6">
@@ -67,7 +67,7 @@ export default function CopyrightNotice() {
           {/* Legal Enforcement */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
             <h2 className="md:text-3xl font-bold mb-6 text-foreground">Legal Enforcement</h2>
-            <p className="leading-relaxed mb-4 text-body">
+            <p className="leading-relaxed mb-[var(--para-gap)] text-body">
               Unauthorized use of any copyrighted material from this website may result in:
             </p>
             <ul className="space-y-3 ml-6">
@@ -96,7 +96,7 @@ export default function CopyrightNotice() {
           {/* Contact Information */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
             <h2 className="md:text-3xl font-bold mb-6 text-foreground">Contact Information</h2>
-            <p className="leading-relaxed mb-3 text-body">
+            <p className="leading-relaxed mb-[var(--para-gap)] text-body">
               For questions regarding copyright permissions or to report unauthorized use of our content, please contact:
             </p>
             <a href="mailto:info@vizantir.com" className="font-medium transition-colors hover:opacity-80" style={{ color: 'var(--cobalt-text)' }}>

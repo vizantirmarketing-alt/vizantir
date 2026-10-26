@@ -83,7 +83,9 @@ function AccordionItem({
         )}
       >
         <div className="overflow-hidden">
-          <div className="px-5 pb-4 md:px-6 md:pb-5">{children}</div>
+          <div className="px-5 pb-4 text-[16px] leading-[1.5] md:px-6 md:pb-5 md:text-[length:inherit] md:leading-[inherit]">
+            {children}
+          </div>
         </div>
       </div>
     </motion.div>

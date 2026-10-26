@@ -83,7 +83,7 @@ export default function IndustriesHubPage() {
                     className="h-auto flex flex-col rounded-2xl border border-border bg-background">
                     <h2 className="md:text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
                     <p className="text-cobalt-text font-medium mb-4">{vertical.tagline}</p>
-                    <p className="mb-6 flex-1 text-sm text-body leading-relaxed">
+                    <p className="mb-6 flex-1 text-base md:text-sm text-body leading-normal md:leading-relaxed">
                       {vertical.description}
                     </p>
                     <Link
@@ -99,7 +99,7 @@ export default function IndustriesHubPage() {
             </div>
 
             <div className="mb-20 md:mb-28">
-              <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+              <div className="max-w-3xl mx-auto text-center mb-[var(--heading-gap)]">
                 <h2 className="md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
                   Vizantir takes projects across the broader market. Any established business that

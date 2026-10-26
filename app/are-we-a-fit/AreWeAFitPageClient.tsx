@@ -171,7 +171,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
               {content.closingSection.heading}
             </h2>
             <p
-              className="mx-auto mb-8 max-w-[48ch] text-base leading-relaxed md:text-lg"
+              className="mx-auto mb-[var(--cta-gap)] max-w-[48ch] text-base leading-relaxed md:text-lg"
               style={{ color: colors.textMuted }}
             >
               {content.closingSection.body}

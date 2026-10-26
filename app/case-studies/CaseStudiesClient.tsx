@@ -428,7 +428,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-20 text-center"
           >
-            <p className="mb-8 text-xl" style={{ color: colors.textMuted }}>
+            <p className="mb-[var(--cta-gap)] text-xl" style={{ color: colors.textMuted }}>
               Ready to grow with a partner who values transparency and measurable results?
             </p>
             <Link

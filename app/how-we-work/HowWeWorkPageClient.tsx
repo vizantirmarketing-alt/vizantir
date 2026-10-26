@@ -132,7 +132,7 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-16"
+            className="text-center mb-[var(--heading-gap)]"
           >
             <h2
             className="md:text-3xl font-bold text-balance transition-colors duration-500"
@@ -145,7 +145,7 @@ export default function HowWeWorkPageClient() {
           {/* Comparison Cards */}
           <div className="grid items-stretch md:grid-cols-3 gap-6">
             {/* Traditional Agencies */}
-            <MotionCard variant="plain" badge={false}
+            <MotionCard variant="plain" pad="sm" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -164,7 +164,7 @@ export default function HowWeWorkPageClient() {
                 {howWeWorkComparisonColumns[0].name}
               </h3>
 
-              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-base md:text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {howWeWorkComparisonColumns[0].items.map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
@@ -175,7 +175,7 @@ export default function HowWeWorkPageClient() {
             </MotionCard>
 
             {/* Hourly Dev Shops */}
-            <MotionCard variant="plain" badge={false}
+            <MotionCard variant="plain" pad="sm" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -194,7 +194,7 @@ export default function HowWeWorkPageClient() {
                 {howWeWorkComparisonColumns[1].name}
               </h3>
 
-              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-base md:text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {howWeWorkComparisonColumns[1].items.map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <X className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-[2px]" aria-hidden />
@@ -205,7 +205,7 @@ export default function HowWeWorkPageClient() {
             </MotionCard>
 
             {/* Vizantir */}
-            <MotionCard variant="plain" badge={false}
+            <MotionCard variant="plain" pad="sm" badge={false}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -224,7 +224,7 @@ export default function HowWeWorkPageClient() {
                 {howWeWorkComparisonColumns[2].name}
               </h3>
 
-              <ul className="space-y-2 text-pretty text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
+              <ul className="space-y-2 text-pretty text-base md:text-sm leading-normal transition-colors duration-500" style={{ color: colors.textMuted }}>
                 {howWeWorkComparisonColumns[2].items.map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-cobalt-text flex-shrink-0 mt-[2px]" aria-hidden />
@@ -369,7 +369,7 @@ export default function HowWeWorkPageClient() {
                   }}
                 >
                   <p
-                    className="text-sm leading-relaxed"
+                    className="text-base md:text-sm leading-normal md:leading-relaxed"
                     style={{ color: colors.textMuted }}
                   >
                     {faq.answer}

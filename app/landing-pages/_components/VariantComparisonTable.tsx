@@ -46,7 +46,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
       <Section className="px-6 md:px-12 lg:px-20"
         aria-labelledby="variant-comparison-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="variant-comparison-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -69,7 +69,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
               <p className="mt-4 text-xl font-bold leading-snug text-foreground md:text-2xl">
                 {current.optimizedFor}
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-4 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                 Hero, problem framing, proof callout, fit criteria, and FAQ answers are all tuned
                 for this audience. Shared product, process, and deliverables stay consistent across
                 the family.
@@ -106,7 +106,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                               <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                                 Current · {variant.hero.eyebrow}
                               </p>
-                              <p className="mt-1 text-sm leading-relaxed text-foreground">
+                              <p className="mt-1 text-base md:text-sm leading-normal md:leading-relaxed text-foreground">
                                 {highlightFor(variant, row.key)}
                               </p>
                             </div>
@@ -125,7 +125,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                                 {variant.hero.eyebrow}
                               </p>
-                              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                              <p className="mt-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                                 {highlightFor(variant, row.key)}
                               </p>
                             </Link>

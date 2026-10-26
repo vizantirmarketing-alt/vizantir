@@ -31,7 +31,7 @@ export function ProductDefinition() {
       <SectionDivider />
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="product-definition-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="product-definition-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -55,7 +55,7 @@ export function ProductDefinition() {
             className="grid gap-[var(--stack)] md:grid-cols-3"
           >
             {columns.map((column) => (
-              <MotionCard variant="plain" badge={false}
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={column.title}
                 variants={itemVariants}
                 className="block h-auto rounded-2xl border border-border bg-muted">
@@ -63,7 +63,7 @@ export function ProductDefinition() {
                   <column.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{column.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{column.description}</p>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{column.description}</p>
               </MotionCard>
             ))}
           </motion.div>

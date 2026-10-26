@@ -40,7 +40,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
     <Section style={{ background: 'var(--background)' }}>
       <div className="container mx-auto px-gutter">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-[var(--heading-gap)]">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

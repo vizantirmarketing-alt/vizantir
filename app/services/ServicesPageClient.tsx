@@ -206,7 +206,7 @@ function CarePricingRows() {
         </div>
       ))}
       <SectionDivider />
-      <div className="mt-12 flex justify-center">
+      <div className="mt-[var(--cta-gap)] flex justify-center">
         <Button
           asChild
           variant="default"
@@ -417,7 +417,7 @@ function ProjectPricingRows() {
         </div>
       ))}
       <SectionDivider />
-      <div className="mt-12 flex justify-center">
+      <div className="mt-[var(--cta-gap)] flex justify-center">
         <Button
           asChild
           variant="default"
@@ -615,7 +615,7 @@ function ProjectPricingSection() {
             <p className="max-w-[48ch] text-pretty text-base leading-relaxed text-muted-foreground">
               {SMALLER_PROJECTS.body}
             </p>
-            <div className="mt-8">
+            <div className="mt-[var(--cta-gap)]">
               <Button
                 asChild
                 variant="default"

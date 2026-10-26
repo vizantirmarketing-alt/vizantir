@@ -62,7 +62,7 @@ function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
           <p className="text-cobalt-text font-medium mb-4">{tech.tagline}</p>
           <ul className="mb-6 space-y-3 flex-1">
             {tech.whyWeUseIt.slice(0, 2).map((item) => (
-              <li key={item} className="flex gap-3 text-sm text-body leading-relaxed">
+              <li key={item} className="flex gap-3 text-base md:text-sm text-body leading-normal md:leading-relaxed">
                 <span
                   className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{ background: 'var(--cobalt-accent)' }}
@@ -105,7 +105,7 @@ export default function TechnologyHubPage() {
             </div>
 
             <div className="mb-16 md:mb-20">
-              <div className="max-w-3xl mb-10">
+              <div className="max-w-3xl mb-[var(--heading-gap)]">
                 <h2 className="md:text-3xl font-bold text-foreground mb-4">Core Stack</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
                   The foundation under every Vizantir build.
@@ -115,7 +115,7 @@ export default function TechnologyHubPage() {
             </div>
 
             <div className="mb-16 md:mb-20">
-              <div className="max-w-3xl mb-10">
+              <div className="max-w-3xl mb-[var(--heading-gap)]">
                 <h2 className="md:text-3xl font-bold text-foreground mb-4">
                   When the Project Calls for It
                 </h2>
@@ -126,7 +126,7 @@ export default function TechnologyHubPage() {
               <TechnologyGrid technologies={SPECIALIZED_TOOLS} />
             </div>
 
-            <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="max-w-3xl mx-auto text-center mb-[var(--heading-gap)]">
               <h2 className="md:text-3xl font-bold text-foreground mb-6">
                 Why stack choices matter
               </h2>

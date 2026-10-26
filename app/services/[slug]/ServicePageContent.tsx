@@ -179,6 +179,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             {service.slug === 'landing-pages' ? (
               <Link
                 href="/landing-pages"
+                // Raw p-5 md:p-6: banner link, not a Card
                 className="mt-8 flex items-center justify-between gap-4 rounded-2xl border p-5 no-underline transition-opacity hover:opacity-90 md:p-6"
                 style={{
                   background: 'rgba(0, 112, 243, 0.08)',
@@ -237,7 +238,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center md:text-left"
+                className="mb-[var(--heading-gap)] text-center md:text-left"
               >
                 <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.benefits}
@@ -276,7 +277,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-12 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
                 <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.process}
@@ -323,7 +324,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-12 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
                 <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.offerings}
@@ -331,7 +332,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
               </motion.div>
               <div className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3">
                 {service.offerings!.map((offering, index) => (
-                  <MotionCard variant="plain" interactive badge={false}
+                  <MotionCard variant="plain" pad="sm" interactive badge={false}
                     key={index}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -342,7 +343,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
                       {offering.name}
                     </h3>
-                    <p className="text-sm leading-relaxed" style={{ color: colors.textMuted }}>
+                    <p className="text-base md:text-sm leading-normal md:leading-relaxed" style={{ color: colors.textMuted }}>
                       {offering.description}
                     </p>
                   </MotionCard>
@@ -368,7 +369,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center md:text-left"
+                className="mb-[var(--heading-gap)] text-center md:text-left"
               >
                 <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.deliverables}
@@ -407,7 +408,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
                 <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.faqs}
@@ -454,7 +455,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-12 text-center"
+                className="mb-[var(--heading-gap)] text-center"
               >
                 <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   {headings.related}
@@ -471,7 +472,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   >
                     <Link
                       href={serviceHref(rel.slug)}
-                      className={cn(cardSurfaceVariants({ variant: 'plain', interactive: true }), 'group rounded-2xl')}
+                      className={cn(cardSurfaceVariants({ variant: 'plain', interactive: true, pad: 'sm' }), 'group rounded-2xl')}
                       style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
                     >
                       <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
@@ -511,7 +512,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             <h2 className="mb-4 font-bold md:text-3xl" style={{ color: colors.text }}>
               Ready to talk about {service.title}?
             </h2>
-            <p className="mb-8 text-lg" style={{ color: colors.textMuted }}>
+            <p className="mb-[var(--cta-gap)] text-lg" style={{ color: colors.textMuted }}>
               Book a strategy call and we&apos;ll walk through goals, scope, and fit. No pitch deck required.
             </p>
             <Button

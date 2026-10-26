@@ -53,7 +53,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
       <Section className="px-6 md:px-12 lg:px-20"
         aria-labelledby="handoff-preview-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="handoff-preview-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -101,7 +101,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
                       <p className="font-mono text-sm font-semibold text-foreground">
                         {section.title}
                       </p>
-                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                         {section.detail}
                       </p>
                     </div>

@@ -5,7 +5,8 @@ import { cva } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const cardSurfaceVariants = cva(
-  'relative flex h-full flex-col rounded-xl transition-colors duration-300',
+  // Mobile card body is 16px / 1.5; md+ inherits the page baseline.
+  'relative flex h-full flex-col rounded-xl text-[16px] leading-[1.5] transition-colors duration-300 md:text-[length:inherit] md:leading-[inherit]',
   {
     variants: {
       variant: {

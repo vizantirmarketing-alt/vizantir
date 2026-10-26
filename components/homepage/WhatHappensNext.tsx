@@ -57,7 +57,7 @@ const WhatHappensNext = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-12"
+          className="text-center mb-[var(--heading-gap)]"
         >
           <h2 
             className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
@@ -90,7 +90,7 @@ const WhatHappensNext = () => {
               {/* Step Number */}
               <div 
                 aria-hidden="true"
-                className="text-4xl md:text-6xl font-black mb-4 leading-none"
+                className="text-[28px] md:text-6xl font-black mb-4 leading-none"
                 style={{ 
                   color: 'rgba(0, 112, 243, 0.2)',
                 }}

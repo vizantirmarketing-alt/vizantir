@@ -39,7 +39,7 @@ function DeliverableColumn({
         {items.map((item) => (
           <li key={item} className="flex items-start gap-3">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text" aria-hidden />
-            <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
+            <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item}</span>
           </li>
         ))}
       </ul>
@@ -53,7 +53,7 @@ export function DeliverablesBlock() {
       <SectionDivider />
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="deliverables-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="deliverables-heading"
               className="font-bold text-foreground md:text-4xl lg:text-5xl"

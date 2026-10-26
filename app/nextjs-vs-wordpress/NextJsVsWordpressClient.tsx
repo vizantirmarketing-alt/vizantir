@@ -96,7 +96,7 @@ export default function NextJsVsWordpressClient() {
 
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="comparison-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="comparison-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -220,7 +220,7 @@ export default function NextJsVsWordpressClient() {
 
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="criteria-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="criteria-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -250,7 +250,7 @@ export default function NextJsVsWordpressClient() {
 
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-3xl">
-          <motion.div {...sectionReveal} className="mb-12 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="faq-heading"
               className="font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -280,7 +280,7 @@ export default function NextJsVsWordpressClient() {
                   questionClassName="text-base font-medium"
                   className={isOpen ? 'border-cobalt-accent/30 bg-card' : 'border-border bg-card'}
                 >
-                  <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
+                  <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{faq.answer}</p>
                 </AccordionItem>
               )
             })}
@@ -298,7 +298,7 @@ export default function NextJsVsWordpressClient() {
             >
               {nextjsVsWordpressCta.heading}
             </h2>
-            <p className="mb-10 text-lg text-white">{nextjsVsWordpressCta.body}</p>
+            <p className="mb-[var(--cta-gap)] text-lg text-white">{nextjsVsWordpressCta.body}</p>
             <Button
               size="lg"
               asChild

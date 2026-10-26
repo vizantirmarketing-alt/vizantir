@@ -51,7 +51,7 @@ export function VariantSystemDemo() {
       <Section className="px-6 md:px-12 lg:px-20"
         aria-labelledby="variant-system-demo-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="variant-system-demo-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -75,7 +75,7 @@ export function VariantSystemDemo() {
             {DEMO_TILES.map((tile, index) => {
               const isActive = index === activeIndex
               return (
-                <MotionCard variant="plain" badge={false}
+                <MotionCard variant="plain" pad="sm" badge={false}
                   key={tile.label}
                   variants={itemVariants}
                   className={`block h-auto relative rounded-2xl border transition-colors duration-500 ${
@@ -99,6 +99,7 @@ export function VariantSystemDemo() {
                     />
                   </div>
 
+                  {/* Raw p-4: inline code block, not a Card */}
                   <div className="space-y-3 rounded-xl border border-border/80 bg-background/70 p-4 font-mono text-sm">
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">CPC</span>

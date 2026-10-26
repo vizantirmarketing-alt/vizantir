@@ -196,12 +196,12 @@ export default function TermsAndConditions() {
       <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
           {sections.map((section, sectionIndex) => (
-            <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
+            <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-[var(--heading-gap)]">
               <h2 className="md:text-3xl font-bold mb-6 text-foreground">{section.title}</h2>
               {section.subsections.map((subsection, subIndex) => (
                 <div key={subIndex} className="mb-6">
                   {subsection.subtitle && <h3 className="text-xl font-semibold mb-3 text-foreground">{subsection.subtitle}</h3>}
-                  {subsection.content && <p className="leading-relaxed mb-3 text-body">{subsection.content}</p>}
+                  {subsection.content && <p className="leading-relaxed mb-[var(--para-gap)] text-body">{subsection.content}</p>}
                   {subsection.list && (
                     <ul className="space-y-2 ml-6">
                       {subsection.list.map((item, itemIndex) => (

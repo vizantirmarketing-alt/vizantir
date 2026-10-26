@@ -83,10 +83,10 @@ export function PricingCards({
             <h3 className="mb-1 text-balance text-xl font-bold text-foreground">{tier.name}</h3>
             <p className="mb-1 text-3xl font-black text-cobalt-text">{tier.price}</p>
             <p className="mb-4 text-pretty text-sm text-muted-foreground">{tier.timeline}</p>
-            <p className="mb-6 text-pretty text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
+            <p className="mb-6 text-pretty text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{tier.description}</p>
             <ul className="mb-6 mt-2 space-y-3">
               {tier.includes.map((line) => (
-                <li key={line} className="flex items-start gap-2 text-pretty text-sm text-foreground/80">
+                <li key={line} className="flex items-start gap-2 text-pretty text-base md:text-sm text-foreground/80">
                   <CheckCircle2
                     className="mt-[2px] h-4 w-4 flex-shrink-0 text-cobalt-text"
                     aria-hidden

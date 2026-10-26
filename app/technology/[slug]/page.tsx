@@ -94,7 +94,7 @@ export default async function TechnologyPage({ params }: PageProps) {
 
             <p className="max-w-[48ch] text-base md:text-lg text-body leading-relaxed mb-16">{tech.intro}</p>
 
-            <div className="mb-16">
+            <div className="mb-[var(--heading-gap)]">
               <h2 className="md:text-3xl font-bold text-foreground mb-6">
                 Why we use {tech.name}
               </h2>
@@ -112,7 +112,7 @@ export default async function TechnologyPage({ params }: PageProps) {
               </ul>
             </div>
 
-            <div className="mb-16">
+            <div className="mb-[var(--heading-gap)]">
               <h2 className="md:text-3xl font-bold text-foreground mb-6">
                 What this means for your business
               </h2>

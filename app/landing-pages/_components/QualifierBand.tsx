@@ -40,7 +40,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
       <SectionDivider />
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="qualifier-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="qualifier-heading"
               className="font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -67,7 +67,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
                       className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
-                    <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
+                    <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -84,7 +84,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
                       className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70"
                       aria-hidden
                     />
-                    <span className="text-sm leading-relaxed text-muted-foreground">
+                    <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                       {item.before}
                       {item.link ? (
                         <Link

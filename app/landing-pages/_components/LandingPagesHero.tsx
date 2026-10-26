@@ -49,7 +49,7 @@ export function LandingPagesHero({
           {subheadline}
         </motion.p>
 
-        <motion.div variants={itemVariants} initial="visible" className="flex flex-col items-center gap-4">
+        <motion.div variants={itemVariants} initial="visible" className="flex flex-col items-center gap-[var(--btn-stack)]">
           <Button
             size="lg"
             asChild

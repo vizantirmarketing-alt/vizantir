@@ -32,7 +32,7 @@ export default function GetStartedPageClient() {
         <div className="max-w-4xl mx-auto">
           <div className="space-y-[var(--stack)]">
             {steps.map((step, index) => (
-              <MotionCard variant="plain" badge={false}
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -80,10 +80,10 @@ export default function GetStartedPageClient() {
             <h2 className="md:text-3xl font-bold mb-4 text-foreground">
               Next step: a real conversation
             </h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto text-muted-foreground">
+            <p className="text-lg mb-[var(--cta-gap)] max-w-xl mx-auto text-muted-foreground">
               Book a discovery call. We&apos;ll see if the project and timeline line up. No pressure, no hard sell.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-[var(--btn-stack)] sm:gap-4 justify-center">
               <Link
                 href="/contact"
                 onClick={() => trackBookStrategyCall('get_started')}

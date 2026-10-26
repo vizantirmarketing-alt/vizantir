@@ -136,14 +136,14 @@ list spacing.
 | `--section-y-sm` | 32px | 64px | blog teaser, marquee, minor sections |
 | `--hero-top` | 128px | 128px | page hero top padding, clears the fixed navbar |
 | `--stack` | 12px | 24px | gap between stacked cards or list items |
-| `--card-pad` | 20px | 32px | Card padding (`pad="lg"` uses `--card-pad-lg` 32/48, `pad="sm"` uses `--card-pad-sm` 16/20) |
-| `--heading-gap` | 24px | 32px | section heading to first content |
-| `--para-gap` | 20px | 20px | paragraph spacing |
-| `--cta-gap` | 32px | 40px | last body text to CTA |
+| `--card-pad` | 20px | 32px | Card padding (`pad="lg"` uses `--card-pad-lg` 32/48 for CTA panels; `pad="sm"` uses `--card-pad-sm` 20/24 for lighter cards) |
+| `--heading-gap` | 24px | 32px | bottom margin of the section heading wrapper |
+| `--para-gap` | 20px | 20px | prose paragraph spacing outside `.blog-content` |
+| `--cta-gap` | 32px | 40px | last body text to the section CTA |
 | `--btn-stack` | 12px | 12px | between stacked buttons |
 | `--gutter` | 20px | 16px | container side padding, via `px-gutter` |
 
-Type: body 17px / 1.55 mobile, 18px / 1.6 at md+. h1 36px / 1.1 and h2 28px / 1.15
+Type: body 17px / 1.55 mobile, 16px / 1.6 at md+. Card and accordion content is 16px / 1.5 on mobile. h1 36px / 1.1 and h2 28px / 1.15
 on mobile come from the global base styles. Headings only carry `sm:`/`md:`/`lg:`
 size classes; do not add an unprefixed `text-*xl` to an h1 or h2.
 
@@ -160,6 +160,10 @@ Rules:
 - Vertical lists or grids of cards and accordion rows use
   `gap-[var(--stack)]` or `space-y-[var(--stack)]`. Inline `gap-2`/`gap-3` on
   buttons, pills and icon rows stays as is.
+- Section heading wrappers use `mb-[var(--heading-gap)]`, the paragraph above a section
+  CTA uses `mb-[var(--cta-gap)]`, stacked button groups use `gap-[var(--btn-stack)]`,
+  and legal and rich-text paragraphs use `--para-gap`. Body copy inside a card that
+  would be `text-sm` is `text-base md:text-sm`; `text-sm` stays only on meta lines.
 - A deliberate exception to any of this gets a one-line comment saying why.
 
 Out of scope for these rules: `app/intel`, `app/studio`, `components/arcade`,

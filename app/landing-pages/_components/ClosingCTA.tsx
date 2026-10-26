@@ -34,7 +34,7 @@ export function ClosingCTA({
           >
             {heading}
           </h2>
-          <p className="mb-10 text-lg text-white/80">{subheading}</p>
+          <p className="mb-[var(--cta-gap)] text-lg text-white/80">{subheading}</p>
           <Button
             size="lg"
             asChild

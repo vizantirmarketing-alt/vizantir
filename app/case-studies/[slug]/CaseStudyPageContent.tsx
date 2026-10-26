@@ -179,7 +179,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 text-center md:text-left"
+                className="mb-[var(--heading-gap)] text-center md:text-left"
               >
                 <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   Technologies used

@@ -55,7 +55,7 @@ const WhyVizantir = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" as const }}
-          className="text-center mb-12"
+          className="text-center mb-[var(--heading-gap)]"
         >
           <h2 
             className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"

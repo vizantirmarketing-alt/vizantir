@@ -248,7 +248,7 @@ export default function WebsiteRedesignLasVegasClient() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.24 }}
-            className="flex flex-col items-center gap-4"
+            className="flex flex-col items-center gap-[var(--btn-stack)]"
           >
             <Button
               size="lg"
@@ -306,7 +306,7 @@ export default function WebsiteRedesignLasVegasClient() {
       {/* 3 — What We Build for Redesign Projects */}
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="what-we-build-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="what-we-build-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -327,7 +327,7 @@ export default function WebsiteRedesignLasVegasClient() {
             className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3"
           >
             {offeringBlocks.map((block) => (
-              <MotionCard variant="plain" interactive badge={false}
+              <MotionCard variant="plain" pad="sm" interactive badge={false}
                 key={block.title}
                 variants={itemVariants}
                 className="block h-auto rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
@@ -335,7 +335,7 @@ export default function WebsiteRedesignLasVegasClient() {
                   <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{block.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{block.description}</p>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{block.description}</p>
               </MotionCard>
             ))}
           </motion.div>
@@ -367,7 +367,7 @@ export default function WebsiteRedesignLasVegasClient() {
       {/* 4 — Differentiation (three redesign risk profiles) */}
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="differentiation-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="differentiation-heading"
               className="font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -388,7 +388,7 @@ export default function WebsiteRedesignLasVegasClient() {
                       className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70"
                       aria-hidden
                     />
-                    <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
+                    <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -408,7 +408,7 @@ export default function WebsiteRedesignLasVegasClient() {
                       className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70"
                       aria-hidden
                     />
-                    <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
+                    <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -428,7 +428,7 @@ export default function WebsiteRedesignLasVegasClient() {
                       className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text"
                       aria-hidden
                     />
-                    <span className="text-sm leading-relaxed text-foreground/90">{item}</span>
+                    <span className="text-base md:text-sm leading-normal md:leading-relaxed text-foreground/90">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -454,7 +454,7 @@ export default function WebsiteRedesignLasVegasClient() {
       {/* 5 — Proof (real migrations + methodology) */}
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="proof-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="proof-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -474,13 +474,13 @@ export default function WebsiteRedesignLasVegasClient() {
             className="mb-16 grid gap-[var(--stack)] md:grid-cols-2"
           >
             {realProjectWork.map((client) => (
-              <MotionCard variant="plain" interactive badge={false}
+              <MotionCard variant="plain" pad="sm" interactive badge={false}
                 key={client.name}
                 variants={itemVariants}
                 className="h-auto flex flex-col rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
                 <h3 className="mb-1 text-lg font-bold text-foreground">{client.name}</h3>
                 <p className="mb-4 text-sm text-cobalt-text">{client.context}</p>
-                <p className="mb-5 flex-1 text-sm leading-relaxed text-muted-foreground">
+                <p className="mb-5 flex-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                   {client.description}
                 </p>
                 <Link
@@ -512,7 +512,7 @@ export default function WebsiteRedesignLasVegasClient() {
             className="mb-12 grid gap-[var(--stack)] md:grid-cols-3"
           >
             {methodologyItems.map((item) => (
-              <MotionCard variant="plain" badge={false}
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={item.title}
                 variants={itemVariants}
                 className="block h-auto rounded-2xl border border-border bg-muted">
@@ -520,7 +520,7 @@ export default function WebsiteRedesignLasVegasClient() {
                   <ShieldCheck size={20} className="text-cobalt-text" aria-hidden />
                   <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item.detail}</p>
               </MotionCard>
             ))}
           </motion.div>
@@ -546,7 +546,7 @@ export default function WebsiteRedesignLasVegasClient() {
       {/* 6 — Process */}
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="process-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="process-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -567,7 +567,7 @@ export default function WebsiteRedesignLasVegasClient() {
             className="grid gap-[var(--stack)] sm:grid-cols-2 lg:grid-cols-4"
           >
             {processSteps.map((step) => (
-              <MotionCard variant="plain" badge={false}
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={step.title}
                 variants={itemVariants}
                 className="block h-auto rounded-2xl border border-border bg-muted">
@@ -577,7 +577,7 @@ export default function WebsiteRedesignLasVegasClient() {
                   </div>
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-foreground">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
+                <p className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{step.description}</p>
               </MotionCard>
             ))}
           </motion.div>
@@ -589,7 +589,7 @@ export default function WebsiteRedesignLasVegasClient() {
       {/* 7 — Pricing (retained — purchase-intent buyers price-shop; OfferCatalog is real SEO value) */}
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="pricing-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="pricing-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -611,7 +611,7 @@ export default function WebsiteRedesignLasVegasClient() {
       {/* 8 — FAQ */}
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-4xl">
-          <motion.div {...sectionReveal} className="mb-12 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="faq-heading"
               className="font-bold text-foreground md:text-4xl lg:text-5xl"
@@ -628,12 +628,12 @@ export default function WebsiteRedesignLasVegasClient() {
             className="space-y-[var(--stack)]"
           >
             {faqs.map((faq) => (
-              <MotionCard variant="plain" badge={false}
+              <MotionCard variant="plain" pad="sm" badge={false}
                 key={faq.question}
                 variants={itemVariants}
                 className="block h-auto rounded-2xl border border-border bg-muted">
                 <h3 className="mb-3 text-lg font-semibold text-foreground">{faq.question}</h3>
-                <p className="max-w-[48ch] text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
+                <p className="max-w-[48ch] text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{faq.answer}</p>
               </MotionCard>
             ))}
           </motion.div>
@@ -651,7 +651,7 @@ export default function WebsiteRedesignLasVegasClient() {
             >
               Ready to Redesign Without Breaking What Already Works?
             </h2>
-            <p className="mb-10 text-lg text-white">
+            <p className="mb-[var(--cta-gap)] text-lg text-white">
               Strategy calls are 30 minutes, no pitch, just fit.
             </p>
             <Button

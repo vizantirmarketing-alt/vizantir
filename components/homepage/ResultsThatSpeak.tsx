@@ -30,7 +30,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="max-w-7xl mx-auto"
         >
-          <div className="text-center mb-10 md:mb-12">
+          <div className="text-center mb-[var(--heading-gap)]">
             <h2 
               className="md:text-5xl font-black mb-4 tracking-tight text-foreground"
             >
@@ -106,7 +106,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
             })}
           </div>
 
-          <div className="text-center mt-10 md:mt-12">
+          <div className="text-center mt-[var(--cta-gap)]">
             <Link
               href="/case-studies"
               className="bg-cobalt-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-cobalt"

@@ -184,7 +184,7 @@ export default function ContactPageClient() {
           <h1 className="md:text-4xl font-bold mb-4 text-foreground">
             Message Sent!
           </h1>
-          <p className="text-lg mb-8 text-muted-foreground">
+          <p className="text-lg mb-[var(--cta-gap)] text-muted-foreground">
             Thank you for reaching out. We&apos;ll get back to you within 24 hours.
           </p>
           <Link
@@ -297,9 +297,9 @@ export default function ContactPageClient() {
               </div>
 
               {/* Business Hours */}
-              <Card variant="plain" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+              <Card variant="plain" pad="sm" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
                 <h3 className="font-semibold mb-4 text-foreground">Business Hours</h3>
-                <div className="space-y-2 text-sm text-body">
+                <div className="space-y-2 text-base md:text-sm text-body">
                   {contactDetails.hours.map((row) => (
                     <div key={row.days} className="flex justify-between">
                       <span>{row.days}</span>
@@ -310,8 +310,8 @@ export default function ContactPageClient() {
               </Card>
 
               {/* Response Time */}
-              <Card variant="plain" badge={false} className="h-auto flex-row items-center gap-3 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
-                <p className="text-sm text-body">
+              <Card variant="plain" pad="sm" badge={false} className="h-auto flex-row items-center gap-3 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+                <p className="text-base md:text-sm text-body">
                   Average response time: <strong>{contactDetails.responseTimeAverage}</strong>
                 </p>
               </Card>
@@ -443,7 +443,7 @@ export default function ContactPageClient() {
                     <p
                       ref={errorRef}
                       tabIndex={-1}
-                      className="text-sm mt-2 text-body"
+                      className="text-base md:text-sm mt-2 text-body"
                     >
                       {submitError}
                     </p>

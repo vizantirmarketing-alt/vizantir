@@ -39,13 +39,13 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
       <h3 className="text-xl font-bold text-foreground">{tier.name}</h3>
       <p className="mt-2 text-2xl font-black text-foreground">{tier.price}</p>
       <p className="mt-2 text-sm font-medium text-cobalt-text">{tier.tagline}</p>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
+      <p className="mt-3 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{tier.description}</p>
 
       <ul className="mt-6 flex-1 space-y-3">
         {includes.map((item) => (
           <li key={item} className="flex items-start gap-2.5">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cobalt-text" aria-hidden />
-            <span className="text-sm leading-relaxed text-muted-foreground">{item}</span>
+            <span className="text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">{item}</span>
           </li>
         ))}
       </ul>
@@ -76,7 +76,7 @@ export function TierComparison({
       <SectionDivider />
       <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="tier-comparison-heading">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...sectionReveal} className="mb-14 text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] text-center">
             <h2
               id="tier-comparison-heading"
               className="font-bold text-foreground md:text-4xl lg:text-5xl"

@@ -42,7 +42,7 @@ export function ProofBand({ clients, callout }: ProofBandProps) {
             </motion.div>
           ) : null}
 
-          <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
+          <motion.div {...sectionReveal} className="mb-[var(--heading-gap)] mx-auto max-w-3xl text-center">
             <h2
               id="proof-heading"
               className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"

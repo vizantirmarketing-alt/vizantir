@@ -164,6 +164,7 @@ export default function SitemapPageClient({
               className="md:col-span-2 lg:col-span-3"
             >
               <SectionHeading label="Blog" />
+              {/* Raw p-4: compact disclosure row, smaller than any Card pad */}
               <details className="group rounded-lg border border-border bg-card/50 p-4">
                 <summary className="cursor-pointer list-none text-muted-foreground transition-colors hover:text-cobalt-text [&::-webkit-details-marker]:hidden">
                   <span className="font-medium text-foreground">
