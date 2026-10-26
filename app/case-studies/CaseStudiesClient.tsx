@@ -136,7 +136,7 @@ function CaseStudyIndexRow({
 
         <div className="min-w-0">
           <h2
-            className="mb-2 text-2xl font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-text md:text-[2.35rem]"
+            className="mb-2 font-bold leading-[1.1] tracking-[-0.025em] transition-colors duration-200 group-hover:text-cobalt-text md:text-[2.35rem]"
             style={{ color: colors.text }}
           >
             {study.title}
@@ -230,7 +230,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             className="mb-14"
           >
             <h1
-              className="mb-6 max-w-[16ch] text-5xl font-black leading-[1.02] tracking-[-0.035em] md:text-6xl lg:text-7xl"
+              className="mb-6 max-w-[16ch] font-black leading-[1.02] tracking-[-0.035em] md:text-6xl lg:text-7xl"
               style={{ color: colors.text }}
             >
               Websites We Have Launched
@@ -374,7 +374,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
             </div>
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
               <div>
-                <h2 className="text-3xl font-black tracking-tight md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-black tracking-tight md:text-4xl" style={{ color: colors.text }}>
                   Analytir
                 </h2>
                 <p className="mt-4 leading-relaxed" style={{ color: colors.textMuted }}>

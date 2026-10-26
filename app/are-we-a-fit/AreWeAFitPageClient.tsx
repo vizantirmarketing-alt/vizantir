@@ -72,7 +72,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             <motion.div {...sectionMotion}>
               <h2
                 id="ideal-fit-heading"
-                className="mb-9 text-center text-balance text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+                className="mb-9 text-center text-balance font-bold tracking-tight md:mb-10 md:text-3xl"
                 style={{ color: colors.text }}
               >
                 {idealHeading}
@@ -103,7 +103,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
             <motion.div {...sectionMotion}>
               <h2
                 id="not-fit-heading"
-                className="mb-9 text-center text-balance text-2xl font-bold tracking-tight md:mb-10 md:text-3xl"
+                className="mb-9 text-center text-balance font-bold tracking-tight md:mb-10 md:text-3xl"
                 style={{ color: colors.text }}
               >
                 {notIdealHeading}
@@ -137,7 +137,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           <motion.div {...sectionMotion}>
             <h2
               id="budget-heading"
-              className="mb-5 text-2xl font-bold tracking-tight md:text-3xl"
+              className="mb-5 font-bold tracking-tight md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.budgetSection.heading}
@@ -165,7 +165,7 @@ export default function AreWeAFitPageClient({ content }: AreWeAFitPageClientProp
           <motion.div {...sectionMotion}>
             <h2
               id="closing-heading"
-              className="mb-6 text-balance text-2xl font-bold tracking-tight md:text-3xl"
+              className="mb-6 text-balance font-bold tracking-tight md:text-3xl"
               style={{ color: colors.text }}
             >
               {content.closingSection.heading}

@@ -16,7 +16,7 @@ const EditorialStatement = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] text-foreground"
+              className="md:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] text-foreground"
             >
               A stronger website changes how the business is perceived
             </h2>

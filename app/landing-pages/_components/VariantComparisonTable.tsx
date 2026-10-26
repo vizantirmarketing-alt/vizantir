@@ -49,7 +49,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
             <h2
               id="variant-comparison-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Same system. Different job per URL.
             </h2>

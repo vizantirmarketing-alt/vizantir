@@ -24,7 +24,7 @@ export function LandingPagesFAQ({ faqs }: LandingPagesFAQProps) {
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <h2
               id="faq-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Landing page questions
             </h2>

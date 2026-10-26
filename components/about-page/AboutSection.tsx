@@ -12,7 +12,7 @@ export default function AboutSection({ section, children }: AboutSectionProps) {
   return (
     <Section className="px-6 md:px-12 lg:px-20">
       <div className="mx-auto max-w-4xl">
-        <h2 className="mb-8 text-center text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+        <h2 className="mb-8 text-center text-balance font-bold tracking-tight text-foreground md:text-4xl">
           {section.heading}
         </h2>
         <div className="space-y-5">

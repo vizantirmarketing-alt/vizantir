@@ -1,5 +1,5 @@
-import { Section } from '@/components/ui/Section'
 'use client'
+import { Section } from '@/components/ui/Section'
 
 const items = [
   "WEBSITE DESIGN",

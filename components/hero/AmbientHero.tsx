@@ -77,8 +77,8 @@ export function AmbientHero({
           <h1
             className={
               compact
-                ? 'max-w-[40ch] text-[clamp(40px,5.2vw,72px)] font-bold leading-[0.95] tracking-[-0.035em] text-foreground lg:text-[62px]'
-                : 'max-w-[17ch] text-[clamp(44px,6.4vw,92px)] font-bold leading-[0.95] tracking-[-0.035em] text-foreground'
+                ? 'max-w-[40ch] text-[clamp(36px,5.2vw,72px)] font-bold leading-[0.95] tracking-[-0.035em] text-foreground lg:text-[62px]'
+                : 'max-w-[17ch] text-[clamp(36px,6.4vw,92px)] font-bold leading-[0.95] tracking-[-0.035em] text-foreground'
             }
           >
             {headline}

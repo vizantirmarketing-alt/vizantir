@@ -22,7 +22,7 @@ const AboutStory = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <h2 
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
+                className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
               >
                 Your business has outgrown what you started with.
               </h2>

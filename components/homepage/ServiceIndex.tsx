@@ -15,7 +15,7 @@ export function ServiceIndex({ services }: ServiceIndexProps) {
       <div className="mx-auto max-w-5xl">
         <h2
           id="services-heading"
-          className="text-balance text-3xl font-black tracking-tight text-foreground md:text-4xl"
+          className="text-balance font-black tracking-tight text-foreground md:text-4xl"
         >
           Services
         </h2>

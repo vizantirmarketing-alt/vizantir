@@ -56,7 +56,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
             All case studies
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
+            <h1 className="font-bold tracking-tight md:text-5xl lg:text-6xl" style={{ color: colors.text }}>
               {caseStudy.title}
             </h1>
             {isStudio || metadataLine ? (
@@ -117,7 +117,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="mb-8 font-bold md:text-4xl" style={{ color: colors.text }}>
                   The problem to solve
                 </h2>
                 <PortableText value={caseStudy.challenge!} components={vizantirPortableTextComponents} />
@@ -138,7 +138,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="mb-8 font-bold md:text-4xl" style={{ color: colors.text }}>
                   What we built
                 </h2>
                 <PortableText value={caseStudy.solution!} components={vizantirPortableTextComponents} />
@@ -159,7 +159,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
               >
-                <h2 className="mb-8 text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="mb-8 font-bold md:text-4xl" style={{ color: colors.text }}>
                   Impact and outcomes
                 </h2>
                 <PortableText value={caseStudy.results!} components={vizantirPortableTextComponents} />
@@ -181,7 +181,7 @@ export default function CaseStudyPageContent({ caseStudy }: CaseStudyPageContent
                 transition={{ duration: 0.45 }}
                 className="mb-10 text-center md:text-left"
               >
-                <h2 className="text-3xl font-bold md:text-4xl" style={{ color: colors.text }}>
+                <h2 className="font-bold md:text-4xl" style={{ color: colors.text }}>
                   Technologies used
                 </h2>
               </motion.div>

@@ -30,7 +30,7 @@ export function ClosingCTA({
         <motion.div {...sectionReveal}>
           <h2
             id="closing-cta-heading"
-            className="mb-5 text-3xl font-bold text-white md:text-4xl lg:text-5xl"
+            className="mb-5 font-bold text-white md:text-4xl lg:text-5xl"
           >
             {heading}
           </h2>

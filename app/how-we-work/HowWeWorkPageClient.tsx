@@ -73,7 +73,7 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-16 text-center text-balance transition-colors duration-500"
+            className="md:text-3xl font-bold mb-16 text-center text-balance transition-colors duration-500"
             style={{ color: colors.text }}
           >
             The Process
@@ -135,7 +135,7 @@ export default function HowWeWorkPageClient() {
             className="text-center mb-16"
           >
             <h2
-            className="text-2xl md:text-3xl font-bold text-balance transition-colors duration-500"
+            className="md:text-3xl font-bold text-balance transition-colors duration-500"
             style={{ color: colors.text }}
             >
               Why Vizantir
@@ -261,7 +261,7 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-12 text-center text-balance"
+            className="md:text-3xl font-bold mb-12 text-center text-balance"
             style={{ color: colors.text }}
           >
             What to Expect
@@ -337,7 +337,7 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl md:text-3xl font-bold mb-12 text-center text-balance"
+            className="md:text-3xl font-bold mb-12 text-center text-balance"
             style={{ color: colors.text }}
           >
             Questions
@@ -392,7 +392,7 @@ export default function HowWeWorkPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-6 text-balance transition-colors duration-500"
+            className="md:text-4xl font-bold mb-6 text-balance transition-colors duration-500"
             style={{ color: colors.text }}
           >
             Ready to start?

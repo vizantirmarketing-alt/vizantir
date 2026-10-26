@@ -65,7 +65,7 @@ export default function IndustriesHubPage() {
         <Section hero className="px-6 md:px-12 lg:px-20">
           <div className="max-w-6xl mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
+              <h1 className="md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 Industries We Serve
               </h1>
               <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
@@ -81,7 +81,7 @@ export default function IndustriesHubPage() {
                   <Card as="article" variant="plain" badge={false}
                     key={vertical.href}
                     className="h-auto flex flex-col rounded-2xl border border-border bg-background">
-                    <h2 className="text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
+                    <h2 className="md:text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
                     <p className="text-cobalt-text font-medium mb-4">{vertical.tagline}</p>
                     <p className="mb-6 flex-1 text-sm text-body leading-relaxed">
                       {vertical.description}
@@ -100,7 +100,7 @@ export default function IndustriesHubPage() {
 
             <div className="mb-20 md:mb-28">
               <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
+                <h2 className="md:text-3xl font-bold text-foreground mb-4">Also Serving</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
                   Vizantir takes projects across the broader market. Any established business that
                   wants a premium, custom-built site over a templated solution.

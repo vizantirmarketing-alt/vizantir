@@ -163,7 +163,7 @@ const Hero = () => {
         >
 
           <h1 
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500 text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
+            className="sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-[-0.02em] mb-8 transition-colors duration-500 text-foreground" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.15)' }}
           >
             <span
               className="block text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-semibold leading-[1.08] tracking-[-0.02em] text-muted-foreground" style={{ textShadow: 'none' }}

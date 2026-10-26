@@ -224,7 +224,7 @@ export default function WebsiteRedesignLasVegasClient() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+            className="mb-6 font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
           >
             Website Redesign in Las Vegas
             <br />
@@ -278,7 +278,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal}>
             <h2
               id="problem-heading"
-              className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-8 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               You&apos;ve decided to redesign. The risk is who you hire.
             </h2>
@@ -309,7 +309,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="what-we-build-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What We Build for Redesign Projects
             </h2>
@@ -370,7 +370,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="differentiation-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Cheap Redesigner, Full-Rebuild Agency, or SEO-Safe Studio
             </h2>
@@ -457,7 +457,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="proof-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Real Las Vegas Businesses We&apos;ve Built and Migrated
             </h2>
@@ -549,7 +549,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="process-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What Happens When We Redesign Your Site
             </h2>
@@ -592,7 +592,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="pricing-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Redesign Project Tiers
             </h2>
@@ -614,7 +614,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <h2
               id="faq-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Website Redesign Questions
             </h2>
@@ -647,7 +647,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <motion.div {...sectionReveal}>
             <h2
               id="closing-cta-heading"
-              className="mb-5 text-3xl font-bold text-white md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-white md:text-4xl lg:text-5xl"
             >
               Ready to Redesign Without Breaking What Already Works?
             </h2>

@@ -547,7 +547,7 @@ function SectionHeading({
       <h2
         className={cn(
           'text-balance font-bold leading-tight tracking-tight text-foreground',
-          compact ? 'text-2xl md:text-3xl' : 'text-3xl md:text-4xl',
+          compact ? 'md:text-3xl' : 'md:text-4xl',
         )}
       >
         {heading}
@@ -608,7 +608,7 @@ function ProjectPricingSection() {
       </PricingSection>
       <Section className="bg-[color-mix(in_oklab,var(--background),var(--foreground)_4%)] px-6 md:px-12 lg:px-20">
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3 md:gap-12">
-          <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
+          <h2 className="text-balance font-bold leading-tight tracking-tight text-foreground md:text-4xl">
             {SMALLER_PROJECTS.heading}
           </h2>
           <div className="md:col-span-2">

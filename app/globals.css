@@ -514,6 +514,31 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-satoshi, system-ui, -apple-system, sans-serif);
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  /* Mobile heading baseline. Elements that set md:/lg: sizes take over from md up. */
+  h1 {
+    font-size: 36px;
+    line-height: 1.1;
+  }
+  h2 {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    /* Desktop heading sizes stay with each element's md:/lg: classes. */
+    h1,
+    h2 {
+      font-size: inherit;
+      line-height: inherit;
+    }
   }
 }
 

@@ -25,7 +25,7 @@ const CTA = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-4xl md:text-5xl font-black mb-6 text-foreground"
+            className="md:text-5xl font-black mb-6 text-foreground"
           >
             If the website needs to do more than just look better, let&apos;s talk.
           </motion.h2>

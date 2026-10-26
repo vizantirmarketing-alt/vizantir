@@ -36,7 +36,7 @@ export default function NotFound() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <h2 
-              className="text-2xl md:text-3xl font-bold mb-4 text-foreground"
+              className="md:text-3xl font-bold mb-4 text-foreground"
             >
               Page Not Found
             </h2>

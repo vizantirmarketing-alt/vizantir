@@ -46,8 +46,8 @@ export function PricingCards({
           className={cn(
             'text-balance font-bold text-foreground',
             isStart
-              ? 'mb-3 text-3xl leading-tight tracking-tight md:text-4xl'
-              : 'mb-4 text-3xl md:text-4xl lg:text-5xl',
+              ? 'mb-3 leading-tight tracking-tight md:text-4xl'
+              : 'mb-4 md:text-4xl lg:text-5xl',
           )}
         >
           {heading}

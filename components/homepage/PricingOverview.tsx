@@ -10,7 +10,7 @@ export function PricingOverview() {
   return (
     <Section className="px-6 transition-colors duration-500 md:px-12 lg:px-20">
       <div className="mx-auto max-w-5xl">
-        <h2 className="text-balance text-3xl font-black tracking-tight text-foreground md:text-4xl">
+        <h2 className="text-balance font-black tracking-tight text-foreground md:text-4xl">
           Fixed scope. Fixed price. One engagement.
         </h2>
 

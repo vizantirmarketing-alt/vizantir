@@ -46,7 +46,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="text-4xl md:text-5xl font-bold mb-4 text-foreground"
+              className="md:text-5xl font-bold mb-4 text-foreground"
             >
               Questions? <span style={{ color: 'var(--cobalt-text)' }}>Answered.</span>
             </motion.h2>

@@ -232,7 +232,7 @@ export default function LasVegasWebDesignClient() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+            className="mb-6 font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
           >
             Las Vegas Web Design
             <br />
@@ -287,7 +287,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal}>
             <h2
               id="problem-heading"
-              className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-8 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Three options. Two of them waste money.
             </h2>
@@ -319,7 +319,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="what-we-build-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What We Build for Las Vegas Businesses
             </h2>
@@ -380,7 +380,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="differentiation-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Out-of-Town, Cheap Local, or Custom Local
             </h2>
@@ -467,7 +467,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="proof-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Real Las Vegas Businesses We&apos;ve Built For
             </h2>
@@ -559,7 +559,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="process-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What Happens When We Build Your Site
             </h2>
@@ -601,7 +601,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="pricing-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Fixed-Scope Projects, No Surprise Invoices
             </h2>
@@ -623,7 +623,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <h2
               id="faq-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Las Vegas Web Design Questions
             </h2>
@@ -656,7 +656,7 @@ export default function LasVegasWebDesignClient() {
           <motion.div {...sectionReveal}>
             <h2
               id="closing-cta-heading"
-              className="mb-5 text-3xl font-bold text-white md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-white md:text-4xl lg:text-5xl"
             >
               Ready to Build a Site That Actually Works in Las Vegas?
             </h2>

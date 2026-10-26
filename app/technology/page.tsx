@@ -94,7 +94,7 @@ export default function TechnologyHubPage() {
         <Section hero className="px-6 md:px-12 lg:px-20">
           <div className="max-w-6xl mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
+              <h1 className="md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
                 The Technology Behind Every Vizantir Build
               </h1>
               <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">
@@ -106,7 +106,7 @@ export default function TechnologyHubPage() {
 
             <div className="mb-16 md:mb-20">
               <div className="max-w-3xl mb-10">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Core Stack</h2>
+                <h2 className="md:text-3xl font-bold text-foreground mb-4">Core Stack</h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
                   The foundation under every Vizantir build.
                 </p>
@@ -116,7 +116,7 @@ export default function TechnologyHubPage() {
 
             <div className="mb-16 md:mb-20">
               <div className="max-w-3xl mb-10">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                <h2 className="md:text-3xl font-bold text-foreground mb-4">
                   When the Project Calls for It
                 </h2>
                 <p className="text-base md:text-lg text-body leading-relaxed">
@@ -127,7 +127,7 @@ export default function TechnologyHubPage() {
             </div>
 
             <div className="max-w-3xl mx-auto text-center mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+              <h2 className="md:text-3xl font-bold text-foreground mb-6">
                 Why stack choices matter
               </h2>
               <p className="max-w-[48ch] mx-auto text-base md:text-lg text-body leading-relaxed">

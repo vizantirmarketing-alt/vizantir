@@ -165,7 +165,7 @@ export default function BlogPageClient({ posts }: Props) {
           >
             <div className="flex flex-wrap items-end justify-between gap-12">
               <div className="min-w-0 max-w-[720px] flex-1">
-                <h1 className="max-w-[720px] text-5xl font-bold leading-[1.02] tracking-tight md:text-6xl">
+                <h1 className="max-w-[720px] font-bold leading-[1.02] tracking-tight md:text-6xl">
                   Web design insights for business owners
                 </h1>
                 <p className="mt-6 text-lg" style={{ color: colors.textMuted }}>
@@ -271,7 +271,7 @@ export default function BlogPageClient({ posts }: Props) {
                   ) : null}
                 </div>
                 <div className="min-w-0">
-                  <h2 className="max-w-[820px] text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl">
+                  <h2 className="max-w-[820px] font-bold leading-[1.08] tracking-tight md:text-5xl">
                     {leadPost.title}
                   </h2>
                   {postExcerpt(leadPost) ? (
@@ -381,7 +381,7 @@ export default function BlogPageClient({ posts }: Props) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="mb-6 text-3xl font-bold md:text-4xl"
+            className="mb-6 font-bold md:text-4xl"
             style={{ color: colors.text }}
           >
             Want to talk through your project?

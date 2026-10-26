@@ -31,7 +31,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
       <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Frequently Asked Questions
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
@@ -131,7 +131,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
               border: '1px solid rgba(0, 112, 243,0.3)'
             }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+            <h2 className="md:text-3xl font-bold mb-4 text-foreground">
               Still have questions?
             </h2>
             <p className="text-lg mb-6 text-muted-foreground">

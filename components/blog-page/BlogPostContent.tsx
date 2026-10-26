@@ -118,7 +118,7 @@ export default function BlogPostContent({ post, children }: BlogPostContentProps
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 transition-colors duration-500"
+            className="sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 transition-colors duration-500"
             style={{ color: colors.text }}
           >
             {post.title}

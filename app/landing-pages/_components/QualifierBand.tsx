@@ -43,7 +43,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="qualifier-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Who this is for.
             </h2>

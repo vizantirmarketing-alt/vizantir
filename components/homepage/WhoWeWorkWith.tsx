@@ -25,7 +25,7 @@ const WhoWeWorkWith = () => {
           className="max-w-4xl mx-auto text-center"
         >
           <h2 
-            className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-foreground"
+            className="md:text-5xl font-black mb-6 tracking-tight text-foreground"
           >
             Built for businesses where trust matters before the sale
           </h2>

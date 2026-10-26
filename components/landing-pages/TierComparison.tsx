@@ -79,7 +79,7 @@ export function TierComparison({
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="tier-comparison-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Two tiers. One craft standard.
             </h2>

@@ -60,7 +60,7 @@ const WhatHappensNext = () => {
           className="text-center mb-12"
         >
           <h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
+            className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
           >
             What Happens Next
           </h2>
@@ -90,7 +90,7 @@ const WhatHappensNext = () => {
               {/* Step Number */}
               <div 
                 aria-hidden="true"
-                className="text-6xl md:text-7xl font-black mb-4 leading-none"
+                className="text-4xl md:text-6xl font-black mb-4 leading-none"
                 style={{ 
                   color: 'rgba(0, 112, 243, 0.2)',
                 }}

@@ -21,7 +21,7 @@ export function HomepageProblem({ heading, body, bullets }: HomepageProblemProps
           <motion.div {...sectionReveal}>
             <h2
               id="homepage-problem-heading"
-              className="mb-8 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-8 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               {heading}
             </h2>

@@ -181,7 +181,7 @@ export default function ContactPageClient() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </motion.div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+          <h1 className="md:text-4xl font-bold mb-4 text-foreground">
             Message Sent!
           </h1>
           <p className="text-lg mb-8 text-muted-foreground">
@@ -217,7 +217,7 @@ export default function ContactPageClient() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Start the Conversation
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
@@ -242,7 +242,7 @@ export default function ContactPageClient() {
               className="lg:col-span-2 space-y-8"
             >
               <div>
-                <h2 className="text-2xl font-bold mb-6 text-foreground">
+                <h2 className="md:text-2xl font-bold mb-6 text-foreground">
                   Contact Information
                 </h2>
                 <div className="space-y-6">
@@ -325,7 +325,7 @@ export default function ContactPageClient() {
               className="lg:col-span-3"
             >
               <Card variant="plain" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-                <h2 className="text-2xl font-bold mb-6 text-foreground">
+                <h2 className="md:text-2xl font-bold mb-6 text-foreground">
                   Start Your Project
                 </h2>
                 

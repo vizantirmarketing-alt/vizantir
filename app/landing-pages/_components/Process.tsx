@@ -55,7 +55,7 @@ export function Process({ emphasis }: ProcessProps) {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="process-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               How we build a landing page.
             </h2>

@@ -35,7 +35,7 @@ export function RelatedServices() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="related-services-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Related services.
             </h2>

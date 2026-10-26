@@ -44,7 +44,7 @@ export default function NextJsVsWordpressClient() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+            className="mb-6 font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
           >
             {nextjsVsWordpressHero.heading}
           </motion.h1>
@@ -99,7 +99,7 @@ export default function NextJsVsWordpressClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="comparison-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               {nextjsVsWordpressComparison.heading}
             </h2>
@@ -158,7 +158,7 @@ export default function NextJsVsWordpressClient() {
             <motion.div {...sectionReveal} className="max-w-[48ch]">
               <h2
                 id="nextjs-better-heading"
-                className="mb-5 text-3xl font-bold text-foreground md:text-4xl"
+                className="mb-5 font-bold text-foreground md:text-4xl"
               >
                 {nextjsVsWordpressNextBetter.heading}
               </h2>
@@ -190,7 +190,7 @@ export default function NextJsVsWordpressClient() {
             >
               <h2
                 id="wordpress-better-heading"
-                className="mb-5 text-3xl font-bold text-foreground md:text-4xl"
+                className="mb-5 font-bold text-foreground md:text-4xl"
               >
                 {nextjsVsWordpressWordpressBetter.heading}
               </h2>
@@ -223,7 +223,7 @@ export default function NextJsVsWordpressClient() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="criteria-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               {nextjsVsWordpressCriteria.heading}
             </h2>
@@ -253,7 +253,7 @@ export default function NextJsVsWordpressClient() {
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <h2
               id="faq-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               Questions people ask about Next.js vs WordPress
             </h2>
@@ -294,7 +294,7 @@ export default function NextJsVsWordpressClient() {
           <motion.div {...sectionReveal}>
             <h2
               id="closing-cta-heading"
-              className="mb-5 text-3xl font-bold text-white md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-white md:text-4xl lg:text-5xl"
             >
               {nextjsVsWordpressCta.heading}
             </h2>

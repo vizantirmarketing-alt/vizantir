@@ -36,7 +36,7 @@ export function LandingPagesHero({
         <motion.h1
           variants={itemVariants}
           initial="visible"
-          className="mb-6 text-4xl font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+          className="mb-6 font-black leading-[1.05] text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
         >
           {headline}
         </motion.h1>

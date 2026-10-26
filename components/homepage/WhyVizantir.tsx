@@ -58,7 +58,7 @@ const WhyVizantir = () => {
           className="text-center mb-12"
         >
           <h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
+            className="md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-foreground"
           >
             Why businesses choose Vizantir
           </h2>

@@ -56,7 +56,7 @@ export function DeliverablesBlock() {
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
               id="deliverables-heading"
-              className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What&apos;s inside every Vizantir landing page.
             </h2>

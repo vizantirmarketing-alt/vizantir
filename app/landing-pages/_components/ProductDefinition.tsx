@@ -34,7 +34,7 @@ export function ProductDefinition() {
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
             <h2
               id="product-definition-heading"
-              className="mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+              className="mb-5 font-bold text-foreground md:text-4xl lg:text-5xl"
             >
               What a Vizantir landing page actually is.
             </h2>

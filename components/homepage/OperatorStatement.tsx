@@ -23,7 +23,7 @@ const OperatorStatement = () => {
           className="max-w-3xl mx-auto text-center"
         >
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight text-foreground"
+            className="md:text-5xl lg:text-6xl font-black mb-6 tracking-tight text-foreground"
           >
             Built with an operator&apos;s mindset
           </h2>

@@ -14,7 +14,7 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   return (
     <Section edge="none" className="mt-16">
       <h2
-        className="text-2xl md:text-3xl font-bold mb-6"
+        className="md:text-3xl font-bold mb-6"
         style={{ color: 'var(--foreground)' }}
       >
         Related articles

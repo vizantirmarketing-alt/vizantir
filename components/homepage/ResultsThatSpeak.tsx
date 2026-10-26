@@ -32,7 +32,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
         >
           <div className="text-center mb-10 md:mb-12">
             <h2 
-              className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-foreground"
+              className="md:text-5xl font-black mb-4 tracking-tight text-foreground"
             >
               Selected Work
             </h2>

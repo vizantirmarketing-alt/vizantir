@@ -86,7 +86,7 @@ export default async function TechnologyPage({ params }: PageProps) {
       <div style={{ background: 'var(--background)' }}>
         <Section hero className="px-6 md:px-12 lg:px-20">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
+            <h1 className="md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6">
               {tech.keyword}
             </h1>
 
@@ -95,7 +95,7 @@ export default async function TechnologyPage({ params }: PageProps) {
             <p className="max-w-[48ch] text-base md:text-lg text-body leading-relaxed mb-16">{tech.intro}</p>
 
             <div className="mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+              <h2 className="md:text-3xl font-bold text-foreground mb-6">
                 Why we use {tech.name}
               </h2>
               <ul className="space-y-4">
@@ -113,7 +113,7 @@ export default async function TechnologyPage({ params }: PageProps) {
             </div>
 
             <div className="mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+              <h2 className="md:text-3xl font-bold text-foreground mb-6">
                 What this means for your business
               </h2>
               <p className="max-w-[48ch] text-base md:text-lg text-body leading-relaxed">{tech.businessOutcome}</p>

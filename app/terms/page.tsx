@@ -179,7 +179,7 @@ export default function TermsAndConditions() {
       <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Terms and Conditions</h1>
+            <h1 className="md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Terms and Conditions</h1>
             <p className="text-lg text-muted-foreground">Effective Date: January 1, 2025</p>
           </motion.div>
         </div>
@@ -197,7 +197,7 @@ export default function TermsAndConditions() {
         <div className="max-w-4xl mx-auto">
           {sections.map((section, sectionIndex) => (
             <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">{section.title}</h2>
+              <h2 className="md:text-3xl font-bold mb-6 text-foreground">{section.title}</h2>
               {section.subsections.map((subsection, subIndex) => (
                 <div key={subIndex} className="mb-6">
                   {subsection.subtitle && <h3 className="text-xl font-semibold mb-3 text-foreground">{subsection.subtitle}</h3>}
