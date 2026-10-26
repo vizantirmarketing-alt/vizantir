@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -33,6 +33,7 @@ const getMountedServer = () => false;
 const Navbar = ({ minimal }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
   const mounted = useSyncExternalStore(subscribeNoop, getMountedClient, getMountedServer);
   const pathname = usePathname();
   const isMinimal = minimal ?? MINIMAL_NAV_PATHS.has(pathname);
@@ -43,6 +44,47 @@ const Navbar = ({ minimal }: NavbarProps) => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // iOS WebKit keeps a stale fixed-position origin after the viewport changes shape.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let outerFrame = 0;
+    let innerFrame = 0;
+
+    const settleFixedBar = () => {
+      cancelAnimationFrame(outerFrame);
+      cancelAnimationFrame(innerFrame);
+      outerFrame = requestAnimationFrame(() => {
+        innerFrame = requestAnimationFrame(() => {
+          if (typeof window === "undefined") return;
+          const bar = navRef.current;
+          if (!bar) return;
+          void bar.offsetHeight;
+          window.scrollTo(0, window.scrollY);
+          const offsetTop = window.visualViewport?.offsetTop ?? 0;
+          bar.style.top = offsetTop !== 0 ? `${offsetTop}px` : "0px";
+        });
+      });
+    };
+
+    window.addEventListener("orientationchange", settleFixedBar);
+    const viewport = window.visualViewport;
+    if (viewport) {
+      viewport.addEventListener("resize", settleFixedBar);
+      viewport.addEventListener("scroll", settleFixedBar);
+    }
+
+    return () => {
+      cancelAnimationFrame(outerFrame);
+      cancelAnimationFrame(innerFrame);
+      window.removeEventListener("orientationchange", settleFixedBar);
+      if (viewport) {
+        viewport.removeEventListener("resize", settleFixedBar);
+        viewport.removeEventListener("scroll", settleFixedBar);
+      }
+    };
   }, []);
 
   // Prevent body scroll when mobile menu is open
@@ -96,6 +138,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
       `}</style>
 
       <nav
+        ref={navRef}
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
           background: isScrolled ? 'rgba(250, 249, 245, 0.18)' : 'transparent',
