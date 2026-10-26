@@ -17,12 +17,12 @@ export function MenuButton({ open, onClick }: MenuButtonProps) {
     >
       <span className="relative block h-[10px] w-[26px]">
         <span
-          className={`absolute left-0 top-0 block h-[3.5px] rounded-none bg-foreground transition-all duration-300 ease-out ${
+          className={`absolute left-0 top-0 block h-[3px] rounded-none bg-foreground transition-all duration-300 ease-out ${
             open ? "w-[26px] translate-y-[4.25px] rotate-45" : "w-[26px]"
           }`}
         />
         <span
-          className={`absolute left-0 top-[8.5px] block h-[3.5px] rounded-none bg-foreground transition-all duration-300 ease-out ${
+          className={`absolute left-0 top-[8.5px] block h-[3px] rounded-none bg-foreground transition-all duration-300 ease-out ${
             open ? "w-[26px] -translate-y-[4.25px] -rotate-45" : "w-[18px]"
           }`}
         />
