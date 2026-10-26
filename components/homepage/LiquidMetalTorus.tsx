@@ -417,9 +417,10 @@ export default function LiquidMetalTorus() {
   }, [])
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full min-h-[280px] sm:min-h-[340px] md:min-h-[400px]"
+    <div 
+      ref={containerRef} 
+      className="w-full h-full"
+      style={{ minHeight: '400px' }}
     />
   )
 }

@@ -58,7 +58,7 @@ const Hero = () => {
             `;
 
   return (
-    <Section edge="none" className="hero-section relative min-h-[85svh] md:min-h-[100svh] short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-clip md:overflow-y-visible transition-colors duration-700"
+    <Section edge="none" className="hero-section relative min-h-[85svh] md:min-h-[100svh] short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
       style={{
         background: 'var(--background)',
       }}>
@@ -146,7 +146,7 @@ const Hero = () => {
         
         {/* LEFT SIDE - Liquid Metal Torus */}
         <div className="relative z-10 order-1 min-w-0 h-[280px] sm:h-[340px] md:h-[400px] lg:h-[650px] flex items-center justify-center lg:justify-start overflow-visible opacity-100">
-          <div className="relative w-full h-full max-w-[700px] md:-mt-10 lg:-mt-24 scale-90 md:scale-100">
+          <div className="relative w-full h-full max-w-[700px] -mt-8 sm:-mt-10 lg:-mt-24 scale-90 md:scale-100">
             {show3D ? (
               <Suspense fallback={<TorusPlaceholder />}>
                 <LiquidMetalTorus />
