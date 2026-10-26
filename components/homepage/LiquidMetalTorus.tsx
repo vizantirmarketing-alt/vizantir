@@ -3,15 +3,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-const MD_BREAKPOINT = 768
-
-// Below md the host slot is 360px tall (400px at sm), so the camera moves in to fill it.
-// md and up keep the original framing.
-function getCameraFraming() {
-  const belowMd = window.innerWidth < MD_BREAKPOINT
-  return belowMd ? { z: 6, y: 0 } : { z: 6.5, y: 0.2 }
-}
-
 export default function LiquidMetalTorus() {
   const containerRef = useRef<HTMLDivElement>(null)
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
@@ -36,16 +27,17 @@ export default function LiquidMetalTorus() {
     // Scene
     const scene = new THREE.Scene()
 
-    // Camera
+    // Camera - further back on mobile for smaller torus
     const camera = new THREE.PerspectiveCamera(
       45,
       container.clientWidth / container.clientHeight,
       0.1,
       1000
     )
-    const framing = getCameraFraming()
-    camera.position.z = framing.z
-    camera.position.y = framing.y
+    // Pull camera back on mobile (smaller screens) to make torus appear smaller
+    const isMobile = container.clientWidth < 640 // sm breakpoint
+    camera.position.z = isMobile ? 7 : 6.5
+    camera.position.y = 0.2
     cameraRef.current = camera
 
     // Renderer
@@ -378,9 +370,8 @@ export default function LiquidMetalTorus() {
       cam.aspect = aspect
       cam.updateProjectionMatrix()
 
-      const framing = getCameraFraming()
-      cam.position.z = framing.z
-      cam.position.y = framing.y
+      const isMobileNow = width < 640
+      cam.position.z = isMobileNow ? 7 : 6.5
 
       rendererRef.current.setSize(width, height)
       rendererRef.current.setPixelRatio(getPixelRatio())
