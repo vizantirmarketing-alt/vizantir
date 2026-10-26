@@ -5,10 +5,10 @@ interface AnswerBlockProps {
 
 export function AnswerBlock({ body }: AnswerBlockProps) {
   return (
-    <Section edge="none" className="transition-colors duration-500 md:py-[var(--section-y)]"
+    <Section edge="none" className="px-6 transition-colors duration-500 md:px-12 md:py-[var(--section-y)] lg:px-20"
       style={{ background: 'var(--background)' }}>
-      <div className="container mx-auto px-gutter">
-        <p className="sr-only md:not-sr-only mx-auto max-w-[55ch] text-base md:text-lg leading-relaxed text-muted-foreground">
+      <div className="mx-auto max-w-5xl">
+        <p className="sr-only md:not-sr-only max-w-[55ch] text-base md:text-lg leading-relaxed text-muted-foreground">
           {body}
         </p>
       </div>
