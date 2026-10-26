@@ -70,7 +70,7 @@ export function VariantSystemDemo() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-3"
+            className="grid gap-[var(--stack)] md:grid-cols-3"
           >
             {DEMO_TILES.map((tile, index) => {
               const isActive = index === activeIndex
@@ -80,8 +80,8 @@ export function VariantSystemDemo() {
                   variants={itemVariants}
                   className={`block h-auto relative rounded-2xl border transition-colors duration-500 ${
                     isActive
-                      ? 'border-cobalt-accent bg-cobalt-muted-subtle'
-                      : 'border-border bg-muted/40'
+                      ? 'border-cobalt-muted-border bg-cobalt-muted-subtle'
+                      : 'border-border bg-muted'
                   }`}
                   aria-current={isActive ? 'true' : undefined}>
                   <div className="mb-5 flex items-center justify-between">

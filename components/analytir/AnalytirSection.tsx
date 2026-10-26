@@ -51,7 +51,7 @@ const AnalytirSection = () => {
           >
             <Link
               href="/analytir"
-              className="block min-w-0 transition-transform duration-300 hover:-translate-y-1"
+              className="block min-w-0"
             >
               <div
                 className="min-w-0 overflow-hidden"

@@ -14,15 +14,8 @@ import { VariantComparisonTable } from './_components/VariantComparisonTable'
 import { VariantSystemDemo } from './_components/VariantSystemDemo'
 import { TierComparison } from '@/components/landing-pages/TierComparison'
 import { variants } from './_data/variants'
-import type { ProofClient } from './_lib/get-proof-clients'
 
-type LandingPagesClientProps = {
-  proofClients: ProofClient[]
-}
-
-export default function LandingPagesClient({
-  proofClients: _proofClients,
-}: LandingPagesClientProps) {
+export default function LandingPagesClient() {
   const v = variants.primary
 
   return (

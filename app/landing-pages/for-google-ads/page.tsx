@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import ForGoogleAdsClient from './ForGoogleAdsClient'
 import { ForGoogleAdsPageSchema } from './_schema'
 import { variants } from '../_data/variants'
-import { getProofBandClients } from '../_lib/get-proof-clients'
 
 const v = variants.googleAds
 const META_TITLE = v.metaTitle
@@ -47,13 +46,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function ForGoogleAdsPage() {
-  const proofClients = await getProofBandClients()
-
+export default function ForGoogleAdsPage() {
   return (
     <>
       <ForGoogleAdsPageSchema />
-      <ForGoogleAdsClient proofClients={proofClients} />
+      <ForGoogleAdsClient />
     </>
   )
 }

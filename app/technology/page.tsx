@@ -55,9 +55,9 @@ function TechnologyGrid({ technologies }: { technologies: Technology[] }) {
   return (
     <div className="grid gap-[var(--stack)] md:grid-cols-2 lg:grid-cols-3">
       {technologies.map((tech) => (
-        <Card as="article" variant="plain" badge={false}
+        <Card as="article" variant="plain" interactive badge={false}
           key={tech.slug}
-          className="h-auto flex flex-col rounded-2xl border border-border bg-background">
+          className="h-auto flex flex-col rounded-2xl border border-border bg-muted">
           <h3 className="text-2xl font-bold text-foreground mb-3">{tech.name}</h3>
           <p className="text-cobalt-text font-medium mb-4">{tech.tagline}</p>
           <ul className="mb-6 space-y-3 flex-1">

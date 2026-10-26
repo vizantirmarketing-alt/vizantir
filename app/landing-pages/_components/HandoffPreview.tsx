@@ -75,7 +75,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
           >
             <MotionCard variant="plain" badge={false}
               variants={itemVariants}
-              className="block h-auto rounded-2xl border border-border bg-muted/30 shadow-sm">
+              className="block h-auto rounded-2xl border border-border bg-muted">
               <p className="mb-6 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Sample handoff document
               </p>

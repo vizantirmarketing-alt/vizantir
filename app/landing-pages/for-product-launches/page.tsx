@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import ForProductLaunchesClient from './ForProductLaunchesClient'
 import { ForProductLaunchesPageSchema } from './_schema'
 import { variants } from '../_data/variants'
-import { getProofBandClients } from '../_lib/get-proof-clients'
 
 const v = variants.productLaunches
 const META_TITLE = v.metaTitle
@@ -47,13 +46,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function ForProductLaunchesPage() {
-  const proofClients = await getProofBandClients()
-
+export default function ForProductLaunchesPage() {
   return (
     <>
       <ForProductLaunchesPageSchema />
-      <ForProductLaunchesClient proofClients={proofClients} />
+      <ForProductLaunchesClient />
     </>
   )
 }

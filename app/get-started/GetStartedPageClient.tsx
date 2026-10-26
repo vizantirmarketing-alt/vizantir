@@ -37,12 +37,7 @@ export default function GetStartedPageClient() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="h-auto flex-row gap-6 rounded-2xl"
-                style={{ 
-                  background: '#FFFFFF',
-                  border: '1px solid rgba(0,0,0,0.08)',
-                  boxShadow: '0 2px 12px rgba(0,0,0,0.04)'
-                }}
+                className="h-auto flex-row gap-6 rounded-2xl border border-border bg-muted"
               >
                 <div 
                   className="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg"

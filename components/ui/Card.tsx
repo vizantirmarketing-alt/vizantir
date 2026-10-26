@@ -6,11 +6,10 @@ import { cn } from '@/lib/utils'
 
 const cardSurfaceVariants = cva(
   // Mobile card body is 16px / 1.5; md+ inherits the page baseline.
-  'relative flex h-full flex-col rounded-xl text-[16px] leading-[1.5] transition-colors duration-300 md:text-[length:inherit] md:leading-[inherit]',
+  'relative flex h-full flex-col rounded-xl text-[16px] leading-[1.5] md:text-[length:inherit] md:leading-[inherit]',
   {
     variants: {
       variant: {
-        glass: 'card-surface-glass',
         'muted-30': 'border',
         'muted-20': 'border',
         /** Border only. Colors come from className (themed or per-page surfaces). */
@@ -23,7 +22,8 @@ const cardSurfaceVariants = cva(
       /** Lift on hover. Hover colors only apply to interactive cards. */
       interactive: {
         true: 'card-interactive',
-        false: '',
+        // Interactive cards get their transition from .card-interactive; a utility here would override it.
+        false: 'transition-colors duration-300',
       },
       /** Padding comes from --card-pad* in globals.css. lg = CTA panels, sm = compact rows. */
       pad: {
@@ -33,7 +33,6 @@ const cardSurfaceVariants = cva(
       },
     },
     compoundVariants: [
-      { variant: 'glass', featured: true, class: 'card-surface-glass-featured' },
       {
         variant: 'muted-30',
         featured: false,
@@ -80,7 +79,7 @@ type CardElement = 'div' | 'article' | 'aside'
 
 interface CardProps extends React.ComponentPropsWithoutRef<'div'> {
   /** Surface treatment — not page/business context */
-  variant?: 'glass' | 'muted-30' | 'muted-20' | 'plain'
+  variant?: 'muted-30' | 'muted-20' | 'plain'
   /** Applies featured surface (cobalt tint). Default badge: "Popular" */
   featured?: boolean
   /**

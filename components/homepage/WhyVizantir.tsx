@@ -76,14 +76,7 @@ const WhyVizantir = () => {
             <MotionCard variant="plain" interactive badge={false}
               key={index}
               variants={cardVariants}
-              className="group block h-auto rounded-2xl overflow-hidden"
-              style={{
-                background: 'rgba(0, 0, 0, 0.02)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                border: '1px solid rgba(0, 0, 0, 0.08)',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-              }}
+              className="group block h-auto overflow-hidden rounded-2xl border border-border bg-muted"
             >
               <h3 
                 className="text-[22px] leading-[1.2] md:text-2xl md:leading-8 font-bold mb-2 md:mb-3 transition-colors duration-300 text-foreground"

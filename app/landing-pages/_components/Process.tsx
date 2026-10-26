@@ -71,7 +71,7 @@ export function Process({ emphasis }: ProcessProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid gap-[var(--stack)] sm:grid-cols-2 lg:grid-cols-4"
           >
             {processSteps.map((step) => {
               const isEmphasized = emphasis?.step === step.key
@@ -81,7 +81,7 @@ export function Process({ emphasis }: ProcessProps) {
                   variants={itemVariants}
                   className={`block h-auto rounded-2xl border ${
                     isEmphasized
-                      ? 'border-cobalt-accent bg-cobalt-muted-subtle'
+                      ? 'border-cobalt-muted-border bg-cobalt-muted-subtle'
                       : 'border-border bg-muted'
                   }`}>
                   <div className="mb-4 flex items-center justify-between">

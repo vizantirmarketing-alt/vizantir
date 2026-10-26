@@ -52,7 +52,7 @@ export function RelatedServices() {
               <MotionCard variant="plain" pad="sm" badge={false}
                 key={service.href}
                 variants={itemVariants}
-                className="flex h-full flex-col rounded-2xl border border-border bg-muted/40">
+                className="flex h-full flex-col rounded-2xl border border-border bg-muted">
                 <h3 className="mb-3 text-lg font-bold text-foreground">{service.title}</h3>
                 <p className="mb-6 flex-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
                   {service.description}

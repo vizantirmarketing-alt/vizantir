@@ -20,21 +20,6 @@ import { trackBookStrategyCall } from '@/lib/analytics'
 import { Check, X } from 'lucide-react'
 import { AmbientHero } from '@/components/hero/AmbientHero'
 
-function RecommendedBadge({ visible }: { visible: boolean }) {
-  return (
-    <div className="mb-4 flex min-h-[22px] items-center justify-end">
-      <span
-        className={`rounded-full bg-cobalt-gradient px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-white ${
-          visible ? '' : 'invisible'
-        }`}
-        aria-hidden={!visible}
-      >
-        Recommended
-      </span>
-    </div>
-  )
-}
-
 export default function HowWeWorkPageClient() {
   // Colors matching Vizantir design system
   const colors = {
@@ -143,19 +128,14 @@ export default function HowWeWorkPageClient() {
           </motion.div>
 
           {/* Comparison Cards */}
-          <div className="grid items-stretch md:grid-cols-3 gap-6">
+          <div className="grid items-stretch gap-[var(--stack)] md:grid-cols-3">
             {/* Traditional Agencies */}
-            <MotionCard variant="plain" pad="sm" badge={false}
+            <MotionCard variant="plain" pad="sm"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="block h-full overflow-hidden rounded-2xl border"
-              style={{
-                background: colors.cardBg,
-                borderColor: colors.cardBorder,
-              }}>
-              <RecommendedBadge visible={false} />
+              className="block h-full overflow-hidden rounded-2xl border border-border bg-muted">
 
               <h3
                 className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
@@ -175,17 +155,12 @@ export default function HowWeWorkPageClient() {
             </MotionCard>
 
             {/* Hourly Dev Shops */}
-            <MotionCard variant="plain" pad="sm" badge={false}
+            <MotionCard variant="plain" pad="sm"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="block h-full overflow-hidden rounded-2xl border"
-              style={{
-                background: colors.cardBg,
-                borderColor: colors.cardBorder,
-              }}>
-              <RecommendedBadge visible={false} />
+              className="block h-full overflow-hidden rounded-2xl border border-border bg-muted">
 
               <h3
                 className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"
@@ -205,17 +180,12 @@ export default function HowWeWorkPageClient() {
             </MotionCard>
 
             {/* Vizantir */}
-            <MotionCard variant="plain" pad="sm" badge={false}
+            <MotionCard variant="plain" pad="sm" featured badge="Recommended"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="block h-full overflow-hidden rounded-2xl border"
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 112, 243,0.1) 0%, rgba(0, 112, 243,0.02) 100%)',
-                borderColor: 'rgba(0, 112, 243,0.3)',
-              }}>
-              <RecommendedBadge visible />
+              className="block h-full overflow-hidden rounded-2xl border border-cobalt-muted-border bg-cobalt-muted-subtle">
 
               <h3
                 className="text-lg font-bold mb-2 md:min-h-[3.5rem] transition-colors duration-500"

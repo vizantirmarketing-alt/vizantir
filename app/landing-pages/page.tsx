@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import LandingPagesClient from './LandingPagesClient'
 import { LandingPagesPageSchema } from './_schema'
 import { variants } from './_data/variants'
-import { getProofBandClients } from './_lib/get-proof-clients'
 
 const v = variants.primary
 const META_TITLE = v.metaTitle
@@ -48,13 +47,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function LandingPagesPage() {
-  const proofClients = await getProofBandClients()
-
+export default function LandingPagesPage() {
   return (
     <>
       <LandingPagesPageSchema />
-      <LandingPagesClient proofClients={proofClients} />
+      <LandingPagesClient />
     </>
   )
 }

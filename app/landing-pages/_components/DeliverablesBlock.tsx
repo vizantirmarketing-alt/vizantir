@@ -33,7 +33,7 @@ function DeliverableColumn({
   return (
     <MotionCard variant="plain" badge={false}
       variants={itemVariants}
-      className="block h-auto rounded-2xl border border-border bg-muted/40">
+      className="block h-auto rounded-2xl border border-border bg-muted">
       <h3 className="mb-6 text-xl font-bold text-foreground">{title}</h3>
       <ul className="space-y-3">
         {items.map((item) => (
@@ -67,7 +67,7 @@ export function DeliverablesBlock() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 md:grid-cols-2"
+            className="grid gap-[var(--stack)] md:grid-cols-2"
           >
             <DeliverableColumn title="Design and build" items={designAndBuild} />
             <DeliverableColumn title="Conversion infrastructure" items={conversionInfrastructure} />

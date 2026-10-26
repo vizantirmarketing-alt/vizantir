@@ -59,10 +59,10 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
             </p>
           </motion.div>
 
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
+          <div className="grid gap-[var(--stack)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
             <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="block h-auto rounded-2xl border border-cobalt-accent/40 bg-cobalt-muted-subtle">
+              className="block h-auto rounded-2xl border border-cobalt-muted-border bg-cobalt-muted-subtle">
               <p className="text-xs font-semibold uppercase tracking-wider text-cobalt-text">
                 This variant is optimized for
               </p>
@@ -87,7 +87,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
                 <MotionCard variant="plain" pad="sm" badge={false}
                   key={row.key}
                   variants={itemVariants}
-                  className="block h-auto group rounded-2xl border border-border bg-muted/30 transition-colors hover:border-cobalt-accent/40 hover:bg-cobalt-muted-subtle/50">
+                  className="block h-auto group rounded-2xl border border-border bg-muted transition-colors hover:border-cobalt-accent/40 hover:bg-cobalt-muted-subtle/50">
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold text-foreground">{row.label}</p>
                     <ArrowRight

@@ -116,8 +116,6 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       text: 'var(--foreground)',
       textMuted: 'var(--muted-foreground)',
       accent: 'var(--cobalt-primary)',
-      cardBg: '#FFFFFF',
-      cardBorder: 'rgba(0,0,0,0.08)',
       divider: 'linear-gradient(90deg, transparent, rgba(0, 112, 243,0.3), transparent)',
     }),
     []
@@ -291,8 +289,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.06 }}
-                    className="block h-auto rounded-2xl border"
-                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
+                    className="block h-auto rounded-2xl border border-border bg-muted">
                     <div
                       className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold"
                       style={{ background: `${colors.accent}22`, color: colors.accent }}
@@ -338,8 +335,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="block h-auto rounded-2xl border"
-                    style={{ background: colors.cardBg, borderColor: colors.cardBorder }}>
+                    className="block h-auto rounded-2xl border border-border bg-muted">
                     <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
                       {offering.name}
                     </h3>
@@ -461,7 +457,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   {headings.related}
                 </h2>
               </motion.div>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-[var(--stack)] sm:grid-cols-2 lg:grid-cols-3">
                 {service.relatedServices!.map((rel, index) => (
                   <motion.div
                     key={rel.slug}
@@ -472,8 +468,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                   >
                     <Link
                       href={serviceHref(rel.slug)}
-                      className={cn(cardSurfaceVariants({ variant: 'plain', interactive: true, pad: 'sm' }), 'group rounded-2xl')}
-                      style={{ background: colors.cardBg, borderColor: colors.cardBorder }}
+                      className={cn(cardSurfaceVariants({ variant: 'plain', interactive: true, pad: 'sm' }), 'group rounded-2xl border-border bg-muted')}
                     >
                       <h3 className="mb-3 text-lg font-bold" style={{ color: colors.text }}>
                         {rel.title}

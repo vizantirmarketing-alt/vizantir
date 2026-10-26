@@ -58,7 +58,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
           >
             <MotionCard variant="plain" badge={false}
               variants={itemVariants}
-              className="block h-auto rounded-2xl border border-border bg-muted/40">
+              className="block h-auto rounded-2xl border border-border bg-muted">
               <h3 className="mb-6 text-xl font-bold text-foreground">You&apos;re a fit if:</h3>
               <ul className="space-y-3">
                 {fitItems.map((item) => (
@@ -75,7 +75,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
 
             <MotionCard variant="plain" badge={false}
               variants={itemVariants}
-              className="block h-auto rounded-2xl border border-border bg-muted/40">
+              className="block h-auto rounded-2xl border border-border bg-muted">
               <h3 className="mb-6 text-xl font-bold text-foreground">You&apos;re not a fit if:</h3>
               <ul className="space-y-3">
                 {notFitItems.map((item) => (

@@ -29,7 +29,7 @@ function TierCard({ tier, isSystemLive }: TierCardProps) {
       className={`flex h-full flex-col rounded-2xl border ${
         tier.featured
           ? 'border-cobalt-muted-border bg-cobalt-muted-subtle'
-          : 'border-border bg-muted/30'
+          : 'border-border bg-muted'
       }`}>
       {tier.featured ? (
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cobalt-text">
@@ -90,7 +90,7 @@ export function TierComparison({
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-40px' }}
-            className="grid gap-6 lg:grid-cols-2"
+            className="grid gap-[var(--stack)] lg:grid-cols-2"
           >
             {landingPagePricing.map((tier) => (
               <TierCard

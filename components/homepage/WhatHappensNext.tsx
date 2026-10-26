@@ -78,14 +78,7 @@ const WhatHappensNext = () => {
             <MotionCard variant="plain" badge={false}
               key={index}
               variants={cardVariants}
-              className="block h-auto rounded-2xl transition-all duration-300 hover:-translate-y-1"
-              style={{
-                background: 'rgba(0, 0, 0, 0.02)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                border: '1px solid rgba(0, 0, 0, 0.08)',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-              }}
+              className="block h-auto rounded-2xl border border-border bg-muted"
             >
               {/* Step Number */}
               <div 

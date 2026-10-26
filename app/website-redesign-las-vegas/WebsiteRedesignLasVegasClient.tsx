@@ -330,7 +330,7 @@ export default function WebsiteRedesignLasVegasClient() {
               <MotionCard variant="plain" pad="sm" interactive badge={false}
                 key={block.title}
                 variants={itemVariants}
-                className="block h-auto rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
                   <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
@@ -379,7 +379,7 @@ export default function WebsiteRedesignLasVegasClient() {
           <div className="grid gap-[var(--stack)] lg:grid-cols-3">
             <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="block h-auto rounded-2xl border border-border bg-muted/60">
+              className="block h-auto rounded-2xl border border-border bg-muted">
               <h3 className="mb-6 text-xl font-bold text-foreground">Cheap Redesigner</h3>
               <ul className="space-y-3">
                 {cheapRedesignerCompare.map((item) => (
@@ -399,7 +399,7 @@ export default function WebsiteRedesignLasVegasClient() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.04 }}
-              className="block h-auto rounded-2xl border border-border bg-muted/60">
+              className="block h-auto rounded-2xl border border-border bg-muted">
               <h3 className="mb-6 text-xl font-bold text-foreground">Full-Rebuild Agency</h3>
               <ul className="space-y-3">
                 {fullRebuildAgencyCompare.map((item) => (
@@ -419,7 +419,7 @@ export default function WebsiteRedesignLasVegasClient() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="block h-auto rounded-2xl border border-cobalt-accent/25 bg-muted shadow-[0_0_0_1px_rgba(0,112,243,0.06)]">
+              className="block h-auto rounded-2xl border border-cobalt-muted-border bg-cobalt-muted-subtle">
               <h3 className="mb-6 text-xl font-bold text-foreground">Vizantir</h3>
               <ul className="mb-8 space-y-3">
                 {vizantirCompare.map((item) => (
@@ -477,7 +477,7 @@ export default function WebsiteRedesignLasVegasClient() {
               <MotionCard variant="plain" pad="sm" interactive badge={false}
                 key={client.name}
                 variants={itemVariants}
-                className="h-auto flex flex-col rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
+                className="h-auto flex flex-col rounded-2xl border border-border bg-muted">
                 <h3 className="mb-1 text-lg font-bold text-foreground">{client.name}</h3>
                 <p className="mb-4 text-sm text-cobalt-text">{client.context}</p>
                 <p className="mb-5 flex-1 text-base md:text-sm leading-normal md:leading-relaxed text-muted-foreground">
@@ -527,7 +527,7 @@ export default function WebsiteRedesignLasVegasClient() {
 
           <motion.div
             {...sectionReveal}
-            className="rounded-2xl border border-border bg-muted/80 px-6 py-8 text-center md:px-10"
+            className="rounded-2xl border border-border bg-muted px-6 py-8 text-center md:px-10"
           >
             <p className="text-base font-semibold tracking-wide text-foreground md:text-lg">
               Vizantir Design Studio · Las Vegas, NV 89139

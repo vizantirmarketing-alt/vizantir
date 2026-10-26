@@ -78,9 +78,9 @@ export default function IndustriesHubPage() {
             <div className="mb-20 md:mb-28">
               <div className="grid gap-[var(--stack)] md:grid-cols-2">
                 {PRIMARY_VERTICALS.map((vertical) => (
-                  <Card as="article" variant="plain" badge={false}
+                  <Card as="article" variant="plain" interactive badge={false}
                     key={vertical.href}
-                    className="h-auto flex flex-col rounded-2xl border border-border bg-background">
+                    className="h-auto flex flex-col rounded-2xl border border-border bg-muted">
                     <h2 className="md:text-2xl font-bold text-foreground mb-3">{vertical.title}</h2>
                     <p className="text-cobalt-text font-medium mb-4">{vertical.tagline}</p>
                     <p className="mb-6 flex-1 text-base md:text-sm text-body leading-normal md:leading-relaxed">

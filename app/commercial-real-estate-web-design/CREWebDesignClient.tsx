@@ -303,7 +303,7 @@ export default function CREWebDesignClient() {
               <MotionCard variant="plain" pad="sm" interactive badge={false}
                 key={block.title}
                 variants={itemVariants}
-                className="block h-auto rounded-2xl border border-border bg-muted transition-colors duration-300 hover:border-cobalt-accent/30">
+                className="block h-auto rounded-2xl border border-border bg-muted">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black/[0.02]">
                   <block.icon size={24} className="text-cobalt-text" aria-hidden />
                 </div>
@@ -332,7 +332,7 @@ export default function CREWebDesignClient() {
           <div className="grid gap-[var(--stack)] lg:grid-cols-2">
             <MotionCard variant="plain" badge={false}
               {...sectionReveal}
-              className="block h-auto rounded-2xl border border-border bg-muted/60">
+              className="block h-auto rounded-2xl border border-border bg-muted">
               <h3 className="mb-6 text-xl font-bold text-foreground">
                 How most agencies build CRE sites
               </h3>
@@ -354,7 +354,7 @@ export default function CREWebDesignClient() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="block h-auto rounded-2xl border border-cobalt-accent/25 bg-muted shadow-[0_0_0_1px_rgba(0,112,243,0.06)]">
+              className="block h-auto rounded-2xl border border-cobalt-muted-border bg-cobalt-muted-subtle">
               <h3 className="mb-6 text-xl font-bold text-foreground">How Vizantir builds them</h3>
               <ul className="mb-8 space-y-3">
                 {vizantirCompare.map((item) => (
@@ -423,7 +423,7 @@ export default function CREWebDesignClient() {
 
           <motion.div
             {...sectionReveal}
-            className="rounded-2xl border border-border bg-muted/80 px-6 py-8 text-center md:px-10"
+            className="rounded-2xl border border-border bg-muted px-6 py-8 text-center md:px-10"
           >
             <p className="text-base font-semibold tracking-wide text-foreground md:text-lg">
               Vizantir Design Studio · Las Vegas

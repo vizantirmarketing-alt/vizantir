@@ -297,7 +297,7 @@ export default function ContactPageClient() {
               </div>
 
               {/* Business Hours */}
-              <Card variant="plain" pad="sm" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+              <Card variant="plain" pad="sm" badge={false} className="block h-auto rounded-2xl border border-border bg-muted">
                 <h3 className="font-semibold mb-4 text-foreground">Business Hours</h3>
                 <div className="space-y-2 text-base md:text-sm text-body">
                   {contactDetails.hours.map((row) => (
@@ -310,7 +310,7 @@ export default function ContactPageClient() {
               </Card>
 
               {/* Response Time */}
-              <Card variant="plain" pad="sm" badge={false} className="h-auto flex-row items-center gap-3 rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)` }}>
+              <Card variant="plain" pad="sm" badge={false} className="h-auto flex-row items-center gap-3 rounded-2xl border border-border bg-muted">
                 <p className="text-base md:text-sm text-body">
                   Average response time: <strong>{contactDetails.responseTimeAverage}</strong>
                 </p>
@@ -324,7 +324,7 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-3"
             >
-              <Card variant="plain" badge={false} className="block h-auto rounded-2xl" style={{ background: '#FFFFFF', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+              <Card variant="plain" badge={false} className="block h-auto rounded-2xl border border-border bg-muted">
                 <h2 className="md:text-2xl font-bold mb-6 text-foreground">
                   Start Your Project
                 </h2>

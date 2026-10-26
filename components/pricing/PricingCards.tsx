@@ -74,10 +74,10 @@ export function PricingCards({
             variant="plain"
             featured={tier.featured}
             className={cn(
-              'rounded-2xl bg-muted',
+              'rounded-2xl',
               tier.featured
-                ? 'border-cobalt-muted-border shadow-[0_0_40px_rgba(0,112,243,0.08)]'
-                : 'border-border',
+                ? 'border-cobalt-muted-border bg-cobalt-muted-subtle'
+                : 'border-border bg-muted',
             )}
           >
             <h3 className="mb-1 text-balance text-xl font-bold text-foreground">{tier.name}</h3>

@@ -13,15 +13,8 @@ import { RelatedServices } from '../_components/RelatedServices'
 import { VariantComparisonTable } from '../_components/VariantComparisonTable'
 import { TierComparison } from '@/components/landing-pages/TierComparison'
 import { variants } from '../_data/variants'
-import type { ProofClient } from '../_lib/get-proof-clients'
 
-type ForProductLaunchesClientProps = {
-  proofClients: ProofClient[]
-}
-
-export default function ForProductLaunchesClient({
-  proofClients: _proofClients,
-}: ForProductLaunchesClientProps) {
+export default function ForProductLaunchesClient() {
   const v = variants.productLaunches
 
   return (
