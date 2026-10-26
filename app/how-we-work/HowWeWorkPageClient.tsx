@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState } from 'react'
 import {
   howWeWorkComparisonColumns,
@@ -64,7 +65,7 @@ export default function HowWeWorkPageClient() {
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* Process Steps Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
+      <Section className="px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -117,13 +118,13 @@ export default function HowWeWorkPageClient() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* Why Vizantir Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20">
+      <Section className="px-6 md:px-12 lg:px-20">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -249,13 +250,13 @@ export default function HowWeWorkPageClient() {
 
           </motion.p>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* What's Included Section */}
-      <section className="px-6 md:px-12 lg:px-20 pt-20 pb-10">
+      <Section edge="top" className="px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -325,13 +326,13 @@ export default function HowWeWorkPageClient() {
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* FAQ Section */}
-      <section className="px-6 md:px-12 lg:px-20 pt-10 pb-20">
+      <Section size="sm" className="px-6 md:px-12 lg:px-20">
         <div className="max-w-3xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -413,13 +414,13 @@ export default function HowWeWorkPageClient() {
             })}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Divider */}
       <div className="w-full h-px" style={{ background: colors.divider }} />
 
       {/* CTA Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20 md:py-24">
+      <Section size="lg" className="px-6 md:px-12 lg:px-20">
         <div className="max-w-2xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -458,7 +459,7 @@ export default function HowWeWorkPageClient() {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

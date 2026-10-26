@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -168,7 +169,7 @@ export default function LawFirmWebDesignClient() {
   return (
     <div className="bg-background text-foreground transition-colors duration-500">
       {/* 1 — Hero */}
-      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+      <Section hero className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 md:px-12 lg:px-20">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
           aria-hidden
@@ -233,12 +234,12 @@ export default function LawFirmWebDesignClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 2 — The Problem */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="problem-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="problem-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal}>
             <h2
@@ -268,12 +269,12 @@ export default function LawFirmWebDesignClient() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 3 — What We Build */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="what-we-build-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="what-we-build-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -310,12 +311,12 @@ export default function LawFirmWebDesignClient() {
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 4 — Differentiation */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="differentiation-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="differentiation-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -379,12 +380,12 @@ export default function LawFirmWebDesignClient() {
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 5 — Proof (methodology + credential band) */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="proof-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="proof-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -434,12 +435,12 @@ export default function LawFirmWebDesignClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 6 — Process */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="process-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="process-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -478,12 +479,12 @@ export default function LawFirmWebDesignClient() {
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* 8 — FAQ (after Process, before closing CTA) */}
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-4xl">
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <h2
@@ -513,13 +514,11 @@ export default function LawFirmWebDesignClient() {
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* 7 — Closing CTA band */}
-      <section
-        className="relative overflow-hidden bg-cobalt-primary px-6 py-24 md:px-12 lg:px-20"
-        aria-labelledby="closing-cta-heading"
-      >
+      <Section size="lg" className="relative overflow-hidden bg-cobalt-primary px-6 md:px-12 lg:px-20"
+        aria-labelledby="closing-cta-heading">
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <motion.div {...sectionReveal}>
             <h2
@@ -557,7 +556,7 @@ export default function LawFirmWebDesignClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

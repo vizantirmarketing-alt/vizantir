@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { Code2, Palette, Rocket, Search } from 'lucide-react'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -48,7 +49,7 @@ export function Process({ emphasis }: ProcessProps) {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="process-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="process-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -103,7 +104,7 @@ export function Process({ emphasis }: ProcessProps) {
             })}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

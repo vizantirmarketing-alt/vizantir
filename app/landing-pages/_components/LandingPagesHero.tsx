@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -23,7 +24,7 @@ export function LandingPagesHero({
   trackingLocation,
 }: LandingPagesHeroProps) {
   return (
-    <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+    <Section hero className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 md:px-12 lg:px-20">
       <div className="pointer-events-none absolute inset-0" aria-hidden data-atmosphere-slot />
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
@@ -64,6 +65,6 @@ export function LandingPagesHero({
           </Button>
         </motion.div>
       </div>
-    </section>
+    </Section>
   )
 }

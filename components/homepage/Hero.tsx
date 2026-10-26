@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -57,12 +58,10 @@ const Hero = () => {
             `;
 
   return (
-    <section
-      className="hero-section relative min-h-[100svh] short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
-      style={{ 
+    <Section edge="none" className="hero-section relative min-h-[85svh] md:min-h-[100svh] short-landscape:min-h-0 w-full flex items-center overflow-x-clip overflow-y-visible transition-colors duration-700"
+      style={{
         background: 'var(--background)',
-      }}
-    >
+      }}>
       {/* Background gradient - purple/amber glow on LEFT side */}
       <div 
         className="absolute inset-0 pointer-events-none transition-opacity duration-700"
@@ -142,7 +141,7 @@ const Hero = () => {
       />
 
       <div 
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-[100svh] short-landscape:min-h-0 py-16 lg:py-16 short-landscape:py-10"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-0 items-center min-h-[85svh] md:min-h-[100svh] short-landscape:min-h-0"
       >
         
         {/* LEFT SIDE - Liquid Metal Torus */}
@@ -160,7 +159,7 @@ const Hero = () => {
 
         {/* RIGHT SIDE - Content */}
         <div
-          className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left"
+          className="relative z-10 min-w-0 max-w-2xl order-2 lg:ml-auto text-left pb-[var(--section-y-lg)] lg:py-[var(--section-y-lg)] short-landscape:py-6"
         >
 
           <h1 
@@ -204,7 +203,7 @@ const Hero = () => {
         </div>
       </div>
 
-    </section>
+    </Section>
   );
 };
 

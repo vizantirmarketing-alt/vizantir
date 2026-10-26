@@ -1,3 +1,4 @@
+import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
@@ -27,7 +28,7 @@ export function FromTheBlog({ posts }: FromTheBlogProps) {
   if (posts.length === 0) return null
 
   return (
-    <section className="px-6 py-16 transition-colors duration-500 md:px-12 md:py-20 lg:px-20 short-landscape:py-8">
+    <Section size="sm" className="px-6 transition-colors duration-500 md:px-12 lg:px-20">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-balance text-3xl font-black tracking-tight text-foreground md:text-4xl">
           From the blog
@@ -65,6 +66,6 @@ export function FromTheBlog({ posts }: FromTheBlogProps) {
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
-    </section>
+    </Section>
   )
 }

@@ -107,7 +107,7 @@ const Navbar = ({ minimal }: NavbarProps) => {
           paddingBottom: isScrolled ? '0.75rem' : '1.25rem',
         }}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-gutter">
           <div className="flex items-center justify-between">
             <HomeLogoLink className="flex items-center cursor-pointer">
               {!mounted ? (

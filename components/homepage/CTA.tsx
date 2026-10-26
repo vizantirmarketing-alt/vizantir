@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
@@ -7,13 +8,11 @@ import { trackBookStrategyCall } from '@/lib/analytics';
 
 const CTA = () => {
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 relative overflow-hidden"
+    <Section className="relative overflow-hidden"
       style={{
         background: 'var(--background)',
-      }}
-    >
-      <div className="container mx-auto px-4 relative z-10">
+      }}>
+      <div className="container mx-auto px-gutter relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -55,7 +54,7 @@ const CTA = () => {
           </motion.div>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

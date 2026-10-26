@@ -1,14 +1,13 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 
 const OperatorStatement = () => {
   return (
-    <section
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         <div
           className="w-full max-w-5xl mx-auto h-px mb-12 md:mb-14"
           style={{
@@ -35,7 +34,7 @@ const OperatorStatement = () => {
           </p>
         </motion.div>
       </div>
-    </section>
+    </Section>
   )
 }
 

@@ -1,3 +1,4 @@
+import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 
 import type { RelatedPost } from '@/lib/blog-related'
@@ -10,7 +11,7 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   if (posts.length < 1) return null
 
   return (
-    <section className="mt-16">
+    <Section edge="none" className="mt-16">
       <h2
         className="text-2xl md:text-3xl font-bold mb-6"
         style={{ color: 'var(--foreground)' }}
@@ -37,6 +38,6 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
           </Link>
         ))}
       </div>
-    </section>
+    </Section>
   )
 }

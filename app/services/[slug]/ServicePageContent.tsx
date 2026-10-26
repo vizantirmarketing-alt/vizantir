@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -136,7 +137,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
   return (
     <div style={{ background: colors.bg }} className="min-h-screen transition-colors duration-500">
       {/* Hero */}
-      <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-16 md:pb-20 overflow-hidden">
+      <Section hero className="relative px-6 md:px-12 lg:px-20 overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
@@ -197,14 +198,14 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             ) : null}
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <div className="h-px w-full" style={{ background: colors.divider }} />
 
       {/* Overview */}
       {hasOverview ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-3xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -218,7 +219,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 <PortableText value={service.overview!} components={vizantirPortableTextComponents} />
               </motion.div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -226,7 +227,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Benefits */}
       {hasBenefits ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -257,7 +258,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </ul>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -265,7 +266,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Process */}
       {hasProcess ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -305,7 +306,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -313,7 +314,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Offerings */}
       {hasOfferings ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -347,7 +348,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -359,7 +360,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Deliverables */}
       {hasDeliverables ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -390,7 +391,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </ul>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -398,7 +399,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* FAQs */}
       {hasFaqs ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -469,7 +470,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 })}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
@@ -477,7 +478,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
       {/* Related services */}
       {hasRelated ? (
         <>
-          <section className="px-6 py-16 md:px-12 md:py-20 lg:px-20">
+          <Section className="px-6 md:px-12 lg:px-20">
             <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -519,13 +520,13 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
                 ))}
               </div>
             </div>
-          </section>
+          </Section>
           <div className="h-px w-full" style={{ background: colors.divider }} />
         </>
       ) : null}
 
       {/* CTA */}
-      <section className="px-6 py-16 md:px-12 md:pb-24 lg:px-20">
+      <Section size="lg" className="px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -556,7 +557,7 @@ export default function ServicePageContent({ service }: ServicePageContentProps)
             </Button>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

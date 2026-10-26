@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -23,10 +24,8 @@ export function ClosingCTA({
   trackingLocation,
 }: ClosingCTAProps) {
   return (
-    <section
-      className="relative overflow-hidden bg-cobalt-primary px-6 py-16 md:px-12 md:py-24 lg:px-20"
-      aria-labelledby="closing-cta-heading"
-    >
+    <Section size="lg" className="relative overflow-hidden bg-cobalt-primary px-6 md:px-12 lg:px-20"
+      aria-labelledby="closing-cta-heading">
       <div className="relative z-10 mx-auto max-w-3xl text-center">
         <motion.div {...sectionReveal}>
           <h2
@@ -64,6 +63,6 @@ export function ClosingCTA({
           </p>
         </motion.div>
       </div>
-    </section>
+    </Section>
   )
 }

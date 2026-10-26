@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -31,7 +32,7 @@ export default function NextJsVsWordpressClient() {
 
   return (
     <div className="bg-background text-foreground transition-colors duration-500">
-      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 pb-20 pt-32 md:px-12 lg:px-20">
+      <Section hero className="relative flex min-h-[88svh] items-center justify-center overflow-hidden px-6 md:px-12 lg:px-20">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--cobalt-muted-subtle)_0%,transparent_60%)]"
           aria-hidden
@@ -89,11 +90,11 @@ export default function NextJsVsWordpressClient() {
             </Button>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="comparison-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="comparison-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -147,11 +148,11 @@ export default function NextJsVsWordpressClient() {
             </table>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="nextjs-better-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="nextjs-better-heading">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <motion.div {...sectionReveal} className="max-w-[48ch]">
@@ -213,11 +214,11 @@ export default function NextJsVsWordpressClient() {
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="criteria-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="criteria-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -243,11 +244,11 @@ export default function NextJsVsWordpressClient() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-3xl">
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <h2
@@ -313,12 +314,10 @@ export default function NextJsVsWordpressClient() {
             })}
           </div>
         </div>
-      </section>
+      </Section>
 
-      <section
-        className="relative overflow-hidden bg-cobalt-primary px-6 py-24 md:px-12 lg:px-20"
-        aria-labelledby="closing-cta-heading"
-      >
+      <Section size="lg" className="relative overflow-hidden bg-cobalt-primary px-6 md:px-12 lg:px-20"
+        aria-labelledby="closing-cta-heading">
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <motion.div {...sectionReveal}>
             <h2
@@ -343,7 +342,7 @@ export default function NextJsVsWordpressClient() {
             </Button>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

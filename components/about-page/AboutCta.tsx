@@ -1,3 +1,4 @@
+import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 
 import type { AboutFinalCtaContent } from '@/data/about'
@@ -8,7 +9,7 @@ interface AboutCtaProps {
 
 export default function AboutCta({ content }: AboutCtaProps) {
   return (
-    <section className="px-6 py-20 md:px-12 md:py-24 lg:px-20">
+    <Section size="lg" className="px-6 md:px-12 lg:px-20">
       <div className="mx-auto max-w-4xl text-center">
         <p className="mb-6 text-pretty text-base text-muted-foreground md:text-lg">
           Think we might be the studio for you?
@@ -20,6 +21,6 @@ export default function AboutCta({ content }: AboutCtaProps) {
           {content.label}
         </Link>
       </div>
-    </section>
+    </Section>
   )
 }

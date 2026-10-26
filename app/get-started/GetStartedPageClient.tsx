@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { getStartedDescription, getStartedSteps } from '@/data/get-started'
@@ -12,7 +13,7 @@ export default function GetStartedPageClient() {
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4">
+      <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
@@ -23,10 +24,10 @@ export default function GetStartedPageClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* Process Steps */}
-      <section className="px-4 pb-16">
+      <Section size="sm" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
           <div className="space-y-8">
             {steps.map((step, index) => (
@@ -60,10 +61,10 @@ export default function GetStartedPageClient() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* CTA Section */}
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -107,7 +108,7 @@ export default function GetStartedPageClient() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

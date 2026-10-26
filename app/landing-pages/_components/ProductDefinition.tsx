@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { Code2, Palette, Target } from 'lucide-react'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -27,7 +28,7 @@ export function ProductDefinition() {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="product-definition-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="product-definition-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
             <h2
@@ -67,7 +68,7 @@ export function ProductDefinition() {
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

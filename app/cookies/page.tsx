@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
@@ -224,24 +225,24 @@ export default function CookiePolicy() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
-      <section className="pt-32 pb-16 px-4">
+      <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">Cookie Policy</h1>
             <p className="text-lg text-muted-foreground">Effective Date: January 1, 2025</p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-4 pb-8">
+      <Section size="sm" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-lg leading-relaxed text-body">
             This Cookie Policy explains how Vizantir.com (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) uses cookies and similar tracking technologies when you visit our website.
           </motion.p>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
           {sections.map((section, sectionIndex) => (
             <motion.div key={sectionIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 + sectionIndex * 0.05 }} className="mb-12">
@@ -274,7 +275,7 @@ export default function CookiePolicy() {
             <p className="text-sm text-meta">Last Updated: October 2, 2026</p>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

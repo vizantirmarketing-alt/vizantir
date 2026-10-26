@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { memo, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -218,7 +219,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
 
   return (
     <div className="min-h-screen pt-32 pb-20" style={{ background: colors.bg }}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-gutter">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <motion.div
@@ -302,7 +303,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
           {/* Index */}
           <div className="relative">
             {clientStudies.length > 0 ? (
-              <section>
+              <Section edge="none">
                 <h2
                   className="mb-2 mt-10 text-xl font-bold tracking-tight md:text-2xl"
                   style={{ color: colors.text }}
@@ -318,11 +319,11 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     showStudioMarker={false}
                   />
                 ))}
-              </section>
+              </Section>
             ) : null}
 
             {studioStudies.length > 0 ? (
-              <section className={clientStudies.length > 0 ? 'mt-16' : 'mt-10'}>
+              <Section edge="none" className={clientStudies.length > 0 ? 'mt-16' : 'mt-10'}>
                 <h2
                   className="mb-3 text-xl font-bold tracking-tight md:text-2xl"
                   style={{ color: colors.text }}
@@ -346,7 +347,7 @@ const CaseStudiesClient = ({ caseStudies }: CaseStudiesClientProps) => {
                     showStudioMarker
                   />
                 ))}
-              </section>
+              </Section>
             ) : null}
           </div>
 

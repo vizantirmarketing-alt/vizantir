@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { CheckCircle2, X } from 'lucide-react'
@@ -36,7 +37,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="qualifier-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="qualifier-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -102,7 +103,7 @@ export function QualifierBand({ overrides }: QualifierBandProps) {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

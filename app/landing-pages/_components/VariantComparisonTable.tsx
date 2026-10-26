@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
@@ -41,10 +42,8 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
   return (
     <>
       <SectionDivider />
-      <section
-        className="px-6 py-20 md:px-12 lg:px-20"
-        aria-labelledby="variant-comparison-heading"
-      >
+      <Section className="px-6 md:px-12 lg:px-20"
+        aria-labelledby="variant-comparison-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
             <h2
@@ -141,7 +140,7 @@ export function VariantComparisonTable({ currentSlug }: VariantComparisonTablePr
             </motion.div>
           </div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

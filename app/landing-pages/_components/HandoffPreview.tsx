@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import SectionDivider from '@/components/ui/SectionDivider'
@@ -48,10 +49,8 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
   return (
     <>
       <SectionDivider />
-      <section
-        className="px-6 py-20 md:px-12 lg:px-20"
-        aria-labelledby="handoff-preview-heading"
-      >
+      <Section className="px-6 md:px-12 lg:px-20"
+        aria-labelledby="handoff-preview-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 mx-auto max-w-3xl text-center">
             <h2
@@ -112,7 +111,7 @@ export function HandoffPreview({ trackingLocation }: HandoffPreviewProps) {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import SectionDivider from '@/components/ui/SectionDivider'
 import { containerVariants, itemVariants, sectionReveal } from './motion'
@@ -17,7 +18,7 @@ export function LandingPagesFAQ({ faqs }: LandingPagesFAQProps) {
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="faq-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="faq-heading">
         <div className="mx-auto max-w-4xl">
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <h2
@@ -47,7 +48,7 @@ export function LandingPagesFAQ({ faqs }: LandingPagesFAQProps) {
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

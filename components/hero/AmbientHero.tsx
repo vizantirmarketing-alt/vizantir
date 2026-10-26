@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import type { AmbientVariant } from './AmbientHeroCanvas'
 
@@ -38,7 +39,8 @@ export function AmbientHero({
   }, [])
 
   return (
-    <section
+    <Section
+      edge="none"
       className={`relative overflow-hidden ${compact ? 'md:min-h-[60svh]' : 'min-h-[100svh]'}`}
     >
       <div
@@ -89,6 +91,6 @@ export function AmbientHero({
           {children}
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

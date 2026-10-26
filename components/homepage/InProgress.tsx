@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 
@@ -11,11 +12,9 @@ const project = {
 
 const InProgress = () => {
   return (
-    <section
-      className="pt-16 md:pt-20 pb-0 short-landscape:pt-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section edge="top" className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -47,7 +46,7 @@ const InProgress = () => {
           </div>
         </motion.div>
       </div>
-    </section>
+    </Section>
   )
 }
 

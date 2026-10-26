@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -200,7 +201,7 @@ export default function ContactPageClient() {
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 pb-16 px-4">
+      <Section size="sm" hero className="relative overflow-hidden px-4">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -223,12 +224,12 @@ export default function ContactPageClient() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       <SectionDivider />
 
       {/* Contact Section */}
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
             
@@ -479,7 +480,7 @@ export default function ContactPageClient() {
             </motion.div>
       </div>
     </div>
-      </section>
+      </Section>
 
       <SectionDivider />
     </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import type { Faq } from '@/components/homepage/FAQSection'
 import { AccordionIndicator } from '@/components/ui/AccordionIndicator'
 import { motion } from 'framer-motion'
@@ -26,7 +27,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)', transition: 'background-color 0.5s ease' }}>
-      <section className="pt-32 pb-16 px-4">
+      <Section size="sm" hero className="px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
@@ -73,9 +74,9 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             </div>
           </div>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-4 pb-24">
+      <Section size="lg" edge="bottom" className="px-4">
         <div className="max-w-4xl mx-auto">
           <div className="space-y-4">
             {filteredFaqs.length === 0 ? (
@@ -178,7 +179,7 @@ export default function FAQPageClient({ faqs }: FAQPageClientProps) {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

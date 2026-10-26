@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { CheckCircle2 } from 'lucide-react'
@@ -73,7 +74,7 @@ export function TierComparison({
   return (
     <>
       <SectionDivider />
-      <section className="px-6 py-20 md:px-12 lg:px-20" aria-labelledby="tier-comparison-heading">
+      <Section className="px-6 md:px-12 lg:px-20" aria-labelledby="tier-comparison-heading">
         <div className="mx-auto max-w-6xl">
           <motion.div {...sectionReveal} className="mb-14 text-center">
             <h2
@@ -100,7 +101,7 @@ export function TierComparison({
             ))}
           </motion.div>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

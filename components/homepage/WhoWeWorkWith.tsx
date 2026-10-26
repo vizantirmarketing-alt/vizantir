@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { motion } from 'framer-motion';
 
 const WhoWeWorkWith = () => {
@@ -13,11 +14,9 @@ const WhoWeWorkWith = () => {
   ];
 
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -43,7 +42,7 @@ const WhoWeWorkWith = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="flex flex-wrap justify-center gap-4 md:gap-6"
+            className="flex flex-wrap justify-center gap-2 md:gap-6"
           >
             {industries.map((industry, index) => (
               <motion.div
@@ -65,7 +64,7 @@ const WhoWeWorkWith = () => {
           </motion.div>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

@@ -1,3 +1,4 @@
+import { Section } from '@/components/ui/Section'
 import Link from 'next/link'
 
 import type { LinkedService } from '@/lib/linked-services'
@@ -10,7 +11,7 @@ export function ServiceIndex({ services }: ServiceIndexProps) {
   if (services.length === 0) return null
 
   return (
-    <section className="px-6 py-16 transition-colors duration-500 md:px-12 md:py-20 lg:px-20 short-landscape:py-8">
+    <Section className="px-6 transition-colors duration-500 md:px-12 lg:px-20">
       <div className="mx-auto max-w-5xl">
         <h2
           id="services-heading"
@@ -39,6 +40,6 @@ export function ServiceIndex({ services }: ServiceIndexProps) {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

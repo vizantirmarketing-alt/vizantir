@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -155,7 +156,7 @@ export default function BlogPageClient({ posts }: Props) {
         transition: themeBgColorTransition,
       }}
     >
-      <section className="px-6 pt-32 md:px-12 lg:px-20">
+      <Section size="sm" hero className="px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0 }}
@@ -239,9 +240,9 @@ export default function BlogPageClient({ posts }: Props) {
             </div>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
-      <section className="px-6 md:px-12 lg:px-20">
+      <Section edge="none" className="px-6 md:px-12 lg:px-20">
         <div className={`mx-auto max-w-6xl pb-24 ${leadPost ? 'pt-14' : ''}`}>
           {leadPost ? (
             <motion.div
@@ -371,11 +372,9 @@ export default function BlogPageClient({ posts }: Props) {
             ))
           )}
         </div>
-      </section>
+      </Section>
 
-      <section
-        className="border-t border-[rgba(20,20,19,0.14)] px-6 py-20 md:px-12 lg:px-20"
-      >
+      <Section className="border-t border-[rgba(20,20,19,0.14)] px-6 md:px-12 lg:px-20">
         <div className="mx-auto max-w-2xl text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -423,7 +422,7 @@ export default function BlogPageClient({ posts }: Props) {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -36,11 +37,8 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
   };
 
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <motion.h2
@@ -138,7 +136,7 @@ const FAQSection = ({ faqs }: FAQSectionProps) => {
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 

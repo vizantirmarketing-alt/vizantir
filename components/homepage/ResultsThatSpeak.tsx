@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -19,11 +20,9 @@ interface ResultsThatSpeakProps {
 const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
 
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -118,7 +117,7 @@ const ResultsThatSpeak = ({ caseStudies }: ResultsThatSpeakProps) => {
           </div>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

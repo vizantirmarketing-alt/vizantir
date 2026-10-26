@@ -1,5 +1,6 @@
 'use client'
 
+import { Section } from '@/components/ui/Section'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
@@ -46,11 +47,9 @@ const WhatHappensNext = () => {
   };
 
   return (
-    <section 
-      className="py-16 md:py-20 short-landscape:py-8 transition-colors duration-500"
-      style={{ background: 'var(--background)' }}
-    >
-      <div className="container mx-auto px-4">
+    <Section className="transition-colors duration-500"
+      style={{ background: 'var(--background)' }}>
+      <div className="container mx-auto px-gutter">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -134,7 +133,7 @@ const WhatHappensNext = () => {
           </p>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 
