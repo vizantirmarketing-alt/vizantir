@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HomeLogoLink } from "@/components/ui/HomeLogoLink";
-import { X } from "lucide-react";
 import { trackBookStrategyCall } from "@/lib/analytics";
 import { mainNavLinks } from "@/data/navigation";
+import { MenuButton } from "@/components/navbar/MenuButton";
+import { NavOverlay } from "@/components/navbar/NavOverlay";
 
 /** Paths that use logo + CTA only (no menu links). */
 const MINIMAL_NAV_PATHS = new Set([
@@ -32,7 +33,7 @@ const getMountedServer = () => false;
 
 const Navbar = ({ minimal }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const mounted = useSyncExternalStore(subscribeNoop, getMountedClient, getMountedServer);
   const pathname = usePathname();
@@ -87,21 +88,20 @@ const Navbar = ({ minimal }: NavbarProps) => {
     };
   }, []);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
+    const media = window.matchMedia("(min-width: 1280px)");
+    const closeOnDesktop = () => {
+      if (media.matches) setMenuOpen(false);
     };
-  }, [isMobileMenuOpen]);
+    media.addEventListener("change", closeOnDesktop);
+    return () => media.removeEventListener("change", closeOnDesktop);
+  }, []);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   // Close mobile menu when switching into minimal mode
-  if (isMinimal && isMobileMenuOpen) {
-    setIsMobileMenuOpen(false);
+  if (isMinimal && menuOpen) {
+    setMenuOpen(false);
   }
 
   const handleStrategyCallClick = (location: string) => {
@@ -209,119 +209,18 @@ const Navbar = ({ minimal }: NavbarProps) => {
               </Link>
             </div>
 
-            {/* Mobile Menu Button — full nav only */}
-            {!isMinimal && !isMobileMenuOpen && (
-              <button
-                className="xl:hidden z-50 relative text-foreground"
-                aria-label="Open menu"
-                aria-expanded={false}
-                onClick={() => setIsMobileMenuOpen(true)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M4 8h16" />
-                  <path d="M4 16h16" />
-                </svg>
-              </button>
+            {!isMinimal && (
+              <MenuButton
+                open={menuOpen}
+                onClick={() => setMenuOpen((open) => !open)}
+              />
             )}
           </div>
         </div>
       </nav>
 
-      {/* Mobile Bottom Sheet — full nav only */}
       {!isMinimal && (
-      <div
-        className={`xl:hidden fixed top-0 left-0 right-0 z-[60] h-[100dvh] max-h-[100dvh] min-h-0 ${
-          isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
-        }`}
-        inert={!isMobileMenuOpen ? true : undefined}
-      >
-        {/* Backdrop */}
-        <div
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="absolute inset-0"
-          style={{
-            opacity: isMobileMenuOpen ? 1 : 0,
-            transition: 'opacity 500ms ease',
-            background: 'rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-          }}
-        />
-
-        {/* Sheet */}
-        <div
-          className="absolute inset-0 shadow-2xl flex flex-col min-h-0 overscroll-y-contain"
-          style={{
-            transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(100%)',
-            transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
-            willChange: 'transform',
-            background: 'rgba(255, 255, 255, 1)',
-          }}
-        >
-          {/* Header Row */}
-          <div
-            className="shrink-0 flex items-center justify-between px-6 pt-3 pb-3"
-            style={{
-              borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
-            }}
-          >
-            {mounted && (
-              <Image
-                src="/logo/logo-light.svg"
-                alt="Vizantir Logo"
-                width={120}
-                height={24}
-                className="h-5 w-auto"
-              />
-            )}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Close menu"
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-              style={{
-                background: 'rgba(0, 0, 0, 0.04)',
-                border: '1px solid rgba(0, 0, 0, 0.06)',
-              }}
-            >
-              <X size={18} />
-            </button>
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="flex flex-1 flex-col min-h-0 overflow-y-auto overscroll-contain px-6 pb-8">
-            <div className="flex flex-1 flex-col justify-evenly short-landscape:justify-start short-landscape:gap-4 min-h-0">
-              {mainNavLinks.map((link, idx) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block py-3 sm:py-4 ${
-                    idx !== mainNavLinks.length - 1 ? 'border-b border-border/40' : ''
-                  } ${mounted && pathname === link.path ? 'text-cobalt-text' : 'text-foreground'}`}
-                >
-                  <span className="link-lift text-xl sm:text-2xl font-medium">{link.name}</span>
-                </Link>
-              ))}
-            </div>
-          </nav>
-
-          {mounted && (
-            <div className="shrink-0 px-6 pt-4 pb-6 space-y-4 border-t border-border/40 bg-white">
-              <Link
-                href="/contact"
-                onClick={() => {
-                  trackBookStrategyCall('mobile_menu');
-                  setIsMobileMenuOpen(false);
-                }}
-                className="flex w-full items-center justify-center rounded-xl py-4 text-base font-semibold bg-cobalt-gradient text-white shadow-cobalt transition-all duration-300 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0070F3]/40 focus-visible:ring-offset-2"
-              >
-                Book a Strategy Call
-              </Link>
-            </div>
-          )}
-        </div>
-      </div>
+        <NavOverlay open={menuOpen} onClose={closeMenu} links={mainNavLinks} />
       )}
     </>
   );

@@ -883,6 +883,25 @@ html, body {
   to { --lap: 360deg; }
 }
 
+/* Mobile nav overlay only: short viewports tighten the centered link stack so it still clears the bar. */
+@media (max-height: 520px) {
+  .nav-overlay-content {
+    gap: 0.75rem;
+    padding-top: 76px;
+  }
+
+  .nav-overlay-link {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .nav-overlay-content .overlay-cta {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .chat-launcher-ring::before {
     animation: none;
