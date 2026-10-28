@@ -10,6 +10,7 @@ import { faqSchema, graphSchema, webPageSchema } from '@/lib/schema'
 import { homepageAnswerBlock } from '@/data/homepage'
 import { AnswerBlock } from '@/components/homepage/AnswerBlock'
 import { PricingOverview } from '@/components/homepage/PricingOverview'
+import { SearchReadiness } from '@/components/homepage/SearchReadiness'
 import { ServiceIndex } from '@/components/homepage/ServiceIndex'
 import { FromTheBlog, type HomepageBlogPost } from '@/components/homepage/FromTheBlog'
 import Hero from '@/components/homepage/Hero'
@@ -114,6 +115,7 @@ export default async function Home() {
       <Hero />
       <AnswerBlock body={homepageAnswerBlock.body} />
       <PricingOverview />
+      <SearchReadiness />
       <ServiceIndex services={toLinkedServices(services ?? [])} />
       <Marquee />
       <EditorialStatement />

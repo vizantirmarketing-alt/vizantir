@@ -17,7 +17,7 @@ const WhyVizantir = () => {
     },
     {
       title: "Built to Convert",
-      description: "Faster load times, cleaner code, and a mobile experience that does not make people leave.",
+      description: "Faster load times, cleaner code, search readiness built in, and a mobile experience that does not make people leave.",
     },
     {
       title: "Commercial Thinking",

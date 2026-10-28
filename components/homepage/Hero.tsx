@@ -180,7 +180,7 @@ const Hero = () => {
           <p
             className="text-lg md:text-xl leading-relaxed mb-[var(--cta-gap)] max-w-lg transition-colors duration-500 text-muted-foreground"
           >
-            Vizantir is a Las Vegas design studio. Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders.
+            Vizantir is a Las Vegas design studio. Sites that make people stop and say, who did this? Every one is built from scratch on Next.js, with no templates and no page builders. And every one is built to rank from the day it goes live.
           </p>
 
           <div className="flex flex-col gap-[var(--btn-stack)] sm:flex-row sm:items-center sm:gap-4">

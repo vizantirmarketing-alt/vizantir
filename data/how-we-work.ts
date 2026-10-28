@@ -100,7 +100,7 @@ export const howWeWorkIncludes = [
   'Defined scope before work begins',
   'Milestone updates throughout',
   'Mobile-responsive design',
-  'Basic SEO setup',
+  'Technical SEO setup',
   'Launch support',
 ] as const
 
