@@ -1,9 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { AnimatePresence, motion } from 'framer-motion';
 import { MessageCircle, Send, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -23,8 +22,8 @@ const STARTER_PROMPTS = [
 
 const MAX_INPUT_LENGTH = 2000;
 const ERROR_MESSAGE = 'Something went wrong, please try again.';
-const GREETING_TOOLTIP_SESSION_KEY = 'vizantir-chat-greeting-seen';
-const SCROLL_GREETING_THRESHOLD = 0.5;
+const LAUNCHER_LABEL = 'Questions? Talk to us';
+const LAUNCHER_SCROLL_PX = 200;
 
 const QUICK_ACTIONS = [
   { label: 'Services', href: '/services' },
@@ -276,19 +275,17 @@ export function VizantirChat() {
   const [isStreaming, setIsStreaming] = useState(false);
   const mounted = useSyncExternalStore(subscribeNoop, getMountedClient, getMountedServer);
   const [isMobile, setIsMobile] = useState(false);
-  const [showGreetingTooltip, setShowGreetingTooltip] = useState(false);
-  const [greetingBlocked, setGreetingBlocked] = useState(() =>
-    typeof window === 'undefined' ? true : sessionStorage.getItem(GREETING_TOOLTIP_SESSION_KEY) === '1',
-  );
+  const [pastScroll, setPastScroll] = useState(false);
+  const [footerInView, setFooterInView] = useState(false);
+  const [pillWidth, setPillWidth] = useState(0);
+  const [canAnimate, setCanAnimate] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const markGreetingSeen = useCallback(() => {
-    sessionStorage.setItem(GREETING_TOOLTIP_SESSION_KEY, '1');
-    setGreetingBlocked(true);
-    setShowGreetingTooltip(false);
-  }, []);
+  const launcherLabelRef = useRef<HTMLSpanElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
     const mobileQuery = window.matchMedia(
@@ -332,36 +329,57 @@ export function VizantirChat() {
   }, [messages, isStreaming]);
 
   useEffect(() => {
-    if (greetingBlocked || isOpen) return;
+    const onScroll = () => setPastScroll(window.scrollY >= LAUNCHER_SCROLL_PX);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-    const checkScroll = () => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollable <= 0) return;
+  useEffect(() => {
+    const footer = document.querySelector('[data-site-footer]');
+    if (!footer) return;
 
-      if (window.scrollY / scrollable >= SCROLL_GREETING_THRESHOLD) {
-        sessionStorage.setItem(GREETING_TOOLTIP_SESSION_KEY, '1');
-        setGreetingBlocked(true);
-        setShowGreetingTooltip(true);
-      }
+    const observer = new IntersectionObserver(([entry]) => {
+      setFooterInView(entry?.isIntersecting ?? false);
+    });
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
+  useLayoutEffect(() => {
+    const label = launcherLabelRef.current;
+    if (!label) return;
+
+    const measure = () => {
+      const next = Math.ceil(label.offsetWidth);
+      setPillWidth((current) => (current === next ? current : next));
     };
 
-    window.addEventListener('scroll', checkScroll, { passive: true });
-    checkScroll();
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(label);
+    const frame = requestAnimationFrame(() => setCanAnimate(true));
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [mounted]);
 
-    return () => window.removeEventListener('scroll', checkScroll);
-  }, [greetingBlocked, isOpen]);
+  // Panel header close is the only close control: focus it on open, return focus to the launcher on close.
+  useEffect(() => {
+    if (isOpen) {
+      closeButtonRef.current?.focus();
+    } else if (wasOpenRef.current) {
+      launcherRef.current?.focus();
+    }
+    wasOpenRef.current = isOpen;
+  }, [isOpen]);
 
   const handleToggle = () => {
     if (!isOpen) {
       setHasOpened(true);
-      markGreetingSeen();
     }
     setIsOpen((prev) => !prev);
-  };
-
-  const dismissGreetingTooltip = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    markGreetingSeen();
   };
 
   const sendMessage = useCallback(
@@ -488,6 +506,7 @@ export function VizantirChat() {
             <p className="text-xs text-white/60">Premium web design studio</p>
           </div>
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={() => setIsOpen(false)}
             className="flex size-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
@@ -631,51 +650,68 @@ export function VizantirChat() {
     )
   );
 
+  const showPill = !pastScroll;
+  const pillWidthPx = pillWidth > 0 ? pillWidth : undefined;
+
   return (
     <>
-      <div className="pointer-events-none fixed bottom-6 right-6 z-[9999]">
-        <AnimatePresence>
-          {!isOpen && showGreetingTooltip && (
-            <motion.div
-              initial={{ opacity: 0, y: 8, x: 8 }}
-              animate={{ opacity: 1, y: 0, x: 0 }}
-              exit={{ opacity: 0, y: 8, x: 8 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="pointer-events-auto absolute bottom-[calc(100%+0.75rem)] right-0 w-max max-w-[min(240px,calc(100vw-5rem))]"
-              role="status"
-            >
-              <div className="relative rounded-xl border border-cobalt-muted-border bg-background px-3.5 py-2.5 pr-8 text-sm text-foreground shadow-lg">
-                <span className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full bg-cobalt-primary" aria-hidden />
-                <p className="pl-2 leading-snug">Hi! How can I help?</p>
-                <button
-                  type="button"
-                  onClick={dismissGreetingTooltip}
-                  className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  aria-label="Dismiss greeting"
-                >
-                  <X className="size-3" />
-                </button>
-                <span
-                  className="absolute -bottom-1.5 right-5 size-3 rotate-45 border-r border-b border-cobalt-muted-border bg-background"
-                  aria-hidden
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {!isOpen && (
-          <span className="chat-launcher-ring pointer-events-none block">
-            <button
-              type="button"
-              onClick={handleToggle}
-              className="pointer-events-auto flex aspect-square size-14 shrink-0 items-center justify-center rounded-full bg-cobalt-gradient"
-              aria-label="Open chat"
-            >
-              <MessageCircle className="size-6" />
-            </button>
-          </span>
+      <div
+        aria-hidden={footerInView || undefined}
+        className={cn(
+          'pointer-events-none fixed bottom-6 right-6 z-[9999]',
+          canAnimate && 'transition-transform duration-200 ease-[ease] motion-reduce:transition-none',
+          footerInView && 'translate-y-[calc(100%+1.5rem)]',
         )}
+      >
+        <button
+          ref={launcherRef}
+          type="button"
+          onClick={handleToggle}
+          aria-label="Open chat"
+          tabIndex={footerInView || isOpen ? -1 : undefined}
+          style={
+            {
+              '--chat-pill-width': pillWidthPx ? `${pillWidthPx}px` : '13.75rem',
+              // Overrides the cobalt button transition so the pill width still animates.
+              ...(canAnimate && {
+                transition:
+                  'width 200ms ease, box-shadow 150ms ease-out, transform 150ms ease-out, background 200ms ease-out',
+              }),
+            } as CSSProperties
+          }
+          className={cn(
+            'group bg-cobalt-gradient relative flex h-10 w-10 items-center justify-center rounded-xl font-sans text-base font-semibold text-white shadow-cobalt',
+            isOpen && 'invisible',
+            showPill && 'md:w-[var(--chat-pill-width)]',
+            !isOpen && pastScroll && 'md:hover:w-[var(--chat-pill-width)] md:focus-visible:w-[var(--chat-pill-width)]',
+            footerInView ? 'pointer-events-none' : 'pointer-events-auto',
+          )}
+        >
+          <span
+            ref={launcherLabelRef}
+            aria-hidden
+            className={cn(
+              'pointer-events-none absolute! top-1/2 left-1/2 w-max -translate-x-1/2 -translate-y-1/2 px-4 whitespace-nowrap',
+              canAnimate && 'transition-opacity duration-200 ease-[ease] motion-reduce:transition-none',
+              'opacity-0',
+              showPill && 'md:opacity-100',
+              !isOpen && pastScroll && 'md:group-hover:opacity-100 md:group-focus-visible:opacity-100',
+            )}
+          >
+            {LAUNCHER_LABEL}
+          </span>
+          <MessageCircle
+            aria-hidden
+            strokeWidth={1.5}
+            className={cn(
+              'absolute! top-1/2 left-1/2 size-[18px] -translate-x-1/2 -translate-y-1/2',
+              canAnimate && 'transition-opacity duration-200 ease-[ease] motion-reduce:transition-none',
+              'opacity-100',
+              showPill && 'md:opacity-0',
+              !isOpen && pastScroll && 'md:group-hover:opacity-0 md:group-focus-visible:opacity-0',
+            )}
+          />
+        </button>
       </div>
 
       {panel}

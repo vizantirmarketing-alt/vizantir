@@ -18,14 +18,15 @@ const Footer = ({ serviceLinks }: { serviceLinks: FooterServiceLink[] }) => {
   const currentYear = Math.max(calendarYear, 2026)
 
   return (
-    <footer 
+    <footer
+      data-site-footer
       className="border-t"
       style={{
         background: 'var(--background)',
         borderColor: 'rgba(0,0,0,0.1)',
       }}
     >
-      <div className="container mx-auto px-gutter py-12">
+      <div className="container mx-auto px-gutter pt-12 pb-8 md:pb-12">
         <div
           className={
             serviceLinks.length > 0
@@ -250,20 +251,28 @@ const Footer = ({ serviceLinks }: { serviceLinks: FooterServiceLink[] }) => {
               <MadeInUSA />
               <America250 />
             </div>
-            <div className="flex gap-6">
+            <div className="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-3 md:w-auto md:flex-nowrap md:justify-end">
               {[
-                { name: 'Privacy Policy', href: '/privacy' },
-                { name: 'Terms of Service', href: '/terms' },
-                { name: 'Cookie Policy', href: '/cookies' },
-                { name: 'Copyright', href: '/copyright' },
-              ].map((link) => (
-                <Link 
-                  key={link.href}
-                  href={link.href} 
-                  className="link-lift text-sm text-muted-foreground"
-                >
-                  {link.name}
-                </Link>
+                [
+                  { name: 'Privacy Policy', href: '/privacy' },
+                  { name: 'Terms of Service', href: '/terms' },
+                ],
+                [
+                  { name: 'Cookie Policy', href: '/cookies' },
+                  { name: 'Copyright', href: '/copyright' },
+                ],
+              ].map((group) => (
+                <div key={group[0].href} className="flex items-center gap-x-6">
+                  {group.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="link-lift text-sm text-muted-foreground"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
               ))}
             </div>
           </div>
