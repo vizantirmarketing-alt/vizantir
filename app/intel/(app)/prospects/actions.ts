@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { measureProspectById } from '@/lib/prospects/measure'
+import { createMeasureDeps } from '@/lib/prospects/measure-deps'
 import {
   CANCELLABLE_RUN_STATES,
   OWNER_NOTE_MAX,
@@ -209,5 +211,50 @@ export async function updateProspectNote(
   } catch {
     console.error('Prospect note update failed')
     return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+export type MeasurePerformanceResult =
+  | {
+      ok: true
+      performanceScore: number
+      rating: string
+      fitScore: number | null
+      opportunityScore: number | null
+      confidence: string
+    }
+  | { ok: false; error: string }
+
+/**
+ * Measures the prospect's home page with PageSpeed Insights through the same
+ * logic as the runner measure route. Long running (up to about 105 seconds):
+ * the detail page sets maxDuration to cover it.
+ */
+export async function measureProspectPerformance(
+  prospectId: string,
+): Promise<MeasurePerformanceResult> {
+  await requireIntelUser()
+
+  try {
+    const result = await measureProspectById(prospectId, createMeasureDeps())
+    if (!result.ok) {
+      return {
+        ok: false,
+        error: result.reason ? `${result.error} (${result.reason})` : result.error,
+      }
+    }
+
+    revalidateProspects(prospectId)
+    return {
+      ok: true,
+      performanceScore: result.performanceScore,
+      rating: result.rating,
+      fitScore: result.fitScore,
+      opportunityScore: result.opportunityScore,
+      confidence: result.confidence,
+    }
+  } catch {
+    console.error('Prospect measurement failed')
+    return { ok: false, error: 'Measurement failed. Try again shortly.' }
   }
 }

@@ -2,7 +2,15 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { buildClaimResponse, type ClaimedRun, type ProspectClaimStore } from './claim';
+import {
+  ABANDONED_RUN_HOURS,
+  abandonedCutoff,
+  abandonedReasonLine,
+  buildClaimResponse,
+  type ClaimedRun,
+  type ProspectClaimStore,
+} from './claim';
+import { splitRunSummary } from './ingest';
 import { FIXTURE_RUN_CONFIG, FIXTURE_RUN_ID } from './fixtures/ingest-batch.fixture';
 import { PROSPECT_FACTORS, RUBRIC_VERSION } from './rubric';
 
@@ -15,14 +23,29 @@ const RUN: ClaimedRun = {
   claimedAt: NOW.toISOString(),
 };
 
-function store(run: ClaimedRun | null, domains: string[] | Error): ProspectClaimStore & { claims: number } {
-  const state = {
+type FakeClaimStore = ProspectClaimStore & {
+  claims: number;
+  calls: string[];
+  abandonedCutoffs: string[];
+};
+
+function store(run: ClaimedRun | null, domains: string[] | Error): FakeClaimStore {
+  const state: FakeClaimStore = {
     claims: 0,
+    calls: [],
+    abandonedCutoffs: [],
+    async failAbandonedRuns(cutoffIso) {
+      state.calls.push('failAbandoned');
+      state.abandonedCutoffs.push(cutoffIso);
+      return 0;
+    },
     async claimOldestRequestedRun() {
+      state.calls.push('claim');
       state.claims += 1;
       return run;
     },
     async listKnownDomains() {
+      state.calls.push('listKnown');
       if (domains instanceof Error) throw domains;
       return domains;
     },
@@ -59,5 +82,44 @@ describe('buildClaimResponse', () => {
     const failing = store(RUN, new Error('db down'));
     await assert.rejects(buildClaimResponse(failing, NOW));
     assert.equal(failing.claims, 0);
+  });
+});
+
+describe('rubric v2 in claim', () => {
+  it('returns a description for every factor', async () => {
+    const response = await buildClaimResponse(store(RUN, []), NOW);
+    assert.ok(response.run !== null && 'rubric' in response);
+    assert.equal(response.rubric.version, 'prospect-rubric-v2');
+    for (const factor of response.rubric.factors) {
+      assert.ok(factor.description.length > 20, factor.key);
+    }
+    const navigation = response.rubric.factors.find((f) => f.key === 'navigation_conversion_friction');
+    assert.match(navigation?.description ?? '', /two distinct pages/);
+    const performance = response.rubric.factors.find((f) => f.key === 'performance_technical_issues');
+    assert.match(performance?.description ?? '', /Set only by the server/);
+  });
+});
+
+describe('abandoned runs', () => {
+  it('fails runs claimed more than two hours ago before claiming the next run', async () => {
+    const fake = store(RUN, []);
+    await buildClaimResponse(fake, NOW);
+    assert.deepEqual(fake.calls, ['failAbandoned', 'listKnown', 'claim']);
+    assert.deepEqual(fake.abandonedCutoffs, ['2026-11-10T06:00:00.000Z']);
+  });
+
+  it('also clears abandoned runs when nothing is queued', async () => {
+    const fake = store(null, []);
+    assert.deepEqual(await buildClaimResponse(fake, NOW), { run: null });
+    assert.equal(fake.calls[0], 'failAbandoned');
+  });
+
+  it('computes the cutoff and a clear reason line', () => {
+    assert.equal(ABANDONED_RUN_HOURS, 2);
+    assert.equal(abandonedCutoff(NOW).toISOString(), '2026-11-10T06:00:00.000Z');
+    const line = abandonedReasonLine('2026-11-10T05:12:00.000Z');
+    assert.match(line, /^System: Run abandoned: claimed at 2026-11-10T05:12:00\.000Z/);
+    assert.match(line, /within 2 hours/);
+    assert.deepEqual(splitRunSummary(line).errors.length, 1);
   });
 });

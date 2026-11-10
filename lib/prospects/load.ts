@@ -7,6 +7,7 @@ import 'server-only'
 import { z } from 'zod'
 
 import {
+  comparePriority,
   EVIDENCE_KINDS,
   PROSPECT_REVIEW_STATUSES,
   PROSPECT_RUN_STATES,
@@ -27,6 +28,13 @@ import type { RunConfig, RunCounts } from '@/lib/prospects/ingest'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 const RECENT_RUNS_LIMIT = 10
+/**
+ * Priority is computed (60% fit + 40% opportunity), which PostgREST cannot
+ * order by, so the priority sort reads the filtered rows and sorts in code.
+ * Above this many matching prospects the list fails closed rather than sort
+ * a silently truncated set.
+ */
+const PRIORITY_SORT_MAX_ROWS = 5000
 const FILTER_OPTIONS_SCAN_LIMIT = 2000
 const EVIDENCE_LIMIT = 500
 
@@ -183,16 +191,16 @@ export async function fetchProspects(
       query = query.order('opportunity_score', { ascending: false, nullsFirst: false })
     } else if (params.sort === 'researched') {
       query = query.order('last_researched_at', { ascending: false })
-    } else {
+    } else if (params.sort === 'fit') {
       query = query.order('fit_score', { ascending: false, nullsFirst: false })
     }
     query = query.order('canonical_name', { ascending: true })
 
     const from = (params.page - 1) * PROSPECTS_PAGE_SIZE
-    const { data, error, count } = await query.range(
-      from,
-      from + PROSPECTS_PAGE_SIZE - 1,
-    )
+    const { data, error, count } =
+      params.sort === 'priority'
+        ? await query.range(0, PRIORITY_SORT_MAX_ROWS - 1)
+        : await query.range(from, from + PROSPECTS_PAGE_SIZE - 1)
 
     if (error) {
       console.error('Prospect list query failed')
@@ -206,9 +214,18 @@ export async function fetchProspects(
     }
 
     const total = count ?? 0
+    let rows = parsed.data.map(toListRow)
+    if (params.sort === 'priority') {
+      if (total > PRIORITY_SORT_MAX_ROWS) {
+        console.error('Prospect priority sort exceeds row limit')
+        return { ok: false }
+      }
+      rows = [...rows].sort(comparePriority).slice(from, from + PROSPECTS_PAGE_SIZE)
+    }
+
     return {
       ok: true,
-      rows: parsed.data.map(toListRow),
+      rows,
       total,
       page: params.page,
       pageCount: Math.max(1, Math.ceil(total / PROSPECTS_PAGE_SIZE)),

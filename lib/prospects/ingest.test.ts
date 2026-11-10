@@ -15,7 +15,9 @@ import {
 import { MemoryProspectStore } from './fixtures/memory-store';
 import {
   REJECT_REASONS,
+  appendSummaryLine,
   buildErrorSummary,
+  splitRunSummary,
   finalRunState,
   ingestBatch,
   prepareBatch,
@@ -42,16 +44,17 @@ describe('prepareBatch', () => {
     const prepared = prepareBatch(FIXTURE_BATCH, FIXTURE_RUN_CONFIG, NOW.toISOString());
     const full = prepared.accepted.find((record) => record.domain === 'example.com');
     assert.ok(full);
-    // fit: 30 + 30 + 12.5 + 0 = 72.5 -> 73; opportunity: 35 + 15 + 10 + 0 = 60
+    // fit: 30 + 30 + 12.5 + 0 = 72.5 -> 73; opportunity: 35 + 0 (performance
+    // unknown until measured) + 10 + 0 = 45, with 30 of 100 weight unknown.
     assert.equal(full.write.fitScore, 73);
-    assert.equal(full.write.opportunityScore, 60);
+    assert.equal(full.write.opportunityScore, 45);
     assert.equal(full.write.confidence, 'high');
     assert.equal(full.write.rubricVersion, RUBRIC_VERSION);
 
     const sparse = prepared.accepted.find((record) => record.domain === 'example.org');
     assert.ok(sparse);
     assert.equal(sparse.write.fitScore, null);
-    assert.equal(sparse.write.opportunityScore, 65);
+    assert.equal(sparse.write.opportunityScore, null);
     assert.equal(sparse.write.confidence, 'low');
   });
 
@@ -223,5 +226,130 @@ describe('run summary helpers', () => {
     assert.equal(finalRunState('completed', { saved: 3, rejected: 0 }, ['Runner: one site timed out']), 'partial');
     assert.equal(finalRunState('completed', { saved: 0, rejected: 0 }, []), 'completed');
     assert.equal(finalRunState('failed', { saved: 3, rejected: 0 }, []), 'failed');
+  });
+});
+
+describe('rubric v2 ingest rules', () => {
+  const nowIso = NOW.toISOString();
+
+  it('rejects a record that rates the performance factor', () => {
+    const rated = { ...FIXTURE_FULLY_RATED, ratings: { ...FIXTURE_FULLY_RATED.ratings, performance_technical_issues: 'weak' as const } };
+    const prepared = prepareBatch({ runId: FIXTURE_RUN_ID, prospects: [rated] }, FIXTURE_RUN_CONFIG, nowIso);
+    assert.equal(prepared.accepted.length, 0);
+    assert.deepEqual(prepared.rejected[0]?.reasons, [`${REJECT_REASONS.serverRatedFactor}:performance_technical_issues`]);
+  });
+
+  it('rejects performance evidence even when the rating is unknown', () => {
+    const withEvidence = {
+      ...FIXTURE_FULLY_RATED,
+      evidence: [
+        ...FIXTURE_FULLY_RATED.evidence,
+        { factor: 'performance_technical_issues' as const, kind: 'measurement' as const, claim: 'Fixture: score 41.', sourceUrl: 'https://example.com/', observedAt: '2026-11-01T17:30:00.000Z' },
+      ],
+    };
+    const prepared = prepareBatch({ runId: FIXTURE_RUN_ID, prospects: [withEvidence] }, FIXTURE_RUN_CONFIG, nowIso);
+    assert.equal(prepared.accepted.length, 0);
+    assert.match(prepared.rejected[0]?.reasons[0] ?? '', /^server_rated_factor:/);
+  });
+
+  it('rejects a navigation rating backed by only one source URL', () => {
+    const oneSource = {
+      ...FIXTURE_FULLY_RATED,
+      evidence: FIXTURE_FULLY_RATED.evidence.filter(
+        (item) => !(item.factor === 'navigation_conversion_friction' && item.sourceUrl.endsWith('/services')),
+      ),
+    };
+    const prepared = prepareBatch({ runId: FIXTURE_RUN_ID, prospects: [oneSource] }, FIXTURE_RUN_CONFIG, nowIso);
+    assert.equal(prepared.accepted.length, 0);
+    assert.deepEqual(prepared.rejected[0]?.reasons, [`${REJECT_REASONS.needsTwoSources}:navigation_conversion_friction`]);
+  });
+
+  it('rejects two navigation items that cite the same URL', () => {
+    const sameUrl = {
+      ...FIXTURE_FULLY_RATED,
+      evidence: FIXTURE_FULLY_RATED.evidence.map((item) =>
+        item.factor === 'navigation_conversion_friction' ? { ...item, sourceUrl: 'https://example.com/' } : item,
+      ),
+    };
+    const prepared = prepareBatch({ runId: FIXTURE_RUN_ID, prospects: [sameUrl] }, FIXTURE_RUN_CONFIG, nowIso);
+    assert.equal(prepared.accepted.length, 0);
+  });
+
+  it('accepts navigation evidence from two distinct URLs, and unknown navigation with none', () => {
+    const prepared = prepareBatch({ runId: FIXTURE_RUN_ID, prospects: [FIXTURE_FULLY_RATED] }, FIXTURE_RUN_CONFIG, nowIso);
+    assert.equal(prepared.accepted.length, 1);
+
+    const unknownNav = {
+      ...FIXTURE_FULLY_RATED,
+      ratings: { ...FIXTURE_FULLY_RATED.ratings, navigation_conversion_friction: 'unknown' as const },
+      evidence: FIXTURE_FULLY_RATED.evidence.filter((item) => item.factor !== 'navigation_conversion_friction'),
+    };
+    const second = prepareBatch({ runId: FIXTURE_RUN_ID, prospects: [unknownNav] }, FIXTURE_RUN_CONFIG, nowIso);
+    assert.equal(second.accepted.length, 1);
+  });
+});
+
+describe('run notes versus errors', () => {
+  it('finishes as completed with notes and a shortfall but no errors or rejections', async () => {
+    const store = new MemoryProspectStore([fixtureClaimedRun({ config: { ...FIXTURE_RUN_CONFIG, targetCount: 10 } })]);
+    const result = await ingestBatch(
+      store,
+      {
+        runId: FIXTURE_RUN_ID,
+        prospects: [FIXTURE_FULLY_RATED],
+        finish: 'completed',
+        runNotes: ['Skipped example-firm.example.net: HTTP 403', 'Only 1 of 10 qualified: most results were directories.'],
+      },
+      NOW,
+    );
+    assert.equal(result.ok ? result.runState : null, 'completed');
+    const summary = store.runs.get(FIXTURE_RUN_ID)?.errorSummary ?? null;
+    assert.deepEqual(splitRunSummary(summary), {
+      errors: [],
+      notes: ['Skipped example-firm.example.net: HTTP 403', 'Only 1 of 10 qualified: most results were directories.'],
+    });
+  });
+
+  it('still finishes as partial when there is a runner error', async () => {
+    const store = new MemoryProspectStore([fixtureClaimedRun()]);
+    const result = await ingestBatch(
+      store,
+      { runId: FIXTURE_RUN_ID, prospects: [FIXTURE_FULLY_RATED], finish: 'completed', runErrors: ['Search provider timed out'], runNotes: ['Skipped one site'] },
+      NOW,
+    );
+    assert.equal(result.ok ? result.runState : null, 'partial');
+    const split = splitRunSummary(store.runs.get(FIXTURE_RUN_ID)?.errorSummary ?? null);
+    assert.deepEqual(split.errors, ['Search provider timed out']);
+    assert.deepEqual(split.notes, ['Skipped one site']);
+  });
+
+  it('does not duplicate notes when a batch is resent', () => {
+    const first = buildErrorSummary(null, {}, [], ['Skipped one site']);
+    const second = buildErrorSummary(first.summary, {}, [], ['Skipped one site']);
+    assert.equal(second.summary, 'Note: Skipped one site');
+    assert.deepEqual(second.noteLines, ['Note: Skipped one site']);
+    assert.deepEqual(second.runnerLines, []);
+  });
+
+  it('keeps system lines such as an abandoned-run reason as errors', () => {
+    const rebuilt = buildErrorSummary('System: Run abandoned', {}, [], []);
+    assert.deepEqual(rebuilt.runnerLines, ['System: Run abandoned']);
+  });
+
+  it('splits stored summaries into errors and notes', () => {
+    assert.deepEqual(splitRunSummary(null), { errors: [], notes: [] });
+    assert.deepEqual(
+      splitRunSummary('2 records rejected: a.example.com (missing_evidence:growth_signals)\nRunner: timeout\nNote: skipped b.example.com\nSystem: abandoned'),
+      {
+        errors: ['2 records rejected: a.example.com (missing_evidence:growth_signals)', 'timeout', 'abandoned'],
+        notes: ['skipped b.example.com'],
+      },
+    );
+  });
+
+  it('appends a summary line once', () => {
+    assert.equal(appendSummaryLine(null, 'System: x'), 'System: x');
+    assert.equal(appendSummaryLine('Note: a', 'System: x'), 'Note: a\nSystem: x');
+    assert.equal(appendSummaryLine('Note: a\nSystem: x', 'System: x'), 'Note: a\nSystem: x');
   });
 });

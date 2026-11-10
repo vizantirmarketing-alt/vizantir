@@ -201,7 +201,7 @@ describe('claim', () => {
   it('prints the claim response when a run is claimed', async () => {
     const body = {
       run: { id: FIXTURE_RUN_ID, config: { market: 'Fixture City', industry: 'Fixture', targetCount: 3, exclusions: [] } },
-      rubric: { version: 'prospect-rubric-v1', ratings: ['unknown', 'none', 'weak', 'strong'], factors: [] },
+      rubric: { version: 'prospect-rubric-v2', ratings: ['unknown', 'none', 'weak', 'strong'], factors: [] },
     };
     const { deps, captured } = harness(async () => respond(200, body));
     assert.equal(await runRunnerCli(['claim'], deps), EXIT_OK);
@@ -225,8 +225,8 @@ describe('ingest', () => {
     assert.equal(captured.requests[0]?.url, 'http://localhost:3000/api/prospects/ingest');
 
     const output = captured.stdout.join('\n');
-    assert.match(output, /saved {5}example\.com {2}fit 73 {2}opportunity 60 {2}confidence high/);
-    assert.match(output, /saved {5}example\.org {2}fit — {2}opportunity 65 {2}confidence low/);
+    assert.match(output, /saved {5}example\.com {2}fit 73 {2}opportunity 45 {2}confidence high/);
+    assert.match(output, /saved {5}example\.org {2}fit — {2}opportunity — {2}confidence low/);
     assert.match(output, /rejected {2}canyon-ridge\.example\.net {2}missing_evidence:growth_signals/);
     assert.match(output, /rejected {2}excluded-firm\.example\.net {2}excluded_domain/);
     assert.match(output, /"counts":\{"saved":2,"rejected":2\}/);

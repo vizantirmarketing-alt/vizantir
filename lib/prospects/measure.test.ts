@@ -7,6 +7,7 @@ import { FIXTURE_RUN_ID } from './fixtures/ingest-batch.fixture';
 import {
   PERFORMANCE_FACTOR,
   measureProspect,
+  measureProspectById,
   parseMeasureBody,
   ratingFromPerformanceScore,
   type FetchMeasurementResult,
@@ -35,6 +36,8 @@ const PROSPECT: MeasureProspectRecord = {
   domain: 'example.com',
   factorRatings: BASE_RATINGS,
   latestRunId: FIXTURE_RUN_ID,
+  // Researched under v1: measuring must not relabel it as re-researched.
+  rubricVersion: 'prospect-rubric-v1',
 };
 
 function measurement(score: number): PerformanceMeasurement {
@@ -114,7 +117,8 @@ describe('measureProspect', () => {
     const write = writes[0];
     assert.ok(write);
     assert.deepEqual(write.factorRatings, expectedRatings);
-    assert.equal(write.rubricVersion, RUBRIC_VERSION);
+    assert.equal(write.rubricVersion, 'prospect-rubric-v1');
+    assert.notEqual(write.rubricVersion, RUBRIC_VERSION);
     assert.equal(write.runId, FIXTURE_RUN_ID);
     assert.equal(write.evidence.factorKey, PERFORMANCE_FACTOR);
     assert.equal(write.evidence.kind, 'measurement');
@@ -222,5 +226,55 @@ describe('parseMeasureBody', () => {
     assert.equal(parseMeasureBody('{').ok, false);
     const big = parseMeasureBody(JSON.stringify({ domain: 'x'.repeat(5000) }));
     assert.equal(big.ok ? null : big.status, 413);
+  });
+});
+
+describe('measureProspectById (owner Measure performance action)', () => {
+  function byIdDeps(domains: Record<string, string>) {
+    const { deps, writes, fetched } = harness({});
+    const lookups: string[] = [];
+    return {
+      deps: {
+        ...deps,
+        async findDomainById(id: string) {
+          lookups.push(id);
+          return domains[id] ?? null;
+        },
+      },
+      writes,
+      fetched,
+      lookups,
+    };
+  }
+
+  const ID = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+
+  it('measures the prospect behind the id', async () => {
+    const { deps, writes, fetched } = byIdDeps({ [ID]: 'example.com' });
+    const result = await measureProspectById(ID, deps);
+    assert.equal(result.ok, true);
+    assert.deepEqual(fetched, ['https://example.com/']);
+    assert.equal(writes.length, 1);
+  });
+
+  it('rejects a malformed id without a lookup', async () => {
+    const { deps, lookups } = byIdDeps({});
+    const result = await measureProspectById('not-a-uuid', deps);
+    assert.equal(result.ok ? null : result.status, 400);
+    assert.equal(lookups.length, 0);
+  });
+
+  it('returns 404 for an unknown id without measuring', async () => {
+    const { deps, fetched } = byIdDeps({});
+    const result = await measureProspectById(ID, deps);
+    assert.equal(result.ok ? null : result.status, 404);
+    assert.equal(fetched.length, 0);
+  });
+
+  it('passes through the unconfigured key error', async () => {
+    const base = byIdDeps({ [ID]: 'example.com' });
+    const result = await measureProspectById(ID, { ...base.deps, pageSpeedConfigured: false });
+    assert.equal(result.ok ? null : result.status, 503);
+    assert.equal(base.writes.length, 0);
   });
 });

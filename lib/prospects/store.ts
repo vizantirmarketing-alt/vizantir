@@ -9,14 +9,15 @@ import 'server-only'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
-import type { ProspectClaimStore } from '@/lib/prospects/claim'
-import type {
-  EvidenceWrite,
-  ProspectIngestStore,
-  ProspectWrite,
-  RecordOutcomes,
-  RunUpdate,
-  StoredRun,
+import { abandonedReasonLine, type ProspectClaimStore } from '@/lib/prospects/claim'
+import {
+  appendSummaryLine,
+  type EvidenceWrite,
+  type ProspectIngestStore,
+  type ProspectWrite,
+  type RecordOutcomes,
+  type RunUpdate,
+  type StoredRun,
 } from '@/lib/prospects/ingest'
 import type {
   MeasurementWrite,
@@ -88,8 +89,62 @@ const KNOWN_DOMAINS_MAX_PAGES = 50
 
 export function createProspectStore(
   client: SupabaseClient = createSupabaseServiceRole(),
-): ProspectIngestStore & ProspectClaimStore & ProspectMeasureStore {
+): ProspectIngestStore &
+  ProspectClaimStore &
+  ProspectMeasureStore & { findDomainById(prospectId: string): Promise<string | null> } {
   return {
+    async failAbandonedRuns(cutoffIso: string, nowIso: string) {
+      const { data, error } = await client
+        .from('prospect_runs')
+        .select('id, claimed_at, error_summary')
+        .eq('state', 'claimed')
+        .lt('claimed_at', cutoffIso)
+        .limit(100)
+
+      if (error) {
+        throw new ProspectStoreError('abandoned runs read')
+      }
+      const rows = z
+        .array(
+          z.object({
+            id: z.string(),
+            claimed_at: z.string().nullable(),
+            error_summary: z.string().nullable(),
+          }),
+        )
+        .safeParse(data ?? [])
+      if (!rows.success) {
+        throw new ProspectStoreError('abandoned runs parse')
+      }
+
+      let failed = 0
+      for (const row of rows.data) {
+        const { data: updated, error: updateError } = await client
+          .from('prospect_runs')
+          .update({
+            state: 'failed',
+            finished_at: nowIso,
+            updated_at: nowIso,
+            error_summary: appendSummaryLine(
+              row.error_summary,
+              abandonedReasonLine(row.claimed_at ?? 'an unknown time'),
+            ),
+          })
+          .eq('id', row.id)
+          .eq('state', 'claimed')
+          .select('id')
+          .maybeSingle()
+
+        if (updateError) {
+          throw new ProspectStoreError('abandoned run update')
+        }
+        if (updated !== null) {
+          failed += 1
+        }
+      }
+      return failed
+    },
+
     async listKnownDomains() {
       const domains: string[] = []
       for (let page = 0; page < KNOWN_DOMAINS_MAX_PAGES; page += 1) {
@@ -119,7 +174,7 @@ export function createProspectStore(
     async findProspectByDomain(domain: string) {
       const { data, error } = await client
         .from('prospects')
-        .select('id, domain, factor_ratings, latest_run_id')
+        .select('id, domain, factor_ratings, latest_run_id, rubric_version')
         .eq('domain', domain)
         .maybeSingle()
 
@@ -135,6 +190,7 @@ export function createProspectStore(
           domain: z.string(),
           factor_ratings: z.unknown(),
           latest_run_id: z.string().nullable(),
+          rubric_version: z.string(),
         })
         .safeParse(data)
       if (!row.success) {
@@ -145,7 +201,22 @@ export function createProspectStore(
         domain: row.data.domain,
         factorRatings: readFactorRatings(row.data.factor_ratings),
         latestRunId: row.data.latest_run_id,
+        rubricVersion: row.data.rubric_version,
       }
+    },
+
+    async findDomainById(prospectId: string) {
+      const { data, error } = await client
+        .from('prospects')
+        .select('domain')
+        .eq('id', prospectId)
+        .maybeSingle()
+
+      if (error) {
+        throw new ProspectStoreError('prospect domain read')
+      }
+      const row = z.object({ domain: z.string() }).safeParse(data)
+      return row.success ? row.data.domain : null
     },
 
     async saveMeasurement(write: MeasurementWrite) {

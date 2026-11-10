@@ -18,6 +18,8 @@ import type {
 } from '@/lib/prospects/ingest-schema'
 import type { EvidenceKind, ProspectRunState } from '@/lib/prospects/params'
 import {
+  SERVER_RATED_FACTOR,
+  factorsMissingDistinctSources,
   factorsMissingEvidence,
   scoreProspect,
   type FactorRatings,
@@ -100,10 +102,59 @@ export const REJECT_REASONS = {
   excluded: 'excluded_domain',
   duplicateInBatch: 'duplicate_in_batch',
   missingEvidence: 'missing_evidence',
+  serverRatedFactor: 'server_rated_factor',
+  needsTwoSources: 'needs_two_sources',
 } as const
 
 const ERROR_SUMMARY_MAX = 2000
-const RUNNER_LINE_PREFIX = 'Runner: '
+
+/*
+ * prospect_runs.error_summary holds typed lines so notes need no new column:
+ *   "Note: ..."    runner notes (skipped sites, shortfall reasons). Not errors.
+ *   "Runner: ..."  runner-reported errors.
+ *   "System: ..."  server-recorded errors (for example an abandoned run).
+ *   "<n> record(s) rejected: ..."  derived from record outcomes. An error.
+ * Every line that is not a note is an error. splitRunSummary() is the reader.
+ */
+export const NOTE_LINE_PREFIX = 'Note: '
+export const RUNNER_LINE_PREFIX = 'Runner: '
+export const SYSTEM_LINE_PREFIX = 'System: '
+
+export function splitRunSummary(summary: string | null): {
+  errors: string[]
+  notes: string[]
+} {
+  const errors: string[] = []
+  const notes: string[] = []
+  if (summary === null) {
+    return { errors, notes }
+  }
+  for (const line of summary.split('\n')) {
+    const trimmed = line.trim()
+    if (trimmed.length === 0) {
+      continue
+    }
+    if (trimmed.startsWith(NOTE_LINE_PREFIX)) {
+      notes.push(trimmed.slice(NOTE_LINE_PREFIX.length))
+    } else if (trimmed.startsWith(RUNNER_LINE_PREFIX)) {
+      errors.push(trimmed.slice(RUNNER_LINE_PREFIX.length))
+    } else if (trimmed.startsWith(SYSTEM_LINE_PREFIX)) {
+      errors.push(trimmed.slice(SYSTEM_LINE_PREFIX.length))
+    } else {
+      errors.push(trimmed)
+    }
+  }
+  return { errors, notes }
+}
+
+/** Appends one line to a stored summary, without duplicating it. */
+export function appendSummaryLine(summary: string | null, line: string): string {
+  const lines = summary === null ? [] : summary.split('\n').filter((l) => l.trim().length > 0)
+  if (!lines.includes(line)) {
+    lines.push(line)
+  }
+  return lines.join('\n')
+}
 
 export type PreparedRecord = {
   domain: string
@@ -157,6 +208,21 @@ export function prepareProspect(
   }
 
   const ratings: FactorRatings = input.ratings
+
+  // The performance factor is rated only by the server, from a measurement.
+  if (
+    ratings[SERVER_RATED_FACTOR] !== 'unknown' ||
+    input.evidence.some((item) => item.factor === SERVER_RATED_FACTOR)
+  ) {
+    return {
+      ok: false,
+      rejected: {
+        key: domain,
+        reasons: [`${REJECT_REASONS.serverRatedFactor}:${SERVER_RATED_FACTOR}`],
+      },
+    }
+  }
+
   const missing = factorsMissingEvidence(
     ratings,
     input.evidence.map((item) => item.factor),
@@ -168,6 +234,19 @@ export function prepareProspect(
         key: domain,
         reasons: missing.map(
           (factor) => `${REJECT_REASONS.missingEvidence}:${factor}`,
+        ),
+      },
+    }
+  }
+
+  const singleSource = factorsMissingDistinctSources(ratings, input.evidence)
+  if (singleSource.length > 0) {
+    return {
+      ok: false,
+      rejected: {
+        key: domain,
+        reasons: singleSource.map(
+          (factor) => `${REJECT_REASONS.needsTwoSources}:${factor}`,
         ),
       },
     }
@@ -280,32 +359,40 @@ export function finalRunState(
   return 'completed'
 }
 
-function runnerLinesFrom(summary: string | null): string[] {
+function linesWithPrefix(summary: string | null, prefix: string): string[] {
   if (summary === null) {
     return []
   }
-  return summary
-    .split('\n')
-    .filter((line) => line.startsWith(RUNNER_LINE_PREFIX))
+  return summary.split('\n').filter((line) => line.startsWith(prefix))
+}
+
+function mergeLines(existing: string[], incoming: readonly string[], prefix: string): string[] {
+  const merged = [...existing]
+  for (const raw of incoming) {
+    const line = `${prefix}${raw.replace(/\s+/g, ' ').trim()}`
+    if (!merged.includes(line)) {
+      merged.push(line)
+    }
+  }
+  return merged
 }
 
 /**
- * Rebuilds the run's error summary: one line describing rejected records
- * (derived from outcomes, so it never double counts) plus the union of runner
- * reported lines.
+ * Rebuilds the run's summary: one line describing rejected records (derived
+ * from outcomes, so it never double counts), then the union of runner and
+ * system error lines, then the union of note lines.
+ *
+ * errorLines counts toward a partial result; noteLines never does.
  */
 export function buildErrorSummary(
   previous: string | null,
   outcomes: RecordOutcomes,
   runErrors: readonly string[],
-): { summary: string | null; runnerLines: string[] } {
-  const runnerLines = [...runnerLinesFrom(previous)]
-  for (const error of runErrors) {
-    const line = `${RUNNER_LINE_PREFIX}${error.replace(/\s+/g, ' ').trim()}`
-    if (!runnerLines.includes(line)) {
-      runnerLines.push(line)
-    }
-  }
+  runNotes: readonly string[] = [],
+): { summary: string | null; runnerLines: string[]; noteLines: string[] } {
+  const runnerLines = mergeLines(linesWithPrefix(previous, RUNNER_LINE_PREFIX), runErrors, RUNNER_LINE_PREFIX)
+  const systemLines = linesWithPrefix(previous, SYSTEM_LINE_PREFIX)
+  const noteLines = mergeLines(linesWithPrefix(previous, NOTE_LINE_PREFIX), runNotes, NOTE_LINE_PREFIX)
 
   const rejected = Object.entries(outcomes).filter(
     ([, outcome]) => outcome.status === 'rejected',
@@ -319,10 +406,10 @@ export function buildErrorSummary(
       `${rejected.length} record${rejected.length === 1 ? '' : 's'} rejected: ${detail}`,
     )
   }
-  lines.push(...runnerLines)
+  lines.push(...runnerLines, ...systemLines, ...noteLines)
 
   if (lines.length === 0) {
-    return { summary: null, runnerLines }
+    return { summary: null, runnerLines: [...runnerLines, ...systemLines], noteLines }
   }
   const joined = lines.join('\n')
   return {
@@ -330,7 +417,8 @@ export function buildErrorSummary(
       joined.length > ERROR_SUMMARY_MAX
         ? `${joined.slice(0, ERROR_SUMMARY_MAX - 1)}…`
         : joined,
-    runnerLines,
+    runnerLines: [...runnerLines, ...systemLines],
+    noteLines,
   }
 }
 
@@ -398,6 +486,7 @@ export async function ingestBatch(
     run.errorSummary,
     outcomes,
     batch.runErrors ?? [],
+    batch.runNotes ?? [],
   )
 
   const finishState =

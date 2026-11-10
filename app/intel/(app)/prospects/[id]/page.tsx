@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
+import { ProspectMeasureButton } from '@/app/intel/_components/prospects/ProspectMeasureButton'
 import { ProspectReviewControls } from '@/app/intel/_components/prospects/ProspectReviewControls'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import {
@@ -32,6 +33,11 @@ import {
   type ScoreBreakdown,
   type ScoreKind,
 } from '@/lib/prospects/rubric'
+
+// Measure performance runs a PageSpeed Insights test through a server action
+// on this route. The fetcher allows 90 seconds plus one quick retry, and the
+// runner measure route allows 120, so this matches it.
+export const maxDuration = 120
 
 export const metadata: Metadata = {
   title: 'Prospect',
@@ -193,9 +199,14 @@ function ScoreTable({
         <tbody className="divide-y divide-black/8">
           {breakdown.factors.map((factor) => (
             <tr key={factor.key}>
-              <td className="py-2 pr-3 text-body">{factor.label}</td>
+              <td className="py-2 pr-3 align-top text-body">
+                <p>{factor.label}</p>
+                <p className="mt-0.5 text-sm leading-relaxed text-meta">
+                  {FACTOR_DEFINITIONS[factor.key].description}
+                </p>
+              </td>
               <td className="py-2 pr-3 text-foreground">
-                {PROSPECT_RATING_LABELS[factor.rating]}
+                <span className="align-top">{PROSPECT_RATING_LABELS[factor.rating]}</span>
               </td>
               <td className="py-2 text-right tabular-nums text-foreground">
                 {factor.rating === 'unknown' ? '—' : formatPoints(factor.points)}
@@ -233,6 +244,9 @@ function ScoresSection({ prospect }: { prospect: ProspectDetail }) {
           stored={prospect.opportunityScore}
           breakdown={opportunity}
         />
+      </div>
+      <div className="mt-4 border-t border-black/8 pt-4">
+        <ProspectMeasureButton prospectId={prospect.id} />
       </div>
       <p className="mt-4 text-sm text-meta">
         Rubric {prospect.rubricVersion}. Strong earns a factor&apos;s full weight,

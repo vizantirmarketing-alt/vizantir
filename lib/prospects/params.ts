@@ -54,10 +54,13 @@ export const EVIDENCE_KIND_LABELS: Record<EvidenceKind, string> = {
   inference: 'Inference',
 }
 
-export const PROSPECT_SORTS = ['fit', 'opportunity', 'researched'] as const
+export const PROSPECT_SORTS = ['priority', 'fit', 'opportunity', 'researched'] as const
 export type ProspectSort = (typeof PROSPECT_SORTS)[number]
 
+export const DEFAULT_PROSPECT_SORT: ProspectSort = 'priority'
+
 export const PROSPECT_SORT_LABELS: Record<ProspectSort, string> = {
+  priority: 'Priority, highest first',
   fit: 'Fit, highest first',
   opportunity: 'Opportunity, highest first',
   researched: 'Last researched, newest first',
@@ -134,7 +137,7 @@ export function parseProspectsListParams(
     review: isProspectReviewStatus(review) ? review : 'all',
     industry: cleanText(first(search.industry)),
     market: cleanText(first(search.market)),
-    sort: isProspectSort(sort) ? sort : 'fit',
+    sort: isProspectSort(sort) ? sort : DEFAULT_PROSPECT_SORT,
     page: Number.isInteger(pageRaw) && pageRaw > 1 ? pageRaw : 1,
   }
 }
@@ -156,7 +159,7 @@ export function prospectsListHref(params: ProspectsListParams): string {
   if (params.market !== null) {
     query.set('market', params.market)
   }
-  if (params.sort !== 'fit') {
+  if (params.sort !== DEFAULT_PROSPECT_SORT) {
     query.set('sort', params.sort)
   }
   if (params.page > 1) {
@@ -213,4 +216,37 @@ export function formatProspectTimestamp(iso: string | null): string {
     timeZone: PROSPECT_DISPLAY_TIME_ZONE,
     timeZoneName: 'short',
   }).format(date)
+}
+
+/** Priority weights: 60 percent fit plus 40 percent opportunity. */
+export const PRIORITY_FIT_WEIGHT = 0.6
+export const PRIORITY_OPPORTUNITY_WEIGHT = 0.4
+
+/** Null when either score is missing; such prospects sort last. */
+export function priorityScore(
+  fitScore: number | null,
+  opportunityScore: number | null,
+): number | null {
+  if (fitScore === null || opportunityScore === null) {
+    return null
+  }
+  return fitScore * PRIORITY_FIT_WEIGHT + opportunityScore * PRIORITY_OPPORTUNITY_WEIGHT
+}
+
+/** Highest priority first, missing priority last, then by name. */
+export function comparePriority(
+  a: { fitScore: number | null; opportunityScore: number | null; name: string },
+  b: { fitScore: number | null; opportunityScore: number | null; name: string },
+): number {
+  const pa = priorityScore(a.fitScore, a.opportunityScore)
+  const pb = priorityScore(b.fitScore, b.opportunityScore)
+  if (pa === null && pb !== null) return 1
+  if (pa !== null && pb === null) return -1
+  if (pa !== null && pb !== null && pa !== pb) return pb - pa
+  return a.name.localeCompare(b.name)
+}
+
+/** Saved against requested, e.g. "7 of 10"; just the count when unknown. */
+export function formatSavedOfRequested(saved: number, requested: number | null): string {
+  return requested === null ? String(saved) : `${saved} of ${requested}`
 }

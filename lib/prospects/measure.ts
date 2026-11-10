@@ -9,6 +9,10 @@
  * confidence are recomputed with the rubric. Nothing about the rating or the
  * scores is accepted from the caller.
  *
+ * Measuring is not re-research: the prospect keeps its stored rubric
+ * version. Weights and the rating map are identical across versions, so the
+ * recomputed scores are valid under the stored version.
+ *
  * Evidence rows require a run id. The measurement is attached to the
  * prospect's latest run, so a later re-ingest of that run replaces it along
  * with the rest of that run's evidence and resets the factor to whatever the
@@ -18,6 +22,7 @@
 import { z } from 'zod'
 
 import { normalizeDomain } from '@/lib/prospects/domain'
+import { isUuid } from '@/lib/prospects/params'
 import type { EvidenceWrite } from '@/lib/prospects/ingest'
 import {
   scoreProspect,
@@ -93,6 +98,7 @@ export type MeasureProspectRecord = {
   domain: string
   factorRatings: FactorRatings
   latestRunId: string | null
+  rubricVersion: string
 }
 
 export type MeasurementWrite = {
@@ -217,7 +223,7 @@ export async function measureProspect(
     fitScore: scores.fit.score,
     opportunityScore: scores.opportunity.score,
     confidence: scores.confidence,
-    rubricVersion: scores.rubricVersion,
+    rubricVersion: prospect.rubricVersion,
     evidence: {
       factorKey: PERFORMANCE_FACTOR,
       kind: 'measurement',
@@ -239,4 +245,23 @@ export async function measureProspect(
     opportunityScore: scores.opportunity.score,
     confidence: scores.confidence,
   }
+}
+
+export type MeasureByIdDeps = MeasureDeps & {
+  findDomainById(prospectId: string): Promise<string | null>
+}
+
+/** The owner-side entry point: measures a prospect by id. */
+export async function measureProspectById(
+  prospectId: string,
+  deps: MeasureByIdDeps,
+): Promise<MeasureResult> {
+  if (!isUuid(prospectId)) {
+    return { ok: false, status: 400, error: 'Invalid prospect' }
+  }
+  const domain = await deps.findDomainById(prospectId)
+  if (domain === null) {
+    return { ok: false, status: 404, error: 'No prospect with this id' }
+  }
+  return measureProspect(domain, deps)
 }

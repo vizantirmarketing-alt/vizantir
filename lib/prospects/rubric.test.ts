@@ -11,6 +11,7 @@ import {
   computeConfidence,
   computeScore,
   factorPoints,
+  factorsMissingDistinctSources,
   factorsMissingEvidence,
   readFactorRatings,
   scoreProspect,
@@ -146,5 +147,32 @@ describe('readFactorRatings', () => {
     assert.equal(ratings.business_complexity, 'unknown');
     assert.equal(ratings.market_industry_match, 'unknown');
     assert.deepEqual(readFactorRatings(null), allRated('unknown'));
+  });
+});
+
+describe('rubric v2', () => {
+  it('bumps the version and gives every factor a description', () => {
+    assert.equal(RUBRIC_VERSION, 'prospect-rubric-v2');
+    for (const factor of PROSPECT_FACTORS) {
+      assert.ok(FACTOR_DEFINITIONS[factor].description.length > 20, factor);
+    }
+  });
+
+  it('keeps v1 weights and points', () => {
+    assert.equal(computeScore('fit', allRated('strong')).score, 100);
+    assert.equal(factorPoints('custom_web_relevance', 'weak'), 12.5);
+  });
+
+  it('requires two distinct source URLs for a navigation rating', () => {
+    const ratings = { ...allRated('unknown'), navigation_conversion_friction: 'weak' } satisfies FactorRatings;
+    const one = [{ factor: 'navigation_conversion_friction', sourceUrl: 'https://example.com/' }];
+    const sameTwice = [...one, { factor: 'navigation_conversion_friction', sourceUrl: 'https://example.com/ ' }];
+    const two = [...one, { factor: 'navigation_conversion_friction', sourceUrl: 'https://example.com/services' }];
+    const otherFactor = [...one, { factor: 'growth_signals', sourceUrl: 'https://example.com/about' }];
+    assert.deepEqual(factorsMissingDistinctSources(ratings, one), ['navigation_conversion_friction']);
+    assert.deepEqual(factorsMissingDistinctSources(ratings, sameTwice), ['navigation_conversion_friction']);
+    assert.deepEqual(factorsMissingDistinctSources(ratings, otherFactor), ['navigation_conversion_friction']);
+    assert.deepEqual(factorsMissingDistinctSources(ratings, two), []);
+    assert.deepEqual(factorsMissingDistinctSources(allRated('unknown'), []), []);
   });
 });

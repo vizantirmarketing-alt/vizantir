@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server'
 
-import { serverEnv } from '@/lib/env/server'
 import { MEASURE_MAX_BODY_CHARS, measureProspect, parseMeasureBody } from '@/lib/prospects/measure'
+import { createMeasureDeps } from '@/lib/prospects/measure-deps'
 import { authorizeRunner, readRunnerAuthEnv } from '@/lib/prospects/runner-auth'
-import { createProspectStore } from '@/lib/prospects/store'
-import { fetchPsiReport } from '@/lib/reports/psi'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -45,27 +43,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await measureProspect(parsed.domain, {
-      store: createProspectStore(),
-      pageSpeedConfigured: Boolean(serverEnv.CRUX_API_KEY),
-      now: () => new Date(),
-      async fetchMeasurement(url) {
-        const report = await fetchPsiReport({ url })
-        if (!report.ok) {
-          return { ok: false, reason: report.reason, status: report.status }
-        }
-        return {
-          ok: true,
-          data: {
-            performanceScore: report.data.performanceScore,
-            lcpMs: report.data.lcp.value,
-            tbtMs: report.data.tbt.value,
-            cls: report.data.cls.value,
-            fetchedAt: report.data.fetchedAt,
-          },
-        }
-      },
-    })
+    const result = await measureProspect(parsed.domain, createMeasureDeps())
 
     if (!result.ok) {
       return NextResponse.json(

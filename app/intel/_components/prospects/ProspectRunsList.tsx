@@ -1,8 +1,10 @@
 import { ProspectRunCancelButton } from '@/app/intel/_components/prospects/ProspectRunCancelButton'
 import { ProspectRunStateChip } from '@/app/intel/_components/ui/StatusChip'
+import { splitRunSummary } from '@/lib/prospects/ingest'
 import type { ProspectRunRow } from '@/lib/prospects/load'
 import {
   CANCELLABLE_RUN_STATES,
+  formatSavedOfRequested,
   formatShortDate,
 } from '@/lib/prospects/params'
 
@@ -35,7 +37,9 @@ export function ProspectRunsList({ runs }: { runs: ProspectRunRow[] }) {
 
   return (
     <ul className="divide-y divide-black/8">
-      {runs.map((run) => (
+      {runs.map((run) => {
+        const summary = splitRunSummary(run.errorSummary)
+        return (
         <li key={run.id} className="py-3 first:pt-0 last:pb-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-sm font-medium text-foreground">{runTitle(run)}</p>
@@ -47,8 +51,9 @@ export function ProspectRunsList({ runs }: { runs: ProspectRunRow[] }) {
             </div>
           </div>
           <p className="mt-1 text-sm text-meta">
-            {runTiming(run)} · {run.counts.saved} saved, {run.counts.rejected}{' '}
-            rejected
+            {runTiming(run)} ·{' '}
+            {formatSavedOfRequested(run.counts.saved, run.config?.targetCount ?? null)} saved
+            {run.counts.rejected > 0 ? `, ${run.counts.rejected} rejected` : ''}
             {run.requestedBy !== null ? ` · ${run.requestedBy}` : ''}
           </p>
           {run.config !== null && run.config.exclusions.length > 0 ? (
@@ -57,13 +62,27 @@ export function ProspectRunsList({ runs }: { runs: ProspectRunRow[] }) {
               {run.config.exclusions.length === 1 ? '' : 's'}
             </p>
           ) : null}
-          {run.errorSummary !== null ? (
-            <p className="mt-2 whitespace-pre-wrap text-sm text-warning-severe">
-              {run.errorSummary}
-            </p>
+          {summary.errors.length > 0 ? (
+            <ul className="mt-2 space-y-1 text-sm text-warning-severe" aria-label="Errors">
+              {summary.errors.map((line) => (
+                <li key={line} className="whitespace-pre-wrap">
+                  {line}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {summary.notes.length > 0 ? (
+            <ul className="mt-2 space-y-1 text-sm text-meta" aria-label="Notes">
+              {summary.notes.map((line) => (
+                <li key={line} className="whitespace-pre-wrap">
+                  {line}
+                </li>
+              ))}
+            </ul>
           ) : null}
         </li>
-      ))}
+        )
+      })}
     </ul>
   )
 }

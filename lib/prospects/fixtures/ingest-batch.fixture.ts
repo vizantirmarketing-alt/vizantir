@@ -49,7 +49,7 @@ export const FIXTURE_FULLY_RATED: IngestProspect = {
     custom_web_relevance: 'weak',
     growth_signals: 'none',
     navigation_conversion_friction: 'strong',
-    performance_technical_issues: 'weak',
+    performance_technical_issues: 'unknown',
     content_information_architecture: 'weak',
     integration_cms_opportunity: 'none',
   },
@@ -59,13 +59,13 @@ export const FIXTURE_FULLY_RATED: IngestProspect = {
     evidence('custom_web_relevance', 'inference', 'Fixture: template theme with stock imagery.', 'https://example.com/'),
     evidence('growth_signals', 'observation', 'Fixture: no hiring or expansion notices found.', 'https://example.com/news'),
     evidence('navigation_conversion_friction', 'observation', 'Fixture: contact form is four clicks deep.', 'https://example.com/'),
-    evidence('performance_technical_issues', 'measurement', 'Fixture: mobile performance score 41.', 'https://example.com/'),
+    evidence('navigation_conversion_friction', 'observation', 'Fixture: service page has no contact link.', 'https://example.com/services'),
     evidence('content_information_architecture', 'observation', 'Fixture: duplicate service pages.', 'https://example.com/services'),
     evidence('integration_cms_opportunity', 'inference', 'Fixture: no scheduling or intake integration needed.', 'https://example.com/'),
   ],
 }
 
-/** Mostly unknown: fit is null, opportunity is scored, confidence is low. */
+/** Mostly unknown: fit and opportunity are both null, confidence is low. */
 export const FIXTURE_SPARSE: IngestProspect = {
   name: 'Fictional Desert Bloom Dental',
   domain: 'example.org',
@@ -76,14 +76,14 @@ export const FIXTURE_SPARSE: IngestProspect = {
     custom_web_relevance: 'unknown',
     growth_signals: 'unknown',
     navigation_conversion_friction: 'strong',
-    performance_technical_issues: 'strong',
+    performance_technical_issues: 'unknown',
     content_information_architecture: 'unknown',
     integration_cms_opportunity: 'unknown',
   },
   evidence: [
     evidence('market_industry_match', 'observation', 'Fixture: practice located in Fixture Valley.', 'https://example.org/'),
     evidence('navigation_conversion_friction', 'observation', 'Fixture: no booking path on mobile.', 'https://example.org/'),
-    evidence('performance_technical_issues', 'measurement', 'Fixture: LCP 6.2s on mobile.', 'https://example.org/'),
+    evidence('navigation_conversion_friction', 'observation', 'Fixture: practice page repeats a different phone number.', 'https://example.org/practice'),
   ],
 }
 

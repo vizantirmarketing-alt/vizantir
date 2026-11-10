@@ -15,6 +15,7 @@ import { PROSPECT_FACTORS, PROSPECT_RATINGS } from '@/lib/prospects/rubric'
 export const INGEST_MAX_PROSPECTS = 25
 export const INGEST_MAX_EVIDENCE_PER_PROSPECT = 40
 export const INGEST_MAX_RUN_ERRORS = 50
+export const INGEST_MAX_RUN_NOTES = 50
 /** Request body cap, checked before JSON parsing. */
 export const INGEST_MAX_BODY_CHARS = 1_000_000
 
@@ -64,8 +65,13 @@ export const ingestBatchSchema = z.strictObject({
   prospects: z.array(ingestProspectSchema).max(INGEST_MAX_PROSPECTS),
   /** Set on the last batch of a run. */
   finish: z.enum(['completed', 'failed']).optional(),
-  /** Runner-side problems worth showing the owner (sites unreachable, etc). */
+  /** Runner-side errors: something went wrong. Counts toward a partial result. */
   runErrors: z.array(z.string().trim().min(1).max(500)).max(INGEST_MAX_RUN_ERRORS).optional(),
+  /**
+   * Runner notes: skipped sites, shortfall reasons and similar. Shown to the
+   * owner in neutral styling. Never affects the run's final state.
+   */
+  runNotes: z.array(z.string().trim().min(1).max(500)).max(INGEST_MAX_RUN_NOTES).optional(),
 })
 
 export type IngestEvidence = z.infer<typeof evidenceSchema>
