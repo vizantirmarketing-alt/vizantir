@@ -392,3 +392,113 @@ export async function fetchProspectDetail(
     return { ok: false, reason: 'error' }
   }
 }
+
+export type NewProspectWithEvidence = {
+  id: string
+  name: string
+  domain: string
+  fitScore: number | null
+  opportunityScore: number | null
+  confidence: ProspectConfidence
+  factorRatings: FactorRatings
+  createdAt: string
+  /** All evidence rows, most recently observed first. */
+  evidence: { factorKey: string; kind: EvidenceKind; claim: string; sourceUrl: string }[]
+}
+
+/**
+ * Prospects first added after `sinceIso` (newest first, at most `limit`),
+ * with their stored ratings and every evidence row, plus the total number
+ * added in the window. Selects only. Used by the daily briefing.
+ */
+export async function fetchProspectsCreatedSince(
+  sinceIso: string,
+  limit: number,
+): Promise<{ rows: NewProspectWithEvidence[]; total: number } | null> {
+  try {
+    const supabase = createSupabaseServiceRole()
+    const { data, error, count } = await supabase
+      .from('prospects')
+      .select(
+        'id, canonical_name, domain, fit_score, opportunity_score, confidence, factor_ratings, created_at',
+        { count: 'exact' },
+      )
+      .gt('created_at', sinceIso)
+      .order('created_at', { ascending: false })
+      .limit(limit)
+
+    if (error) {
+      return null
+    }
+    const rows = z
+      .array(
+        z.object({
+          id: z.string(),
+          canonical_name: z.string(),
+          domain: z.string(),
+          fit_score: z.number().nullable(),
+          opportunity_score: z.number().nullable(),
+          confidence: z.enum(CONFIDENCE_LEVELS),
+          factor_ratings: z.unknown(),
+          created_at: z.string(),
+        }),
+      )
+      .safeParse(data ?? [])
+    if (!rows.success) {
+      return null
+    }
+    const total = count ?? rows.data.length
+    if (rows.data.length === 0) {
+      return { rows: [], total }
+    }
+
+    const { data: evidenceData, error: evidenceError } = await supabase
+      .from('prospect_evidence')
+      .select('prospect_id, factor_key, kind, claim, source_url, observed_at')
+      .in('prospect_id', rows.data.map((row) => row.id))
+      .order('observed_at', { ascending: false })
+      .limit(rows.data.length * 60)
+
+    if (evidenceError) {
+      return null
+    }
+    const evidence = z
+      .array(
+        z.object({
+          prospect_id: z.string(),
+          factor_key: z.string(),
+          kind: z.enum(EVIDENCE_KINDS),
+          claim: z.string(),
+          source_url: z.string(),
+        }),
+      )
+      .safeParse(evidenceData ?? [])
+    if (!evidence.success) {
+      return null
+    }
+
+    return {
+      total,
+      rows: rows.data.map((row) => ({
+        id: row.id,
+        name: row.canonical_name,
+        domain: row.domain,
+        fitScore: row.fit_score,
+        opportunityScore: row.opportunity_score,
+        confidence: row.confidence,
+        factorRatings: readFactorRatings(row.factor_ratings),
+        createdAt: row.created_at,
+        evidence: evidence.data
+          .filter((item) => item.prospect_id === row.id)
+          .map((item) => ({
+            factorKey: item.factor_key,
+            kind: item.kind,
+            claim: item.claim,
+            sourceUrl: item.source_url,
+          })),
+      })),
+    }
+  } catch {
+    return null
+  }
+}

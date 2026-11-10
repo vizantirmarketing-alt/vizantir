@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { ProspectCampaigns } from '@/app/intel/_components/prospects/ProspectCampaigns'
 import { ProspectRunRequestForm } from '@/app/intel/_components/prospects/ProspectRunRequestForm'
 import { ProspectRunsList } from '@/app/intel/_components/prospects/ProspectRunsList'
 import { ProspectsFilters } from '@/app/intel/_components/prospects/ProspectsFilters'
@@ -10,6 +11,8 @@ import {
 } from '@/app/intel/_components/prospects/ProspectsTable'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import type { Campaign } from '@/lib/briefing/campaigns'
+import { createCampaignStore } from '@/lib/briefing/store'
 import {
   fetchProspectFilterOptions,
   fetchProspects,
@@ -42,6 +45,7 @@ export default async function IntelProspectsPage({
     fetchRecentProspectRuns(),
   ])
   const filtersActive = prospectsFiltersActive(params)
+  const campaigns = await loadCampaigns()
 
   return (
     <div className="flex flex-col gap-4">
@@ -56,6 +60,16 @@ export default async function IntelProspectsPage({
 
       <Panel title="Request research" accent="cobalt">
         <ProspectRunRequestForm />
+      </Panel>
+
+      <Panel title="Scheduled campaigns">
+        {campaigns === null ? (
+          <p className="text-sm leading-relaxed text-body" role="alert">
+            Unable to load scheduled campaigns. Try again shortly.
+          </p>
+        ) : (
+          <ProspectCampaigns campaigns={campaigns} />
+        )}
       </Panel>
 
       <Panel title="Recent runs">
@@ -106,4 +120,13 @@ export default async function IntelProspectsPage({
       </Panel>
     </div>
   )
+}
+
+async function loadCampaigns(): Promise<Campaign[] | null> {
+  try {
+    return await createCampaignStore().listAllCampaigns()
+  } catch {
+    console.error('Prospect campaigns query failed')
+    return null
+  }
 }

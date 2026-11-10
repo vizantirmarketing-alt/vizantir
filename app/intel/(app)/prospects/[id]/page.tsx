@@ -200,10 +200,21 @@ function ScoreTable({
           {breakdown.factors.map((factor) => (
             <tr key={factor.key}>
               <td className="py-2 pr-3 align-top text-body">
-                <p>{factor.label}</p>
-                <p className="mt-0.5 text-sm leading-relaxed text-meta">
-                  {FACTOR_DEFINITIONS[factor.key].description}
-                </p>
+                <details className="group">
+                  <summary className="cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
+                    <span>{factor.label}</span>
+                    <span className="ml-1.5 text-sm text-meta group-open:hidden" aria-hidden>
+                      +
+                    </span>
+                    <span className="ml-1.5 hidden text-sm text-meta group-open:inline" aria-hidden>
+                      −
+                    </span>
+                    <span className="sr-only">Show rating guidance</span>
+                  </summary>
+                  <p className="mt-1 text-sm leading-relaxed text-meta">
+                    {FACTOR_DEFINITIONS[factor.key].description}
+                  </p>
+                </details>
               </td>
               <td className="py-2 pr-3 text-foreground">
                 <span className="align-top">{PROSPECT_RATING_LABELS[factor.rating]}</span>

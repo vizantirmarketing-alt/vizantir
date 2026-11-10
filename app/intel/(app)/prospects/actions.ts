@@ -258,3 +258,142 @@ export async function measureProspectPerformance(
     return { ok: false, error: 'Measurement failed. Try again shortly.' }
   }
 }
+
+const CAMPAIGN_CADENCE_MAX = 90
+
+const campaignSchema = runRequestSchema.extend({
+  cadenceDays: z.coerce
+    .number({ message: 'Enter a cadence in days.' })
+    .int('Enter a whole number of days.')
+    .min(1, 'Cadence must be at least 1 day.')
+    .max(CAMPAIGN_CADENCE_MAX, `Cadence can be at most ${CAMPAIGN_CADENCE_MAX} days.`),
+})
+
+export type CampaignInput = RequestProspectRunInput & { cadenceDays: string }
+
+function parseCampaignInput(
+  input: CampaignInput,
+):
+  | {
+      ok: true
+      row: {
+        market: string
+        industry: string
+        target_count: number
+        exclusions: string[]
+        cadence_days: number
+      }
+    }
+  | { ok: false; error: string } {
+  const parsed = campaignSchema.safeParse(input)
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0]?.message ?? 'Check the campaign fields.' }
+  }
+  const exclusions = parseRunExclusions(parsed.data.exclusions)
+  if (!exclusions.ok) {
+    return { ok: false, error: exclusions.error }
+  }
+  return {
+    ok: true,
+    row: {
+      market: parsed.data.market,
+      industry: parsed.data.industry,
+      target_count: parsed.data.targetCount,
+      exclusions: exclusions.domains,
+      cadence_days: parsed.data.cadenceDays,
+    },
+  }
+}
+
+export async function createCampaign(input: CampaignInput): Promise<ProspectMutationResult> {
+  await requireIntelUser()
+
+  const parsed = parseCampaignInput(input)
+  if (!parsed.ok) {
+    return parsed
+  }
+
+  try {
+    const supabase = createSupabaseServiceRole()
+    const { error } = await supabase.from('prospect_campaigns').insert(parsed.row)
+    if (error) {
+      console.error('Prospect campaign create failed')
+      return { ok: false, error: GENERIC_ERROR }
+    }
+    revalidateProspects()
+    return { ok: true }
+  } catch {
+    console.error('Prospect campaign create failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+export async function updateCampaign(
+  campaignId: string,
+  input: CampaignInput,
+): Promise<ProspectMutationResult> {
+  await requireIntelUser()
+
+  if (!idSchema.safeParse(campaignId).success) {
+    return { ok: false, error: 'Invalid campaign.' }
+  }
+  const parsed = parseCampaignInput(input)
+  if (!parsed.ok) {
+    return parsed
+  }
+
+  try {
+    const supabase = createSupabaseServiceRole()
+    const { data, error } = await supabase
+      .from('prospect_campaigns')
+      .update({ ...parsed.row, updated_at: new Date().toISOString() })
+      .eq('id', campaignId)
+      .select('id')
+      .maybeSingle()
+    if (error) {
+      console.error('Prospect campaign update failed')
+      return { ok: false, error: GENERIC_ERROR }
+    }
+    if (data === null) {
+      return { ok: false, error: 'Campaign not found.' }
+    }
+    revalidateProspects()
+    return { ok: true }
+  } catch {
+    console.error('Prospect campaign update failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+export async function setCampaignActive(
+  campaignId: string,
+  active: boolean,
+): Promise<ProspectMutationResult> {
+  await requireIntelUser()
+
+  if (!idSchema.safeParse(campaignId).success || typeof active !== 'boolean') {
+    return { ok: false, error: 'Invalid campaign.' }
+  }
+
+  try {
+    const supabase = createSupabaseServiceRole()
+    const { data, error } = await supabase
+      .from('prospect_campaigns')
+      .update({ active, updated_at: new Date().toISOString() })
+      .eq('id', campaignId)
+      .select('id')
+      .maybeSingle()
+    if (error) {
+      console.error('Prospect campaign status update failed')
+      return { ok: false, error: GENERIC_ERROR }
+    }
+    if (data === null) {
+      return { ok: false, error: 'Campaign not found.' }
+    }
+    revalidateProspects()
+    return { ok: true }
+  } catch {
+    console.error('Prospect campaign status update failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/intel', label: 'Overview' },
+  { href: '/intel/briefing', label: 'Briefing' },
   { href: '/intel/clients', label: 'Clients' },
   { href: '/intel/search', label: 'Search' },
   { href: '/intel/leads', label: 'Leads' },

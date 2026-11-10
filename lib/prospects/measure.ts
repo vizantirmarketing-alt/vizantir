@@ -162,6 +162,36 @@ export function measurementClaim(url: string, data: PerformanceMeasurement): str
   )
 }
 
+const MEASUREMENT_CLAIM_RE =
+  /performance score (\d{1,3})\/100, LCP ([\d,]+(?:\.\d+)?) ms/
+
+/**
+ * Reads the score and LCP back out of a claim written by measurementClaim().
+ * The two live side by side so the format and its reader cannot drift.
+ */
+export function parseMeasurementClaim(
+  claim: string,
+): { performanceScore: number; lcpMs: number } | null {
+  const match = MEASUREMENT_CLAIM_RE.exec(claim)
+  if (match === null || match[1] === undefined || match[2] === undefined) {
+    return null
+  }
+  const performanceScore = Number(match[1])
+  const lcpMs = Number(match[2].replace(/,/g, ''))
+  if (!Number.isFinite(performanceScore) || !Number.isFinite(lcpMs)) {
+    return null
+  }
+  return { performanceScore, lcpMs }
+}
+
+/** Compact performance line, e.g. "Mobile performance 33/100, LCP 16.2 s". */
+export function formatPerformanceSummary(measurement: {
+  performanceScore: number
+  lcpMs: number
+}): string {
+  return `Mobile performance ${measurement.performanceScore}/100, LCP ${(measurement.lcpMs / 1000).toFixed(1)} s`
+}
+
 function observedAt(fetchedAt: string, now: Date): string {
   const parsed = Date.parse(fetchedAt)
   return Number.isNaN(parsed) ? now.toISOString() : new Date(parsed).toISOString()

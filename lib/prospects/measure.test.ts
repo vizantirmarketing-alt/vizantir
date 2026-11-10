@@ -6,7 +6,10 @@ import { describe, it } from 'node:test';
 import { FIXTURE_RUN_ID } from './fixtures/ingest-batch.fixture';
 import {
   PERFORMANCE_FACTOR,
+  formatPerformanceSummary,
   measureProspect,
+  measurementClaim,
+  parseMeasurementClaim,
   measureProspectById,
   parseMeasureBody,
   ratingFromPerformanceScore,
@@ -276,5 +279,21 @@ describe('measureProspectById (owner Measure performance action)', () => {
     const result = await measureProspectById(ID, { ...base.deps, pageSpeedConfigured: false });
     assert.equal(result.ok ? null : result.status, 503);
     assert.equal(base.writes.length, 0);
+  });
+});
+
+describe('measurement claim round trip', () => {
+  it('reads the score and LCP back from the stored claim', () => {
+    const claim = measurementClaim('https://example.com/', {
+      performanceScore: 33,
+      lcpMs: 16234.4,
+      tbtMs: 610,
+      cls: 0.12,
+      fetchedAt: '2026-11-10T08:00:00.000Z',
+    });
+    assert.deepEqual(parseMeasurementClaim(claim), { performanceScore: 33, lcpMs: 16234 });
+    assert.equal(formatPerformanceSummary({ performanceScore: 33, lcpMs: 16234 }), 'Mobile performance 33/100, LCP 16.2 s');
+    assert.equal(formatPerformanceSummary({ performanceScore: 90, lcpMs: 950 }), 'Mobile performance 90/100, LCP 0.9 s');
+    assert.equal(parseMeasurementClaim('Fixture: not a measurement'), null);
   });
 });
