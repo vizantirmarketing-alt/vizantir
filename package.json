@@ -56,7 +56,8 @@
     "correct:stale-stats": "tsx scripts/correct-stale-stats.ts",
     "correct:cwv-ranking-claims": "tsx scripts/correct-cwv-ranking-claims.ts",
     "link:wordpress-cluster-pillar": "tsx scripts/link-wordpress-cluster-to-pillar.ts",
-    "record:methodology": "tsx scripts/record-methodology-change.ts"
+    "record:methodology": "tsx scripts/record-methodology-change.ts",
+    "prospect:runner": "tsx scripts/prospect-runner.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",

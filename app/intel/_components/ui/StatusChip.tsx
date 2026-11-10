@@ -8,6 +8,16 @@ import {
   LEAD_STATUS_LABELS,
   type LeadStatus,
 } from '@/lib/intel/lead-params'
+import {
+  PROSPECT_REVIEW_LABELS,
+  PROSPECT_RUN_STATE_LABELS,
+  type ProspectReviewStatus,
+  type ProspectRunState,
+} from '@/lib/prospects/params'
+import {
+  CONFIDENCE_LABELS,
+  type ProspectConfidence,
+} from '@/lib/prospects/rubric'
 import { cn } from '@/lib/utils'
 
 type StatusTone = 'new' | 'active' | 'success' | 'muted'
@@ -100,6 +110,67 @@ export function ConfidenceChip({
       )}
     >
       {DECISION_CONFIDENCE_LABELS[confidence]}
+    </span>
+  )
+}
+
+function prospectReviewTone(status: ProspectReviewStatus): StatusTone {
+  if (status === 'unreviewed') {
+    return 'new'
+  }
+  if (status === 'accepted') {
+    return 'success'
+  }
+  return 'muted'
+}
+
+function prospectRunTone(state: ProspectRunState): StatusTone {
+  if (state === 'requested') {
+    return 'new'
+  }
+  if (state === 'completed') {
+    return 'success'
+  }
+  if (state === 'cancelled') {
+    return 'muted'
+  }
+  return 'active'
+}
+
+export function ProspectReviewChip({ status }: { status: ProspectReviewStatus }) {
+  return (
+    <StatusChip
+      tone={prospectReviewTone(status)}
+      label={PROSPECT_REVIEW_LABELS[status]}
+    />
+  )
+}
+
+export function ProspectRunStateChip({ state }: { state: ProspectRunState }) {
+  return (
+    <StatusChip
+      tone={prospectRunTone(state)}
+      label={PROSPECT_RUN_STATE_LABELS[state]}
+    />
+  )
+}
+
+export function ProspectConfidenceChip({
+  confidence,
+}: {
+  confidence: ProspectConfidence
+}) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
+        confidence === 'high' &&
+          'border border-cobalt-primary text-cobalt-primary',
+        confidence === 'medium' && 'border border-black/15 text-meta',
+        confidence === 'low' && 'border border-dashed border-black/20 text-meta',
+      )}
+    >
+      {CONFIDENCE_LABELS[confidence]} confidence
     </span>
   )
 }

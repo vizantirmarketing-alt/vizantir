@@ -1,0 +1,227 @@
+// Run with: pnpm exec tsx --test lib/prospects/ingest.test.ts
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+
+import {
+  FIXTURE_BATCH,
+  FIXTURE_EXCLUDED,
+  FIXTURE_FULLY_RATED,
+  FIXTURE_MISSING_EVIDENCE,
+  FIXTURE_RUN_CONFIG,
+  FIXTURE_RUN_ID,
+  FIXTURE_SPARSE,
+  fixtureClaimedRun,
+} from './fixtures/ingest-batch.fixture';
+import { MemoryProspectStore } from './fixtures/memory-store';
+import {
+  REJECT_REASONS,
+  buildErrorSummary,
+  finalRunState,
+  ingestBatch,
+  prepareBatch,
+} from './ingest';
+import type { IngestBatch } from './ingest-schema';
+import { RUBRIC_VERSION } from './rubric';
+
+const NOW = new Date('2026-11-09T12:00:00.000Z');
+
+function snapshot(store: MemoryProspectStore) {
+  return {
+    prospects: [...store.prospects.values()]
+      .map((prospect) => ({ ...prospect }))
+      .sort((a, b) => a.domain.localeCompare(b.domain)),
+    evidence: [...store.evidence].sort((a, b) =>
+      `${a.prospectId}${a.factorKey}${a.claim}`.localeCompare(`${b.prospectId}${b.factorKey}${b.claim}`),
+    ),
+    run: store.runs.get(FIXTURE_RUN_ID),
+  };
+}
+
+describe('prepareBatch', () => {
+  it('computes scores in code from ratings', () => {
+    const prepared = prepareBatch(FIXTURE_BATCH, FIXTURE_RUN_CONFIG, NOW.toISOString());
+    const full = prepared.accepted.find((record) => record.domain === 'example.com');
+    assert.ok(full);
+    // fit: 30 + 30 + 12.5 + 0 = 72.5 -> 73; opportunity: 35 + 15 + 10 + 0 = 60
+    assert.equal(full.write.fitScore, 73);
+    assert.equal(full.write.opportunityScore, 60);
+    assert.equal(full.write.confidence, 'high');
+    assert.equal(full.write.rubricVersion, RUBRIC_VERSION);
+
+    const sparse = prepared.accepted.find((record) => record.domain === 'example.org');
+    assert.ok(sparse);
+    assert.equal(sparse.write.fitScore, null);
+    assert.equal(sparse.write.opportunityScore, 65);
+    assert.equal(sparse.write.confidence, 'low');
+  });
+
+  it('falls back to the run market and industry, and keeps a supplied market', () => {
+    const prepared = prepareBatch(FIXTURE_BATCH, FIXTURE_RUN_CONFIG, NOW.toISOString());
+    const full = prepared.accepted.find((record) => record.domain === 'example.com');
+    const sparse = prepared.accepted.find((record) => record.domain === 'example.org');
+    assert.equal(full?.write.market, FIXTURE_RUN_CONFIG.market);
+    assert.equal(full?.write.industry, FIXTURE_RUN_CONFIG.industry);
+    assert.equal(sparse?.write.market, FIXTURE_SPARSE.market);
+  });
+
+  it('rejects a record whose non-unknown rating lacks evidence', () => {
+    const prepared = prepareBatch(FIXTURE_BATCH, FIXTURE_RUN_CONFIG, NOW.toISOString());
+    const rejected = prepared.rejected.find((record) => record.key === 'canyon-ridge.example.net');
+    assert.deepEqual(rejected?.reasons, [`${REJECT_REASONS.missingEvidence}:growth_signals`]);
+    assert.ok(!prepared.accepted.some((record) => record.domain === 'canyon-ridge.example.net'));
+  });
+
+  it('rejects excluded domains and invalid domains', () => {
+    const batch: IngestBatch = {
+      runId: FIXTURE_RUN_ID,
+      prospects: [FIXTURE_EXCLUDED, { ...FIXTURE_EXCLUDED, domain: 'http://10.0.0.1' }],
+    };
+    const prepared = prepareBatch(batch, FIXTURE_RUN_CONFIG, NOW.toISOString());
+    assert.equal(prepared.accepted.length, 0);
+    assert.deepEqual(prepared.rejected.map((record) => record.reasons[0]), [
+      REJECT_REASONS.excluded,
+      REJECT_REASONS.invalidDomain,
+    ]);
+  });
+
+  it('rejects a second record for the same normalized domain in one batch', () => {
+    const batch: IngestBatch = {
+      runId: FIXTURE_RUN_ID,
+      prospects: [FIXTURE_FULLY_RATED, { ...FIXTURE_FULLY_RATED, domain: 'example.com' }],
+    };
+    const prepared = prepareBatch(batch, FIXTURE_RUN_CONFIG, NOW.toISOString());
+    assert.equal(prepared.accepted.length, 1);
+    assert.deepEqual(prepared.rejected, [
+      { key: 'example.com', reasons: [REJECT_REASONS.duplicateInBatch] },
+    ]);
+  });
+});
+
+describe('ingestBatch', () => {
+  it('saves valid records, rejects invalid ones, and records outcomes on the run', async () => {
+    const store = new MemoryProspectStore([fixtureClaimedRun()]);
+    const result = await ingestBatch(store, FIXTURE_BATCH, NOW);
+
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    assert.deepEqual(result.saved.map((record) => record.domain).sort(), ['example.com', 'example.org']);
+    assert.equal(result.rejected.length, 2);
+    assert.deepEqual(result.counts, { saved: 2, rejected: 2 });
+    assert.equal(result.runState, 'claimed');
+
+    assert.equal(store.prospects.size, 2);
+    assert.equal(store.evidence.length, FIXTURE_FULLY_RATED.evidence.length + FIXTURE_SPARSE.evidence.length);
+    assert.ok(store.evidence.every((item) => item.runId === FIXTURE_RUN_ID));
+    assert.match(store.runs.get(FIXTURE_RUN_ID)?.errorSummary ?? '', /2 records rejected/);
+  });
+
+  it('is idempotent when the same batch is ingested twice', async () => {
+    const store = new MemoryProspectStore([fixtureClaimedRun()]);
+    await ingestBatch(store, FIXTURE_BATCH, NOW);
+    const first = snapshot(store);
+
+    const again = await ingestBatch(store, FIXTURE_BATCH, NOW);
+    assert.equal(again.ok, true);
+    assert.deepEqual(snapshot(store), first);
+    assert.deepEqual(again.ok ? again.counts : null, { saved: 2, rejected: 2 });
+  });
+
+  it('replaces this run\'s evidence for a re-ingested domain rather than appending', async () => {
+    const store = new MemoryProspectStore([fixtureClaimedRun()]);
+    await ingestBatch(store, { runId: FIXTURE_RUN_ID, prospects: [FIXTURE_FULLY_RATED] }, NOW);
+
+    const revised = {
+      ...FIXTURE_FULLY_RATED,
+      ratings: { ...FIXTURE_FULLY_RATED.ratings, growth_signals: 'unknown' as const },
+      evidence: FIXTURE_FULLY_RATED.evidence.filter((item) => item.factor !== 'growth_signals'),
+    };
+    await ingestBatch(store, { runId: FIXTURE_RUN_ID, prospects: [revised] }, NOW);
+
+    assert.equal(store.prospects.size, 1);
+    assert.equal(store.evidence.length, FIXTURE_FULLY_RATED.evidence.length - 1);
+    assert.equal(store.prospects.get('example.com')?.factorRatings.growth_signals, 'unknown');
+  });
+
+  it('keeps evidence from earlier runs and preserves the owner review', async () => {
+    const otherRunId = '9b2e4c6a-1d3f-4a5b-8c7d-0e1f2a3b4c5d';
+    const store = new MemoryProspectStore([
+      fixtureClaimedRun(),
+      fixtureClaimedRun({ id: otherRunId }),
+    ]);
+    await ingestBatch(store, { runId: FIXTURE_RUN_ID, prospects: [FIXTURE_FULLY_RATED] }, NOW);
+
+    const saved = store.prospects.get('example.com');
+    assert.ok(saved);
+    store.prospects.set('example.com', { ...saved, reviewStatus: 'accepted', ownerNote: 'Call in January.' });
+
+    await ingestBatch(store, { runId: otherRunId, prospects: [FIXTURE_FULLY_RATED] }, NOW);
+
+    const after = store.prospects.get('example.com');
+    assert.equal(after?.reviewStatus, 'accepted');
+    assert.equal(after?.ownerNote, 'Call in January.');
+    assert.equal(after?.latestRunId, otherRunId);
+    assert.equal(store.evidence.length, FIXTURE_FULLY_RATED.evidence.length * 2);
+  });
+
+  it('refuses a run that does not exist or is not claimed', async () => {
+    const missing = await ingestBatch(new MemoryProspectStore(), FIXTURE_BATCH, NOW);
+    assert.deepEqual(missing, { ok: false, status: 404, error: 'Run not found' });
+
+    for (const state of ['requested', 'completed', 'partial', 'failed', 'cancelled'] as const) {
+      const store = new MemoryProspectStore([fixtureClaimedRun({ state })]);
+      const result = await ingestBatch(store, FIXTURE_BATCH, NOW);
+      assert.equal(result.ok ? null : result.status, 409);
+      assert.equal(store.prospects.size, 0);
+    }
+  });
+
+  it('finishes as partial when records were rejected and completed when none were', async () => {
+    const partialStore = new MemoryProspectStore([fixtureClaimedRun()]);
+    const partial = await ingestBatch(partialStore, { ...FIXTURE_BATCH, finish: 'completed' }, NOW);
+    assert.equal(partial.ok ? partial.runState : null, 'partial');
+
+    const cleanStore = new MemoryProspectStore([fixtureClaimedRun()]);
+    const clean = await ingestBatch(
+      cleanStore,
+      { runId: FIXTURE_RUN_ID, prospects: [FIXTURE_FULLY_RATED], finish: 'completed' },
+      NOW,
+    );
+    assert.equal(clean.ok ? clean.runState : null, 'completed');
+
+    const after = await ingestBatch(cleanStore, { runId: FIXTURE_RUN_ID, prospects: [] }, NOW);
+    assert.equal(after.ok ? null : after.status, 409);
+  });
+
+  it('marks a run failed when the runner reports failure', async () => {
+    const store = new MemoryProspectStore([fixtureClaimedRun()]);
+    const result = await ingestBatch(
+      store,
+      { runId: FIXTURE_RUN_ID, prospects: [], finish: 'failed', runErrors: ['Search provider unavailable'] },
+      NOW,
+    );
+    assert.equal(result.ok ? result.runState : null, 'failed');
+    assert.match(store.runs.get(FIXTURE_RUN_ID)?.errorSummary ?? '', /Runner: Search provider unavailable/);
+  });
+
+  it('does not save anything into a missing-evidence record', async () => {
+    const store = new MemoryProspectStore([fixtureClaimedRun()]);
+    await ingestBatch(store, { runId: FIXTURE_RUN_ID, prospects: [FIXTURE_MISSING_EVIDENCE] }, NOW);
+    assert.equal(store.prospects.size, 0);
+    assert.equal(store.evidence.length, 0);
+  });
+});
+
+describe('run summary helpers', () => {
+  it('does not duplicate runner errors when a batch is resent', () => {
+    const outcomes = {};
+    const first = buildErrorSummary(null, outcomes, ['Timeout on page 2']);
+    const second = buildErrorSummary(first.summary, outcomes, ['Timeout on page 2']);
+    assert.equal(second.summary, 'Runner: Timeout on page 2');
+  });
+
+  it('treats runner errors as a partial result', () => {
+    assert.equal(finalRunState('completed', { saved: 3, rejected: 0 }, ['Runner: one site timed out']), 'partial');
+    assert.equal(finalRunState('completed', { saved: 0, rejected: 0 }, []), 'completed');
+    assert.equal(finalRunState('failed', { saved: 3, rejected: 0 }, []), 'failed');
+  });
+});
