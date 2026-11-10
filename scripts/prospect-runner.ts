@@ -11,6 +11,10 @@
  * Base URL: PROSPECT_RUNNER_BASE_URL, default http://localhost:3000. https is
  * required for any host other than localhost.
  *
+ * Proxy-auth mode: with PROSPECT_RUNNER_PROXY_AUTH=1 the token is not read
+ * and no Authorization header is sent (a network proxy attaches it).
+ * PROSPECT_RUNNER_BASE_URL must then be set to an https, non-local URL.
+ *
  * Exit codes: 0 ok, 1 failure, 2 no run queued (claim), 64 usage.
  */
 

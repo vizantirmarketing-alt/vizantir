@@ -8,6 +8,13 @@
  *
  * The bearer token is never printed. Every line of output passes through
  * redactSecret() as a backstop, including error text from the network layer.
+ *
+ * Proxy-auth mode (PROSPECT_RUNNER_PROXY_AUTH=1) is for a cloud environment
+ * whose network proxy attaches the Authorization header itself. In that mode
+ * the helper never reads PROSPECT_INGEST_TOKEN (neither the environment nor
+ * .env.local), sends no Authorization header, and requires
+ * PROSPECT_RUNNER_BASE_URL to be an https URL for a non-local host. Otherwise
+ * it behaves identically.
  */
 
 import { normalizeDomain } from '@/lib/prospects/domain'
@@ -16,6 +23,7 @@ import { parseIngestBody } from '@/lib/prospects/ingest-schema'
 export const DEFAULT_RUNNER_BASE_URL = 'http://localhost:3000'
 export const RUNNER_TOKEN_ENV = 'PROSPECT_INGEST_TOKEN'
 export const RUNNER_BASE_URL_ENV = 'PROSPECT_RUNNER_BASE_URL'
+export const RUNNER_PROXY_AUTH_ENV = 'PROSPECT_RUNNER_PROXY_AUTH'
 
 export const EXIT_OK = 0
 export const EXIT_FAILURE = 1
@@ -75,6 +83,33 @@ export function resolveBaseUrl(raw: string | undefined): BaseUrlResult {
   }
 
   return { ok: true, origin: url.origin }
+}
+
+export function isProxyAuthMode(env: Record<string, string | undefined>): boolean {
+  return env[RUNNER_PROXY_AUTH_ENV]?.trim() === '1'
+}
+
+/** Proxy-auth mode: the base URL must be set, https, and not a local host. */
+export function resolveProxyBaseUrl(raw: string | undefined): BaseUrlResult {
+  if (!raw?.trim()) {
+    return {
+      ok: false,
+      error: `${RUNNER_BASE_URL_ENV} must be set when ${RUNNER_PROXY_AUTH_ENV}=1.`,
+    }
+  }
+  const base = resolveBaseUrl(raw)
+  if (!base.ok) {
+    return base
+  }
+  const url = new URL(base.origin)
+  if (url.protocol !== 'https:') {
+    return { ok: false, error: `${RUNNER_BASE_URL_ENV} must use https when ${RUNNER_PROXY_AUTH_ENV}=1.` }
+  }
+  const host = url.hostname.toLowerCase()
+  if (LOCAL_HOSTS.has(host) || host.endsWith('.localhost')) {
+    return { ok: false, error: `${RUNNER_BASE_URL_ENV} must not be localhost when ${RUNNER_PROXY_AUTH_ENV}=1.` }
+  }
+  return base
 }
 
 /**
@@ -171,34 +206,47 @@ export async function runRunnerCli(argv: string[], deps: RunnerDeps): Promise<nu
     return EXIT_USAGE
   }
 
-  const base = resolveBaseUrl(deps.env[RUNNER_BASE_URL_ENV])
+  const proxyAuth = isProxyAuthMode(deps.env)
+  const base = proxyAuth
+    ? resolveProxyBaseUrl(deps.env[RUNNER_BASE_URL_ENV])
+    : resolveBaseUrl(deps.env[RUNNER_BASE_URL_ENV])
   if (!base.ok) {
     deps.stderr(base.error)
     return EXIT_FAILURE
   }
 
-  const token = resolveToken(deps)
+  // In proxy-auth mode the token is never resolved, so neither the
+  // environment variable nor .env.local is read.
+  const token = proxyAuth ? null : resolveToken(deps)
   const out = (line: string) => deps.stdout(redactSecret(line, token))
   const err = (line: string) => deps.stderr(redactSecret(line, token))
 
-  if (token === null) {
+  if (!proxyAuth && token === null) {
     err(`${RUNNER_TOKEN_ENV} is not set in the environment or .env.local.`)
     return EXIT_FAILURE
   }
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   }
+  if (!proxyAuth && token !== null) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
+  const conn: Connection = {
+    origin: base.origin,
+    headers,
+    proxyHost: proxyAuth ? new URL(base.origin).host : null,
+  }
 
   if (command === 'claim') {
-    return runClaim(base.origin, headers, deps, out, err)
+    return runClaim(conn, deps, out, err)
   }
   if (command === 'measure') {
-    return runMeasure(base.origin, headers, rest[0] ?? '', deps, out, err)
+    return runMeasure(conn, rest[0] ?? '', deps, out, err)
   }
-  return runIngest(base.origin, headers, rest[0] ?? '', deps, out, err)
+  return runIngest(conn, rest[0] ?? '', deps, out, err)
 }
 
 async function post(
@@ -219,13 +267,29 @@ async function post(
   }
 }
 
-function describeFailure(label: string, status: number, json: unknown): string[] {
+type Connection = {
+  origin: string
+  headers: Record<string, string>
+  /** Set in proxy-auth mode: the host the proxy should attach credentials for. */
+  proxyHost: string | null
+}
+
+function describeFailure(
+  label: string,
+  status: number,
+  json: unknown,
+  proxyHost: string | null,
+): string[] {
   const lines = [`${label} failed: HTTP ${status}${readString(json, 'error') ? `: ${readString(json, 'error')}` : ''}`]
   if (status === 503) {
     lines.push('The server has no usable PROSPECT_INGEST_TOKEN configured.')
   }
   if (status === 401) {
-    lines.push('The server rejected the token.')
+    lines.push(
+      proxyHost === null
+        ? 'The server rejected the token.'
+        : `The network proxy did not attach credentials for ${proxyHost}. Check that this environment's proxy injects the Authorization header for that host.`,
+    )
   }
   for (const issue of readArray(json, 'issues')) {
     if (typeof issue === 'string') {
@@ -240,18 +304,17 @@ function describeFailure(label: string, status: number, json: unknown): string[]
 }
 
 async function runClaim(
-  origin: string,
-  headers: Record<string, string>,
+  conn: Connection,
   deps: RunnerDeps,
   out: (line: string) => void,
   err: (line: string) => void,
 ): Promise<number> {
-  const result = await post(deps, `${origin}/api/prospects/claim`, headers, undefined, err)
+  const result = await post(deps, `${conn.origin}/api/prospects/claim`, conn.headers, undefined, err)
   if (result === null) {
     return EXIT_FAILURE
   }
   if (result.status !== 200 || result.json === null) {
-    describeFailure('Claim', result.status, result.json).forEach(err)
+    describeFailure('Claim', result.status, result.json, conn.proxyHost).forEach(err)
     return EXIT_FAILURE
   }
 
@@ -266,8 +329,7 @@ async function runClaim(
 }
 
 async function runIngest(
-  origin: string,
-  headers: Record<string, string>,
+  conn: Connection,
   file: string,
   deps: RunnerDeps,
   out: (line: string) => void,
@@ -292,12 +354,12 @@ async function runIngest(
     return EXIT_FAILURE
   }
 
-  const result = await post(deps, `${origin}/api/prospects/ingest`, headers, raw, err)
+  const result = await post(deps, `${conn.origin}/api/prospects/ingest`, conn.headers, raw, err)
   if (result === null) {
     return EXIT_FAILURE
   }
   if (result.status !== 200 || result.json === null) {
-    describeFailure('Ingest', result.status, result.json).forEach(err)
+    describeFailure('Ingest', result.status, result.json, conn.proxyHost).forEach(err)
     return EXIT_FAILURE
   }
 
@@ -320,8 +382,7 @@ async function runIngest(
 }
 
 async function runMeasure(
-  origin: string,
-  headers: Record<string, string>,
+  conn: Connection,
   rawDomain: string,
   deps: RunnerDeps,
   out: (line: string) => void,
@@ -335,8 +396,8 @@ async function runMeasure(
 
   const result = await post(
     deps,
-    `${origin}/api/prospects/measure`,
-    headers,
+    `${conn.origin}/api/prospects/measure`,
+    conn.headers,
     JSON.stringify({ domain }),
     err,
   )
@@ -344,7 +405,7 @@ async function runMeasure(
     return EXIT_FAILURE
   }
   if (result.status !== 200 || result.json === null) {
-    describeFailure('Measure', result.status, result.json).forEach(err)
+    describeFailure('Measure', result.status, result.json, conn.proxyHost).forEach(err)
     const reason = readString(result.json, 'reason')
     if (reason !== null) {
       err(`Reason: ${reason}`)

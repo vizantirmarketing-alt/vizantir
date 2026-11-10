@@ -9,7 +9,8 @@
  *   - per prospect: one performance line and one highlight evidence item
  *   - inquiries: at most 5 from the last 30 days; older ones are only a count
  *   - runs: finished in the run window; a failed run is dropped when a later
- *     run for the same market and industry completed
+ *     run for the same market and industry saved at least one prospect,
+ *     whatever that later run's final state
  *   - findings: at most 5, with the total
  *   - unreviewed prospects: never repeats one already listed as new
  *
@@ -303,7 +304,8 @@ function finishedTime(run: { finishedAt: string | null }): number | null {
 
 /**
  * Runs finished after runsSince, minus failed runs superseded by a later
- * completed run for the same market and industry. Newest first.
+ * finished run for the same market and industry that saved at least one
+ * prospect, whatever that later run's final state. Newest first.
  */
 export function selectRuns(runs: readonly RawRun[], runsSince: string): RawRun[] {
   const since = Date.parse(runsSince)
@@ -318,7 +320,7 @@ export function selectRuns(runs: readonly RawRun[], runsSince: string): RawRun[]
       return !runs.some(
         (other) =>
           other.id !== run.id &&
-          other.state === 'completed' &&
+          other.saved >= 1 &&
           runKey(other) === runKey(run) &&
           (finishedTime(other) ?? 0) > failedAt,
       )

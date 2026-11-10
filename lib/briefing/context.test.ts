@@ -194,13 +194,41 @@ describe('research runs', () => {
     assert.deepEqual(selectRuns([base, failedLater], '2026-11-09T16:00:00Z').map((r) => r.id), ['b', 'a']);
   });
 
-  it('only a completed run supersedes, not a partial or cancelled one', () => {
+  describe('superseded failed runs', () => {
     const failed: RawRun = {
-      id: 'f', state: 'failed', market: 'M', industry: 'I', saved: 0, requested: 1,
+      id: 'f', state: 'failed', market: 'M', industry: 'I', saved: 0, requested: 5,
       errors: ['x'], notes: [], requestedAt: '2026-11-10T00:00:00Z', finishedAt: '2026-11-10T09:00:00Z',
     };
-    const partial: RawRun = { ...failed, id: 'p', state: 'partial', errors: [], finishedAt: '2026-11-10T10:00:00Z' };
-    assert.deepEqual(selectRuns([failed, partial], '2026-11-09T16:00:00Z').map((r) => r.id), ['p', 'f']);
+    const later = (overrides: Partial<RawRun>): RawRun => ({
+      ...failed, id: 'later', errors: [], finishedAt: '2026-11-10T10:00:00Z', ...overrides,
+    });
+    const ids = (runs: RawRun[]) => selectRuns(runs, '2026-11-09T16:00:00Z').map((r) => r.id);
+
+    it('drops the failure when a later run saved at least one prospect, whatever its state', () => {
+      for (const state of ['completed', 'partial', 'failed', 'cancelled']) {
+        assert.deepEqual(ids([failed, later({ state, saved: 1 })]), ['later'], state);
+      }
+    });
+
+    it('keeps the failure when the later run saved nothing', () => {
+      for (const state of ['completed', 'partial']) {
+        assert.deepEqual(ids([failed, later({ state, saved: 0 })]), ['later', 'f'], state);
+      }
+    });
+
+    it('keeps the failure when the run that saved prospects finished earlier', () => {
+      assert.deepEqual(ids([failed, later({ saved: 3, finishedAt: '2026-11-10T08:00:00Z' })]), ['f', 'later']);
+    });
+
+    it('keeps the failure when the later run is for a different market or industry, or has not finished', () => {
+      assert.deepEqual(ids([failed, later({ saved: 3, market: 'Elsewhere' })]), ['later', 'f']);
+      assert.deepEqual(ids([failed, later({ saved: 3, industry: 'Other' })]), ['later', 'f']);
+      assert.deepEqual(ids([failed, later({ state: 'claimed', saved: 3, finishedAt: null })]), ['f']);
+    });
+
+    it('matches market and industry ignoring case and spacing', () => {
+      assert.deepEqual(ids([failed, later({ saved: 2, market: ' m ', industry: 'i' })]), ['later']);
+    });
   });
 });
 

@@ -325,3 +325,86 @@ describe('measure', () => {
     assert.equal(captured.requests.length, 0);
   });
 });
+
+describe('proxy-auth mode', () => {
+  const PROXY_ENV = {
+    PROSPECT_RUNNER_PROXY_AUTH: '1',
+    PROSPECT_RUNNER_BASE_URL: 'https://www.vizantir.com',
+    PROSPECT_INGEST_TOKEN: TOKEN,
+  };
+
+  it('never reads the token from the environment or .env.local and sends no Authorization header', async () => {
+    let envFileReads = 0;
+    const { deps, captured } = harness(async () => respond(200, { run: null }), {
+      env: PROXY_ENV,
+      readEnvFile: () => {
+        envFileReads += 1;
+        return `PROSPECT_INGEST_TOKEN=${TOKEN}\n`;
+      },
+    });
+    assert.equal(await runRunnerCli(['claim'], deps), EXIT_NO_RUN_QUEUED);
+    assert.equal(envFileReads, 0);
+    assert.equal(captured.requests.length, 1);
+    assert.equal(captured.requests[0]?.url, 'https://www.vizantir.com/api/prospects/claim');
+    assert.ok(!('Authorization' in (captured.requests[0]?.headers ?? {})));
+    assert.ok(!JSON.stringify(captured.requests).includes(TOKEN));
+  });
+
+  it('works without any token configured', async () => {
+    const { deps, captured } = harness(fakeServerWithoutAuth(), {
+      env: { PROSPECT_RUNNER_PROXY_AUTH: '1', PROSPECT_RUNNER_BASE_URL: 'https://www.vizantir.com' },
+    });
+    assert.equal(await runRunnerCli(['measure', 'example.com'], deps), EXIT_OK);
+    assert.deepEqual(JSON.parse(captured.requests[0]?.body ?? ''), { domain: 'example.com' });
+    assert.ok(!('Authorization' in (captured.requests[0]?.headers ?? {})));
+  });
+
+  it('requires the base URL to be set, https and not localhost', async () => {
+    const cases: [Record<string, string | undefined>, RegExp][] = [
+      [{ PROSPECT_RUNNER_PROXY_AUTH: '1' }, /must be set when PROSPECT_RUNNER_PROXY_AUTH=1/],
+      [{ PROSPECT_RUNNER_PROXY_AUTH: '1', PROSPECT_RUNNER_BASE_URL: 'http://www.vizantir.com' }, /must use https/],
+      [{ PROSPECT_RUNNER_PROXY_AUTH: '1', PROSPECT_RUNNER_BASE_URL: 'http://localhost:3000' }, /must use https/],
+      [{ PROSPECT_RUNNER_PROXY_AUTH: '1', PROSPECT_RUNNER_BASE_URL: 'https://localhost:3000' }, /must not be localhost/],
+      [{ PROSPECT_RUNNER_PROXY_AUTH: '1', PROSPECT_RUNNER_BASE_URL: 'https://127.0.0.1' }, /must not be localhost/],
+      [{ PROSPECT_RUNNER_PROXY_AUTH: '1', PROSPECT_RUNNER_BASE_URL: 'https://app.localhost' }, /must not be localhost/],
+    ];
+    for (const [env, message] of cases) {
+      const { deps, captured } = harness(async () => respond(200, { run: null }), { env });
+      assert.equal(await runRunnerCli(['claim'], deps), EXIT_FAILURE, JSON.stringify(env));
+      assert.equal(captured.requests.length, 0);
+      assert.match(captured.stderr.join('\n'), message);
+    }
+  });
+
+  it('says the proxy did not attach credentials when the server returns 401', async () => {
+    for (const argv of [['claim'], ['ingest', BATCH_PATH], ['measure', 'example.com']]) {
+      const { deps, captured } = harness(async () => respond(401, { error: 'Unauthorized' }), { env: PROXY_ENV });
+      assert.equal(await runRunnerCli(argv, deps), EXIT_FAILURE);
+      const stderr = captured.stderr.join('\n');
+      assert.match(stderr, /proxy did not attach credentials for www\.vizantir\.com/);
+      assert.ok(!stderr.includes('rejected the token'));
+    }
+  });
+
+  it('is only enabled by the exact value 1; otherwise behaviour is unchanged', async () => {
+    for (const value of [undefined, '0', 'true', '']) {
+      const { deps, captured } = harness(async () => respond(401, { error: 'Unauthorized' }), {
+        env: { PROSPECT_RUNNER_PROXY_AUTH: value, PROSPECT_INGEST_TOKEN: TOKEN },
+      });
+      await runRunnerCli(['claim'], deps);
+      assert.equal(captured.requests[0]?.url, 'http://localhost:3000/api/prospects/claim', String(value));
+      assert.equal(captured.requests[0]?.headers.Authorization, `Bearer ${TOKEN}`);
+      assert.match(captured.stderr.join('\n'), /The server rejected the token/);
+    }
+  });
+});
+
+function fakeServerWithoutAuth(): RunnerFetch {
+  return async (_url, init) => {
+    if ('Authorization' in init.headers) return respond(400, { error: 'unexpected header' });
+    return respond(200, {
+      ok: true, domain: 'example.com', prospectId: 'p', measuredUrl: 'https://example.com/',
+      performanceScore: 50, rating: 'weak', fitScore: 70, opportunityScore: 40, confidence: 'high',
+    });
+  };
+}
