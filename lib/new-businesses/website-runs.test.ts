@@ -244,3 +244,62 @@ describe('queueing', () => {
     assert.deepEqual(await queueCheckRun(checks, 'dashboard', T0), { outcome: 'limit_reached' });
   });
 });
+
+describe('rules version 2 on stored results', () => {
+  it('a stored version 1 has_website from a news article is re-derived to no_website on the next rescore', async () => {
+    const { businesses } = await setup();
+    const cafe = businesses.byName('Sample Cafe')!;
+    // As version 1 stored it: an unlisted news host counted as the own domain.
+    cafe.website = {
+      status: 'has_website',
+      url: 'https://www.example-news.test/story',
+      rulesVersion: 'website-check-v1',
+      checkedAt: T0.toISOString(),
+      evidence: {
+        searches: ['"Sample Cafe" Las Vegas', '"Sample Cafe" 702-555-0102'],
+        candidates: [{ url: 'https://www.example-news.test/story', kindClaimed: 'other', hostKind: 'own_domain', excerpt: 'Sample Cafe has no online presence yet.', matched: ['name', 'street_address'], accepted: true }],
+        placeholder: false,
+        outcomeClaimed: 'found',
+        note: null,
+      },
+    };
+    await rescoreStoredRows(businesses, T0.toISOString());
+    const after = businesses.byName('Sample Cafe')!;
+    assert.equal(after.website?.status, 'no_website');
+    assert.equal(after.website?.url, null);
+    assert.equal(after.website?.rulesVersion, 'website-check-v2');
+    assert.equal(after.rank?.score, 95, 'ranked with the re-derived status (+20, not -30)');
+  });
+
+  it('leaves a stored result unchanged when its evidence is incomplete', async () => {
+    const { businesses } = await setup();
+    const { rederiveStoredWebsiteResults } = await import('./import');
+    const cafe = businesses.byName('Sample Cafe')!;
+    cafe.website = { status: 'has_website', url: 'https://x.test/', rulesVersion: 'website-check-v1', checkedAt: T0.toISOString(), evidence: { searches: ['a', 'b'] } };
+    const listed = await businesses.listRankableRows();
+    assert.deepEqual(rederiveStoredWebsiteResults(listed).incomplete, [cafe.id]);
+    await rescoreStoredRows(businesses, T0.toISOString());
+    assert.equal(businesses.byName('Sample Cafe')!.website?.status, 'has_website');
+    assert.equal(businesses.byName('Sample Cafe')!.website?.rulesVersion, 'website-check-v1');
+  });
+
+  it('a business submitted unsearched is stored as unclear with its note and not offered again', async () => {
+    const { businesses, checks } = await setup();
+    const claim = await claimOne(checks);
+    assert.ok(claim.run !== null);
+    const agent = claim.businesses.find((b) => b.name === 'Demo Realty Agent')!;
+    const out = await ingestCheckBatch(
+      { store: checks, rescore: async () => {} },
+      { runId: claim.run.id, businesses: [{ id: agent.id, searches: [], candidates: [], placeholder: false, outcome_claimed: 'unclear', note: "Licensed under a person's name; not searched." }], finish: 'completed' },
+      T0,
+    );
+    assert.ok(out.ok);
+    const row = businesses.byName('Demo Realty Agent')!;
+    assert.equal(row.website?.status, 'unclear');
+    assert.equal((row.website?.evidence as { note: string }).note, "Licensed under a person's name; not searched.");
+    await queueCheckRun(checks, 'dashboard', T0);
+    const next = await buildCheckClaimResponse(checks, T0);
+    assert.ok(next.run !== null);
+    assert.ok(!next.businesses.some((b) => b.name === 'Demo Realty Agent'));
+  });
+});

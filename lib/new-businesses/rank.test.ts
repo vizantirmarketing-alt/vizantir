@@ -224,7 +224,7 @@ describe('rank version 3: website signal', () => {
     assert.equal(reasonLine(rankBusiness({ ...local, website: 'no_website' }, ALONE).signals), 'No website found · Restaurant license');
     assert.equal(
       reasonLine(rankBusiness({ ...biz({ phone: '213-555-0101' }), website: 'social_only' }, ALONE).signals),
-      'Social or directory page only · Restaurant license · phone number from outside Las Vegas (area code 213), often a franchise or corporate office',
+      'Listing or social page only · Restaurant license · phone number from outside Las Vegas (area code 213), often a franchise or corporate office',
     );
     assert.equal(reasonLine(rankBusiness(local, ALONE).signals), 'Restaurant license', 'unchecked businesses are unchanged');
   });

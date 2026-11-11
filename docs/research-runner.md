@@ -293,7 +293,7 @@ End the session with a short, factual report.
 - businesses in the run, and businesses submitted
 - the server's status for each submitted business, as counts per status (for example "12 no_website, 9 has_website, 4 unclear")
 - businesses rejected, with the server's reasons
-- businesses skipped, and why (as submitted in `runNotes`)
+- businesses submitted without searching, and why (from their notes)
 - how many searches and page reads were used
 - any errors (as submitted in `runErrors`), and the final run state
 
@@ -319,7 +319,12 @@ After the prospect loop ends, process website-check runs one at a time:
 
 ### Checking one business
 
-For each business, use **at most 3 searches and at most 2 page reads**, with the same page-reading tool chosen for the session.
+**Every business in a claimed run must be submitted**, including any you do not search.
+
+- **When a business's name is a person's name, do not search for it.** Submit it with no searches, no candidates, `outcome_claimed` `unclear`, and the note `Licensed under a person's name; not searched.`
+- **Any other business you cannot check** is submitted the same way, with a short factual note saying why, for example `Every search was blocked.`
+
+For each business you do check, use **at most 3 searches and at most 2 page reads**, with the same page-reading tool chosen for the session.
 
 1. **Search 1:** the business name with the city, for example `"Example Bakery" Las Vegas`.
 2. **Search 2:** the business name with the phone number, or with the street address when there is no phone.
@@ -330,7 +335,7 @@ For each business, use **at most 3 searches and at most 2 page reads**, with the
 
 For every page you consider, record a candidate:
 - `url`: the page's URL (http or https only)
-- `kind_claimed`: what you believe it is: `own_site`, `social`, `directory`, `builder_page` or `other`
+- `kind_claimed`: what you believe it is: `own_site` only for the business's own website, `builder_page` for its page on a website builder, `social` or `directory` for a listing, and `other` for anything else, such as a news article that mentions the business
 - `excerpt`: verbatim text under 25 words, from the page or the search result, that ties the page to this business
 - `identity_match`: `name`, `street_address`, `phone`, `city` and `business_type`, each `true` only if you saw it match
 
@@ -340,7 +345,7 @@ Then set:
   - `found` when a page passes the identity rule
   - `none_found` when **at least two different searches** found nothing that passes the identity rule
   - `unclear` otherwise
-- `note`: optional, one short sentence.
+- `note`: one short sentence; optional for a business you searched, required for one you did not. It must not contain personal data beyond what the claim supplied.
 
 Rules:
 - **Never report `none_found` after a single search.** The server treats it as unclear.
@@ -379,17 +384,17 @@ Run `mkdir -p /tmp/website-checks` once. Write JSON files to `/tmp/website-check
 Limits per batch:
 - At most **40 businesses**.
 - At most **6 candidates** per business.
-- At most **3 searches** per business.
+- **1 to 3 searches** per business, or none only for a business submitted unsearched as described above.
 - The file under 200,000 characters.
 
 Only businesses from the claimed run are accepted; any other id is rejected.
 
 On the **last** batch of a run:
 - add `"finish": "completed"`, or `"failed"` if the run could not be carried out at all
-- add `"runNotes"` for businesses you skipped and why (not errors)
+- add `"runNotes"` for anything the owner should know that is not an error
 - add `"runErrors"` only for things that went wrong in the run itself
 
-Neither field may contain personal data. A business you did not submit is released by the server for a later run.
+Neither field may contain personal data.
 
 Submit each file in order with `pnpm prospect:runner nb-ingest /tmp/website-checks/<file>.json`:
 

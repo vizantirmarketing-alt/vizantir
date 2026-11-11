@@ -56,15 +56,30 @@ export const candidateSchema = z.strictObject({
   identity_match: identityMatchSchema,
 })
 
-export const checkedBusinessSchema = z.strictObject({
-  /** The opaque business id from the claim response. */
-  id: z.uuid(),
-  searches: z.array(z.string().trim().min(1).max(300)).min(1).max(CHECK_INGEST_MAX_SEARCHES),
-  candidates: z.array(candidateSchema).max(CHECK_INGEST_MAX_CANDIDATES),
-  placeholder: z.boolean(),
-  outcome_claimed: z.enum(OUTCOMES_CLAIMED),
-  note: z.string().trim().max(300).optional(),
-})
+export const checkedBusinessSchema = z
+  .strictObject({
+    /** The opaque business id from the claim response. */
+    id: z.uuid(),
+    searches: z.array(z.string().trim().min(1).max(300)).max(CHECK_INGEST_MAX_SEARCHES),
+    candidates: z.array(candidateSchema).max(CHECK_INGEST_MAX_CANDIDATES),
+    placeholder: z.boolean(),
+    outcome_claimed: z.enum(OUTCOMES_CLAIMED),
+    note: z.string().trim().max(300).optional(),
+  })
+  // A business the runner could not or must not search (for example one
+  // licensed under a person's name) is still submitted, so it is not offered
+  // again: no searches, no candidates, outcome unclear, and a note saying why.
+  // Any other submission needs at least one search.
+  .superRefine((business, ctx) => {
+    if (business.searches.length > 0) return
+    if (business.outcome_claimed !== 'unclear' || !business.note || business.candidates.length > 0) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['searches'],
+        message: 'At least one search is required, unless outcome_claimed is unclear, there are no candidates, and a note says why.',
+      })
+    }
+  })
 
 export const checkBatchSchema = z.strictObject({
   runId: z.uuid(),

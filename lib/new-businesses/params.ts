@@ -27,7 +27,7 @@ export type NewBusinessWebsiteFilter = (typeof NEW_BUSINESS_WEBSITE_FILTERS)[num
 
 export const NEW_BUSINESS_WEBSITE_FILTER_LABELS: Record<NewBusinessWebsiteFilter, string> = {
   no_website: 'No website',
-  social_only: 'Social page only',
+  social_only: 'Listing or social page only',
   placeholder: 'Placeholder',
   free_builder: 'Free builder page',
   has_website: 'Has website',

@@ -19,6 +19,20 @@ import {
 
 type Option = { value: string; label: string }
 
+/*
+ * The filter row wraps and every control grows to fill its row, so the row
+ * always reaches the panel's right edge. Each basis is the width the
+ * control's label and longest value need at 14px:
+ *   standard  "Review status", "Unreviewed", "North Las Vegas", "October 2026"
+ *   website   "Listing or social page only"
+ *   category  "Professional, Scientific, and Technical Services - Group 2"
+ */
+const BASIS = {
+  standard: 'min-w-0 flex-[1_1_11rem]',
+  website: 'min-w-0 flex-[1_1_15rem]',
+  category: 'min-w-0 flex-[2_1_28rem]',
+} as const
+
 const LEAD_FILTER_LABELS = { likely: 'Likely', possible: 'Possible', low: 'Low' } as const
 
 function readFormString(form: FormData, key: string): string {
@@ -52,6 +66,7 @@ function FilterSelect({
   value,
   options,
   allLabel = 'All',
+  className = BASIS.standard,
   onChange,
 }: {
   id: string
@@ -60,10 +75,11 @@ function FilterSelect({
   value: string
   options: Option[]
   allLabel?: string
+  className?: string
   onChange: (form: HTMLFormElement | null) => void
 }) {
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={id} className="mb-2 block intel-body font-medium text-body">
         {label}
       </label>
@@ -114,8 +130,8 @@ export function NewBusinessFilters({
         router.push(hrefFromForm(event.currentTarget))
       }}
     >
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-8">
-        <div>
+      <div className="flex flex-wrap gap-3">
+        <div className={BASIS.standard}>
           <label htmlFor="nb-review" className="mb-2 block intel-body font-medium text-body">
             Review status
           </label>
@@ -146,11 +162,12 @@ export function NewBusinessFilters({
           id="nb-website"
           name="website"
           label="Website"
+          className={BASIS.website}
           value={params.website === 'all' ? '' : params.website}
           options={NEW_BUSINESS_WEBSITE_FILTERS.map((status) => ({ value: status, label: NEW_BUSINESS_WEBSITE_FILTER_LABELS[status] }))}
           onChange={onChange}
         />
-        <FilterSelect id="nb-category" name="category" label="Category" value={params.category ?? ''} options={withCurrent(plain(categories), params.category)} onChange={onChange} />
+        <FilterSelect id="nb-category" name="category" label="Category" className={BASIS.category} value={params.category ?? ''} options={withCurrent(plain(categories), params.category)} onChange={onChange} />
         <FilterSelect id="nb-city" name="city" label="City" value={params.city ?? ''} options={withCurrent(plain(cities), params.city)} onChange={onChange} />
         <FilterSelect id="nb-zip" name="zip" label="Zip" value={params.zip ?? ''} options={withCurrent(plain(zips), params.zip)} onChange={onChange} />
         <FilterSelect id="nb-period" name="period" label="Period" value={params.period ?? ''} options={withCurrent(periods, params.period)} onChange={onChange} />

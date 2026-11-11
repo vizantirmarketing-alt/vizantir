@@ -9,7 +9,8 @@ import { z } from 'zod'
 
 import { NEW_BUSINESS_SOURCE, type Period } from '@/lib/new-businesses/discovery'
 import { LEAD_TIERS, reasonLine, type LeadTier, type RankSignal } from '@/lib/new-businesses/rank'
-import { WEBSITE_STATUSES, type WebsiteStatus } from '@/lib/new-businesses/website-rules'
+import { WEBSITE_STATUSES, candidateClass, type WebsiteStatus } from '@/lib/new-businesses/website-rules'
+import { CANDIDATE_KINDS } from '@/lib/new-businesses/website-schema'
 import {
   NEW_BUSINESSES_PAGE_SIZE,
   NEW_BUSINESS_REVIEW_STATUSES,
@@ -56,13 +57,26 @@ export type NewBusinessWebsite = {
   url: string | null
   checkedAt: string | null
   searches: string[]
-  candidates: { url: string; excerpt: string; accepted: boolean }[]
+  /** mention: a page about the business that is not its web presence. */
+  candidates: { url: string; excerpt: string; accepted: boolean; mention: boolean }[]
+  /** The runner's note, for example why a business was not searched. */
+  note: string | null
 }
 
 const websiteEvidenceSchema = z
   .object({
     searches: z.array(z.string()).catch([]),
-    candidates: z.array(z.object({ url: z.string(), excerpt: z.string(), accepted: z.boolean().catch(false) })).catch([]),
+    candidates: z
+      .array(
+        z.object({
+          url: z.string(),
+          excerpt: z.string(),
+          accepted: z.boolean().catch(false),
+          kindClaimed: z.enum(CANDIDATE_KINDS).optional().catch(undefined),
+        }),
+      )
+      .catch([]),
+    note: z.string().nullable().optional().catch(null),
   })
   .nullable()
   .catch(null)
@@ -263,7 +277,14 @@ export async function fetchNewBusinesses(
                   url: row.website_url ?? null,
                   checkedAt: row.website_checked_at ?? null,
                   searches: row.website_evidence?.searches.slice(0, 3) ?? [],
-                  candidates: row.website_evidence?.candidates.slice(0, 6) ?? [],
+                  candidates: (row.website_evidence?.candidates.slice(0, 6) ?? []).map((c) => ({
+                    url: c.url,
+                    excerpt: c.excerpt,
+                    accepted: c.accepted,
+                    // Classed from the stored URL and kind_claimed under the current rules.
+                    mention: c.kindClaimed !== undefined && candidateClass(c.url, c.kindClaimed) === 'mention',
+                  })),
+                  note: row.website_evidence?.note?.trim() || null,
                 },
         }
       }),

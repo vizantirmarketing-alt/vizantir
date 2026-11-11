@@ -42,6 +42,8 @@ const rankableRowSchema = z.object({
   owner_note: z.string().nullable(),
   created_at: z.string(),
   website_status: z.enum(WEBSITE_STATUSES).nullable().catch(null),
+  website_rules_version: z.string().nullable().catch(null),
+  website_evidence: z.unknown(),
 })
 type RankableDbRow = z.infer<typeof rankableRowSchema>
 
@@ -199,7 +201,7 @@ export function createNewBusinessStore(
         const { data, error } = await client
           .from('new_businesses')
           .select(
-            'id, source, period_year, period_month, dedupe_key, business_name, address, suite, phone, category, review_status, reviewed_at, owner_note, created_at, website_status',
+            'id, source, period_year, period_month, dedupe_key, business_name, address, suite, phone, category, review_status, reviewed_at, owner_note, created_at, website_status, website_rules_version, website_evidence',
           )
           .eq('source', source)
           .order('id', { ascending: true })
@@ -226,8 +228,28 @@ export function createNewBusinessStore(
           hasNote: row.owner_note !== null && row.owner_note.trim().length > 0,
           createdAt: row.created_at,
           websiteStatus: row.website_status,
+          websiteRulesVersion: row.website_rules_version,
+          websiteEvidence: row.website_evidence,
         }),
       )
+    },
+
+    async saveWebsiteRederivations(source, updates) {
+      for (const { rowIds, decision } of updates) {
+        for (let i = 0; i < rowIds.length; i += CHUNK) {
+          const { error } = await client
+            .from('new_businesses')
+            .update({
+              website_status: decision.status,
+              website_url: decision.url,
+              website_evidence: decision.evidence,
+              website_rules_version: decision.rulesVersion,
+            })
+            .eq('source', source)
+            .in('id', rowIds.slice(i, i + CHUNK))
+          if (error) throw new NewBusinessStoreError('website rederive')
+        }
+      }
     },
 
     async saveRanks(source, updates) {

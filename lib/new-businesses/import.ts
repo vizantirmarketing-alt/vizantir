@@ -30,6 +30,7 @@ import {
   type PositionedPage,
 } from '@/lib/new-businesses/parse'
 import { RANK_VERSION, rankStoredRows, type LeadTier, type RankableStoredRow, type RankSignal } from '@/lib/new-businesses/rank'
+import { WEBSITE_RULES_VERSION, rederiveWebsiteDecision, type WebsiteDecision } from '@/lib/new-businesses/website-rules'
 
 /** Only the newest few published periods are imported automatically. */
 export const IMPORT_LOOKBACK_PERIODS = 3
@@ -100,6 +101,44 @@ export interface NewBusinessStore {
   listRankableRows(source: string): Promise<RankableRow[]>
   /** Writes lead score and group columns only. Never touches review status or notes. */
   saveRanks(source: string, updates: RankUpdate[]): Promise<void>
+  /**
+   * Writes re-derived website results (status, url, evidence, rules version)
+   * to the given license rows. Never review status, notes or the run link.
+   */
+  saveWebsiteRederivations(source: string, updates: WebsiteRederivation[]): Promise<void>
+}
+
+export type WebsiteRederivation = { rowIds: string[]; decision: WebsiteDecision }
+
+/**
+ * Stored website results from an older rules version, re-decided under the
+ * current rules from their own stored evidence. Rows whose evidence lacks a
+ * field the rules need are returned in `incomplete` and left unchanged.
+ * Rows of one business share one evidence record, so identical results are
+ * written together.
+ */
+export function rederiveStoredWebsiteResults(rows: readonly RankableRow[]): {
+  updates: WebsiteRederivation[]
+  incomplete: string[]
+  statusById: Map<string, WebsiteDecision['status']>
+} {
+  const byResult = new Map<string, WebsiteRederivation>()
+  const incomplete: string[] = []
+  const statusById = new Map<string, WebsiteDecision['status']>()
+  for (const row of rows) {
+    if (row.websiteStatus === null || row.websiteRulesVersion === WEBSITE_RULES_VERSION) continue
+    const decision = rederiveWebsiteDecision(row.id, row.websiteEvidence)
+    if (decision === null) {
+      incomplete.push(row.id)
+      continue
+    }
+    statusById.set(row.id, decision.status)
+    const key = JSON.stringify(decision)
+    const entry = byResult.get(key) ?? { rowIds: [], decision }
+    entry.rowIds.push(row.id)
+    byResult.set(key, entry)
+  }
+  return { updates: [...byResult.values()], incomplete, statusById }
 }
 
 export type ImportDeps = {
@@ -148,7 +187,19 @@ export function applyCategoryRule(
  * together and saved in batches. Returns rows written.
  */
 export async function rescoreStoredRows(store: NewBusinessStore, nowIso: string): Promise<number> {
-  const rows = await store.listRankableRows(NEW_BUSINESS_SOURCE)
+  const listed = await store.listRankableRows(NEW_BUSINESS_SOURCE)
+
+  // Results from an older website rules version are re-decided first, so the
+  // ranking below uses the current status.
+  const rederived = rederiveStoredWebsiteResults(listed)
+  if (rederived.updates.length > 0) {
+    await store.saveWebsiteRederivations(NEW_BUSINESS_SOURCE, rederived.updates)
+  }
+  const rows = listed.map((row) => {
+    const status = rederived.statusById.get(row.id)
+    return status === undefined ? row : { ...row, websiteStatus: status, websiteRulesVersion: WEBSITE_RULES_VERSION }
+  })
+
   const updates: RankUpdate[] = []
   for (const { group, result } of rankStoredRows(rows)) {
     for (const id of group.rowIds) {

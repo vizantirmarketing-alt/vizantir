@@ -30,6 +30,9 @@ export function WebsiteCell({ website }: { website: NewBusinessWebsite | null })
   return (
     <div className="min-w-0 space-y-1">
       <WebsiteStatusChip status={website.status} />
+      {website.status === 'unclear' && website.note !== null ? (
+        <p className="text-meta [overflow-wrap:anywhere]">{website.note}</p>
+      ) : null}
       {website.url !== null ? (
         <div>
           <ExternalLink href={website.url} />
@@ -57,7 +60,11 @@ export function WebsiteCell({ website }: { website: NewBusinessWebsite | null })
                     <li key={`${i}-${candidate.url}`}>
                       <q className="text-body">{candidate.excerpt}</q>{' '}
                       <ExternalLink href={candidate.url} />
-                      {candidate.accepted ? null : <span> · did not match this business</span>}
+                      {!candidate.accepted ? (
+                        <span> · did not match this business</span>
+                      ) : candidate.mention ? (
+                        <span> · mention, not the business&apos;s website</span>
+                      ) : null}
                     </li>
                   ))}
                 </ul>

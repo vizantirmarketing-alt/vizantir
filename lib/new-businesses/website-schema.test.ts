@@ -76,3 +76,24 @@ describe('parseCheckBody', () => {
     assert.ok(!parseCheckBody(body({ runId: RUN, businesses: [], finish: 'partial' })).ok);
   });
 });
+
+describe('businesses submitted without searching', () => {
+  const unsearched = { searches: [], candidates: [], outcome_claimed: 'unclear', note: "Licensed under a person's name; not searched." };
+
+  it('accepts zero searches when the outcome is unclear, there are no candidates, and a note says why', () => {
+    assert.ok(parseCheckBody(body({ runId: RUN, businesses: [business(unsearched)] })).ok);
+  });
+
+  it('rejects every other zero-search submission', () => {
+    for (const bad of [
+      { ...unsearched, outcome_claimed: 'none_found' },
+      { ...unsearched, outcome_claimed: 'found' },
+      { ...unsearched, note: undefined },
+      { ...unsearched, note: '   ' },
+      { ...unsearched, candidates: [candidate()] },
+    ]) {
+      const result = parseCheckBody(body({ runId: RUN, businesses: [business(bad)] }));
+      assert.ok(!result.ok && result.status === 400, JSON.stringify(bad));
+    }
+  });
+});

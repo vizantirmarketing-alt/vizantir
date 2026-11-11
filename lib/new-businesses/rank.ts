@@ -102,7 +102,7 @@ export type BusinessRankInput = {
 
 const WEBSITE_SIGNAL_LABELS: Record<WebsiteStatus, string> = {
   no_website: 'No website found',
-  social_only: 'Social or directory page only',
+  social_only: 'Listing or social page only',
   placeholder: 'Website is a placeholder',
   free_builder: 'Free builder page, no own domain',
   has_website: 'Has a website',
@@ -299,6 +299,10 @@ export function rankBusiness(business: BusinessRankInput, counts: RankCounts): R
 export type RankableStoredRow = RankInput & GroupInput & {
   /** Written to every row of a business by a website check; null when unchecked. */
   websiteStatus: WebsiteStatus | null
+  /** The rules version that produced websiteStatus; null when unchecked. */
+  websiteRulesVersion?: string | null
+  /** The stored website evidence, re-read when the rules version changes. */
+  websiteEvidence?: unknown
 }
 
 function isWebsiteStatus(value: unknown): value is WebsiteStatus {

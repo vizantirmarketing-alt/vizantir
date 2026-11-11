@@ -7,7 +7,7 @@
 import { periodKey, type Period } from '@/lib/new-businesses/discovery'
 import type { ImportCounts, ImportSummary, NewBusinessStore, RankUpdate, StoredRow } from '@/lib/new-businesses/import'
 import type { NewBusinessReviewWriter, ReviewPatch, ReviewTarget } from '@/lib/new-businesses/review'
-import type { WebsiteStatus } from '@/lib/new-businesses/website-rules'
+import type { WebsiteDecision, WebsiteStatus } from '@/lib/new-businesses/website-rules'
 
 export type MemoryImport = ImportSummary & { counts?: ImportCounts; error?: string | null }
 
@@ -77,6 +77,8 @@ export class MemoryNewBusinessStore implements NewBusinessStore {
       hasNote: row.ownerNote !== null,
       createdAt: row.createdAt,
       websiteStatus: row.website?.status ?? null,
+      websiteRulesVersion: row.website?.rulesVersion ?? null,
+      websiteEvidence: row.website?.evidence,
     }))
   }
   async saveRanks(_source: string, updates: RankUpdate[]) {
@@ -114,6 +116,17 @@ export class MemoryNewBusinessStore implements NewBusinessStore {
           }
         }
       },
+    }
+  }
+  async saveWebsiteRederivations(_source: string, updates: { rowIds: string[]; decision: WebsiteDecision }[]) {
+    const byId = new Map([...this.rows.values()].map((row) => [row.id, row]))
+    for (const { rowIds, decision } of updates) {
+      for (const id of rowIds) {
+        const row = byId.get(id)
+        if (row?.website) {
+          row.website = { ...row.website, status: decision.status, url: decision.url, evidence: decision.evidence, rulesVersion: decision.rulesVersion }
+        }
+      }
     }
   }
   byName(name: string) {

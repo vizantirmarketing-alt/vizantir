@@ -226,7 +226,7 @@ const WEBSITE_STATUS_TONE: Record<WebsiteChipStatus, StatusTone> = {
 
 const WEBSITE_STATUS_LABEL: Record<WebsiteChipStatus, string> = {
   no_website: 'No website',
-  social_only: 'Social page only',
+  social_only: 'Listing or social page only',
   placeholder: 'Placeholder',
   free_builder: 'Free builder page',
   has_website: 'Has website',
