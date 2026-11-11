@@ -207,6 +207,7 @@ export function fixtureInputs(overrides: Partial<RawBriefingInputs> = {}): RawBr
         { provider: 'gbp', label: 'Business Profile', lastRun: null, stale: false },
       ],
     },
+    newBusinesses: { ok: true, value: 4 },
     ...overrides,
   }
 }
@@ -217,6 +218,7 @@ export function quietInputs(): RawBriefingInputs {
     inquiries: { ok: true, value: { rows: [], total: 0, olderCount: 0 } },
     findings: { ok: true, value: { items: [], total: 0 } },
     runs: { ok: true, value: [] },
+    newBusinesses: { ok: true, value: 0 },
     sources: {
       ok: true,
       value: [{ provider: 'gsc', label: 'GSC', lastRun: { status: 'success', startedAt: '2026-11-10T09:30:00.000Z', administratorMessage: null }, stale: false }],

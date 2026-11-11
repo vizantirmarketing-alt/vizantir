@@ -70,3 +70,35 @@ describe('runBriefingCron', () => {
     assert.equal('action' in result.briefing ? result.briefing.action : null, 'generated');
   });
 });
+
+describe('runBriefingCron with the New Businesses import', () => {
+  it('imports before generating the briefing', async () => {
+    const order: string[] = [];
+    const briefings = new MemoryBriefingStore();
+    const deps = briefingDeps(briefings, '2026-12-15T15:00:00Z');
+    const loadSources = deps.sources.load;
+    deps.sources = { load: async (opts) => { order.push('briefing'); return loadSources(opts); } };
+    const result = await runBriefingCron({
+      campaigns: new MemoryCampaignStore([]),
+      briefing: deps,
+      importNewBusinesses: async () => {
+        order.push('import');
+        return { outcome: 'up_to_date', period: { year: 2026, month: 11 } };
+      },
+    });
+    assert.deepEqual(order, ['import', 'briefing']);
+    assert.deepEqual(result.newBusinesses, { outcome: 'up_to_date', period: { year: 2026, month: 11 } });
+  });
+
+  it('never lets an import failure break the briefing', async () => {
+    const result = await runBriefingCron({
+      campaigns: new MemoryCampaignStore([]),
+      briefing: briefingDeps(new MemoryBriefingStore(), '2026-12-15T15:00:00Z'),
+      importNewBusinesses: async () => {
+        throw new Error('boom');
+      },
+    });
+    assert.deepEqual(result.newBusinesses, { error: 'New business import failed' });
+    assert.equal('action' in result.briefing ? result.briefing.action : null, 'generated');
+  });
+});

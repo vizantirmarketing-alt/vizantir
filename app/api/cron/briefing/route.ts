@@ -2,11 +2,14 @@ import { createHash, timingSafeEqual } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { runBriefingCron } from '@/lib/briefing/cron';
 import { createCampaignStore, createGenerateDeps } from '@/lib/briefing/deps';
+import { createImportDeps } from '@/lib/new-businesses/deps';
+import { importLatestDaily } from '@/lib/new-businesses/import';
 
 export const dynamic = 'force-dynamic';
-// Queuing is a few small writes; the briefing makes one model call with a
-// 45 second timeout and one retry.
-export const maxDuration = 120;
+// Queuing is a few small writes; the New Businesses import downloads and
+// parses one PDF (60 second fetch timeout); the briefing makes one model call
+// with a 45 second timeout and one retry.
+export const maxDuration = 300;
 
 export async function GET(request: Request) {
   return handleCron(request);
@@ -34,6 +37,7 @@ async function handleCron(request: Request): Promise<NextResponse> {
     const result = await runBriefingCron({
       campaigns: createCampaignStore(),
       briefing: createGenerateDeps(),
+      importNewBusinesses: () => importLatestDaily(createImportDeps()),
     });
     // Outcomes go in the response body, not the log. Vercel does not surface
     // console.error from cron routes in the CLI or the dashboard log detail

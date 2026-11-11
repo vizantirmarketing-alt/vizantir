@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from 'react'
 
+import { TextAction } from '@/app/intel/_components/ui/TextAction'
+
 import { cancelProspectRun } from '@/app/intel/(app)/prospects/actions'
 
 export function ProspectRunCancelButton({ runId }: { runId: string }) {
@@ -10,9 +12,10 @@ export function ProspectRunCancelButton({ runId }: { runId: string }) {
 
   return (
     <span className="inline-flex items-center gap-2">
-      <button
-        type="button"
-        disabled={pending}
+      <TextAction
+        tone="destructive"
+        pending={pending}
+        pendingLabel="Cancelling…"
         onClick={() => {
           setError(null)
           startTransition(async () => {
@@ -22,10 +25,9 @@ export function ProspectRunCancelButton({ runId }: { runId: string }) {
             }
           })
         }}
-        className="text-sm text-meta transition-colors hover:text-foreground disabled:opacity-50"
       >
-        {pending ? 'Cancelling…' : 'Cancel'}
-      </button>
+        Cancel
+      </TextAction>
       {error !== null ? (
         <span className="text-sm text-warning-severe" role="alert">
           {error}

@@ -9,6 +9,7 @@ import 'server-only'
  *   fetchSyncHealth, isSyncRunStale       lib/intel/sync-health.ts
  *   fetchProspects, fetchRecentProspectRuns,
  *   fetchProspectsCreatedSince            lib/prospects/load.ts
+ *   countNewBusinessesSince               lib/new-businesses/load.ts
  * plus one select-only count below (countNewInquiriesBefore).
  * No sync function, detector, report generator or sender is called.
  *
@@ -25,6 +26,7 @@ import type { BriefingSources } from '@/lib/briefing/generate'
 import { fetchDecisionFeed } from '@/lib/intel/decisions/feed'
 import { fetchLeadDashboardStats, fetchLeads } from '@/lib/intel/leads'
 import { fetchSyncHealth, isSyncRunStale } from '@/lib/intel/sync-health'
+import { countNewBusinessesSince } from '@/lib/new-businesses/load'
 import { splitRunSummary } from '@/lib/prospects/ingest'
 import {
   fetchProspects,
@@ -58,7 +60,7 @@ async function attempt<T>(load: () => Promise<T | null>): Promise<LoaderResult<T
 
 export const briefingSources: BriefingSources = {
   async load({ windows }) {
-    const [newProspects, topUnreviewed, inquiries, inquiryStats, findings, runs, sources] =
+    const [newProspects, topUnreviewed, inquiries, inquiryStats, findings, runs, sources, newBusinesses] =
       await Promise.all([
         attempt(() => fetchProspectsCreatedSince(windows.prospectsSince, NEW_PROSPECTS_LIMIT)),
         attempt(async () => {
@@ -136,6 +138,7 @@ export const briefingSources: BriefingSources = {
               provider.lastRun !== null && isSyncRunStale(provider.lastRun.startedAt, health.nowMs),
           }))
         }),
+        attempt(() => countNewBusinessesSince(windows.prospectsSince)),
       ])
 
     const inputs: RawBriefingInputs = {
@@ -146,6 +149,7 @@ export const briefingSources: BriefingSources = {
       findings,
       runs,
       sources,
+      newBusinesses,
     }
     return inputs
   },

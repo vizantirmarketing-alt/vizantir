@@ -71,6 +71,7 @@ const ALL_SECTIONS: readonly (keyof RawBriefingInputs)[] = [
   'findings',
   'runs',
   'sources',
+  'newBusinesses',
 ]
 
 function allFailed(): RawBriefingInputs {
@@ -82,6 +83,7 @@ function allFailed(): RawBriefingInputs {
     findings: { ok: false },
     runs: { ok: false },
     sources: { ok: false },
+    newBusinesses: { ok: false },
   }
 }
 

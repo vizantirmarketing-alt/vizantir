@@ -13,6 +13,8 @@
  *     whatever that later run's final state
  *   - findings: at most 5, with the total
  *   - unreviewed prospects: never repeats one already listed as new
+ *   - new businesses: a count only, in enabled categories, never sent to the
+ *     model (buildUserMessage removes it)
  *
  * It is also the data minimisation boundary: inbound inquiries are reduced to
  * id, status, company and age, so no names, emails, phone numbers or message
@@ -152,6 +154,8 @@ export type RawBriefingInputs = {
   findings: LoaderResult<{ items: RawFinding[]; total: number }>
   runs: LoaderResult<RawRun[]>
   sources: LoaderResult<RawSource[]>
+  /** New businesses in enabled categories added in the prospect window. A count only. */
+  newBusinesses: LoaderResult<number>
 }
 
 /* ---------- Saved content ---------- */
@@ -220,6 +224,12 @@ export type BriefingContent = {
     notes: string[]
   }[]
   sources: SourceFreshness[]
+  /**
+   * New businesses in enabled categories since the previous briefing. A count
+   * only, never rows, and never sent to the model. Optional so briefings saved
+   * before this field existed still read.
+   */
+  newBusinesses?: { count: number; since: string }
   /** Sections whose loader failed. Rendered as unavailable, never as empty. */
   unavailable: string[]
   /** True when nothing needs attention. */
@@ -428,6 +438,7 @@ export function assembleBriefingContent(
   }))
   const sources = toSourceFreshness(take('sources', inputs.sources, []))
   const unhealthySources = sources.filter((s) => s.state !== 'ok')
+  const newBusinessCount = take('newBusinesses', inputs.newBusinesses, 0)
 
   const quiet =
     newProspects.length === 0 &&
@@ -435,6 +446,7 @@ export function assembleBriefingContent(
     findings.items.length === 0 &&
     runs.length === 0 &&
     unhealthySources.length === 0 &&
+    newBusinessCount === 0 &&
     unavailable.length === 0
 
   return {
@@ -464,6 +476,7 @@ export function assembleBriefingContent(
     },
     runs,
     sources,
+    newBusinesses: { count: newBusinessCount, since: windows.prospectsSince },
     unavailable,
     quiet,
     suggestedActions: null,

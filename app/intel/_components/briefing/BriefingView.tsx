@@ -249,6 +249,23 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
         )}
       </Panel>
 
+      {unavailable.has('newBusinesses') ? (
+        <Panel title="New businesses">
+          <Unavailable />
+        </Panel>
+      ) : content.newBusinesses !== undefined ? (
+        <Panel title="New businesses">
+          <p className="text-sm text-body">
+            {content.newBusinesses.count} new{' '}
+            {content.newBusinesses.count === 1 ? 'business' : 'businesses'} in enabled categories since{' '}
+            {formatShortDate(content.newBusinesses.since)}.{' '}
+            <Link href="/intel/new-businesses" className={actionLinkClass}>
+              Open New Businesses
+            </Link>
+          </p>
+        </Panel>
+      ) : null}
+
       <Panel title="Open Intel findings">
         {unavailable.has('findings') ? (
           <Unavailable />

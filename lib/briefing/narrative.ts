@@ -50,10 +50,15 @@ Rules:
 - If "quiet" is true, say plainly that nothing new needs attention and return no actions.`
 
 export function buildUserMessage(content: BriefingContent): string {
-  // suggestedActions is output, not input.
-  const { suggestedActions: _omit, ...context } = content
-  void _omit
-  return JSON.stringify(context)
+  // suggestedActions is output, not input. newBusinesses is never sent to the
+  // model, not even as a count.
+  const { suggestedActions: _actions, newBusinesses: _businesses, unavailable, ...context } = content
+  void _actions
+  void _businesses
+  return JSON.stringify({
+    ...context,
+    unavailable: unavailable.filter((section) => section !== 'newBusinesses'),
+  })
 }
 
 const outputSchema = z.strictObject({

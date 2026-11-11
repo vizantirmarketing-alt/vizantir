@@ -292,3 +292,19 @@ describe('unreviewed prospects', () => {
     assert.ok(!content.unavailable.includes('topUnreviewed'));
   });
 });
+
+describe('new businesses line', () => {
+  it('saves a count since the previous briefing but never sends it to the model', () => {
+    const content = assemble();
+    assert.deepEqual(content.newBusinesses, { count: 4, since: FIXTURE_WINDOWS.prospectsSince });
+    const sent = JSON.parse(buildUserMessage(content));
+    assert.ok(!('newBusinesses' in sent));
+  });
+
+  it('is not quiet when new businesses arrived, and marks a failed count unavailable without telling the model', () => {
+    assert.equal(assemble({ ...quietInputs(), newBusinesses: { ok: true, value: 2 } }).quiet, false);
+    const failed = assemble(fixtureInputs({ newBusinesses: { ok: false } }));
+    assert.ok(failed.unavailable.includes('newBusinesses'));
+    assert.ok(!JSON.parse(buildUserMessage(failed)).unavailable.includes('newBusinesses'));
+  });
+});

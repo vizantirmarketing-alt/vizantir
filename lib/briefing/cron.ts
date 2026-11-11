@@ -7,6 +7,7 @@
  */
 
 import { queueDueCampaigns, type CampaignStore, type QueueResult } from '@/lib/briefing/campaigns'
+import type { ImportResult } from '@/lib/new-businesses/import'
 import {
   generateScheduledBriefing,
   type GenerateDeps,
@@ -15,12 +16,15 @@ import {
 
 export type BriefingCronResult = {
   campaigns: QueueResult | { error: string }
+  newBusinesses?: ImportResult | { error: string }
   briefing: ScheduledBriefingResult | { error: string }
 }
 
 export async function runBriefingCron(deps: {
   campaigns: CampaignStore
   briefing: GenerateDeps
+  /** At most one New Businesses import attempt per local day. */
+  importNewBusinesses?: () => Promise<ImportResult>
 }): Promise<BriefingCronResult> {
   // A campaign failure must not block the briefing, and vice versa.
   let campaigns: BriefingCronResult['campaigns']
@@ -30,6 +34,17 @@ export async function runBriefingCron(deps: {
     campaigns = { error: 'Campaign queuing failed' }
   }
 
+  // Runs before the briefing so today's import is counted. A failure is
+  // recorded on the import row and never blocks the briefing.
+  let newBusinesses: BriefingCronResult['newBusinesses']
+  if (deps.importNewBusinesses) {
+    try {
+      newBusinesses = await deps.importNewBusinesses()
+    } catch {
+      newBusinesses = { error: 'New business import failed' }
+    }
+  }
+
   let briefing: BriefingCronResult['briefing']
   try {
     briefing = await generateScheduledBriefing(deps.briefing)
@@ -37,5 +52,5 @@ export async function runBriefingCron(deps: {
     briefing = { error: 'Briefing generation failed' }
   }
 
-  return { campaigns, briefing }
+  return newBusinesses === undefined ? { campaigns, briefing } : { campaigns, newBusinesses, briefing }
 }

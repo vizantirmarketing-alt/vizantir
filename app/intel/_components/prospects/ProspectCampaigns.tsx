@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type FormEvent } from 'react'
 
+import { TextAction } from '@/app/intel/_components/ui/TextAction'
 import { Button } from '@/components/ui/button'
 import type { Campaign } from '@/lib/briefing/campaigns'
 import {
@@ -171,25 +172,19 @@ function CampaignRow({ campaign }: { campaign: Campaign }) {
           <span className={campaign.active ? 'text-sm text-positive' : 'text-sm text-meta'}>
             {campaign.active ? 'Active' : 'Paused'}
           </span>
-          <button
-            type="button"
+          <TextAction
             disabled={pending}
+            aria-expanded={editing}
             onClick={() => {
               setError(null)
               setEditing((value) => !value)
             }}
-            className="text-sm text-meta transition-colors hover:text-foreground disabled:opacity-50"
           >
             {editing ? 'Close' : 'Edit'}
-          </button>
-          <button
-            type="button"
-            disabled={pending}
-            onClick={onToggle}
-            className="text-sm text-meta transition-colors hover:text-foreground disabled:opacity-50"
-          >
+          </TextAction>
+          <TextAction pending={pending} pendingLabel="Saving…" onClick={onToggle}>
             {campaign.active ? 'Pause' : 'Resume'}
-          </button>
+          </TextAction>
         </div>
       </div>
       <p className="mt-1 text-sm text-meta">

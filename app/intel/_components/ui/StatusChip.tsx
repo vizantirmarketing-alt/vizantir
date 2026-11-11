@@ -20,13 +20,14 @@ import {
 } from '@/lib/prospects/rubric'
 import { cn } from '@/lib/utils'
 
-type StatusTone = 'new' | 'active' | 'success' | 'muted'
+type StatusTone = 'new' | 'active' | 'success' | 'muted' | 'warning'
 
 const TONE_CLASS: Record<StatusTone, string> = {
   new: 'bg-cobalt-soft font-medium text-foreground',
   active: 'bg-black/[0.08] font-medium text-foreground',
   success: 'bg-positive-soft font-medium text-positive',
   muted: 'bg-black/[0.05] font-medium text-meta',
+  warning: 'bg-warning-severe-soft font-medium text-warning-severe',
 }
 
 const DOT_CLASS: Record<StatusTone, string> = {
@@ -34,6 +35,7 @@ const DOT_CLASS: Record<StatusTone, string> = {
   active: 'bg-meta',
   success: 'bg-positive',
   muted: 'bg-meta/40',
+  warning: 'bg-warning-severe',
 }
 
 function StatusChip({ tone, label }: { tone: StatusTone; label: string }) {
@@ -173,4 +175,20 @@ export function ProspectConfidenceChip({
       {CONFIDENCE_LABELS[confidence]} confidence
     </span>
   )
+}
+
+const IMPORT_STATE_TONE: Record<'importing' | 'imported' | 'failed', StatusTone> = {
+  importing: 'active',
+  imported: 'success',
+  failed: 'warning',
+}
+
+const IMPORT_STATE_LABEL: Record<'importing' | 'imported' | 'failed', string> = {
+  importing: 'Importing',
+  imported: 'Imported',
+  failed: 'Failed',
+}
+
+export function NewBusinessImportChip({ state }: { state: 'importing' | 'imported' | 'failed' }) {
+  return <StatusChip tone={IMPORT_STATE_TONE[state]} label={IMPORT_STATE_LABEL[state]} />
 }
