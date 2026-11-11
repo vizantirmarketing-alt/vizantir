@@ -308,3 +308,16 @@ describe('new businesses line', () => {
     assert.ok(!JSON.parse(buildUserMessage(failed)).unavailable.includes('newBusinesses'));
   });
 });
+
+describe('new businesses with no website found', () => {
+  it('adds the unreviewed no-website count to the saved content only', () => {
+    const content = assemble(fixtureInputs({ newBusinessesNoWebsite: { ok: true, value: 7 } }));
+    assert.deepEqual(content.newBusinesses, { count: 4, since: FIXTURE_WINDOWS.prospectsSince, noWebsite: 7 });
+    assert.ok(!('newBusinesses' in JSON.parse(buildUserMessage(content))));
+  });
+
+  it('leaves the field out when the count is not loaded', () => {
+    assert.deepEqual(assemble(fixtureInputs({ newBusinessesNoWebsite: { ok: false } })).newBusinesses, { count: 4, since: FIXTURE_WINDOWS.prospectsSince });
+    assert.deepEqual(assemble().newBusinesses, { count: 4, since: FIXTURE_WINDOWS.prospectsSince });
+  });
+});

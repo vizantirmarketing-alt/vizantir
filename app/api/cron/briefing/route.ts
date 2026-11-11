@@ -4,6 +4,8 @@ import { runBriefingCron } from '@/lib/briefing/cron';
 import { createCampaignStore, createGenerateDeps } from '@/lib/briefing/deps';
 import { createImportDeps } from '@/lib/new-businesses/deps';
 import { importLatestDaily } from '@/lib/new-businesses/import';
+import { queueCheckRun } from '@/lib/new-businesses/website-runs';
+import { createWebsiteCheckStore } from '@/lib/new-businesses/website-store';
 
 export const dynamic = 'force-dynamic';
 // Queuing is a few small writes; the New Businesses import downloads and
@@ -38,6 +40,7 @@ async function handleCron(request: Request): Promise<NextResponse> {
       campaigns: createCampaignStore(),
       briefing: createGenerateDeps(),
       importNewBusinesses: () => importLatestDaily(createImportDeps()),
+      queueWebsiteChecks: () => queueCheckRun(createWebsiteCheckStore(), 'schedule', new Date()),
     });
     // Outcomes go in the response body, not the log. Vercel does not surface
     // console.error from cron routes in the CLI or the dashboard log detail

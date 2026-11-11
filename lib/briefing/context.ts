@@ -156,6 +156,8 @@ export type RawBriefingInputs = {
   sources: LoaderResult<RawSource[]>
   /** New businesses in enabled categories added in the prospect window. A count only. */
   newBusinesses: LoaderResult<number>
+  /** Unreviewed businesses whose website check found no website. A count only. */
+  newBusinessesNoWebsite?: LoaderResult<number>
 }
 
 /* ---------- Saved content ---------- */
@@ -229,7 +231,7 @@ export type BriefingContent = {
    * only, never rows, and never sent to the model. Optional so briefings saved
    * before this field existed still read.
    */
-  newBusinesses?: { count: number; since: string }
+  newBusinesses?: { count: number; since: string; noWebsite?: number }
   /** Sections whose loader failed. Rendered as unavailable, never as empty. */
   unavailable: string[]
   /** True when nothing needs attention. */
@@ -476,7 +478,11 @@ export function assembleBriefingContent(
     },
     runs,
     sources,
-    newBusinesses: { count: newBusinessCount, since: windows.prospectsSince },
+    newBusinesses: {
+      count: newBusinessCount,
+      since: windows.prospectsSince,
+      ...(inputs.newBusinessesNoWebsite?.ok ? { noWebsite: inputs.newBusinessesNoWebsite.value } : {}),
+    },
     unavailable,
     quiet,
     suggestedActions: null,

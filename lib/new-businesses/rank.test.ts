@@ -25,9 +25,9 @@ function biz(overrides: Partial<BusinessRankInput> = {}): BusinessRankInput {
   return { name: 'Fictional Bakery LLC', address: '100 Example St', suite: null, phone: '(702) 555-0101', categories: [RESTAURANT], ...overrides };
 }
 
-describe('rankBusiness (version 2)', () => {
+describe('rankBusiness (version 3, v2 signals unchanged)', () => {
   it('is versioned and keeps every weight in one object', () => {
-    assert.equal(RANK_VERSION, 'new-business-rank-v2');
+    assert.equal(RANK_VERSION, 'new-business-rank-v3');
     assert.deepEqual(RANK_WEIGHTS.type, { high: 60, medium: 40, low: 15 });
     assert.equal(RANK_WEIGHTS.hasPhone, 5);
     assert.equal(RANK_WEIGHTS.localPhone, 10);
@@ -137,7 +137,7 @@ describe('rankStoredRows', () => {
     n += 1;
     return {
       id: `r${String(n).padStart(3, '0')}`, name: 'Fictional Bakery LLC', address: '100 Example St', suite: null, phone: '(702) 555-0101',
-      category: RESTAURANT, period: '2026-10', reviewStatus: 'unreviewed', reviewedAt: null, hasNote: false, createdAt: `2026-11-0${(n % 9) + 1}T00:00:00Z`,
+      category: RESTAURANT, period: '2026-10', reviewStatus: 'unreviewed', reviewedAt: null, hasNote: false, createdAt: `2026-11-0${(n % 9) + 1}T00:00:00Z`, websiteStatus: null,
       ...overrides,
     };
   }
@@ -197,5 +197,46 @@ describe('reasonLine', () => {
     const line = reasonLine(rankBusiness(biz({ categories: [RESTAURANT, 'Retail - Group 1'] }), ALONE).signals);
     assert.ok(!/phone number on the license|local 702/i.test(line));
     assert.ok(!/holds 2 licenses/i.test(line));
+  });
+});
+
+describe('rank version 3: website signal', () => {
+  const local = biz();
+
+  it('adds the website weight only when a result exists', () => {
+    assert.equal(rankBusiness(local, ALONE).score, 75);
+    assert.equal(rankBusiness({ ...local, website: null }, ALONE).score, 75);
+    const expected = { no_website: 95, social_only: 90, placeholder: 90, free_builder: 85, has_website: 45, unclear: 75 } as const;
+    for (const [status, score] of Object.entries(expected)) {
+      assert.equal(rankBusiness({ ...local, website: status as keyof typeof expected }, ALONE).score, score, status);
+    }
+    assert.deepEqual(RANK_WEIGHTS.website, { no_website: 20, social_only: 15, placeholder: 15, free_builder: 10, has_website: -30, unclear: 0 });
+  });
+
+  it('clamps to 100 and moves tiers as before', () => {
+    const top = rankBusiness({ ...biz({ categories: [RESTAURANT, 'Retail - Group 1'] }), website: 'no_website' }, ALONE);
+    assert.equal(top.score, 100);
+    assert.equal(top.tier, 'likely');
+    assert.equal(rankBusiness({ ...local, website: 'has_website' }, ALONE).tier, 'possible');
+  });
+
+  it('leads the reason line with the website finding', () => {
+    assert.equal(reasonLine(rankBusiness({ ...local, website: 'no_website' }, ALONE).signals), 'No website found · Restaurant license');
+    assert.equal(
+      reasonLine(rankBusiness({ ...biz({ phone: '213-555-0101' }), website: 'social_only' }, ALONE).signals),
+      'Social or directory page only · Restaurant license · phone number from outside Las Vegas (area code 213), often a franchise or corporate office',
+    );
+    assert.equal(reasonLine(rankBusiness(local, ALONE).signals), 'Restaurant license', 'unchecked businesses are unchanged');
+  });
+
+  it('takes the website result from any row of a grouped business', () => {
+    let k = 0;
+    const row = (overrides: Partial<RankableStoredRow>): RankableStoredRow => ({
+      id: `w${++k}`, name: 'Fictional Bakery LLC', address: '100 Example St', suite: null, phone: '(702) 555-0101', category: RESTAURANT,
+      period: '2026-10', reviewStatus: 'unreviewed', reviewedAt: null, hasNote: false, createdAt: `2026-11-0${k}T00:00:00Z`, websiteStatus: null, ...overrides,
+    });
+    const [ranked] = rankStoredRows([row({}), row({ category: 'Retail - Group 1', websiteStatus: 'no_website' })]);
+    assert.equal(ranked!.result.score, 100);
+    assert.ok(ranked!.result.signals.some((s) => s.key === 'website'));
   });
 });

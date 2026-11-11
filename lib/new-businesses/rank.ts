@@ -2,9 +2,11 @@
  * Deterministic lead ranking for stored new businesses. Pure: no I/O, no
  * clock, no randomness. The same rows always produce the same scores.
  *
- * Version 2 ranks businesses, not license rows: rows are grouped by
+ * Businesses, not license rows, are ranked: rows are grouped by
  * lib/new-businesses/group.ts, each business is scored once from all of its
- * licenses, and every row of the business carries that score.
+ * licenses, and every row of the business carries that score. Version 3 adds
+ * the website check result (lib/new-businesses/website-rules.ts) when there
+ * is one.
  *
  * The score only orders the list. It never hides, deletes, skips or rejects
  * a business.
@@ -16,8 +18,9 @@
 import { categoryShortName, categoryTier, type CategoryTier } from '@/lib/new-businesses/category-tiers'
 import { groupBusinesses, type BusinessGroup, type GroupInput } from '@/lib/new-businesses/group'
 import { isLocalPhone, locationKey, normalizeAddress, normalizeName, normalizePhone } from '@/lib/new-businesses/normalize'
+import { WEBSITE_STATUSES, type WebsiteStatus } from '@/lib/new-businesses/website-rules'
 
-export const RANK_VERSION = 'new-business-rank-v2'
+export const RANK_VERSION = 'new-business-rank-v3'
 
 export const RANK_WEIGHTS = {
   type: { high: 60, medium: 40, low: 15 } satisfies Record<CategoryTier, number>,
@@ -30,6 +33,15 @@ export const RANK_WEIGHTS = {
   sharedLocation: -20,
   addressOrHoldingName: -35,
   storeNumber: -25,
+  /** Applied only when a website check result exists. */
+  website: {
+    no_website: 20,
+    social_only: 15,
+    placeholder: 15,
+    free_builder: 10,
+    has_website: -30,
+    unclear: 0,
+  } satisfies Record<WebsiteStatus, number>,
   /** Distinct categories one business holds to count as several licenses. */
   severalLicensesMin: 2,
   /** Distinct business names on one phone number to count as a filing service pattern. */
@@ -52,6 +64,7 @@ export const LEAD_TIER_LABELS: Record<LeadTier, string> = {
 }
 
 export type RankSignalKey =
+  | 'website'
   | 'type'
   | 'has_phone'
   | 'local_phone'
@@ -83,6 +96,17 @@ export type BusinessRankInput = {
   suite: string | null
   phone: string | null
   categories: readonly string[]
+  /** The website check result, or null when the business has not been checked. */
+  website?: WebsiteStatus | null
+}
+
+const WEBSITE_SIGNAL_LABELS: Record<WebsiteStatus, string> = {
+  no_website: 'No website found',
+  social_only: 'Social or directory page only',
+  placeholder: 'Website is a placeholder',
+  free_builder: 'Free builder page, no own domain',
+  has_website: 'Has a website',
+  unclear: 'Website check unclear',
 }
 
 /** Counts for one business, taken from every stored row. */
@@ -263,12 +287,23 @@ export function rankBusiness(business: BusinessRankInput, counts: RankCounts): R
     signals.push({ key: 'store_number', label: 'Name has a store number, so likely a chain location', points: w.storeNumber })
   }
 
+  if (business.website !== undefined && business.website !== null) {
+    signals.push({ key: 'website', label: WEBSITE_SIGNAL_LABELS[business.website], points: w.website[business.website] })
+  }
+
   const raw = signals.reduce((sum, signal) => sum + signal.points, 0)
   const score = Math.max(0, Math.min(100, raw))
   return { score, tier: tierForScore(score), signals }
 }
 
-export type RankableStoredRow = RankInput & GroupInput
+export type RankableStoredRow = RankInput & GroupInput & {
+  /** Written to every row of a business by a website check; null when unchecked. */
+  websiteStatus: WebsiteStatus | null
+}
+
+function isWebsiteStatus(value: unknown): value is WebsiteStatus {
+  return WEBSITE_STATUSES.some((status) => status === value)
+}
 
 export type RankedBusiness = { group: BusinessGroup; result: RankResult }
 
@@ -290,6 +325,7 @@ export function rankStoredRows(rows: readonly RankableStoredRow[]): RankedBusine
       suite: primary.suite,
       phone,
       categories: group.categories,
+      website: members.map((row) => row.websiteStatus).find(isWebsiteStatus) ?? null,
     }
     return { group, result: rankBusiness(business, countsFor(counts, business)) }
   })
@@ -307,11 +343,13 @@ const DISTINGUISHING: ReadonlySet<RankSignalKey> = new Set([
 ])
 
 /**
- * The reason line under a business name: its type first, then only what
- * distinguishes it, largest effect first. A typical local shop reads just
- * "Restaurant license".
+ * The reason line under a business name: the website finding first when
+ * there is one, then the type, then only what distinguishes the business,
+ * largest effect first. A typical unchecked local shop reads just
+ * "Restaurant license"; a checked one "No website found · Restaurant license".
  */
 export function reasonLine(signals: readonly RankSignal[], limit = 2): string {
+  const website = signals.find((signal) => signal.key === 'website')
   const type = signals.find((signal) => signal.key === 'type')
   const extra = signals
     .map((signal, index) => ({ signal, index }))
@@ -319,8 +357,11 @@ export function reasonLine(signals: readonly RankSignal[], limit = 2): string {
     .sort((a, b) => Math.abs(b.signal.points) - Math.abs(a.signal.points) || a.index - b.index)
     .slice(0, limit)
     .map(({ signal }) => signal.label)
-  const parts = type ? [type.label, ...extra] : extra
-  return parts.map((part, i) => (i === 0 ? part : lowerFirst(part))).join(' · ')
+  // The website finding and the type keep their capitals ("No website found ·
+  // Restaurant license"); the distinguishing parts read as a continuation.
+  const lead = [website?.label, type?.label].filter((part): part is string => part !== undefined)
+  const rest = extra.map((part, i) => (lead.length === 0 && i === 0 ? part : lowerFirst(part)))
+  return [...lead, ...rest].join(' · ')
 }
 
 function lowerFirst(text: string): string {

@@ -7,6 +7,7 @@
 import { periodKey, type Period } from '@/lib/new-businesses/discovery'
 import type { ImportCounts, ImportSummary, NewBusinessStore, RankUpdate, StoredRow } from '@/lib/new-businesses/import'
 import type { NewBusinessReviewWriter, ReviewPatch, ReviewTarget } from '@/lib/new-businesses/review'
+import type { WebsiteStatus } from '@/lib/new-businesses/website-rules'
 
 export type MemoryImport = ImportSummary & { counts?: ImportCounts; error?: string | null }
 
@@ -18,6 +19,8 @@ export type MemoryRow = StoredRow & {
   ownerNote: string | null
   createdAt: string
   rank: Omit<RankUpdate, 'id'> | null
+  website: { status: WebsiteStatus; url: string | null; evidence: unknown; rulesVersion: string; checkedAt: string } | null
+  websiteCheckRunId: string | null
 }
 
 export class MemoryNewBusinessStore implements NewBusinessStore {
@@ -55,7 +58,7 @@ export class MemoryNewBusinessStore implements NewBusinessStore {
       const key = `${periodKey(period)}|${row.dedupeKey}`
       if (this.rows.has(key)) continue
       const id = `row-${String(this.rows.size + 1).padStart(4, '0')}`
-      this.rows.set(key, { ...row, id, period, reviewStatus: 'unreviewed', reviewedAt: null, ownerNote: null, createdAt: nowIso, rank: null })
+      this.rows.set(key, { ...row, id, period, reviewStatus: 'unreviewed', reviewedAt: null, ownerNote: null, createdAt: nowIso, rank: null, website: null, websiteCheckRunId: null })
       inserted += 1
     }
     return inserted
@@ -73,6 +76,7 @@ export class MemoryNewBusinessStore implements NewBusinessStore {
       reviewedAt: row.reviewedAt,
       hasNote: row.ownerNote !== null,
       createdAt: row.createdAt,
+      websiteStatus: row.website?.status ?? null,
     }))
   }
   async saveRanks(_source: string, updates: RankUpdate[]) {

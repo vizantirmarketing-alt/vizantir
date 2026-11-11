@@ -5,6 +5,10 @@ import { CategoryToggles } from '@/app/intel/_components/new-businesses/Category
 import { ImportLatestButton, ImportRow } from '@/app/intel/_components/new-businesses/ImportControls'
 import { NewBusinessFilters } from '@/app/intel/_components/new-businesses/NewBusinessFilters'
 import { NewBusinessesTable } from '@/app/intel/_components/new-businesses/NewBusinessesTable'
+import { WebsiteCheckButton } from '@/app/intel/_components/new-businesses/WebsiteCheckControls'
+import { WebsiteCheckRunChip } from '@/app/intel/_components/ui/StatusChip'
+import { fetchCheckRuns, type CheckRunRow } from '@/lib/new-businesses/website-store'
+import { splitRunSummary } from '@/lib/prospects/ingest'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
@@ -49,19 +53,76 @@ function tierCountLine(listTotal: number, tiers: NewBusinessTierCounts | null): 
     tiers.mode === 'grouped'
       ? `${plural(tiers.businesses, 'business', 'businesses')} from ${plural(tiers.licenseRecords, 'license record', 'license records')}`
       : plural(tiers.licenseRecords, 'license record', 'license records')
-  return [head, `${format(tiers.likely)} likely`, `${format(tiers.possible)} possible`, `${format(tiers.low)} low`].join(' · ')
+  return [
+    head,
+    `${format(tiers.likely)} likely`,
+    `${format(tiers.possible)} possible`,
+    `${format(tiers.low)} low`,
+    `${format(tiers.checked)} checked`,
+    `${format(tiers.noWebsite)} no website`,
+  ].join(' · ')
+}
+
+/** The last few website-check runs, with the prospect runs' note and error lines. */
+function CheckRunList({ runs }: { runs: CheckRunRow[] | null }) {
+  if (runs === null) {
+    return (
+      <p className="intel-body text-body" role="alert">
+        Unable to load website checks. Try again shortly.
+      </p>
+    )
+  }
+  if (runs.length === 0) {
+    return <p className="intel-body text-body">No website checks yet.</p>
+  }
+  return (
+    <ul className="divide-y divide-black/8 intel-body">
+      {runs.map((run) => {
+        const { errors, notes } = splitRunSummary(run.errorSummary)
+        const when = run.finishedAt ?? run.claimedAt ?? run.requestedAt
+        return (
+          <li key={run.id} className="min-w-0 py-2 first:pt-0 last:pb-0">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+              <WebsiteCheckRunChip state={run.state} />
+              <span className="text-body">
+                {run.businessCount > 0
+                  ? `${run.checked} of ${run.businessCount} checked${run.rejected > 0 ? ` · ${run.rejected} rejected` : ''}`
+                  : run.state === 'requested'
+                    ? 'Waiting for the research runner'
+                    : 'No businesses'}
+              </span>
+              <span className="intel-secondary text-meta">
+                {run.source === 'schedule' ? 'Scheduled' : 'Requested'} · {formatLocalTimestamp(when)}
+              </span>
+            </div>
+            {notes.map((note) => (
+              <p key={`n-${note}`} className="mt-0.5 intel-secondary text-meta [overflow-wrap:anywhere]">
+                {note}
+              </p>
+            ))}
+            {errors.map((error) => (
+              <p key={`e-${error}`} className="mt-0.5 intel-secondary text-warning-severe [overflow-wrap:anywhere]">
+                {error}
+              </p>
+            ))}
+          </li>
+        )
+      })}
+    </ul>
+  )
 }
 
 export default async function NewBusinessesPage({ searchParams }: PageProps) {
   await requireIntelUser()
 
   const params = parseNewBusinessesListParams(await searchParams)
-  const [list, categories, imports, options, tiers] = await Promise.all([
+  const [list, categories, imports, options, tiers, checkRuns] = await Promise.all([
     fetchNewBusinesses(params),
     fetchCategories(),
     fetchImports(),
     fetchNewBusinessFilterOptions(),
     fetchNewBusinessTierCounts(params),
+    fetchCheckRuns(5),
   ])
   const periods = (imports ?? [])
     .filter((i) => i.state === 'imported')
@@ -117,6 +178,11 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
           )}
         </Panel>
       </div>
+
+      <Panel title="Website checks">
+        <WebsiteCheckButton />
+        <CheckRunList runs={checkRuns} />
+      </Panel>
 
       <Panel title="Filters">
         <NewBusinessFilters

@@ -92,7 +92,7 @@ export const briefingContentSchema = z.object({
     }),
   ),
   sources: z.array(sourceSchema),
-  newBusinesses: z.object({ count: z.number(), since: z.string() }).optional(),
+  newBusinesses: z.object({ count: z.number(), since: z.string(), noWebsite: z.number().optional() }).optional(),
   unavailable: z.array(z.string()),
   quiet: z.boolean(),
   suggestedActions: z.array(z.object({ recordId: z.string(), text: z.string() })).nullable(),

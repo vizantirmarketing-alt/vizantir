@@ -21,6 +21,24 @@ export const PHONE_LABEL = 'Phone on public license record'
 export const NEW_BUSINESS_LEAD_FILTERS = ['likely', 'possible', 'low'] as const
 export type NewBusinessLeadFilter = (typeof NEW_BUSINESS_LEAD_FILTERS)[number]
 
+/** Website check statuses, as in lib/new-businesses/website-rules.ts, plus "unchecked". */
+export const NEW_BUSINESS_WEBSITE_FILTERS = ['no_website', 'social_only', 'placeholder', 'free_builder', 'has_website', 'unclear', 'unchecked'] as const
+export type NewBusinessWebsiteFilter = (typeof NEW_BUSINESS_WEBSITE_FILTERS)[number]
+
+export const NEW_BUSINESS_WEBSITE_FILTER_LABELS: Record<NewBusinessWebsiteFilter, string> = {
+  no_website: 'No website',
+  social_only: 'Social page only',
+  placeholder: 'Placeholder',
+  free_builder: 'Free builder page',
+  has_website: 'Has website',
+  unclear: 'Unclear',
+  unchecked: 'Not checked',
+}
+
+export function isNewBusinessWebsiteFilter(value: unknown): value is NewBusinessWebsiteFilter {
+  return NEW_BUSINESS_WEBSITE_FILTERS.some((status) => status === value)
+}
+
 export function isNewBusinessLeadFilter(value: unknown): value is NewBusinessLeadFilter {
   return NEW_BUSINESS_LEAD_FILTERS.some((tier) => tier === value)
 }
@@ -30,6 +48,8 @@ export type NewBusinessesListParams = {
   review: NewBusinessReviewStatus | 'all'
   /** Lead tier filter. Default all: the score orders the list, it never hides rows. */
   lead: NewBusinessLeadFilter | 'all'
+  /** Website check filter. Default all. */
+  website: NewBusinessWebsiteFilter | 'all'
   category: string | null
   city: string | null
   zip: string | null
@@ -64,11 +84,13 @@ function text(value: string | undefined, max = 200): string | null {
 export function parseNewBusinessesListParams(search: NewBusinessesSearchParams): NewBusinessesListParams {
   const review = first(search.review)
   const lead = first(search.lead)
+  const website = first(search.website)
   const period = text(first(search.period), 7)
   const page = Number(first(search.page))
   return {
     review: isNewBusinessReviewStatus(review) ? review : 'unreviewed',
     lead: isNewBusinessLeadFilter(lead) ? lead : 'all',
+    website: isNewBusinessWebsiteFilter(website) ? website : 'all',
     category: text(first(search.category)),
     city: text(first(search.city)),
     zip: text(first(search.zip), 10),
@@ -81,6 +103,7 @@ export function newBusinessesListHref(params: NewBusinessesListParams): string {
   const query = new URLSearchParams()
   if (params.review !== 'unreviewed') query.set('review', params.review)
   if (params.lead !== 'all') query.set('lead', params.lead)
+  if (params.website !== 'all') query.set('website', params.website)
   if (params.category !== null) query.set('category', params.category)
   if (params.city !== null) query.set('city', params.city)
   if (params.zip !== null) query.set('zip', params.zip)
@@ -94,6 +117,7 @@ export function newBusinessesFiltersActive(params: NewBusinessesListParams): boo
   return (
     params.review !== 'unreviewed' ||
     params.lead !== 'all' ||
+    params.website !== 'all' ||
     params.category !== null ||
     params.city !== null ||
     params.zip !== null ||

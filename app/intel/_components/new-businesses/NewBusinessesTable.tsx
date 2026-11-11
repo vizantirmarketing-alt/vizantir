@@ -1,4 +1,5 @@
 import { NewBusinessRowControls } from '@/app/intel/_components/new-businesses/NewBusinessRowControls'
+import { WebsiteCell } from '@/app/intel/_components/new-businesses/WebsiteCell'
 import { NewBusinessLeadChip } from '@/app/intel/_components/ui/StatusChip'
 import { formatPeriod } from '@/lib/new-businesses/discovery'
 import type { NewBusinessRow } from '@/lib/new-businesses/load'
@@ -25,6 +26,7 @@ export function NewBusinessesTable({ rows }: { rows: NewBusinessRow[] }) {
             <th className="intel-th pr-3">Licenses</th>
             {/* Phone sits under the address to keep the table within its panel at 1280px. */}
             <th className="intel-th pr-3">Address · {PHONE_LABEL.toLowerCase()}</th>
+            <th className="intel-th pr-3">Website</th>
             <th className="intel-th pr-3">Lead</th>
             <th className="intel-th">Review</th>
           </tr>
@@ -49,6 +51,9 @@ export function NewBusinessesTable({ rows }: { rows: NewBusinessRow[] }) {
               <td className="min-w-44 py-2.5 pr-3 text-body">
                 <span className="block">{address(row)}</span>
                 <span className="block whitespace-nowrap">{row.phone ?? 'No phone'}</span>
+              </td>
+              <td className="min-w-36 max-w-56 py-2.5 pr-3">
+                <WebsiteCell website={row.website} />
               </td>
               <td className="whitespace-nowrap py-2.5 pr-3">
                 {row.leadTier !== null && row.leadScore !== null ? (

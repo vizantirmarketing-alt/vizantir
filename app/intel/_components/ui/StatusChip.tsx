@@ -211,3 +211,50 @@ const LEAD_TIER_LABEL: Record<'likely' | 'possible' | 'low', string> = {
 export function NewBusinessLeadChip({ tier }: { tier: 'likely' | 'possible' | 'low' }) {
   return <StatusChip tone={LEAD_TIER_TONE[tier]} label={LEAD_TIER_LABEL[tier]} />
 }
+
+type WebsiteChipStatus = 'no_website' | 'social_only' | 'placeholder' | 'free_builder' | 'has_website' | 'unclear'
+
+// The statuses that make a business a stronger lead stand out in cobalt.
+const WEBSITE_STATUS_TONE: Record<WebsiteChipStatus, StatusTone> = {
+  no_website: 'new',
+  social_only: 'new',
+  placeholder: 'new',
+  free_builder: 'active',
+  has_website: 'muted',
+  unclear: 'muted',
+}
+
+const WEBSITE_STATUS_LABEL: Record<WebsiteChipStatus, string> = {
+  no_website: 'No website',
+  social_only: 'Social page only',
+  placeholder: 'Placeholder',
+  free_builder: 'Free builder page',
+  has_website: 'Has website',
+  unclear: 'Unclear',
+}
+
+export function WebsiteStatusChip({ status }: { status: WebsiteChipStatus }) {
+  return <StatusChip tone={WEBSITE_STATUS_TONE[status]} label={WEBSITE_STATUS_LABEL[status]} />
+}
+
+type CheckRunChipState = 'requested' | 'claimed' | 'completed' | 'failed' | 'cancelled'
+
+const CHECK_RUN_TONE: Record<CheckRunChipState, StatusTone> = {
+  requested: 'new',
+  claimed: 'active',
+  completed: 'success',
+  failed: 'warning',
+  cancelled: 'muted',
+}
+
+const CHECK_RUN_LABEL: Record<CheckRunChipState, string> = {
+  requested: 'Waiting',
+  claimed: 'In progress',
+  completed: 'Completed',
+  failed: 'Failed',
+  cancelled: 'Cancelled',
+}
+
+export function WebsiteCheckRunChip({ state }: { state: CheckRunChipState }) {
+  return <StatusChip tone={CHECK_RUN_TONE[state]} label={CHECK_RUN_LABEL[state]} />
+}

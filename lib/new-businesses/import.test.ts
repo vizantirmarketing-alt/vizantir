@@ -131,7 +131,7 @@ describe('lead ranking during import', () => {
     assert.ok(result.outcome === 'imported' && result.rankError === undefined);
     for (const row of store.rows.values()) {
       assert.ok(row.rank !== null, row.name);
-      assert.equal(row.rank.version, 'new-business-rank-v2');
+      assert.equal(row.rank.version, 'new-business-rank-v3');
       assert.ok(row.rank.score >= 0 && row.rank.score <= 100);
     }
     assert.equal(store.byName('FICTIONAL BAKERY LLC')?.rank?.tier, 'likely');

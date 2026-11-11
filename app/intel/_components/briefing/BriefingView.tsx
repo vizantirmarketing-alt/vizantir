@@ -259,6 +259,9 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
             {content.newBusinesses.count} new{' '}
             {content.newBusinesses.count === 1 ? 'business' : 'businesses'} in enabled categories since{' '}
             {formatShortDate(content.newBusinesses.since)}.{' '}
+            {content.newBusinesses.noWebsite !== undefined && content.newBusinesses.noWebsite > 0
+              ? `${content.newBusinesses.noWebsite} unreviewed ${content.newBusinesses.noWebsite === 1 ? 'business has' : 'businesses have'} no website found. `
+              : null}
             <Link href="/intel/new-businesses" className={actionLinkClass}>
               Open New Businesses
             </Link>

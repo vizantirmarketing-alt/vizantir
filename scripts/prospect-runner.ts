@@ -5,6 +5,8 @@
  *   pnpm prospect:runner claim
  *   pnpm prospect:runner ingest <batch.json>
  *   pnpm prospect:runner measure <domain>
+ *   pnpm prospect:runner nb-claim               (New Businesses website checks)
+ *   pnpm prospect:runner nb-ingest <batch.json>
  *
  * Token: PROSPECT_INGEST_TOKEN from the environment, else from .env.local
  * (only that one key is read). It is never printed.
@@ -22,7 +24,8 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { runRunnerCli, type RunnerFetch } from '../lib/prospects/runner-client'
+import { runRunnerCli, type RunnerDeps, type RunnerFetch } from '../lib/prospects/runner-client'
+import { isWebsiteCheckCommand, runWebsiteCheckCli } from '../lib/new-businesses/website-runner-client'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const ENV_FILE = join(ROOT, '.env.local')
@@ -39,13 +42,16 @@ const runnerFetch: RunnerFetch = (url, init) =>
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   })
 
-void runRunnerCli(process.argv.slice(2), {
+const deps: RunnerDeps = {
   fetch: runnerFetch,
   env: process.env,
   readEnvFile: () => (existsSync(ENV_FILE) ? readFileSync(ENV_FILE, 'utf8') : null),
   readFile: (path) => readFileSync(path, 'utf8'),
   stdout: (line) => process.stdout.write(`${line}\n`),
   stderr: (line) => process.stderr.write(`${line}\n`),
-}).then((code) => {
+}
+
+const argv = process.argv.slice(2)
+void (isWebsiteCheckCommand(argv[0]) ? runWebsiteCheckCli(argv, deps) : runRunnerCli(argv, deps)).then((code) => {
   process.exitCode = code
 })

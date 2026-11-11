@@ -8,6 +8,7 @@
 
 import { queueDueCampaigns, type CampaignStore, type QueueResult } from '@/lib/briefing/campaigns'
 import type { ImportResult } from '@/lib/new-businesses/import'
+import type { QueueCheckResult } from '@/lib/new-businesses/website-runs'
 import {
   generateScheduledBriefing,
   type GenerateDeps,
@@ -17,6 +18,7 @@ import {
 export type BriefingCronResult = {
   campaigns: QueueResult | { error: string }
   newBusinesses?: ImportResult | { error: string }
+  websiteChecks?: QueueCheckResult | { error: string }
   briefing: ScheduledBriefingResult | { error: string }
 }
 
@@ -25,6 +27,11 @@ export async function runBriefingCron(deps: {
   briefing: GenerateDeps
   /** At most one New Businesses import attempt per local day. */
   importNewBusinesses?: () => Promise<ImportResult>
+  /**
+   * Queues one New Businesses website-check run when unchecked businesses
+   * remain and no check run is requested or claimed.
+   */
+  queueWebsiteChecks?: () => Promise<QueueCheckResult>
 }): Promise<BriefingCronResult> {
   // A campaign failure must not block the briefing, and vice versa.
   let campaigns: BriefingCronResult['campaigns']
@@ -45,6 +52,17 @@ export async function runBriefingCron(deps: {
     }
   }
 
+  // After the import, so newly imported businesses can be queued; before the
+  // briefing. A failure never blocks the import or the briefing.
+  let websiteChecks: BriefingCronResult['websiteChecks']
+  if (deps.queueWebsiteChecks) {
+    try {
+      websiteChecks = await deps.queueWebsiteChecks()
+    } catch {
+      websiteChecks = { error: 'Website check queuing failed' }
+    }
+  }
+
   let briefing: BriefingCronResult['briefing']
   try {
     briefing = await generateScheduledBriefing(deps.briefing)
@@ -52,5 +70,10 @@ export async function runBriefingCron(deps: {
     briefing = { error: 'Briefing generation failed' }
   }
 
-  return newBusinesses === undefined ? { campaigns, briefing } : { campaigns, newBusinesses, briefing }
+  return {
+    campaigns,
+    ...(newBusinesses === undefined ? {} : { newBusinesses }),
+    ...(websiteChecks === undefined ? {} : { websiteChecks }),
+    briefing,
+  }
 }

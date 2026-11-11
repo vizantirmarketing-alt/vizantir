@@ -12,6 +12,7 @@ import { z } from 'zod'
 import { NEW_BUSINESS_SOURCE, type Period } from '@/lib/new-businesses/discovery'
 import type { ImportSummary, NewBusinessStore, RankableRow, StoredRow } from '@/lib/new-businesses/import'
 import type { NewBusinessReviewWriter } from '@/lib/new-businesses/review'
+import { WEBSITE_STATUSES } from '@/lib/new-businesses/website-rules'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 export class NewBusinessStoreError extends Error {
@@ -40,6 +41,7 @@ const rankableRowSchema = z.object({
   reviewed_at: z.string().nullable(),
   owner_note: z.string().nullable(),
   created_at: z.string(),
+  website_status: z.enum(WEBSITE_STATUSES).nullable().catch(null),
 })
 type RankableDbRow = z.infer<typeof rankableRowSchema>
 
@@ -197,7 +199,7 @@ export function createNewBusinessStore(
         const { data, error } = await client
           .from('new_businesses')
           .select(
-            'id, source, period_year, period_month, dedupe_key, business_name, address, suite, phone, category, review_status, reviewed_at, owner_note, created_at',
+            'id, source, period_year, period_month, dedupe_key, business_name, address, suite, phone, category, review_status, reviewed_at, owner_note, created_at, website_status',
           )
           .eq('source', source)
           .order('id', { ascending: true })
@@ -223,6 +225,7 @@ export function createNewBusinessStore(
           reviewedAt: row.reviewed_at,
           hasNote: row.owner_note !== null && row.owner_note.trim().length > 0,
           createdAt: row.created_at,
+          websiteStatus: row.website_status,
         }),
       )
     },

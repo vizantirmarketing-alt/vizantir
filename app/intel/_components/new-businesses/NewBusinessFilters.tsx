@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import { Select } from '@/components/ui/select'
 import {
   NEW_BUSINESS_LEAD_FILTERS,
+  NEW_BUSINESS_WEBSITE_FILTERS,
+  NEW_BUSINESS_WEBSITE_FILTER_LABELS,
   NEW_BUSINESS_REVIEW_LABELS,
   NEW_BUSINESS_REVIEW_STATUSES,
   newBusinessesFiltersActive,
@@ -29,6 +31,7 @@ function hrefFromForm(form: HTMLFormElement): string {
   const parsed = parseNewBusinessesListParams({
     review: readFormString(data, 'review'),
     lead: readFormString(data, 'lead'),
+    website: readFormString(data, 'website'),
     category: readFormString(data, 'category'),
     city: readFormString(data, 'city'),
     zip: readFormString(data, 'zip'),
@@ -111,7 +114,7 @@ export function NewBusinessFilters({
         router.push(hrefFromForm(event.currentTarget))
       }}
     >
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-8">
         <div>
           <label htmlFor="nb-review" className="mb-2 block intel-body font-medium text-body">
             Review status
@@ -137,6 +140,14 @@ export function NewBusinessFilters({
           label="Lead"
           value={params.lead === 'all' ? '' : params.lead}
           options={NEW_BUSINESS_LEAD_FILTERS.map((tier) => ({ value: tier, label: LEAD_FILTER_LABELS[tier] }))}
+          onChange={onChange}
+        />
+        <FilterSelect
+          id="nb-website"
+          name="website"
+          label="Website"
+          value={params.website === 'all' ? '' : params.website}
+          options={NEW_BUSINESS_WEBSITE_FILTERS.map((status) => ({ value: status, label: NEW_BUSINESS_WEBSITE_FILTER_LABELS[status] }))}
           onChange={onChange}
         />
         <FilterSelect id="nb-category" name="category" label="Category" value={params.category ?? ''} options={withCurrent(plain(categories), params.category)} onChange={onChange} />

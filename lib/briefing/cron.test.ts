@@ -102,3 +102,66 @@ describe('runBriefingCron with the New Businesses import', () => {
     assert.equal('action' in result.briefing ? result.briefing.action : null, 'generated');
   });
 });
+
+describe('runBriefingCron with website check queuing', () => {
+  it('queues after the import and before the briefing', async () => {
+    const order: string[] = [];
+    const briefings = new MemoryBriefingStore();
+    const deps = briefingDeps(briefings, '2026-12-15T15:00:00Z');
+    const loadSources = deps.sources.load;
+    deps.sources = { load: async (opts) => { order.push('briefing'); return loadSources(opts); } };
+    const result = await runBriefingCron({
+      campaigns: new MemoryCampaignStore([]),
+      briefing: deps,
+      importNewBusinesses: async () => {
+        order.push('import');
+        return { outcome: 'up_to_date', period: { year: 2026, month: 11 } };
+      },
+      queueWebsiteChecks: async () => {
+        order.push('queue');
+        return { outcome: 'queued', runId: 'run-1' };
+      },
+    });
+    assert.deepEqual(order, ['import', 'queue', 'briefing']);
+    assert.deepEqual(result.websiteChecks, { outcome: 'queued', runId: 'run-1' });
+  });
+
+  it('a queuing failure blocks neither the import nor the briefing', async () => {
+    let imported = false;
+    const result = await runBriefingCron({
+      campaigns: new MemoryCampaignStore([]),
+      briefing: briefingDeps(new MemoryBriefingStore(), '2026-12-15T15:00:00Z'),
+      importNewBusinesses: async () => {
+        imported = true;
+        return { outcome: 'up_to_date', period: { year: 2026, month: 11 } };
+      },
+      queueWebsiteChecks: async () => {
+        throw new Error('boom');
+      },
+    });
+    assert.equal(imported, true);
+    assert.deepEqual(result.websiteChecks, { error: 'Website check queuing failed' });
+    assert.equal('action' in result.briefing ? result.briefing.action : null, 'generated');
+  });
+
+  it('queues at most one run per tick when wired to the real queue rule', async () => {
+    const { MemoryNewBusinessStore } = await import('@/lib/new-businesses/fixtures/memory-store');
+    const { MemoryWebsiteCheckStore } = await import('@/lib/new-businesses/fixtures/memory-website-store');
+    const { rescoreStoredRows } = await import('@/lib/new-businesses/import');
+    const { queueCheckRun } = await import('@/lib/new-businesses/website-runs');
+    const businesses = new MemoryNewBusinessStore();
+    await businesses.storeRows('clark_county', { year: 2026, month: 10 }, [
+      { index: 1, name: 'Fictional Bakery LLC', address: '100 Example St', suite: null, city: 'Las Vegas', state: 'NV', zip: '89101', phone: '(702) 555-0101', category: 'Food Services - Restaurants & Other', dedupeKey: 'a' },
+    ]);
+    await rescoreStoredRows(businesses, '2026-12-15T15:00:00.000Z');
+    const checks = new MemoryWebsiteCheckStore(businesses);
+    for (let tick = 0; tick < 3; tick += 1) {
+      await runBriefingCron({
+        campaigns: new MemoryCampaignStore([]),
+        briefing: briefingDeps(new MemoryBriefingStore(), '2026-12-15T15:00:00Z'),
+        queueWebsiteChecks: () => queueCheckRun(checks, 'schedule', new Date('2026-12-15T15:00:00Z')),
+      });
+    }
+    assert.equal(checks.runs.length, 1);
+  });
+});

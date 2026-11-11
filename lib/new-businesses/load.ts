@@ -9,6 +9,7 @@ import { z } from 'zod'
 
 import { NEW_BUSINESS_SOURCE, type Period } from '@/lib/new-businesses/discovery'
 import { LEAD_TIERS, reasonLine, type LeadTier, type RankSignal } from '@/lib/new-businesses/rank'
+import { WEBSITE_STATUSES, type WebsiteStatus } from '@/lib/new-businesses/website-rules'
 import {
   NEW_BUSINESSES_PAGE_SIZE,
   NEW_BUSINESS_REVIEW_STATUSES,
@@ -45,7 +46,26 @@ export type NewBusinessRow = {
   leadTier: LeadTier | null
   /** The business type, then only what sets it apart. */
   leadReason: string | null
+  /** The website check result, or null when the business has not been checked. */
+  website: NewBusinessWebsite | null
 }
+
+export type NewBusinessWebsite = {
+  status: WebsiteStatus
+  /** The best accepted URL; http or https only (checked again before rendering). */
+  url: string | null
+  checkedAt: string | null
+  searches: string[]
+  candidates: { url: string; excerpt: string; accepted: boolean }[]
+}
+
+const websiteEvidenceSchema = z
+  .object({
+    searches: z.array(z.string()).catch([]),
+    candidates: z.array(z.object({ url: z.string(), excerpt: z.string(), accepted: z.boolean().catch(false) })).catch([]),
+  })
+  .nullable()
+  .catch(null)
 
 export type CategoryRow = {
   category: string
@@ -106,6 +126,14 @@ const groupedRowSchema = baseRowSchema.extend({
 const BASE_COLUMNS =
   'id, period_year, period_month, business_name, address, suite, city, state, zip, phone, category, review_status, owner_note, lead_score, lead_tier, lead_signals'
 const GROUPED_COLUMNS = `${BASE_COLUMNS}, group_categories, group_periods, group_license_count`
+const WEBSITE_COLUMNS = 'website_status, website_url, website_evidence, website_checked_at'
+
+const websiteFields = {
+  website_status: z.enum(WEBSITE_STATUSES).nullable().optional().catch(null),
+  website_url: z.string().nullable().optional().catch(null),
+  website_evidence: websiteEvidenceSchema.optional(),
+  website_checked_at: z.string().nullable().optional().catch(null),
+}
 
 /**
  * grouped:  every row has been regrouped; the list shows one primary row per business.
@@ -125,13 +153,23 @@ async function listMode(supabase: ReturnType<typeof createSupabaseServiceRole>):
   return (count ?? 0) === 0 ? 'grouped' : 'licenses'
 }
 
+/** Whether migration 0031 is applied. Before it, the page works without website columns. */
+async function websiteColumnsAvailable(supabase: ReturnType<typeof createSupabaseServiceRole>): Promise<boolean> {
+  const { error } = await supabase.from('new_businesses').select('website_status', { count: 'exact', head: true }).limit(1)
+  return !error
+}
+
 type FilterStep =
   | { op: 'eq'; column: string; value: string | number | boolean }
   | { op: 'contains'; column: string; value: string[] }
+  | { op: 'isNull'; column: string }
 
 /** The list filters for a mode. Category and period match any license of a business. */
-function listFilters(params: NewBusinessesListParams, mode: NewBusinessListMode, withLead: boolean): FilterStep[] {
+function listFilters(params: NewBusinessesListParams, mode: NewBusinessListMode, withLead: boolean, website: boolean): FilterStep[] {
   const steps: FilterStep[] = [{ op: 'eq', column: 'source', value: NEW_BUSINESS_SOURCE }]
+  if (website && params.website !== 'all') {
+    steps.push(params.website === 'unchecked' ? { op: 'isNull', column: 'website_status' } : { op: 'eq', column: 'website_status', value: params.website })
+  }
   if (mode === 'grouped') steps.push({ op: 'eq', column: 'group_primary', value: true })
   if (params.review !== 'all') steps.push({ op: 'eq', column: 'review_status', value: params.review })
   if (withLead && params.lead !== 'all') steps.push({ op: 'eq', column: 'lead_tier', value: params.lead })
@@ -170,10 +208,11 @@ export async function fetchNewBusinesses(
 ): Promise<{ ok: true; mode: NewBusinessListMode; rows: NewBusinessRow[]; total: number; pageCount: number } | { ok: false }> {
   try {
     const supabase = createSupabaseServiceRole()
-    const mode = await listMode(supabase)
-    let query = supabase.from('new_businesses').select(mode === 'grouped' ? GROUPED_COLUMNS : BASE_COLUMNS, { count: 'exact' })
-    for (const step of listFilters(params, mode, true)) {
-      query = step.op === 'eq' ? query.eq(step.column, step.value) : query.contains(step.column, step.value)
+    const [mode, website] = await Promise.all([listMode(supabase), websiteColumnsAvailable(supabase)])
+    const columns = `${mode === 'grouped' ? GROUPED_COLUMNS : BASE_COLUMNS}${website ? `, ${WEBSITE_COLUMNS}` : ''}`
+    let query = supabase.from('new_businesses').select(columns, { count: 'exact' })
+    for (const step of listFilters(params, mode, true, website)) {
+      query = step.op === 'eq' ? query.eq(step.column, step.value) : step.op === 'contains' ? query.contains(step.column, step.value) : query.is(step.column, null)
     }
 
     const from = (params.page - 1) * NEW_BUSINESSES_PAGE_SIZE
@@ -185,7 +224,9 @@ export async function fetchNewBusinesses(
       .range(from, from + NEW_BUSINESSES_PAGE_SIZE - 1)
     if (error) return { ok: false }
 
-    const rows = z.array(groupedRowSchema.partial({ group_categories: true, group_periods: true, group_license_count: true })).safeParse(data ?? [])
+    const rows = z
+      .array(groupedRowSchema.partial({ group_categories: true, group_periods: true, group_license_count: true }).extend(websiteFields))
+      .safeParse(data ?? [])
     if (!rows.success) return { ok: false }
     const total = count ?? 0
     return {
@@ -214,6 +255,16 @@ export async function fetchNewBusinesses(
           leadScore: row.lead_score,
           leadTier: row.lead_score === null ? null : row.lead_tier,
           leadReason: row.lead_score !== null && signals !== null && signals.length > 0 ? reasonLine(signals) : null,
+          website:
+            row.website_status === null || row.website_status === undefined
+              ? null
+              : {
+                  status: row.website_status,
+                  url: row.website_url ?? null,
+                  checkedAt: row.website_checked_at ?? null,
+                  searches: row.website_evidence?.searches.slice(0, 3) ?? [],
+                  candidates: row.website_evidence?.candidates.slice(0, 6) ?? [],
+                },
         }
       }),
     }
@@ -231,6 +282,9 @@ export type NewBusinessTierCounts = {
   possible: number
   low: number
   unscored: number
+  /** Businesses with a website check result, and those found to have no website. */
+  checked: number
+  noWebsite: number
 }
 
 /**
@@ -241,15 +295,15 @@ export type NewBusinessTierCounts = {
 export async function fetchNewBusinessTierCounts(params: NewBusinessesListParams): Promise<NewBusinessTierCounts | null> {
   try {
     const supabase = createSupabaseServiceRole()
-    const mode = await listMode(supabase)
-    const steps = listFilters(params, mode, false)
-    const counts: NewBusinessTierCounts = { mode, businesses: 0, licenseRecords: 0, likely: 0, possible: 0, low: 0, unscored: 0 }
+    const [mode, website] = await Promise.all([listMode(supabase), websiteColumnsAvailable(supabase)])
+    const steps = listFilters(params, mode, false, website)
+    const counts: NewBusinessTierCounts = { mode, businesses: 0, licenseRecords: 0, likely: 0, possible: 0, low: 0, unscored: 0, checked: 0, noWebsite: 0 }
     for (let from = 0; ; from += COUNT_PAGE) {
       let query = supabase
         .from('new_businesses')
-        .select(mode === 'grouped' ? 'id, lead_score, lead_tier, group_license_count' : 'id, lead_score, lead_tier')
+        .select(`id, lead_score, lead_tier${mode === 'grouped' ? ', group_license_count' : ''}${website ? ', website_status' : ''}`)
       for (const step of steps) {
-        query = step.op === 'eq' ? query.eq(step.column, step.value) : query.contains(step.column, step.value)
+        query = step.op === 'eq' ? query.eq(step.column, step.value) : step.op === 'contains' ? query.contains(step.column, step.value) : query.is(step.column, null)
       }
       const { data, error } = await query.order('id', { ascending: true }).range(from, from + COUNT_PAGE - 1)
       if (error) return null
@@ -259,6 +313,7 @@ export async function fetchNewBusinessTierCounts(params: NewBusinessesListParams
             lead_score: scoreFields.lead_score,
             lead_tier: scoreFields.lead_tier,
             group_license_count: z.number().int().nullable().optional().catch(null),
+            website_status: websiteFields.website_status,
           }),
         )
         .safeParse(data ?? [])
@@ -268,6 +323,8 @@ export async function fetchNewBusinessTierCounts(params: NewBusinessesListParams
         counts.licenseRecords += row.group_license_count ?? 1
         if (row.lead_score === null || row.lead_tier === null) counts.unscored += 1
         else counts[row.lead_tier] += 1
+        if (row.website_status !== null && row.website_status !== undefined) counts.checked += 1
+        if (row.website_status === 'no_website') counts.noWebsite += 1
       }
       if (parsed.data.length < COUNT_PAGE) break
     }

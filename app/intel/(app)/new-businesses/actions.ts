@@ -9,6 +9,8 @@ import { NEW_BUSINESS_SOURCE } from '@/lib/new-businesses/discovery'
 import { createImportDeps } from '@/lib/new-businesses/deps'
 import { setBusinessNote, setBusinessReview } from '@/lib/new-businesses/review'
 import { createNewBusinessReviewWriter } from '@/lib/new-businesses/store'
+import { MAX_WAITING_CHECK_RUNS, queueCheckRun } from '@/lib/new-businesses/website-runs'
+import { createWebsiteCheckStore } from '@/lib/new-businesses/website-store'
 import { importLatest, reimportPeriod, type ImportResult } from '@/lib/new-businesses/import'
 import { importResultMessage } from '@/lib/new-businesses/messages'
 import {
@@ -178,6 +180,33 @@ export async function setNewBusinessCategoriesEnabled(
     return { ok: true }
   } catch {
     console.error('New business categories update failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+/**
+ * Queues one website-check run of up to 30 businesses. At most
+ * MAX_WAITING_CHECK_RUNS may wait at once. The research runner picks it up
+ * with the next scheduled research, or when the scheduled task is started by
+ * hand.
+ */
+export async function queueWebsiteCheckNow(): Promise<ImportActionResult> {
+  await requireIntelUser()
+  try {
+    const result = await queueCheckRun(createWebsiteCheckStore(), 'dashboard', new Date())
+    revalidate()
+    switch (result.outcome) {
+      case 'queued':
+        return { ok: true, message: 'Queued. It runs with the next scheduled research.' }
+      case 'nothing_to_check':
+        return { ok: false, error: 'Every eligible business already has a website result.' }
+      case 'limit_reached':
+        return { ok: false, error: `${MAX_WAITING_CHECK_RUNS} website checks are already waiting.` }
+      case 'run_open':
+        return { ok: false, error: 'A website check is already waiting.' }
+    }
+  } catch {
+    console.error('Website check queuing failed')
     return { ok: false, error: GENERIC_ERROR }
   }
 }
