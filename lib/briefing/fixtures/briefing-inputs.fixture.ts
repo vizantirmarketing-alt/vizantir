@@ -194,7 +194,8 @@ export function fixtureInputs(overrides: Partial<RawBriefingInputs> = {}): RawBr
         run({ id: FIXTURE_RUN_ID, saved: 7, requested: 10, finishedAt: '2026-11-10T15:00:00.000Z', notes: ['Skipped excluded-firm.example.net: HTTP 403'] }),
         run({ id: FIXTURE_SUPERSEDED_RUN_ID, state: 'failed', industry: 'Fictional dentists', saved: 0, finishedAt: '2026-11-10T09:00:00.000Z', errors: ['Search provider timed out'] }),
         run({ id: FIXTURE_SUPERSEDING_RUN_ID, state: 'completed', industry: 'fictional dentists ', finishedAt: '2026-11-10T12:00:00.000Z' }),
-        run({ id: FIXTURE_STANDALONE_FAILED_RUN_ID, state: 'failed', industry: 'Fictional accountants', saved: 0, finishedAt: '2026-11-10T10:00:00.000Z', errors: ['Runner crashed'] }),
+        // No run that saved prospects finished after it, so it stays unresolved.
+        run({ id: FIXTURE_STANDALONE_FAILED_RUN_ID, state: 'failed', industry: 'Fictional accountants', saved: 0, finishedAt: '2026-11-10T16:00:00.000Z', errors: ['Runner crashed'] }),
         run({ id: FIXTURE_OLD_RUN_ID, finishedAt: '2026-11-08T15:00:00.000Z', notes: ['Fixture: old note'] }),
         run({ id: FIXTURE_UNFINISHED_RUN_ID, state: 'claimed', finishedAt: null }),
       ],

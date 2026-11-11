@@ -89,6 +89,7 @@ export const briefingContentSchema = z.object({
       finishedAt: z.string().nullable(),
       errors: z.array(z.string()),
       notes: z.array(z.string()),
+      resolved: z.boolean().optional(),
     }),
   ),
   sources: z.array(sourceSchema),

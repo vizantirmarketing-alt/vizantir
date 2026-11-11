@@ -7,6 +7,7 @@ import { NewBusinessFilters } from '@/app/intel/_components/new-businesses/NewBu
 import { NewBusinessesTable } from '@/app/intel/_components/new-businesses/NewBusinessesTable'
 import { WebsiteCheckButton } from '@/app/intel/_components/new-businesses/WebsiteCheckControls'
 import { WebsiteCheckRunChip } from '@/app/intel/_components/ui/StatusChip'
+import { resolvedCheckRunIds } from '@/lib/new-businesses/website-runs'
 import { fetchCheckRuns, type CheckRunRow } from '@/lib/new-businesses/website-store'
 import { splitRunSummary } from '@/lib/prospects/ingest'
 import { Panel } from '@/app/intel/_components/ui/Panel'
@@ -75,10 +76,15 @@ function CheckRunList({ runs }: { runs: CheckRunRow[] | null }) {
   if (runs.length === 0) {
     return <p className="intel-body text-body">No website checks yet.</p>
   }
+  const resolved = resolvedCheckRunIds(runs)
   return (
     <ul className="divide-y divide-black/8 intel-body">
       {runs.map((run) => {
-        const { errors, notes } = splitRunSummary(run.errorSummary)
+        const summary = splitRunSummary(run.errorSummary)
+        // A failure resolved by a later completed check is a fact, not a problem.
+        const isResolved = resolved.has(run.id)
+        const errors = isResolved ? [] : summary.errors
+        const notes = isResolved ? [...summary.notes, 'The cause has since been resolved. Its unchecked businesses went back into the queue.'] : summary.notes
         const when = run.finishedAt ?? run.claimedAt ?? run.requestedAt
         return (
           <li key={run.id} className="min-w-0 py-2 first:pt-0 last:pb-0">

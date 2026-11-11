@@ -47,16 +47,20 @@ Rules:
 - actions: zero to three items the owner can act on today, such as reviewing a prospect, replying to an inquiry, or fixing a failed source. Each recordId must be copied exactly from an id, findingKey or provider in the JSON. Each text is one short imperative sentence.
 - inquiries.olderCount is a count only. Never suggest an action about older inquiries, and never refer to anything that is not in the JSON.
 - Do not invent records, numbers, names or URLs.
+- Only runs in the JSON may be discussed. A failure that has since been resolved is left out on purpose: never describe a resolved failure as a current problem and never propose fixing it.
 - If "quiet" is true, say plainly that nothing new needs attention and return no actions.`
 
 export function buildUserMessage(content: BriefingContent): string {
   // suggestedActions is output, not input. newBusinesses is never sent to the
-  // model, not even as a count.
-  const { suggestedActions: _actions, newBusinesses: _businesses, unavailable, ...context } = content
+  // model, not even as a count. A resolved failure is not sent either: it
+  // needs no attention, so the model can neither summarise it as a current
+  // problem nor propose fixing it.
+  const { suggestedActions: _actions, newBusinesses: _businesses, unavailable, runs, ...context } = content
   void _actions
   void _businesses
   return JSON.stringify({
     ...context,
+    runs: runs.filter((run) => run.resolved !== true),
     unavailable: unavailable.filter((section) => section !== 'newBusinesses'),
   })
 }
@@ -125,6 +129,10 @@ export function validateNarrativeOutput(
     }
   }
 
+  // An action about a resolved failure is dropped rather than failing the
+  // whole reply: the narrative stays, the stale action does not.
+  const resolvedIds = new Set(content.runs.filter((run) => run.resolved === true).map((run) => run.id))
+  parsed.data.actions = parsed.data.actions.filter((action) => !resolvedIds.has(action.recordId))
   const ids = contextRecordIds(content)
   const unknown = parsed.data.actions.find((action) => !ids.has(action.recordId))
   if (unknown) {

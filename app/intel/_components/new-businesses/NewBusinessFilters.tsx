@@ -20,17 +20,30 @@ import {
 type Option = { value: string; label: string }
 
 /*
- * The filter row wraps and every control grows to fill its row, so the row
- * always reaches the panel's right edge. Each basis is the width the
- * control's label and longest value need at 14px:
- *   standard  "Review status", "Unreviewed", "North Las Vegas", "October 2026"
- *   website   "Listing or social page only"
- *   category  "Professional, Scientific, and Technical Services - Group 2"
+ * Seven filters in two groups that each fill their row:
+ *   row 1  Review status, Lead, Website, Period   (status and time)
+ *   row 2  Category, City, Zip                     (what and where)
+ * The row is a size container. When the panel is wide enough for all seven
+ * at their natural minimums (89rem, gaps included), they sit on one row;
+ * otherwise a break after Period gives two balanced rows, so no single
+ * control is ever stretched across the panel on its own. Below the width of
+ * the second row (46rem) the controls simply wrap.
+ *
+ * Each basis is the measured width the control's label and longest value
+ * need at 14px, plus a little room:
+ *   review 8.5rem "Unreviewed"            lead 7.5rem "Possible"
+ *   website 14.5rem "Listing or social page only"
+ *   period 9.5rem "October 2026"          category 27rem "Professional, Scientific, and Technical Services - Group 2"
+ *   city 10.5rem "North Las Vegas"        zip 7rem "89031"
  */
 const BASIS = {
-  standard: 'min-w-0 flex-[1_1_11rem]',
-  website: 'min-w-0 flex-[1_1_15rem]',
-  category: 'min-w-0 flex-[2_1_28rem]',
+  review: 'min-w-0 flex-[1_1_8.5rem]',
+  lead: 'min-w-0 flex-[1_1_7.5rem]',
+  website: 'min-w-0 flex-[1_1_14.5rem]',
+  period: 'min-w-0 flex-[1_1_9.5rem]',
+  category: 'min-w-0 flex-[2_1_27rem]',
+  city: 'min-w-0 flex-[1_1_10.5rem]',
+  zip: 'min-w-0 flex-[1_1_7rem]',
 } as const
 
 const LEAD_FILTER_LABELS = { likely: 'Likely', possible: 'Possible', low: 'Low' } as const
@@ -66,7 +79,7 @@ function FilterSelect({
   value,
   options,
   allLabel = 'All',
-  className = BASIS.standard,
+  className,
   onChange,
 }: {
   id: string
@@ -130,47 +143,52 @@ export function NewBusinessFilters({
         router.push(hrefFromForm(event.currentTarget))
       }}
     >
-      <div className="flex flex-wrap gap-3">
-        <div className={BASIS.standard}>
-          <label htmlFor="nb-review" className="mb-2 block intel-body font-medium text-body">
-            Review status
-          </label>
-          <Select
-            id="nb-review"
-            name="review"
-            defaultValue={params.review}
-            className="w-full"
-            onChange={(event) => onChange(event.currentTarget.form)}
-          >
-            <option value="all">All</option>
-            {NEW_BUSINESS_REVIEW_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {NEW_BUSINESS_REVIEW_LABELS[status]}
-              </option>
-            ))}
-          </Select>
+      <div className="@container">
+        <div className="flex flex-wrap gap-3">
+          <div className={BASIS.review}>
+            <label htmlFor="nb-review" className="mb-2 block intel-body font-medium text-body">
+              Review status
+            </label>
+            <Select
+              id="nb-review"
+              name="review"
+              defaultValue={params.review}
+              className="w-full"
+              onChange={(event) => onChange(event.currentTarget.form)}
+            >
+              <option value="all">All</option>
+              {NEW_BUSINESS_REVIEW_STATUSES.map((status) => (
+                <option key={status} value={status}>
+                  {NEW_BUSINESS_REVIEW_LABELS[status]}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <FilterSelect
+            id="nb-lead"
+            name="lead"
+            label="Lead"
+            className={BASIS.lead}
+            value={params.lead === 'all' ? '' : params.lead}
+            options={NEW_BUSINESS_LEAD_FILTERS.map((tier) => ({ value: tier, label: LEAD_FILTER_LABELS[tier] }))}
+            onChange={onChange}
+          />
+          <FilterSelect
+            id="nb-website"
+            name="website"
+            label="Website"
+            className={BASIS.website}
+            value={params.website === 'all' ? '' : params.website}
+            options={NEW_BUSINESS_WEBSITE_FILTERS.map((status) => ({ value: status, label: NEW_BUSINESS_WEBSITE_FILTER_LABELS[status] }))}
+            onChange={onChange}
+          />
+          <FilterSelect id="nb-period" name="period" label="Period" className={BASIS.period} value={params.period ?? ''} options={withCurrent(periods, params.period)} onChange={onChange} />
+          {/* Two balanced rows until all seven fit on one. The negative margin cancels the extra row gap. */}
+          <div aria-hidden className="-mt-3 h-0 basis-full @min-[89rem]:hidden" />
+          <FilterSelect id="nb-category" name="category" label="Category" className={BASIS.category} value={params.category ?? ''} options={withCurrent(plain(categories), params.category)} onChange={onChange} />
+          <FilterSelect id="nb-city" name="city" label="City" className={BASIS.city} value={params.city ?? ''} options={withCurrent(plain(cities), params.city)} onChange={onChange} />
+          <FilterSelect id="nb-zip" name="zip" label="Zip" className={BASIS.zip} value={params.zip ?? ''} options={withCurrent(plain(zips), params.zip)} onChange={onChange} />
         </div>
-        <FilterSelect
-          id="nb-lead"
-          name="lead"
-          label="Lead"
-          value={params.lead === 'all' ? '' : params.lead}
-          options={NEW_BUSINESS_LEAD_FILTERS.map((tier) => ({ value: tier, label: LEAD_FILTER_LABELS[tier] }))}
-          onChange={onChange}
-        />
-        <FilterSelect
-          id="nb-website"
-          name="website"
-          label="Website"
-          className={BASIS.website}
-          value={params.website === 'all' ? '' : params.website}
-          options={NEW_BUSINESS_WEBSITE_FILTERS.map((status) => ({ value: status, label: NEW_BUSINESS_WEBSITE_FILTER_LABELS[status] }))}
-          onChange={onChange}
-        />
-        <FilterSelect id="nb-category" name="category" label="Category" className={BASIS.category} value={params.category ?? ''} options={withCurrent(plain(categories), params.category)} onChange={onChange} />
-        <FilterSelect id="nb-city" name="city" label="City" value={params.city ?? ''} options={withCurrent(plain(cities), params.city)} onChange={onChange} />
-        <FilterSelect id="nb-zip" name="zip" label="Zip" value={params.zip ?? ''} options={withCurrent(plain(zips), params.zip)} onChange={onChange} />
-        <FilterSelect id="nb-period" name="period" label="Period" value={params.period ?? ''} options={withCurrent(periods, params.period)} onChange={onChange} />
       </div>
       {newBusinessesFiltersActive(params) ? (
         <Link

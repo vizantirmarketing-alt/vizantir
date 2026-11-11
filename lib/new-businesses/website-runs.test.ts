@@ -6,7 +6,7 @@ import { describe, it } from 'node:test';
 import { MemoryNewBusinessStore } from './fixtures/memory-store';
 import { MemoryWebsiteCheckStore } from './fixtures/memory-website-store';
 import { rescoreStoredRows } from './import';
-import { buildCheckClaimResponse, ingestCheckBatch, queueCheckRun, CHECK_RUN_SIZE, MAX_WAITING_CHECK_RUNS } from './website-runs';
+import { buildCheckClaimResponse, ingestCheckBatch, queueCheckRun, resolvedCheckRunIds, CHECK_RUN_SIZE, MAX_WAITING_CHECK_RUNS } from './website-runs';
 import type { CheckBatch, CheckedBusiness } from './website-schema';
 
 const OCT = { year: 2026, month: 10 };
@@ -301,5 +301,16 @@ describe('rules version 2 on stored results', () => {
     const next = await buildCheckClaimResponse(checks, T0);
     assert.ok(next.run !== null);
     assert.ok(!next.businesses.some((b) => b.name === 'Demo Realty Agent'));
+  });
+});
+
+describe('resolved website-check failures', () => {
+  const failed = { id: 'f', state: 'failed' as const, checked: 0, finishedAt: '2026-11-10T20:00:00Z' };
+  it('a failed check run is resolved by a later completed run with at least one business checked', () => {
+    assert.deepEqual(resolvedCheckRunIds([failed, { id: 'c', state: 'completed', checked: 3, finishedAt: '2026-11-10T22:00:00Z' }]), new Set(['f']));
+    assert.equal(resolvedCheckRunIds([failed, { id: 'c', state: 'completed', checked: 0, finishedAt: '2026-11-10T22:00:00Z' }]).size, 0);
+    assert.equal(resolvedCheckRunIds([failed, { id: 'c', state: 'completed', checked: 3, finishedAt: '2026-11-10T19:00:00Z' }]).size, 0);
+    assert.equal(resolvedCheckRunIds([failed, { id: 'c', state: 'claimed', checked: 3, finishedAt: null }]).size, 0);
+    assert.equal(resolvedCheckRunIds([failed]).size, 0);
   });
 });

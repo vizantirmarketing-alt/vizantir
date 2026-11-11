@@ -259,9 +259,15 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
             {content.newBusinesses.count} new{' '}
             {content.newBusinesses.count === 1 ? 'business' : 'businesses'} in enabled categories since{' '}
             {formatShortDate(content.newBusinesses.since)}.{' '}
-            {content.newBusinesses.noWebsite !== undefined && content.newBusinesses.noWebsite > 0
-              ? `${content.newBusinesses.noWebsite} unreviewed ${content.newBusinesses.noWebsite === 1 ? 'business has' : 'businesses have'} no website found. `
-              : null}
+            {content.newBusinesses.noWebsite !== undefined && content.newBusinesses.noWebsite > 0 ? (
+              <>
+                <Link href="/intel/new-businesses?website=no_website" className={actionLinkClass}>
+                  {content.newBusinesses.noWebsite} unreviewed{' '}
+                  {content.newBusinesses.noWebsite === 1 ? 'business has' : 'businesses have'} no website found
+                </Link>
+                .{' '}
+              </>
+            ) : null}
             <Link href="/intel/new-businesses" className={actionLinkClass}>
               Open New Businesses
             </Link>
@@ -308,11 +314,21 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
                 <RecordAnchor href="/intel/prospects">
                   {[r.industry, r.market].filter(Boolean).join(' · ') || 'Research run'}
                 </RecordAnchor>
-                <span className={r.state === 'failed' ? 'text-warning-severe' : 'text-meta'}>
-                  {' '}
-                  · {RUN_STATE_LABELS[r.state] ?? r.state} ·{' '}
-                  {r.requested === null ? r.saved : `${r.saved} of ${r.requested}`} saved
-                </span>
+                {r.resolved === true ? (
+                  // A failure resolved by a later run that saved prospects: a fact, not a problem.
+                  <span className="text-meta">
+                    {' '}
+                    · {RUN_STATE_LABELS[r.state] ?? r.state}
+                    {r.finishedAt ? ` ${formatShortDate(r.finishedAt)}` : ''}. The cause has since been resolved. The run
+                    was not repeated.
+                  </span>
+                ) : (
+                  <span className={r.state === 'failed' ? 'text-warning-severe' : 'text-meta'}>
+                    {' '}
+                    · {RUN_STATE_LABELS[r.state] ?? r.state} ·{' '}
+                    {r.requested === null ? r.saved : `${r.saved} of ${r.requested}`} saved
+                  </span>
+                )}
                 {r.errors.length > 0 ? (
                   <ul className="mt-1 space-y-0.5 text-warning-severe" aria-label="Errors">
                     {r.errors.map((line) => (

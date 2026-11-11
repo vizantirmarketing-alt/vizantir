@@ -101,6 +101,31 @@ export interface WebsiteCheckStore {
   requestRun(source: CheckRunSource, nowIso: string): Promise<{ id: string }>
 }
 
+// --- Resolved failures.
+
+/**
+ * A failed website-check run is resolved once any later check run has
+ * completed with at least one business checked: that run proves checking
+ * works again. Decided from state, finish times and counts only, never from
+ * error wording.
+ */
+export function resolvedCheckRunIds(
+  runs: readonly { id: string; state: CheckRunState; checked: number; finishedAt: string | null }[],
+): Set<string> {
+  const time = (iso: string | null) => (iso === null ? null : Date.parse(iso))
+  const resolved = new Set<string>()
+  for (const run of runs) {
+    const failedAt = time(run.finishedAt)
+    if (run.state !== 'failed' || failedAt === null || Number.isNaN(failedAt)) continue
+    const later = runs.some((other) => {
+      const t = time(other.finishedAt)
+      return other.id !== run.id && other.state === 'completed' && other.checked >= 1 && t !== null && t > failedAt
+    })
+    if (later) resolved.add(run.id)
+  }
+  return resolved
+}
+
 // --- Queueing.
 
 export type QueueCheckResult =

@@ -224,6 +224,13 @@ export type BriefingContent = {
     finishedAt: string | null
     errors: string[]
     notes: string[]
+    /**
+     * True for a failure resolved by a later run that saved prospects
+     * (resolvedRunIds). Its error lines are not kept, it is never sent to the
+     * model, and it is never the subject of an action. Optional so briefings
+     * saved before this field existed still read.
+     */
+    resolved?: boolean
   }[]
   sources: SourceFreshness[]
   /**
@@ -340,6 +347,42 @@ export function selectRuns(runs: readonly RawRun[], runsSince: string): RawRun[]
     .sort((a, b) => (finishedTime(b) ?? 0) - (finishedTime(a) ?? 0))
 }
 
+/**
+ * A run that failed as a whole: state failed, or state partial with nothing
+ * saved. Decided from state and saved count only, never from error wording:
+ * a run that saved nothing could not do its work (no page-reading tool,
+ * network policy, blocked hosts, credentials, a helper command failing), and
+ * any later run that saves a prospect proves that work is possible again.
+ */
+function failedAsAWhole(run: RawRun): boolean {
+  return run.state === 'failed' || (run.state === 'partial' && run.saved === 0)
+}
+
+/**
+ * Failures resolved by a later run: a run that failed as a whole is resolved
+ * once ANY run, in any market or industry, finished after it with at least
+ * one prospect saved, whatever that later run's final state. Decided from
+ * run state, timestamps and saved counts only.
+ *
+ * A failure with no later successful run is not resolved and stays as it is,
+ * including any action the model proposes for it.
+ */
+export function resolvedRunIds(runs: readonly RawRun[]): Set<string> {
+  const resolved = new Set<string>()
+  for (const run of runs) {
+    if (!failedAsAWhole(run)) continue
+    const failedAt = finishedTime(run)
+    if (failedAt === null) continue
+    const later = runs.some((other) => {
+      if (other.id === run.id || other.saved < 1) return false
+      const t = finishedTime(other)
+      return t !== null && t > failedAt
+    })
+    if (later) resolved.add(run.id)
+  }
+  return resolved
+}
+
 function sourceState(source: RawSource): SourceFreshness['state'] {
   if (source.lastRun === null) return 'never'
   if (source.lastRun.status === 'failed') return 'failed'
@@ -427,7 +470,11 @@ export function assembleBriefingContent(
   const recentTotal = Math.max(recent.length, inquiryData.total - olderCount)
 
   const findings = take('findings', inputs.findings, { items: [], total: 0 })
-  const runs = selectRuns(take('runs', inputs.runs, []), windows.runsSince).map((run) => ({
+  const allRuns = take('runs', inputs.runs, [])
+  // Resolution looks at every loaded run, not just the window: the run that
+  // proves the environment works again may have finished before or after it.
+  const resolved = resolvedRunIds(allRuns)
+  const runs = selectRuns(allRuns, windows.runsSince).map((run) => ({
     id: run.id,
     state: run.state,
     market: run.market,
@@ -435,8 +482,10 @@ export function assembleBriefingContent(
     saved: run.saved,
     requested: run.requested,
     finishedAt: run.finishedAt,
-    errors: run.errors,
+    // A resolved failure keeps no error lines: it is listed as a fact, not a problem.
+    errors: resolved.has(run.id) ? [] : run.errors,
     notes: run.notes,
+    ...(resolved.has(run.id) ? { resolved: true } : {}),
   }))
   const sources = toSourceFreshness(take('sources', inputs.sources, []))
   const unhealthySources = sources.filter((s) => s.state !== 'ok')
@@ -446,7 +495,7 @@ export function assembleBriefingContent(
     newProspects.length === 0 &&
     recent.length === 0 &&
     findings.items.length === 0 &&
-    runs.length === 0 &&
+    runs.every((run) => run.resolved === true) &&
     unhealthySources.length === 0 &&
     newBusinessCount === 0 &&
     unavailable.length === 0
@@ -496,7 +545,8 @@ export function contextRecordIds(content: BriefingContent): Set<string> {
   for (const p of content.topUnreviewed) ids.add(p.id)
   for (const i of content.inquiries.recent) ids.add(i.id)
   for (const f of content.findings.items) ids.add(f.findingKey)
-  for (const r of content.runs) ids.add(r.id)
+  // A resolved failure is never the subject of an action.
+  for (const r of content.runs) if (r.resolved !== true) ids.add(r.id)
   for (const s of content.sources) ids.add(s.provider)
   return ids
 }

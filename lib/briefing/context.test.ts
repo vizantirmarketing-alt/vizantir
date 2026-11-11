@@ -168,7 +168,7 @@ describe('research runs', () => {
     const content = assemble();
     assert.deepEqual(
       content.runs.map((r) => r.id),
-      [FIXTURE_RUN_ID, FIXTURE_SUPERSEDING_RUN_ID, FIXTURE_STANDALONE_FAILED_RUN_ID],
+      [FIXTURE_STANDALONE_FAILED_RUN_ID, FIXTURE_RUN_ID, FIXTURE_SUPERSEDING_RUN_ID],
     );
     const ids = contextRecordIds(content);
     for (const excluded of [FIXTURE_SUPERSEDED_RUN_ID, FIXTURE_OLD_RUN_ID, FIXTURE_UNFINISHED_RUN_ID]) {
