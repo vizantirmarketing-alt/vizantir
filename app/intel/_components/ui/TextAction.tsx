@@ -50,7 +50,7 @@ export function TextAction({
       aria-disabled={inactive || undefined}
       aria-busy={pending || undefined}
       className={cn(
-        '-mx-1 inline-flex items-center rounded px-1 text-sm font-medium underline-offset-2 transition-colors',
+        '-mx-1 inline-flex items-center rounded px-1 intel-body font-medium underline-offset-2 transition-colors',
         'hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt-focus',
         TONE_CLASS[tone],
         'disabled:cursor-not-allowed disabled:bg-transparent disabled:text-meta disabled:no-underline disabled:hover:bg-transparent',

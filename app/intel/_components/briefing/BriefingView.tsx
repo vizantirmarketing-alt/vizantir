@@ -18,7 +18,7 @@ import { FACTOR_DEFINITIONS, isProspectFactor } from '@/lib/prospects/rubric'
 import { formatScore, formatShortDate } from '@/lib/prospects/params'
 
 const linkClass = 'text-foreground transition-colors hover:text-cobalt-primary'
-const actionLinkClass = 'text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]'
+const actionLinkClass = 'intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]'
 
 function RecordAnchor({ href, children }: { href: string; children: ReactNode }) {
   return (
@@ -29,12 +29,12 @@ function RecordAnchor({ href, children }: { href: string; children: ReactNode })
 }
 
 function Empty({ children }: { children: ReactNode }) {
-  return <p className="text-sm leading-relaxed text-body">{children}</p>
+  return <p className="intel-body leading-relaxed text-body">{children}</p>
 }
 
 function Unavailable() {
   return (
-    <p className="text-sm text-warning-severe" role="alert">
+    <p className="intel-body text-warning-severe" role="alert">
       This section could not be loaded when the briefing was generated.
     </p>
   )
@@ -66,7 +66,7 @@ function factorLabel(key: string): string {
 function ProspectItem({ prospect }: { prospect: BriefingProspect }) {
   return (
     <li className="py-2.5 first:pt-0 last:pb-0">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-sm">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 intel-body">
         <RecordAnchor href={`/intel/prospects/${prospect.id}`}>
           <span className="font-medium">{prospect.name}</span>{' '}
           <span className="text-meta">{prospect.domain}</span>
@@ -77,10 +77,10 @@ function ProspectItem({ prospect }: { prospect: BriefingProspect }) {
         </span>
       </div>
       {prospect.performance !== null ? (
-        <p className="mt-0.5 truncate text-sm text-body">{prospect.performance}</p>
+        <p className="mt-0.5 truncate intel-body text-body">{prospect.performance}</p>
       ) : null}
       {prospect.highlight !== null ? (
-        <p className="mt-0.5 line-clamp-1 text-sm text-body">
+        <p className="mt-0.5 line-clamp-1 intel-body text-body">
           <span className="text-meta">{factorLabel(prospect.highlight.factorKey)}:</span>{' '}
           {prospect.highlight.claim}{' '}
           <a
@@ -104,7 +104,7 @@ function NewProspectsSection({ content }: { content: BriefingContent }) {
 
   return (
     <>
-      <p className="mb-2 text-sm text-meta">
+      <p className="mb-2 intel-secondary text-meta">
         {shown.length} of {total} added since {formatShortDate(content.windows.prospectsSince)}, highest
         priority first.
       </p>
@@ -143,7 +143,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
     <div className="flex flex-col gap-4">
       {content.quiet ? (
         <Panel title="Today" accent="positive">
-          <p className="text-sm leading-relaxed text-body">
+          <p className="intel-body leading-relaxed text-body">
             Nothing new since the last briefing. No new prospects, no recent inquiries waiting, no open
             findings, no finished research runs, and every data source is healthy.
           </p>
@@ -152,9 +152,9 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
 
       {briefing.narrative !== null ? (
         <Panel title="Summary" accent="cobalt">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-body">{briefing.narrative}</p>
+          <p className="whitespace-pre-wrap intel-body leading-relaxed text-body">{briefing.narrative}</p>
           {content.suggestedActions !== null && content.suggestedActions.length > 0 ? (
-            <ul className="mt-3 space-y-1.5 text-sm">
+            <ul className="mt-3 space-y-1.5 intel-body">
               {content.suggestedActions.map((action) => {
                 const link = recordLink(content, action.recordId)
                 return (
@@ -169,7 +169,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
         </Panel>
       ) : briefing.error !== null && !content.quiet ? (
         <Panel title="Summary">
-          <p className="text-sm text-meta">{summaryUnavailableMessage(briefing.error)}</p>
+          <p className="intel-secondary text-meta">{summaryUnavailableMessage(briefing.error)}</p>
         </Panel>
       ) : null}
 
@@ -189,7 +189,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
         </Panel>
       ) : content.topUnreviewed.length === 0 ? null : (
         <Panel title="Highest priority unreviewed prospects">
-          <ul className="divide-y divide-black/8 text-sm">
+          <ul className="divide-y divide-black/8 intel-body">
             {content.topUnreviewed.map((p) => (
               <li key={p.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2 first:pt-0 last:pb-0">
                 <RecordAnchor href={`/intel/prospects/${p.id}`}>
@@ -210,7 +210,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
           <Unavailable />
         ) : (
           <>
-            <p className="text-sm text-body">
+            <p className="intel-body text-body">
               {content.inquiries.recentTotal} new{' '}
               {content.inquiries.recentTotal === 1 ? 'inquiry' : 'inquiries'} in the last{' '}
               {INQUIRY_RECENT_DAYS} days
@@ -223,7 +223,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
               .
             </p>
             {content.inquiries.recent.length > 0 ? (
-              <ul className="mt-2 divide-y divide-black/8 text-sm">
+              <ul className="mt-2 divide-y divide-black/8 intel-body">
                 {content.inquiries.recent.map((i) => (
                   <li key={i.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
                     <RecordAnchor href={`/intel/leads/${i.id}`}>{i.company ?? 'No company given'}</RecordAnchor>
@@ -236,7 +236,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
               </ul>
             ) : null}
             {content.inquiries.olderCount > 0 ? (
-              <p className="mt-2 text-sm text-meta">
+              <p className="mt-2 intel-secondary text-meta">
                 {content.inquiries.olderCount} older new{' '}
                 {content.inquiries.olderCount === 1 ? 'inquiry' : 'inquiries'} from before the last{' '}
                 {INQUIRY_RECENT_DAYS} days.{' '}
@@ -255,7 +255,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
         </Panel>
       ) : content.newBusinesses !== undefined ? (
         <Panel title="New businesses">
-          <p className="text-sm text-body">
+          <p className="intel-body text-body">
             {content.newBusinesses.count} new{' '}
             {content.newBusinesses.count === 1 ? 'business' : 'businesses'} in enabled categories since{' '}
             {formatShortDate(content.newBusinesses.since)}.{' '}
@@ -273,10 +273,10 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
           <Empty>No open findings.</Empty>
         ) : (
           <>
-            <p className="text-sm text-meta">
+            <p className="intel-secondary text-meta">
               {content.findings.items.length} of {content.findings.openCount} open.
             </p>
-            <ul className="mt-2 divide-y divide-black/8 text-sm">
+            <ul className="mt-2 divide-y divide-black/8 intel-body">
               {content.findings.items.map((f) => (
                 <li key={f.findingKey} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
                   <RecordAnchor href="/intel">{f.title}</RecordAnchor>
@@ -299,7 +299,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
         ) : content.runs.length === 0 ? (
           <Empty>No research runs finished since {formatShortDate(content.windows.runsSince)}.</Empty>
         ) : (
-          <ul className="divide-y divide-black/8 text-sm">
+          <ul className="divide-y divide-black/8 intel-body">
             {content.runs.map((r) => (
               <li key={r.id} className="py-2.5 first:pt-0 last:pb-0">
                 <RecordAnchor href="/intel/prospects">
@@ -336,7 +336,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
         ) : briefing.sourceFreshness.length === 0 ? (
           <Empty>No data sources reported.</Empty>
         ) : (
-          <ul className="divide-y divide-black/8 text-sm">
+          <ul className="divide-y divide-black/8 intel-body">
             {briefing.sourceFreshness.map((s) => (
               <li key={s.provider} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
                 <RecordAnchor href="/intel">{s.label}</RecordAnchor>

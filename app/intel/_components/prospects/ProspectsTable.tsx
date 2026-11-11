@@ -26,12 +26,12 @@ export function ProspectsTable({ rows }: { rows: ProspectListRow[] }) {
           <li key={row.id} className="py-3">
             <Link
               href={`/intel/prospects/${row.id}`}
-              className="text-sm font-medium text-foreground transition-colors hover:text-cobalt-primary"
+              className="intel-body font-medium text-foreground transition-colors hover:text-cobalt-primary"
             >
               {row.name}
             </Link>
-            <p className="mt-0.5 text-sm text-meta">{row.domain}</p>
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-body">
+            <p className="mt-0.5 intel-secondary text-meta">{row.domain}</p>
+            <div className="mt-2 flex flex-wrap items-center gap-2 intel-body text-body">
               <span>
                 Fit <ScoreValue value={row.fitScore} />
               </span>
@@ -46,17 +46,17 @@ export function ProspectsTable({ rows }: { rows: ProspectListRow[] }) {
         ))}
       </ul>
       <div className="hidden overflow-x-auto lg:block">
-        <table className="w-full text-left text-sm">
+        <table className="w-full text-left intel-secondary">
           <thead>
             <tr className="border-b border-black/8 text-meta">
-              <th className="py-2 pr-4 font-normal">Company</th>
-              <th className="py-2 pr-4 font-normal">Industry</th>
-              <th className="py-2 pr-4 font-normal">Market</th>
-              <th className="py-2 pr-4 text-right font-normal">Fit</th>
-              <th className="py-2 pr-4 text-right font-normal">Opportunity</th>
-              <th className="py-2 pr-4 font-normal">Confidence</th>
-              <th className="py-2 pr-4 font-normal">Review</th>
-              <th className="py-2 font-normal">Last researched</th>
+              <th className="intel-th pr-4">Company</th>
+              <th className="intel-th pr-4">Industry</th>
+              <th className="intel-th pr-4">Market</th>
+              <th className="intel-th pr-4 text-right">Fit</th>
+              <th className="intel-th pr-4 text-right">Opportunity</th>
+              <th className="intel-th pr-4">Confidence</th>
+              <th className="intel-th pr-4">Review</th>
+              <th className="intel-th">Last researched</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-black/8">
@@ -115,7 +115,7 @@ export function ProspectsPagination({
   return (
     <nav
       aria-label="Prospect pages"
-      className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 text-sm"
+      className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 intel-body"
     >
       <span className="text-meta">
         Page {page} of {pageCount} · {total.toLocaleString('en-US')} prospects
@@ -153,12 +153,12 @@ export function ProspectsEmptyState({
 }) {
   return (
     <div>
-      <p className="text-sm font-medium text-foreground">{title}</p>
-      <p className="mt-2 text-sm leading-relaxed text-body">{body}</p>
+      <p className="intel-body font-medium text-foreground">{title}</p>
+      <p className="mt-2 intel-body leading-relaxed text-body">{body}</p>
       {action ? (
         <Link
           href={action.href}
-          className="mt-4 inline-block text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="mt-4 inline-block intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
         >
           {action.label}
         </Link>

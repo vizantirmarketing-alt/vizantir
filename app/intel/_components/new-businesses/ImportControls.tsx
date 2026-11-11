@@ -19,11 +19,11 @@ const wrap = 'w-full min-w-0 [overflow-wrap:anywhere]'
 function Message({ result }: { result: ImportActionResult | null }) {
   if (result === null) return null
   return result.ok ? (
-    <p className={`${wrap} text-sm text-meta`} role="status">
+    <p className={`${wrap} intel-secondary text-meta`} role="status">
       {result.message}
     </p>
   ) : (
-    <p className={`${wrap} text-sm text-warning-severe`} role="alert">
+    <p className={`${wrap} intel-secondary text-warning-severe`} role="alert">
       {result.error}
     </p>
   )

@@ -18,7 +18,7 @@ import {
 } from '@/lib/intel/lead-params'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 type LeadsFiltersProps = {
   params: LeadsListParams
@@ -65,7 +65,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
         <div>
           <label
             htmlFor="intel-leads-status"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Status
           </label>
@@ -88,7 +88,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
         <div>
           <label
             htmlFor="intel-leads-channel"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Channel
           </label>
@@ -111,7 +111,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
         <div className="sm:col-span-2">
           <label
             htmlFor="intel-leads-q"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Search
           </label>
@@ -159,7 +159,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
         {filtersActive ? (
           <Link
             href="/intel/leads"
-            className="text-sm text-meta transition-colors hover:text-foreground"
+            className="intel-secondary text-meta transition-colors hover:text-foreground"
           >
             Clear filters
           </Link>

@@ -30,7 +30,7 @@ import { cn } from '@/lib/utils'
 
 export function SearchHeader() {
   return (
-    <h1 className="text-base font-semibold tracking-tight text-foreground">
+    <h1 className="intel-title text-foreground">
       Search
     </h1>
   )
@@ -50,8 +50,8 @@ type EmptyStateProps = {
 export function SearchEmptyState({ title, body }: EmptyStateProps) {
   return (
     <div>
-      <p className="text-sm font-medium text-foreground">{title}</p>
-      <p className="mt-2 text-sm leading-relaxed text-body">{body}</p>
+      <p className="intel-body font-medium text-foreground">{title}</p>
+      <p className="mt-2 intel-body leading-relaxed text-body">{body}</p>
     </div>
   )
 }
@@ -67,7 +67,7 @@ export function SearchRangeNav({ range }: { range: SearchRange }) {
             href={searchHref(value)}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'text-sm transition-colors',
+              'intel-body transition-colors',
               active
                 ? 'text-foreground'
                 : 'text-meta hover:text-foreground',
@@ -94,7 +94,7 @@ export function SearchDateSpans({ span, comparison }: DateSpansProps) {
       : 'Prior unavailable'
 
   return (
-    <p className="text-xs text-meta">
+    <p className="intel-secondary text-meta">
       {formatSpanLabel(span)}
       <span aria-hidden className="px-1.5">
         ·
@@ -277,7 +277,7 @@ export function SearchSummaryCards({
 
 export function SearchPositionCaveat() {
   return (
-    <p className="text-sm leading-relaxed text-meta">
+    <p className="intel-secondary leading-relaxed text-meta">
       Average position is directional. Google averages it across impressions.
     </p>
   )
@@ -289,7 +289,7 @@ export function SearchMoversUnavailable({
   coverageStartedOn: string | null
 }) {
   return (
-    <p className="text-sm leading-relaxed text-meta">
+    <p className="intel-secondary leading-relaxed text-meta">
       {coverageStartedOn
         ? `Query movers are omitted because the prior period starts before trustworthy coverage (${formatDisplayDate(coverageStartedOn)}).`
         : 'Query movers are omitted because the prior period cannot be verified against coverage.'}

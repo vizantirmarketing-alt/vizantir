@@ -61,7 +61,7 @@ function DeltaChip({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-0.5 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[0.65rem] font-semibold tabular-nums',
+        'inline-flex items-center gap-0.5 whitespace-nowrap rounded-full px-2 py-0.5 intel-label font-semibold tabular-nums',
         tone === 'positive' && 'bg-positive-soft text-positive',
         tone === 'warning' && 'bg-warning-soft text-warning',
         tone === 'neutral' && 'bg-black/[0.05] text-meta',
@@ -102,19 +102,19 @@ export function MetricCard({
             {icon}
           </span>
         ) : null}
-        <p className="text-[0.7rem] leading-4 text-meta">{label}</p>
+        <p className="intel-secondary text-meta">{label}</p>
       </div>
       {failed ? (
         <>
-          <p className="mt-1 text-sm leading-relaxed text-warning" role="alert">
+          <p className="mt-1 intel-body leading-relaxed text-warning" role="alert">
             {context ?? 'Could not load this metric.'}
           </p>
           {action ? <div className="mt-1.5">{action}</div> : null}
         </>
       ) : (
         <>
-          <div className="mt-1 flex items-center gap-2">
-            <p className="text-2xl leading-none font-medium tabular-nums tracking-tight text-foreground">
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <p className="intel-number leading-none font-medium text-foreground">
               {value}
             </p>
             {deltaLabel !== undefined && deltaDirection !== undefined ? (
@@ -129,7 +129,7 @@ export function MetricCard({
           {context ? (
             <p
               className={cn(
-                'mt-1 truncate text-[0.7rem] leading-4',
+                'mt-1 intel-secondary',
                 contextTone === 'warning' && 'text-warning',
                 contextTone === 'warning-severe' && 'text-warning-severe',
                 contextTone === 'meta' && 'text-meta',

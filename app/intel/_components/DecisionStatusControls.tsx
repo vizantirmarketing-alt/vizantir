@@ -13,7 +13,7 @@ import {
 import { updateDecisionStatus } from '@/app/intel/(app)/actions'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 type DecisionStatusControlsProps = {
   findingKey: string
@@ -56,7 +56,7 @@ export function DecisionStatusControls({
     <form onSubmit={onSubmit} aria-busy={pending} className="max-w-md">
       <label
         htmlFor={`decision-status-${findingKey}`}
-        className="mb-2 block text-sm font-medium text-body"
+        className="mb-2 block intel-body font-medium text-body"
       >
         Status
       </label>
@@ -99,7 +99,7 @@ export function DecisionStatusControls({
         <div className="mt-3">
           <label
             htmlFor={`decision-note-${findingKey}`}
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Result note
             <span className="font-normal text-meta"> (optional)</span>
@@ -118,7 +118,7 @@ export function DecisionStatusControls({
       ) : null}
 
       {error ? (
-        <p className="mt-2 text-sm text-warning-severe" role="alert">
+        <p className="mt-2 intel-body text-warning-severe" role="alert">
           {error}
         </p>
       ) : null}

@@ -19,7 +19,7 @@ import {
 } from '@/app/intel/(app)/leads/[id]/actions'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 type LeadPipelineFormsProps = {
   leadId: string
@@ -35,7 +35,7 @@ function MutationError({ message }: { message: string | null }) {
   }
 
   return (
-    <p className="text-sm text-warning-severe" role="alert">
+    <p className="intel-body text-warning-severe" role="alert">
       {message}
     </p>
   )
@@ -93,7 +93,7 @@ function StatusForm({
     <form onSubmit={onSubmit} aria-busy={pending} className="max-w-md">
       <label
         htmlFor="intel-lead-status"
-        className="mb-2 block text-sm font-medium text-body"
+        className="mb-2 block intel-body font-medium text-body"
       >
         Status
       </label>
@@ -131,7 +131,7 @@ function StatusForm({
           {pending ? 'Saving…' : 'Update status'}
         </Button>
       </div>
-      <p className="mt-2 text-sm text-meta">
+      <p className="mt-2 intel-secondary text-meta">
         Current: {LEAD_STATUS_LABELS[currentStatus]}. Choose a new status, then
         update.
       </p>
@@ -178,7 +178,7 @@ function ValueForm({
     <form onSubmit={onSubmit} aria-busy={pending} className="max-w-md">
       <label
         htmlFor="intel-lead-value"
-        className="mb-2 block text-sm font-medium text-body"
+        className="mb-2 block intel-body font-medium text-body"
       >
         Estimated value
       </label>
@@ -209,7 +209,7 @@ function ValueForm({
           {pending ? 'Saving…' : 'Save'}
         </Button>
       </div>
-      <p className="mt-2 text-sm text-meta">Leave blank to clear.</p>
+      <p className="mt-2 intel-secondary text-meta">Leave blank to clear.</p>
       <div className="mt-2">
         <MutationError message={error} />
       </div>
@@ -241,7 +241,7 @@ function NotesForm({ leadId, notes }: { leadId: string; notes: string | null }) 
     <form onSubmit={onSubmit} aria-busy={pending} className="max-w-xl">
       <label
         htmlFor="intel-lead-notes"
-        className="mb-2 block text-sm font-medium text-body"
+        className="mb-2 block intel-body font-medium text-body"
       >
         Notes
       </label>

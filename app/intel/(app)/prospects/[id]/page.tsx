@@ -68,7 +68,7 @@ export default async function IntelProspectDetailPage({
       <div className="flex flex-col gap-4">
         <BackLink />
         <Panel>
-          <p className="text-sm leading-relaxed text-body" role="alert">
+          <p className="intel-body leading-relaxed text-body" role="alert">
             Unable to load this prospect. Try again shortly.
           </p>
         </Panel>
@@ -82,7 +82,7 @@ export default async function IntelProspectDetailPage({
     <div className="flex flex-col gap-4">
       <BackLink />
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-base font-semibold tracking-tight text-foreground">
+        <h1 className="intel-title text-foreground">
           {prospect.name}
         </h1>
         <ProspectReviewChip status={prospect.reviewStatus} />
@@ -108,7 +108,7 @@ function BackLink() {
   return (
     <Link
       href="/intel/prospects"
-      className="inline-flex items-baseline gap-1 text-sm text-foreground transition-colors hover:text-cobalt-primary"
+      className="inline-flex items-baseline gap-1 intel-body text-foreground transition-colors hover:text-cobalt-primary"
     >
       <ArrowLeft className="size-[1em]" aria-hidden />
       Prospect Research
@@ -119,8 +119,8 @@ function BackLink() {
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <dt className="text-sm text-meta">{label}</dt>
-      <dd className="mt-1 text-sm text-foreground">{children}</dd>
+      <dt className="intel-secondary text-meta">{label}</dt>
+      <dd className="mt-1 intel-body text-foreground">{children}</dd>
     </div>
   )
 }
@@ -177,23 +177,23 @@ function ScoreTable({
   return (
     <div className="min-w-0">
       <div className="flex items-baseline justify-between gap-4">
-        <h3 className="text-sm font-medium text-foreground">{SCORE_TITLES[kind]}</h3>
-        <p className="text-2xl font-semibold tabular-nums text-foreground">
+        <h3 className="intel-body font-medium text-foreground">{SCORE_TITLES[kind]}</h3>
+        <p className="intel-number font-semibold text-foreground">
           {formatScore(stored)}
-          <span className="text-sm font-normal text-meta"> / 100</span>
+          <span className="intel-secondary font-normal text-meta"> / 100</span>
         </p>
       </div>
       {stored === null ? (
-        <p className="mt-1 text-sm text-meta">
+        <p className="mt-1 intel-secondary text-meta">
           Not scored: more than half of this score&apos;s weight is unknown.
         </p>
       ) : null}
-      <table className="mt-3 w-full text-left text-sm">
+      <table className="mt-3 w-full text-left intel-secondary">
         <thead>
           <tr className="border-b border-black/8 text-meta">
-            <th className="py-1.5 pr-3 font-normal">Factor</th>
-            <th className="py-1.5 pr-3 font-normal">Rating</th>
-            <th className="py-1.5 text-right font-normal">Points</th>
+            <th className="intel-th pr-3">Factor</th>
+            <th className="intel-th pr-3">Rating</th>
+            <th className="intel-th text-right">Points</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-black/8">
@@ -203,15 +203,15 @@ function ScoreTable({
                 <details className="group">
                   <summary className="cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
                     <span>{factor.label}</span>
-                    <span className="ml-1.5 text-sm text-meta group-open:hidden" aria-hidden>
+                    <span className="ml-1.5 intel-secondary text-meta group-open:hidden" aria-hidden>
                       +
                     </span>
-                    <span className="ml-1.5 hidden text-sm text-meta group-open:inline" aria-hidden>
+                    <span className="ml-1.5 hidden intel-secondary text-meta group-open:inline" aria-hidden>
                       −
                     </span>
                     <span className="sr-only">Show rating guidance</span>
                   </summary>
-                  <p className="mt-1 text-sm leading-relaxed text-meta">
+                  <p className="mt-1 intel-secondary leading-relaxed text-meta">
                     {FACTOR_DEFINITIONS[factor.key].description}
                   </p>
                 </details>
@@ -243,7 +243,7 @@ function ScoresSection({ prospect }: { prospect: ProspectDetail }) {
   return (
     <Panel title="Score breakdown">
       {versionMismatch ? (
-        <p className="mb-3 text-sm text-warning">
+        <p className="mb-3 intel-body text-warning">
           Scored under {prospect.rubricVersion}. The factor points below use the
           current rubric ({RUBRIC_VERSION}); the totals are the stored scores.
         </p>
@@ -259,7 +259,7 @@ function ScoresSection({ prospect }: { prospect: ProspectDetail }) {
       <div className="mt-4 border-t border-black/8 pt-4">
         <ProspectMeasureButton prospectId={prospect.id} />
       </div>
-      <p className="mt-4 text-sm text-meta">
+      <p className="mt-4 intel-secondary text-meta">
         Rubric {prospect.rubricVersion}. Strong earns a factor&apos;s full weight,
         weak half, none and unknown nothing. Scores are computed by Vizantir, not
         supplied by the research runner.
@@ -282,7 +282,7 @@ function EvidenceSection({
   if (evidence.length === 0) {
     return (
       <Panel title="Evidence">
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           No evidence recorded. Every factor for this company is rated unknown.
         </p>
       </Panel>
@@ -294,7 +294,7 @@ function EvidenceSection({
       <ul className="divide-y divide-black/8">
         {evidence.map((item) => (
           <li key={item.id} className="py-3 first:pt-0 last:pb-0">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-meta">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 intel-secondary text-meta">
               <span className="font-medium text-foreground">
                 {factorLabel(item.factorKey)}
               </span>
@@ -304,14 +304,14 @@ function EvidenceSection({
               </time>
               {item.runId !== latestRunId ? <span>Earlier run</span> : null}
             </div>
-            <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-body">
+            <p className="mt-1 whitespace-pre-wrap intel-body leading-relaxed text-body">
               {item.claim}
             </p>
             <a
               href={item.sourceUrl}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="mt-1 inline-block max-w-full truncate align-bottom text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+              className="mt-1 inline-block max-w-full truncate align-bottom intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
             >
               {item.sourceUrl}
             </a>

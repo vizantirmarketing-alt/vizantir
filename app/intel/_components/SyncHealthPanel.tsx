@@ -26,8 +26,8 @@ export function SyncHealthPanel(props: SyncHealthPanelProps) {
   if (empty) {
     return (
       <Panel title="Sync health">
-        <p className="text-sm font-medium text-foreground">No syncs have run yet</p>
-        <p className="mt-2 text-sm leading-relaxed text-body">
+        <p className="intel-body font-medium text-foreground">No syncs have run yet</p>
+        <p className="mt-2 intel-body leading-relaxed text-body">
           Scheduled jobs write a row here after they finish. Health will appear
           once the first run completes.
         </p>
@@ -46,7 +46,7 @@ export function SyncHealthPanel(props: SyncHealthPanelProps) {
     const latestAt = latestStartedAt(healthy)
     return (
       <Panel title="Sync health">
-        <p className="text-sm text-body">
+        <p className="intel-body text-body">
           All syncs are healthy
           {latestAt ? ` · last run ${formatActivityRelative(latestAt, nowMs)}` : ''}
         </p>
@@ -61,7 +61,7 @@ export function SyncHealthPanel(props: SyncHealthPanelProps) {
   return (
     <Panel title="Sync health" accent={hasFailed ? 'warning-severe' : undefined}>
       {healthy.length > 0 ? (
-        <p className="text-sm text-body">
+        <p className="intel-body text-body">
           {healthySummary(healthy, nowMs)}
         </p>
       ) : null}
@@ -91,8 +91,8 @@ function AttentionRow({
   if (provider.lastRun === null) {
     return (
       <article className="flex flex-col gap-0.5 py-2.5">
-        <p className="text-sm font-medium text-warning">{provider.label}</p>
-        <p className="text-sm text-warning">No runs recorded</p>
+        <p className="intel-body font-medium text-warning">{provider.label}</p>
+        <p className="intel-body text-warning">No runs recorded</p>
       </article>
     )
   }
@@ -107,24 +107,24 @@ function AttentionRow({
   return (
     <article className="flex flex-col gap-0.5 py-2.5">
       <div className="flex items-baseline justify-between gap-3">
-        <p className={cn('min-w-0 text-sm font-medium', tone)}>
+        <p className={cn('min-w-0 intel-body font-medium', tone)}>
           {provider.label}
         </p>
         <time
           dateTime={lastRun.startedAt}
-          className="shrink-0 text-[0.7rem] tabular-nums text-meta"
+          className="shrink-0 intel-secondary tabular-nums text-meta"
         >
           {formatActivityRelative(lastRun.startedAt, nowMs)}
         </time>
       </div>
-      <p className={cn('text-sm', tone)}>{happened}</p>
+      <p className={cn('intel-body', tone)}>{happened}</p>
       {lastRun.consecutiveUnhealthy > 1 ? (
-        <p className={cn('text-[0.7rem] leading-4', tone)}>
+        <p className={cn('intel-secondary', tone)}>
           {streakLabel(lastRun.status, lastRun.consecutiveUnhealthy)}
         </p>
       ) : null}
       {lastRun.administratorMessage && (failed || partial) ? (
-        <p className="text-sm leading-relaxed break-words text-body">
+        <p className="intel-body leading-relaxed break-words text-body">
           {lastRun.administratorMessage}
         </p>
       ) : null}

@@ -12,7 +12,7 @@ import {
 } from '@/app/intel/(app)/new-businesses/actions'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 function slug(category: string): string {
   return `category-${category.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`
@@ -43,7 +43,7 @@ export function CategoryToggles({ categories }: { categories: CategoryRow[] }) {
 
   if (rows.length === 0) {
     return (
-      <p className="text-sm leading-relaxed text-body">
+      <p className="intel-body leading-relaxed text-body">
         No categories yet. They appear after the first import, all switched off.
       </p>
     )
@@ -54,7 +54,7 @@ export function CategoryToggles({ categories }: { categories: CategoryRow[] }) {
 
   return (
     <div className="min-w-0 space-y-3" aria-busy={pending}>
-      <p className="text-sm text-meta [overflow-wrap:anywhere]">
+      <p className="intel-secondary text-meta [overflow-wrap:anywhere]">
         <span className="font-medium text-foreground">{formatEnabledTotal(rows)}</span>. Only businesses in
         categories that are on are kept; the rest are counted and skipped. After turning a category on, re-import a
         period to pick up its businesses.
@@ -95,27 +95,27 @@ export function CategoryToggles({ categories }: { categories: CategoryRow[] }) {
         >
           Turn off shown
         </Button>
-        <span className="text-sm text-meta">
+        <span className="intel-secondary text-meta">
           {shown.length === rows.length ? `${rows.length} shown` : `${shown.length} of ${rows.length} shown`}
         </span>
       </div>
 
       {error !== null ? (
-        <p className="text-sm text-warning-severe [overflow-wrap:anywhere]" role="alert">
+        <p className="intel-body text-warning-severe [overflow-wrap:anywhere]" role="alert">
           {error}
         </p>
       ) : null}
 
       {shown.length === 0 ? (
-        <p className="text-sm text-body">No categories match.</p>
+        <p className="intel-body text-body">No categories match.</p>
       ) : (
         <ul className="max-h-96 divide-y divide-black/8 overflow-y-auto pr-1">
           {shown.map((row) => (
             <li key={row.category} className="flex min-w-0 items-center justify-between gap-3 py-1.5">
-              <label htmlFor={slug(row.category)} className="min-w-0 flex-1 truncate text-sm text-body" title={row.category}>
+              <label htmlFor={slug(row.category)} className="min-w-0 flex-1 break-words intel-body text-body">
                 {row.category}
               </label>
-              <span className="shrink-0 tabular-nums text-sm text-meta">{row.lastSeenCount}</span>
+              <span className="shrink-0 tabular-nums intel-secondary text-meta">{row.lastSeenCount}</span>
               <input
                 id={slug(row.category)}
                 type="checkbox"

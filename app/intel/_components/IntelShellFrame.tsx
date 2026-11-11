@@ -39,7 +39,7 @@ function SignOutForm({ className }: { className?: string }) {
       <button
         type="submit"
         className={cn(
-          'text-sm text-meta transition-colors hover:text-foreground',
+          'intel-secondary text-meta transition-colors hover:text-foreground',
           className,
         )}
       >
@@ -67,7 +67,8 @@ function NavLinks({
               onClick={onNavigate}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'block rounded-md px-3 py-2 text-sm tracking-wide transition-colors',
+                // 14px: "Prospect Research" must fit the 128px link width at every size.
+                'block rounded-md px-3 py-2 intel-secondary tracking-wide transition-colors',
                 active
                   ? 'bg-cobalt-soft text-foreground'
                   : 'text-meta hover:text-foreground',
@@ -96,7 +97,8 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
   }
 
   return (
-    <div className="min-h-svh bg-background">
+    // tabular-nums: every count, value, date and time in Intel lines up.
+    <div className="min-h-svh bg-background tabular-nums">
       {/*
         Desktop sidebar toggle. Fixed at the same spot whether the sidebar is
         open or closed, so toggling twice needs no pointer movement. Below lg
@@ -108,7 +110,6 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
         aria-expanded={!collapsed}
         aria-controls={sidebarId}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         className="fixed left-3 top-3 z-40 hidden size-8 items-center justify-center rounded-md text-meta transition-colors hover:bg-black/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt-focus lg:inline-flex"
       >
         <PanelLeft className="size-4" aria-hidden />
@@ -135,10 +136,10 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
           )}
         >
           <div className="flex h-full w-[13.5rem] flex-col px-8 py-12">
-            <p className="shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
+            <p className="shrink-0 intel-eyebrow text-cobalt-primary">
               Intel
             </p>
-            <p className="mt-3 shrink-0 text-sm text-meta">Vizantir</p>
+            <p className="mt-3 shrink-0 intel-secondary text-meta">Vizantir</p>
 
             <nav
               aria-label="Intel"
@@ -148,7 +149,7 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
             </nav>
 
             <div className="mt-8 shrink-0 space-y-3">
-              <p className="truncate text-xs text-meta" title={email}>
+              <p className="break-all intel-secondary text-meta">
                 {email}
               </p>
               <SignOutForm />
@@ -158,7 +159,7 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
 
         <div className="flex min-h-svh min-w-0 flex-col">
           <header className="flex shrink-0 items-center justify-between border-b border-black/8 px-6 py-4 lg:hidden">
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
+            <p className="intel-eyebrow text-cobalt-primary">
               Intel
             </p>
             <button
@@ -190,7 +191,7 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
                 />
               </div>
               <div className="mt-8 shrink-0 space-y-3 border-t border-black/8 pt-8">
-                <p className="truncate text-xs text-meta" title={email}>
+                <p className="break-all intel-secondary text-meta">
                   {email}
                 </p>
                 <SignOutForm />
@@ -213,7 +214,7 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
           <main
             data-sidebar={collapsed ? 'collapsed' : 'expanded'}
             className={cn(
-              'min-w-0 flex-1 px-6 py-6 md:px-8 md:py-8 lg:px-10',
+              'intel-body min-w-0 flex-1 px-6 py-6 md:px-8 md:py-8 lg:px-10',
               'lg:transition-[padding] lg:duration-200 lg:ease-out motion-reduce:transition-none',
               collapsed && 'lg:pl-16',
             )}

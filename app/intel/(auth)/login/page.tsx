@@ -22,13 +22,13 @@ export default async function IntelLoginPage({ searchParams }: IntelLoginPagePro
   return (
     <div className="flex min-h-screen items-center bg-background">
       <div className="mx-auto w-full max-w-md px-6 py-24">
-        <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cobalt-primary">
+        <p className="intel-eyebrow text-cobalt-primary">
           Intel
         </p>
         <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground">
           Sign in
         </h1>
-        <p className="mt-4 mb-10 text-base leading-relaxed text-body">
+        <p className="mt-4 mb-10 intel-body leading-relaxed text-body">
           Continue with Google to sign in.
         </p>
         <LoginForm initialError={initialError} />

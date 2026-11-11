@@ -66,7 +66,7 @@ export function DecisionTriagedToggle({
             'peer-focus-visible:ring-2 peer-focus-visible:ring-cobalt-focus',
           )}
         />
-        <span className="text-sm text-body">{label}</span>
+        <span className="intel-body text-body">{label}</span>
       </label>
     </form>
   )

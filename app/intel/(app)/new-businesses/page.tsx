@@ -61,8 +61,8 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
     // The table scrolls inside its own panel instead.
     <div className="flex min-w-0 flex-col gap-4">
       <div className="min-w-0">
-        <h1 className="text-base font-semibold tracking-tight text-foreground">New Businesses</h1>
-        <p className="mt-1 text-sm text-meta">
+        <h1 className="intel-title text-foreground">New Businesses</h1>
+        <p className="mt-1 intel-secondary text-meta">
           New business licenses from Clark County&apos;s monthly public lists. Only businesses in categories you
           enable are kept.
         </p>
@@ -71,7 +71,7 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
       <div className="grid min-w-0 gap-4 lg:grid-cols-2 [&>*]:min-w-0">
         <Panel title="Categories">
           {categories === null ? (
-            <p className="text-sm text-body" role="alert">
+            <p className="intel-body text-body" role="alert">
               Unable to load categories. Try again shortly.
             </p>
           ) : (
@@ -82,15 +82,15 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
         <Panel title="Imports">
           <ImportLatestButton />
           {imports === null ? (
-            <p className="text-sm text-body" role="alert">
+            <p className="intel-body text-body" role="alert">
               Unable to load imports. Try again shortly.
             </p>
           ) : imports.length === 0 ? (
-            <p className="text-sm leading-relaxed text-body">
+            <p className="intel-body leading-relaxed text-body">
               Nothing imported yet. The newest list is imported automatically each morning, or use Import latest.
             </p>
           ) : (
-            <ul className="divide-y divide-black/8 text-sm">
+            <ul className="divide-y divide-black/8 intel-body">
               {imports.map((i) => (
                 <ImportRow
                   key={periodKey(i.period)}
@@ -119,26 +119,26 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
 
       <Panel title="Businesses">
         {!list.ok ? (
-          <p className="text-sm text-body" role="alert">
+          <p className="intel-body text-body" role="alert">
             Unable to load businesses. Try again shortly.
           </p>
         ) : list.rows.length === 0 ? (
-          <p className="text-sm leading-relaxed text-body">
+          <p className="intel-body leading-relaxed text-body">
             No businesses match. Enable categories, then import or re-import a period.
           </p>
         ) : (
           <>
-            <p className="mb-2 text-sm text-meta">{list.total.toLocaleString('en-US')} businesses</p>
+            <p className="mb-2 intel-secondary text-meta">{list.total.toLocaleString('en-US')} businesses</p>
             <div className="max-w-full overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-left intel-secondary">
                 <thead>
                   <tr className="border-b border-black/8 text-meta">
-                    <th className="py-2 pr-4 font-normal">Name</th>
-                    <th className="py-2 pr-4 font-normal">Category</th>
-                    <th className="py-2 pr-4 font-normal">Address</th>
-                    <th className="py-2 pr-4 font-normal">{PHONE_LABEL}</th>
-                    <th className="py-2 pr-4 font-normal">Period</th>
-                    <th className="py-2 font-normal">Review</th>
+                    <th className="intel-th pr-4">Name</th>
+                    <th className="intel-th pr-4">Category</th>
+                    <th className="intel-th pr-4">Address</th>
+                    <th className="intel-th pr-4">{PHONE_LABEL}</th>
+                    <th className="intel-th pr-4">Period</th>
+                    <th className="intel-th">Review</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/8">
@@ -158,7 +158,7 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
               </table>
             </div>
             {list.pageCount > 1 ? (
-              <nav aria-label="Business pages" className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 text-sm">
+              <nav aria-label="Business pages" className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 intel-body">
                 <span className="text-meta">
                   Page {params.page} of {list.pageCount}
                 </span>

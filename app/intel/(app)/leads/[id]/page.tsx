@@ -57,11 +57,11 @@ export default async function IntelLeadDetailPage({
     return (
       <div className="flex flex-col gap-4">
         <BackLink href={backHref} />
-        <h1 className="text-base font-semibold tracking-tight text-foreground">
+        <h1 className="intel-title text-foreground">
           Inquiry
         </h1>
         <Panel>
-          <p className="text-sm leading-relaxed text-body" role="alert">
+          <p className="intel-body leading-relaxed text-body" role="alert">
             Unable to load this inquiry. Try again shortly.
           </p>
         </Panel>
@@ -78,7 +78,7 @@ export default async function IntelLeadDetailPage({
       <BackLink href={backHref} />
 
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-base font-semibold tracking-tight text-foreground">
+        <h1 className="intel-title text-foreground">
           {lead.name}
         </h1>
         <LeadStatusBadge status={lead.status} />
@@ -113,7 +113,7 @@ function BackLink({ href }: { href: string }) {
   return (
     <Link
       href={href}
-      className="inline-flex items-baseline gap-1 text-sm text-foreground transition-colors hover:text-foreground"
+      className="inline-flex items-baseline gap-1 intel-body text-foreground transition-colors hover:text-foreground"
     >
       <ArrowLeft className="size-[1em]" aria-hidden />
       Leads
@@ -130,8 +130,8 @@ function Field({
 }) {
   return (
     <div>
-      <dt className="text-sm text-meta">{label}</dt>
-      <dd className="mt-1 text-sm text-foreground">{children}</dd>
+      <dt className="intel-secondary text-meta">{label}</dt>
+      <dd className="mt-1 intel-body text-foreground">{children}</dd>
     </div>
   )
 }
@@ -185,8 +185,8 @@ function InquirySection({ lead }: { lead: LeadDetail }) {
         </Field>
       </dl>
       <div className="mt-6">
-        <p className="text-sm text-meta">Message</p>
-        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+        <p className="intel-secondary text-meta">Message</p>
+        <p className="mt-2 whitespace-pre-wrap intel-body leading-relaxed text-foreground">
           {lead.message}
         </p>
       </div>
@@ -220,7 +220,7 @@ function AttributionSection({ lead }: { lead: LeadDetail }) {
           </Field>
         </dl>
       ) : (
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           This inquiry predates attribution capture.
         </p>
       )}
@@ -268,12 +268,12 @@ function DeliverySection({ lead }: { lead: LeadDetail }) {
         </Field>
       </dl>
       {lead.notify_error ? (
-        <p className="mt-5 text-sm leading-relaxed text-body">
+        <p className="mt-5 intel-body leading-relaxed text-body">
           {lead.notify_error}
         </p>
       ) : null}
       {needsReply ? (
-        <p className={`mt-5 text-sm leading-relaxed ${warningClass}`}>
+        <p className={`mt-5 intel-body leading-relaxed ${warningClass}`}>
           The notification email may not have been received. This inquiry still
           needs a reply.
         </p>
@@ -286,19 +286,19 @@ function HistorySection({ history }: { history: LeadStatusHistoryRow[] }) {
   return (
     <Panel title="History">
       {history.length === 0 ? (
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           No status changes have been recorded.
         </p>
       ) : (
         <ol className="divide-y divide-black/8">
           {history.map((entry) => (
             <li key={entry.id} className="py-2 first:pt-0">
-              <p className="text-sm text-foreground">
+              <p className="intel-body text-foreground">
                 {entry.previous_status
                   ? `${formatStatusLabel(entry.previous_status)} → ${formatStatusLabel(entry.new_status)}`
                   : `Set to ${formatStatusLabel(entry.new_status)}`}
               </p>
-              <p className="mt-1 text-sm text-body">
+              <p className="mt-1 intel-body text-body">
                 {entry.changed_by ? `${entry.changed_by} · ` : null}
                 <time dateTime={entry.changed_at} className="tabular-nums">
                   {formatFullTimestamp(entry.changed_at)}

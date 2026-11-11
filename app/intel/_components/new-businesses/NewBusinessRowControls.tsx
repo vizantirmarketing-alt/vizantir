@@ -51,7 +51,7 @@ export function NewBusinessRowControls({
             size="sm"
             disabled={pending || reviewStatus === action.status}
             onClick={() => run(() => updateNewBusinessReview(id, action.status))}
-            className="h-7 border-black/10 px-2 text-xs"
+            className="h-9 border-black/10 px-2 intel-secondary"
           >
             {action.label}
           </Button>
@@ -59,13 +59,13 @@ export function NewBusinessRowControls({
         <button
           type="button"
           onClick={() => setNoteOpen((open) => !open)}
-          className="text-xs text-meta transition-colors hover:text-foreground"
+          className="intel-secondary text-meta transition-colors hover:text-foreground"
         >
           {noteOpen ? 'Close note' : ownerNote ? 'Edit note' : 'Note'}
         </button>
       </div>
-      <p className="text-xs text-meta">{NEW_BUSINESS_REVIEW_LABELS[reviewStatus]}</p>
-      {ownerNote && !noteOpen ? <p className="line-clamp-2 text-xs text-body">{ownerNote}</p> : null}
+      <p className="intel-secondary text-meta">{NEW_BUSINESS_REVIEW_LABELS[reviewStatus]}</p>
+      {ownerNote && !noteOpen ? <p className="line-clamp-2 intel-secondary text-body">{ownerNote}</p> : null}
       {noteOpen ? (
         <div className="space-y-1.5">
           <textarea
@@ -74,7 +74,7 @@ export function NewBusinessRowControls({
             rows={2}
             onChange={(event) => setNote(event.target.value)}
             aria-label="Note"
-            className="w-full rounded-lg border border-black/10 bg-white px-2 py-1.5 text-sm text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus"
+            className="w-full rounded-lg border border-black/10 bg-white px-2 py-1.5 intel-body text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus"
           />
           <Button
             type="button"
@@ -82,14 +82,14 @@ export function NewBusinessRowControls({
             size="sm"
             disabled={pending}
             onClick={() => run(() => updateNewBusinessNote(id, note), () => setNoteOpen(false))}
-            className="h-7 border-black/10 px-2 text-xs"
+            className="h-9 border-black/10 px-2 intel-secondary"
           >
             {pending ? 'Saving…' : 'Save note'}
           </Button>
         </div>
       ) : null}
       {error !== null ? (
-        <p className="text-xs text-warning-severe" role="alert">
+        <p className="intel-secondary text-warning-severe" role="alert">
           {error}
         </p>
       ) : null}

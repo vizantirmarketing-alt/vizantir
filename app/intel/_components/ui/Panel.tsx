@@ -48,7 +48,7 @@ export function Panel({
           {title ? (
             <h2
               className={cn(
-                'text-[0.7rem] font-medium uppercase tracking-[0.18em]',
+                'intel-eyebrow',
                 accent ? ACCENT_TITLE[accent] : 'text-meta',
               )}
             >

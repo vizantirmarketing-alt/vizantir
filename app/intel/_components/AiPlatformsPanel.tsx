@@ -15,7 +15,7 @@ export function AiPlatformsPanel(props: AiPlatformsPanelProps) {
         <PanelQueryError message="Unable to load AI platform data. Data could not be loaded." />
       ) : (
         <>
-          <p className="mb-3 text-[0.7rem] leading-4 text-meta">
+          <p className="mb-3 intel-secondary text-meta">
             Crawler visits to robots.txt in the last 30 days. A proxy for AI
             platform awareness of the site.
           </p>
@@ -46,21 +46,21 @@ function PlatformRow({
       : 'Not yet seen'
 
   return (
-    <article className="flex h-12 items-center justify-between gap-4">
+    <article className="flex min-h-12 items-center py-1.5 justify-between gap-4">
       <div className="min-w-0">
         <p
           className={cn(
-            'truncate text-sm',
+            'truncate intel-body',
             unseen ? 'text-meta' : 'text-foreground',
           )}
         >
           {row.label}
         </p>
-        <p className="truncate text-[0.7rem] leading-4 text-meta">{lastSeen}</p>
+        <p className="truncate intel-secondary text-meta">{lastSeen}</p>
       </div>
       <p
         className={cn(
-          'shrink-0 text-sm tabular-nums',
+          'shrink-0 intel-body tabular-nums',
           unseen ? 'text-meta' : 'text-foreground',
         )}
       >

@@ -32,7 +32,7 @@ function ExportAction({ params }: { params: LeadsListParams }) {
   return (
     <a
       href={leadsExportHref(params)}
-      className="text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+      className="intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
     >
       Export this filtered view
     </a>

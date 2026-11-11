@@ -37,7 +37,7 @@ import { cn } from '@/lib/utils'
 export function DecisionHeader({ action }: { action?: ReactNode }) {
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-      <h1 className="text-base font-semibold tracking-tight text-foreground">
+      <h1 className="intel-title text-foreground">
         Overview
       </h1>
       {action}
@@ -55,10 +55,10 @@ export function DecisionEmptyState({ hiddenCount }: { hiddenCount: number }) {
   if (hiddenCount > 0) {
     return (
       <div>
-        <p className="text-sm font-medium text-foreground">
+        <p className="intel-body font-medium text-foreground">
           All findings are triaged
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-body">
+        <p className="mt-2 intel-body leading-relaxed text-body">
           {hiddenCount === 1
             ? '1 completed or dismissed finding is hidden from this view.'
             : `${formatCount(hiddenCount)} completed or dismissed findings are hidden from this view.`}
@@ -69,8 +69,8 @@ export function DecisionEmptyState({ hiddenCount }: { hiddenCount: number }) {
 
   return (
     <div>
-      <p className="text-sm font-medium text-foreground">No findings yet</p>
-      <p className="mt-2 text-sm leading-relaxed text-body">
+      <p className="intel-body font-medium text-foreground">No findings yet</p>
+      <p className="mt-2 intel-body leading-relaxed text-body">
         Detectors run daily after Search Console sync. Findings that need a
         look will appear here.
       </p>
@@ -241,7 +241,7 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
         >
           <h3
             className={cn(
-              'min-w-0 flex-1 truncate text-sm font-medium',
+              'min-w-0 flex-1 truncate intel-body font-medium',
               triaged ? 'text-body' : 'text-foreground',
             )}
           >
@@ -254,7 +254,7 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
             <DecisionStatusChip status={item.status} />
           </span>
           {fact ? (
-            <span className="min-w-0 max-w-[8rem] truncate text-xs font-medium tabular-nums text-body sm:max-w-[16rem]">
+            <span className="min-w-0 max-w-[8rem] truncate intel-secondary font-medium tabular-nums text-body sm:max-w-[16rem]">
               {fact}
             </span>
           ) : null}
@@ -266,12 +266,12 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
           </span>
         </summary>
         <div className="space-y-3 border-t border-black/8 pb-3 pt-3">
-          <p className="text-xs text-meta">
+          <p className="intel-secondary text-meta">
             {formatSpanLabel({ start: item.periodStart, end: item.periodEnd })}
           </p>
-          <p className="text-sm leading-relaxed text-body">{item.description}</p>
+          <p className="intel-body leading-relaxed text-body">{item.description}</p>
           {item.recommendedAction ? (
-            <p className="text-sm leading-relaxed text-body">
+            <p className="intel-body leading-relaxed text-body">
               <span className="font-medium text-foreground">Recommended. </span>
               {item.recommendedAction}
             </p>
@@ -311,7 +311,7 @@ function CompletionRecord({
   return (
     <div className="rounded-lg bg-positive-soft px-3 py-2.5">
       {completedAt ? (
-        <p className="text-xs font-medium text-positive">
+        <p className="intel-secondary font-medium text-positive">
           Completed{' '}
           <time dateTime={completedAt}>{formatCompletedAt(completedAt)}</time>
         </p>
@@ -320,8 +320,8 @@ function CompletionRecord({
         <p
           className={
             completedAt
-              ? 'mt-2 text-sm leading-relaxed text-body'
-              : 'text-sm leading-relaxed text-body'
+              ? 'mt-2 intel-body leading-relaxed text-body'
+              : 'intel-body leading-relaxed text-body'
           }
         >
           <span className="font-medium text-foreground">Result. </span>
@@ -335,11 +335,11 @@ function CompletionRecord({
 function RelatedUrl({ href }: { href: string }) {
   const label = href.replace(/^https?:\/\//, '')
   if (!/^https?:\/\//i.test(href)) {
-    return <p className="text-sm text-body">{href}</p>
+    return <p className="intel-body text-body">{href}</p>
   }
 
   return (
-    <p className="text-sm">
+    <p className="intel-body">
       <a
         href={href}
         className="text-cobalt-primary transition-colors hover:text-[#1E85FF]"
@@ -358,16 +358,16 @@ function EvidenceBlock({ evidence }: { evidence: Record<string, unknown> }) {
 
   return (
     <details>
-      <summary className="cursor-pointer text-sm text-meta transition-colors hover:text-foreground">
+      <summary className="cursor-pointer intel-secondary text-meta transition-colors hover:text-foreground">
         Evidence
       </summary>
       <dl className="mt-3 space-y-3">
         {entries.map(([key, value]) => (
           <div key={key}>
-            <dt className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+            <dt className="intel-eyebrow text-meta">
               {humanizeKey(key)}
             </dt>
-            <dd className="mt-1 text-sm text-body">
+            <dd className="mt-1 intel-body text-body">
               <EvidenceValue fieldKey={key} value={value} />
             </dd>
           </div>

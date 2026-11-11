@@ -370,7 +370,7 @@ function LegendItem({
   label: string
 }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm text-body">
+    <span className="inline-flex items-center gap-1.5 intel-body text-body">
       {swatch}
       {label}
     </span>
@@ -424,10 +424,10 @@ export function SearchTrendChart({
     <Panel
       title="Trend"
       headerAction={
-        <span className="text-xs text-meta">{SEARCH_RANGE_LABELS[range]}</span>
+        <span className="intel-secondary text-meta">{SEARCH_RANGE_LABELS[range]}</span>
       }
     >
-      <p className="max-w-2xl text-sm leading-relaxed text-body">
+      <p className="max-w-2xl intel-body leading-relaxed text-body">
         {visibleSummary(clicks, impressions, comparison, range)}
       </p>
       <div className="mt-3 flex flex-wrap items-center gap-5">
@@ -455,7 +455,12 @@ export function SearchTrendChart({
           </>
         )}
       </div>
-      <figure className="mt-3">
+      {/*
+        Axis labels sit in margins outside the plot: a left gutter for values
+        and a band below for dates, so 14px labels never overlap the plot.
+        The plot's own geometry, scales and data are unchanged.
+      */}
+      <figure className="mt-3 pb-6 pl-12">
         <figcaption className="sr-only">{description}</figcaption>
         <svg
           className="block h-[180px] w-full overflow-visible md:h-[220px]"
@@ -601,26 +606,32 @@ export function SearchTrendChart({
           </svg>
 
           <text
-            x={8}
-            y={pct(PLOT.top + 11, HEIGHT)}
-            className="fill-meta text-[0.65rem]"
+            x={-8}
+            y={pct(PLOT.top, HEIGHT)}
+            textAnchor="end"
+            dominantBaseline="middle"
+            className="fill-meta intel-secondary"
           >
             {compactCount(axisMax)}
           </text>
           {gridValues.map((value) => (
             <text
               key={value}
-              x={8}
-              y={pct(yAt(value, axisMax) + 4, HEIGHT)}
-              className="fill-meta text-[0.65rem]"
+              x={-8}
+              y={pct(yAt(value, axisMax), HEIGHT)}
+              textAnchor="end"
+              dominantBaseline="middle"
+              className="fill-meta intel-secondary"
             >
               {compactCount(Math.round(value))}
             </text>
           ))}
           <text
-            x={8}
-            y={pct(baseline - 2, HEIGHT)}
-            className="fill-meta text-[0.65rem]"
+            x={-8}
+            y={pct(baseline, HEIGHT)}
+            textAnchor="end"
+            dominantBaseline="middle"
+            className="fill-meta intel-secondary"
           >
             0
           </text>
@@ -634,7 +645,7 @@ export function SearchTrendChart({
                     y={pct(marker.y, HEIGHT)}
                     dy={-(CLICK_MARKER_RADIUS + CLICK_MARKER_RING + 3)}
                     textAnchor="middle"
-                    className="fill-cobalt-primary text-[0.65rem]"
+                    className="fill-cobalt-primary intel-secondary"
                   >
                     {marker.clicks}
                   </text>
@@ -646,9 +657,10 @@ export function SearchTrendChart({
             <text
               key={`${tick.index}-${tick.label}`}
               x={pct(xAt(tick.index, daily.length), WIDTH)}
-              y={pct(HEIGHT - 5, HEIGHT)}
+              y="100%"
+              dy="1.1em"
               textAnchor={dateAnchor(tick.index, daily.length)}
-              className="fill-meta text-[0.65rem]"
+              className="fill-meta intel-secondary"
             >
               {tick.label}
             </text>

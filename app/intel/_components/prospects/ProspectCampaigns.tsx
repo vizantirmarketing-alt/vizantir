@@ -20,7 +20,7 @@ import {
 } from '@/app/intel/(app)/prospects/actions'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 function readFormString(form: FormData, key: string): string {
   const value = form.get(key)
@@ -49,7 +49,7 @@ function CampaignFields({ idPrefix, campaign }: { idPrefix: string; campaign?: C
     <>
       <div className="grid gap-3 sm:grid-cols-[1fr_1fr_7rem_7rem]">
         <div>
-          <label htmlFor={`${idPrefix}-market`} className="mb-2 block text-sm font-medium text-body">
+          <label htmlFor={`${idPrefix}-market`} className="mb-2 block intel-body font-medium text-body">
             Market
           </label>
           <input
@@ -63,7 +63,7 @@ function CampaignFields({ idPrefix, campaign }: { idPrefix: string; campaign?: C
           />
         </div>
         <div>
-          <label htmlFor={`${idPrefix}-industry`} className="mb-2 block text-sm font-medium text-body">
+          <label htmlFor={`${idPrefix}-industry`} className="mb-2 block intel-body font-medium text-body">
             Industry
           </label>
           <input
@@ -77,7 +77,7 @@ function CampaignFields({ idPrefix, campaign }: { idPrefix: string; campaign?: C
           />
         </div>
         <div>
-          <label htmlFor={`${idPrefix}-count`} className="mb-2 block text-sm font-medium text-body">
+          <label htmlFor={`${idPrefix}-count`} className="mb-2 block intel-body font-medium text-body">
             Companies
           </label>
           <input
@@ -92,7 +92,7 @@ function CampaignFields({ idPrefix, campaign }: { idPrefix: string; campaign?: C
           />
         </div>
         <div>
-          <label htmlFor={`${idPrefix}-cadence`} className="mb-2 block text-sm font-medium text-body">
+          <label htmlFor={`${idPrefix}-cadence`} className="mb-2 block intel-body font-medium text-body">
             Every (days)
           </label>
           <input
@@ -108,7 +108,7 @@ function CampaignFields({ idPrefix, campaign }: { idPrefix: string; campaign?: C
         </div>
       </div>
       <div>
-        <label htmlFor={`${idPrefix}-exclusions`} className="mb-2 block text-sm font-medium text-body">
+        <label htmlFor={`${idPrefix}-exclusions`} className="mb-2 block intel-body font-medium text-body">
           Exclude domains (optional)
         </label>
         <textarea
@@ -119,7 +119,7 @@ function CampaignFields({ idPrefix, campaign }: { idPrefix: string; campaign?: C
           placeholder="One per line or comma separated"
           className={fieldClassName}
         />
-        <p className="mt-1 text-sm text-meta">Up to {RUN_EXCLUSIONS_MAX} domains.</p>
+        <p className="mt-1 intel-secondary text-meta">Up to {RUN_EXCLUSIONS_MAX} domains.</p>
       </div>
     </>
   )
@@ -127,7 +127,7 @@ function CampaignFields({ idPrefix, campaign }: { idPrefix: string; campaign?: C
 
 function Message({ error }: { error: string | null }) {
   return error === null ? null : (
-    <p className="text-sm text-warning-severe" role="alert">
+    <p className="intel-body text-warning-severe" role="alert">
       {error}
     </p>
   )
@@ -165,11 +165,11 @@ function CampaignRow({ campaign }: { campaign: Campaign }) {
   return (
     <li className="py-3 first:pt-0 last:pb-0" aria-busy={pending}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm font-medium text-foreground">
+        <p className="intel-body font-medium text-foreground">
           {campaign.industry} · {campaign.market} · {campaign.targetCount} companies
         </p>
         <div className="flex items-center gap-3">
-          <span className={campaign.active ? 'text-sm text-positive' : 'text-sm text-meta'}>
+          <span className={campaign.active ? 'intel-body text-positive' : 'intel-secondary text-meta'}>
             {campaign.active ? 'Active' : 'Paused'}
           </span>
           <TextAction
@@ -187,7 +187,7 @@ function CampaignRow({ campaign }: { campaign: Campaign }) {
           </TextAction>
         </div>
       </div>
-      <p className="mt-1 text-sm text-meta">
+      <p className="mt-1 intel-secondary text-meta">
         {cadenceLabel(campaign.cadenceDays)} · last queued{' '}
         {campaign.lastQueuedAt === null ? 'never' : formatShortDate(campaign.lastQueuedAt)}
         {campaign.exclusions.length > 0
@@ -244,7 +244,7 @@ function NewCampaignForm() {
           {pending ? 'Adding…' : 'Add campaign'}
         </Button>
         {saved ? (
-          <p className="text-sm text-meta" role="status">
+          <p className="intel-secondary text-meta" role="status">
             Campaign added. It queues its first run at the next 7:00 AM Pacific check.
           </p>
         ) : null}
@@ -258,7 +258,7 @@ export function ProspectCampaigns({ campaigns }: { campaigns: Campaign[] }) {
   return (
     <div className="space-y-5">
       {campaigns.length === 0 ? (
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           No scheduled campaigns. A campaign queues a research run on its cadence, checked daily at
           7:00 AM Pacific, and never while one of its runs is still requested or in progress.
         </p>
@@ -273,7 +273,7 @@ export function ProspectCampaigns({ campaigns }: { campaigns: Campaign[] }) {
         </ul>
       )}
       <div className="border-t border-black/8 pt-4">
-        <p className="mb-3 text-sm font-medium text-foreground">New campaign</p>
+        <p className="mb-3 intel-body font-medium text-foreground">New campaign</p>
         <NewCampaignForm />
       </div>
     </div>

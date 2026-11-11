@@ -41,7 +41,7 @@ const DOT_CLASS: Record<StatusTone, string> = {
 
 export function ReportsHeader() {
   return (
-    <h1 className="text-base font-semibold tracking-tight text-foreground">
+    <h1 className="intel-title text-foreground">
       Reports
     </h1>
   )
@@ -49,7 +49,7 @@ export function ReportsHeader() {
 
 export function ReportsQueryError() {
   return (
-    <p className="text-sm leading-relaxed text-body" role="alert">
+    <p className="intel-body leading-relaxed text-body" role="alert">
       Unable to load reports. Try again shortly.
     </p>
   )
@@ -58,8 +58,8 @@ export function ReportsQueryError() {
 export function ReportsEmptyState() {
   return (
     <div>
-      <p className="text-sm font-medium text-foreground">No reports yet</p>
-      <p className="mt-2 text-sm leading-relaxed text-body">
+      <p className="intel-body font-medium text-foreground">No reports yet</p>
+      <p className="mt-2 intel-body leading-relaxed text-body">
         Monthly reports will appear here after the 4th-of-month run.
       </p>
     </div>
@@ -77,7 +77,7 @@ export function ReportsQueue({
     <div className="flex flex-col gap-4">
       {awaitingCount > 0 ? (
         <Panel title="Awaiting review" accent="cobalt">
-          <p className="text-sm leading-relaxed text-body">
+          <p className="intel-body leading-relaxed text-body">
             {awaitingCount === 1
               ? '1 Care report is waiting for a narrative before send.'
               : `${awaitingCount} Care reports are waiting for a narrative before send.`}
@@ -93,7 +93,7 @@ export function ReportsQueue({
                 <Link
                   href={`/intel/reports/${row.id}`}
                   prefetch={false}
-                  className="min-w-0 text-sm font-medium text-foreground transition-colors hover:text-cobalt-primary"
+                  className="min-w-0 intel-body font-medium text-foreground transition-colors hover:text-cobalt-primary"
                 >
                   {row.clientName}
                 </Link>
@@ -102,8 +102,8 @@ export function ReportsQueue({
                   awaitingReview={row.awaitingReview}
                 />
               </div>
-              <p className="mt-1 text-sm text-body">{formatMonth(row.period)}</p>
-              <p className="mt-2 text-sm text-meta">
+              <p className="mt-1 intel-body text-body">{formatMonth(row.period)}</p>
+              <p className="mt-2 intel-secondary text-meta">
                 {TIER_LABEL[row.tier]}
                 <span aria-hidden className="px-2">
                   ·
@@ -115,23 +115,23 @@ export function ReportsQueue({
         </ul>
 
         <div className="hidden lg:block">
-          <table className="w-full border-collapse text-left text-sm">
+          <table className="w-full border-collapse text-left intel-secondary">
             <caption className="sr-only">Monthly reports</caption>
             <thead>
               <tr className="border-b border-black/8">
-                <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+                <th className="intel-th pr-4">
                   Client
                 </th>
-                <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+                <th className="intel-th pr-4">
                   Period
                 </th>
-                <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+                <th className="intel-th pr-4">
                   Tier
                 </th>
-                <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+                <th className="intel-th pr-4">
                   Status
                 </th>
-                <th className="py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+                <th className="intel-th">
                   PDF
                 </th>
               </tr>
@@ -192,7 +192,7 @@ function ReportStatusBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         TONE_CLASS[tone],
       )}
     >

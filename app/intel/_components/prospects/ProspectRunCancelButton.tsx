@@ -29,7 +29,7 @@ export function ProspectRunCancelButton({ runId }: { runId: string }) {
         Cancel
       </TextAction>
       {error !== null ? (
-        <span className="text-sm text-warning-severe" role="alert">
+        <span className="intel-body text-warning-severe" role="alert">
           {error}
         </span>
       ) : null}

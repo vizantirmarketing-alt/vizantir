@@ -69,7 +69,7 @@ function ClientsBackLink() {
   return (
     <Link
       href="/intel/clients"
-      className="inline-flex items-baseline gap-1 text-sm text-foreground transition-colors hover:text-foreground"
+      className="inline-flex items-baseline gap-1 intel-body text-foreground transition-colors hover:text-foreground"
     >
       <ArrowLeft className="size-[1em]" aria-hidden />
       Clients

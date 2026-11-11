@@ -57,7 +57,7 @@ function FilterSelect({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-body">
+      <label htmlFor={id} className="mb-2 block intel-body font-medium text-body">
         {label}
       </label>
       <Select
@@ -109,7 +109,7 @@ export function NewBusinessFilters({
     >
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <div>
-          <label htmlFor="nb-review" className="mb-2 block text-sm font-medium text-body">
+          <label htmlFor="nb-review" className="mb-2 block intel-body font-medium text-body">
             Review status
           </label>
           <Select
@@ -135,7 +135,7 @@ export function NewBusinessFilters({
       {newBusinessesFiltersActive(params) ? (
         <Link
           href="/intel/new-businesses"
-          className="mt-3 inline-block text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="mt-3 inline-block intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
         >
           Clear filters
         </Link>

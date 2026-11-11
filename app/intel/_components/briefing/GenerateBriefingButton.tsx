@@ -43,7 +43,7 @@ export function GenerateBriefingButton({ hasToday }: { hasToday: boolean }) {
       </Button>
       {message !== null ? (
         <p
-          className={message.tone === 'error' ? 'text-sm text-warning-severe' : 'text-sm text-meta'}
+          className={message.tone === 'error' ? 'intel-body text-warning-severe' : 'intel-secondary text-meta'}
           role={message.tone === 'error' ? 'alert' : 'status'}
         >
           {message.text}

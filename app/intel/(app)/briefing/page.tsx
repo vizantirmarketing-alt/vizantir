@@ -63,8 +63,8 @@ export default async function IntelBriefingPage({ searchParams }: BriefingPagePr
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-base font-semibold tracking-tight text-foreground">Briefing</h1>
-          <p className="mt-1 text-sm text-meta">
+          <h1 className="intel-title text-foreground">Briefing</h1>
+          <p className="mt-1 intel-secondary text-meta">
             {briefing
               ? `${formatBriefingDate(briefing.briefingDate)} · generated ${formatLocalTimestamp(briefing.generatedAt)}`
               : 'Daily at 7:00 AM Pacific.'}
@@ -75,13 +75,13 @@ export default async function IntelBriefingPage({ searchParams }: BriefingPagePr
 
       {loadFailed ? (
         <Panel>
-          <p className="text-sm leading-relaxed text-body" role="alert">
+          <p className="intel-body leading-relaxed text-body" role="alert">
             Unable to load briefings. Try again shortly.
           </p>
         </Panel>
       ) : briefing === null ? (
         <Panel>
-          <p className="text-sm leading-relaxed text-body">
+          <p className="intel-body leading-relaxed text-body">
             {requested
               ? `No briefing for ${formatBriefingDate(requested)}.`
               : 'No briefings yet. The first one is generated at 7:00 AM Pacific, or use Generate now.'}
@@ -91,7 +91,7 @@ export default async function IntelBriefingPage({ searchParams }: BriefingPagePr
         <>
           {briefing.status === 'failed' ? (
             <Panel accent="warning-severe">
-              <p className="text-sm text-warning-severe" role="alert">
+              <p className="intel-body text-warning-severe" role="alert">
                 {briefingFailedMessage(briefing.error)}
               </p>
             </Panel>
@@ -102,9 +102,9 @@ export default async function IntelBriefingPage({ searchParams }: BriefingPagePr
 
       <Panel title="History">
         {history.length === 0 ? (
-          <p className="text-sm text-body">No briefings yet.</p>
+          <p className="intel-body text-body">No briefings yet.</p>
         ) : (
-          <ul className="divide-y divide-black/8 text-sm">
+          <ul className="divide-y divide-black/8 intel-body">
             {history.map((h) => {
               const current = briefing?.briefingDate === h.briefingDate
               return (

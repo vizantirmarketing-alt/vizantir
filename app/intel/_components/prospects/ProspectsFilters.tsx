@@ -75,7 +75,7 @@ export function ProspectsFilters({
         <div>
           <label
             htmlFor="intel-prospects-review"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Review status
           </label>
@@ -97,7 +97,7 @@ export function ProspectsFilters({
         <div>
           <label
             htmlFor="intel-prospects-industry"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Industry
           </label>
@@ -119,7 +119,7 @@ export function ProspectsFilters({
         <div>
           <label
             htmlFor="intel-prospects-market"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Market
           </label>
@@ -141,7 +141,7 @@ export function ProspectsFilters({
         <div>
           <label
             htmlFor="intel-prospects-sort"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Sort
           </label>
@@ -163,7 +163,7 @@ export function ProspectsFilters({
       {filtersActive ? (
         <Link
           href="/intel/prospects"
-          className="mt-3 inline-block text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="mt-3 inline-block intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
         >
           Clear filters
         </Link>

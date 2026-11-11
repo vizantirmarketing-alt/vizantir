@@ -44,7 +44,7 @@ export function LoginForm({ initialError = false }: LoginFormProps) {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {status === 'error' ? (
-        <p className="text-sm text-body" role="alert">
+        <p className="intel-body text-body" role="alert">
           {ERROR_MESSAGE}
         </p>
       ) : null}

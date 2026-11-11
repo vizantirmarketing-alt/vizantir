@@ -15,7 +15,7 @@ import {
 } from '@/app/intel/(app)/prospects/actions'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 const REVIEW_ACTIONS: { status: ProspectReviewStatus; label: string }[] = [
   { status: 'accepted', label: 'Accept' },
@@ -28,7 +28,7 @@ function MutationError({ message }: { message: string | null }) {
     return null
   }
   return (
-    <p className="text-sm text-warning-severe" role="alert">
+    <p className="intel-body text-warning-severe" role="alert">
       {message}
     </p>
   )
@@ -76,7 +76,7 @@ function ReviewButtons({
 
   return (
     <div aria-busy={pending}>
-      <p className="mb-2 text-sm font-medium text-body">Review</p>
+      <p className="mb-2 intel-body font-medium text-body">Review</p>
       <div className="flex flex-wrap gap-2">
         {REVIEW_ACTIONS.map((action) => (
           <Button
@@ -104,7 +104,7 @@ function ReviewButtons({
           </Button>
         ) : null}
       </div>
-      <p className="mt-2 text-sm text-meta">
+      <p className="mt-2 intel-secondary text-meta">
         Current: {PROSPECT_REVIEW_LABELS[reviewStatus]}.
       </p>
       <div className="mt-2">
@@ -148,7 +148,7 @@ function NoteForm({
     <form onSubmit={onSubmit} aria-busy={pending}>
       <label
         htmlFor="intel-prospect-note"
-        className="mb-2 block text-sm font-medium text-body"
+        className="mb-2 block intel-body font-medium text-body"
       >
         Note
       </label>
@@ -176,7 +176,7 @@ function NoteForm({
           {pending ? 'Saving…' : 'Save note'}
         </Button>
         {saved ? (
-          <p className="text-sm text-meta" role="status">
+          <p className="intel-secondary text-meta" role="status">
             Saved.
           </p>
         ) : null}

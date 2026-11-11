@@ -37,7 +37,7 @@ export function ActivityFeed(props: ActivityFeedProps) {
       {props.failed ? (
         <PanelQueryError message="Unable to load activity. Data could not be loaded." />
       ) : props.items.length === 0 ? (
-        <p className="text-sm text-body">
+        <p className="intel-body text-body">
           Activity will appear as things happen.
         </p>
       ) : (
@@ -65,7 +65,7 @@ function ActivityRow({
   const Icon = CATEGORY_ICON[item.category]
 
   return (
-    <article className="flex h-10 items-center gap-2.5">
+    <article className="flex min-h-10 items-center py-1 gap-2.5">
       <span
         className={cn(
           'flex size-6 shrink-0 items-center justify-center rounded-md',
@@ -78,7 +78,7 @@ function ActivityRow({
       <div className="min-w-0 flex-1">
         <p
           className={cn(
-            'truncate text-sm',
+            'truncate intel-body',
             failed
               ? 'font-medium text-warning-severe'
               : recent
@@ -98,7 +98,7 @@ function ActivityRow({
       <time
         dateTime={item.occurredAt}
         className={cn(
-          'shrink-0 text-[0.7rem] tabular-nums',
+          'shrink-0 intel-secondary tabular-nums',
           recent ? 'text-body' : 'text-meta',
         )}
       >
@@ -107,7 +107,7 @@ function ActivityRow({
       {item.href ? (
         <Link
           href={item.href}
-          className="shrink-0 text-[0.7rem] text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="shrink-0 intel-secondary text-cobalt-primary transition-colors hover:text-[#1E85FF]"
         >
           View
         </Link>

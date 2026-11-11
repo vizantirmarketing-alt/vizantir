@@ -42,7 +42,7 @@ function StatusChip({ tone, label }: { tone: StatusTone; label: string }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         TONE_CLASS[tone],
       )}
     >
@@ -103,7 +103,7 @@ export function ConfidenceChip({
   return (
     <span
       className={cn(
-        'inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
+        'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         confidence === 'high' &&
           'border border-cobalt-primary text-cobalt-primary',
         confidence === 'medium' && 'border border-black/15 text-meta',
@@ -165,7 +165,7 @@ export function ProspectConfidenceChip({
   return (
     <span
       className={cn(
-        'inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
+        'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         confidence === 'high' &&
           'border border-cobalt-primary text-cobalt-primary',
         confidence === 'medium' && 'border border-black/15 text-meta',

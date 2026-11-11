@@ -33,20 +33,20 @@ export function ProspectMeasureButton({ prospectId }: { prospectId: string }) {
           {pending ? 'Measuring…' : 'Measure performance'}
         </Button>
         {pending ? (
-          <p className="text-sm text-meta" role="status">
+          <p className="intel-secondary text-meta" role="status">
             Running a mobile PageSpeed Insights test. This can take up to two minutes.
           </p>
         ) : null}
       </div>
       {result !== null && result.ok ? (
-        <p className="mt-2 text-sm text-body" role="status">
+        <p className="mt-2 intel-body text-body" role="status">
           Mobile performance {result.performanceScore}/100, rated {result.rating}. Fit{' '}
           {formatScore(result.fitScore)}, opportunity {formatScore(result.opportunityScore)},{' '}
           {result.confidence} confidence.
         </p>
       ) : null}
       {result !== null && !result.ok ? (
-        <p className="mt-2 text-sm text-warning-severe" role="alert">
+        <p className="mt-2 intel-body text-warning-severe" role="alert">
           {result.error}
         </p>
       ) : null}

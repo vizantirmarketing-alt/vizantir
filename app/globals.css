@@ -97,6 +97,75 @@
   }
 }
 
+/*
+ * Intel type scale. One typeface (Satoshi, inherited from body) and nothing
+ * below 14px anywhere in the Intel dashboard. These are the only font sizes
+ * Intel pages and components use; they never set their own. Out of scope:
+ * the client-facing monthly report document (app/intel/reports/[reportId]),
+ * which keeps its own print typography.
+ *
+ *   intel-number     24px  stat and metric values (tabular)
+ *   intel-title      20px  page titles
+ *   intel-body       15px  primary text
+ *   intel-secondary  14px  metadata, captions, hints (pair with text-meta)
+ *   intel-label      14px  medium labels and chips
+ *   intel-eyebrow    14px  the label step, uppercase: panel titles, wordmark
+ *   intel-th         14px  every Intel table header: sentence case, medium, meta
+ *
+ * Line height, weight and tracking read Tailwind's leading-*, font-* and
+ * tracking-* variables first, so those utilities still override them.
+ */
+@utility intel-number {
+  font-size: 24px;
+  line-height: var(--tw-leading, 1.1);
+  font-weight: var(--tw-font-weight, 500);
+  letter-spacing: var(--tw-tracking, -0.025em);
+  font-variant-numeric: tabular-nums;
+}
+
+@utility intel-title {
+  font-size: 20px;
+  line-height: var(--tw-leading, 1.25);
+  font-weight: var(--tw-font-weight, 600);
+  letter-spacing: var(--tw-tracking, -0.02em);
+}
+
+@utility intel-body {
+  font-size: 15px;
+  line-height: var(--tw-leading, 1.5);
+}
+
+@utility intel-secondary {
+  font-size: 14px;
+  line-height: var(--tw-leading, 1.45);
+}
+
+@utility intel-label {
+  font-size: 14px;
+  line-height: var(--tw-leading, 1.3);
+  font-weight: var(--tw-font-weight, 500);
+}
+
+/* One tracking value for every uppercase label in Intel. At 14px, 0.04em keeps
+   panel titles about as wide as the old 11.2px / 0.18em ones. */
+@utility intel-eyebrow {
+  font-size: 14px;
+  line-height: var(--tw-leading, 1.3);
+  font-weight: var(--tw-font-weight, 500);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@utility intel-th {
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-meta);
+  padding-block: 0.5rem;
+}
+
 @utility px-gutter {
   padding-inline: var(--gutter);
 }

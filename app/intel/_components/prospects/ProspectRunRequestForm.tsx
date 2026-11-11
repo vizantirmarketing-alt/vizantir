@@ -12,7 +12,7 @@ import {
 import { requestProspectRun } from '@/app/intel/(app)/prospects/actions'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 function readFormString(form: FormData, key: string): string {
   const value = form.get(key)
@@ -57,7 +57,7 @@ export function ProspectRunRequestForm() {
         <div>
           <label
             htmlFor="intel-prospect-run-market"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Market
           </label>
@@ -73,7 +73,7 @@ export function ProspectRunRequestForm() {
         <div>
           <label
             htmlFor="intel-prospect-run-industry"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Industry
           </label>
@@ -89,7 +89,7 @@ export function ProspectRunRequestForm() {
         <div>
           <label
             htmlFor="intel-prospect-run-count"
-            className="mb-2 block text-sm font-medium text-body"
+            className="mb-2 block intel-body font-medium text-body"
           >
             Companies
           </label>
@@ -108,7 +108,7 @@ export function ProspectRunRequestForm() {
       <div>
         <label
           htmlFor="intel-prospect-run-exclusions"
-          className="mb-2 block text-sm font-medium text-body"
+          className="mb-2 block intel-body font-medium text-body"
         >
           Exclude domains (optional)
         </label>
@@ -119,7 +119,7 @@ export function ProspectRunRequestForm() {
           placeholder="One per line or comma separated"
           className={fieldClassName}
         />
-        <p className="mt-1 text-sm text-meta">
+        <p className="mt-1 intel-secondary text-meta">
           Up to {RUN_EXCLUSIONS_MAX} domains. The research runner skips these.
         </p>
       </div>
@@ -133,12 +133,12 @@ export function ProspectRunRequestForm() {
           {pending ? 'Requesting…' : 'Request research run'}
         </Button>
         {requested ? (
-          <p className="text-sm text-body" role="status">
+          <p className="intel-body text-body" role="status">
             Run requested. It waits in the queue until the research runner claims it.
           </p>
         ) : null}
         {error !== null ? (
-          <p className="text-sm text-warning-severe" role="alert">
+          <p className="intel-body text-warning-severe" role="alert">
             {error}
           </p>
         ) : null}

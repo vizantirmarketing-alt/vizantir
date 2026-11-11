@@ -17,8 +17,8 @@ function TableHead({ columns }: { columns: readonly string[] }) {
             key={column}
             className={
               index === columns.length - 1
-                ? 'py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta'
-                : 'py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta'
+                ? 'intel-th'
+                : 'intel-th pr-4'
             }
           >
             {column}
@@ -33,7 +33,7 @@ export function SearchTopQueries({ rows }: { rows: readonly QueryAggregate[] }) 
   return (
     <Panel title="Top queries">
       {rows.length === 0 ? (
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           No queries in this range.
         </p>
       ) : (
@@ -41,17 +41,17 @@ export function SearchTopQueries({ rows }: { rows: readonly QueryAggregate[] }) 
           <ul className="divide-y divide-black/8 lg:hidden">
             {rows.map((row) => (
               <li key={row.query} className="py-2">
-                <p className="text-sm font-medium text-foreground">
+                <p className="intel-body font-medium text-foreground">
                   {row.query}
                 </p>
-                <p className="mt-1 text-sm tabular-nums text-body">
+                <p className="mt-1 intel-body tabular-nums text-body">
                   {formatQueryCount(row.clicks)} clicks
                   <span aria-hidden className="px-2">
                     ·
                   </span>
                   {formatQueryCount(row.impressions)} impressions
                 </p>
-                <p className="mt-1 text-sm tabular-nums text-meta">
+                <p className="mt-1 intel-secondary tabular-nums text-meta">
                   {formatQueryCtr(row.ctr)} CTR
                   <span aria-hidden className="px-2">
                     ·
@@ -63,7 +63,7 @@ export function SearchTopQueries({ rows }: { rows: readonly QueryAggregate[] }) 
           </ul>
 
           <div className="hidden lg:block">
-            <table className="w-full border-collapse text-left text-sm">
+            <table className="w-full border-collapse text-left intel-secondary">
               <caption className="sr-only">
                 Top queries by impressions
               </caption>
@@ -111,8 +111,8 @@ function MoverList({
   if (rows.length === 0) {
     return (
       <div>
-        <h3 className="text-sm font-medium text-foreground">{title}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-body">
+        <h3 className="intel-body font-medium text-foreground">{title}</h3>
+        <p className="mt-3 intel-body leading-relaxed text-body">
           None in this range.
         </p>
       </div>
@@ -121,12 +121,12 @@ function MoverList({
 
   return (
     <div>
-      <h3 className="text-sm font-medium text-foreground">{title}</h3>
+      <h3 className="intel-body font-medium text-foreground">{title}</h3>
       <ul className="mt-3 divide-y divide-black/8 lg:hidden">
         {rows.map((row) => (
           <li key={row.query} className="py-2">
-            <p className="text-sm font-medium text-foreground">{row.query}</p>
-            <p className="mt-1 text-sm tabular-nums text-body">
+            <p className="intel-body font-medium text-foreground">{row.query}</p>
+            <p className="mt-1 intel-body tabular-nums text-body">
               {formatClickDelta(row.delta)} clicks
               <span aria-hidden className="px-2">
                 ·
@@ -141,7 +141,7 @@ function MoverList({
         ))}
       </ul>
       <div className="mt-3 hidden lg:block">
-        <table className="w-full border-collapse text-left text-sm">
+        <table className="w-full border-collapse text-left intel-secondary">
           <caption className="sr-only">{caption}</caption>
           <TableHead columns={['Query', 'Delta', 'Now', 'Prior']} />
           <tbody>
@@ -201,7 +201,7 @@ export function SearchNearPageOne({
   return (
     <Panel title="Close to page one">
       {rows.length === 0 ? (
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           No queries sit between positions 8 and 20 with enough impressions.
         </p>
       ) : (
@@ -209,10 +209,10 @@ export function SearchNearPageOne({
           <ul className="divide-y divide-black/8 lg:hidden">
             {rows.map((row) => (
               <li key={row.query} className="py-2">
-                <p className="text-sm font-medium text-foreground">
+                <p className="intel-body font-medium text-foreground">
                   {row.query}
                 </p>
-                <p className="mt-1 text-sm tabular-nums text-body">
+                <p className="mt-1 intel-body tabular-nums text-body">
                   Position {formatQueryPosition(row.position)}
                   <span aria-hidden className="px-2">
                     ·
@@ -224,7 +224,7 @@ export function SearchNearPageOne({
           </ul>
 
           <div className="hidden lg:block">
-            <table className="w-full border-collapse text-left text-sm">
+            <table className="w-full border-collapse text-left intel-secondary">
               <caption className="sr-only">
                 Queries close to page one
               </caption>

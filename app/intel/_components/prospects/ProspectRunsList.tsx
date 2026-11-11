@@ -29,7 +29,7 @@ function runTiming(run: ProspectRunRow): string {
 export function ProspectRunsList({ runs }: { runs: ProspectRunRow[] }) {
   if (runs.length === 0) {
     return (
-      <p className="text-sm leading-relaxed text-body">
+      <p className="intel-body leading-relaxed text-body">
         No research runs yet. Request one above.
       </p>
     )
@@ -42,7 +42,7 @@ export function ProspectRunsList({ runs }: { runs: ProspectRunRow[] }) {
         return (
         <li key={run.id} className="py-3 first:pt-0 last:pb-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-sm font-medium text-foreground">{runTitle(run)}</p>
+            <p className="intel-body font-medium text-foreground">{runTitle(run)}</p>
             <div className="flex items-center gap-3">
               <ProspectRunStateChip state={run.state} />
               {CANCELLABLE_RUN_STATES.includes(run.state) ? (
@@ -50,20 +50,20 @@ export function ProspectRunsList({ runs }: { runs: ProspectRunRow[] }) {
               ) : null}
             </div>
           </div>
-          <p className="mt-1 text-sm text-meta">
+          <p className="mt-1 intel-secondary text-meta">
             {runTiming(run)} ·{' '}
             {formatSavedOfRequested(run.counts.saved, run.config?.targetCount ?? null)} saved
             {run.counts.rejected > 0 ? `, ${run.counts.rejected} rejected` : ''}
             {run.requestedBy !== null ? ` · ${run.requestedBy}` : ''}
           </p>
           {run.config !== null && run.config.exclusions.length > 0 ? (
-            <p className="mt-1 text-sm text-meta">
+            <p className="mt-1 intel-secondary text-meta">
               Excluding {run.config.exclusions.length} domain
               {run.config.exclusions.length === 1 ? '' : 's'}
             </p>
           ) : null}
           {summary.errors.length > 0 ? (
-            <ul className="mt-2 space-y-1 text-sm text-warning-severe" aria-label="Errors">
+            <ul className="mt-2 space-y-1 intel-body text-warning-severe" aria-label="Errors">
               {summary.errors.map((line) => (
                 <li key={line} className="whitespace-pre-wrap">
                   {line}
@@ -72,7 +72,7 @@ export function ProspectRunsList({ runs }: { runs: ProspectRunRow[] }) {
             </ul>
           ) : null}
           {summary.notes.length > 0 ? (
-            <ul className="mt-2 space-y-1 text-sm text-meta" aria-label="Notes">
+            <ul className="mt-2 space-y-1 intel-secondary text-meta" aria-label="Notes">
               {summary.notes.map((line) => (
                 <li key={line} className="whitespace-pre-wrap">
                   {line}

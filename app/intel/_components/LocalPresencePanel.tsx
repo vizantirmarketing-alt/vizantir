@@ -14,11 +14,11 @@ export function LocalPresencePanel(props: LocalPresencePanelProps) {
         <PanelQueryError message="Unable to load local presence. Data could not be loaded." />
       ) : (
         <>
-          <p className="mb-3 text-[0.7rem] leading-4 text-meta">
+          <p className="mb-3 intel-secondary text-meta">
             Google Business Profile reviews vs local competitors.
           </p>
           {props.places.length === 0 ? (
-            <p className="text-sm text-body">
+            <p className="intel-body text-body">
               No snapshots yet. Data appears after the first daily sync.
             </p>
           ) : (
@@ -43,10 +43,10 @@ export function LocalPresencePanel(props: LocalPresencePanelProps) {
 function SelfMissing() {
   return (
     <article className="flex flex-col gap-0.5 py-2.5">
-      <p className="text-sm font-medium text-warning">
+      <p className="intel-body font-medium text-warning">
         Not visible in Places search
       </p>
-      <p className="text-sm leading-relaxed text-body">
+      <p className="intel-body leading-relaxed text-body">
         The profile exists but does not surface in Google&apos;s Places search.
         Improving prominence — reviews, posts, categories — is the fix.
       </p>
@@ -59,22 +59,22 @@ function PlaceRow({ place }: { place: LocalPresencePlace }) {
   const delta = formatDelta(place.reviewDelta)
 
   return (
-    <article className="flex h-12 items-center justify-between gap-4">
+    <article className="flex min-h-12 items-center py-1.5 justify-between gap-4">
       <div className="min-w-0">
         <p
           className={cn(
-            'truncate text-sm text-foreground',
+            'truncate intel-body text-foreground',
             place.isSelf && 'font-medium',
           )}
         >
           {place.displayName}
         </p>
         {metrics !== null ? (
-          <p className="truncate text-[0.7rem] leading-4 text-meta">{metrics}</p>
+          <p className="truncate intel-secondary text-meta">{metrics}</p>
         ) : null}
       </div>
       {delta !== null ? (
-        <p className={cn('shrink-0 text-sm tabular-nums', deltaClass(place.reviewDelta))}>
+        <p className={cn('shrink-0 intel-body tabular-nums', deltaClass(place.reviewDelta))}>
           {delta}
         </p>
       ) : null}

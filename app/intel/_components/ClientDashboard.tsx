@@ -84,7 +84,7 @@ type DeltaFields = {
 
 export function ClientsHeader() {
   return (
-    <h1 className="text-base font-semibold tracking-tight text-foreground">
+    <h1 className="intel-title text-foreground">
       Clients
     </h1>
   )
@@ -92,7 +92,7 @@ export function ClientsHeader() {
 
 export function ClientPageHeader() {
   return (
-    <h1 className="text-base font-semibold tracking-tight text-foreground">
+    <h1 className="intel-title text-foreground">
       Client
     </h1>
   )
@@ -113,8 +113,8 @@ export function ClientQueryError() {
 export function ClientsEmptyState() {
   return (
     <div>
-      <p className="text-sm font-medium text-foreground">No active clients</p>
-      <p className="mt-2 text-sm leading-relaxed text-body">
+      <p className="intel-body font-medium text-foreground">No active clients</p>
+      <p className="mt-2 intel-body leading-relaxed text-body">
         Active clients will appear here once they are added.
       </p>
     </div>
@@ -138,11 +138,11 @@ export function ClientsList({ clients }: { clients: readonly ClientListItem[] })
             <Link
               href={`/intel/clients/${client.id}`}
               prefetch={false}
-              className="text-sm font-medium text-foreground transition-colors hover:text-cobalt-primary"
+              className="intel-body font-medium text-foreground transition-colors hover:text-cobalt-primary"
             >
               {client.name}
             </Link>
-            <p className="mt-1 break-all text-sm text-body">
+            <p className="mt-1 break-all intel-body text-body">
               {displaySiteUrl(client.siteUrl)}
             </p>
             <div className="mt-2">
@@ -156,20 +156,20 @@ export function ClientsList({ clients }: { clients: readonly ClientListItem[] })
       </ul>
 
       <div className="hidden lg:block">
-        <table className="w-full border-collapse text-left text-sm">
+        <table className="w-full border-collapse text-left intel-secondary">
           <caption className="sr-only">Active clients</caption>
           <thead>
             <tr className="border-b border-black/8">
-              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="intel-th pr-4">
                 Client
               </th>
-              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="intel-th pr-4">
                 Site
               </th>
-              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="intel-th pr-4">
                 Care
               </th>
-              <th className="py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="intel-th">
                 Sources
               </th>
             </tr>
@@ -244,10 +244,10 @@ function ClientHeader({
 }) {
   return (
     <div>
-      <h1 className="text-base font-semibold tracking-tight text-foreground">
+      <h1 className="intel-title text-foreground">
         {client.name}
       </h1>
-      <p className="mt-1 text-xs text-meta">
+      <p className="mt-1 intel-secondary text-meta">
         {displaySiteUrl(client.siteUrl)}
         <span aria-hidden className="px-1.5">
           ·
@@ -342,7 +342,7 @@ function Ga4Section({ result }: { result: DashboardGa4Result }) {
           deltaDirection={returningDelta?.deltaDirection}
         />
       </StatStrip>
-      <p className="text-sm leading-relaxed text-body">
+      <p className="intel-body leading-relaxed text-body">
         Users counts each person once for the window. New and returning can both include
         the same person, so they do not add up to Users.
       </p>
@@ -433,24 +433,24 @@ function Ga4BreakdownTable({
 }) {
   return (
     <div>
-      <h3 className="text-sm font-medium text-foreground">{title}</h3>
+      <h3 className="intel-body font-medium text-foreground">{title}</h3>
       <ul className="mt-3 divide-y divide-black/8 lg:hidden">
         {rows.map((row) => (
           <li key={row.key} className="py-2">
-            <p className="text-sm font-medium text-foreground">{row.label}</p>
-            <p className="mt-1 text-sm tabular-nums text-body">{row.value}</p>
+            <p className="intel-body font-medium text-foreground">{row.label}</p>
+            <p className="mt-1 intel-body tabular-nums text-body">{row.value}</p>
           </li>
         ))}
       </ul>
       <div className="mt-3 hidden lg:block">
-        <table className="w-full border-collapse text-left text-sm">
+        <table className="w-full border-collapse text-left intel-secondary">
           <caption className="sr-only">{caption}</caption>
           <thead>
             <tr className="border-b border-black/8">
-              <th className="py-1.5 pr-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="intel-th pr-4">
                 {columns[0]}
               </th>
-              <th className="py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+              <th className="intel-th">
                 {columns[1]}
               </th>
             </tr>
@@ -544,7 +544,7 @@ function GscSection({ result }: { result: DashboardGscResult }) {
   if (result.current.emptyRows) {
     return (
       <Panel title="Search Console">
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           Search Console has no data for this property yet. New properties usually take a
           few days to report.
         </p>
@@ -608,7 +608,7 @@ function CruxSection({ result }: { result: DashboardCruxResult }) {
   if (result.kind === 'no_data') {
     return (
       <Panel title="CrUX">
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           Chrome has no field data for this origin yet.
         </p>
       </Panel>
@@ -652,7 +652,7 @@ function CruxSection({ result }: { result: DashboardCruxResult }) {
             contextTone={current.cls.passed ? 'meta' : 'warning'}
           />
         </StatStrip>
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           Lab test from PageSpeed Insights, not real visitor data. Chrome has no field data
           for this origin yet.
         </p>
@@ -665,7 +665,7 @@ function CruxSection({ result }: { result: DashboardCruxResult }) {
 
   return (
     <Panel title="CrUX">
-      <p className="mb-2.5 text-xs text-meta">
+      <p className="mb-2.5 intel-secondary text-meta">
         {period
           ? `Phones, ${formatSpanLabel({ start: period.firstDate, end: period.lastDate })}`
           : 'Phones, rolling 28-day field window'}
@@ -710,7 +710,7 @@ function UptimeSection({ result }: { result: DashboardUptimeResult }) {
   return (
     <Panel title="Uptime">
       {data.uptimePercentage === null ? (
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           {data.coverage === 'none'
             ? 'Uptime monitoring had not started in this window.'
             : `The monitor started mid-window on ${formatLongDate(data.monitorCreatedAt)}, so a full uptime percentage is not available.`}
@@ -732,11 +732,11 @@ function UptimeSection({ result }: { result: DashboardUptimeResult }) {
       )}
 
       <div className="mt-4">
-        <h3 className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-meta">
+        <h3 className="intel-eyebrow text-meta">
           Incidents
         </h3>
         {data.incidents.length === 0 ? (
-          <p className="mt-2 text-sm leading-relaxed text-body">
+          <p className="mt-2 intel-body leading-relaxed text-body">
             No downtime was recorded
             {data.coverage === 'partial' ? ' after monitoring started' : ''}.
           </p>
@@ -744,10 +744,10 @@ function UptimeSection({ result }: { result: DashboardUptimeResult }) {
           <ul className="mt-2 divide-y divide-black/8">
             {data.incidents.map((incident) => (
               <li key={incident.startedAt} className="py-2 first:pt-0">
-                <p className="text-sm text-foreground">
+                <p className="intel-body text-foreground">
                   {formatLongDate(incident.startedAt)}
                 </p>
-                <p className="mt-1 text-sm text-body">
+                <p className="mt-1 intel-body text-body">
                   {formatDuration(incident.durationSeconds)}
                   {incident.reason ? ` · ${incident.reason}` : ''}
                 </p>
@@ -772,7 +772,7 @@ function SourceStatePanel({
   if (reason === 'not_configured') {
     return (
       <Panel title={title}>
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           {title} is not connected yet. This client needs {SOURCE_SETUP[source]}.
         </p>
       </Panel>
@@ -807,7 +807,7 @@ function SourceChip({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         connected
           ? 'bg-positive-soft font-medium text-positive'
           : 'bg-black/[0.05] font-medium text-meta',
@@ -829,7 +829,7 @@ function CareTierChip({ tier }: { tier: IntelClient['careTier'] }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-[0.65rem] tracking-wide',
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         tier === 'care' || tier === 'growth'
           ? 'bg-cobalt-soft font-medium text-foreground'
           : 'bg-black/[0.08] font-medium text-foreground',

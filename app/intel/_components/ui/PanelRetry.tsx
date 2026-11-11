@@ -20,7 +20,7 @@ export function PanelRetry({ label = 'Retry' }: PanelRetryProps) {
           router.refresh()
         })
       }}
-      className="text-sm text-cobalt-primary transition-colors hover:text-[#1E85FF] disabled:opacity-50"
+      className="intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF] disabled:opacity-50"
     >
       {pending ? 'Retrying…' : label}
     </button>
@@ -34,7 +34,7 @@ type PanelQueryErrorProps = {
 export function PanelQueryError({ message }: PanelQueryErrorProps) {
   return (
     <div>
-      <p className="text-sm leading-relaxed text-warning" role="alert">
+      <p className="intel-body leading-relaxed text-warning" role="alert">
         {message}
       </p>
       <div className="mt-2">

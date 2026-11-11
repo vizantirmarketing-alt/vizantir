@@ -50,10 +50,10 @@ export default async function IntelProspectsPage({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-base font-semibold tracking-tight text-foreground">
+        <h1 className="intel-title text-foreground">
           Prospect Research
         </h1>
-        <p className="mt-1 text-sm text-meta">
+        <p className="mt-1 intel-secondary text-meta">
           Companies found by outbound research. Inbound inquiries stay under Leads.
         </p>
       </div>
@@ -64,7 +64,7 @@ export default async function IntelProspectsPage({
 
       <Panel title="Scheduled campaigns">
         {campaigns === null ? (
-          <p className="text-sm leading-relaxed text-body" role="alert">
+          <p className="intel-body leading-relaxed text-body" role="alert">
             Unable to load scheduled campaigns. Try again shortly.
           </p>
         ) : (
@@ -76,7 +76,7 @@ export default async function IntelProspectsPage({
         {runs.ok ? (
           <ProspectRunsList runs={runs.runs} />
         ) : (
-          <p className="text-sm leading-relaxed text-body" role="alert">
+          <p className="intel-body leading-relaxed text-body" role="alert">
             Unable to load research runs. Try again shortly.
           </p>
         )}
@@ -92,7 +92,7 @@ export default async function IntelProspectsPage({
 
       <Panel title="Prospects">
         {!result.ok ? (
-          <p className="text-sm leading-relaxed text-body" role="alert">
+          <p className="intel-body leading-relaxed text-body" role="alert">
             Unable to load prospects. Try again shortly.
           </p>
         ) : result.total === 0 && filtersActive ? (

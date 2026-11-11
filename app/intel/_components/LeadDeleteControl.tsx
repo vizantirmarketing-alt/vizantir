@@ -114,17 +114,17 @@ export function LeadDeleteControl({
               }
             }}
           >
-            <h2 id={titleId} className="text-sm font-medium text-foreground">
+            <h2 id={titleId} className="intel-body font-medium text-foreground">
               Delete inquiry
             </h2>
             <p
               id={descriptionId}
-              className="mt-2 text-sm leading-relaxed text-body"
+              className="mt-2 intel-body leading-relaxed text-body"
             >
               Delete {name} ({companyText})? This deletion is permanent.
             </p>
             {error ? (
-              <p className="mt-3 text-sm text-warning-severe" role="alert">
+              <p className="mt-3 intel-body text-warning-severe" role="alert">
                 {error}
               </p>
             ) : null}
