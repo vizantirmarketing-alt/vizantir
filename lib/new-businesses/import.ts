@@ -29,6 +29,7 @@ import {
   type NewBusinessRecord,
   type PositionedPage,
 } from '@/lib/new-businesses/parse'
+import { RANK_VERSION, rankStoredRows, type LeadTier, type RankableStoredRow, type RankSignal } from '@/lib/new-businesses/rank'
 
 /** Only the newest few published periods are imported automatically. */
 export const IMPORT_LOOKBACK_PERIODS = 3
@@ -52,18 +53,53 @@ export type ImportCounts = {
 
 export type StoredRow = NewBusinessRecord & { dedupeKey: string }
 
+/** A stored license row as the ranker and grouper need it. Read only. */
+export type RankableRow = RankableStoredRow
+
+/**
+ * Written to one license row by a rescore: the business's score and its
+ * grouping. Never includes review status or notes.
+ */
+export type RankUpdate = {
+  id: string
+  score: number
+  tier: LeadTier
+  signals: RankSignal[]
+  version: string
+  scoredAt: string
+  groupKey: string
+  groupPrimary: boolean
+  /** Every category the business holds; written on every row of the business. */
+  groupCategories: string[]
+  /** Every period (YYYY-MM) of the business, newest first. */
+  groupPeriods: string[]
+  groupLicenseCount: number
+}
+
+/** Rows written per batch when saving scores. */
+export const RANK_BATCH_SIZE = 500
+
 export interface NewBusinessStore {
   listImports(source: string): Promise<ImportSummary[]>
   beginImport(source: string, period: Period, fileUrl: string, nowIso: string): Promise<void>
-  finishImport(source: string, period: Period, counts: ImportCounts, nowIso: string): Promise<void>
+  /** note: a non-fatal problem to show on the import, e.g. scores not updated. */
+  finishImport(source: string, period: Period, counts: ImportCounts, nowIso: string, note?: string | null): Promise<void>
   failImport(source: string, period: Period, error: string, nowIso: string): Promise<void>
   /**
    * Upserts last-seen counts for every category in the file, creating new
    * categories disabled, and returns enabled flags for those categories.
    */
   recordCategoryCounts(source: string, counts: Map<string, number>, nowIso: string): Promise<Map<string, boolean>>
-  /** Insert-or-ignore on (source, period, dedupe key). Returns rows newly inserted. */
+  /**
+   * Insert-or-ignore on (source, period, dedupe key). Returns rows newly
+   * inserted. An existing row is never rewritten, so its review status and
+   * owner note survive every re-import.
+   */
   storeRows(source: string, period: Period, rows: StoredRow[], nowIso: string): Promise<number>
+  /** Every stored license row for the source, for grouping and rescoring. */
+  listRankableRows(source: string): Promise<RankableRow[]>
+  /** Writes lead score and group columns only. Never touches review status or notes. */
+  saveRanks(source: string, updates: RankUpdate[]): Promise<void>
 }
 
 export type ImportDeps = {
@@ -75,7 +111,7 @@ export type ImportDeps = {
 }
 
 export type ImportResult =
-  | { outcome: 'imported'; period: Period; counts: ImportCounts }
+  | { outcome: 'imported'; period: Period; counts: ImportCounts; rankError?: string }
   | { outcome: 'up_to_date'; period: Period | null }
   | { outcome: 'skipped_today' }
   | { outcome: 'failed'; period: Period | null; error: string }
@@ -104,6 +140,39 @@ export function applyCategoryRule(
   return { stored, discarded }
 }
 
+/**
+ * Regroups and rescores every stored license row. Rows are grouped into
+ * businesses (one primary row each), each business is scored once, and every
+ * row of the business gets that score and the group's category list. Shared
+ * phone and address signals depend on the whole set, so all rows are handled
+ * together and saved in batches. Returns rows written.
+ */
+export async function rescoreStoredRows(store: NewBusinessStore, nowIso: string): Promise<number> {
+  const rows = await store.listRankableRows(NEW_BUSINESS_SOURCE)
+  const updates: RankUpdate[] = []
+  for (const { group, result } of rankStoredRows(rows)) {
+    for (const id of group.rowIds) {
+      updates.push({
+        id,
+        score: result.score,
+        tier: result.tier,
+        signals: result.signals,
+        version: RANK_VERSION,
+        scoredAt: nowIso,
+        groupKey: group.key,
+        groupPrimary: id === group.primaryId,
+        groupCategories: group.categories,
+        groupPeriods: group.periods,
+        groupLicenseCount: group.licenseCount,
+      })
+    }
+  }
+  for (let i = 0; i < updates.length; i += RANK_BATCH_SIZE) {
+    await store.saveRanks(NEW_BUSINESS_SOURCE, updates.slice(i, i + RANK_BATCH_SIZE))
+  }
+  return updates.length
+}
+
 /** Fetches, parses and stores one period's file. Records failure on the import row. */
 export async function importFile(deps: ImportDeps, file: DiscoveredFile): Promise<ImportResult> {
   const period: Period = { year: file.year, month: file.month }
@@ -125,6 +194,15 @@ export async function importFile(deps: ImportDeps, file: DiscoveredFile): Promis
     const { stored, discarded } = applyCategoryRule(parsed.rows, enabled)
     const inserted = await deps.store.storeRows(NEW_BUSINESS_SOURCE, period, stored, deps.now().toISOString())
 
+    // Scoring never fails the import: a problem is recorded on the import row
+    // and the scores already stored stay as they were.
+    let rankError: string | undefined
+    try {
+      await rescoreStoredRows(deps.store, deps.now().toISOString())
+    } catch (error) {
+      rankError = `Lead scores were not updated: ${errorText(error)}`
+    }
+
     const counts: ImportCounts = {
       rowsTotal: parsed.rows.length,
       rowsStored: stored.length,
@@ -132,8 +210,10 @@ export async function importFile(deps: ImportDeps, file: DiscoveredFile): Promis
       rowsInserted: inserted,
       unparsedLines: parsed.unparsedLines + parsed.incompleteRows,
     }
-    await deps.store.finishImport(NEW_BUSINESS_SOURCE, period, counts, deps.now().toISOString())
-    return { outcome: 'imported', period, counts }
+    await deps.store.finishImport(NEW_BUSINESS_SOURCE, period, counts, deps.now().toISOString(), rankError ?? null)
+    return rankError === undefined
+      ? { outcome: 'imported', period, counts }
+      : { outcome: 'imported', period, counts, rankError }
   } catch (error) {
     const message = errorText(error)
     await deps.store.failImport(NEW_BUSINESS_SOURCE, period, message, deps.now().toISOString())

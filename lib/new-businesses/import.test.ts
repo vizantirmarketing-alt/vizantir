@@ -10,9 +10,11 @@ import {
   importLatest,
   importLatestDaily,
   reimportPeriod,
+  rescoreStoredRows,
   type ImportDeps,
 } from './import';
 import { parseNewBusinessPages } from './parse';
+import { setBusinessReview } from './review';
 
 const FOOD = 'Food Services - Restaurant';
 const PRO = 'Professional, Scientific, and Technical Services - Group 2';
@@ -117,5 +119,114 @@ describe('importLatestDaily', () => {
     assert.equal(later.fetched.length, 0);
     const tomorrow = deps(store, { now: () => new Date('2026-11-11T15:00:00Z') });
     assert.equal((await importLatestDaily(tomorrow.d)).outcome, 'imported');
+  });
+});
+
+describe('lead ranking during import', () => {
+  it('scores every stored row at the end of an import', async () => {
+    const store = new MemoryNewBusinessStore();
+    store.enable(FOOD);
+    store.enable(PRO);
+    const result = await importLatest(deps(store).d);
+    assert.ok(result.outcome === 'imported' && result.rankError === undefined);
+    for (const row of store.rows.values()) {
+      assert.ok(row.rank !== null, row.name);
+      assert.equal(row.rank.version, 'new-business-rank-v2');
+      assert.ok(row.rank.score >= 0 && row.rank.score <= 100);
+    }
+    assert.equal(store.byName('FICTIONAL BAKERY LLC')?.rank?.tier, 'likely');
+  });
+
+  it('rescores rows from earlier periods too, because group counts span the whole set', async () => {
+    const store = new MemoryNewBusinessStore();
+    store.enable(FOOD);
+    await importLatest(deps(store).d);
+    const first = store.byName('FICTIONAL BAKERY LLC')!.rank!.scoredAt;
+    await importLatest(deps(store, { now: () => new Date('2026-11-11T15:00:00Z') }).d);
+    assert.notEqual(store.byName('FICTIONAL BAKERY LLC')!.rank!.scoredAt, first);
+  });
+
+  it('keeps review status and owner note when a period is re-imported', async () => {
+    const store = new MemoryNewBusinessStore();
+    store.enable(FOOD);
+    store.enable(PRO);
+    await importLatest(deps(store).d);
+    const row = store.byName('Sample Consulting Group')!;
+    row.reviewStatus = 'accepted';
+    row.ownerNote = 'Called back, wants a quote';
+
+    const again = await reimportPeriod(deps(store).d, { year: 2026, month: 10 });
+    assert.ok(again.outcome === 'imported' && again.counts.rowsInserted === 0);
+    const after = store.byName('Sample Consulting Group')!;
+    assert.equal(after.id, row.id);
+    assert.equal(after.reviewStatus, 'accepted');
+    assert.equal(after.ownerNote, 'Called back, wants a quote');
+    assert.ok(after.rank !== null);
+  });
+
+  it('never fails the import when scoring fails, records it, and leaves earlier scores in place', async () => {
+    const store = new MemoryNewBusinessStore();
+    store.enable(FOOD);
+    await importLatest(deps(store).d);
+    const before = store.byName('FICTIONAL BAKERY LLC')!.rank;
+
+    store.failRankSave = true;
+    const result = await reimportPeriod(deps(store).d, { year: 2026, month: 10 });
+    assert.equal(result.outcome, 'imported');
+    assert.ok(result.outcome === 'imported' && /Lead scores were not updated: rank save unavailable/.test(result.rankError ?? ''));
+    assert.equal(store.imports.get('2026-10')?.state, 'imported');
+    assert.match(store.imports.get('2026-10')?.error ?? '', /Lead scores were not updated/);
+    assert.deepEqual(store.byName('FICTIONAL BAKERY LLC')!.rank, before);
+  });
+
+  it('saves scores in batches', async () => {
+    const store = new MemoryNewBusinessStore();
+    const rows = Array.from({ length: 1203 }, (_, i) => ({
+      index: i + 1, name: `Example Shop ${i}`, address: null, suite: null, city: null, state: null, zip: null, phone: null, category: FOOD,
+      dedupeKey: `k${i}`,
+    }));
+    await store.storeRows('clark_county', { year: 2026, month: 10 }, rows);
+    assert.equal(await rescoreStoredRows(store, '2026-11-10T15:00:00.000Z'), 1203);
+    assert.deepEqual(store.rankSaveBatches, [500, 500, 203]);
+  });
+});
+
+describe('grouping during import', () => {
+  it('marks one primary row per business and gives every row the group fields', async () => {
+    const store = new MemoryNewBusinessStore();
+    store.enable(FOOD);
+    store.enable(PRO);
+    await importLatest(deps(store).d);
+    await importLatest(deps(store, { now: () => new Date('2026-11-11T15:00:00Z') }).d);
+    // Two periods of the same three businesses: six license rows, three businesses.
+    assert.equal(store.rows.size, 6);
+    assert.equal(store.businesses().length, 3);
+    for (const primary of store.businesses()) {
+      const rows = store.businessRows(primary.rank!.groupKey);
+      assert.equal(rows.length, 2);
+      assert.equal(primary.rank!.groupLicenseCount, 2);
+      assert.deepEqual(primary.rank!.groupPeriods, ['2026-10', '2026-09']);
+      assert.ok(rows.every((row) => row.rank!.score === primary.rank!.score));
+    }
+  });
+
+  it('a new license row never resurfaces a reviewed business as unreviewed', async () => {
+    const store = new MemoryNewBusinessStore();
+    store.enable(FOOD);
+    await importLatest(deps(store).d);
+    const bakery = store.businesses().find((row) => row.name === 'FICTIONAL BAKERY LLC')!;
+    await setBusinessReview(store.reviewWriter(), bakery.id, 'accepted', '2026-11-10T16:00:00.000Z');
+
+    // The next period brings a new, unreviewed license row for the same business.
+    await importLatest(deps(store, { now: () => new Date('2026-11-11T15:00:00Z') }).d);
+    const rows = store.businessRows(bakery.rank!.groupKey);
+    assert.equal(rows.length, 2);
+    assert.ok(rows.some((row) => row.reviewStatus === 'unreviewed'), 'the new license row itself is not rewritten');
+
+    const primary = store.businesses().find((row) => row.rank!.groupKey === bakery.rank!.groupKey)!;
+    assert.equal(primary.id, bakery.id);
+    assert.equal(primary.reviewStatus, 'accepted');
+    const unreviewedBusinesses = store.businesses().filter((row) => row.reviewStatus === 'unreviewed');
+    assert.ok(!unreviewedBusinesses.some((row) => row.rank!.groupKey === bakery.rank!.groupKey));
   });
 });

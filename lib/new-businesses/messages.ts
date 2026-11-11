@@ -20,9 +20,10 @@ export function importResultMessage(result: ImportResult, action: ImportAction =
       const period = formatPeriod(result.period)
       const done = `${period} ${action === 'reimport' ? 'updated' : 'imported'}.`
       const nothingKept = result.counts.rowsStored === 0 && result.counts.rowsTotal > 0
+      const base = nothingKept ? `${done} Nothing was kept because their categories are off.` : done
       return {
         ok: true,
-        message: nothingKept ? `${done} Nothing was kept because their categories are off.` : done,
+        message: result.rankError ? `${base} Lead scores were not updated; earlier scores are unchanged.` : base,
       }
     }
     case 'up_to_date':

@@ -136,6 +136,9 @@ function prospectRunTone(state: ProspectRunState): StatusTone {
   if (state === 'cancelled') {
     return 'muted'
   }
+  if (state === 'failed') {
+    return 'warning'
+  }
   return 'active'
 }
 
@@ -191,4 +194,20 @@ const IMPORT_STATE_LABEL: Record<'importing' | 'imported' | 'failed', string> = 
 
 export function NewBusinessImportChip({ state }: { state: 'importing' | 'imported' | 'failed' }) {
   return <StatusChip tone={IMPORT_STATE_TONE[state]} label={IMPORT_STATE_LABEL[state]} />
+}
+
+const LEAD_TIER_TONE: Record<'likely' | 'possible' | 'low', StatusTone> = {
+  likely: 'success',
+  possible: 'active',
+  low: 'muted',
+}
+
+const LEAD_TIER_LABEL: Record<'likely' | 'possible' | 'low', string> = {
+  likely: 'Likely',
+  possible: 'Possible',
+  low: 'Low',
+}
+
+export function NewBusinessLeadChip({ tier }: { tier: 'likely' | 'possible' | 'low' }) {
+  return <StatusChip tone={LEAD_TIER_TONE[tier]} label={LEAD_TIER_LABEL[tier]} />
 }

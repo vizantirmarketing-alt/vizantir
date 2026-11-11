@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { CategoryToggles } from '@/app/intel/_components/new-businesses/CategoryToggles'
 import { ImportLatestButton, ImportRow } from '@/app/intel/_components/new-businesses/ImportControls'
 import { NewBusinessFilters } from '@/app/intel/_components/new-businesses/NewBusinessFilters'
-import { NewBusinessRowControls } from '@/app/intel/_components/new-businesses/NewBusinessRowControls'
+import { NewBusinessesTable } from '@/app/intel/_components/new-businesses/NewBusinessesTable'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
@@ -14,10 +14,11 @@ import {
   fetchImports,
   fetchNewBusinesses,
   fetchNewBusinessFilterOptions,
+  fetchNewBusinessTierCounts,
+  type NewBusinessTierCounts,
 } from '@/lib/new-businesses/load'
 import { importSummaryLine } from '@/lib/new-businesses/messages'
 import {
-  PHONE_LABEL,
   newBusinessesListHref,
   parseNewBusinessesListParams,
   type NewBusinessesSearchParams,
@@ -36,21 +37,31 @@ export const metadata: Metadata = {
 
 type PageProps = { searchParams: Promise<NewBusinessesSearchParams> }
 
-function address(row: { address: string | null; suite: string | null; city: string | null; state: string | null; zip: string | null }): string {
-  const street = [row.address, row.suite].filter(Boolean).join(', ')
-  const place = [row.city, [row.state, row.zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
-  return [street, place].filter(Boolean).join(' · ') || '—'
+/**
+ * "236 businesses from 677 license records · 120 likely · 80 possible · 36 low".
+ * Counts follow every filter except Lead, so the breakdown shows all three tiers.
+ */
+function tierCountLine(listTotal: number, tiers: NewBusinessTierCounts | null): string {
+  const format = (n: number) => n.toLocaleString('en-US')
+  const plural = (n: number, one: string, many: string) => `${format(n)} ${n === 1 ? one : many}`
+  if (tiers === null) return plural(listTotal, 'business', 'businesses')
+  const head =
+    tiers.mode === 'grouped'
+      ? `${plural(tiers.businesses, 'business', 'businesses')} from ${plural(tiers.licenseRecords, 'license record', 'license records')}`
+      : plural(tiers.licenseRecords, 'license record', 'license records')
+  return [head, `${format(tiers.likely)} likely`, `${format(tiers.possible)} possible`, `${format(tiers.low)} low`].join(' · ')
 }
 
 export default async function NewBusinessesPage({ searchParams }: PageProps) {
   await requireIntelUser()
 
   const params = parseNewBusinessesListParams(await searchParams)
-  const [list, categories, imports, options] = await Promise.all([
+  const [list, categories, imports, options, tiers] = await Promise.all([
     fetchNewBusinesses(params),
     fetchCategories(),
     fetchImports(),
     fetchNewBusinessFilterOptions(),
+    fetchNewBusinessTierCounts(params),
   ])
   const periods = (imports ?? [])
     .filter((i) => i.state === 'imported')
@@ -128,35 +139,16 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
           </p>
         ) : (
           <>
-            <p className="mb-2 intel-secondary text-meta">{list.total.toLocaleString('en-US')} businesses</p>
-            <div className="max-w-full overflow-x-auto">
-              <table className="w-full text-left intel-secondary">
-                <thead>
-                  <tr className="border-b border-black/8 text-meta">
-                    <th className="intel-th pr-4">Name</th>
-                    <th className="intel-th pr-4">Category</th>
-                    <th className="intel-th pr-4">Address</th>
-                    <th className="intel-th pr-4">{PHONE_LABEL}</th>
-                    <th className="intel-th pr-4">Period</th>
-                    <th className="intel-th">Review</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-black/8">
-                  {list.rows.map((row) => (
-                    <tr key={row.id} className="align-top">
-                      <td className="py-2.5 pr-4 font-medium text-foreground">{row.name}</td>
-                      <td className="py-2.5 pr-4 text-body">{row.category}</td>
-                      <td className="py-2.5 pr-4 text-body">{address(row)}</td>
-                      <td className="whitespace-nowrap py-2.5 pr-4 tabular-nums text-body">{row.phone ?? '—'}</td>
-                      <td className="whitespace-nowrap py-2.5 pr-4 text-body">{formatPeriod(row.period)}</td>
-                      <td className="min-w-48 py-2.5">
-                        <NewBusinessRowControls id={row.id} reviewStatus={row.reviewStatus} ownerNote={row.ownerNote} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <p className="mb-2 intel-secondary text-meta">{tierCountLine(list.total, tiers)}</p>
+            {list.mode === 'licenses' ? (
+              <p className="mb-2 intel-secondary text-meta">
+                Businesses are grouped after the next import or re-import. Until then each license is listed on its own.
+              </p>
+            ) : null}
+            {tiers !== null && tiers.unscored > 0 ? (
+              <p className="mb-2 intel-secondary text-meta">Scores appear after the next import or re-import.</p>
+            ) : null}
+            <NewBusinessesTable rows={list.rows} />
             {list.pageCount > 1 ? (
               <nav aria-label="Business pages" className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 intel-body">
                 <span className="text-meta">

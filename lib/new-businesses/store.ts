@@ -9,8 +9,9 @@ import 'server-only'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
-import type { Period } from '@/lib/new-businesses/discovery'
-import type { ImportSummary, NewBusinessStore, StoredRow } from '@/lib/new-businesses/import'
+import { NEW_BUSINESS_SOURCE, type Period } from '@/lib/new-businesses/discovery'
+import type { ImportSummary, NewBusinessStore, RankableRow, StoredRow } from '@/lib/new-businesses/import'
+import type { NewBusinessReviewWriter } from '@/lib/new-businesses/review'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 export class NewBusinessStoreError extends Error {
@@ -21,6 +22,26 @@ export class NewBusinessStoreError extends Error {
 }
 
 const CHUNK = 500
+const READ_PAGE = 1000
+
+const rankableRowSchema = z.object({
+  id: z.string(),
+  source: z.string(),
+  period_year: z.number().int(),
+  period_month: z.number().int(),
+  dedupe_key: z.string(),
+  business_name: z.string(),
+  address: z.string().nullable(),
+  suite: z.string().nullable(),
+  phone: z.string().nullable(),
+  category: z.string(),
+  // Read only, to choose each business's primary row. Never written by a rescore.
+  review_status: z.string(),
+  reviewed_at: z.string().nullable(),
+  owner_note: z.string().nullable(),
+  created_at: z.string(),
+})
+type RankableDbRow = z.infer<typeof rankableRowSchema>
 
 function periodColumns(period: Period) {
   return { period_year: period.year, period_month: period.month }
@@ -29,6 +50,10 @@ function periodColumns(period: Period) {
 export function createNewBusinessStore(
   client: SupabaseClient = createSupabaseServiceRole(),
 ): NewBusinessStore {
+  // Identity columns of the rows last listed for ranking, by id. saveRanks
+  // sends them back unchanged alongside the new scores.
+  const identity = new Map<string, RankableDbRow>()
+
   return {
     async listImports(source) {
       const { data, error } = await client
@@ -75,7 +100,7 @@ export function createNewBusinessStore(
       if (error) throw new NewBusinessStoreError('import begin')
     },
 
-    async finishImport(source, period, counts, nowIso) {
+    async finishImport(source, period, counts, nowIso, note = null) {
       const { error } = await client
         .from('new_business_imports')
         .update({
@@ -85,7 +110,7 @@ export function createNewBusinessStore(
           rows_discarded: counts.rowsDiscarded,
           rows_inserted: counts.rowsInserted,
           unparsed_lines: counts.unparsedLines,
-          error: null,
+          error: note,
           finished_at: nowIso,
           updated_at: nowIso,
         })
@@ -164,6 +189,110 @@ export function createNewBusinessStore(
         inserted += Array.isArray(data) ? data.length : 0
       }
       return inserted
+    },
+
+    async listRankableRows(source) {
+      const rows: RankableDbRow[] = []
+      for (let from = 0; ; from += READ_PAGE) {
+        const { data, error } = await client
+          .from('new_businesses')
+          .select(
+            'id, source, period_year, period_month, dedupe_key, business_name, address, suite, phone, category, review_status, reviewed_at, owner_note, created_at',
+          )
+          .eq('source', source)
+          .order('id', { ascending: true })
+          .range(from, from + READ_PAGE - 1)
+        if (error) throw new NewBusinessStoreError('rank rows read')
+        const parsed = z.array(rankableRowSchema).safeParse(data ?? [])
+        if (!parsed.success) throw new NewBusinessStoreError('rank rows parse')
+        rows.push(...parsed.data)
+        if (parsed.data.length < READ_PAGE) break
+      }
+      identity.clear()
+      for (const row of rows) identity.set(row.id, row)
+      return rows.map(
+        (row): RankableRow => ({
+          id: row.id,
+          name: row.business_name,
+          address: row.address,
+          suite: row.suite,
+          phone: row.phone,
+          category: row.category,
+          period: `${row.period_year}-${String(row.period_month).padStart(2, '0')}`,
+          reviewStatus: row.review_status,
+          reviewedAt: row.reviewed_at,
+          hasNote: row.owner_note !== null && row.owner_note.trim().length > 0,
+          createdAt: row.created_at,
+        }),
+      )
+    },
+
+    async saveRanks(source, updates) {
+      // One upsert per batch, keyed on id. The row's own required columns are
+      // sent back unchanged (an insert path needs them); only the lead_* and
+      // group_* columns change. review_status, owner_note and reviewed_at are
+      // not in the payload, so they are never touched.
+      const payload = updates.map((update) => {
+        const row = identity.get(update.id)
+        if (row === undefined || row.source !== source) throw new NewBusinessStoreError('rank row lookup')
+        return {
+          id: row.id,
+          source: row.source,
+          period_year: row.period_year,
+          period_month: row.period_month,
+          dedupe_key: row.dedupe_key,
+          business_name: row.business_name,
+          category: row.category,
+          lead_score: update.score,
+          lead_tier: update.tier,
+          lead_signals: update.signals,
+          rank_version: update.version,
+          scored_at: update.scoredAt,
+          group_key: update.groupKey,
+          group_primary: update.groupPrimary,
+          group_categories: update.groupCategories,
+          group_periods: update.groupPeriods,
+          group_license_count: update.groupLicenseCount,
+        }
+      })
+      for (let i = 0; i < payload.length; i += CHUNK) {
+        const { error } = await client
+          .from('new_businesses')
+          .upsert(payload.slice(i, i + CHUNK), { onConflict: 'id' })
+        if (error) throw new NewBusinessStoreError('rank save')
+      }
+    },
+  }
+}
+
+/**
+ * Review and note writes for the owner's actions. A business's rows share a
+ * group_key, so an action applies to every license row of the business. A
+ * row that has not been grouped yet (no group_key, or before migration 0030)
+ * is updated on its own.
+ */
+export function createNewBusinessReviewWriter(
+  client: SupabaseClient = createSupabaseServiceRole(),
+): NewBusinessReviewWriter {
+  return {
+    async groupKeyOf(id) {
+      const { data, error } = await client.from('new_businesses').select('group_key').eq('id', id).maybeSingle()
+      if (error) {
+        // Before migration 0030 the column does not exist: treat the row as ungrouped.
+        const fallback = await client.from('new_businesses').select('id').eq('id', id).maybeSingle()
+        if (fallback.error) throw new NewBusinessStoreError('review row read')
+        return fallback.data === null ? undefined : null
+      }
+      if (data === null) return undefined
+      const parsed = z.object({ group_key: z.string().nullable().optional() }).safeParse(data)
+      return parsed.success ? (parsed.data.group_key ?? null) : null
+    },
+
+    async update(target, patch) {
+      let query = client.from('new_businesses').update(patch).eq('source', NEW_BUSINESS_SOURCE)
+      query = target.groupKey !== null ? query.eq('group_key', target.groupKey) : query.eq('id', target.id)
+      const { error } = await query
+      if (error) throw new NewBusinessStoreError('review update')
     },
   }
 }

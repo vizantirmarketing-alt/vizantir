@@ -40,9 +40,12 @@ export function NewBusinessRowControls({
     })
   }
 
+  const buttonClass = 'h-8 border-black/10 px-2 intel-secondary'
+
   return (
     <div className="space-y-1.5" aria-busy={pending}>
-      <div className="flex flex-wrap items-center gap-1.5">
+      {/* Accept, Reject, Archive and Note on one line; they apply to every license of the business. */}
+      <div className="flex flex-nowrap items-center gap-1.5">
         {ACTIONS.map((action) => (
           <Button
             key={action.status}
@@ -51,21 +54,26 @@ export function NewBusinessRowControls({
             size="sm"
             disabled={pending || reviewStatus === action.status}
             onClick={() => run(() => updateNewBusinessReview(id, action.status))}
-            className="h-9 border-black/10 px-2 intel-secondary"
+            className={buttonClass}
           >
             {action.label}
           </Button>
         ))}
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
+          aria-expanded={noteOpen}
           onClick={() => setNoteOpen((open) => !open)}
-          className="intel-secondary text-meta transition-colors hover:text-foreground"
+          className={buttonClass}
         >
-          {noteOpen ? 'Close note' : ownerNote ? 'Edit note' : 'Note'}
-        </button>
+          {noteOpen ? 'Close' : ownerNote ? 'Edit note' : 'Note'}
+        </Button>
       </div>
-      <p className="intel-secondary text-meta">{NEW_BUSINESS_REVIEW_LABELS[reviewStatus]}</p>
-      {ownerNote && !noteOpen ? <p className="line-clamp-2 intel-secondary text-body">{ownerNote}</p> : null}
+      {reviewStatus !== 'unreviewed' ? (
+        <p className="intel-secondary text-meta">{NEW_BUSINESS_REVIEW_LABELS[reviewStatus]}</p>
+      ) : null}
+      {ownerNote && !noteOpen ? <p className="line-clamp-1 intel-secondary text-body">{ownerNote}</p> : null}
       {noteOpen ? (
         <div className="space-y-1.5">
           <textarea
@@ -82,7 +90,7 @@ export function NewBusinessRowControls({
             size="sm"
             disabled={pending}
             onClick={() => run(() => updateNewBusinessNote(id, note), () => setNoteOpen(false))}
-            className="h-9 border-black/10 px-2 intel-secondary"
+            className={buttonClass}
           >
             {pending ? 'Saving…' : 'Save note'}
           </Button>

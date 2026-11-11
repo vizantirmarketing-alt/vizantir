@@ -16,10 +16,20 @@ export const NEW_BUSINESS_REVIEW_LABELS: Record<NewBusinessReviewStatus, string>
 }
 
 export const PHONE_LABEL = 'Phone on public license record'
+
+/** Lead tiers, as in lib/new-businesses/rank.ts. Repeated here so this file stays dependency-free. */
+export const NEW_BUSINESS_LEAD_FILTERS = ['likely', 'possible', 'low'] as const
+export type NewBusinessLeadFilter = (typeof NEW_BUSINESS_LEAD_FILTERS)[number]
+
+export function isNewBusinessLeadFilter(value: unknown): value is NewBusinessLeadFilter {
+  return NEW_BUSINESS_LEAD_FILTERS.some((tier) => tier === value)
+}
 export const NEW_BUSINESS_NOTE_MAX = 2000
 
 export type NewBusinessesListParams = {
   review: NewBusinessReviewStatus | 'all'
+  /** Lead tier filter. Default all: the score orders the list, it never hides rows. */
+  lead: NewBusinessLeadFilter | 'all'
   category: string | null
   city: string | null
   zip: string | null
@@ -53,10 +63,12 @@ function text(value: string | undefined, max = 200): string | null {
 
 export function parseNewBusinessesListParams(search: NewBusinessesSearchParams): NewBusinessesListParams {
   const review = first(search.review)
+  const lead = first(search.lead)
   const period = text(first(search.period), 7)
   const page = Number(first(search.page))
   return {
     review: isNewBusinessReviewStatus(review) ? review : 'unreviewed',
+    lead: isNewBusinessLeadFilter(lead) ? lead : 'all',
     category: text(first(search.category)),
     city: text(first(search.city)),
     zip: text(first(search.zip), 10),
@@ -68,6 +80,7 @@ export function parseNewBusinessesListParams(search: NewBusinessesSearchParams):
 export function newBusinessesListHref(params: NewBusinessesListParams): string {
   const query = new URLSearchParams()
   if (params.review !== 'unreviewed') query.set('review', params.review)
+  if (params.lead !== 'all') query.set('lead', params.lead)
   if (params.category !== null) query.set('category', params.category)
   if (params.city !== null) query.set('city', params.city)
   if (params.zip !== null) query.set('zip', params.zip)
@@ -80,6 +93,7 @@ export function newBusinessesListHref(params: NewBusinessesListParams): string {
 export function newBusinessesFiltersActive(params: NewBusinessesListParams): boolean {
   return (
     params.review !== 'unreviewed' ||
+    params.lead !== 'all' ||
     params.category !== null ||
     params.city !== null ||
     params.zip !== null ||

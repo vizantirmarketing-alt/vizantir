@@ -7,6 +7,8 @@ import { requireIntelUser } from '@/lib/auth/allowlist'
 import { BULK_CATEGORY_LIMIT } from '@/lib/new-businesses/categories'
 import { NEW_BUSINESS_SOURCE } from '@/lib/new-businesses/discovery'
 import { createImportDeps } from '@/lib/new-businesses/deps'
+import { setBusinessNote, setBusinessReview } from '@/lib/new-businesses/review'
+import { createNewBusinessReviewWriter } from '@/lib/new-businesses/store'
 import { importLatest, reimportPeriod, type ImportResult } from '@/lib/new-businesses/import'
 import { importResultMessage } from '@/lib/new-businesses/messages'
 import {
@@ -109,22 +111,9 @@ export async function updateNewBusinessReview(
     return { ok: false, error: 'Choose a valid review status.' }
   }
   try {
-    const now = new Date().toISOString()
-    const { data, error } = await createSupabaseServiceRole()
-      .from('new_businesses')
-      .update({
-        review_status: parsed.data.status,
-        reviewed_at: parsed.data.status === 'unreviewed' ? null : now,
-        updated_at: now,
-      })
-      .eq('id', parsed.data.id)
-      .select('id')
-      .maybeSingle()
-    if (error) {
-      console.error('New business review update failed')
-      return { ok: false, error: GENERIC_ERROR }
-    }
-    if (data === null) {
+    // Applies to every license row of the business (lib/new-businesses/review.ts).
+    const result = await setBusinessReview(createNewBusinessReviewWriter(), parsed.data.id, parsed.data.status, new Date().toISOString())
+    if (!result.ok) {
       return { ok: false, error: 'Business not found.' }
     }
     revalidate()
@@ -146,19 +135,10 @@ export async function updateNewBusinessNote(id: string, note: string): Promise<N
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? 'Check the note.' }
   }
-  const trimmed = parsed.data.note.trim()
   try {
-    const { data, error } = await createSupabaseServiceRole()
-      .from('new_businesses')
-      .update({ owner_note: trimmed.length > 0 ? trimmed : null, updated_at: new Date().toISOString() })
-      .eq('id', parsed.data.id)
-      .select('id')
-      .maybeSingle()
-    if (error) {
-      console.error('New business note update failed')
-      return { ok: false, error: GENERIC_ERROR }
-    }
-    if (data === null) {
+    // Applies to every license row of the business (lib/new-businesses/review.ts).
+    const result = await setBusinessNote(createNewBusinessReviewWriter(), parsed.data.id, parsed.data.note, new Date().toISOString())
+    if (!result.ok) {
       return { ok: false, error: 'Business not found.' }
     }
     revalidate()

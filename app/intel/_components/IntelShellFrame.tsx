@@ -49,6 +49,23 @@ function SignOutForm({ className }: { className?: string }) {
   )
 }
 
+/**
+ * The email with a preferred line break before the "@". overflow-wrap:
+ * anywhere on the parent only breaks inside a part when that part alone is
+ * still wider than the sidebar.
+ */
+function EmailText({ email }: { email: string }) {
+  const at = email.lastIndexOf('@')
+  if (at <= 0) return <>{email}</>
+  return (
+    <>
+      {email.slice(0, at)}
+      <wbr />
+      {email.slice(at)}
+    </>
+  )
+}
+
 function NavLinks({
   pathname,
   onNavigate,
@@ -149,8 +166,8 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
             </nav>
 
             <div className="mt-8 shrink-0 space-y-3">
-              <p className="break-all intel-secondary text-meta">
-                {email}
+              <p className="intel-secondary text-meta [overflow-wrap:anywhere]">
+                <EmailText email={email} />
               </p>
               <SignOutForm />
             </div>
@@ -191,9 +208,9 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
                 />
               </div>
               <div className="mt-8 shrink-0 space-y-3 border-t border-black/8 pt-8">
-                <p className="break-all intel-secondary text-meta">
-                  {email}
-                </p>
+                <p className="intel-secondary text-meta [overflow-wrap:anywhere]">
+                <EmailText email={email} />
+              </p>
                 <SignOutForm />
               </div>
             </nav>

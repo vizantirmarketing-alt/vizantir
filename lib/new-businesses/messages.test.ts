@@ -79,3 +79,12 @@ describe('importSummaryLine', () => {
     }
   });
 });
+
+describe('importResultMessage with a scoring problem', () => {
+  it('still reports success and says the scores were not updated', () => {
+    assert.deepEqual(
+      importResultMessage({ outcome: 'imported', period: OCTOBER, counts: counts(10), rankError: 'Lead scores were not updated: timeout' }, 'reimport'),
+      { ok: true, message: 'October 2026 updated. Lead scores were not updated; earlier scores are unchanged.' },
+    );
+  });
+});

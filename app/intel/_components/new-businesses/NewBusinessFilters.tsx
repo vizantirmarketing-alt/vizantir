@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 
 import { Select } from '@/components/ui/select'
 import {
+  NEW_BUSINESS_LEAD_FILTERS,
   NEW_BUSINESS_REVIEW_LABELS,
   NEW_BUSINESS_REVIEW_STATUSES,
   newBusinessesFiltersActive,
@@ -16,6 +17,8 @@ import {
 
 type Option = { value: string; label: string }
 
+const LEAD_FILTER_LABELS = { likely: 'Likely', possible: 'Possible', low: 'Low' } as const
+
 function readFormString(form: FormData, key: string): string {
   const value = form.get(key)
   return typeof value === 'string' ? value : ''
@@ -25,6 +28,7 @@ function hrefFromForm(form: HTMLFormElement): string {
   const data = new FormData(form)
   const parsed = parseNewBusinessesListParams({
     review: readFormString(data, 'review'),
+    lead: readFormString(data, 'lead'),
     category: readFormString(data, 'category'),
     city: readFormString(data, 'city'),
     zip: readFormString(data, 'zip'),
@@ -107,7 +111,7 @@ export function NewBusinessFilters({
         router.push(hrefFromForm(event.currentTarget))
       }}
     >
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
         <div>
           <label htmlFor="nb-review" className="mb-2 block intel-body font-medium text-body">
             Review status
@@ -127,6 +131,14 @@ export function NewBusinessFilters({
             ))}
           </Select>
         </div>
+        <FilterSelect
+          id="nb-lead"
+          name="lead"
+          label="Lead"
+          value={params.lead === 'all' ? '' : params.lead}
+          options={NEW_BUSINESS_LEAD_FILTERS.map((tier) => ({ value: tier, label: LEAD_FILTER_LABELS[tier] }))}
+          onChange={onChange}
+        />
         <FilterSelect id="nb-category" name="category" label="Category" value={params.category ?? ''} options={withCurrent(plain(categories), params.category)} onChange={onChange} />
         <FilterSelect id="nb-city" name="city" label="City" value={params.city ?? ''} options={withCurrent(plain(cities), params.city)} onChange={onChange} />
         <FilterSelect id="nb-zip" name="zip" label="Zip" value={params.zip ?? ''} options={withCurrent(plain(zips), params.zip)} onChange={onChange} />
