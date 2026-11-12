@@ -1,3 +1,4 @@
+import { DraftEmailAction } from '@/app/intel/_components/outreach/DraftEmailAction'
 import { NewBusinessRowControls } from '@/app/intel/_components/new-businesses/NewBusinessRowControls'
 import { WebsiteCell } from '@/app/intel/_components/new-businesses/WebsiteCell'
 import { NewBusinessLeadChip } from '@/app/intel/_components/ui/StatusChip'
@@ -16,7 +17,14 @@ function address(row: Pick<NewBusinessRow, 'address' | 'suite' | 'city' | 'state
  * fetchNewBusinesses. Scrolls inside its panel when the panel is narrower
  * than the table.
  */
-export function NewBusinessesTable({ rows }: { rows: NewBusinessRow[] }) {
+export function NewBusinessesTable({
+  rows,
+  activeDrafts,
+}: {
+  rows: NewBusinessRow[]
+  /** Active outreach draft ids by subject (group key, or row id before grouping). Null when they could not be read. */
+  activeDrafts: ReadonlyMap<string, string> | null
+}) {
   return (
     <div className="max-w-full overflow-x-auto">
       <table className="w-full text-left intel-secondary">
@@ -33,7 +41,7 @@ export function NewBusinessesTable({ rows }: { rows: NewBusinessRow[] }) {
         </thead>
         <tbody className="divide-y divide-black/8">
           {rows.map((row) => (
-            <tr key={row.id} className="align-top">
+            <tr key={row.id} id={`business-${row.id}`} className="scroll-mt-4 align-top target:bg-cobalt-soft/40">
               <td className="min-w-44 py-2.5 pr-3">
                 <span className="block font-medium text-foreground">{row.name}</span>
                 {row.leadReason !== null ? (
@@ -69,6 +77,15 @@ export function NewBusinessesTable({ rows }: { rows: NewBusinessRow[] }) {
               </td>
               <td className="py-2.5">
                 <NewBusinessRowControls id={row.id} reviewStatus={row.reviewStatus} ownerNote={row.ownerNote} />
+                {row.reviewStatus === 'accepted' ? (
+                  <div className="mt-1.5">
+                    <DraftEmailAction
+                      subjectType="new_business"
+                      leadId={row.id}
+                      activeDraftId={activeDrafts?.get(row.groupKey ?? row.id) ?? null}
+                    />
+                  </div>
+                ) : null}
               </td>
             </tr>
           ))}

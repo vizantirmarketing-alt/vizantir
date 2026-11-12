@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
+import { DraftEmailAction } from '@/app/intel/_components/outreach/DraftEmailAction'
 import { ProspectMeasureButton } from '@/app/intel/_components/prospects/ProspectMeasureButton'
 import { ProspectReviewControls } from '@/app/intel/_components/prospects/ProspectReviewControls'
 import { Panel } from '@/app/intel/_components/ui/Panel'
@@ -12,6 +13,7 @@ import {
   ProspectReviewChip,
 } from '@/app/intel/_components/ui/StatusChip'
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { createOutreachStore } from '@/lib/outreach/deps'
 import {
   fetchProspectDetail,
   type ProspectDetail,
@@ -36,7 +38,8 @@ import {
 
 // Measure performance runs a PageSpeed Insights test through a server action
 // on this route. The fetcher allows 90 seconds plus one quick retry, and the
-// runner measure route allows 120, so this matches it.
+// runner measure route allows 120, so this matches it. Draft email (one model
+// call, retried once) fits inside the same limit.
 export const maxDuration = 120
 
 export const metadata: Metadata = {
@@ -77,6 +80,7 @@ export default async function IntelProspectDetailPage({
   }
 
   const { prospect, evidence } = result
+  const activeDraftId = prospect.reviewStatus === 'accepted' ? await activeDraftFor(prospect.id) : null
 
   return (
     <div className="flex flex-col gap-4">
@@ -93,6 +97,14 @@ export default async function IntelProspectDetailPage({
       <ScoresSection prospect={prospect} />
       <EvidenceSection evidence={evidence} latestRunId={prospect.latestRunId} />
 
+      <Panel title="Outreach">
+        {prospect.reviewStatus === 'accepted' ? (
+          <DraftEmailAction subjectType="prospect" leadId={prospect.id} activeDraftId={activeDraftId} />
+        ) : (
+          <p className="intel-body text-body">Accept this prospect to draft a first-contact email.</p>
+        )}
+      </Panel>
+
       <Panel title="Review">
         <ProspectReviewControls
           prospectId={prospect.id}
@@ -102,6 +114,15 @@ export default async function IntelProspectDetailPage({
       </Panel>
     </div>
   )
+}
+
+/** The prospect's draft that needs review or is approved, if any. A failed read just shows Draft email. */
+async function activeDraftFor(prospectId: string): Promise<string | null> {
+  try {
+    return (await createOutreachStore().findActiveDraft('prospect', prospectId))?.id ?? null
+  } catch {
+    return null
+  }
 }
 
 function BackLink() {

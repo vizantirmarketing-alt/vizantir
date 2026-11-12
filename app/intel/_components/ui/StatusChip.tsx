@@ -258,3 +258,23 @@ const CHECK_RUN_LABEL: Record<CheckRunChipState, string> = {
 export function WebsiteCheckRunChip({ state }: { state: CheckRunChipState }) {
   return <StatusChip tone={CHECK_RUN_TONE[state]} label={CHECK_RUN_LABEL[state]} />
 }
+
+type OutreachChipStatus = 'draft' | 'approved' | 'sent' | 'discarded'
+
+const OUTREACH_TONE: Record<OutreachChipStatus, StatusTone> = {
+  draft: 'new',
+  approved: 'active',
+  sent: 'success',
+  discarded: 'muted',
+}
+
+const OUTREACH_LABEL: Record<OutreachChipStatus, string> = {
+  draft: 'Needs review',
+  approved: 'Approved',
+  sent: 'Sent',
+  discarded: 'Discarded',
+}
+
+export function OutreachStatusChip({ status }: { status: OutreachChipStatus }) {
+  return <StatusChip tone={OUTREACH_TONE[status]} label={OUTREACH_LABEL[status]} />
+}

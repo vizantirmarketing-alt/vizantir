@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { href: '/intel/leads', label: 'Leads' },
   { href: '/intel/prospects', label: 'Prospect Research' },
   { href: '/intel/new-businesses', label: 'New Businesses' },
+  { href: '/intel/outreach', label: 'Outreach' },
   { href: '/intel/reports', label: 'Reports' },
 ] as const
 

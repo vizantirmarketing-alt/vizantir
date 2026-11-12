@@ -12,6 +12,7 @@ import { fetchCheckRuns, type CheckRunRow } from '@/lib/new-businesses/website-s
 import { splitRunSummary } from '@/lib/prospects/ingest'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { createOutreachStore } from '@/lib/outreach/deps'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { formatPeriod, periodKey } from '@/lib/new-businesses/discovery'
 import {
@@ -20,6 +21,7 @@ import {
   fetchNewBusinesses,
   fetchNewBusinessFilterOptions,
   fetchNewBusinessTierCounts,
+  type NewBusinessRow,
   type NewBusinessTierCounts,
 } from '@/lib/new-businesses/load'
 import { importSummaryLine } from '@/lib/new-businesses/messages'
@@ -118,6 +120,22 @@ function CheckRunList({ runs }: { runs: CheckRunRow[] | null }) {
   )
 }
 
+/**
+ * Draft ids for the accepted rows on this page, keyed by subject (the group
+ * key, or the row id before grouping). Null when Outreach cannot be read, for
+ * example before migration 0032; the rows then just offer Draft email.
+ */
+async function activeDraftsFor(rows: NewBusinessRow[]): Promise<Map<string, string> | null> {
+  const refs = rows.filter((row) => row.reviewStatus === 'accepted').map((row) => row.groupKey ?? row.id)
+  if (refs.length === 0) return new Map()
+  try {
+    const drafts = await createOutreachStore().activeDraftsFor('new_business', refs)
+    return new Map(drafts.map((draft) => [draft.subjectRef, draft.id]))
+  } catch {
+    return null
+  }
+}
+
 export default async function NewBusinessesPage({ searchParams }: PageProps) {
   await requireIntelUser()
 
@@ -130,6 +148,7 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
     fetchNewBusinessTierCounts(params),
     fetchCheckRuns(5),
   ])
+  const activeDrafts = list.ok ? await activeDraftsFor(list.rows) : null
   const periods = (imports ?? [])
     .filter((i) => i.state === 'imported')
     .map((i) => ({ value: periodKey(i.period), label: formatPeriod(i.period) }))
@@ -220,7 +239,7 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
             {tiers !== null && tiers.unscored > 0 ? (
               <p className="mb-2 intel-secondary text-meta">Scores appear after the next import or re-import.</p>
             ) : null}
-            <NewBusinessesTable rows={list.rows} />
+            <NewBusinessesTable rows={list.rows} activeDrafts={activeDrafts} />
             {list.pageCount > 1 ? (
               <nav aria-label="Business pages" className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 intel-body">
                 <span className="text-meta">

@@ -28,6 +28,8 @@ const COUNT_PAGE = 1000
 export type NewBusinessRow = {
   /** The primary row's id. Review actions apply to every license row of the business. */
   id: string
+  /** Shared by every license row of the business; null before grouping. */
+  groupKey: string | null
   name: string
   address: string | null
   suite: string | null
@@ -132,6 +134,7 @@ const baseRowSchema = z.object({
 })
 
 const groupedRowSchema = baseRowSchema.extend({
+  group_key: z.string().nullable().optional().catch(null),
   group_categories: z.array(z.string()).nullable().catch(null),
   group_periods: z.array(z.string()).nullable().catch(null),
   group_license_count: z.number().int().nullable().catch(null),
@@ -139,7 +142,7 @@ const groupedRowSchema = baseRowSchema.extend({
 
 const BASE_COLUMNS =
   'id, period_year, period_month, business_name, address, suite, city, state, zip, phone, category, review_status, owner_note, lead_score, lead_tier, lead_signals'
-const GROUPED_COLUMNS = `${BASE_COLUMNS}, group_categories, group_periods, group_license_count`
+const GROUPED_COLUMNS = `${BASE_COLUMNS}, group_key, group_categories, group_periods, group_license_count`
 const WEBSITE_COLUMNS = 'website_status, website_url, website_evidence, website_checked_at'
 
 const websiteFields = {
@@ -239,7 +242,7 @@ export async function fetchNewBusinesses(
     if (error) return { ok: false }
 
     const rows = z
-      .array(groupedRowSchema.partial({ group_categories: true, group_periods: true, group_license_count: true }).extend(websiteFields))
+      .array(groupedRowSchema.partial({ group_key: true, group_categories: true, group_periods: true, group_license_count: true }).extend(websiteFields))
       .safeParse(data ?? [])
     if (!rows.success) return { ok: false }
     const total = count ?? 0
@@ -254,6 +257,7 @@ export async function fetchNewBusinesses(
         const signals = row.lead_signals === null ? null : americanSpelling(row.lead_signals as RankSignal[])
         return {
           id: row.id,
+          groupKey: row.group_key ?? null,
           name: row.business_name,
           address: row.address,
           suite: row.suite,
