@@ -48,6 +48,7 @@ Body:
 - Make exactly one specific, true observation, taken only from the JSON. ${context.leadType === 'prospect' ? PROSPECT_OBSERVATION : BUSINESS_OBSERVATION}
 - Never invent a compliment, a statistic, a number, a mutual connection or any prior contact. Every number you write must appear in the JSON.
 - End with one soft ask: a short call or a reply. Ask for nothing else.
+- Ask once. Make one request for a reply or a call, in one place: the last line. Do not ask earlier in the email, do not repeat the request in other words, and do not add a second question.
 - No pricing, packages, quotes, offers or attachments. No links, web addresses or email addresses, except ${STUDIO_SITE_HOST}. You may mention ${STUDIO_SITE_HOST} once, inside a sentence. Never put it on a line of its own.
 - Never mention AI, automation, tools, software, scraping, research or how this message was written.
 - The last line is the ask. No sign-off, no signature, no web address on its own line, no postal address and no opt-out line. They are added after your text.

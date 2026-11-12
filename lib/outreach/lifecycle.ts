@@ -4,7 +4,11 @@
  *
  *   draft     edit (recipient, subject, body), approve, discard, do not contact
  *   approved  text locked; edit again (back to draft), mark as sent, discard,
- *             do not contact
+ *             do not contact; send through Gmail (lib/outreach/gmail/send.ts)
+ *   sending   nothing while the Gmail request is in flight; once stale, the
+ *             same as send_unconfirmed
+ *   send_unconfirmed
+ *             mark as sent, try again (a new Gmail send), do not contact
  *   sent      do not contact (the record stays sent)
  *   discarded nothing
  *
@@ -17,6 +21,7 @@ import { singleLine } from '@/lib/outreach/mailto'
 import {
   OUTREACH_BODY_MAX,
   OUTREACH_SUBJECT_MAX,
+  SENDING_STALE_MS,
   SHARED_MAIL_DOMAINS,
   emailDomain,
   isValidEmail,
@@ -81,8 +86,27 @@ export async function editAgain(store: OutreachStore, id: string, nowIso: string
   return done(await store.updateDraft(id, ['approved'], { status: 'draft', approvedAt: null, updatedAt: nowIso }))
 }
 
+/** A 'sending' row whose request has ended without recording an outcome. */
+export function isStaleSending(draft: Pick<OutreachDraft, 'status' | 'updatedAt'>, nowIso: string): boolean {
+  return draft.status === 'sending' && Date.parse(nowIso) - Date.parse(draft.updatedAt) >= SENDING_STALE_MS
+}
+
+/**
+ * Approved: the owner sent it from his mail app. Not confirmed (or a stale
+ * send): the owner found it in his Sent folder, so it went through Gmail.
+ */
 export async function markSent(store: OutreachStore, id: string, nowIso: string): Promise<LifecycleResult> {
-  return done(await store.updateDraft(id, ['approved'], { status: 'sent', sentAt: nowIso, updatedAt: nowIso }))
+  const current = await load(store, id)
+  if ('error' in current) return { ok: false, error: current.error }
+  if (current.status === 'approved') {
+    return done(await store.updateDraft(id, ['approved'], { status: 'sent', sentAt: nowIso, sentVia: 'mail_app', updatedAt: nowIso }))
+  }
+  if (current.status === 'send_unconfirmed' || isStaleSending(current, nowIso)) {
+    return done(
+      await store.updateDraft(id, [current.status], { status: 'sent', sentAt: nowIso, sentVia: 'gmail', sendError: null, updatedAt: nowIso }),
+    )
+  }
+  return { ok: false, error: CHANGED }
 }
 
 export async function discardDraft(store: OutreachStore, id: string, nowIso: string): Promise<LifecycleResult> {
@@ -100,7 +124,8 @@ export async function doNotContact(store: OutreachStore, id: string, nowIso: str
   const to = current.toEmail === null ? '' : normalizeEmail(current.toEmail)
   if (!isValidEmail(to)) return { ok: false, error: 'Add the recipient email first, so it can be added to the do-not-contact list.' }
   await store.addSuppression({ email: to, domain: null, reason: 'do_not_contact' }, nowIso)
-  if (current.status === 'sent') return { ok: true, draft: current }
+  // Sent, or possibly sent: the record is kept as it is.
+  if (current.status === 'sent' || current.status === 'send_unconfirmed' || current.status === 'sending') return { ok: true, draft: current }
   return done(await store.updateDraft(id, ['draft', 'approved'], { status: 'discarded', updatedAt: nowIso }))
 }
 

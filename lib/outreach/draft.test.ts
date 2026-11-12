@@ -57,8 +57,8 @@ describe('writeDraft', () => {
     assert.ok(!draft.body.includes(OPT_OUT_LINE))
     assert.equal(draft.toEmail, null)
     assert.equal(draft.model, 'test-model')
-    assert.equal(draft.promptVersion, 'outreach-v3')
-    assert.equal(OUTREACH_PROMPT_VERSION, 'outreach-v3')
+    assert.equal(draft.promptVersion, 'outreach-v4')
+    assert.equal(OUTREACH_PROMPT_VERSION, 'outreach-v4')
     assert.equal(draft.leadName, 'Harbor & Pine Family Law')
   })
 
@@ -275,5 +275,9 @@ function sampleDraft(i: number): OutreachDraft {
     updatedAt: '',
     approvedAt: null,
     sentAt: null,
+    sentVia: null,
+    gmailMessageId: null,
+    gmailThreadId: null,
+    sendError: null,
   }
 }

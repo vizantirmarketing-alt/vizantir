@@ -2,25 +2,57 @@
  * Outreach enums, labels, limits and email helpers. Pure; safe to import from
  * client components.
  *
- * Nothing in Outreach sends email. The owner approves a draft and sends it
- * from his own mail application; the server only stores text.
+ * The owner approves a draft and sends it either from his own mail
+ * application, or from the dashboard through his connected Google mailbox
+ * (lib/outreach/gmail/), one email per click. Nothing is ever sent
+ * automatically.
  */
 
 export const OUTREACH_SUBJECT_TYPES = ['prospect', 'new_business'] as const
 export type OutreachSubjectType = (typeof OUTREACH_SUBJECT_TYPES)[number]
 
-export const OUTREACH_STATUSES = ['draft', 'approved', 'sent', 'discarded'] as const
+/**
+ * sending           claimed for one Gmail send; the request is in flight
+ * send_unconfirmed  the Gmail request timed out or failed on Google's side, so
+ *                   delivery is unknown; never retried automatically
+ */
+export const OUTREACH_STATUSES = ['draft', 'approved', 'sending', 'send_unconfirmed', 'sent', 'discarded'] as const
 export type OutreachStatus = (typeof OUTREACH_STATUSES)[number]
 
-/** A lead has at most one draft in these states (a partial unique index in 0032). */
-export const ACTIVE_STATUSES: readonly OutreachStatus[] = ['draft', 'approved']
+/** A lead has at most one draft in these states (partial unique indexes in 0032 and 0033). */
+export const ACTIVE_STATUSES: readonly OutreachStatus[] = ['draft', 'approved', 'sending', 'send_unconfirmed']
+
+/** States a Gmail send may start from. A draft must also pass the hard voice rules. */
+export const SENDABLE_STATUSES: readonly OutreachStatus[] = ['draft', 'approved', 'send_unconfirmed']
 
 export const OUTREACH_STATUS_LABELS: Record<OutreachStatus, string> = {
   draft: 'Needs review',
   approved: 'Approved',
+  sending: 'Sending',
+  send_unconfirmed: 'Not confirmed',
   sent: 'Sent',
   discarded: 'Discarded',
 }
+
+export const SENT_VIA = ['gmail', 'mail_app'] as const
+export type SentVia = (typeof SENT_VIA)[number]
+
+export const SENT_VIA_LABELS: Record<SentVia, string> = {
+  gmail: 'Sent from the dashboard',
+  mail_app: 'Sent from your mail app',
+}
+
+/** Emails sent through Gmail per local day (America/Los_Angeles). Mail-app sends do not count. */
+export const OUTREACH_DAILY_SEND_LIMIT = 20
+
+/**
+ * A row still 'sending' after this long belongs to a request that has ended
+ * without recording its outcome, so it is treated as not confirmed.
+ */
+export const SENDING_STALE_MS = 3 * 60 * 1000
+
+/** The short error stored on a draft when Google refuses a send. */
+export const SEND_ERROR_MAX = 300
 
 export const OUTREACH_SUBJECT_LABELS: Record<OutreachSubjectType, string> = {
   prospect: 'Prospect',
@@ -43,7 +75,7 @@ export const SENT_PER_DAY_NOTE = 20
 export const MAILTO_MAX_LENGTH = 1800
 
 /** Changing the prompt or a voice rule changes what a draft means: bump this. */
-export const OUTREACH_PROMPT_VERSION = 'outreach-v3'
+export const OUTREACH_PROMPT_VERSION = 'outreach-v4'
 
 /**
  * How every draft describes the studio, word for word, after its name from

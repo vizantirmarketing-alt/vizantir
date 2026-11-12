@@ -4,7 +4,7 @@ import 'server-only'
  * Production wiring for outreach drafting. The one outbound request is the
  * model call, made through the briefing's model factory: same SDK, same key,
  * same model constant, same timeout and error handling. Nothing here sends
- * email; the owner sends from his own mail application.
+ * email; direct sending is wired separately in lib/outreach/gmail/deps.ts.
  */
 
 import { BRIEFING_MODEL, createBriefingModel } from '@/lib/briefing/model'

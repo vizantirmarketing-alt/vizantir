@@ -4,7 +4,7 @@
  * lib/outreach/fixtures/memory-store.ts.
  */
 
-import type { OutreachStatus, OutreachSubjectType, SuppressionReason } from '@/lib/outreach/params'
+import type { OutreachStatus, OutreachSubjectType, SentVia, SuppressionReason } from '@/lib/outreach/params'
 
 export type OutreachSettings = {
   senderName: string
@@ -33,11 +33,25 @@ export type OutreachDraft = {
   updatedAt: string
   approvedAt: string | null
   sentAt: string | null
+  /** How it was sent. null on rows marked sent before migration 0033 (mail app). */
+  sentVia: SentVia | null
+  gmailMessageId: string | null
+  gmailThreadId: string | null
+  /** A short reason Google refused the last send, cleared when a send starts. */
+  sendError: string | null
 }
 
-export type NewDraft = Omit<OutreachDraft, 'id' | 'createdAt' | 'updatedAt' | 'approvedAt' | 'sentAt' | 'status'>
+export type NewDraft = Omit<
+  OutreachDraft,
+  'id' | 'createdAt' | 'updatedAt' | 'approvedAt' | 'sentAt' | 'status' | 'sentVia' | 'gmailMessageId' | 'gmailThreadId' | 'sendError'
+>
 
-export type DraftPatch = Partial<Pick<OutreachDraft, 'toEmail' | 'subject' | 'body' | 'status' | 'approvedAt' | 'sentAt'>> & {
+export type DraftPatch = Partial<
+  Pick<
+    OutreachDraft,
+    'toEmail' | 'subject' | 'body' | 'status' | 'approvedAt' | 'sentAt' | 'sentVia' | 'gmailMessageId' | 'gmailThreadId' | 'sendError'
+  >
+> & {
   updatedAt: string
 }
 
@@ -62,6 +76,8 @@ export interface OutreachStore {
   countCreatedSince(iso: string): Promise<number>
   /** Rows marked sent at or after this instant. */
   countSentSince(iso: string): Promise<number>
+  /** Rows sent through Gmail at or after this instant: the daily send limit. */
+  countGmailSentSince(iso: string): Promise<number>
   /**
    * Inserts a draft. When replaceId is set, that row is discarded first, and
    * only while it is still a draft. 'conflict' when the subject still has an
@@ -84,4 +100,27 @@ export interface OutreachStore {
   /** 'exists' when the address is already listed (the domain flag is then widened, never narrowed). */
   addSuppression(entry: Omit<Suppression, 'id' | 'createdAt'>, nowIso: string): Promise<'added' | 'exists'>
   removeSuppression(id: string): Promise<boolean>
+}
+
+/** The one connected Google mailbox. The refresh token is stored encrypted (AES-256-GCM). */
+export type GmailConnection = {
+  email: string
+  /** Base64. */
+  tokenCiphertext: string
+  /** Base64, 12 bytes, new for every write. */
+  tokenIv: string
+  /** Base64, the 16-byte GCM authentication tag. */
+  tokenTag: string
+  connectedAt: string
+  connectedBy: string
+  /** Set when Google answered invalid_grant: the owner must connect again. */
+  needsReconnect: boolean
+}
+
+export interface GmailConnectionStore {
+  get(): Promise<GmailConnection | null>
+  /** Replaces the one row. */
+  save(connection: GmailConnection): Promise<void>
+  markNeedsReconnect(): Promise<void>
+  remove(): Promise<void>
 }

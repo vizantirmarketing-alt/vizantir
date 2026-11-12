@@ -6,7 +6,16 @@
  */
 
 import { ACTIVE_STATUSES, type OutreachStatus, type OutreachSubjectType } from '@/lib/outreach/params'
-import type { DraftPatch, NewDraft, OutreachDraft, OutreachSettings, OutreachStore, Suppression } from '@/lib/outreach/types'
+import type {
+  DraftPatch,
+  GmailConnection,
+  GmailConnectionStore,
+  NewDraft,
+  OutreachDraft,
+  OutreachSettings,
+  OutreachStore,
+  Suppression,
+} from '@/lib/outreach/types'
 
 export class MemoryOutreachStore implements OutreachStore {
   settings: OutreachSettings | null = null
@@ -43,6 +52,9 @@ export class MemoryOutreachStore implements OutreachStore {
   async countSentSince(iso: string) {
     return this.drafts.filter((d) => d.status === 'sent' && d.sentAt !== null && d.sentAt >= iso).length
   }
+  async countGmailSentSince(iso: string) {
+    return this.drafts.filter((d) => d.status === 'sent' && d.sentVia === 'gmail' && d.sentAt !== null && d.sentAt >= iso).length
+  }
   async insertDraft(draft: NewDraft, replaceId: string | null, nowIso: string) {
     if (replaceId !== null) {
       const old = this.drafts.find((d) => d.id === replaceId && d.status === 'draft')
@@ -56,7 +68,19 @@ export class MemoryOutreachStore implements OutreachStore {
       return { ok: false as const, reason: 'conflict' as const }
     }
     const id = this.id('draft')
-    this.drafts.push({ ...draft, id, status: 'draft', createdAt: nowIso, updatedAt: nowIso, approvedAt: null, sentAt: null })
+    this.drafts.push({
+      ...draft,
+      id,
+      status: 'draft',
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      approvedAt: null,
+      sentAt: null,
+      sentVia: null,
+      gmailMessageId: null,
+      gmailThreadId: null,
+      sendError: null,
+    })
     return { ok: true as const, id }
   }
   async updateDraft(id: string, from: readonly OutreachStatus[], patch: DraftPatch) {
@@ -102,5 +126,25 @@ export class MemoryOutreachStore implements OutreachStore {
     const before = this.suppressions.length
     this.suppressions = this.suppressions.filter((s) => s.id !== id)
     return this.suppressions.length < before
+  }
+}
+
+/** TEST FIXTURE. The one-row Gmail connection, in memory. */
+export class MemoryGmailConnectionStore implements GmailConnectionStore {
+  connection: GmailConnection | null = null
+  saves = 0
+
+  async get() {
+    return this.connection === null ? null : { ...this.connection }
+  }
+  async save(connection: GmailConnection) {
+    this.saves += 1
+    this.connection = { ...connection }
+  }
+  async markNeedsReconnect() {
+    if (this.connection !== null) this.connection.needsReconnect = true
+  }
+  async remove() {
+    this.connection = null
   }
 }

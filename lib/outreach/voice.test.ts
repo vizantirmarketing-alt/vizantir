@@ -454,3 +454,41 @@ vizantir.com`
     assert.deepEqual(rules, ['signature'])
   })
 })
+
+describe('ask once (a warning, outreach-v4)', () => {
+  const ASK_TWICE = `Hello,
+
+I was looking at your site and noticed that the contact page asks visitors to call during office hours and has no contact form or online booking. Would you be open to a short call about it?
+
+I'm James, and I run Vizantir Design Studio, a custom web studio in Las Vegas. Making that first step easier for the people who need you is the kind of thing I work on.
+
+Would you be open to a short call, or a reply with a good time to talk?`
+
+  it('an ask repeated in a second paragraph is a warning, never a refusal', () => {
+    assert.ok(WARNING_RULES.has('ask_once'))
+    assert.ok(warningsFor(GOOD_PROSPECT_REPLY.subject, ASK_TWICE).includes('ask_once'))
+    assert.ok(!rulesFor(GOOD_PROSPECT_REPLY.subject, ASK_TWICE).includes('ask_once'))
+    const warnings = voiceWarnings({ subject: GOOD_PROSPECT_REPLY.subject, body: ASK_TWICE }, voiceContextFor(buildOutreachContext(prospectLead()), FIXTURE_SETTINGS.studioName))
+    assert.ok(warnings.includes('This email may ask for a reply or a call more than once. Keep one ask, in one place, at the end.'))
+    assert.ok(!('ask_once' in REFUSAL_REASONS))
+  })
+
+  it('one ask in one place passes, even over two sentences', () => {
+    assert.ok(!warningsFor(GOOD_PROSPECT_REPLY.subject, GOOD_PROSPECT_REPLY.body).includes('ask_once'))
+    assert.ok(!warningsFor(GOOD_BUSINESS_REPLY.subject, GOOD_BUSINESS_REPLY.body, businessLead()).includes('ask_once'))
+  })
+
+  it('three ask sentences in one paragraph is a warning', () => {
+    const body = GOOD_PROSPECT_REPLY.body.replace(
+      'Would you be open to a short call, or a reply with a good time to talk?',
+      'Would you be open to a short call? Or would a reply suit you better? Let me know.',
+    )
+    assert.ok(warningsFor(GOOD_PROSPECT_REPLY.subject, body).includes('ask_once'))
+  })
+
+  it('the prompt asks for one ask in one place', async () => {
+    const { outreachSystemPrompt } = await import('./prompt')
+    const prompt = outreachSystemPrompt(FIXTURE_SETTINGS, buildOutreachContext(prospectLead()))
+    assert.match(prompt, /Ask once\. Make one request for a reply or a call, in one place: the last line\./)
+  })
+})

@@ -6,6 +6,9 @@ import { z } from 'zod'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { createDraftDeps, createOutreachStore } from '@/lib/outreach/deps'
 import { writeDraft } from '@/lib/outreach/draft'
+import { disconnect } from '@/lib/outreach/gmail/connect'
+import { createGmailConnectionStore, createSendDeps, readGmailConfig } from '@/lib/outreach/gmail/deps'
+import { approveAndSend as approveAndSendDraft } from '@/lib/outreach/gmail/send'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
 import {
   addSuppressionByHand,
@@ -181,6 +184,49 @@ export async function removeOutreachSuppression(id: string, confirmed: boolean):
     return { ok: true }
   } catch {
     console.error('Outreach suppression remove failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+/**
+ * Approves (if it still needs review) and sends one draft through the
+ * connected Google mailbox. One email per call; never called by cron or the
+ * runner. Every check runs here, on the server.
+ */
+export async function approveAndSend(draftId: string): Promise<OutreachActionResult> {
+  await requireIntelUser()
+  if (!isUuid(draftId)) return { ok: false, error: 'Draft not found.' }
+  try {
+    const result = await approveAndSendDraft(createSendDeps(), draftId)
+    if (result.ok) {
+      revalidateDraft(result.draft)
+      return { ok: true }
+    }
+    // A rejection or an unknown outcome changed the draft's state.
+    if (result.outcome !== 'refused') revalidatePath(`/intel/outreach/${draftId}`)
+    revalidatePath('/intel/outreach')
+    return { ok: false, error: result.error }
+  } catch {
+    console.error('Outreach send failed')
+    revalidatePath(`/intel/outreach/${draftId}`)
+    return { ok: false, error: 'The email could not be sent. Reload the page to see where it stands before trying again.' }
+  }
+}
+
+/** Revokes the Google permission, then removes the connection even if Google did not confirm. */
+export async function disconnectGoogle(): Promise<OutreachActionResult & { message?: string }> {
+  await requireIntelUser()
+  try {
+    const { revoked } = await disconnect({ config: readGmailConfig(), connections: createGmailConnectionStore(), fetch: (input, init) => fetch(input, init) })
+    revalidatePath('/intel/outreach')
+    return {
+      ok: true,
+      message: revoked
+        ? 'Disconnected. Google has withdrawn the sending permission.'
+        : 'Disconnected here. Google did not confirm the withdrawal, so you can also remove access in your Google account settings.',
+    }
+  } catch {
+    console.error('Outreach Google disconnect failed')
     return { ok: false, error: GENERIC_ERROR }
   }
 }

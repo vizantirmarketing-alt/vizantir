@@ -91,7 +91,8 @@ export async function writeDraft(deps: DraftDeps, lead: OutreachLead): Promise<W
 
   const { subjectType, subjectRef } = subjectOf(lead)
   const active = await deps.store.findActiveDraft(subjectType, subjectRef)
-  if (active?.status === 'approved') return refuse('approved_exists')
+  // Approved, being sent or not confirmed: the text is locked.
+  if (active !== null && active.status !== 'draft') return refuse('approved_exists')
 
   const now = deps.now()
   if ((await deps.store.countCreatedSince(localDayStartIso(now))) >= DAILY_DRAFT_CAP) return refuse('daily_cap')

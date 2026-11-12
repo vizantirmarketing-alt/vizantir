@@ -1,15 +1,17 @@
 'use client'
 
-import { useState, useTransition, type ReactNode } from 'react'
+import { useEffect, useRef, useState, useTransition, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { TextAction } from '@/app/intel/_components/ui/TextAction'
+import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { buildMailto, messageText } from '@/lib/outreach/mailto'
-import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX } from '@/lib/outreach/params'
+import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX, SENT_VIA_LABELS } from '@/lib/outreach/params'
 import type { OutreachDraft } from '@/lib/outreach/types'
 
 import {
+  approveAndSend,
   approveOutreachDraft,
   discardOutreachDraft,
   doNotContactOutreachDraft,
@@ -45,7 +47,77 @@ function Footer({ footer }: { footer: string }) {
   )
 }
 
-export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDraft; replyToEmail: string | null }) {
+/** Present when a Google mailbox is connected and healthy. */
+export type SendingProps = { from: string; sentToday: number; limit: number }
+
+/** The inline confirmation before a dashboard send: who it is from, to, and the subject. */
+function SendConfirmation({
+  from,
+  to,
+  subject,
+  pending,
+  onSend,
+  onCancel,
+}: {
+  from: string
+  to: string
+  subject: string
+  pending: boolean
+  onSend: () => void
+  onCancel: () => void
+}) {
+  const panelRef = useRef<HTMLDivElement>(null)
+  const sendRef = useRef<HTMLButtonElement>(null)
+
+  // It opens below the actions, often under the fold: bring it into view and put focus on Send now.
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    panelRef.current?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' })
+    sendRef.current?.focus({ preventScroll: true })
+  }, [])
+
+  return (
+    <div
+      ref={panelRef}
+      className="space-y-3 rounded-lg border border-black/10 bg-cobalt-soft/40 px-3 py-3"
+      role="group"
+      aria-label="Confirm send"
+    >
+      <div className="grid gap-2">
+        <ReadField label="From">{from}</ReadField>
+        <ReadField label="To">{to.length > 0 ? to : 'No recipient yet'}</ReadField>
+        <ReadField label="Subject">{subject}</ReadField>
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <Button
+          ref={sendRef}
+          type="button"
+          size="sm"
+          disabled={pending}
+          onClick={onSend}
+          className="bg-cobalt-primary intel-secondary text-white hover:bg-[#1E85FF]"
+        >
+          {pending ? 'Sending…' : 'Send now'}
+        </Button>
+        <TextAction disabled={pending} onClick={onCancel}>
+          Cancel
+        </TextAction>
+      </div>
+    </div>
+  )
+}
+
+export function OutreachDraftEditor({
+  draft,
+  replyToEmail,
+  sending = null,
+  staleSending = false,
+}: {
+  draft: OutreachDraft
+  replyToEmail: string | null
+  sending?: SendingProps | null
+  staleSending?: boolean
+}) {
   const router = useRouter()
   const [toEmail, setToEmail] = useState(draft.toEmail ?? '')
   const [subject, setSubject] = useState(draft.subject)
@@ -53,10 +125,24 @@ export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDr
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
   const [confirmDoNotContact, setConfirmDoNotContact] = useState(false)
+  const [confirmSend, setConfirmSend] = useState(false)
   const [pending, startTransition] = useTransition()
+  const sendOpenerRef = useRef<HTMLButtonElement>(null)
+  const returnFocusToOpener = useRef(false)
+
+  // On Cancel, focus goes back to the button that opened the confirmation, once it is shown again.
+  useEffect(() => {
+    if (confirmSend || !returnFocusToOpener.current) return
+    returnFocusToOpener.current = false
+    sendOpenerRef.current?.focus()
+  }, [confirmSend])
 
   const dirty = toEmail !== (draft.toEmail ?? '') || subject !== draft.subject || body !== draft.body
   const editable = draft.status === 'draft'
+  const unconfirmed = draft.status === 'send_unconfirmed' || staleSending
+  const inFlight = draft.status === 'sending' && !staleSending
+  const canSend = sending !== null && (draft.status === 'draft' || draft.status === 'approved' || unconfirmed)
+  const limitReached = sending !== null && sending.sentToday >= sending.limit
 
   function run(action: () => Promise<OutreachActionResult>, done?: string) {
     setError(null)
@@ -73,6 +159,22 @@ export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDr
   }
 
   const save = () => saveOutreachDraft(draft.id, { toEmail, subject, body })
+
+  function send() {
+    run(async () => {
+      if (editable && dirty) {
+        const saved = await save()
+        if (!saved.ok) return saved
+      }
+      const result = await approveAndSend(draft.id)
+      setConfirmSend(false)
+      // A refusal can still mean the state moved on (not confirmed, back to approved).
+      if (!result.ok) router.refresh()
+      return result
+    }, 'Sent.')
+  }
+
+  const sendLabel = unconfirmed ? 'Try again' : editable ? 'Approve and send' : 'Send'
 
   async function copy(text: string, label: string) {
     setError(null)
@@ -137,7 +239,7 @@ export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDr
         </div>
       ) : (
         <div className="space-y-3">
-          <ReadField label="To">{draft.toEmail ?? '—'}</ReadField>
+          <ReadField label="To">{draft.toEmail ?? 'No recipient yet'}</ReadField>
           <ReadField label="Subject">{draft.subject}</ReadField>
           <ReadField label="Message">
             <p className="whitespace-pre-wrap leading-relaxed">{draft.body}</p>
@@ -146,18 +248,61 @@ export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDr
         </div>
       )}
 
+      {draft.status === 'sent' ? (
+        <p className="intel-body text-body">
+          {SENT_VIA_LABELS[draft.sentVia ?? 'mail_app']}
+          {draft.sentAt !== null ? `, ${formatLocalTimestamp(draft.sentAt)}` : ''}.
+        </p>
+      ) : null}
+      {inFlight ? (
+        <p className="intel-body text-body" role="status">
+          Sending now. Reload in a moment to see the result.
+        </p>
+      ) : null}
+      {unconfirmed ? (
+        <p className="intel-body text-warning-severe" role="alert">
+          Not confirmed. Check your Sent folder before trying again.
+        </p>
+      ) : null}
+      {draft.status === 'approved' && draft.sendError !== null ? (
+        <p className="intel-body text-warning-severe [overflow-wrap:anywhere]">The last send was refused. {draft.sendError}</p>
+      ) : null}
+
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-black/8 pt-3">
+        {canSend && !confirmSend ? (
+          <Button
+            ref={sendOpenerRef}
+            type="button"
+            size="sm"
+            disabled={pending || limitReached}
+            onClick={() => {
+              setError(null)
+              setStatus(null)
+              setConfirmSend(true)
+            }}
+            className="bg-cobalt-primary intel-secondary text-white hover:bg-[#1E85FF]"
+          >
+            {sendLabel}
+          </Button>
+        ) : null}
+
         {editable ? (
           <>
-            <Button
-              type="button"
-              size="sm"
-              disabled={pending || !dirty}
-              onClick={() => run(save, 'Saved.')}
-              className="bg-cobalt-primary intel-secondary text-white hover:bg-[#1E85FF]"
-            >
-              {pending ? 'Saving…' : 'Save'}
-            </Button>
+            {sending === null ? (
+              <Button
+                type="button"
+                size="sm"
+                disabled={pending || !dirty}
+                onClick={() => run(save, 'Saved.')}
+                className="bg-cobalt-primary intel-secondary text-white hover:bg-[#1E85FF]"
+              >
+                {pending ? 'Saving…' : 'Save'}
+              </Button>
+            ) : (
+              <TextAction disabled={pending || !dirty} onClick={() => run(save, 'Saved.')}>
+                Save
+              </TextAction>
+            )}
             <TextAction
               disabled={pending}
               onClick={() =>
@@ -170,7 +315,7 @@ export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDr
                 })
               }
             >
-              Approve
+              {sending === null ? 'Approve' : 'Approve only'}
             </TextAction>
             <TextAction
               disabled={pending}
@@ -210,24 +355,51 @@ export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDr
           </>
         ) : null}
 
+        {unconfirmed ? (
+          <TextAction disabled={pending} onClick={() => run(() => markOutreachDraftSent(draft.id))}>
+            Mark as sent
+          </TextAction>
+        ) : null}
+
         {draft.status === 'draft' || draft.status === 'approved' ? (
           <TextAction tone="destructive" disabled={pending} onClick={() => run(() => discardOutreachDraft(draft.id))}>
             Discard
           </TextAction>
         ) : null}
 
-        {draft.status !== 'discarded' && !confirmDoNotContact ? (
+        {draft.status !== 'discarded' && !inFlight && !confirmDoNotContact ? (
           <TextAction tone="destructive" disabled={pending} onClick={() => setConfirmDoNotContact(true)}>
             Do not contact
           </TextAction>
         ) : null}
       </div>
 
+      {canSend && sending !== null ? (
+        <p className="intel-secondary text-meta">
+          {sending.sentToday} of {sending.limit} sent today
+          {limitReached ? '. The daily limit is reached; send the rest tomorrow, or from your mail app.' : ''}
+        </p>
+      ) : null}
+
+      {confirmSend && sending !== null ? (
+        <SendConfirmation
+          from={sending.from}
+          to={editable ? toEmail.trim().toLowerCase() : (draft.toEmail ?? '')}
+          subject={editable ? subject : draft.subject}
+          pending={pending}
+          onSend={send}
+          onCancel={() => {
+            returnFocusToOpener.current = true
+            setConfirmSend(false)
+          }}
+        />
+      ) : null}
+
       {confirmDoNotContact ? (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2" role="group" aria-label="Confirm do not contact">
           <p className="intel-body text-body">
-            {draft.status === 'sent'
-              ? 'Add this recipient to the do-not-contact list? The email stays recorded as sent.'
+            {draft.status === 'sent' || unconfirmed
+              ? 'Add this recipient to the do-not-contact list? The email stays recorded as it is.'
               : 'Add this recipient to the do-not-contact list and discard the draft?'}
           </p>
           <TextAction
@@ -253,7 +425,7 @@ export function OutreachDraftEditor({ draft, replyToEmail }: { draft: OutreachDr
             : 'The recipient cannot be opened as a mail link. Choose Edit again and check the address.'}
         </p>
       ) : null}
-      {draft.status === 'approved' && replyToEmail ? (
+      {draft.status === 'approved' && replyToEmail && sending === null ? (
         <p className="intel-secondary text-meta">Send it from {replyToEmail}, so replies come back to that mailbox.</p>
       ) : null}
       {status !== null ? (

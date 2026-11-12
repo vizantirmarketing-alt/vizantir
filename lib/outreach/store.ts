@@ -5,7 +5,7 @@ import 'server-only'
  * Thin on purpose: the rules live in lib/outreach/draft.ts and
  * lib/outreach/lifecycle.ts. Service role, explicit column lists, Zod on
  * every read. Writes only to outreach_drafts, outreach_suppressions and
- * outreach_settings (migration 0032).
+ * outreach_settings (migration 0032), and outreach_gmail_connection (0033).
  *
  * Mirrors lib/outreach/fixtures/memory-store.ts:
  *   - one active (draft or approved) row per subject: the partial unique
@@ -18,18 +18,29 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
 import {
+  ACTIVE_STATUSES,
   OUTREACH_STATUSES,
   OUTREACH_SUBJECT_TYPES,
+  SENT_VIA,
   SUPPRESSION_REASONS,
   normalizeEmail,
   type OutreachStatus,
   type OutreachSubjectType,
 } from '@/lib/outreach/params'
-import type { DraftPatch, NewDraft, OutreachDraft, OutreachSettings, OutreachStore, Suppression } from '@/lib/outreach/types'
+import type {
+  DraftPatch,
+  GmailConnection,
+  GmailConnectionStore,
+  NewDraft,
+  OutreachDraft,
+  OutreachSettings,
+  OutreachStore,
+  Suppression,
+} from '@/lib/outreach/types'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
 const DRAFT_COLUMNS =
-  'id, subject_type, subject_ref, lead_id, lead_name, to_email, subject, body, footer, status, model, prompt_version, created_at, updated_at, approved_at, sent_at'
+  'id, subject_type, subject_ref, lead_id, lead_name, to_email, subject, body, footer, status, model, prompt_version, created_at, updated_at, approved_at, sent_at, sent_via, gmail_message_id, gmail_thread_id, send_error'
 const SUPPRESSION_COLUMNS = 'id, email, domain, reason, created_at'
 const SETTINGS_COLUMNS = 'sender_name, studio_name, reply_to_email, postal_address'
 
@@ -53,6 +64,10 @@ const draftRowSchema = z.object({
   updated_at: z.string(),
   approved_at: z.string().nullable(),
   sent_at: z.string().nullable(),
+  sent_via: z.enum(SENT_VIA).nullable(),
+  gmail_message_id: z.string().nullable(),
+  gmail_thread_id: z.string().nullable(),
+  send_error: z.string().nullable(),
 })
 
 const suppressionRowSchema = z.object({
@@ -95,6 +110,10 @@ function toDraft(row: z.infer<typeof draftRowSchema>): OutreachDraft {
     updatedAt: row.updated_at,
     approvedAt: row.approved_at,
     sentAt: row.sent_at,
+    sentVia: row.sent_via,
+    gmailMessageId: row.gmail_message_id,
+    gmailThreadId: row.gmail_thread_id,
+    sendError: row.send_error,
   }
 }
 
@@ -129,13 +148,18 @@ function patchColumns(patch: DraftPatch): Record<string, string | null> {
   if (patch.status !== undefined) columns.status = patch.status
   if (patch.approvedAt !== undefined) columns.approved_at = patch.approvedAt
   if (patch.sentAt !== undefined) columns.sent_at = patch.sentAt
+  if (patch.sentVia !== undefined) columns.sent_via = patch.sentVia
+  if (patch.gmailMessageId !== undefined) columns.gmail_message_id = patch.gmailMessageId
+  if (patch.gmailThreadId !== undefined) columns.gmail_thread_id = patch.gmailThreadId
+  if (patch.sendError !== undefined) columns.send_error = patch.sendError
   return columns
 }
 
 export function createOutreachStore(client: SupabaseClient = createSupabaseServiceRole()): OutreachStore {
-  async function countSince(column: 'created_at' | 'sent_at', iso: string, status?: OutreachStatus): Promise<number> {
+  async function countSince(column: 'created_at' | 'sent_at', iso: string, status?: OutreachStatus, sentVia?: 'gmail'): Promise<number> {
     let query = client.from('outreach_drafts').select('id', { count: 'exact', head: true }).gte(column, iso)
     if (status !== undefined) query = query.eq('status', status)
+    if (sentVia !== undefined) query = query.eq('sent_via', sentVia)
     const { count, error } = await query
     if (error) throw new OutreachStoreError(`count ${column}`)
     return count ?? 0
@@ -183,7 +207,7 @@ export function createOutreachStore(client: SupabaseClient = createSupabaseServi
         .select(DRAFT_COLUMNS)
         .eq('subject_type', subjectType)
         .eq('subject_ref', subjectRef)
-        .in('status', ['draft', 'approved'])
+        .in('status', [...ACTIVE_STATUSES])
         .limit(1)
       if (error) throw new OutreachStoreError('active draft read')
       return parseDrafts(data, 'active draft read')[0] ?? null
@@ -191,6 +215,7 @@ export function createOutreachStore(client: SupabaseClient = createSupabaseServi
 
     countCreatedSince: (iso: string) => countSince('created_at', iso),
     countSentSince: (iso: string) => countSince('sent_at', iso, 'sent'),
+    countGmailSentSince: (iso: string) => countSince('sent_at', iso, 'sent', 'gmail'),
 
     async insertDraft(draft: NewDraft, replaceId: string | null, nowIso: string) {
       let replaced = false
@@ -275,7 +300,7 @@ export function createOutreachStore(client: SupabaseClient = createSupabaseServi
           .select(DRAFT_COLUMNS)
           .eq('subject_type', subjectType)
           .in('subject_ref', refs.slice(i, i + SUBJECT_REF_BATCH))
-          .in('status', ['draft', 'approved'])
+          .in('status', [...ACTIVE_STATUSES])
         if (error) throw new OutreachStoreError('active drafts read')
         out.push(...parseDrafts(data, 'active drafts read'))
       }
@@ -335,6 +360,67 @@ export function createOutreachStore(client: SupabaseClient = createSupabaseServi
       const { data, error } = await client.from('outreach_suppressions').delete().eq('id', id).select('id')
       if (error) throw new OutreachStoreError('suppression delete')
       return Array.isArray(data) && data.length > 0
+    },
+  }
+}
+
+const CONNECTION_COLUMNS = 'email, token_ciphertext, token_iv, token_tag, connected_at, connected_by, needs_reconnect'
+
+const connectionRowSchema = z.object({
+  email: z.string(),
+  token_ciphertext: z.string(),
+  token_iv: z.string(),
+  token_tag: z.string(),
+  connected_at: z.string(),
+  connected_by: z.string(),
+  needs_reconnect: z.boolean(),
+})
+
+/** The one connected Google mailbox (migration 0033). Single row, id = true. */
+export function createGmailConnectionStore(client: SupabaseClient = createSupabaseServiceRole()): GmailConnectionStore {
+  return {
+    async get() {
+      const { data, error } = await client.from('outreach_gmail_connection').select(CONNECTION_COLUMNS).eq('id', true).maybeSingle()
+      if (error) throw new OutreachStoreError('connection read')
+      if (data === null) return null
+      const row = connectionRowSchema.safeParse(data)
+      if (!row.success) throw new OutreachStoreError('connection parse')
+      return {
+        email: row.data.email,
+        tokenCiphertext: row.data.token_ciphertext,
+        tokenIv: row.data.token_iv,
+        tokenTag: row.data.token_tag,
+        connectedAt: row.data.connected_at,
+        connectedBy: row.data.connected_by,
+        needsReconnect: row.data.needs_reconnect,
+      }
+    },
+
+    async save(connection: GmailConnection) {
+      const { error } = await client.from('outreach_gmail_connection').upsert(
+        {
+          id: true,
+          email: connection.email,
+          token_ciphertext: connection.tokenCiphertext,
+          token_iv: connection.tokenIv,
+          token_tag: connection.tokenTag,
+          connected_at: connection.connectedAt,
+          connected_by: connection.connectedBy,
+          needs_reconnect: connection.needsReconnect,
+        },
+        { onConflict: 'id' },
+      )
+      if (error) throw new OutreachStoreError('connection save')
+    },
+
+    async markNeedsReconnect() {
+      const { error } = await client.from('outreach_gmail_connection').update({ needs_reconnect: true }).eq('id', true)
+      if (error) throw new OutreachStoreError('connection update')
+    },
+
+    async remove() {
+      const { error } = await client.from('outreach_gmail_connection').delete().eq('id', true)
+      if (error) throw new OutreachStoreError('connection delete')
     },
   }
 }

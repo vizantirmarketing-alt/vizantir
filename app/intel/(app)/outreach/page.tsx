@@ -1,14 +1,19 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 
+import { GoogleConnection } from '@/app/intel/_components/outreach/GoogleConnection'
 import { OutreachSettingsForm } from '@/app/intel/_components/outreach/OutreachSettingsForm'
 import { SuppressionList } from '@/app/intel/_components/outreach/SuppressionList'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { localDayStartIso } from '@/lib/outreach/dates'
 import { createOutreachStore } from '@/lib/outreach/deps'
+import { createGmailConnectionStore, readGmailConfig } from '@/lib/outreach/gmail/deps'
+import { RESULT_COOKIE, RESULT_PARAM, decodeNotice, type ConnectionNotice } from '@/lib/outreach/gmail/flash'
+import { connectionView, type ConnectionView } from '@/lib/outreach/gmail/view'
 import { leadHref } from '@/lib/outreach/links'
-import { OUTREACH_SUBJECT_LABELS, SENT_PER_DAY_NOTE, type OutreachStatus } from '@/lib/outreach/params'
+import { OUTREACH_DAILY_SEND_LIMIT, OUTREACH_SUBJECT_LABELS, SENT_PER_DAY_NOTE, type OutreachStatus } from '@/lib/outreach/params'
 import { missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
 import type { OutreachDraft, OutreachSettings, Suppression } from '@/lib/outreach/types'
 import { formatShortDate } from '@/lib/prospects/params'
@@ -23,30 +28,51 @@ export const metadata: Metadata = {
 const DRAFTS_LIMIT = 300
 
 type Loaded =
-  | { ok: true; settings: OutreachSettings | null; drafts: OutreachDraft[]; suppressions: Suppression[]; sentToday: number }
+  | {
+      ok: true
+      settings: OutreachSettings | null
+      drafts: OutreachDraft[]
+      suppressions: Suppression[]
+      sentToday: number
+      gmailSentToday: number
+      connection: ConnectionView
+    }
   | { ok: false }
 
 async function load(): Promise<Loaded> {
   try {
     const store = createOutreachStore()
-    const [settings, drafts, suppressions, sentToday] = await Promise.all([
+    const dayStart = localDayStartIso(new Date())
+    const [settings, drafts, suppressions, sentToday, gmailSentToday, connection] = await Promise.all([
       store.getSettings(),
       store.listDrafts(DRAFTS_LIMIT),
       store.listSuppressions(),
-      store.countSentSince(localDayStartIso(new Date())),
+      store.countSentSince(dayStart),
+      store.countGmailSentSince(dayStart),
+      createGmailConnectionStore().get(),
     ])
-    return { ok: true, settings, drafts, suppressions, sentToday }
+    return { ok: true, settings, drafts, suppressions, sentToday, gmailSentToday, connection: connectionView(readGmailConfig(), connection, settings?.replyToEmail ?? null) }
   } catch {
     console.error('Outreach page load failed')
     return { ok: false }
   }
 }
 
-const GROUPS: { status: Exclude<OutreachStatus, 'discarded'>; title: string; empty: string; dateLabel: string }[] = [
-  { status: 'draft', title: 'Needs review', empty: 'No drafts need review.', dateLabel: 'Updated' },
-  { status: 'approved', title: 'Approved', empty: 'No approved emails waiting to be sent.', dateLabel: 'Approved' },
-  { status: 'sent', title: 'Sent', empty: 'No emails marked as sent yet.', dateLabel: 'Sent' },
+type Group = { statuses: OutreachStatus[]; title: string; empty: string; dateLabel: string; hideWhenEmpty?: boolean }
+
+const GROUPS: Group[] = [
+  { statuses: ['draft'], title: 'Needs review', empty: 'No drafts need review.', dateLabel: 'Updated' },
+  { statuses: ['approved'], title: 'Approved', empty: 'No approved emails waiting to be sent.', dateLabel: 'Approved' },
+  // A send in flight, or one whose delivery Google did not confirm.
+  { statuses: ['sending', 'send_unconfirmed'], title: 'Not confirmed', empty: '', dateLabel: 'Updated', hideWhenEmpty: true },
+  { statuses: ['sent'], title: 'Sent', empty: 'No emails sent yet.', dateLabel: 'Sent' },
 ]
+
+/** The connection result, shown once after Google sends the owner back. */
+async function connectionNotice(searchParams: Promise<Record<string, string | string[] | undefined>>): Promise<ConnectionNotice | null> {
+  if ((await searchParams)[RESULT_PARAM] !== '1') return null
+  return decodeNotice((await cookies()).get(RESULT_COOKIE)?.value)
+}
 
 function groupDate(draft: OutreachDraft, status: OutreachStatus): string {
   const iso = status === 'approved' ? draft.approvedAt : status === 'sent' ? draft.sentAt : draft.updatedAt
@@ -87,24 +113,24 @@ function DraftList({ drafts, status, empty, dateLabel }: { drafts: OutreachDraft
   )
 }
 
-export default async function OutreachPage() {
+export default async function OutreachPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireIntelUser()
-  const data = await load()
+  const [data, notice] = await Promise.all([load(), connectionNotice(searchParams)])
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
       <div className="min-w-0">
         <h1 className="intel-title text-foreground">Outreach</h1>
         <p className="mt-1 intel-secondary text-meta">
-          First-contact emails for accepted leads. Nothing is sent from here: approve a draft, then send it from your own
-          mail app and mark it as sent.
+          First-contact emails for accepted leads. Approve a draft, then send it from the dashboard when Google is connected,
+          or from your own mail app and mark it as sent. Nothing is sent without your click.
         </p>
       </div>
 
       {!data.ok ? (
         <Panel>
           <p className="intel-body leading-relaxed text-body" role="alert">
-            Unable to load Outreach. Try again shortly. If this is the first visit since the update, migration 0032 may not
+            Unable to load Outreach. Try again shortly. If this is the first visit since the update, migration 0033 may not
             be applied yet.
           </p>
         </Panel>
@@ -112,8 +138,13 @@ export default async function OutreachPage() {
         <>
           <Panel title="Today">
             <p className="intel-body text-body">
-              {data.sentToday === 1 ? '1 email' : `${data.sentToday.toLocaleString('en-US')} emails`} marked as sent today.
+              {data.sentToday === 1 ? '1 email' : `${data.sentToday.toLocaleString('en-US')} emails`} sent today.
             </p>
+            {data.connection.state === 'connected' || data.gmailSentToday > 0 ? (
+              <p className="mt-1 intel-secondary text-meta">
+                {data.gmailSentToday} of {OUTREACH_DAILY_SEND_LIMIT} sent from the dashboard today.
+              </p>
+            ) : null}
             {data.sentToday > SENT_PER_DAY_NOTE ? (
               <p className="mt-1 intel-secondary text-meta">
                 That is more than {SENT_PER_DAY_NOTE} in one day. Many first-contact emails from one mailbox in a day can get it
@@ -126,11 +157,12 @@ export default async function OutreachPage() {
           </Panel>
 
           {GROUPS.map((group) => {
-            const drafts = data.drafts.filter((draft) => draft.status === group.status)
+            const drafts = data.drafts.filter((draft) => group.statuses.includes(draft.status))
+            if (drafts.length === 0 && group.hideWhenEmpty) return null
             return (
-              <Panel key={group.status} title={`${group.title} · ${drafts.length}`}>
+              <Panel key={group.title} title={`${group.title} · ${drafts.length}`}>
                 <div className="@container">
-                  <DraftList drafts={drafts} status={group.status} empty={group.empty} dateLabel={group.dateLabel} />
+                  <DraftList drafts={drafts} status={group.statuses[0]!} empty={group.empty} dateLabel={group.dateLabel} />
                 </div>
               </Panel>
             )
@@ -144,6 +176,9 @@ export default async function OutreachPage() {
             </Panel>
             <Panel title="Do not contact">
               <SuppressionList entries={data.suppressions} />
+            </Panel>
+            <Panel title="Direct sending">
+              <GoogleConnection view={data.connection} notice={notice} />
             </Panel>
           </div>
         </>

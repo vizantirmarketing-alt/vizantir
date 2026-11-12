@@ -63,6 +63,7 @@ export type VoiceRule =
   | 'one_finding'
   | 'page_name'
   | 'studio_wording'
+  | 'ask_once'
   | 'reply_format'
 
 export type VoiceViolation = { rule: VoiceRule; message: string }
@@ -79,6 +80,7 @@ export const WARNING_RULES: ReadonlySet<VoiceRule> = new Set<VoiceRule>([
   'one_finding',
   'page_name',
   'studio_wording',
+  'ask_once',
   'three_item_list',
   'urgency',
   'false_familiarity',
@@ -87,7 +89,10 @@ export const WARNING_RULES: ReadonlySet<VoiceRule> = new Set<VoiceRule>([
   'attachments',
 ])
 
-export type HardRule = Exclude<VoiceRule, 'one_finding' | 'page_name' | 'studio_wording' | 'three_item_list' | 'urgency' | 'false_familiarity' | 'prior_contact' | 'pricing' | 'attachments'>
+export type HardRule = Exclude<
+  VoiceRule,
+  'one_finding' | 'page_name' | 'studio_wording' | 'ask_once' | 'three_item_list' | 'urgency' | 'false_familiarity' | 'prior_contact' | 'pricing' | 'attachments'
+>
 
 /** What the owner reads when a draft is refused: plain words, never rule keys. */
 export const REFUSAL_REASONS: Record<HardRule, string> = {
@@ -351,12 +356,38 @@ export function voiceWarnings(draft: { subject: string; body: string }, context:
 const WARNING_SENTENCES: Partial<Record<VoiceRule, string>> = {
   one_finding: 'This email may draw on more than one finding. Check it against the list above.',
   studio_wording: 'This email may describe the studio in other words, such as its size or location. Check how it describes the studio.',
+  ask_once: 'This email may ask for a reply or a call more than once. Keep one ask, in one place, at the end.',
   three_item_list: 'This email may contain a list of three items. Read it aloud once before approving.',
   urgency: 'This email may sound urgent or time-limited. Check its tone.',
   false_familiarity: 'This email may sound more familiar than a first contact should. Check its tone.',
   prior_contact: 'This email may suggest earlier contact or a referral. Make sure that is true.',
   pricing: 'This email may mention pricing, fees, quotes or an offer. Check it.',
   attachments: 'This email may mention an attachment. Nothing is attached to it.',
+}
+
+// A sentence that requests a reply or a call: a question, or the usual wordings of an ask.
+const ASK_SENTENCE =
+  /\?\s*$|\blet me know\b|\bfeel free\b|\b(?:reply|write back|get back to me)\b|\b(?:a|short|quick|brief|15[\s-]minute|20[\s-]minute) (?:call|chat|conversation)\b|\bif you(?:'re| are) (?:open|interested)\b/i
+
+/**
+ * Where the email asks for a reply or a call: the paragraphs holding an ask
+ * sentence. Repeated when asks sit in more than one paragraph, or there are
+ * three or more ask sentences. A pattern, so a warning only.
+ */
+export function askPlaces(body: string): { paragraphs: number; sentences: number; repeated: boolean } {
+  const paragraphs = body
+    .replace(/\r\n?/g, '\n')
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0 && paragraph !== GREETING_LINE)
+  let withAsk = 0
+  let sentences = 0
+  for (const paragraph of paragraphs) {
+    const asks = paragraph.split(/(?<=[.?])\s+/).filter((sentence) => ASK_SENTENCE.test(sentence.trim())).length
+    if (asks > 0) withAsk += 1
+    sentences += asks
+  }
+  return { paragraphs: withAsk, sentences, repeated: withAsk > 1 || sentences >= 3 }
 }
 
 function allChecks(draft: { subject: string; body: string }, context: VoiceContext): VoiceViolation[] {
@@ -488,6 +519,10 @@ function allChecks(draft: { subject: string; body: string }, context: VoiceConte
   const pages = context.findings.length > 0 ? unnamedPages(body, context.findings) : []
   if (pages.length > 0) {
     add('page_name', `Name a page only the way the finding names it; "${pages[0]}" is not in the findings.`)
+  }
+
+  if (askPlaces(body).repeated) {
+    add('ask_once', 'Ask for a reply or a call once, in one place, as the last line. Do not repeat the request elsewhere.')
   }
 
   const lastLines = body.trim().split(/\n+/).slice(-2).map((line) => line.trim())
