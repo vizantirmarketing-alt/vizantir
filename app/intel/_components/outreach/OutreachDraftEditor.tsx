@@ -4,7 +4,9 @@ import { useEffect, useRef, useState, useTransition, type ReactNode } from 'reac
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
+import { ContactNoteLine } from '@/app/intel/_components/outreach/ContactAddress'
 import { TextAction } from '@/app/intel/_components/ui/TextAction'
+import type { ContactNote } from '@/lib/outreach/contacts/view'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { buildMailto, messageText } from '@/lib/outreach/mailto'
 import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX, SENT_VIA_LABELS } from '@/lib/outreach/params'
@@ -112,11 +114,14 @@ export function OutreachDraftEditor({
   replyToEmail,
   sending = null,
   staleSending = false,
+  contactNote = null,
 }: {
   draft: OutreachDraft
   replyToEmail: string | null
   sending?: SendingProps | null
   staleSending?: boolean
+  /** Where the lead's contact address came from, or why there is none. Editing To never changes it. */
+  contactNote?: ContactNote | null
 }) {
   const router = useRouter()
   const [toEmail, setToEmail] = useState(draft.toEmail ?? '')
@@ -208,6 +213,11 @@ export function OutreachDraftEditor({
               onChange={(event) => setToEmail(event.target.value)}
               className={fieldClassName}
             />
+            {contactNote !== null ? (
+              <div className="mt-1.5">
+                <ContactNoteLine note={contactNote} />
+              </div>
+            ) : null}
           </div>
           <div>
             <label htmlFor="outreach-subject" className="mb-2 block intel-body font-medium text-body">
@@ -239,7 +249,10 @@ export function OutreachDraftEditor({
         </div>
       ) : (
         <div className="space-y-3">
-          <ReadField label="To">{draft.toEmail ?? 'No recipient yet'}</ReadField>
+          <div className="space-y-1">
+            <ReadField label="To">{draft.toEmail ?? 'No recipient yet'}</ReadField>
+            {contactNote !== null ? <ContactNoteLine note={contactNote} /> : null}
+          </div>
           <ReadField label="Subject">{draft.subject}</ReadField>
           <ReadField label="Message">
             <p className="whitespace-pre-wrap leading-relaxed">{draft.body}</p>

@@ -13,6 +13,7 @@ import { splitRunSummary } from '@/lib/prospects/ingest'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { createOutreachStore } from '@/lib/outreach/deps'
+import { loadContactNotes } from '@/lib/outreach/contacts/load'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { formatPeriod, periodKey } from '@/lib/new-businesses/discovery'
 import {
@@ -148,7 +149,10 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
     fetchNewBusinessTierCounts(params),
     fetchCheckRuns(5),
   ])
-  const activeDrafts = list.ok ? await activeDraftsFor(list.rows) : null
+  const acceptedRefs = list.ok ? list.rows.filter((row) => row.reviewStatus === 'accepted').map((row) => row.groupKey ?? row.id) : []
+  const [activeDrafts, contactNotes] = list.ok
+    ? await Promise.all([activeDraftsFor(list.rows), loadContactNotes('new_business', acceptedRefs)])
+    : [null, null]
   const periods = (imports ?? [])
     .filter((i) => i.state === 'imported')
     .map((i) => ({ value: periodKey(i.period), label: formatPeriod(i.period) }))
@@ -239,7 +243,7 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
             {tiers !== null && tiers.unscored > 0 ? (
               <p className="mb-2 intel-secondary text-meta">Scores appear after the next import or re-import.</p>
             ) : null}
-            <NewBusinessesTable rows={list.rows} activeDrafts={activeDrafts} />
+            <NewBusinessesTable rows={list.rows} activeDrafts={activeDrafts} contactNotes={contactNotes} />
             {list.pageCount > 1 ? (
               <nav aria-label="Business pages" className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 intel-body">
                 <span className="text-meta">

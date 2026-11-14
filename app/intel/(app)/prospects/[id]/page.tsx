@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
+import { ContactAddress } from '@/app/intel/_components/outreach/ContactAddress'
 import { DraftEmailAction } from '@/app/intel/_components/outreach/DraftEmailAction'
 import { ProspectMeasureButton } from '@/app/intel/_components/prospects/ProspectMeasureButton'
 import { ProspectReviewControls } from '@/app/intel/_components/prospects/ProspectReviewControls'
@@ -13,6 +14,7 @@ import {
   ProspectReviewChip,
 } from '@/app/intel/_components/ui/StatusChip'
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { loadContactNote } from '@/lib/outreach/contacts/load'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import {
   fetchProspectDetail,
@@ -80,7 +82,10 @@ export default async function IntelProspectDetailPage({
   }
 
   const { prospect, evidence } = result
-  const activeDraftId = prospect.reviewStatus === 'accepted' ? await activeDraftFor(prospect.id) : null
+  const accepted = prospect.reviewStatus === 'accepted'
+  const [activeDraftId, contactNote] = accepted
+    ? await Promise.all([activeDraftFor(prospect.id), loadContactNote('prospect', prospect.id)])
+    : [null, null]
 
   return (
     <div className="flex flex-col gap-4">
@@ -99,7 +104,10 @@ export default async function IntelProspectDetailPage({
 
       <Panel title="Outreach">
         {prospect.reviewStatus === 'accepted' ? (
-          <DraftEmailAction subjectType="prospect" leadId={prospect.id} activeDraftId={activeDraftId} />
+          <div className="space-y-3">
+            <DraftEmailAction subjectType="prospect" leadId={prospect.id} activeDraftId={activeDraftId} />
+            <ContactAddress note={contactNote} subjectType="prospect" leadId={prospect.id} />
+          </div>
         ) : (
           <p className="intel-body text-body">Accept this prospect to draft a first-contact email.</p>
         )}

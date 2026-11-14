@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { MAX_WAITING_CONTACT_RUNS, queueLeadContactCheck } from '@/lib/outreach/contacts/runs'
+import { createContactStore } from '@/lib/outreach/contacts/store'
 import { createDraftDeps, createOutreachStore } from '@/lib/outreach/deps'
 import { writeDraft } from '@/lib/outreach/draft'
 import { disconnect } from '@/lib/outreach/gmail/connect'
@@ -70,6 +72,40 @@ export async function writeOutreachDraft(subjectType: OutreachSubjectType, leadI
   } catch {
     console.error('Outreach draft failed')
     return { ok: false, error: 'The draft could not be written. Try again shortly.' }
+  }
+}
+
+/**
+ * "Find contact email" for one accepted lead: queues a one-lead run for the
+ * research runner, or records "no page to check" at once when the lead has no
+ * website or listing page. Never sends anything and never changes a draft.
+ */
+export async function findContactEmail(subjectType: OutreachSubjectType, leadId: string): Promise<{ ok: true; message: string } | { ok: false; error: string }> {
+  await requireIntelUser()
+  const parsed = writeSchema.safeParse({ subjectType, leadId })
+  if (!parsed.success) return { ok: false, error: 'Lead not found.' }
+  try {
+    const result = await queueLeadContactCheck(createContactStore(), parsed.data, new Date())
+    revalidatePath('/intel/outreach', 'layout')
+    if (parsed.data.subjectType === 'prospect') revalidatePath(`/intel/prospects/${parsed.data.leadId}`)
+    else revalidatePath('/intel/new-businesses')
+    switch (result.outcome) {
+      case 'queued':
+        return { ok: true, message: 'Queued. It runs with the next scheduled research.' }
+      case 'no_page':
+        return { ok: true, message: 'There is no website or listing page to check for this lead.' }
+      case 'waiting_for_website_check':
+        return { ok: false, error: 'The website check has not run for this business yet. Try again after it has.' }
+      case 'not_accepted':
+        return { ok: false, error: 'Accept this lead before looking for a contact address.' }
+      case 'already_waiting':
+        return { ok: false, error: 'This lead is already waiting to be checked.' }
+      case 'limit_reached':
+        return { ok: false, error: `${MAX_WAITING_CONTACT_RUNS} contact checks are already waiting. Try again after the next scheduled research.` }
+    }
+  } catch {
+    console.error('Contact check queuing failed')
+    return { ok: false, error: 'Unable to queue the check. If this is the first use since the update, migration 0034 may not be applied yet.' }
   }
 }
 

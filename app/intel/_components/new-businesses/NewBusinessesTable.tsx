@@ -1,3 +1,4 @@
+import { ContactAddress } from '@/app/intel/_components/outreach/ContactAddress'
 import { DraftEmailAction } from '@/app/intel/_components/outreach/DraftEmailAction'
 import { NewBusinessRowControls } from '@/app/intel/_components/new-businesses/NewBusinessRowControls'
 import { WebsiteCell } from '@/app/intel/_components/new-businesses/WebsiteCell'
@@ -5,6 +6,7 @@ import { NewBusinessLeadChip } from '@/app/intel/_components/ui/StatusChip'
 import { formatPeriod } from '@/lib/new-businesses/discovery'
 import type { NewBusinessRow } from '@/lib/new-businesses/load'
 import { PHONE_LABEL } from '@/lib/new-businesses/params'
+import type { ContactNote } from '@/lib/outreach/contacts/view'
 
 function address(row: Pick<NewBusinessRow, 'address' | 'suite' | 'city' | 'state' | 'zip'>): string {
   const street = [row.address, row.suite].filter(Boolean).join(', ')
@@ -20,10 +22,13 @@ function address(row: Pick<NewBusinessRow, 'address' | 'suite' | 'city' | 'state
 export function NewBusinessesTable({
   rows,
   activeDrafts,
+  contactNotes = null,
 }: {
   rows: NewBusinessRow[]
   /** Active outreach draft ids by subject (group key, or row id before grouping). Null when they could not be read. */
   activeDrafts: ReadonlyMap<string, string> | null
+  /** Contact address lines for accepted rows, by subject. Null when they could not be read. */
+  contactNotes?: ReadonlyMap<string, ContactNote> | null
 }) {
   return (
     <div className="max-w-full overflow-x-auto">
@@ -84,6 +89,11 @@ export function NewBusinessesTable({
                       leadId={row.id}
                       activeDraftId={activeDrafts?.get(row.groupKey ?? row.id) ?? null}
                     />
+                    {contactNotes !== null ? (
+                      <div className="mt-1.5 max-w-64">
+                        <ContactAddress note={contactNotes.get(row.groupKey ?? row.id) ?? null} subjectType="new_business" leadId={row.id} />
+                      </div>
+                    ) : null}
                   </div>
                 ) : null}
               </td>

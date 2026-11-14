@@ -15,6 +15,7 @@ import { localDayStartIso } from '@/lib/outreach/dates'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { createGmailConnectionStore, readGmailConfig } from '@/lib/outreach/gmail/deps'
 import { connectionView } from '@/lib/outreach/gmail/view'
+import { loadContactNote } from '@/lib/outreach/contacts/load'
 import { isStaleSending } from '@/lib/outreach/lifecycle'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
 import { leadHref } from '@/lib/outreach/links'
@@ -99,7 +100,10 @@ export default async function OutreachDraftPage({ params }: PageProps) {
     )
   }
   if (draft === null) notFound()
-  const review = await reviewFor(draft, settings?.studioName ?? '')
+  const [review, contactNote] = await Promise.all([
+    reviewFor(draft, settings?.studioName ?? ''),
+    draft.status === 'discarded' ? Promise.resolve(null) : loadContactNote(draft.subjectType, draft.subjectRef),
+  ])
   const view = connectionView(readGmailConfig(), connection, settings?.replyToEmail ?? null)
   // Emails go out as the reply-to address, which may be an alias of the connected account.
   const sendAs = settings?.replyToEmail ? normalizeEmail(settings.replyToEmail) : view.state === 'connected' ? view.email : ''
@@ -141,6 +145,7 @@ export default async function OutreachDraftPage({ params }: PageProps) {
           replyToEmail={settings?.replyToEmail || null}
           sending={sending}
           staleSending={staleSending}
+          contactNote={contactNote}
         />
       </Panel>
     </div>

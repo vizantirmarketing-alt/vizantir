@@ -7,6 +7,8 @@
  *   pnpm prospect:runner measure <domain>
  *   pnpm prospect:runner nb-claim               (New Businesses website checks)
  *   pnpm prospect:runner nb-ingest <batch.json>
+ *   pnpm prospect:runner contact-claim          (Outreach contact addresses)
+ *   pnpm prospect:runner contact-ingest <batch.json>
  *
  * Token: PROSPECT_INGEST_TOKEN from the environment, else from .env.local
  * (only that one key is read). It is never printed.
@@ -26,6 +28,7 @@ import { fileURLToPath } from 'node:url'
 
 import { runRunnerCli, type RunnerDeps, type RunnerFetch } from '../lib/prospects/runner-client'
 import { isWebsiteCheckCommand, runWebsiteCheckCli } from '../lib/new-businesses/website-runner-client'
+import { isContactCommand, runContactCli } from '../lib/outreach/contacts/runner-client'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const ENV_FILE = join(ROOT, '.env.local')
@@ -52,6 +55,11 @@ const deps: RunnerDeps = {
 }
 
 const argv = process.argv.slice(2)
-void (isWebsiteCheckCommand(argv[0]) ? runWebsiteCheckCli(argv, deps) : runRunnerCli(argv, deps)).then((code) => {
+const run = isWebsiteCheckCommand(argv[0])
+  ? runWebsiteCheckCli(argv, deps)
+  : isContactCommand(argv[0])
+    ? runContactCli(argv, deps)
+    : runRunnerCli(argv, deps)
+void run.then((code) => {
   process.exitCode = code
 })

@@ -12,6 +12,11 @@
  * Then the reply must parse and pass every voice check. Any failure gets one
  * retry that lists what was wrong; a second failure refuses. The footer is
  * appended by code, from the settings, never by the model.
+ *
+ * To starts as the lead's found contact address (lib/outreach/contacts/)
+ * when there is one and it is not on the do-not-contact list; otherwise it
+ * starts empty. The owner can always change it, and nothing is ever sent
+ * without the owner's click.
  */
 
 import { buildOutreachContext, isDraftable, subjectOf, type OutreachLead } from '@/lib/outreach/context'
@@ -20,6 +25,9 @@ import { DAILY_DRAFT_CAP, OUTREACH_PROMPT_VERSION } from '@/lib/outreach/params'
 import { outreachSystemPrompt, outreachUserMessage, parseDraftReply, retryInstruction, type DraftReply } from '@/lib/outreach/prompt'
 import { buildFooter, missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
 import type { OutreachStore } from '@/lib/outreach/types'
+import type { ContactStore } from '@/lib/outreach/contacts/runs'
+import { isSuppressed } from '@/lib/outreach/lifecycle'
+import { emailDomain, isValidEmail, normalizeEmail } from '@/lib/outreach/params'
 import { checkVoice, refusalReasons, voiceContextFor, type VoiceViolation } from '@/lib/outreach/voice'
 import type { CallModel } from '@/lib/briefing/narrative'
 
@@ -30,6 +38,33 @@ export type DraftDeps = {
   /** Recorded on the draft. */
   modelName: string
   now(): Date
+  /** The found contact addresses. Absent or failing: To starts empty. */
+  contacts?: Pick<ContactStore, 'getContact'>
+}
+
+/** The lead's found address when it may be used: valid and not on the do-not-contact list. */
+export async function prefillRecipient(
+  store: Pick<OutreachStore, 'findSuppressions'>,
+  contacts: Pick<ContactStore, 'getContact'> | undefined,
+  subject: { subjectType: OutreachLead['type']; subjectRef: string },
+): Promise<string | null> {
+  if (contacts === undefined) return null
+  let found: string | null = null
+  try {
+    const contact = await contacts.getContact(subject)
+    found = contact?.status === 'found' && contact.email !== null ? normalizeEmail(contact.email) : null
+  } catch {
+    // Before migration 0034, or a failed read: drafting goes on with To empty.
+    return null
+  }
+  if (found === null || !isValidEmail(found)) return null
+  try {
+    const matches = await store.findSuppressions(found, emailDomain(found))
+    return isSuppressed(found, matches) ? null : found
+  } catch {
+    // The do-not-contact list could not be read, so the address is not used.
+    return null
+  }
 }
 
 export type WriteDraftRefusal =
@@ -131,7 +166,7 @@ export async function writeDraft(deps: DraftDeps, lead: OutreachLead): Promise<W
       subjectRef,
       leadId: lead.id,
       leadName: lead.name.trim(),
-      toEmail: null,
+      toEmail: await prefillRecipient(deps.store, deps.contacts, { subjectType, subjectRef }),
       subject: result.reply.subject.trim(),
       body: result.reply.body.trim(),
       footer: buildFooter(settings),

@@ -6,7 +6,10 @@ import { GoogleConnection } from '@/app/intel/_components/outreach/GoogleConnect
 import { OutreachSettingsForm } from '@/app/intel/_components/outreach/OutreachSettingsForm'
 import { SuppressionList } from '@/app/intel/_components/outreach/SuppressionList'
 import { Panel } from '@/app/intel/_components/ui/Panel'
+import { WebsiteCheckRunChip } from '@/app/intel/_components/ui/StatusChip'
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { loadContactSummary, type ContactSummary } from '@/lib/outreach/contacts/load'
+import { contactSummaryLine } from '@/lib/outreach/contacts/view'
 import { localDayStartIso } from '@/lib/outreach/dates'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { createGmailConnectionStore, readGmailConfig } from '@/lib/outreach/gmail/deps'
@@ -113,9 +116,22 @@ function DraftList({ drafts, status, empty, dateLabel }: { drafts: OutreachDraft
   )
 }
 
+/** Accepted leads with a contact address, how many wait to be checked, and the latest contact run. */
+function ContactLine({ summary }: { summary: ContactSummary | null }) {
+  if (summary === null) {
+    return <p className="mt-1 intel-secondary text-meta">Contact addresses are not available yet. Migration 0034 may not be applied.</p>
+  }
+  return (
+    <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+      <p className="intel-secondary text-meta">{contactSummaryLine(summary)}</p>
+      {summary.latestRun !== null ? <WebsiteCheckRunChip state={summary.latestRun.state} /> : null}
+    </div>
+  )
+}
+
 export default async function OutreachPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireIntelUser()
-  const [data, notice] = await Promise.all([load(), connectionNotice(searchParams)])
+  const [data, notice, contacts] = await Promise.all([load(), connectionNotice(searchParams), loadContactSummary()])
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
@@ -151,6 +167,7 @@ export default async function OutreachPage({ searchParams }: { searchParams: Pro
                 flagged as spam, so it may be worth spreading the rest over the week.
               </p>
             ) : null}
+            <ContactLine summary={contacts} />
             {missingSettings(data.settings).length > 0 ? (
               <p className="mt-1 intel-secondary text-warning-severe">{missingSettingsMessage(missingSettings(data.settings))}</p>
             ) : null}

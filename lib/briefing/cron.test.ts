@@ -165,3 +165,39 @@ describe('runBriefingCron with website check queuing', () => {
     assert.equal(checks.runs.length, 1);
   });
 });
+
+describe('runBriefingCron with contact check queuing', () => {
+  it('runs after every other step and records its outcome in the result', async () => {
+    const order: string[] = [];
+    const briefings = new MemoryBriefingStore();
+    const deps = briefingDeps(briefings, '2026-12-15T15:00:00Z');
+    const loadSources = deps.sources.load;
+    deps.sources = { load: async (opts) => { order.push('briefing'); return loadSources(opts); } };
+    const result = await runBriefingCron({
+      campaigns: new MemoryCampaignStore([]),
+      briefing: deps,
+      queueWebsiteChecks: async () => {
+        order.push('website');
+        return { outcome: 'nothing_to_check' };
+      },
+      queueContactChecks: async () => {
+        order.push('contacts');
+        return { outcome: 'queued', runId: 'contact-run-1', noPage: 2, rederived: 0 };
+      },
+    });
+    assert.deepEqual(order, ['website', 'briefing', 'contacts']);
+    assert.deepEqual(result.contactChecks, { outcome: 'queued', runId: 'contact-run-1', noPage: 2, rederived: 0 });
+  });
+
+  it('a contact queuing failure blocks nothing and is recorded', async () => {
+    const result = await runBriefingCron({
+      campaigns: new MemoryCampaignStore([]),
+      briefing: briefingDeps(new MemoryBriefingStore(), '2026-12-15T15:00:00Z'),
+      queueContactChecks: async () => {
+        throw new Error('boom');
+      },
+    });
+    assert.deepEqual(result.contactChecks, { error: 'Contact check queuing failed' });
+    assert.equal('action' in result.briefing ? result.briefing.action : null, 'generated');
+  });
+});
