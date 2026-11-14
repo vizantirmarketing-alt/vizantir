@@ -6,8 +6,11 @@ import { describe, it } from 'node:test'
 import { registrableDomain } from './hosts'
 import {
   CONTACT_RULES_VERSION,
+  NOT_CONTACT_LOCALS,
+  ROLE_LOCALS,
   decideContact,
   judgeAddress,
+  mailtoRecipients,
   nameTokens,
   pageAllowed,
   rederiveContact,
@@ -15,7 +18,7 @@ import {
   siteForProspect,
   type LeadSite,
 } from './rules'
-import type { ContactLeadReport } from './schema'
+import { contactLeadSchema, type ContactLeadReport } from './schema'
 
 const OWN: LeadSite = { kind: 'own_domain', url: 'https://www.cactusbakery.example/', domain: 'cactusbakery.example' }
 const LISTING: LeadSite = { kind: 'listing', url: 'https://www.facebook.com/cactusbakerylv' }
@@ -197,5 +200,138 @@ describe('re-derivation', () => {
     assert.equal(rederiveContact(null), null)
     assert.equal(rederiveContact({ malformed: true }), null)
     assert.equal(rederiveContact({ name: 'x' }), null)
+  })
+})
+
+describe('contact-rules-v2: mailto links', () => {
+  const linked = (email: string, linkHref: string, context = 'For more information click here') =>
+    decideContact(
+      { name: NAME, site: OWN },
+      { id: '00000000-0000-4000-8000-000000000001', pages_read: [CONTACT_PAGE], addresses: [{ email, page_url: CONTACT_PAGE, context, link_href: linkHref }] },
+    )
+
+  it('finds information@ from a mailto link whose visible text lacks the address, and keeps the link in the evidence', () => {
+    const d = linked('information@cactusbakery.example', 'mailto:information@cactusbakery.example')
+    assert.equal(d.status, 'found')
+    assert.equal(d.email, 'information@cactusbakery.example')
+    assert.equal(d.kind, 'own_domain')
+    assert.equal(d.rulesVersion, 'contact-rules-v2')
+    const evidence = d.evidence as { addresses: { linkHref?: string }[] }
+    assert.equal(evidence.addresses[0]!.linkHref, 'mailto:information@cactusbakery.example')
+    const again = rederiveContact(JSON.parse(JSON.stringify(d.evidence)))
+    assert.equal(again?.status, 'found')
+    assert.equal(again?.email, 'information@cactusbakery.example')
+  })
+
+  it('fails when the link names a different address than the one reported', () => {
+    const d = linked('information@cactusbakery.example', 'mailto:info@cactusbakery.example')
+    assert.equal(d.status, 'none_found')
+    assert.equal(d.rejectedCount, 1)
+    const tokens = nameTokens(NAME)
+    assert.deepEqual(
+      judgeAddress({ email: 'info@cactusbakery.example', pageUrl: CONTACT_PAGE, context: 'Click here', linkHref: 'mailto:sales@cactusbakery.example' }, OWN, tokens),
+      { outcome: 'rejected', reason: 'context_missing' },
+    )
+  })
+
+  it('the schema accepts only a mailto link target of at most 500 characters', () => {
+    const entry = (link_href: string) => ({
+      id: '00000000-0000-4000-8000-000000000001',
+      pages_read: [CONTACT_PAGE],
+      addresses: [{ email: 'info@cactusbakery.example', page_url: CONTACT_PAGE, context: 'Click here', link_href }],
+    })
+    for (const bad of ['https://cactusbakery.example/contact', 'javascript:alert(1)', 'tel:+15555550100', `mailto:${'a'.repeat(500)}@cactusbakery.example`, '']) {
+      assert.equal(contactLeadSchema.safeParse(entry(bad)).success, false, bad)
+    }
+    assert.equal(contactLeadSchema.safeParse(entry('MAILTO:info@cactusbakery.example')).success, true)
+    // Unknown fields on an address still fail the entry.
+    const extra = entry('mailto:info@cactusbakery.example')
+    assert.equal(contactLeadSchema.safeParse({ ...extra, addresses: [{ ...extra.addresses[0], href: 'mailto:x@y.example' }] }).success, false)
+  })
+
+  it('matches percent-encoded and mixed-case targets, ignores the query, and handles several recipients', () => {
+    assert.deepEqual(mailtoRecipients('MailTo:Information%40CactusBakery.example?subject=Hello%2C%20there'), ['information@cactusbakery.example'])
+    assert.equal(linked('Information@CactusBakery.example', 'MAILTO:information%40cactusbakery.EXAMPLE?subject=Order&body=Hi').status, 'found')
+    assert.equal(linked('info@cactusbakery.example', 'mailto: info@cactusbakery.example ?cc=other@elsewhere.example').status, 'found')
+    // A query that names the address does not count.
+    assert.equal(linked('info@cactusbakery.example', 'mailto:sales@elsewhere.example?cc=info@cactusbakery.example').status, 'none_found')
+    // Several recipients: counts only when the reported address is one of them.
+    assert.deepEqual(mailtoRecipients('mailto:a@x.example,%20B@x.example'), ['a@x.example', 'b@x.example'])
+    assert.equal(linked('info@cactusbakery.example', 'mailto:sales@elsewhere.example,info@cactusbakery.example').status, 'found')
+    assert.equal(linked('info@cactusbakery.example', 'mailto:sales@elsewhere.example,hello@cactusbakery.example').status, 'none_found')
+    assert.equal(linked('info@cactusbakery.example', 'mailto:info@cactusbakery.example.evil,x@y.example').status, 'none_found')
+    // A target that cannot be decoded names nobody.
+    assert.deepEqual(mailtoRecipients('mailto:info%E0%A4%A@cactusbakery.example'), [])
+    assert.deepEqual(mailtoRecipients('https://cactusbakery.example/'), [])
+  })
+
+  it('a context containing the address still passes with no link_href', () => {
+    const d = decide([{ email: 'information@cactusbakery.example', context: 'Email information@cactusbakery.example for details.' }])
+    assert.equal(d.status, 'found')
+    assert.ok(!('linkHref' in (d.evidence as { addresses: object[] }).addresses[0]!))
+  })
+
+  it('never keeps the link of an address that may be a person, so it does not leak through link_href', () => {
+    const d = linked('maria.lopez@cactusbakery.example', 'mailto:maria.lopez@cactusbakery.example?subject=Hi')
+    assert.equal(d.status, 'named_only')
+    assert.ok(!JSON.stringify(d).includes('maria'))
+  })
+})
+
+describe('contact-rules-v2: role local parts', () => {
+  const NEW_ROLES = [
+    'information', 'inquiry', 'enquiry', 'general', 'customerservice', 'customercare', 'care', 'help', 'connect', 'questions',
+    'ask', 'hi', 'hey', 'welcome', 'reservations', 'orders', 'estimates', 'quotes', 'scheduling', 'schedule', 'leasing',
+    'frontoffice', 'mainoffice', 'shop', 'store', 'studio', 'clinic',
+  ]
+
+  it('accepts each new contact-purpose word', () => {
+    for (const local of NEW_ROLES) {
+      const d = decide([{ email: `${local}@cactusbakery.example` }])
+      assert.equal(d.status, 'found', local)
+      assert.equal(d.email, `${local}@cactusbakery.example`, local)
+    }
+  })
+
+  it('compares without dots, hyphens and underscores', () => {
+    for (const local of ['customer.service', 'customer-care', 'front-office', 'main_office', 'front.desk']) {
+      assert.equal(decide([{ email: `${local}@cactusbakery.example` }]).status, 'found', local)
+    }
+  })
+
+  it('still counts a first-name local part as a named person and does not store it', () => {
+    const d = decide([{ email: 'jordan@cactusbakery.example' }])
+    assert.equal(d.status, 'named_only')
+    assert.equal(d.namedCount, 1)
+    assert.ok(!JSON.stringify(d).includes('jordan'))
+  })
+
+  it('no word is on both the role list and the rejected list, and the rejected list is unchanged', () => {
+    const rejected = new Set<string>(NOT_CONTACT_LOCALS)
+    assert.deepEqual(ROLE_LOCALS.filter((word) => rejected.has(word)), [])
+    assert.deepEqual([...NOT_CONTACT_LOCALS], [
+      'noreply', 'donotreply', 'postmaster', 'abuse', 'privacy', 'legal', 'dmca', 'security', 'billing', 'careers', 'jobs',
+      'press', 'webmaster', 'unsubscribe',
+    ])
+    assert.equal(new Set(ROLE_LOCALS).size, ROLE_LOCALS.length, 'no duplicates')
+  })
+
+  it('a v1 result re-derives without error', () => {
+    // As stored under contact-rules-v1: no linkHref, and information@ was not a role then, so only its outcome was kept.
+    const v1 = {
+      name: NAME,
+      site: OWN,
+      pagesRead: [CONTACT_PAGE],
+      addresses: [
+        { redacted: true, outcome: 'named' },
+        { email: 'info@cactusbakery.example', pageUrl: CONTACT_PAGE, context: 'For more information click here' },
+      ],
+      note: null,
+    }
+    const d = rederiveContact(v1)
+    assert.ok(d !== null)
+    assert.equal(d.status, 'named_only')
+    assert.equal(d.rejectedCount, 1)
+    assert.equal(d.rulesVersion, 'contact-rules-v2')
   })
 })

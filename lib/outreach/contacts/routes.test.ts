@@ -85,6 +85,18 @@ describe('contact routes: schema', () => {
     assert.equal(row?.email, null)
   })
 
+  it('records an entry with a link_href that is not mailto as unclear, keeping nothing from it', async () => {
+    for (const link_href of ['https://fictionalfirm.example/contact', 'javascript:void(0)', 'tel:+15555550100']) {
+      const { store, runId, leadId } = await claimed()
+      const reply = await ingest(store, {
+        runId,
+        leads: [{ id: leadId, pages_read: ['https://fictionalfirm.example/contact'], addresses: [{ email: 'info@fictionalfirm.example', page_url: 'https://fictionalfirm.example/contact', context: 'Click here', link_href }] }],
+      })
+      assert.equal(reply.status, 200, link_href)
+      assert.deepEqual((reply.body as { checked: unknown[] }).checked, [{ id: leadId, status: 'unclear' }], link_href)
+    }
+  })
+
   it('ignores lead ids outside the run', async () => {
     const { store, runId } = await claimed()
     const stranger = '99999999-9999-4999-8999-999999999999'

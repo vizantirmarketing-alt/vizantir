@@ -12,7 +12,9 @@
  * A lead is eligible when it is accepted, has no contact result (or had
  * no_page and has a page now), is not held by an open run, and has a stored
  * page: its own website, or the builder or listing page the website check
- * stored. An accepted lead with no stored page gets no_page here, from the
+ * stored. A lead whose stored result was decided under an older rules
+ * version, and that re-derivation could not turn into found, is eligible
+ * again, after the leads with no result. An accepted lead with no stored page gets no_page here, from the
  * server, and is never sent to the runner. A business whose website check
  * has not run yet waits for it.
  */
@@ -132,7 +134,7 @@ export const subjectKey = (subject: ContactSubject) => `${subject.subjectType}:$
 // --- Who is eligible.
 
 export type LeadSort = {
-  /** Has a page and needs checking, not held. */
+  /** Has a page and needs checking, not held: leads with no result (or no_page) first, then older-version results. */
   eligible: (ContactLead & { site: LeadSite })[]
   /** No stored page and no result yet: no_page, from the server. */
   noPage: ContactLead[]
@@ -146,6 +148,7 @@ export type LeadSort = {
 export function sortLeads(leads: readonly ContactLead[], contacts: readonly StoredContact[]): LeadSort {
   const byKey = new Map(contacts.map((contact) => [subjectKey(contact), contact]))
   const sorted: LeadSort = { eligible: [], noPage: [], held: 0, withAddress: 0, accepted: leads.length }
+  const stale: LeadSort['eligible'] = []
   for (const lead of leads) {
     const contact = byKey.get(subjectKey(lead))
     if (contact?.status === 'found') sorted.withAddress += 1
@@ -161,7 +164,10 @@ export function sortLeads(leads: readonly ContactLead[], contacts: readonly Stor
     }
     // no_page is checked again once the lead has a page.
     if (unchecked || contact.status === 'no_page') sorted.eligible.push({ ...lead, site: lead.site })
+    // Decided under older rules: checked again by the runner.
+    else if (contact.rulesVersion !== CONTACT_RULES_VERSION) stale.push({ ...lead, site: lead.site })
   }
+  sorted.eligible.push(...stale)
   return sorted
 }
 
@@ -173,13 +179,21 @@ export async function recordNoPage(store: ContactStore, sorted: LeadSort, nowIso
 
 // --- Re-derivation.
 
-/** Re-decides stored results written under an older rules version. Returns how many changed version. */
+/**
+ * Re-decides stored results written under an older rules version, from their
+ * stored evidence. A result that re-derives to found is saved under the
+ * current version. Any other result is left as it was, under its older
+ * version, so the queue sends the lead to the runner again: the evidence may
+ * lack what the current rules read (a mailto link target before
+ * contact-rules-v2) or hold only the outcome of an address that was not kept.
+ * Returns how many were saved.
+ */
 export async function rederiveContacts(store: ContactStore, nowIso: string): Promise<number> {
   let updated = 0
   for (const contact of await store.listContacts()) {
     if (contact.status === null || contact.rulesVersion === CONTACT_RULES_VERSION) continue
     const decision = rederiveContact(contact.evidence)
-    if (decision === null) continue
+    if (decision === null || decision.status !== 'found') continue
     await store.saveResult(contact.id, null, decision, contact.checkedAt ?? nowIso)
     updated += 1
   }
@@ -265,7 +279,7 @@ export const CONTACT_RULES_FOR_RUNNER = {
   pages:
     'Read only the URLs given for the lead, plus at most two further pages on the same site that those pages link to and that are clearly a contact or about page. At most three page reads per lead. No searches.',
   report:
-    'Report every email address that appears on those pages as text or in a mailto link, with the page URL and the text around it, at most 300 characters, copied exactly.',
+    'Report every email address that appears on those pages as text or in a mailto link, with the page URL and the text around it, at most 300 characters, copied exactly. For an address found as a mailto link, give the link target exactly in link_href and the visible text around the link in context.',
   neverReconstruct:
     'Never reconstruct an address written to avoid collection, such as "name at domain dot com", an image or a script. If a business obscured an address, report nothing for it.',
   neverGuess:

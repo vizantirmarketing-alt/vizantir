@@ -8,7 +8,8 @@
  *      placeholder or platform domain (lib/outreach/contacts/hosts.ts)
  *   2. the page it was on belongs to the lead, judged from the lead's stored
  *      website or listing, never from anything the runner sent
- *   3. the copied text around it contains the address
+ *   3. the copied text around it contains the address, or the address was
+ *      reported from a mailto link whose target names it (mailtoRecipients)
  *   4. the local part is not one that is never for contact (noreply, abuse...)
  *   5. the domain is the lead's own, or a shared mail provider
  *   6. the local part is a role (info, contact...) or one of the business's
@@ -32,7 +33,7 @@ import type { ContactLeadReport } from '@/lib/outreach/contacts/schema'
 import { OUTREACH_EMAIL_MAX, SHARED_MAIL_DOMAINS, emailDomain, isValidEmail } from '@/lib/outreach/params'
 import { normalizeDomain } from '@/lib/prospects/domain'
 
-export const CONTACT_RULES_VERSION = 'contact-rules-v1'
+export const CONTACT_RULES_VERSION = 'contact-rules-v2'
 
 export const CONTACT_STATUSES = ['found', 'none_found', 'named_only', 'no_page', 'unclear'] as const
 export type ContactStatus = (typeof CONTACT_STATUSES)[number]
@@ -50,6 +51,10 @@ export const NOT_CONTACT_LOCALS = [
 export const ROLE_LOCALS = [
   'contact', 'info', 'hello', 'office', 'admin', 'sales', 'team', 'support', 'service', 'inquiries', 'enquiries',
   'booking', 'bookings', 'appointments', 'frontdesk', 'reception', 'mail', 'email',
+  // Added in contact-rules-v2. Contact purposes only, never personal names.
+  'information', 'inquiry', 'enquiry', 'general', 'customerservice', 'customercare', 'care', 'help', 'connect', 'questions',
+  'ask', 'hi', 'hey', 'welcome', 'reservations', 'orders', 'estimates', 'quotes', 'scheduling', 'schedule', 'leasing',
+  'frontoffice', 'mainoffice', 'shop', 'store', 'studio', 'clinic',
 ] as const
 
 /** Words in a business name that are never a name token. */
@@ -140,6 +145,32 @@ export function normalizeReportedEmail(value: string): string {
     .toLowerCase()
 }
 
+/**
+ * The recipients a mailto link names: the part before any "?" query,
+ * percent-decoded, split on commas, each trimmed and lower case. Empty when
+ * the link is not mailto or cannot be decoded.
+ */
+export function mailtoRecipients(href: string): string[] {
+  const match = /^mailto:([^?]*)/i.exec(href.trim())
+  if (match === null) return []
+  let decoded: string
+  try {
+    decoded = decodeURIComponent(match[1]!)
+  } catch {
+    return []
+  }
+  return decoded
+    .split(',')
+    .map((recipient) => recipient.trim().toLowerCase())
+    .filter((recipient) => recipient.length > 0)
+}
+
+/** The copied text contains the address, or the mailto link it came from names it. */
+function evidenceNamesAddress(email: string, context: string, linkHref: string | undefined): boolean {
+  if (context.toLowerCase().includes(email)) return true
+  return linkHref !== undefined && mailtoRecipients(linkHref).includes(email)
+}
+
 /** The local part without a +tag, then without dots, hyphens or underscores, for the word lists. */
 function compactLocal(email: string): string {
   const at = email.lastIndexOf('@')
@@ -164,7 +195,7 @@ export function roleRank(email: string, tokens: readonly string[]): number {
 }
 
 export function judgeAddress(
-  reported: { email: string; pageUrl: string; context: string },
+  reported: { email: string; pageUrl: string; context: string; linkHref?: string },
   site: LeadSite,
   tokens: readonly string[],
 ): AddressJudgement {
@@ -175,7 +206,7 @@ export function judgeAddress(
   const domain = emailDomain(email)!
   if (isPlaceholderDomain(domain)) return { outcome: 'rejected', reason: 'placeholder' }
   if (!pageAllowed(reported.pageUrl, site)) return { outcome: 'rejected', reason: 'page_not_lead' }
-  if (!reported.context.toLowerCase().includes(email)) return { outcome: 'rejected', reason: 'context_missing' }
+  if (!evidenceNamesAddress(email, reported.context, reported.linkHref)) return { outcome: 'rejected', reason: 'context_missing' }
   if ((NOT_CONTACT_LOCALS as readonly string[]).includes(compactLocal(email))) return { outcome: 'rejected', reason: 'not_for_contact' }
 
   let kind: ContactKind
@@ -192,7 +223,8 @@ export function judgeAddress(
 // --- Evidence, as stored.
 
 const storedAddressSchema = z.union([
-  z.object({ email: z.string(), pageUrl: z.string(), context: z.string() }),
+  // linkHref is absent on results stored before contact-rules-v2.
+  z.object({ email: z.string(), pageUrl: z.string(), context: z.string(), linkHref: z.string().optional() }),
   z.object({ redacted: z.literal(true), outcome: z.enum(['named', 'rejected']) }),
 ])
 export type StoredAddress = z.infer<typeof storedAddressSchema>
@@ -282,9 +314,17 @@ export function decideContact(lead: { name: string; site: LeadSite }, report: Co
     site: lead.site,
     pagesRead: report.pages_read.map((page) => page.trim()),
     addresses: report.addresses.map((address) => {
-      if (storable(address.email, tokens)) return { email: address.email.trim(), pageUrl: address.page_url.trim(), context: address.context.trim() }
-      // Judged now and kept only as its outcome: it may be a person's address.
-      const judged = judgeAddress({ email: address.email, pageUrl: address.page_url, context: address.context }, lead.site, tokens)
+      const linkHref = address.link_href?.trim()
+      if (storable(address.email, tokens)) {
+        return {
+          email: address.email.trim(),
+          pageUrl: address.page_url.trim(),
+          context: address.context.trim(),
+          ...(linkHref !== undefined ? { linkHref } : {}),
+        }
+      }
+      // Judged now and kept only as its outcome: it may be a person's address, and so may its link.
+      const judged = judgeAddress({ email: address.email, pageUrl: address.page_url, context: address.context, linkHref }, lead.site, tokens)
       return { redacted: true as const, outcome: judged.outcome === 'named' ? ('named' as const) : ('rejected' as const) }
     }),
     note: report.note?.trim() || null,

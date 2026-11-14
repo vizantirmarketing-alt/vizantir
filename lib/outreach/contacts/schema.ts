@@ -20,6 +20,8 @@ export const CONTACT_MAX_PAGE_READS = 3
 export const CONTACT_MAX_ADDRESSES = 20
 /** The text copied around an address, verbatim. */
 export const CONTACT_CONTEXT_MAX_CHARS = 300
+/** A mailto link's target, verbatim. */
+export const CONTACT_LINK_HREF_MAX_CHARS = 500
 export const CONTACT_INGEST_MAX_RUN_LINES = 50
 /** Request body cap, checked before JSON parsing. */
 export const CONTACT_INGEST_MAX_BODY_CHARS = 200_000
@@ -35,7 +37,15 @@ export const reportedAddressSchema = z.strictObject({
   /** As it appeared on the page, as text or in a mailto link. Validated by the server. */
   email: z.string().trim().min(1).max(320),
   page_url: httpUrlSchema,
+  /** For a mailto link: the visible link text and the words around it. */
   context: z.string().trim().min(1).max(CONTACT_CONTEXT_MAX_CHARS),
+  /** For an address found as a mailto link: the link target, copied exactly. */
+  link_href: z
+    .string()
+    .trim()
+    .max(CONTACT_LINK_HREF_MAX_CHARS)
+    .refine((value) => /^mailto:/i.test(value), { message: 'Must be a mailto link.' })
+    .optional(),
 })
 
 export const contactLeadSchema = z.strictObject({

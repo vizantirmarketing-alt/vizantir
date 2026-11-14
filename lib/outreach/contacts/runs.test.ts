@@ -229,3 +229,73 @@ describe('re-derivation', () => {
     assert.equal(await rederiveContacts(store, T0.toISOString()), 0, 'current results are left alone')
   })
 })
+
+describe('contact-rules-v2: checking again', () => {
+  const PAGE = 'https://firm1.example/contact'
+
+  async function storedUnderV1(status: 'none_found' | 'named_only' | 'unclear') {
+    const store = new MemoryContactStore([prospect(1)])
+    await queueContactRun(store, 'dashboard', T0)
+    const response = await claim(store)
+    assert.ok(response.run !== null)
+    await ingestContactBatch(store, batch(response.run.id, [{ id: response.leads[0]!.id, pages_read: [PAGE], addresses: [] }], 'completed'), T0)
+    const row = store.contacts[0]!
+    // As stored under v1: the mailto address was rejected for its context, and its outcome alone kept.
+    row.rulesVersion = 'contact-rules-v1'
+    row.status = status
+    row.evidence =
+      status === 'unclear'
+        ? { malformed: true }
+        : { name: 'Fictional Firm 1', site: prospect(1).site, pagesRead: [PAGE], addresses: [{ redacted: true, outcome: status === 'named_only' ? 'named' : 'rejected' }], note: null }
+    return { store, row }
+  }
+
+  it('Find contact email queues a lead whose result is none_found, named_only or unclear', async () => {
+    for (const status of ['none_found', 'named_only', 'unclear'] as const) {
+      const { store } = await storedUnderV1(status)
+      const queued = await queueLeadContactCheck(store, { subjectType: 'prospect', leadId: prospect(1).leadId }, T0)
+      assert.equal(queued.outcome, 'queued', status)
+    }
+  })
+
+  it('the morning step re-derives a v1 result without error and queues the lead again when it is not found', async () => {
+    for (const status of ['none_found', 'named_only', 'unclear'] as const) {
+      const { store, row } = await storedUnderV1(status)
+      const queued = await queueContactRun(store, 'schedule', T0)
+      assert.equal(queued.outcome, 'queued', status)
+      assert.equal(queued.rederived, 0, status)
+      assert.equal(row.status, status, 'the stored result stays until the runner checks again')
+      assert.equal(row.rulesVersion, 'contact-rules-v1')
+      const response = await claim(store)
+      assert.ok(response.run !== null)
+      assert.deepEqual(response.leads.map((l) => l.name), ['Fictional Firm 1'])
+      const id = response.leads[0]!.id
+      await ingestContactBatch(
+        store,
+        batch(response.run.id, [
+          {
+            id,
+            pages_read: [PAGE],
+            addresses: [{ email: 'information@firm1.example', page_url: PAGE, context: 'For more information click here', link_href: 'mailto:information@firm1.example' }],
+          },
+        ], 'completed'),
+        T0,
+      )
+      assert.equal(row.status, 'found', status)
+      assert.equal(row.email, 'information@firm1.example')
+      assert.equal(row.rulesVersion, CONTACT_RULES_VERSION)
+      assert.equal((await queueContactRun(store, 'schedule', T0)).outcome, 'nothing_to_check', 'a current result is not queued again')
+    }
+  })
+
+  it('checks leads with no result before older-version results, within the run size', async () => {
+    const leads = Array.from({ length: CONTACT_RUN_SIZE + 1 }, (_, i) => prospect(i + 1))
+    const store = new MemoryContactStore(leads)
+    await store.saveLeadResult(leads[0]!, { status: 'none_found', email: null, sourceUrl: null, kind: null, rejectedCount: 0, namedCount: 0, evidence: { malformed: true }, rulesVersion: 'contact-rules-v1' }, T0.toISOString())
+    await queueContactRun(store, 'schedule', T0)
+    const response = await claim(store)
+    assert.ok(response.run !== null)
+    assert.equal(response.leads.length, CONTACT_RUN_SIZE)
+    assert.ok(!response.leads.some((l) => l.name === 'Fictional Firm 1'), 'the older result waits for the next run')
+  })
+})
