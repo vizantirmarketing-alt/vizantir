@@ -318,3 +318,47 @@ describe('the Gmail request', () => {
     }
   })
 })
+
+describe('a second email to the same business', () => {
+  async function sentEarlier(subjectRef = 'prospect-a'): Promise<string> {
+    const id = await newDraft({ subjectRef })
+    const marked = await markSent(store, id, '2026-11-02T17:00:00.000Z')
+    assert.ok(marked.ok)
+    return id
+  }
+
+  it('is refused without the extra confirm, and nothing is sent or changed', async () => {
+    await sentEarlier()
+    const id = await newDraft()
+    const { fetch, calls } = scriptedFetch({})
+    const result = await approveAndSend(deps(fetch), id)
+    assert.equal(result.ok, false)
+    if (!result.ok) {
+      assert.equal(result.outcome, 'refused')
+      assert.match(result.error, /already emailed on Nov 2, 2026/)
+      assert.match(result.error, /Send another email to this business/)
+    }
+    assert.equal(calls.length, 0)
+    assert.equal((await store.getDraft(id))!.status, 'approved')
+    const explicitNo = await approveAndSend(deps(fetch), id, { anotherEmail: false })
+    assert.equal(explicitNo.ok, false)
+  })
+
+  it('is sent with the extra confirm', async () => {
+    await sentEarlier()
+    const id = await newDraft()
+    const { fetch, calls } = scriptedFetch({ [GOOGLE_TOKEN_URL]: [TOKEN_OK], [GMAIL_SEND_URL]: [SENT_OK] })
+    const result = await approveAndSend(deps(fetch), id, { anotherEmail: true })
+    assert.ok(result.ok)
+    assert.equal(sendCalls(calls), 1)
+    assert.equal((await store.getDraft(id))!.status, 'sent')
+  })
+
+  it('a first email needs no extra confirm, and an email to another business does not count', async () => {
+    await sentEarlier('prospect-b')
+    const id = await newDraft()
+    const { fetch } = scriptedFetch({ [GOOGLE_TOKEN_URL]: [TOKEN_OK], [GMAIL_SEND_URL]: [SENT_OK] })
+    const result = await approveAndSend(deps(fetch), id)
+    assert.ok(result.ok)
+  })
+})

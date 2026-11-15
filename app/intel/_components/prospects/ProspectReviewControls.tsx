@@ -3,6 +3,7 @@
 import { useState, useTransition, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { AcceptedNotice } from '@/app/intel/_components/outreach/AcceptNotice'
 import {
   OWNER_NOTE_MAX,
   PROSPECT_REVIEW_LABELS,
@@ -36,16 +37,19 @@ function MutationError({ message }: { message: string | null }) {
 
 export function ProspectReviewControls({
   prospectId,
+  name,
   reviewStatus,
   ownerNote,
 }: {
   prospectId: string
+  /** For the confirmation after Accept. */
+  name: string
   reviewStatus: ProspectReviewStatus
   ownerNote: string | null
 }) {
   return (
     <div className="space-y-8">
-      <ReviewButtons prospectId={prospectId} reviewStatus={reviewStatus} />
+      <ReviewButtons prospectId={prospectId} name={name} reviewStatus={reviewStatus} />
       <NoteForm prospectId={prospectId} ownerNote={ownerNote} />
     </div>
   )
@@ -53,12 +57,15 @@ export function ProspectReviewControls({
 
 function ReviewButtons({
   prospectId,
+  name,
   reviewStatus,
 }: {
   prospectId: string
+  name: string
   reviewStatus: ProspectReviewStatus
 }) {
   const [error, setError] = useState<string | null>(null)
+  const [accepted, setAccepted] = useState(false)
   const [pending, startTransition] = useTransition()
 
   function setStatus(next: ProspectReviewStatus) {
@@ -70,12 +77,19 @@ function ReviewButtons({
       const result = await updateProspectReview(prospectId, next)
       if (!result.ok) {
         setError(result.error)
+        return
       }
+      setAccepted(next === 'accepted')
     })
   }
 
   return (
     <div aria-busy={pending}>
+      {accepted ? (
+        <div className="mb-3">
+          <AcceptedNotice name={name} onDismiss={() => setAccepted(false)} />
+        </div>
+      ) : null}
       <p className="mb-2 intel-body font-medium text-body">Review</p>
       <div className="flex flex-wrap gap-2">
         {REVIEW_ACTIONS.map((action) => (

@@ -413,3 +413,14 @@ export async function fetchContactRuns(limit = 3): Promise<ContactRunRow[] | nul
     return null
   }
 }
+
+/** Whether a scheduled contact run (not a one-lead run) is waiting to be claimed. Throws when runs cannot be read. */
+export async function hasRequestedGeneralRun(client: SupabaseClient = createSupabaseServiceRole()): Promise<boolean> {
+  const { count, error } = await client
+    .from(RUNS)
+    .select('id', { count: 'exact', head: true })
+    .eq('state', 'requested')
+    .is('target_subject_type', null)
+  if (error) throw new ContactStoreError('general run count')
+  return (count ?? 0) > 0
+}

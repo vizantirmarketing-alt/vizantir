@@ -11,6 +11,7 @@ import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { buildMailto, messageText } from '@/lib/outreach/mailto'
 import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX, SENT_VIA_LABELS } from '@/lib/outreach/params'
 import type { OutreachDraft } from '@/lib/outreach/types'
+import { foundAddressLabel } from '@/lib/outreach/worklist'
 
 import {
   approveAndSend,
@@ -49,6 +50,23 @@ function Footer({ footer }: { footer: string }) {
   )
 }
 
+/**
+ * The line under To. "Found on {host}" only while To is the found address;
+ * once the owner changes it, the found address is shown with a way back.
+ */
+function ToNote({ note, foundEmail, to, onUseFound }: { note: ContactNote | null; foundEmail: string | null; to: string; onUseFound?: (address: string) => void }) {
+  const label = foundAddressLabel(foundEmail, to)
+  if (label.kind === 'changed') {
+    return (
+      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+        <p className="intel-secondary text-meta [overflow-wrap:anywhere]">{label.text}</p>
+        {onUseFound !== undefined ? <TextAction onClick={() => onUseFound(label.address)}>Use found address</TextAction> : null}
+      </div>
+    )
+  }
+  return note !== null ? <ContactNoteLine note={note} /> : null
+}
+
 /** Present when a Google mailbox is connected and healthy. */
 export type SendingProps = { from: string; sentToday: number; limit: number }
 
@@ -57,6 +75,7 @@ function SendConfirmation({
   from,
   to,
   subject,
+  alreadyEmailedOn,
   pending,
   onSend,
   onCancel,
@@ -64,19 +83,26 @@ function SendConfirmation({
   from: string
   to: string
   subject: string
+  /** Set when the business already has a sent email: sending needs the extra confirm. */
+  alreadyEmailedOn: string | null
   pending: boolean
-  onSend: () => void
+  onSend: (anotherEmail: boolean) => void
   onCancel: () => void
 }) {
   const panelRef = useRef<HTMLDivElement>(null)
   const sendRef = useRef<HTMLButtonElement>(null)
+  const anotherRef = useRef<HTMLInputElement>(null)
+  const [another, setAnother] = useState(false)
+  const repeat = alreadyEmailedOn !== null
 
-  // It opens below the actions, often under the fold: bring it into view and put focus on Send now.
+  // It opens below the actions, often under the fold: bring it into view and put focus on Send now,
+  // or on the extra confirm when Send now waits for it.
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     panelRef.current?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' })
-    sendRef.current?.focus({ preventScroll: true })
-  }, [])
+    if (repeat) anotherRef.current?.focus({ preventScroll: true })
+    else sendRef.current?.focus({ preventScroll: true })
+  }, [repeat])
 
   return (
     <div
@@ -90,13 +116,29 @@ function SendConfirmation({
         <ReadField label="To">{to.length > 0 ? to : 'No recipient yet'}</ReadField>
         <ReadField label="Subject">{subject}</ReadField>
       </div>
+      {repeat ? (
+        <div className="space-y-1">
+          <p className="intel-body text-warning-severe">This business was already emailed on {alreadyEmailedOn}.</p>
+          <label className="flex items-center gap-2 intel-body text-foreground">
+            <input
+              ref={anotherRef}
+              type="checkbox"
+              checked={another}
+              disabled={pending}
+              onChange={(event) => setAnother(event.target.checked)}
+              className="size-4 accent-cobalt-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt-focus"
+            />
+            Send another email to this business
+          </label>
+        </div>
+      ) : null}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         <Button
           ref={sendRef}
           type="button"
           size="sm"
-          disabled={pending}
-          onClick={onSend}
+          disabled={pending || (repeat && !another)}
+          onClick={() => onSend(repeat && another)}
           className="bg-cobalt-primary intel-secondary text-white hover:bg-[#1E85FF]"
         >
           {pending ? 'Sending…' : 'Send now'}
@@ -115,6 +157,8 @@ export function OutreachDraftEditor({
   sending = null,
   staleSending = false,
   contactNote = null,
+  foundEmail = null,
+  alreadyEmailedOn = null,
 }: {
   draft: OutreachDraft
   replyToEmail: string | null
@@ -122,6 +166,10 @@ export function OutreachDraftEditor({
   staleSending?: boolean
   /** Where the lead's contact address came from, or why there is none. Editing To never changes it. */
   contactNote?: ContactNote | null
+  /** The stored found address, when it may be used. */
+  foundEmail?: string | null
+  /** The date of this business's latest sent email, when it has one and this draft is not sent. */
+  alreadyEmailedOn?: string | null
 }) {
   const router = useRouter()
   const [toEmail, setToEmail] = useState(draft.toEmail ?? '')
@@ -165,13 +213,13 @@ export function OutreachDraftEditor({
 
   const save = () => saveOutreachDraft(draft.id, { toEmail, subject, body })
 
-  function send() {
+  function send(anotherEmail: boolean) {
     run(async () => {
       if (editable && dirty) {
         const saved = await save()
         if (!saved.ok) return saved
       }
-      const result = await approveAndSend(draft.id)
+      const result = await approveAndSend(draft.id, { anotherEmail })
       setConfirmSend(false)
       // A refusal can still mean the state moved on (not confirmed, back to approved).
       if (!result.ok) router.refresh()
@@ -213,11 +261,9 @@ export function OutreachDraftEditor({
               onChange={(event) => setToEmail(event.target.value)}
               className={fieldClassName}
             />
-            {contactNote !== null ? (
-              <div className="mt-1.5">
-                <ContactNoteLine note={contactNote} />
-              </div>
-            ) : null}
+            <div className="mt-1.5">
+              <ToNote note={contactNote} foundEmail={foundEmail} to={toEmail} onUseFound={setToEmail} />
+            </div>
           </div>
           <div>
             <label htmlFor="outreach-subject" className="mb-2 block intel-body font-medium text-body">
@@ -251,7 +297,7 @@ export function OutreachDraftEditor({
         <div className="space-y-3">
           <div className="space-y-1">
             <ReadField label="To">{draft.toEmail ?? 'No recipient yet'}</ReadField>
-            {contactNote !== null ? <ContactNoteLine note={contactNote} /> : null}
+            <ToNote note={contactNote} foundEmail={foundEmail} to={draft.toEmail ?? ''} />
           </div>
           <ReadField label="Subject">{draft.subject}</ReadField>
           <ReadField label="Message">
@@ -280,6 +326,8 @@ export function OutreachDraftEditor({
       {draft.status === 'approved' && draft.sendError !== null ? (
         <p className="intel-body text-warning-severe [overflow-wrap:anywhere]">The last send was refused. {draft.sendError}</p>
       ) : null}
+
+      {alreadyEmailedOn !== null ? <p className="intel-body text-body">Already emailed on {alreadyEmailedOn}.</p> : null}
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-black/8 pt-3">
         {canSend && !confirmSend ? (
@@ -399,6 +447,7 @@ export function OutreachDraftEditor({
           from={sending.from}
           to={editable ? toEmail.trim().toLowerCase() : (draft.toEmail ?? '')}
           subject={editable ? subject : draft.subject}
+          alreadyEmailedOn={alreadyEmailedOn}
           pending={pending}
           onSend={send}
           onCancel={() => {

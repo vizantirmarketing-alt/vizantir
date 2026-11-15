@@ -18,6 +18,9 @@ import {
   NEW_BUSINESS_REVIEW_STATUSES,
   parsePeriodParam,
 } from '@/lib/new-businesses/params'
+import { reviewAndQueueContact } from '@/lib/outreach/accept'
+import { queueLeadContactCheck } from '@/lib/outreach/contacts/runs'
+import { createContactStore } from '@/lib/outreach/contacts/store'
 import { isUuid } from '@/lib/prospects/params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
@@ -113,12 +116,24 @@ export async function updateNewBusinessReview(
     return { ok: false, error: 'Choose a valid review status.' }
   }
   try {
-    // Applies to every license row of the business (lib/new-businesses/review.ts).
-    const result = await setBusinessReview(createNewBusinessReviewWriter(), parsed.data.id, parsed.data.status, new Date().toISOString())
-    if (!result.ok) {
-      return { ok: false, error: 'Business not found.' }
-    }
+    const now = new Date()
+    const writer = createNewBusinessReviewWriter()
+    const outcome = await reviewAndQueueContact(
+      parsed.data.status,
+      async () => {
+        // Applies to every license row of the business (lib/new-businesses/review.ts).
+        const result = await setBusinessReview(writer, parsed.data.id, parsed.data.status, now.toISOString())
+        return result.ok ? { ok: true } : { ok: false, error: 'Business not found.' }
+      },
+      // The contact lookup for this business, by its subject (group key, or the row id before grouping).
+      async () => {
+        const groupKey = await writer.groupKeyOf(parsed.data.id)
+        return queueLeadContactCheck(createContactStore(), { subjectType: 'new_business', leadId: groupKey ?? parsed.data.id }, now)
+      },
+    )
+    if (!outcome.ok) return outcome
     revalidate()
+    if (parsed.data.status === 'accepted') revalidatePath('/intel/outreach')
     return { ok: true }
   } catch {
     console.error('New business review update failed')

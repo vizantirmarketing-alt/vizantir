@@ -55,6 +55,8 @@ export type DraftPatch = Partial<
   updatedAt: string
 }
 
+export type SubjectState = { subjectType: OutreachSubjectType; subjectRef: string; status: OutreachStatus }
+
 export type Suppression = {
   id: string
   /** Normalized: trimmed and lower-cased. */
@@ -93,6 +95,12 @@ export interface OutreachStore {
   listDrafts(limit: number): Promise<OutreachDraft[]>
   /** Active rows for these subjects, for the "View draft" links. */
   activeDraftsFor(subjectType: OutreachSubjectType, subjectRefs: readonly string[]): Promise<OutreachDraft[]>
+  /** The subject's sent rows, newest sent first. */
+  sentFor(subjectType: OutreachSubjectType, subjectRef: string): Promise<OutreachDraft[]>
+  /** Every row that is not discarded, as subject and status only: which leads have an open draft or a sent email. */
+  listSubjectStates(): Promise<SubjectState[]>
+  /** Sent rows, newest sent first. */
+  listSent(limit: number): Promise<OutreachDraft[]>
 
   listSuppressions(): Promise<Suppression[]>
   /** Entries matching the address exactly, or suppressing its domain. */

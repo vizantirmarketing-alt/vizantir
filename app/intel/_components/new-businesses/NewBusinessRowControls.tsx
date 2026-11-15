@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { useAnnounceAccepted } from '@/app/intel/_components/outreach/AcceptNotice'
 import {
   NEW_BUSINESS_NOTE_MAX,
   NEW_BUSINESS_REVIEW_LABELS,
@@ -19,13 +20,17 @@ const ACTIONS: { status: NewBusinessReviewStatus; label: string }[] = [
 
 export function NewBusinessRowControls({
   id,
+  name,
   reviewStatus,
   ownerNote,
 }: {
   id: string
+  /** For the confirmation after Accept, shown above the list by the page's AcceptNoticeProvider. */
+  name: string
   reviewStatus: NewBusinessReviewStatus
   ownerNote: string | null
 }) {
+  const announceAccepted = useAnnounceAccepted()
   const [noteOpen, setNoteOpen] = useState(false)
   const [note, setNote] = useState(ownerNote ?? '')
   const [error, setError] = useState<string | null>(null)
@@ -53,7 +58,12 @@ export function NewBusinessRowControls({
             variant="outline"
             size="sm"
             disabled={pending || reviewStatus === action.status}
-            onClick={() => run(() => updateNewBusinessReview(id, action.status))}
+            onClick={() =>
+              run(
+                () => updateNewBusinessReview(id, action.status),
+                action.status === 'accepted' ? () => announceAccepted?.(name) : undefined,
+              )
+            }
             className={buttonClass}
           >
             {action.label}

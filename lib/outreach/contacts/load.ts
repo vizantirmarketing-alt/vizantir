@@ -7,23 +7,44 @@ import 'server-only'
  */
 
 import { isSuppressed } from '@/lib/outreach/lifecycle'
-import { sortLeads, type StoredContact } from '@/lib/outreach/contacts/runs'
-import { createContactStore, fetchContactRuns, type ContactRunRow } from '@/lib/outreach/contacts/store'
+import type { ContactLead, StoredContact } from '@/lib/outreach/contacts/runs'
+import { createContactStore, fetchContactRuns, hasRequestedGeneralRun, type ContactRunRow } from '@/lib/outreach/contacts/store'
 import { contactNote, type ContactNote } from '@/lib/outreach/contacts/view'
 import { emailDomain, type OutreachSubjectType } from '@/lib/outreach/params'
 import { createOutreachStore } from '@/lib/outreach/store'
 
+async function foundAndSuppressed(contact: StoredContact): Promise<boolean> {
+  if (contact.status !== 'found' || contact.email === null) return false
+  const matches = await createOutreachStore().findSuppressions(contact.email, emailDomain(contact.email))
+  return isSuppressed(contact.email, matches)
+}
+
 async function noteFor(contact: StoredContact | undefined): Promise<ContactNote> {
   if (contact === undefined) return contactNote(null)
-  let suppressed = false
-  if (contact.status === 'found' && contact.email !== null) {
-    const matches = await createOutreachStore().findSuppressions(contact.email, emailDomain(contact.email))
-    suppressed = isSuppressed(contact.email, matches)
-  }
   return contactNote(
     { status: contact.status, email: contact.email, sourceUrl: contact.sourceUrl, waiting: contact.heldByRunId !== null },
-    suppressed,
+    await foundAndSuppressed(contact),
   )
+}
+
+/**
+ * The draft page's contact line and the found address, for "Changed by you".
+ * foundEmail is null when nothing was found or the address is on the
+ * do-not-contact list, so it is never offered back. null when contacts
+ * cannot be read.
+ */
+export async function loadDraftContact(
+  subjectType: OutreachSubjectType,
+  subjectRef: string,
+): Promise<{ note: ContactNote; foundEmail: string | null } | null> {
+  try {
+    const contact = (await createContactStore().contactsFor(subjectType, [subjectRef]))[0]
+    const note = await noteFor(contact)
+    const usable = contact !== undefined && contact.status === 'found' && contact.email !== null && !(await foundAndSuppressed(contact))
+    return { note, foundEmail: usable ? contact.email : null }
+  } catch {
+    return null
+  }
 }
 
 /** Notes keyed by subject ref. */
@@ -43,22 +64,37 @@ export async function loadContactNote(subjectType: OutreachSubjectType, subjectR
   return (await loadContactNotes(subjectType, [subjectRef]))?.get(subjectRef) ?? null
 }
 
-export type ContactSummary = { accepted: number; withAddress: number; waiting: number; latestRun: ContactRunRow | null }
+/** The latest contact run, for "Last check:". null when runs cannot be read (for example before migration 0034). */
+export async function loadLatestContactRun(): Promise<{ latestRun: ContactRunRow | null } | null> {
+  const runs = await fetchContactRuns(1)
+  return runs === null ? null : { latestRun: runs[0] ?? null }
+}
 
-/** The Outreach page's one line: accepted leads with an address, and how many wait to be checked. */
-export async function loadContactSummary(): Promise<ContactSummary | null> {
+export type WorklistContacts = {
+  leads: ContactLead[]
+  /** null when the contact tables cannot be read (for example before migration 0034). */
+  contacts: StoredContact[] | null
+  generalRunQueued: boolean
+}
+
+/**
+ * Accepted leads for the Outreach page's list, with their contact rows.
+ * Accepted leads come from the prospects and New Businesses tables, so they
+ * load even when the contact tables do not exist yet. null when the leads
+ * themselves cannot be read.
+ */
+export async function loadWorklistContacts(): Promise<WorklistContacts | null> {
+  const store = createContactStore()
+  let leads: ContactLead[]
   try {
-    const store = createContactStore()
-    const [leads, contacts, runs] = await Promise.all([store.listAcceptedLeads(), store.listContacts(), fetchContactRuns(1)])
-    if (runs === null) return null
-    const sorted = sortLeads(leads, contacts)
-    return {
-      accepted: sorted.accepted,
-      withAddress: sorted.withAddress,
-      waiting: sorted.eligible.length + sorted.held,
-      latestRun: runs[0] ?? null,
-    }
+    leads = await store.listAcceptedLeads()
   } catch {
     return null
+  }
+  try {
+    const [contacts, generalRunQueued] = await Promise.all([store.listContacts(), hasRequestedGeneralRun()])
+    return { leads, contacts, generalRunQueued }
+  } catch {
+    return { leads, contacts: null, generalRunQueued: false }
   }
 }

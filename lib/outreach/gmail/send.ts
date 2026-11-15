@@ -8,7 +8,8 @@
  *   1. the connection exists, Google still accepts it, and the connected
  *      account may still send as the reply-to address in settings now
  *   2. the draft is sendable: approved, not confirmed, or a draft that passes
- *      the hard voice rules
+ *      the hard voice rules; and when the business already has a sent email,
+ *      the owner confirmed sending another (options.anotherEmail)
  *   3. the recipient address is present and valid
  *   4. the recipient is not on the do-not-contact list, re-checked now
  *   5. fewer than OUTREACH_DAILY_SEND_LIMIT Gmail sends today
@@ -30,6 +31,7 @@ import { isStaleSending, isSuppressed } from '@/lib/outreach/lifecycle'
 import { messageText } from '@/lib/outreach/mailto'
 import { OUTREACH_DAILY_SEND_LIMIT, SENDABLE_STATUSES, emailDomain, isValidEmail, normalizeEmail } from '@/lib/outreach/params'
 import { missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
+import { formatShortDate } from '@/lib/prospects/params'
 import type { GmailConnection, GmailConnectionStore, OutreachDraft, OutreachStore } from '@/lib/outreach/types'
 
 export type SendDeps = {
@@ -43,6 +45,11 @@ export type SendDeps = {
    * passes. null when the lead can no longer be loaded to check against.
    */
   checkRules: (draft: OutreachDraft, studioName: string) => Promise<string[] | null>
+}
+
+export type SendOptions = {
+  /** The owner's explicit "Send another email to this business". Required when the business already has a sent email. */
+  anotherEmail?: boolean
 }
 
 export type SendResult =
@@ -80,7 +87,13 @@ async function accessToken(deps: SendDeps & { config: GmailConfig }, connection:
   return { error: 'Google could not be reached, so nothing was sent. Try again shortly.' }
 }
 
-export async function approveAndSend(deps: SendDeps, draftId: string): Promise<SendResult> {
+/** The refusal when a business already has a sent email and the owner has not confirmed another. */
+export function anotherEmailRefusal(lastSentIso: string | null): string {
+  const when = lastSentIso === null ? '' : ` on ${formatShortDate(lastSentIso)}`
+  return `This business was already emailed${when}. Nothing was sent. Confirm "Send another email to this business" to send it.`
+}
+
+export async function approveAndSend(deps: SendDeps, draftId: string, options: SendOptions = {}): Promise<SendResult> {
   const nowIso = deps.now().toISOString()
 
   // 1. The connection.
@@ -95,6 +108,8 @@ export async function approveAndSend(deps: SendDeps, draftId: string): Promise<S
   if (draft === null) return refuse('Draft not found.')
   const byStatus = statusRefusal(draft, nowIso)
   if (byStatus !== null) return refuse(byStatus)
+  const earlier = (await deps.store.sentFor(draft.subjectType, draft.subjectRef)).filter((row) => row.id !== draft.id)
+  if (earlier.length > 0 && options.anotherEmail !== true) return refuse(anotherEmailRefusal(earlier[0]!.sentAt))
 
   const settings = await deps.store.getSettings()
   const missing = missingSettings(settings)

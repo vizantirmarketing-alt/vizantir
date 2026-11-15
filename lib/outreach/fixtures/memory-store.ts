@@ -106,6 +106,21 @@ export class MemoryOutreachStore implements OutreachStore {
   async activeDraftsFor(subjectType: OutreachSubjectType, refs: readonly string[]) {
     return this.drafts.filter((d) => d.subjectType === subjectType && refs.includes(d.subjectRef) && ACTIVE_STATUSES.includes(d.status)).map((d) => ({ ...d }))
   }
+  async sentFor(subjectType: OutreachSubjectType, subjectRef: string) {
+    return this.sent().filter((d) => d.subjectType === subjectType && d.subjectRef === subjectRef)
+  }
+  async listSubjectStates() {
+    return this.drafts.filter((d) => d.status !== 'discarded').map((d) => ({ subjectType: d.subjectType, subjectRef: d.subjectRef, status: d.status }))
+  }
+  async listSent(limit: number) {
+    return this.sent().slice(0, limit)
+  }
+  private sent(): OutreachDraft[] {
+    return this.drafts
+      .filter((d) => d.status === 'sent')
+      .sort((a, b) => (b.sentAt ?? '').localeCompare(a.sentAt ?? ''))
+      .map((d) => ({ ...d }))
+  }
 
   async listSuppressions() {
     return this.suppressions.map((s) => ({ ...s }))

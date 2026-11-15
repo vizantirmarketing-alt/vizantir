@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { AcceptNoticeProvider, AcceptNoticeSlot } from '@/app/intel/_components/outreach/AcceptNotice'
 import { CategoryToggles } from '@/app/intel/_components/new-businesses/CategoryToggles'
 import { ImportLatestButton, ImportRow } from '@/app/intel/_components/new-businesses/ImportControls'
 import { NewBusinessFilters } from '@/app/intel/_components/new-businesses/NewBusinessFilters'
@@ -10,7 +11,9 @@ import { WebsiteCheckRunChip } from '@/app/intel/_components/ui/StatusChip'
 import { resolvedCheckRunIds } from '@/lib/new-businesses/website-runs'
 import { fetchCheckRuns, type CheckRunRow } from '@/lib/new-businesses/website-store'
 import { splitRunSummary } from '@/lib/prospects/ingest'
+import { CollapsedSection } from '@/app/intel/_components/ui/CollapsedSection'
 import { Panel } from '@/app/intel/_components/ui/Panel'
+import { categoriesStatus, checksStatus, importsStatus } from '@/lib/new-businesses/sections'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { loadContactNotes } from '@/lib/outreach/contacts/load'
@@ -169,103 +172,105 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
         </p>
       </div>
 
-      <div className="grid min-w-0 gap-4 lg:grid-cols-2 [&>*]:min-w-0">
-        <Panel title="Categories">
-          {categories === null ? (
-            <p className="intel-body text-body" role="alert">
-              Unable to load categories. Try again shortly.
-            </p>
-          ) : (
-            <CategoryToggles categories={categories} />
-          )}
+      <AcceptNoticeProvider>
+        <AcceptNoticeSlot />
+        <Panel title="Filters">
+          <NewBusinessFilters
+            params={params}
+            categories={options.categories}
+            cities={options.cities}
+            zips={options.zips}
+            periods={periods}
+          />
         </Panel>
 
-        <Panel title="Imports">
-          <ImportLatestButton />
-          {imports === null ? (
+        <Panel title="Businesses">
+          {!list.ok ? (
             <p className="intel-body text-body" role="alert">
-              Unable to load imports. Try again shortly.
+              Unable to load businesses. Try again shortly.
             </p>
-          ) : imports.length === 0 ? (
+          ) : list.rows.length === 0 ? (
             <p className="intel-body leading-relaxed text-body">
-              Nothing imported yet. The newest list is imported automatically each morning, or use Import latest.
+              No businesses match. Enable categories, then import or re-import a period.
             </p>
           ) : (
-            <ul className="divide-y divide-black/8 intel-body">
-              {imports.map((i) => (
-                <ImportRow
-                  key={periodKey(i.period)}
-                  period={periodKey(i.period)}
-                  label={formatPeriod(i.period)}
-                  state={i.state}
-                  summary={importSummaryLine(i)}
-                  timestamp={formatLocalTimestamp(i.finishedAt ?? i.startedAt)}
-                  error={i.error}
-                />
-              ))}
-            </ul>
+            <>
+              <p className="mb-2 intel-secondary text-meta">{tierCountLine(list.total, tiers)}</p>
+              {list.mode === 'licenses' ? (
+                <p className="mb-2 intel-secondary text-meta">
+                  Businesses are grouped after the next import or re-import. Until then each license is listed on its own.
+                </p>
+              ) : null}
+              {tiers !== null && tiers.unscored > 0 ? (
+                <p className="mb-2 intel-secondary text-meta">Scores appear after the next import or re-import.</p>
+              ) : null}
+              <NewBusinessesTable rows={list.rows} activeDrafts={activeDrafts} contactNotes={contactNotes} />
+              {list.pageCount > 1 ? (
+                <nav aria-label="Business pages" className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 intel-body">
+                  <span className="text-meta">
+                    Page {params.page} of {list.pageCount}
+                  </span>
+                  <div className="flex gap-4">
+                    {params.page > 1 ? (
+                      <Link href={newBusinessesListHref({ ...params, page: params.page - 1 })} className="text-cobalt-primary transition-colors hover:text-[#1E85FF]">
+                        Previous
+                      </Link>
+                    ) : null}
+                    {params.page < list.pageCount ? (
+                      <Link href={newBusinessesListHref({ ...params, page: params.page + 1 })} className="text-cobalt-primary transition-colors hover:text-[#1E85FF]">
+                        Next
+                      </Link>
+                    ) : null}
+                  </div>
+                </nav>
+              ) : null}
+            </>
           )}
         </Panel>
-      </div>
+      </AcceptNoticeProvider>
 
-      <Panel title="Website checks">
-        <WebsiteCheckButton />
-        <CheckRunList runs={checkRuns} />
-      </Panel>
-
-      <Panel title="Filters">
-        <NewBusinessFilters
-          params={params}
-          categories={options.categories}
-          cities={options.cities}
-          zips={options.zips}
-          periods={periods}
-        />
-      </Panel>
-
-      <Panel title="Businesses">
-        {!list.ok ? (
+      {/* Setup and upkeep: below the list, closed until needed. Nothing inside changed. */}
+      <CollapsedSection title="Categories" status={categoriesStatus(categories)}>
+        {categories === null ? (
           <p className="intel-body text-body" role="alert">
-            Unable to load businesses. Try again shortly.
-          </p>
-        ) : list.rows.length === 0 ? (
-          <p className="intel-body leading-relaxed text-body">
-            No businesses match. Enable categories, then import or re-import a period.
+            Unable to load categories. Try again shortly.
           </p>
         ) : (
-          <>
-            <p className="mb-2 intel-secondary text-meta">{tierCountLine(list.total, tiers)}</p>
-            {list.mode === 'licenses' ? (
-              <p className="mb-2 intel-secondary text-meta">
-                Businesses are grouped after the next import or re-import. Until then each license is listed on its own.
-              </p>
-            ) : null}
-            {tiers !== null && tiers.unscored > 0 ? (
-              <p className="mb-2 intel-secondary text-meta">Scores appear after the next import or re-import.</p>
-            ) : null}
-            <NewBusinessesTable rows={list.rows} activeDrafts={activeDrafts} contactNotes={contactNotes} />
-            {list.pageCount > 1 ? (
-              <nav aria-label="Business pages" className="mt-4 flex items-center justify-between gap-4 border-t border-black/8 pt-3 intel-body">
-                <span className="text-meta">
-                  Page {params.page} of {list.pageCount}
-                </span>
-                <div className="flex gap-4">
-                  {params.page > 1 ? (
-                    <Link href={newBusinessesListHref({ ...params, page: params.page - 1 })} className="text-cobalt-primary transition-colors hover:text-[#1E85FF]">
-                      Previous
-                    </Link>
-                  ) : null}
-                  {params.page < list.pageCount ? (
-                    <Link href={newBusinessesListHref({ ...params, page: params.page + 1 })} className="text-cobalt-primary transition-colors hover:text-[#1E85FF]">
-                      Next
-                    </Link>
-                  ) : null}
-                </div>
-              </nav>
-            ) : null}
-          </>
+          <CategoryToggles categories={categories} />
         )}
-      </Panel>
+      </CollapsedSection>
+
+      <CollapsedSection title="Imports" status={importsStatus(imports)}>
+        <ImportLatestButton />
+        {imports === null ? (
+          <p className="intel-body text-body" role="alert">
+            Unable to load imports. Try again shortly.
+          </p>
+        ) : imports.length === 0 ? (
+          <p className="intel-body leading-relaxed text-body">
+            Nothing imported yet. The newest list is imported automatically each morning, or use Import latest.
+          </p>
+        ) : (
+          <ul className="divide-y divide-black/8 intel-body">
+            {imports.map((i) => (
+              <ImportRow
+                key={periodKey(i.period)}
+                period={periodKey(i.period)}
+                label={formatPeriod(i.period)}
+                state={i.state}
+                summary={importSummaryLine(i)}
+                timestamp={formatLocalTimestamp(i.finishedAt ?? i.startedAt)}
+                error={i.error}
+              />
+            ))}
+          </ul>
+        )}
+      </CollapsedSection>
+
+      <CollapsedSection title="Website checks" status={checksStatus(checkRuns)}>
+        <WebsiteCheckButton />
+        <CheckRunList runs={checkRuns} />
+      </CollapsedSection>
     </div>
   )
 }

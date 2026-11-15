@@ -46,6 +46,8 @@ const SETTINGS_COLUMNS = 'sender_name, studio_name, reply_to_email, postal_addre
 
 const UNIQUE_VIOLATION = '23505'
 const SUBJECT_REF_BATCH = 200
+/** Far above the outreach volume one mailbox can send. */
+const SUBJECT_STATES_LIMIT = 5000
 
 const draftRowSchema = z.object({
   id: z.string(),
@@ -305,6 +307,44 @@ export function createOutreachStore(client: SupabaseClient = createSupabaseServi
         out.push(...parseDrafts(data, 'active drafts read'))
       }
       return out
+    },
+
+    async sentFor(subjectType: OutreachSubjectType, subjectRef: string) {
+      const { data, error } = await client
+        .from('outreach_drafts')
+        .select(DRAFT_COLUMNS)
+        .eq('subject_type', subjectType)
+        .eq('subject_ref', subjectRef)
+        .eq('status', 'sent')
+        .order('sent_at', { ascending: false })
+        .limit(SUBJECT_STATES_LIMIT)
+      if (error) throw new OutreachStoreError('sent read')
+      return parseDrafts(data, 'sent read')
+    },
+
+    async listSubjectStates() {
+      const { data, error } = await client
+        .from('outreach_drafts')
+        .select('subject_type, subject_ref, status')
+        .neq('status', 'discarded')
+        .limit(SUBJECT_STATES_LIMIT)
+      if (error) throw new OutreachStoreError('subject states read')
+      const rows = z
+        .array(z.object({ subject_type: z.enum(OUTREACH_SUBJECT_TYPES), subject_ref: z.string(), status: z.enum(OUTREACH_STATUSES) }))
+        .safeParse(data ?? [])
+      if (!rows.success) throw new OutreachStoreError('subject states parse')
+      return rows.data.map((row) => ({ subjectType: row.subject_type, subjectRef: row.subject_ref, status: row.status }))
+    },
+
+    async listSent(limit: number) {
+      const { data, error } = await client
+        .from('outreach_drafts')
+        .select(DRAFT_COLUMNS)
+        .eq('status', 'sent')
+        .order('sent_at', { ascending: false })
+        .limit(limit)
+      if (error) throw new OutreachStoreError('sent list')
+      return parseDrafts(data, 'sent list')
     },
 
     async listSuppressions() {

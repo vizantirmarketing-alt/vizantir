@@ -81,7 +81,7 @@ export function NewBusinessesTable({
                 )}
               </td>
               <td className="py-2.5">
-                <NewBusinessRowControls id={row.id} reviewStatus={row.reviewStatus} ownerNote={row.ownerNote} />
+                <NewBusinessRowControls id={row.id} name={row.name} reviewStatus={row.reviewStatus} ownerNote={row.ownerNote} />
                 {row.reviewStatus === 'accepted' ? (
                   <div className="mt-1.5">
                     <DraftEmailAction

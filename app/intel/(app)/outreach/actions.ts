@@ -10,6 +10,7 @@ import { createDraftDeps, createOutreachStore } from '@/lib/outreach/deps'
 import { writeDraft } from '@/lib/outreach/draft'
 import { disconnect } from '@/lib/outreach/gmail/connect'
 import { createGmailConnectionStore, createSendDeps, readGmailConfig } from '@/lib/outreach/gmail/deps'
+import { OUTREACH_SETTINGS_PATH } from '@/lib/outreach/gmail/flash'
 import { approveAndSend as approveAndSendDraft } from '@/lib/outreach/gmail/send'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
 import {
@@ -45,6 +46,12 @@ function revalidateDraft(draft?: Pick<OutreachDraft, 'id' | 'subjectType' | 'lea
   revalidatePath(`/intel/outreach/${draft.id}`)
   if (draft.subjectType === 'prospect') revalidatePath(`/intel/prospects/${draft.leadId}`)
   else revalidatePath('/intel/new-businesses')
+}
+
+/** The Outreach page and its settings page: settings, the do-not-contact list and the Google connection show on both. */
+function revalidateSettings(): void {
+  revalidatePath('/intel/outreach')
+  revalidatePath(OUTREACH_SETTINGS_PATH)
 }
 
 const writeSchema = z.object({ subjectType: z.enum(OUTREACH_SUBJECT_TYPES), leadId: z.string().refine(isUuid) })
@@ -184,7 +191,7 @@ export async function saveOutreachSettings(input: {
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Check the settings.' }
   try {
     await createOutreachStore().saveSettings(parsed.data, new Date().toISOString())
-    revalidatePath('/intel/outreach')
+    revalidateSettings()
     return { ok: true }
   } catch {
     console.error('Outreach settings save failed')
@@ -201,7 +208,7 @@ export async function addOutreachSuppression(email: string, wholeDomain: boolean
   try {
     const result = await addSuppressionByHand(createOutreachStore(), parsed.data, new Date().toISOString())
     if (!result.ok) return { ok: false, error: result.error }
-    revalidatePath('/intel/outreach')
+    revalidateSettings()
     return { ok: true, message: result.outcome === 'exists' ? 'Already on the list.' : 'Added.' }
   } catch {
     console.error('Outreach suppression add failed')
@@ -216,7 +223,7 @@ export async function removeOutreachSuppression(id: string, confirmed: boolean):
   try {
     const result = await removeSuppression(createOutreachStore(), id, confirmed)
     if (!result.ok) return result
-    revalidatePath('/intel/outreach')
+    revalidateSettings()
     return { ok: true }
   } catch {
     console.error('Outreach suppression remove failed')
@@ -227,13 +234,16 @@ export async function removeOutreachSuppression(id: string, confirmed: boolean):
 /**
  * Approves (if it still needs review) and sends one draft through the
  * connected Google mailbox. One email per call; never called by cron or the
- * runner. Every check runs here, on the server.
+ * runner. Every check runs here, on the server. anotherEmail is the owner's
+ * "Send another email to this business", required when the business already
+ * has a sent email.
  */
-export async function approveAndSend(draftId: string): Promise<OutreachActionResult> {
+export async function approveAndSend(draftId: string, options?: { anotherEmail?: boolean }): Promise<OutreachActionResult> {
   await requireIntelUser()
   if (!isUuid(draftId)) return { ok: false, error: 'Draft not found.' }
+  const anotherEmail = options !== null && typeof options === 'object' && options.anotherEmail === true
   try {
-    const result = await approveAndSendDraft(createSendDeps(), draftId)
+    const result = await approveAndSendDraft(createSendDeps(), draftId, { anotherEmail })
     if (result.ok) {
       revalidateDraft(result.draft)
       return { ok: true }
@@ -254,7 +264,7 @@ export async function disconnectGoogle(): Promise<OutreachActionResult & { messa
   await requireIntelUser()
   try {
     const { revoked } = await disconnect({ config: readGmailConfig(), connections: createGmailConnectionStore(), fetch: (input, init) => fetch(input, init) })
-    revalidatePath('/intel/outreach')
+    revalidateSettings()
     return {
       ok: true,
       message: revoked

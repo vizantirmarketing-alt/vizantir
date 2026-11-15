@@ -4,6 +4,9 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { reviewAndQueueContact } from '@/lib/outreach/accept'
+import { queueLeadContactCheck } from '@/lib/outreach/contacts/runs'
+import { createContactStore } from '@/lib/outreach/contacts/store'
 import { measureProspectById } from '@/lib/prospects/measure'
 import { createMeasureDeps } from '@/lib/prospects/measure-deps'
 import {
@@ -144,27 +147,42 @@ export async function updateProspectReview(
 
   try {
     const supabase = createSupabaseServiceRole()
-    const now = new Date().toISOString()
-    const { data, error } = await supabase
-      .from('prospects')
-      .update({
-        review_status: parsed.data.reviewStatus,
-        reviewed_at: parsed.data.reviewStatus === 'unreviewed' ? null : now,
-        updated_at: now,
-      })
-      .eq('id', parsed.data.prospectId)
-      .select('id')
-      .maybeSingle()
+    const at = new Date()
+    const now = at.toISOString()
+    const outcome = await reviewAndQueueContact(
+      parsed.data.reviewStatus,
+      async () => {
+        const { data, error } = await supabase
+          .from('prospects')
+          .update({
+            review_status: parsed.data.reviewStatus,
+            reviewed_at: parsed.data.reviewStatus === 'unreviewed' ? null : now,
+            updated_at: now,
+          })
+          .eq('id', parsed.data.prospectId)
+          .select('id')
+          .maybeSingle()
 
-    if (error) {
-      console.error('Prospect review update failed')
-      return { ok: false, error: GENERIC_ERROR }
-    }
-    if (data === null) {
-      return { ok: false, error: 'Prospect not found.' }
+        if (error) {
+          console.error('Prospect review update failed')
+          return { ok: false, error: GENERIC_ERROR }
+        }
+        if (data === null) {
+          return { ok: false, error: 'Prospect not found.' }
+        }
+        return { ok: true }
+      },
+      // The contact lookup for the accepted prospect, through the single-lead queue.
+      () => queueLeadContactCheck(createContactStore(), { subjectType: 'prospect', leadId: parsed.data.prospectId }, at),
+    )
+    if (!outcome.ok) {
+      return outcome
     }
 
     revalidateProspects(parsed.data.prospectId)
+    if (parsed.data.reviewStatus === 'accepted') {
+      revalidatePath('/intel/outreach')
+    }
     return { ok: true }
   } catch {
     console.error('Prospect review update failed')

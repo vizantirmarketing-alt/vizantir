@@ -58,9 +58,3 @@ export function contactNote(contact: ContactSnapshot | null, suppressed = false)
   if (contact.status === null || contact.status === 'found') return { text: 'Not checked for a contact address yet.', link: null, tone: 'normal' }
   return { text: CONTACT_STATUS_TEXT[contact.status], link: null, tone: 'normal' }
 }
-
-/** "4 of 12 accepted leads have a contact address · 3 waiting to be checked". */
-export function contactSummaryLine(summary: { accepted: number; withAddress: number; waiting: number }): string {
-  const leads = summary.accepted === 1 ? 'accepted lead has' : 'accepted leads have'
-  return `${summary.withAddress} of ${summary.accepted} ${leads} a contact address · ${summary.waiting} waiting to be checked`
-}

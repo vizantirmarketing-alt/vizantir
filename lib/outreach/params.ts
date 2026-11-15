@@ -94,7 +94,7 @@ export const SETTINGS_TEXT_MAX = 120
 export const SETTINGS_ADDRESS_MAX = 400
 
 /** The fixed last line of every footer. Appended by code, never by the model. */
-export const OPT_OUT_LINE = "If you'd rather not hear from me again, reply and say so, and I won't write again."
+export const OPT_OUT_LINE = "If you'd rather not hear from me again, just reply and let me know. I won't write again."
 
 // One address, no display name, no comments. Dots may not lead, trail or repeat.
 const LOCAL_PART = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*$/

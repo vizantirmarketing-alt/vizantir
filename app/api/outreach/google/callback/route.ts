@@ -7,7 +7,7 @@ import { NOT_SET_UP } from '@/lib/outreach/gmail/connect'
 import { OAUTH_COOKIE, OAUTH_COOKIE_PATH, redirectUriFor } from '@/lib/outreach/gmail/oauth'
 import { createOutreachStore } from '@/lib/outreach/store'
 
-import { backToOutreach } from '../redirect'
+import { backToSettings } from '../redirect'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   const cookie = (await cookies()).get(OAUTH_COOKIE)?.value
 
   const finish = (ok: boolean, message: string) => {
-    const response = backToOutreach(origin, { ok, message })
+    const response = backToSettings(origin, { ok, message })
     response.cookies.set(OAUTH_COOKIE, '', { httpOnly: true, secure: true, sameSite: 'lax', path: OAUTH_COOKIE_PATH, maxAge: 0 })
     return response
   }

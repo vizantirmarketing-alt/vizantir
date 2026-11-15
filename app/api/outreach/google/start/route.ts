@@ -4,7 +4,7 @@ import { readGmailConfig } from '@/lib/outreach/gmail/deps'
 import { OAUTH_COOKIE, OAUTH_COOKIE_MAX_AGE, OAUTH_COOKIE_PATH } from '@/lib/outreach/gmail/oauth'
 import { createOutreachStore } from '@/lib/outreach/store'
 
-import { backToOutreach, redirectUncached } from '../redirect'
+import { backToSettings, redirectUncached } from '../redirect'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,11 +18,11 @@ export async function GET(request: Request) {
     replyTo = (await createOutreachStore().getSettings())?.replyToEmail ?? ''
   } catch {
     console.error('Outreach Google start: settings read failed')
-    return backToOutreach(origin, { ok: false, message: 'Unable to read Outreach settings. Try again shortly.' })
+    return backToSettings(origin, { ok: false, message: 'Unable to read Outreach settings. Try again shortly.' })
   }
 
   const started = startConnection(readGmailConfig(), origin, replyTo)
-  if (!started.ok) return backToOutreach(origin, { ok: false, message: started.message })
+  if (!started.ok) return backToSettings(origin, { ok: false, message: started.message })
 
   const response = redirectUncached(started.url)
   response.cookies.set(OAUTH_COOKIE, started.cookie, {

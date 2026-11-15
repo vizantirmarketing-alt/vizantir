@@ -116,6 +116,7 @@ export default async function IntelProspectDetailPage({
       <Panel title="Review">
         <ProspectReviewControls
           prospectId={prospect.id}
+          name={prospect.name}
           reviewStatus={prospect.reviewStatus}
           ownerNote={prospect.ownerNote}
         />

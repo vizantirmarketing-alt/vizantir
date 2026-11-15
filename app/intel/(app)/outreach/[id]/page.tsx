@@ -15,14 +15,14 @@ import { localDayStartIso } from '@/lib/outreach/dates'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { createGmailConnectionStore, readGmailConfig } from '@/lib/outreach/gmail/deps'
 import { connectionView } from '@/lib/outreach/gmail/view'
-import { loadContactNote } from '@/lib/outreach/contacts/load'
+import { loadDraftContact } from '@/lib/outreach/contacts/load'
 import { isStaleSending } from '@/lib/outreach/lifecycle'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
 import { leadHref } from '@/lib/outreach/links'
 import { OUTREACH_DAILY_SEND_LIMIT, OUTREACH_SUBJECT_LABELS, normalizeEmail } from '@/lib/outreach/params'
 import type { GmailConnection, OutreachDraft, OutreachSettings } from '@/lib/outreach/types'
 import { voiceWarnings, voiceContextFor } from '@/lib/outreach/voice'
-import { isUuid } from '@/lib/prospects/params'
+import { formatShortDate, isUuid } from '@/lib/prospects/params'
 
 export const dynamic = 'force-dynamic'
 // Draft again makes the one model call through a server action on this
@@ -60,6 +60,15 @@ async function reviewFor(draft: OutreachDraft, studioName: string): Promise<{ ba
   if (!loaded.ok) return null
   const context = voiceContextFor(buildOutreachContext(loaded.lead), studioName)
   return { basis: outreachBasis(loaded.lead), warnings: voiceWarnings({ subject: draft.subject, body: draft.body }, context) }
+}
+
+/** The business's sent emails. A failed read shows none, and the send itself checks again on the server. */
+async function sentFor(draft: OutreachDraft): Promise<OutreachDraft[]> {
+  try {
+    return await createOutreachStore().sentFor(draft.subjectType, draft.subjectRef)
+  } catch {
+    return []
+  }
 }
 
 function history(draft: OutreachDraft): string {
@@ -100,10 +109,15 @@ export default async function OutreachDraftPage({ params }: PageProps) {
     )
   }
   if (draft === null) notFound()
-  const [review, contactNote] = await Promise.all([
+  const [review, contact, sentToBusiness] = await Promise.all([
     reviewFor(draft, settings?.studioName ?? ''),
-    draft.status === 'discarded' ? Promise.resolve(null) : loadContactNote(draft.subjectType, draft.subjectRef),
+    draft.status === 'discarded' ? Promise.resolve(null) : loadDraftContact(draft.subjectType, draft.subjectRef),
+    sentFor(draft),
   ])
+  // Every other email sent to this business, newest first.
+  const otherSent = sentToBusiness.filter((row) => row.id !== draft.id)
+  const alreadyEmailedOn =
+    otherSent.length > 0 && draft.status !== 'sent' && draft.status !== 'discarded' ? formatShortDate(otherSent[0]!.sentAt) : null
   const view = connectionView(readGmailConfig(), connection, settings?.replyToEmail ?? null)
   // Emails go out as the reply-to address, which may be an alias of the connected account.
   const sendAs = settings?.replyToEmail ? normalizeEmail(settings.replyToEmail) : view.state === 'connected' ? view.email : ''
@@ -145,9 +159,26 @@ export default async function OutreachDraftPage({ params }: PageProps) {
           replyToEmail={settings?.replyToEmail || null}
           sending={sending}
           staleSending={staleSending}
-          contactNote={contactNote}
+          contactNote={contact?.note ?? null}
+          foundEmail={contact?.foundEmail ?? null}
+          alreadyEmailedOn={alreadyEmailedOn}
         />
       </Panel>
+
+      {otherSent.length > 0 ? (
+        <Panel title={`Other emails to this business · ${otherSent.length}`}>
+          <ul className="divide-y divide-black/8">
+            {otherSent.map((row) => (
+              <li key={row.id} className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2 first:pt-0 last:pb-0">
+                <Link href={`/intel/outreach/${row.id}`} className="min-w-0 truncate intel-body text-cobalt-text underline-offset-2 hover:underline">
+                  {row.subject}
+                </Link>
+                <span className="whitespace-nowrap intel-secondary text-meta">Sent {formatShortDate(row.sentAt)}</span>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      ) : null}
     </div>
   )
 }

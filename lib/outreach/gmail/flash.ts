@@ -1,14 +1,24 @@
 /**
  * The one-time result of a Google connection attempt, carried from the
- * callback route to the Outreach page in a short-lived httpOnly cookie, so no
- * message or address goes in the URL. Pure.
+ * callback route to the Outreach settings page in a short-lived httpOnly
+ * cookie, so no message or address goes in the URL. Pure.
  */
+
+/** Where the start and callback routes send the owner back to. */
+export const OUTREACH_SETTINGS_PATH = '/intel/outreach/settings'
 
 export const RESULT_COOKIE = 'outreach_google_result'
 export const RESULT_COOKIE_PATH = '/intel/outreach'
 export const RESULT_COOKIE_MAX_AGE = 60
 /** The query flag that tells the page to show the result once. */
 export const RESULT_PARAM = 'google'
+
+/** The settings page, flagged to show the result once. */
+export function settingsResultUrl(origin: string): URL {
+  const url = new URL(OUTREACH_SETTINGS_PATH, origin)
+  url.searchParams.set(RESULT_PARAM, '1')
+  return url
+}
 
 export type ConnectionNotice = { ok: boolean; message: string }
 

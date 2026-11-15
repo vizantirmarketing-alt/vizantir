@@ -144,7 +144,7 @@ describe('the multipart message', () => {
   const LONG =
     'I was looking at your site and noticed that the management services page has no contact form or booking option. ' +
     'Its only call to action is a phone number in the footer, which is easy to miss on a phone and gives no way to ask a question after hours.'
-  const OPT_OUT = "If you'd rather not hear from me again, reply and say so, and I won't write again."
+  const OPT_OUT = "If you'd rather not hear from me again, just reply and let me know. I won't write again."
   const FOOTER = `James\nVizantir Design Studio\n100 Example Plaza, Suite 2\n\n${OPT_OUT}`
   const BODY = `Hello Zoë,\n\n${LONG}\n\nThe café menu page loads quickly, and the façade photos on vizantir.com look great. 🌵\n\nWould a short call next week help?`
   const built = buildRawMessage({ ...INPUT, text: messageText(BODY, FOOTER) })

@@ -1,24 +1,31 @@
 import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
 
-import { GoogleConnection } from '@/app/intel/_components/outreach/GoogleConnection'
-import { OutreachSettingsForm } from '@/app/intel/_components/outreach/OutreachSettingsForm'
-import { SuppressionList } from '@/app/intel/_components/outreach/SuppressionList'
+import { AcceptedLeads } from '@/app/intel/_components/outreach/AcceptedLeads'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { WebsiteCheckRunChip } from '@/app/intel/_components/ui/StatusChip'
 import { requireIntelUser } from '@/lib/auth/allowlist'
-import { loadContactSummary, type ContactSummary } from '@/lib/outreach/contacts/load'
-import { contactSummaryLine } from '@/lib/outreach/contacts/view'
+import { loadLatestContactRun, loadWorklistContacts } from '@/lib/outreach/contacts/load'
+import type { ContactRunRow } from '@/lib/outreach/contacts/store'
 import { localDayStartIso } from '@/lib/outreach/dates'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { createGmailConnectionStore, readGmailConfig } from '@/lib/outreach/gmail/deps'
-import { RESULT_COOKIE, RESULT_PARAM, decodeNotice, type ConnectionNotice } from '@/lib/outreach/gmail/flash'
+import { OUTREACH_SETTINGS_PATH } from '@/lib/outreach/gmail/flash'
 import { connectionView, type ConnectionView } from '@/lib/outreach/gmail/view'
 import { leadHref } from '@/lib/outreach/links'
 import { OUTREACH_DAILY_SEND_LIMIT, OUTREACH_SUBJECT_LABELS, SENT_PER_DAY_NOTE, type OutreachStatus } from '@/lib/outreach/params'
-import { missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
-import type { OutreachDraft, OutreachSettings, Suppression } from '@/lib/outreach/types'
+import type { OutreachDraft, OutreachSettings, SubjectState, Suppression } from '@/lib/outreach/types'
+import {
+  acceptedLeadRows,
+  contactCounts,
+  contactSummaryLine,
+  groupSent,
+  setupNotice,
+  type ContactCounts,
+  type SentGroup,
+  type WorklistContactInput,
+  type WorklistRow,
+} from '@/lib/outreach/worklist'
 import { formatShortDate } from '@/lib/prospects/params'
 
 export const dynamic = 'force-dynamic'
@@ -29,12 +36,15 @@ export const metadata: Metadata = {
 }
 
 const DRAFTS_LIMIT = 300
+const SENT_LIMIT = 2000
 
 type Loaded =
   | {
       ok: true
       settings: OutreachSettings | null
       drafts: OutreachDraft[]
+      sent: OutreachDraft[]
+      states: SubjectState[]
       suppressions: Suppression[]
       sentToday: number
       gmailSentToday: number
@@ -46,15 +56,17 @@ async function load(): Promise<Loaded> {
   try {
     const store = createOutreachStore()
     const dayStart = localDayStartIso(new Date())
-    const [settings, drafts, suppressions, sentToday, gmailSentToday, connection] = await Promise.all([
+    const [settings, drafts, sent, states, suppressions, sentToday, gmailSentToday, connection] = await Promise.all([
       store.getSettings(),
       store.listDrafts(DRAFTS_LIMIT),
+      store.listSent(SENT_LIMIT),
+      store.listSubjectStates(),
       store.listSuppressions(),
       store.countSentSince(dayStart),
       store.countGmailSentSince(dayStart),
       createGmailConnectionStore().get(),
     ])
-    return { ok: true, settings, drafts, suppressions, sentToday, gmailSentToday, connection: connectionView(readGmailConfig(), connection, settings?.replyToEmail ?? null) }
+    return { ok: true, settings, drafts, sent, states, suppressions, sentToday, gmailSentToday, connection: connectionView(readGmailConfig(), connection, settings?.replyToEmail ?? null) }
   } catch {
     console.error('Outreach page load failed')
     return { ok: false }
@@ -68,17 +80,10 @@ const GROUPS: Group[] = [
   { statuses: ['approved'], title: 'Approved', empty: 'No approved emails waiting to be sent.', dateLabel: 'Approved' },
   // A send in flight, or one whose delivery Google did not confirm.
   { statuses: ['sending', 'send_unconfirmed'], title: 'Not confirmed', empty: '', dateLabel: 'Updated', hideWhenEmpty: true },
-  { statuses: ['sent'], title: 'Sent', empty: 'No emails sent yet.', dateLabel: 'Sent' },
 ]
 
-/** The connection result, shown once after Google sends the owner back. */
-async function connectionNotice(searchParams: Promise<Record<string, string | string[] | undefined>>): Promise<ConnectionNotice | null> {
-  if ((await searchParams)[RESULT_PARAM] !== '1') return null
-  return decodeNotice((await cookies()).get(RESULT_COOKIE)?.value)
-}
-
 function groupDate(draft: OutreachDraft, status: OutreachStatus): string {
-  const iso = status === 'approved' ? draft.approvedAt : status === 'sent' ? draft.sentAt : draft.updatedAt
+  const iso = status === 'approved' ? draft.approvedAt : draft.updatedAt
   return formatShortDate(iso)
 }
 
@@ -116,32 +121,114 @@ function DraftList({ drafts, status, empty, dateLabel }: { drafts: OutreachDraft
   )
 }
 
+/** One line per business: its latest email, the date it went out, and how many there are. */
+function SentList({ groups }: { groups: SentGroup[] }) {
+  if (groups.length === 0) return <p className="intel-body text-body">No emails sent yet.</p>
+  return (
+    <ul className="divide-y divide-black/8">
+      {groups.map((group) => (
+        <li
+          key={`${group.subjectType}:${group.subjectRef}`}
+          className="grid min-w-0 gap-x-4 gap-y-0.5 py-2.5 first:pt-0 last:pb-0 @min-[44rem]:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_auto]"
+        >
+          <div className="min-w-0">
+            <Link
+              href={leadHref(group)}
+              className="intel-body font-medium text-foreground transition-colors hover:text-cobalt-primary [overflow-wrap:anywhere]"
+            >
+              {group.leadName}
+            </Link>
+            <p className="intel-secondary text-meta">{OUTREACH_SUBJECT_LABELS[group.subjectType]}</p>
+          </div>
+          <div className="min-w-0">
+            <Link
+              href={`/intel/outreach/${group.latestId}`}
+              className="block truncate intel-body text-cobalt-text underline-offset-2 hover:underline"
+            >
+              {group.latestSubject}
+            </Link>
+            {group.count > 1 ? <p className="intel-secondary text-meta">{group.count} emails</p> : null}
+          </div>
+          <p className="whitespace-nowrap intel-secondary text-meta">Sent {formatShortDate(group.latestSentAt)}</p>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 /** Accepted leads with a contact address, how many wait to be checked, and the latest contact run. */
-function ContactLine({ summary }: { summary: ContactSummary | null }) {
-  if (summary === null) {
+function ContactLine({ counts, latestRun }: { counts: ContactCounts | null; latestRun: ContactRunRow | null }) {
+  if (counts === null) {
     return <p className="mt-1 intel-secondary text-meta">Contact addresses are not available yet. Migration 0034 may not be applied.</p>
   }
   return (
     <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-      <p className="intel-secondary text-meta">{contactSummaryLine(summary)}</p>
-      {summary.latestRun !== null ? <WebsiteCheckRunChip state={summary.latestRun.state} /> : null}
+      <p className="intel-secondary text-meta">{contactSummaryLine(counts)}</p>
+      {latestRun !== null ? (
+        <span className="inline-flex items-center gap-2">
+          <span className="intel-secondary text-meta">Last check:</span>
+          <WebsiteCheckRunChip state={latestRun.state} />
+        </span>
+      ) : null}
     </div>
   )
 }
 
-export default async function OutreachPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+export default async function OutreachPage() {
   await requireIntelUser()
-  const [data, notice, contacts] = await Promise.all([load(), connectionNotice(searchParams), loadContactSummary()])
+  const [data, latest, worklist] = await Promise.all([load(), loadLatestContactRun(), loadWorklistContacts()])
+
+  const notice = data.ok ? setupNotice(data.settings, data.connection) : null
+  const contactInputs: WorklistContactInput[] | null =
+    worklist?.contacts?.map((contact) => ({
+      subjectType: contact.subjectType,
+      subjectRef: contact.subjectRef,
+      status: contact.status,
+      email: contact.email,
+      waiting: contact.heldByRunId !== null,
+    })) ?? null
+  const leadRows: WorklistRow[] | null =
+    data.ok && worklist !== null
+      ? acceptedLeadRows({
+          leads: worklist.leads,
+          states: data.states,
+          contacts: contactInputs,
+          suppressions: data.suppressions,
+          generalRunQueued: worklist.generalRunQueued,
+        })
+      : null
+  // The same states as the list, over every accepted lead. null when contact addresses cannot be read.
+  const counts =
+    worklist !== null && contactInputs !== null && latest !== null
+      ? contactCounts({ leads: worklist.leads, contacts: contactInputs, generalRunQueued: worklist.generalRunQueued })
+      : null
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <div className="min-w-0">
-        <h1 className="intel-title text-foreground">Outreach</h1>
-        <p className="mt-1 intel-secondary text-meta">
-          First-contact emails for accepted leads. Approve a draft, then send it from the dashboard when Google is connected,
-          or from your own mail app and mark it as sent. Nothing is sent without your click.
-        </p>
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-x-6 gap-y-2">
+        <div className="min-w-0">
+          <h1 className="intel-title text-foreground">Outreach</h1>
+          <p className="mt-1 intel-secondary text-meta">
+            First-contact emails for accepted leads. Draft one, approve it, then send it from the dashboard when Google is
+            connected, or from your own mail app and mark it as sent. Nothing is sent without your click.
+          </p>
+        </div>
+        <Link
+          href={OUTREACH_SETTINGS_PATH}
+          className="-mx-1 shrink-0 rounded px-1 intel-body font-medium text-cobalt-text underline-offset-2 transition-colors hover:bg-cobalt-soft hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt-focus"
+        >
+          Outreach settings
+        </Link>
       </div>
+
+      {notice !== null ? (
+        <p className="intel-body text-warning-severe" role="status">
+          {notice}{' '}
+          <Link href={OUTREACH_SETTINGS_PATH} className="font-medium underline underline-offset-2">
+            Open Outreach settings
+          </Link>
+        </p>
+      ) : null}
 
       {!data.ok ? (
         <Panel>
@@ -167,10 +254,17 @@ export default async function OutreachPage({ searchParams }: { searchParams: Pro
                 flagged as spam, so it may be worth spreading the rest over the week.
               </p>
             ) : null}
-            <ContactLine summary={contacts} />
-            {missingSettings(data.settings).length > 0 ? (
-              <p className="mt-1 intel-secondary text-warning-severe">{missingSettingsMessage(missingSettings(data.settings))}</p>
-            ) : null}
+            <ContactLine counts={counts} latestRun={latest?.latestRun ?? null} />
+          </Panel>
+
+          <Panel title={leadRows === null ? 'Accepted leads' : `Accepted leads · ${leadRows.length}`}>
+            {leadRows === null ? (
+              <p className="intel-body text-body" role="alert">
+                Unable to load accepted leads. Try again shortly.
+              </p>
+            ) : (
+              <AcceptedLeads rows={leadRows} />
+            )}
           </Panel>
 
           {GROUPS.map((group) => {
@@ -185,21 +279,20 @@ export default async function OutreachPage({ searchParams }: { searchParams: Pro
             )
           })}
 
-          <div className="grid min-w-0 gap-4 xl:grid-cols-2 [&>*]:min-w-0">
-            <Panel title="Settings">
-              <div className="@container">
-                <OutreachSettingsForm settings={data.settings} />
-              </div>
-            </Panel>
-            <Panel title="Do not contact">
-              <SuppressionList entries={data.suppressions} />
-            </Panel>
-            <Panel title="Direct sending">
-              <GoogleConnection view={data.connection} notice={notice} />
-            </Panel>
-          </div>
+          <SentPanel sent={data.sent} />
         </>
       )}
     </div>
+  )
+}
+
+function SentPanel({ sent }: { sent: OutreachDraft[] }) {
+  const groups = groupSent(sent)
+  return (
+    <Panel title={`Sent · ${groups.length}`}>
+      <div className="@container">
+        <SentList groups={groups} />
+      </div>
+    </Panel>
   )
 }
