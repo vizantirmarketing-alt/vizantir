@@ -9,6 +9,7 @@ import 'server-only'
 
 import { BRIEFING_MODEL, createBriefingModel } from '@/lib/briefing/model'
 import type { DraftDeps } from '@/lib/outreach/draft'
+import { createCallStore } from '@/lib/outreach/calls-store'
 import { createContactStore } from '@/lib/outreach/contacts/store'
 import { createOutreachStore } from '@/lib/outreach/store'
 
@@ -19,6 +20,7 @@ export function createDraftDeps(): DraftDeps {
     modelName: BRIEFING_MODEL,
     now: () => new Date(),
     contacts: createContactStore(),
+    calls: createCallStore(),
   }
 }
 

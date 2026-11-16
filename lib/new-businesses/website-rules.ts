@@ -10,6 +10,13 @@
  * unlisted host can be lowered, to a listing or a mention. Version 1 counted
  * every unlisted host as the business's own domain, which turned news
  * articles and unlisted directories into "has website".
+ *
+ * Version 3 reads where each excerpt came from. A candidate known only from a
+ * search-result summary was never read, so it can never make a business
+ * has_website, placeholder, free_builder or social_only: the most it can
+ * produce is unclear. no_website is decided as before. Results stored before
+ * the field existed have no excerptSource and are read as page evidence, so
+ * re-deriving them gives the same status.
  */
 
 import { z } from 'zod'
@@ -17,13 +24,15 @@ import { z } from 'zod'
 import { classifyHost, type HostKind } from '@/lib/new-businesses/website-hosts'
 import {
   CANDIDATE_KINDS,
+  EXCERPT_SOURCES,
   OUTCOMES_CLAIMED,
+  type ExcerptSource,
   type CheckCandidate,
   type CheckedBusiness,
   type IdentityMatch,
 } from '@/lib/new-businesses/website-schema'
 
-export const WEBSITE_RULES_VERSION = 'website-check-v2'
+export const WEBSITE_RULES_VERSION = 'website-check-v3'
 
 export const WEBSITE_STATUSES = ['no_website', 'social_only', 'placeholder', 'free_builder', 'has_website', 'unclear'] as const
 export type WebsiteStatus = (typeof WEBSITE_STATUSES)[number]
@@ -107,6 +116,8 @@ export type WebsiteEvidence = {
     /** Version 2 and later. */
     class?: CandidateClass | null
     excerpt: string
+    /** Version 3 and later; absent on older results, which are page evidence. */
+    excerptSource?: ExcerptSource
     matched: (keyof IdentityMatch)[]
     accepted: boolean
   }[]
@@ -138,6 +149,10 @@ function matchedFields(match: IdentityMatch): (keyof IdentityMatch)[] {
  *                 accepted candidates are mentions
  *   unclear       anything else
  * Mentions are kept in the evidence but are never the business's website.
+ * Only candidates whose excerpt came from a page that was read can give one
+ * of the first four statuses. An accepted own domain, free builder or listing
+ * known only from a search-result summary makes the result unclear, unless a
+ * read page already decided it.
  */
 export function decideWebsiteStatus(report: CheckedBusiness): WebsiteDecision {
   const assessed = report.candidates.map((candidate) => {
@@ -146,6 +161,9 @@ export function decideWebsiteStatus(report: CheckedBusiness): WebsiteDecision {
     return { candidate, hostKind, cls, accepted: cls !== null && identityAccepted(candidate.identity_match) }
   })
   const accepted = assessed.filter((item) => item.accepted)
+  // Read from a page: may decide a positive status. Summary only: at most unclear.
+  const fromPages = accepted.filter((item) => item.candidate.excerpt_source !== 'search_summary')
+  const summaryPresence = accepted.some((item) => item.candidate.excerpt_source === 'search_summary' && item.cls !== 'mention')
 
   const evidence: WebsiteEvidence = {
     searches: report.searches.map((search) => search.trim()),
@@ -155,6 +173,7 @@ export function decideWebsiteStatus(report: CheckedBusiness): WebsiteDecision {
       hostKind,
       class: cls,
       excerpt: candidate.excerpt.trim(),
+      excerptSource: candidate.excerpt_source,
       matched: matchedFields(candidate.identity_match),
       accepted: ok,
     })),
@@ -168,7 +187,7 @@ export function decideWebsiteStatus(report: CheckedBusiness): WebsiteDecision {
     evidence,
     rulesVersion: WEBSITE_RULES_VERSION,
   })
-  const first = (cls: CandidateClass) => accepted.find((item) => item.cls === cls)?.candidate.url.trim()
+  const first = (cls: CandidateClass) => fromPages.find((item) => item.cls === cls)?.candidate.url.trim()
 
   const own = first('own_domain')
   if (own !== undefined) return decide(report.placeholder ? 'placeholder' : 'has_website', own)
@@ -176,6 +195,8 @@ export function decideWebsiteStatus(report: CheckedBusiness): WebsiteDecision {
   if (builder !== undefined) return decide('free_builder', builder)
   const listing = first('listing')
   if (listing !== undefined) return decide('social_only', listing)
+  // A web presence seen only in a search-result summary was never read.
+  if (summaryPresence) return decide('unclear', null)
 
   // Nothing accepted is a web presence of the business: no candidates, or mentions only.
   const enoughSearches = distinctSearchCount(report.searches) >= NO_WEBSITE_MIN_SEARCHES
@@ -201,6 +222,8 @@ const storedEvidenceSchema = z.object({
       url: z.string(),
       kindClaimed: z.enum(CANDIDATE_KINDS),
       excerpt: z.string(),
+      // Absent before version 3: those excerpts are page evidence.
+      excerptSource: z.enum(EXCERPT_SOURCES).optional(),
       matched: z.array(z.enum(IDENTITY_KEYS)),
     }),
   ),
@@ -225,6 +248,7 @@ export function reportFromStoredEvidence(id: string, evidence: unknown): Checked
       url: c.url,
       kind_claimed: c.kindClaimed,
       excerpt: c.excerpt,
+      excerpt_source: c.excerptSource ?? 'page',
       identity_match: Object.fromEntries(IDENTITY_KEYS.map((key) => [key, c.matched.includes(key)])) as IdentityMatch,
     })),
     placeholder: e.placeholder,

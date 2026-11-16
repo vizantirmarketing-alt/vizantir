@@ -15,8 +15,14 @@ import { connectionView, type ConnectionView } from '@/lib/outreach/gmail/view'
 import { leadHref } from '@/lib/outreach/links'
 import { OUTREACH_DAILY_SEND_LIMIT, OUTREACH_SUBJECT_LABELS, SENT_PER_DAY_NOTE, type OutreachStatus } from '@/lib/outreach/params'
 import type { OutreachDraft, OutreachSettings, SubjectState, Suppression } from '@/lib/outreach/types'
+import { CollapsedSection } from '@/app/intel/_components/ui/CollapsedSection'
+import { loadCallSummaries } from '@/lib/outreach/calls-store'
+import { loadLeadFacts } from '@/lib/outreach/lead-facts'
 import {
   acceptedLeadRows,
+  closedLeadRows,
+  type ClosedRow,
+  type WorklistLeadInput,
   contactCounts,
   contactSummaryLine,
   groupSent,
@@ -176,7 +182,21 @@ function ContactLine({ counts, latestRun }: { counts: ContactCounts | null; late
 
 export default async function OutreachPage() {
   await requireIntelUser()
-  const [data, latest, worklist] = await Promise.all([load(), loadLatestContactRun(), loadWorklistContacts()])
+  const [data, latest, worklist, facts, calls] = await Promise.all([
+    load(),
+    loadLatestContactRun(),
+    loadWorklistContacts(),
+    loadLeadFacts(),
+    loadCallSummaries(),
+  ])
+  // Each accepted lead with its phone and whether it has a specific finding.
+  const leads: WorklistLeadInput[] | null =
+    worklist !== null && facts !== null
+      ? worklist.leads.map((lead) => {
+          const fact = facts.get(`${lead.subjectType}:${lead.subjectRef}`)
+          return { ...lead, phone: fact?.phone ?? null, hasFinding: fact?.hasFinding ?? false }
+        })
+      : null
 
   const notice = data.ok ? setupNotice(data.settings, data.connection) : null
   const contactInputs: WorklistContactInput[] | null =
@@ -188,15 +208,17 @@ export default async function OutreachPage() {
       waiting: contact.heldByRunId !== null,
     })) ?? null
   const leadRows: WorklistRow[] | null =
-    data.ok && worklist !== null
+    data.ok && worklist !== null && leads !== null
       ? acceptedLeadRows({
-          leads: worklist.leads,
+          leads,
           states: data.states,
           contacts: contactInputs,
           suppressions: data.suppressions,
           generalRunQueued: worklist.generalRunQueued,
+          calls,
         })
       : null
+  const closedRows = leads !== null ? closedLeadRows(leads, calls) : []
   // The same states as the list, over every accepted lead. null when contact addresses cannot be read.
   const counts =
     worklist !== null && contactInputs !== null && latest !== null
@@ -280,9 +302,36 @@ export default async function OutreachPage() {
           })}
 
           <SentPanel sent={data.sent} />
+
+          {closedRows.length > 0 ? (
+            <CollapsedSection title="Closed" status={closedRows.length === 1 ? '1 lead closed after a call' : `${closedRows.length} leads closed after a call`}>
+              <ClosedList rows={closedRows} />
+            </CollapsedSection>
+          ) : null}
         </>
       )}
     </div>
+  )
+}
+
+/** Leads a call closed, with the reason. */
+function ClosedList({ rows }: { rows: ClosedRow[] }) {
+  return (
+    <ul className="divide-y divide-black/8">
+      {rows.map((row) => (
+        <li key={`${row.subjectType}:${row.subjectRef}`} className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2 first:pt-0 last:pb-0">
+          <div className="min-w-0">
+            <Link href={leadHref(row)} className="intel-body font-medium text-foreground transition-colors hover:text-cobalt-primary [overflow-wrap:anywhere]">
+              {row.name}
+            </Link>
+            <p className="intel-secondary text-meta">{OUTREACH_SUBJECT_LABELS[row.subjectType]}</p>
+          </div>
+          <p className="intel-secondary text-meta">
+            {row.reason}, {formatShortDate(row.closedAt)}
+          </p>
+        </li>
+      ))}
+    </ul>
   )
 }
 

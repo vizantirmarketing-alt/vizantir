@@ -7,11 +7,16 @@
  * fields named here are copied out, so nothing else can reach the model.
  *
  *   prospect      company name, domain, market, industry, up to three of its
- *                 strongest stored evidence claims with their factor labels,
+ *                 strongest stored observations with their factor labels,
  *                 and the measured mobile performance if present
- *   new business  business name, plain business type, city, license period,
- *                 and the website check status in words
+ *   new business  business name, plain business type, city, and the website
+ *                 check status in words. The license record decides which
+ *                 businesses are listed; it is never part of the context,
+ *                 because a license record does not mean a business is new.
  *   both          the fixed studio description (STUDIO_DESCRIPTION)
+ *
+ * hasSpecificFinding() decides, in one place, whether a lead has anything
+ * specific to write about. A lead without one is never sent to the model.
  *
  * outreachBasis() makes the same selection for the draft page's "Written
  * from" panel, adding each item's source link for the owner. Source links
@@ -23,7 +28,7 @@
  * company's own is dropped here rather than passed on.
  */
 
-import { formatPeriod, type Period } from '@/lib/new-businesses/discovery'
+import type { Period } from '@/lib/new-businesses/discovery'
 import { categoryShortName } from '@/lib/new-businesses/category-tiers'
 import { leadingCategory } from '@/lib/new-businesses/rank'
 import type { WebsiteStatus } from '@/lib/new-businesses/website-rules'
@@ -39,7 +44,7 @@ import {
   isProspectFactor,
   type FactorRatings,
 } from '@/lib/prospects/rubric'
-import { STUDIO_DESCRIPTION, type OutreachSubjectType } from '@/lib/outreach/params'
+import { NO_FINDING_TEXT, STUDIO_DESCRIPTION, type OutreachSubjectType } from '@/lib/outreach/params'
 
 export const MAX_CONTEXT_CLAIMS = 3
 const CLAIM_MAX_CHARS = 400
@@ -100,7 +105,6 @@ export type NewBusinessContext = {
   business: string
   businessType: string
   city: string | null
-  licensed: string
   websiteCheck: string
   studioDescription: string
 }
@@ -161,7 +165,8 @@ function selectClaims(
 ): SelectedClaim[] {
   const ranked = evidence
     .map((item, index) => ({ item, index }))
-    .filter(({ item }) => item.factorKey !== PERFORMANCE_FACTOR && isProspectFactor(item.factorKey))
+    // Observations only: what was seen on the company's pages, never an inference from it.
+    .filter(({ item }) => item.kind === 'observation' && item.factorKey !== PERFORMANCE_FACTOR && isProspectFactor(item.factorKey))
     .filter(({ item }) => claimIsSafe(item.claim, domain))
     .map(({ item, index }) => {
       const key = item.factorKey as keyof typeof FACTOR_DEFINITIONS
@@ -206,13 +211,35 @@ function mobileMeasurement(evidence: ProspectLead['evidence']): { summary: strin
 /** What the website check found, in words that never overstate it. */
 export const WEBSITE_CHECK_WORDS: Record<WebsiteStatus | 'unchecked', string> = {
   no_website: 'A search found no website for this business. That does not prove none exists.',
-  social_only: 'A search found only a listing or social media page for this business, no website of its own.',
+  social_only: 'The only page a search found for this business is a listing or social media page.',
   placeholder: 'A search found only a placeholder page for this business.',
   free_builder: 'A search found only a free website builder page for this business.',
   has_website: 'A search found a website for this business.',
   unclear: 'A search for a website for this business was inconclusive.',
   unchecked: 'No website check has been made for this business.',
 }
+
+/** Website check statuses that are themselves a specific finding about the business's web presence. */
+export const FINDING_WEBSITE_STATUSES: readonly WebsiteStatus[] = ['no_website', 'social_only', 'placeholder', 'free_builder']
+
+export type FindingInput =
+  | Pick<ProspectLead, 'type' | 'domain' | 'factorRatings' | 'evidence'>
+  | Pick<NewBusinessLead, 'type' | 'websiteStatus'>
+
+/**
+ * Whether there is one specific, stored thing to write about:
+ *   prospect      at least one stored observation, as the drafting context
+ *                 selects them (strongestClaims)
+ *   new business  a website check status of no_website, social_only,
+ *                 placeholder or free_builder. has_website, unclear and a
+ *                 business not yet checked have nothing specific known.
+ */
+export function hasSpecificFinding(lead: FindingInput): boolean {
+  if (lead.type === 'prospect') return strongestClaims(lead.factorRatings, lead.evidence, clean(lead.domain, FIELD_MAX_CHARS), 1).length > 0
+  return lead.websiteStatus !== null && FINDING_WEBSITE_STATUSES.includes(lead.websiteStatus)
+}
+
+export { NO_FINDING_TEXT }
 
 export function buildOutreachContext(lead: OutreachLead): OutreachContext {
   if (lead.type === 'prospect') {
@@ -233,7 +260,6 @@ export function buildOutreachContext(lead: OutreachLead): OutreachContext {
     business: clean(lead.name, FIELD_MAX_CHARS),
     businessType: categoryShortName(leadingCategory(lead.licenses.length > 0 ? lead.licenses : ['Business'])),
     city: cleanOrNull(lead.city),
-    licensed: `New business license listed in ${formatPeriod(lead.latestPeriod)}`,
     websiteCheck: WEBSITE_CHECK_WORDS[lead.websiteStatus ?? 'unchecked'],
     studioDescription: STUDIO_DESCRIPTION,
   }
@@ -263,7 +289,6 @@ export function outreachBasis(lead: OutreachLead): BasisItem[] {
   if (context.leadType !== 'new_business') return []
   return [
     { label: 'Business type', text: context.businessType, sourceUrl: null },
-    { label: 'License', text: context.licensed, sourceUrl: null },
     { label: 'Website check', text: context.websiteCheck, sourceUrl: lead.websiteEvidenceUrl ?? null },
   ]
 }

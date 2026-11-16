@@ -40,7 +40,6 @@ describe('context minimisation', () => {
       business: 'Desert Bloom Tacos',
       businessType: 'Restaurant',
       city: 'Henderson',
-      licensed: 'New business license listed in October 2026',
       websiteCheck: 'A search found no website for this business. That does not prove none exists.',
       studioDescription: STUDIO_DESCRIPTION,
     })
@@ -141,13 +140,12 @@ describe('Written from: the basis shown on the draft page', () => {
     assert.equal(basis.length, 3)
   })
 
-  it('new business: type, license period and website check, as sent', () => {
+  it('new business: type and website check, as sent; the license is never part of it', () => {
     const lead = businessLead({ websiteStatus: 'social_only', websiteEvidenceUrl: 'https://social.example/desertbloom' })
     const context = buildOutreachContext(lead)
     assert.ok(context.leadType === 'new_business')
     assert.deepEqual(outreachBasis(lead), [
       { label: 'Business type', text: context.businessType, sourceUrl: null },
-      { label: 'License', text: context.licensed, sourceUrl: null },
       { label: 'Website check', text: context.websiteCheck, sourceUrl: 'https://social.example/desertbloom' },
     ])
     assert.ok(!outreachUserMessage(context).includes('social.example'), 'the evidence link stays out of the context')
@@ -155,8 +153,8 @@ describe('Written from: the basis shown on the draft page', () => {
 
   it('new business with no website found and no link', () => {
     const basis = outreachBasis(businessLead())
-    assert.equal(basis[2]!.text, 'A search found no website for this business. That does not prove none exists.')
-    assert.equal(basis[2]!.sourceUrl, null)
+    assert.equal(basis[1]!.text, 'A search found no website for this business. That does not prove none exists.')
+    assert.equal(basis[1]!.sourceUrl, null)
   })
 })
 

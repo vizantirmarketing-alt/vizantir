@@ -24,6 +24,12 @@ export const CHECK_INGEST_MAX_BODY_CHARS = 200_000
 
 export const CANDIDATE_KINDS = ['own_site', 'social', 'directory', 'builder_page', 'other'] as const
 export const OUTCOMES_CLAIMED = ['none_found', 'found', 'unclear'] as const
+/**
+ * Where a candidate's excerpt came from: copied from a page the runner read,
+ * or taken from a search-result summary. Summary text is never page text.
+ */
+export const EXCERPT_SOURCES = ['page', 'search_summary'] as const
+export type ExcerptSource = (typeof EXCERPT_SOURCES)[number]
 
 const httpUrlSchema = z
   .string()
@@ -53,6 +59,7 @@ export const candidateSchema = z.strictObject({
   url: httpUrlSchema,
   kind_claimed: z.enum(CANDIDATE_KINDS),
   excerpt: excerptSchema,
+  excerpt_source: z.enum(EXCERPT_SOURCES),
   identity_match: identityMatchSchema,
 })
 

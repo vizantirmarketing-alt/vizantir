@@ -33,13 +33,23 @@ import {
 
 const NOW = new Date('2026-11-14T18:00:00.000Z')
 
-const PROSPECT: WorklistLeadInput = { subjectType: 'prospect', subjectRef: 'p-1', leadId: 'p-1', name: 'Fictional Firm', site: siteForProspect('fictionalfirm.example') }
+const PROSPECT: WorklistLeadInput = {
+  subjectType: 'prospect',
+  subjectRef: 'p-1',
+  leadId: 'p-1',
+  name: 'Fictional Firm',
+  site: siteForProspect('fictionalfirm.example'),
+  phone: null,
+  hasFinding: true,
+}
 const BUSINESS: WorklistLeadInput = {
   subjectType: 'new_business',
   subjectRef: 'sample shop|las vegas',
   leadId: 'b-1',
   name: 'Sample Shop',
   site: siteForBusiness('has_website', 'https://sampleshop.example/'),
+  phone: null,
+  hasFinding: true,
 }
 
 function rows(

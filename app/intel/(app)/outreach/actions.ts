@@ -7,9 +7,11 @@ import { requireIntelUser } from '@/lib/auth/allowlist'
 import { MAX_WAITING_CONTACT_RUNS, queueLeadContactCheck } from '@/lib/outreach/contacts/runs'
 import { createContactStore } from '@/lib/outreach/contacts/store'
 import { createDraftDeps, createOutreachStore } from '@/lib/outreach/deps'
-import { writeDraft } from '@/lib/outreach/draft'
+import { writeDraft, writeManualDraft } from '@/lib/outreach/draft'
+import { askedNotToContact, callInputSchema, logCall } from '@/lib/outreach/calls'
+import { createCallStore } from '@/lib/outreach/calls-store'
 import { disconnect } from '@/lib/outreach/gmail/connect'
-import { createGmailConnectionStore, createSendDeps, readGmailConfig } from '@/lib/outreach/gmail/deps'
+import { checkDraftRules, createGmailConnectionStore, createSendDeps, readGmailConfig } from '@/lib/outreach/gmail/deps'
 import { OUTREACH_SETTINGS_PATH } from '@/lib/outreach/gmail/flash'
 import { approveAndSend as approveAndSendDraft } from '@/lib/outreach/gmail/send'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
@@ -161,7 +163,97 @@ export async function saveOutreachDraft(id: string, edit: { toEmail: string; sub
 }
 
 export async function approveOutreachDraft(id: string): Promise<OutreachActionResult> {
-  return lifecycle(id, (now) => approveDraft(createOutreachStore(), id, now))
+  return lifecycle(id, async (now) => {
+    const store = createOutreachStore()
+    const calls = createCallStore()
+    return approveDraft(store, id, now, {
+      askedNotToContact: (draft) => askedNotToContact(calls, draft),
+      // Hand-written drafts meet the same hard writing rules before they are approved.
+      checkRules: async (draft) => checkDraftRules(draft, (await store.getSettings())?.studioName ?? ''),
+    })
+  })
+}
+
+const manualSchema = z.object({
+  toEmail: z.string().max(OUTREACH_EMAIL_MAX + 10, 'Enter a valid recipient email.'),
+  subject: z.string().max(OUTREACH_SUBJECT_MAX + 10, `Keep the subject under ${OUTREACH_SUBJECT_MAX} characters.`),
+  body: z.string().max(OUTREACH_BODY_MAX + 10, `Keep the message under ${OUTREACH_BODY_MAX} characters.`),
+})
+
+/** Saves an email the owner wrote by hand as a new draft. No model call. */
+export async function createManualDraft(
+  subjectType: OutreachSubjectType,
+  leadId: string,
+  input: { toEmail: string; subject: string; body: string },
+): Promise<WriteDraftActionResult> {
+  await requireIntelUser()
+  const parsedLead = writeSchema.safeParse({ subjectType, leadId })
+  if (!parsedLead.success) return { ok: false, error: 'Lead not found.' }
+  const parsed = manualSchema.safeParse(input)
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Check the email.' }
+  try {
+    const lead =
+      parsedLead.data.subjectType === 'prospect' ? await loadProspectLead(parsedLead.data.leadId) : await loadBusinessLead(parsedLead.data.leadId)
+    if (!lead.ok) return { ok: false, error: lead.reason === 'not_found' ? 'Lead not found.' : 'Unable to load this lead. Try again shortly.' }
+    const result = await writeManualDraft({ store: createOutreachStore(), now: () => new Date(), calls: createCallStore() }, lead.lead, parsed.data)
+    if (!result.ok) return { ok: false, error: result.message }
+    revalidatePath('/intel/outreach')
+    if (parsedLead.data.subjectType === 'prospect') revalidatePath(`/intel/prospects/${parsedLead.data.leadId}`)
+    else revalidatePath('/intel/new-businesses')
+    return { ok: true, draftId: result.draftId }
+  } catch {
+    console.error('Outreach manual draft failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+const callSchema = z.object({ subjectType: z.enum(OUTREACH_SUBJECT_TYPES), subjectRef: z.string().min(1).max(500) })
+
+/**
+ * Records a call the owner made. Nothing is dialled or sent. After "Asked not
+ * to be contacted", the lead's found email address goes on the
+ * do-not-contact list.
+ */
+export async function logOutreachCall(
+  subjectType: OutreachSubjectType,
+  subjectRef: string,
+  input: { outcome: string; note: string },
+): Promise<OutreachActionResult> {
+  const user = await requireIntelUser()
+  const subject = callSchema.safeParse({ subjectType, subjectRef })
+  const parsed = callInputSchema.safeParse(input)
+  if (!subject.success) return { ok: false, error: 'Lead not found.' }
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Choose how the call went.' }
+  try {
+    const contactStore = createContactStore()
+    const lead = (await contactStore.listAcceptedLeads()).find(
+      (candidate) => candidate.subjectType === subject.data.subjectType && candidate.subjectRef === subject.data.subjectRef,
+    )
+    if (lead === undefined) return { ok: false, error: 'Accept this lead before logging a call.' }
+    const now = new Date().toISOString()
+    const store = createOutreachStore()
+    const result = await logCall(
+      {
+        calls: createCallStore(),
+        foundEmail: async () => {
+          const contact = await contactStore.getContact(lead)
+          return contact?.status === 'found' && contact.email !== null ? contact.email : null
+        },
+        suppress: async (email) => {
+          await addSuppressionByHand(store, { email, wholeDomain: false }, now, 'do_not_contact')
+        },
+      },
+      { subject: { subjectType: lead.subjectType, subjectRef: lead.subjectRef }, leadId: lead.leadId, outcome: parsed.data.outcome, note: parsed.data.note, createdBy: user.email },
+      now,
+    )
+    if (!result.ok) return result
+    revalidatePath('/intel/outreach')
+    revalidatePath(OUTREACH_SETTINGS_PATH)
+    return { ok: true }
+  } catch {
+    console.error('Outreach call log failed')
+    return { ok: false, error: 'Unable to save the call. If this is the first use since the update, migration 0035 may not be applied yet.' }
+  }
 }
 
 export async function editOutreachDraftAgain(id: string): Promise<OutreachActionResult> {

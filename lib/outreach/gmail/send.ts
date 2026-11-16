@@ -8,8 +8,10 @@
  *   1. the connection exists, Google still accepts it, and the connected
  *      account may still send as the reply-to address in settings now
  *   2. the draft is sendable: approved, not confirmed, or a draft that passes
- *      the hard voice rules; and when the business already has a sent email,
- *      the owner confirmed sending another (options.anotherEmail)
+ *      the hard voice rules (a hand-written draft is checked again even when
+ *      approved); the lead has not asked not to be contacted; and when the
+ *      business already has a sent email, the owner confirmed sending
+ *      another (options.anotherEmail)
  *   3. the recipient address is present and valid
  *   4. the recipient is not on the do-not-contact list, re-checked now
  *   5. fewer than OUTREACH_DAILY_SEND_LIMIT Gmail sends today
@@ -18,6 +20,7 @@
  * plus the footer are sent, From the sender name and the reply-to address. Nothing is written again by a model here.
  */
 
+import { ASKED_NOT_TO_CONTACT_REFUSAL, askedNotToContact, type CallStore } from '@/lib/outreach/calls'
 import { addressFits } from '@/lib/outreach/gmail/account'
 import type { SendOutcome } from '@/lib/outreach/gmail/api'
 import { sendGmailMessage } from '@/lib/outreach/gmail/api'
@@ -45,6 +48,8 @@ export type SendDeps = {
    * passes. null when the lead can no longer be loaded to check against.
    */
   checkRules: (draft: OutreachDraft, studioName: string) => Promise<string[] | null>
+  /** The call log. Absent or failing (before migration 0035): no lead is blocked by it. */
+  calls?: Pick<CallStore, 'callsFor'>
 }
 
 export type SendOptions = {
@@ -108,6 +113,7 @@ export async function approveAndSend(deps: SendDeps, draftId: string, options: S
   if (draft === null) return refuse('Draft not found.')
   const byStatus = statusRefusal(draft, nowIso)
   if (byStatus !== null) return refuse(byStatus)
+  if (await askedNotToContact(deps.calls, draft)) return refuse(ASKED_NOT_TO_CONTACT_REFUSAL)
   const earlier = (await deps.store.sentFor(draft.subjectType, draft.subjectRef)).filter((row) => row.id !== draft.id)
   if (earlier.length > 0 && options.anotherEmail !== true) return refuse(anotherEmailRefusal(earlier[0]!.sentAt))
 
@@ -121,7 +127,7 @@ export async function approveAndSend(deps: SendDeps, draftId: string, options: S
     )
   }
 
-  if (draft.status === 'draft') {
+  if (draft.status === 'draft' || draft.promptVersion === 'manual') {
     const reasons = await deps.checkRules(draft, settings.studioName)
     if (reasons === null) {
       return refuse('This lead can no longer be loaded, so the draft cannot be checked against the writing rules. Approve it first, then send.')

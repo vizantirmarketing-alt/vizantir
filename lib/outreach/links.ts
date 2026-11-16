@@ -11,3 +11,8 @@ export function leadHref(draft: Pick<OutreachDraft, 'subjectType' | 'leadId'>): 
     ? `/intel/prospects/${encodeURIComponent(draft.leadId)}`
     : `/intel/new-businesses?review=accepted#business-${encodeURIComponent(draft.leadId)}`
 }
+
+/** The compose page for "Write it yourself": an email the owner writes by hand, with no model call. */
+export function writeItYourselfHref(lead: Pick<OutreachDraft, 'subjectType' | 'leadId'>): string {
+  return `/intel/outreach/write?type=${encodeURIComponent(lead.subjectType)}&lead=${encodeURIComponent(lead.leadId)}`
+}

@@ -4,7 +4,10 @@
  * injected (lib/outreach/deps.ts in production, fakes in tests).
  *
  * Order of checks, each refusing with a plain message before any model call:
- *   1. the lead is accepted
+ *   1. the lead is accepted, has not asked not to be contacted, and has a
+ *      specific finding (hasSpecificFinding); a lead without one is never
+ *      sent to the model, and the owner can write the email by hand instead
+ *      (writeManualDraft)
  *   2. the settings are complete (a postal address is required)
  *   3. the lead has no approved draft (an unapproved one is replaced)
  *   4. fewer than DAILY_DRAFT_CAP drafts were written today (local time)
@@ -19,7 +22,9 @@
  * without the owner's click.
  */
 
-import { buildOutreachContext, isDraftable, subjectOf, type OutreachLead } from '@/lib/outreach/context'
+import { ASKED_NOT_TO_CONTACT_REFUSAL, askedNotToContact, type CallStore } from '@/lib/outreach/calls'
+import { NO_FINDING_TEXT, buildOutreachContext, hasSpecificFinding, isDraftable, subjectOf, type OutreachLead } from '@/lib/outreach/context'
+import { singleLine } from '@/lib/outreach/mailto'
 import { localDayStartIso } from '@/lib/outreach/dates'
 import { DAILY_DRAFT_CAP, OUTREACH_PROMPT_VERSION } from '@/lib/outreach/params'
 import { outreachSystemPrompt, outreachUserMessage, parseDraftReply, retryInstruction, type DraftReply } from '@/lib/outreach/prompt'
@@ -27,7 +32,7 @@ import { buildFooter, missingSettings, missingSettingsMessage } from '@/lib/outr
 import type { OutreachStore } from '@/lib/outreach/types'
 import type { ContactStore } from '@/lib/outreach/contacts/runs'
 import { isSuppressed } from '@/lib/outreach/lifecycle'
-import { emailDomain, isValidEmail, normalizeEmail } from '@/lib/outreach/params'
+import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX, emailDomain, isValidEmail, normalizeEmail } from '@/lib/outreach/params'
 import { checkVoice, refusalReasons, voiceContextFor, type VoiceViolation } from '@/lib/outreach/voice'
 import type { CallModel } from '@/lib/briefing/narrative'
 
@@ -40,7 +45,12 @@ export type DraftDeps = {
   now(): Date
   /** The found contact addresses. Absent or failing: To starts empty. */
   contacts?: Pick<ContactStore, 'getContact'>
+  /** The call log. Absent or failing (before migration 0035): no lead is blocked by it. */
+  calls?: Pick<CallStore, 'callsFor'>
 }
+
+/** Recorded as both the model and the prompt version of a draft the owner wrote by hand. */
+export const MANUAL_PROMPT_VERSION = 'manual'
 
 /** The lead's found address when it may be used: valid and not on the do-not-contact list. */
 export async function prefillRecipient(
@@ -69,6 +79,10 @@ export async function prefillRecipient(
 
 export type WriteDraftRefusal =
   | 'not_accepted'
+  | 'asked_not_to_contact'
+  | 'no_finding'
+  | 'draft_exists'
+  | 'invalid'
   | 'settings_incomplete'
   | 'approved_exists'
   | 'daily_cap'
@@ -81,8 +95,11 @@ export type WriteDraftResult =
   | { ok: true; draftId: string; attempts: 1 | 2 }
   | { ok: false; reason: WriteDraftRefusal; message: string }
 
-const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met'>, string> = {
+const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid'>, string> = {
   not_accepted: 'Accept this lead before drafting an email.',
+  asked_not_to_contact: ASKED_NOT_TO_CONTACT_REFUSAL,
+  no_finding: NO_FINDING_TEXT,
+  draft_exists: 'This lead already has a draft. Open it from Outreach.',
   approved_exists: 'This lead already has an approved email. Choose Edit again on it before drafting a new one.',
   daily_cap: `${DAILY_DRAFT_CAP} drafts have been written today, the daily limit. Try again tomorrow.`,
   model_not_configured: 'Drafting is not set up on this server.',
@@ -90,7 +107,7 @@ const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules
   conflict: 'Another draft for this lead was saved at the same time. Open it from Outreach.',
 }
 
-function refuse(reason: Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met'>): WriteDraftResult {
+function refuse(reason: Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid'>): WriteDraftResult {
   return { ok: false, reason, message: MESSAGES[reason] }
 }
 
@@ -117,6 +134,9 @@ async function attempt(
 
 export async function writeDraft(deps: DraftDeps, lead: OutreachLead): Promise<WriteDraftResult> {
   if (!isDraftable(lead)) return refuse('not_accepted')
+  if (await askedNotToContact(deps.calls, subjectOf(lead))) return refuse('asked_not_to_contact')
+  // Nothing specific to say: the model is never called, whatever the page sent.
+  if (!hasSpecificFinding(lead)) return refuse('no_finding')
 
   const settings = await deps.store.getSettings()
   const missing = missingSettings(settings)
@@ -178,4 +198,60 @@ export async function writeDraft(deps: DraftDeps, lead: OutreachLead): Promise<W
   )
   if (!saved.ok) return refuse('conflict')
   return { ok: true, draftId: saved.id, attempts }
+}
+
+export type ManualDraftInput = { toEmail: string; subject: string; body: string }
+
+/**
+ * "Write it yourself": a draft the owner writes by hand, with no model call.
+ * The owner fills in the subject and the message on the compose page; the row
+ * is created on the first save, because a stored draft always has a subject
+ * and a body. To starts as for a written draft, the footer is the normal one,
+ * and the model and prompt version are recorded as "manual". The hard voice
+ * rules are checked when it is approved and when it is sent.
+ */
+export async function writeManualDraft(
+  deps: Pick<DraftDeps, 'store' | 'now' | 'calls'>,
+  lead: OutreachLead,
+  input: ManualDraftInput,
+): Promise<WriteDraftResult> {
+  if (!isDraftable(lead)) return refuse('not_accepted')
+  const { subjectType, subjectRef } = subjectOf(lead)
+  if (await askedNotToContact(deps.calls, { subjectType, subjectRef })) return refuse('asked_not_to_contact')
+
+  const settings = await deps.store.getSettings()
+  const missing = missingSettings(settings)
+  if (settings === null || missing.length > 0) {
+    return { ok: false, reason: 'settings_incomplete', message: missingSettingsMessage(missing) }
+  }
+
+  const toEmail = normalizeEmail(input.toEmail.replace(/[\r\n]+/g, ''))
+  if (toEmail.length > 0 && !isValidEmail(toEmail)) return { ok: false, reason: 'invalid', message: 'Enter a valid recipient email.' }
+  const subject = singleLine(input.subject)
+  if (subject.length === 0) return { ok: false, reason: 'invalid', message: 'Add a subject.' }
+  if (subject.length > OUTREACH_SUBJECT_MAX) return { ok: false, reason: 'invalid', message: `Keep the subject under ${OUTREACH_SUBJECT_MAX} characters.` }
+  const body = input.body.replace(/\r\n?/g, '\n').trim()
+  if (body.length === 0) return { ok: false, reason: 'invalid', message: 'Add a message.' }
+  if (body.length > OUTREACH_BODY_MAX) return { ok: false, reason: 'invalid', message: `Keep the message under ${OUTREACH_BODY_MAX} characters.` }
+
+  if ((await deps.store.findActiveDraft(subjectType, subjectRef)) !== null) return refuse('draft_exists')
+
+  const saved = await deps.store.insertDraft(
+    {
+      subjectType,
+      subjectRef,
+      leadId: lead.id,
+      leadName: lead.name.trim(),
+      toEmail: toEmail.length > 0 ? toEmail : null,
+      subject,
+      body,
+      footer: buildFooter(settings),
+      model: MANUAL_PROMPT_VERSION,
+      promptVersion: MANUAL_PROMPT_VERSION,
+    },
+    null,
+    deps.now().toISOString(),
+  )
+  if (!saved.ok) return refuse('conflict')
+  return { ok: true, draftId: saved.id, attempts: 1 }
 }

@@ -15,6 +15,7 @@ function candidate(overrides: Record<string, unknown> = {}) {
     url: 'https://www.example-bakery.test/',
     kind_claimed: 'own_site',
     excerpt: 'Example Bakery on Example St.',
+    excerpt_source: 'page',
     identity_match: { name: true, street_address: true, phone: false, city: true, business_type: false },
     ...overrides,
   };

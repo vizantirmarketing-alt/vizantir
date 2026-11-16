@@ -69,10 +69,28 @@ export async function editDraft(store: OutreachStore, id: string, edit: DraftEdi
   return done(await store.updateDraft(id, ['draft'], { toEmail: toEmail || null, subject, body, updatedAt: nowIso }))
 }
 
-export async function approveDraft(store: OutreachStore, id: string, nowIso: string): Promise<LifecycleResult> {
+export type ApproveGuards = {
+  /** True when the lead asked not to be contacted (the call log). */
+  askedNotToContact?: (draft: OutreachDraft) => Promise<boolean>
+  /**
+   * The hard voice rules a hand-written draft breaks, in plain words; null
+   * when the lead cannot be loaded. Model drafts passed them when written.
+   */
+  checkRules?: (draft: OutreachDraft) => Promise<string[] | null>
+}
+
+export async function approveDraft(store: OutreachStore, id: string, nowIso: string, guards: ApproveGuards = {}): Promise<LifecycleResult> {
   const current = await load(store, id)
   if ('error' in current) return { ok: false, error: current.error }
   if (current.status !== 'draft') return { ok: false, error: 'Only a draft that needs review can be approved.' }
+  if (guards.askedNotToContact !== undefined && (await guards.askedNotToContact(current))) {
+    return { ok: false, error: 'This business asked not to be contacted. No email can be drafted, approved or sent for it.' }
+  }
+  if (current.promptVersion === 'manual' && guards.checkRules !== undefined) {
+    const reasons = await guards.checkRules(current)
+    if (reasons === null) return { ok: false, error: 'This lead can no longer be loaded, so the email cannot be checked against the writing rules.' }
+    if (reasons.length > 0) return { ok: false, error: `This email does not meet the writing rules: ${reasons.join(' ')} Edit it before approving.` }
+  }
   const to = current.toEmail === null ? '' : normalizeEmail(current.toEmail)
   if (!isValidEmail(to)) return { ok: false, error: 'Add a valid recipient email before approving.' }
   const matches = await store.findSuppressions(to, emailDomain(to))

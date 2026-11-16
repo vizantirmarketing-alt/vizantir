@@ -3,7 +3,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
+import { PhoneLink } from '@/app/intel/_components/outreach/AcceptedLeads'
 import { OutreachDraftEditor } from '@/app/intel/_components/outreach/OutreachDraftEditor'
+import { loadLeadPhone } from '@/lib/outreach/lead-facts'
 import { DraftWarnings } from '@/app/intel/_components/outreach/DraftWarnings'
 import { WrittenFromPanel } from '@/app/intel/_components/outreach/WrittenFromPanel'
 import { Panel } from '@/app/intel/_components/ui/Panel'
@@ -109,10 +111,11 @@ export default async function OutreachDraftPage({ params }: PageProps) {
     )
   }
   if (draft === null) notFound()
-  const [review, contact, sentToBusiness] = await Promise.all([
+  const [review, contact, sentToBusiness, phone] = await Promise.all([
     reviewFor(draft, settings?.studioName ?? ''),
     draft.status === 'discarded' ? Promise.resolve(null) : loadDraftContact(draft.subjectType, draft.subjectRef),
     sentFor(draft),
+    loadLeadPhone(draft.subjectType, draft.subjectRef, draft.leadId),
   ])
   // Every other email sent to this business, newest first.
   const otherSent = sentToBusiness.filter((row) => row.id !== draft.id)
@@ -143,6 +146,11 @@ export default async function OutreachDraftPage({ params }: PageProps) {
           </Link>{' '}
           · {history(draft)}
         </p>
+        {phone !== null ? (
+          <p className="mt-0.5 intel-secondary text-meta">
+            Phone: <PhoneLink phone={phone} />
+          </p>
+        ) : null}
       </div>
 
       {draft.status === 'discarded' ? (

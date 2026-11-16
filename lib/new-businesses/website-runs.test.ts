@@ -267,7 +267,7 @@ describe('rules version 2 on stored results', () => {
     const after = businesses.byName('Sample Cafe')!;
     assert.equal(after.website?.status, 'no_website');
     assert.equal(after.website?.url, null);
-    assert.equal(after.website?.rulesVersion, 'website-check-v2');
+    assert.equal(after.website?.rulesVersion, 'website-check-v3');
     assert.equal(after.rank?.score, 95, 'ranked with the re-derived status (+20, not -30)');
   });
 

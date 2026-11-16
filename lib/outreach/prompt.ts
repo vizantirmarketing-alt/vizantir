@@ -16,10 +16,10 @@ export type PromptSender = { senderName: string; studioName: string }
 
 const PROSPECT_OBSERVATION = `The JSON lists up to three findings about the company's current website, each with the factor it bears on, and possibly a mobilePerformance line, which counts as a finding too. Choose exactly one of them. Do not combine two findings into one claim, and do not mention any of the others. Stay inside what the chosen finding says. You may add at most one plain clause on why it matters, and only if the finding supports it; never add a consequence it does not support. Name a page exactly the way the finding names it (if it says "contact page", write "contact page", not another page name). If you use mobilePerformance, quote its numbers exactly. Do not name the company's web address.`
 
-const BUSINESS_OBSERVATION = `The JSON gives the business's name, its type, its city, when its new business license was listed, and what a website check found. You may say that you saw the business is newly licensed. For the observation, use only what websiteCheck says. If it says no website was found, write that you couldn't find a website for the business. Never state as fact that the business has no website, and never claim it lacks one.`
+const BUSINESS_OBSERVATION = `The JSON gives the business's name, its type, its city, and what a website check found. The one observation is what websiteCheck says, stated factually and kindly, and nothing beyond it. Do not say or suggest that you looked at, reviewed or have thoughts on anything else about the business or its pages. If websiteCheck says no website was found, write that you couldn't find a website for the business. Never state as fact that the business has no website, and never claim it lacks one.`
 
 const PROSPECT_SUBJECT = `"Your contact page" or "The contact form on your site"`
-const BUSINESS_SUBJECT = `"Your new restaurant in Henderson", or, when no website was found, "A website for" followed by the business name`
+const BUSINESS_SUBJECT = `"A website for" followed by the business name, or "Your listing page"`
 
 export function outreachSystemPrompt(sender: PromptSender, context: OutreachContext): string {
   const banned = BANNED_PHRASES.map(({ phrase }) => `"${phrase}"`).join(', ')
@@ -35,6 +35,8 @@ Voice:
 - Write as ${sender.senderName}, one person writing a short note to one business, in the first person singular (I, me, my). Never write "we", "our" or "us".
 - Write the way a person writes a short note, with natural contractions: I'd, I'm, you've, it's, that's, don't, couldn't. Write "I'd be glad", never "I would be glad", "I would love" or "I would be happy".
 - Plain and direct. No flattery, no hype, no urgency or scarcity, no deadlines, no false familiarity.
+- Never describe the business as new, newly opened, newly licensed, recently started, just getting started or anything like it, and never mention a business license. Nothing in the JSON says how long the business has been running.
+- State only what the JSON says. Never claim to have reviewed, assessed or formed a view of anything it does not contain.
 
 The studio:
 - Introduce the studio once, with exactly these words: "${intro}". For example: "I run ${intro}."

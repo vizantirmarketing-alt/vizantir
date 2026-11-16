@@ -130,9 +130,9 @@ export const GOOD_BUSINESS_REPLY = {
   subject: 'A website for Desert Bloom Tacos',
   body: `Hello,
 
-I saw that your restaurant was newly licensed in Henderson in October 2026. When I looked, I couldn't find a website for the business, though you may well have one I missed.
+I came across Desert Bloom Tacos in Henderson. When I looked, I couldn't find a website for the business, though you may well have one I missed.
 
-I run Vizantir Design Studio, a custom web studio in Las Vegas. A simple site with your menu and opening hours can help new customers find you.
+I run Vizantir Design Studio, a custom web studio in Las Vegas. A simple site with your menu and opening hours can help people who are searching for a place to eat find you.
 
 If it's useful, I'd be glad to have a short call. Or just reply and let me know what you've got planned.`,
 }

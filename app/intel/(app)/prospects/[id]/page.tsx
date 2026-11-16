@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react'
 
 import { ContactAddress } from '@/app/intel/_components/outreach/ContactAddress'
 import { DraftEmailAction } from '@/app/intel/_components/outreach/DraftEmailAction'
+import { hasSpecificFinding } from '@/lib/outreach/context'
 import { ProspectMeasureButton } from '@/app/intel/_components/prospects/ProspectMeasureButton'
 import { ProspectReviewControls } from '@/app/intel/_components/prospects/ProspectReviewControls'
 import { Panel } from '@/app/intel/_components/ui/Panel'
@@ -105,7 +106,12 @@ export default async function IntelProspectDetailPage({
       <Panel title="Outreach">
         {prospect.reviewStatus === 'accepted' ? (
           <div className="space-y-3">
-            <DraftEmailAction subjectType="prospect" leadId={prospect.id} activeDraftId={activeDraftId} />
+            <DraftEmailAction
+              subjectType="prospect"
+              leadId={prospect.id}
+              activeDraftId={activeDraftId}
+              hasFinding={hasSpecificFinding({ type: 'prospect', domain: prospect.domain, factorRatings: prospect.factorRatings, evidence })}
+            />
             <ContactAddress note={contactNote} subjectType="prospect" leadId={prospect.id} />
           </div>
         ) : (

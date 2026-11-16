@@ -6,6 +6,7 @@ import 'server-only'
  * are Google's OAuth endpoints and Gmail messages.send, nothing else.
  */
 
+import { createCallStore } from '@/lib/outreach/calls-store'
 import { buildOutreachContext } from '@/lib/outreach/context'
 import { gmailConfigFrom, type GmailConfig } from '@/lib/outreach/gmail/config'
 import type { ConnectDeps } from '@/lib/outreach/gmail/connect'
@@ -25,7 +26,7 @@ export function readGmailConfig(): GmailConfig | null {
 }
 
 /** The hard voice rules against the lead as it is now, as drafting checks them. */
-async function checkRules(draft: OutreachDraft, studioName: string): Promise<string[] | null> {
+export async function checkDraftRules(draft: OutreachDraft, studioName: string): Promise<string[] | null> {
   const loaded = draft.subjectType === 'prospect' ? await loadProspectLead(draft.leadId) : await loadBusinessLead(draft.leadId)
   if (!loaded.ok) return null
   const context = voiceContextFor(buildOutreachContext(loaded.lead), studioName)
@@ -39,7 +40,8 @@ export function createSendDeps(): SendDeps {
     config: readGmailConfig(),
     fetch: (input, init) => fetch(input, init),
     now: () => new Date(),
-    checkRules,
+    checkRules: checkDraftRules,
+    calls: createCallStore(),
   }
 }
 

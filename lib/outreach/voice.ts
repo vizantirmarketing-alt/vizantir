@@ -64,6 +64,7 @@ export type VoiceRule =
   | 'page_name'
   | 'studio_wording'
   | 'ask_once'
+  | 'new_business'
   | 'reply_format'
 
 export type VoiceViolation = { rule: VoiceRule; message: string }
@@ -115,6 +116,7 @@ export const REFUSAL_REASONS: Record<HardRule, string> = {
   greeting: "The opening line was not 'Hello,'.",
   contractions: "It read stiffly: no contractions, or 'I would be glad' and the like.",
   subject_wording: 'The subject used a banned word or the studio name.',
+  new_business: 'It called the business new, newly opened or recently started, or mentioned a license. Nothing known says how long it has been running.',
   reply_format: 'The reply was not in the expected form.',
 }
 
@@ -244,6 +246,30 @@ const OTHER_GREETING = /^\s*(?:hi|hey|dear|greetings|good (?:morning|afternoon|e
 const CONTRACTION =
   /\b(?:I'd|I'm|I've|I'll|you've|you're|you'd|you'll|it's|that's|there's|here's|what's|who's|let's|they're|they've|don't|doesn't|didn't|couldn't|wouldn't|shouldn't|can't|isn't|wasn't|aren't|weren't|won't|haven't|hasn't|hadn't)\b/i
 const UNCONTRACTED = /\bI would (?:be (?:glad|happy|delighted|pleased)|love)\b/i
+
+// Calling the business new in any words, or mentioning a license. A license
+// record does not mean a business is new, and it is never mentioned in an
+// email. "Your new website" is an offer, not a claim about the business, so
+// "your new" followed by a word for a site or page is allowed.
+const NEW_BUSINESS_WORDING = new RegExp(
+  [
+    String.raw`\bnewly\b`,
+    String.raw`\bbrand[\s-]new\b`,
+    String.raw`\b(?:just|recently) (?:opened|launched|started|licensed|registered|established|founded|set up|got started|got going|opened up)\b`,
+    String.raw`\bjust (?:getting|starting) (?:started|going|out|off the ground)\b`,
+    String.raw`\bstarting out\b`,
+    String.raw`\b(?:a|your|the|this) new (?:[a-z]+ ){0,3}(?:business|company|venture|shop|store|restaurant|salon|practice|firm|establishment|storefront|bakery|cafe|clinic|studio)\b`,
+    String.raw`\byour new\b(?! (?:web ?site|site|web page|page|home ?page|contact|form|booking|online))`,
+    String.raw`\bnew (?:business|company|venture) (?:owner|owners)\b`,
+    String.raw`\b(?:opened|opening) (?:its|your) doors\b`,
+    String.raw`\bgrand opening\b`,
+    String.raw`\bcongratulat\w* on\b`,
+    String.raw`\bfirst (?:year|months?|weeks?) (?:in|of) business\b`,
+    String.raw`\bstart-?ups?\b`,
+    String.raw`\blicen[cs](?:e|es|ed|ing)\b`,
+  ].join('|'),
+  'i',
+)
 
 const SUBJECT_BANNED =
   /\b(?:observations?|quick question|opportunit(?:y|ies)|proposals?|partnerships?|introductions?|introducing|intro|touching base|touch base)\b/i
@@ -509,6 +535,13 @@ function allChecks(draft: { subject: string; body: string }, context: VoiceConte
     add(
       'subject_wording',
       'Make the subject a plain phrase naming the one thing the email is about, such as "Your contact page". Never use "observation", "quick question", "opportunity", "proposal", "partnership", "introduction", "touching base" or the studio\'s name.',
+    )
+  }
+
+  if (NEW_BUSINESS_WORDING.test(both)) {
+    add(
+      'new_business',
+      'Never describe the business as new, newly opened, newly licensed, recently started or just getting started, and never mention a license. Nothing known says how long it has been running.',
     )
   }
 

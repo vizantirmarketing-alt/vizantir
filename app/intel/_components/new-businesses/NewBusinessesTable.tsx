@@ -7,6 +7,7 @@ import { formatPeriod } from '@/lib/new-businesses/discovery'
 import type { NewBusinessRow } from '@/lib/new-businesses/load'
 import { PHONE_LABEL } from '@/lib/new-businesses/params'
 import type { ContactNote } from '@/lib/outreach/contacts/view'
+import { hasSpecificFinding } from '@/lib/outreach/context'
 
 function address(row: Pick<NewBusinessRow, 'address' | 'suite' | 'city' | 'state' | 'zip'>): string {
   const street = [row.address, row.suite].filter(Boolean).join(', ')
@@ -88,6 +89,7 @@ export function NewBusinessesTable({
                       subjectType="new_business"
                       leadId={row.id}
                       activeDraftId={activeDrafts?.get(row.groupKey ?? row.id) ?? null}
+                      hasFinding={hasSpecificFinding({ type: 'new_business', websiteStatus: row.website?.status ?? null })}
                     />
                     {contactNotes !== null ? (
                       <div className="mt-1.5 max-w-64">

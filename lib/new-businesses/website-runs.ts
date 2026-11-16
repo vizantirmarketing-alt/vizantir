@@ -173,6 +173,8 @@ export const CHECK_RULES_FOR_RUNNER = {
     "Record business pages only. Never record people's names, personal profiles, personal email addresses or anything about an individual. If the only result is an individual's personal profile, do not record it.",
   submitEveryBusiness:
     "Submit every business in the run. When a business's name is a person's name, do not search for it: submit it with no searches, no candidates, outcome_claimed unclear and the note \"Licensed under a person's name; not searched.\" Submit any other business you cannot check the same way, with a short factual note.",
+  excerptSource:
+    'Set excerpt_source to page only when the excerpt was copied from a page you read, and to search_summary when it was taken from a search-result summary. Never present summary text as page text.',
   kindClaimed:
     'Set kind_claimed to own_site only for the business\'s own website, builder_page for its page on a website builder, social or directory for listings, and other for anything else, such as a news article that mentions the business.',
 } as const

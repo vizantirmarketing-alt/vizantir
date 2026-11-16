@@ -18,7 +18,7 @@ const NONE: IdentityMatch = { name: false, street_address: false, phone: false, 
 const MATCH: IdentityMatch = { ...NONE, name: true, street_address: true };
 
 function candidate(url: string, identity: IdentityMatch = MATCH, kind: CheckCandidate['kind_claimed'] = 'own_site'): CheckCandidate {
-  return { url, kind_claimed: kind, excerpt: 'Example Bakery, 100 Example St, Las Vegas.', identity_match: identity };
+  return { url, kind_claimed: kind, excerpt: 'Example Bakery, 100 Example St, Las Vegas.', excerpt_source: 'page', identity_match: identity };
 }
 
 function report(overrides: Partial<CheckedBusiness> = {}): CheckedBusiness {
@@ -114,7 +114,7 @@ describe('decideWebsiteStatus', () => {
 
 describe('rules version 2: host and kind_claimed', () => {
   it('is version 2', () => {
-    assert.equal(WEBSITE_RULES_VERSION, 'website-check-v2');
+    assert.equal(WEBSITE_RULES_VERSION, 'website-check-v3');
   });
 
   it('a news article that mentions the business, after two searches, is no_website', () => {
@@ -205,7 +205,7 @@ describe('re-deriving stored results', () => {
     assert.deepEqual(rebuilt?.candidates[0]?.identity_match, { name: true, street_address: true, phone: false, city: false, business_type: false });
     const decision = rederiveWebsiteDecision('id-1', v1Evidence);
     assert.equal(decision?.status, 'no_website');
-    assert.equal(decision?.rulesVersion, 'website-check-v2');
+    assert.equal(decision?.rulesVersion, 'website-check-v3');
   });
 
   it('returns null, and guesses nothing, when a field the rules need is missing', () => {
