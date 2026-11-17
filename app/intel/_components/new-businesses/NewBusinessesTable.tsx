@@ -1,5 +1,6 @@
 import { ContactAddress } from '@/app/intel/_components/outreach/ContactAddress'
 import { DraftEmailAction } from '@/app/intel/_components/outreach/DraftEmailAction'
+import { SiteReviewAction } from '@/app/intel/_components/outreach/SiteReviewAction'
 import { NewBusinessRowControls } from '@/app/intel/_components/new-businesses/NewBusinessRowControls'
 import { WebsiteCell } from '@/app/intel/_components/new-businesses/WebsiteCell'
 import { NewBusinessLeadChip } from '@/app/intel/_components/ui/StatusChip'
@@ -8,11 +9,23 @@ import type { NewBusinessRow } from '@/lib/new-businesses/load'
 import { PHONE_LABEL } from '@/lib/new-businesses/params'
 import type { ContactNote } from '@/lib/outreach/contacts/view'
 import { hasSpecificFinding } from '@/lib/outreach/context'
+import type { SiteReviewStatus, StoredObservation } from '@/lib/outreach/site-reviews/categories'
+import type { SiteReviewState } from '@/lib/outreach/site-reviews/view'
 
 function address(row: Pick<NewBusinessRow, 'address' | 'suite' | 'city' | 'state' | 'zip'>): string {
   const street = [row.address, row.suite].filter(Boolean).join(', ')
   const place = [row.city, [row.state, row.zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
   return [street, place].filter(Boolean).join(' · ') || '—'
+}
+
+/** Where the business's site review stands; nothing for a business with no own site to review. */
+function SiteReviewCell({ leadId, state }: { leadId: string; state: SiteReviewState | undefined }) {
+  if (state === undefined) return null
+  return (
+    <div className="mt-1.5 max-w-64">
+      <SiteReviewAction leadId={leadId} state={state} />
+    </div>
+  )
 }
 
 /**
@@ -24,12 +37,18 @@ export function NewBusinessesTable({
   rows,
   activeDrafts,
   contactNotes = null,
+  siteReviewStates = null,
+  siteReviewResults = null,
 }: {
   rows: NewBusinessRow[]
   /** Active outreach draft ids by subject (group key, or row id before grouping). Null when they could not be read. */
   activeDrafts: ReadonlyMap<string, string> | null
   /** Contact address lines for accepted rows, by subject. Null when they could not be read. */
   contactNotes?: ReadonlyMap<string, ContactNote> | null
+  /** Site review states by "new_business:subject". Null when they could not be read (before migration 0036). */
+  siteReviewStates?: ReadonlyMap<string, SiteReviewState> | null
+  /** Stored site reviews by subject, for the finding rule. Null when they could not be read. */
+  siteReviewResults?: ReadonlyMap<string, { status: SiteReviewStatus | null; observations: readonly StoredObservation[] }> | null
 }) {
   return (
     <div className="max-w-full overflow-x-auto">
@@ -89,8 +108,13 @@ export function NewBusinessesTable({
                       subjectType="new_business"
                       leadId={row.id}
                       activeDraftId={activeDrafts?.get(row.groupKey ?? row.id) ?? null}
-                      hasFinding={hasSpecificFinding({ type: 'new_business', websiteStatus: row.website?.status ?? null })}
+                      hasFinding={hasSpecificFinding({
+                        type: 'new_business',
+                        websiteStatus: row.website?.status ?? null,
+                        siteReview: siteReviewResults?.get(row.groupKey ?? row.id) ?? null,
+                      })}
                     />
+                    <SiteReviewCell leadId={row.id} state={siteReviewStates?.get(`new_business:${row.groupKey ?? row.id}`)} />
                     {contactNotes !== null ? (
                       <div className="mt-1.5 max-w-64">
                         <ContactAddress note={contactNotes.get(row.groupKey ?? row.id) ?? null} subjectType="new_business" leadId={row.id} />

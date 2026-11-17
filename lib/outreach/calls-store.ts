@@ -9,7 +9,7 @@ import 'server-only'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
-import { CALL_OUTCOMES, summariesBySubject, type CallStore, type CallSummary, type OutreachCall } from '@/lib/outreach/calls'
+import { CALL_OUTCOMES, summariesBySubject, type CallStore, type CallSubject, type CallSummary, type OutreachCall } from '@/lib/outreach/calls'
 import { OUTREACH_SUBJECT_TYPES } from '@/lib/outreach/params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
@@ -99,5 +99,15 @@ export async function loadCallSummaries(): Promise<Map<string, CallSummary> | nu
     return summariesBySubject(await createCallStore().listCalls())
   } catch {
     return null
+  }
+}
+
+/** Whether the call log can be read for this lead (false before migration 0035). */
+export async function callsReadableFor(subject: CallSubject): Promise<boolean> {
+  try {
+    await createCallStore().callsFor(subject)
+    return true
+  } catch {
+    return false
   }
 }

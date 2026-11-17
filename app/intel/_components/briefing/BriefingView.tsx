@@ -11,6 +11,7 @@ import {
   type SourceFreshness,
 } from '@/lib/briefing/context'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
+import { outreachPanelLines } from '@/lib/briefing/outreach-panel'
 import type { BriefingRecord } from '@/lib/briefing/generate'
 import { summaryUnavailableMessage } from '@/lib/briefing/messages'
 import { LEAD_STATUS_LABELS, type LeadStatus } from '@/lib/intel/lead-params'
@@ -272,6 +273,24 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
               Open New Businesses
             </Link>
           </p>
+        </Panel>
+      ) : null}
+
+      {unavailable.has('outreach') ? (
+        <Panel title="Outreach">
+          <Unavailable />
+        </Panel>
+      ) : content.outreach !== undefined ? (
+        <Panel title="Outreach">
+          <ul className="space-y-1">
+            {outreachPanelLines(content.outreach).map((line) => (
+              <li key={line.key}>
+                <Link href={line.href} className={actionLinkClass}>
+                  {line.text}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </Panel>
       ) : null}
 

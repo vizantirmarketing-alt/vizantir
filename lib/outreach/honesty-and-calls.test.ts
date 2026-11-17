@@ -128,7 +128,7 @@ describe('the finding rule', () => {
     const { model, calls } = counting(GOOD_BUSINESS_REPLY)
     assert.ok((await writeDraft(deps(store, model), businessLead())).ok)
     assert.equal(calls(), 1)
-    assert.equal(store.drafts[0]!.promptVersion, 'outreach-v5')
+    assert.equal(store.drafts[0]!.promptVersion, 'outreach-v6')
   })
 })
 

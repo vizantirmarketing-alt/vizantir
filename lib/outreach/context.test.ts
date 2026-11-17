@@ -41,6 +41,8 @@ describe('context minimisation', () => {
       businessType: 'Restaurant',
       city: 'Henderson',
       websiteCheck: 'A search found no website for this business. That does not prove none exists.',
+      // Site-review observations; empty for a business whose own site was not reviewed.
+      findings: [],
       studioDescription: STUDIO_DESCRIPTION,
     })
   })

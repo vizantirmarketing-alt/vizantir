@@ -9,7 +9,7 @@ import 'server-only'
  *   prospect      its stored observations, its factor ratings and domain, so
  *                 the finding is judged exactly as drafting judges it. A
  *                 prospect has no license record, so no phone.
- *   new business  the website check status, and the phone on the primary
+ *   new business  the website check status and its site review, and the phone on the primary
  *                 license row, or on another row of the business when the
  *                 primary has none
  */
@@ -19,6 +19,7 @@ import { z } from 'zod'
 import { NEW_BUSINESS_SOURCE } from '@/lib/new-businesses/discovery'
 import { WEBSITE_STATUSES } from '@/lib/new-businesses/website-rules'
 import { hasSpecificFinding } from '@/lib/outreach/context'
+import { loadSiteReviewResults } from '@/lib/outreach/site-reviews/load'
 import type { OutreachSubjectType } from '@/lib/outreach/params'
 import { readFactorRatings } from '@/lib/prospects/rubric'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
@@ -83,6 +84,9 @@ export async function loadLeadFacts(): Promise<Map<string, LeadFacts> | null> {
       facts.set(key('prospect', row.id), { phone: null, hasFinding })
     }
 
+    // Site reviews; none when the table cannot be read (before migration 0036).
+    const reviews = (await loadSiteReviewResults()) ?? new Map()
+
     // Primary rows first, so the primary row's phone and status win.
     const ordered = [...businessRows.data].sort((a, b) => Number(b.group_primary ?? false) - Number(a.group_primary ?? false))
     for (const row of ordered) {
@@ -90,7 +94,8 @@ export async function loadLeadFacts(): Promise<Map<string, LeadFacts> | null> {
       const phone = row.phone?.trim() || null
       const existing = facts.get(ref)
       if (existing === undefined) {
-        facts.set(ref, { phone, hasFinding: hasSpecificFinding({ type: 'new_business', websiteStatus: row.website_status }) })
+        const siteReview = reviews.get(row.group_key ?? row.id) ?? null
+        facts.set(ref, { phone, hasFinding: hasSpecificFinding({ type: 'new_business', websiteStatus: row.website_status, siteReview }) })
       } else if (existing.phone === null && phone !== null) {
         existing.phone = phone
       }

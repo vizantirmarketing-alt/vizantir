@@ -94,6 +94,16 @@ export const briefingContentSchema = z.object({
   ),
   sources: z.array(sourceSchema),
   newBusinesses: z.object({ count: z.number(), since: z.string(), noWebsite: z.number().optional() }).optional(),
+  // Added after the first briefings were saved: optional, so older stored briefings still read.
+  outreach: z
+    .object({
+      acceptedWaiting: z.number(),
+      needsReview: z.number(),
+      approvedNotSent: z.number(),
+      toCall: z.number(),
+      sentYesterday: z.number(),
+    })
+    .optional(),
   unavailable: z.array(z.string()),
   quiet: z.boolean(),
   suggestedActions: z.array(z.object({ recordId: z.string(), text: z.string() })).nullable(),

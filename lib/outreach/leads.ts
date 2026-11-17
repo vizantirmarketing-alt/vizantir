@@ -2,7 +2,7 @@ import 'server-only'
 
 /**
  * Lead loaders for outreach drafting and the draft page's "Written from"
- * panel. Selects only, and only the columns lib/outreach/context.ts uses: no
+ * panel. A business with its own website also gets its stored site review. Selects only, and only the columns lib/outreach/context.ts uses: no
  * phone, street address, owner note or review history is read, so none of it
  * can reach the model. Source links are read for the owner's view;
  * buildOutreachContext() never copies them.
@@ -18,6 +18,7 @@ import { NEW_BUSINESS_SOURCE } from '@/lib/new-businesses/discovery'
 import { NEW_BUSINESS_REVIEW_STATUSES } from '@/lib/new-businesses/params'
 import { WEBSITE_STATUSES } from '@/lib/new-businesses/website-rules'
 import type { NewBusinessLead, ProspectLead } from '@/lib/outreach/context'
+import { loadSiteReviewFor } from '@/lib/outreach/site-reviews/load'
 import { EVIDENCE_KINDS, PROSPECT_REVIEW_STATUSES } from '@/lib/prospects/params'
 import { readFactorRatings } from '@/lib/prospects/rubric'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
@@ -137,6 +138,9 @@ export async function loadBusinessLead(id: string): Promise<LoadLeadResult<NewBu
       ? { year: Number(newest[1]), month: Number(newest[2]) }
       : { year: row.data.period_year, month: row.data.period_month }
     const licenses = row.data.group_categories && row.data.group_categories.length > 0 ? row.data.group_categories : [row.data.category]
+    const websiteStatus = row.data.website_status ?? null
+    // Only a business with its own website is ever reviewed. null when there is no review or the table cannot be read (before migration 0036).
+    const siteReview = websiteStatus === 'has_website' ? await loadSiteReviewFor(row.data.group_key ?? row.data.id) : null
 
     return {
       ok: true,
@@ -148,7 +152,8 @@ export async function loadBusinessLead(id: string): Promise<LoadLeadResult<NewBu
         licenses,
         city: row.data.city,
         latestPeriod,
-        websiteStatus: row.data.website_status ?? null,
+        websiteStatus,
+        siteReview,
         websiteEvidenceUrl: row.data.website_url ?? row.data.website_evidence?.candidates.find((c) => c.accepted)?.url ?? null,
         reviewStatus: row.data.review_status,
       },

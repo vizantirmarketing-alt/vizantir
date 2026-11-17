@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { AcceptedLeads } from '@/app/intel/_components/outreach/AcceptedLeads'
+import { DraftCallAction } from '@/app/intel/_components/outreach/DraftCallAction'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { WebsiteCheckRunChip } from '@/app/intel/_components/ui/StatusChip'
 import { requireIntelUser } from '@/lib/auth/allowlist'
@@ -18,9 +19,13 @@ import type { OutreachDraft, OutreachSettings, SubjectState, Suppression } from 
 import { CollapsedSection } from '@/app/intel/_components/ui/CollapsedSection'
 import { loadCallSummaries } from '@/lib/outreach/calls-store'
 import { loadLeadFacts } from '@/lib/outreach/lead-facts'
+import { loadSiteReviewStates } from '@/lib/outreach/site-reviews/load'
+import type { ContactStatus } from '@/lib/outreach/contacts/rules'
 import {
   acceptedLeadRows,
   closedLeadRows,
+  draftCallPhone,
+  withLeadFacts,
   type ClosedRow,
   type WorklistLeadInput,
   contactCounts,
@@ -93,8 +98,33 @@ function groupDate(draft: OutreachDraft, status: OutreachStatus): string {
   return formatShortDate(iso)
 }
 
+/** Per draft subject: the phone to call when the draft has no recipient and no address is published (draftCallPhone). */
+type CallPhoneFor = (draft: OutreachDraft) => string | null
+
+/** The lead's phone and Log a call under a draft with no recipient; nothing when there is no phone to call. */
+function DraftCallLine({ draft, phone }: { draft: OutreachDraft; phone: string | null }) {
+  if (phone === null) return null
+  return (
+    <div className="mt-1">
+      <DraftCallAction lead={{ subjectType: draft.subjectType, subjectRef: draft.subjectRef, leadId: draft.leadId, name: draft.leadName }} phone={phone} />
+    </div>
+  )
+}
+
 /** One status group. Stacks into lines on narrow panels, so nothing scrolls sideways at 1024px. */
-function DraftList({ drafts, status, empty, dateLabel }: { drafts: OutreachDraft[]; status: OutreachStatus; empty: string; dateLabel: string }) {
+function DraftList({
+  drafts,
+  status,
+  empty,
+  dateLabel,
+  callPhoneFor,
+}: {
+  drafts: OutreachDraft[]
+  status: OutreachStatus
+  empty: string
+  dateLabel: string
+  callPhoneFor?: CallPhoneFor
+}) {
   if (drafts.length === 0) return <p className="intel-body text-body">{empty}</p>
   return (
     <ul className="divide-y divide-black/8">
@@ -117,6 +147,7 @@ function DraftList({ drafts, status, empty, dateLabel }: { drafts: OutreachDraft
               {draft.subject}
             </Link>
             <p className="truncate intel-secondary text-meta">{draft.toEmail ?? 'No recipient yet'}</p>
+            <DraftCallLine draft={draft} phone={callPhoneFor?.(draft) ?? null} />
           </div>
           <p className="whitespace-nowrap intel-secondary text-meta">
             {dateLabel} {groupDate(draft, status)}
@@ -182,21 +213,29 @@ function ContactLine({ counts, latestRun }: { counts: ContactCounts | null; late
 
 export default async function OutreachPage() {
   await requireIntelUser()
-  const [data, latest, worklist, facts, calls] = await Promise.all([
+  const [data, latest, worklist, facts, calls, siteReviews] = await Promise.all([
     load(),
     loadLatestContactRun(),
     loadWorklistContacts(),
     loadLeadFacts(),
     loadCallSummaries(),
+    loadSiteReviewStates(),
   ])
-  // Each accepted lead with its phone and whether it has a specific finding.
-  const leads: WorklistLeadInput[] | null =
-    worklist !== null && facts !== null
-      ? worklist.leads.map((lead) => {
-          const fact = facts.get(`${lead.subjectType}:${lead.subjectRef}`)
-          return { ...lead, phone: fact?.phone ?? null, hasFinding: fact?.hasFinding ?? false }
-        })
-      : null
+  // Each accepted lead with its phone, whether it has a specific finding, and where its site review stands.
+  const leads: WorklistLeadInput[] | null = worklist !== null && facts !== null ? withLeadFacts(worklist.leads, facts, siteReviews) : null
+  // A draft with no recipient keeps its lead's phone and Log a call when no address is published.
+  const contactStatusByKey = new Map<string, ContactStatus | null>(
+    (worklist?.contacts ?? []).map((contact) => [`${contact.subjectType}:${contact.subjectRef}`, contact.status]),
+  )
+  const callPhoneFor: CallPhoneFor = (draft) => {
+    const key = `${draft.subjectType}:${draft.subjectRef}`
+    return draftCallPhone({
+      toEmail: draft.toEmail,
+      contactStatus: contactStatusByKey.get(key) ?? null,
+      phone: facts?.get(key)?.phone ?? null,
+      callsReadable: calls !== null,
+    })
+  }
 
   const notice = data.ok ? setupNotice(data.settings, data.connection) : null
   const contactInputs: WorklistContactInput[] | null =
@@ -295,7 +334,13 @@ export default async function OutreachPage() {
             return (
               <Panel key={group.title} title={`${group.title} · ${drafts.length}`}>
                 <div className="@container">
-                  <DraftList drafts={drafts} status={group.statuses[0]!} empty={group.empty} dateLabel={group.dateLabel} />
+                  <DraftList
+                    drafts={drafts}
+                    status={group.statuses[0]!}
+                    empty={group.empty}
+                    dateLabel={group.dateLabel}
+                    callPhoneFor={group.statuses.includes('draft') ? callPhoneFor : undefined}
+                  />
                 </div>
               </Panel>
             )

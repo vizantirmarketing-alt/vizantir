@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
 import { PhoneLink } from '@/app/intel/_components/outreach/AcceptedLeads'
+import { DraftCallAction } from '@/app/intel/_components/outreach/DraftCallAction'
+import { callsReadableFor } from '@/lib/outreach/calls-store'
+import { draftCallPhone } from '@/lib/outreach/worklist'
 import { OutreachDraftEditor } from '@/app/intel/_components/outreach/OutreachDraftEditor'
 import { loadLeadPhone } from '@/lib/outreach/lead-facts'
 import { DraftWarnings } from '@/app/intel/_components/outreach/DraftWarnings'
@@ -17,7 +20,7 @@ import { localDayStartIso } from '@/lib/outreach/dates'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { createGmailConnectionStore, readGmailConfig } from '@/lib/outreach/gmail/deps'
 import { connectionView } from '@/lib/outreach/gmail/view'
-import { loadDraftContact } from '@/lib/outreach/contacts/load'
+import { loadContactStatus, loadDraftContact } from '@/lib/outreach/contacts/load'
 import { isStaleSending } from '@/lib/outreach/lifecycle'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
 import { leadHref } from '@/lib/outreach/links'
@@ -111,12 +114,16 @@ export default async function OutreachDraftPage({ params }: PageProps) {
     )
   }
   if (draft === null) notFound()
-  const [review, contact, sentToBusiness, phone] = await Promise.all([
+  const [review, contact, sentToBusiness, phone, contactStatus, callsReadable] = await Promise.all([
     reviewFor(draft, settings?.studioName ?? ''),
     draft.status === 'discarded' ? Promise.resolve(null) : loadDraftContact(draft.subjectType, draft.subjectRef),
     sentFor(draft),
     loadLeadPhone(draft.subjectType, draft.subjectRef, draft.leadId),
+    loadContactStatus(draft.subjectType, draft.subjectRef),
+    draft.status === 'draft' ? callsReadableFor(draft) : Promise.resolve(false),
   ])
+  // A draft that needs review and has no recipient keeps Log a call when no address is published.
+  const callPhone = draft.status === 'draft' ? draftCallPhone({ toEmail: draft.toEmail, contactStatus, phone, callsReadable }) : null
   // Every other email sent to this business, newest first.
   const otherSent = sentToBusiness.filter((row) => row.id !== draft.id)
   const alreadyEmailedOn =
@@ -146,7 +153,11 @@ export default async function OutreachDraftPage({ params }: PageProps) {
           </Link>{' '}
           · {history(draft)}
         </p>
-        {phone !== null ? (
+        {callPhone !== null ? (
+          <div className="mt-1">
+            <DraftCallAction lead={{ subjectType: draft.subjectType, subjectRef: draft.subjectRef, leadId: draft.leadId, name: draft.leadName }} phone={callPhone} />
+          </div>
+        ) : phone !== null ? (
           <p className="mt-0.5 intel-secondary text-meta">
             Phone: <PhoneLink phone={phone} />
           </p>

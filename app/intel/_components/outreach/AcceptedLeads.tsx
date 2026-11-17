@@ -11,7 +11,7 @@ import { leadHref, writeItYourselfHref } from '@/lib/outreach/links'
 import { OUTREACH_SUBJECT_LABELS } from '@/lib/outreach/params'
 import { callLine, telHref, type WorklistRow } from '@/lib/outreach/worklist'
 
-import { findContactEmail, logOutreachCall, writeOutreachDraft } from '@/app/intel/(app)/outreach/actions'
+import { findContactEmail, logOutreachCall, reviewBusinessSite, writeOutreachDraft } from '@/app/intel/(app)/outreach/actions'
 
 const SOURCE_LABELS: Record<WorklistRow['subjectType'], string> = {
   prospect: 'Open in Prospect Research',
@@ -35,8 +35,10 @@ export function PhoneLink({ phone }: { phone: string }) {
   )
 }
 
+export type CallLead = Pick<WorklistRow, 'subjectType' | 'subjectRef' | 'leadId' | 'name'>
+
 /** Records what happened on a call the owner made. No browser dialog. */
-function LogCallForm({ row, onDone, onCancel }: { row: WorklistRow; onDone: () => void; onCancel: () => void }) {
+export function LogCallForm({ row, onDone, onCancel }: { row: CallLead; onDone: () => void; onCancel: () => void }) {
   const [outcome, setOutcome] = useState<CallOutcome | ''>('')
   const [note, setNote] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -125,6 +127,15 @@ function AcceptedLeadRow({ row }: { row: WorklistRow }) {
     })
   }
 
+  function reviewSite() {
+    setMessage(null)
+    startTransition(async () => {
+      const result = await reviewBusinessSite(row.leadId)
+      setMessage(result.ok ? { ok: true, text: result.message } : { ok: false, text: result.error })
+      if (result.ok) router.refresh()
+    })
+  }
+
   function draft() {
     setMessage(null)
     startTransition(async () => {
@@ -198,6 +209,11 @@ function AcceptedLeadRow({ row }: { row: WorklistRow }) {
             {pending ? 'Working…' : 'Draft email'}
           </Button>
         ) : null}
+        {row.action === 'review_site' ? (
+          <Button type="button" size="sm" disabled={pending} onClick={reviewSite} className={primaryClassName}>
+            {pending ? 'Queuing…' : 'Review this site'}
+          </Button>
+        ) : null}
         {row.action === 'log_call' && !logging ? (
           <Button type="button" size="sm" disabled={pending} onClick={() => setLogging(true)} className={primaryClassName}>
             Log a call
@@ -212,6 +228,11 @@ function AcceptedLeadRow({ row }: { row: WorklistRow }) {
           <Link href={writeHref} className={linkActionClassName}>
             Write it yourself
           </Link>
+        ) : null}
+        {row.reviewAction !== null ? (
+          <TextAction disabled={pending} onClick={reviewSite}>
+            {row.reviewAction === 'again' ? 'Review again' : 'Review this site'}
+          </TextAction>
         ) : null}
         {row.checkAgain ? (
           <TextAction disabled={pending} onClick={findContact}>

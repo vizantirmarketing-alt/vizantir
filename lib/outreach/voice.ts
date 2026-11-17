@@ -149,7 +149,8 @@ export function voiceContextFor(context: OutreachContext, studioName: string): V
   const findings =
     context.leadType === 'prospect'
       ? [...context.findings.map((f) => f.claim), ...(context.mobilePerformance === null ? [] : [context.mobilePerformance])]
-      : []
+      : // A reviewed business's site observations, checked by the same rules as a prospect's findings.
+        context.findings.map((f) => f.claim)
   const knownNames =
     context.leadType === 'prospect'
       ? [context.company, context.domain, context.market ?? '', context.industry ?? ''].join(' ')
@@ -251,7 +252,7 @@ const UNCONTRACTED = /\bI would (?:be (?:glad|happy|delighted|pleased)|love)\b/i
 // record does not mean a business is new, and it is never mentioned in an
 // email. "Your new website" is an offer, not a claim about the business, so
 // "your new" followed by a word for a site or page is allowed.
-const NEW_BUSINESS_WORDING = new RegExp(
+export const NEW_BUSINESS_WORDING = new RegExp(
   [
     String.raw`\bnewly\b`,
     String.raw`\bbrand[\s-]new\b`,

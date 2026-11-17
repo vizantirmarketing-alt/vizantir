@@ -6,6 +6,8 @@ import { z } from 'zod'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { MAX_WAITING_CONTACT_RUNS, queueLeadContactCheck } from '@/lib/outreach/contacts/runs'
 import { createContactStore } from '@/lib/outreach/contacts/store'
+import { MAX_WAITING_SITE_REVIEW_RUNS, queueLeadSiteReview } from '@/lib/outreach/site-reviews/runs'
+import { createSiteReviewStore } from '@/lib/outreach/site-reviews/store'
 import { createDraftDeps, createOutreachStore } from '@/lib/outreach/deps'
 import { writeDraft, writeManualDraft } from '@/lib/outreach/draft'
 import { askedNotToContact, callInputSchema, logCall } from '@/lib/outreach/calls'
@@ -115,6 +117,38 @@ export async function findContactEmail(subjectType: OutreachSubjectType, leadId:
   } catch {
     console.error('Contact check queuing failed')
     return { ok: false, error: 'Unable to queue the check. If this is the first use since the update, migration 0034 may not be applied yet.' }
+  }
+}
+
+/**
+ * "Review this site" and "Review again" for one accepted business with its
+ * own website: queues a one-lead run for the research runner. Never sends
+ * anything and never changes a draft.
+ */
+export async function reviewBusinessSite(leadId: string): Promise<{ ok: true; message: string } | { ok: false; error: string }> {
+  await requireIntelUser()
+  if (typeof leadId !== 'string' || !isUuid(leadId)) return { ok: false, error: 'Lead not found.' }
+  try {
+    const result = await queueLeadSiteReview(createSiteReviewStore(), { leadId }, new Date())
+    revalidatePath('/intel/outreach')
+    revalidatePath('/intel/new-businesses')
+    switch (result.outcome) {
+      case 'queued':
+        return { ok: true, message: 'Queued. It runs with the next scheduled research.' }
+      case 'no_site':
+        return { ok: false, error: 'Only a business whose own website was found can have its site reviewed.' }
+      case 'not_accepted':
+        return { ok: false, error: 'Accept this business before reviewing its site.' }
+      case 'already_reviewed':
+        return { ok: false, error: 'This site has already been reviewed.' }
+      case 'already_waiting':
+        return { ok: false, error: 'This site is already waiting to be reviewed.' }
+      case 'limit_reached':
+        return { ok: false, error: `${MAX_WAITING_SITE_REVIEW_RUNS} site reviews are already waiting. Try again after the next scheduled research.` }
+    }
+  } catch {
+    console.error('Site review queuing failed')
+    return { ok: false, error: 'Unable to queue the review. If this is the first use since the update, migration 0036 may not be applied yet.' }
   }
 }
 

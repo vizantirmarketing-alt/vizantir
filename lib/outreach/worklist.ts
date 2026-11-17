@@ -17,6 +17,7 @@ import { ACTIVE_STATUSES, NO_FINDING_TEXT, emailDomain, normalizeEmail, type Out
 import type { ConnectionView } from '@/lib/outreach/gmail/view'
 import { missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
 import type { OutreachDraft, OutreachSettings, SubjectState, Suppression } from '@/lib/outreach/types'
+import { siteReviewText, type SiteReviewState } from '@/lib/outreach/site-reviews/view'
 
 // --- Accepted leads.
 
@@ -31,6 +32,11 @@ export type WorklistLeadInput = {
   phone: string | null
   /** hasSpecificFinding() for the lead: whether there is anything specific to write about. */
   hasFinding: boolean
+  /**
+   * Where the review of the business's own site stands; null or absent when it
+   * has no own site to review or site reviews cannot be read (before migration 0036).
+   */
+  siteReview?: SiteReviewState | null
 }
 
 export type WorklistContactInput = {
@@ -42,7 +48,7 @@ export type WorklistContactInput = {
   waiting: boolean
 }
 
-export type WorklistAction = 'find_contact' | 'draft' | 'log_call' | 'none'
+export type WorklistAction = 'find_contact' | 'draft' | 'log_call' | 'review_site' | 'none'
 
 export type WorklistRow = {
   subjectType: OutreachSubjectType
@@ -56,8 +62,10 @@ export type WorklistRow = {
   action: WorklistAction
   /** The secondary drafting action: Draft email beside Log a call, or Write it yourself when there is no finding. */
   secondary: 'draft' | 'write' | null
-  /** NO_FINDING_TEXT where Draft email would otherwise be. */
+  /** NO_FINDING_TEXT where Draft email would otherwise be, or where the site review stands. */
   noFindingText: string | null
+  /** The secondary site-review action: "Review this site" beside another primary action, or "Review again". */
+  reviewAction: 'review' | 'again' | null
   /** The license record's phone number, as stored. */
   phone: string | null
   /** The call log for the lead; null when there are no calls or the log cannot be read. */
@@ -83,6 +91,31 @@ const STATUS_TEXT: Record<Exclude<ContactStatus, 'found'>, string> = {
 }
 
 const subjectKey = (subject: { subjectType: OutreachSubjectType; subjectRef: string }) => `${subject.subjectType}:${subject.subjectRef}`
+
+type FindingStep = { primary: 'draft' | 'review_site' | 'none'; secondary: 'write' | null; noFindingText: string | null; reviewAction: 'review' | 'again' | null }
+
+/**
+ * The drafting step for a lead, by the finding rule and its site review:
+ *   finding        Draft email
+ *   queued         the waiting line, nothing else
+ *   not_reviewed   Review this site, with Write it yourself
+ *   nothing_found  the line, Write it yourself and Review again (also unclear)
+ *   otherwise      NO_FINDING_TEXT and Write it yourself
+ */
+export function findingStep(lead: Pick<WorklistLeadInput, 'hasFinding' | 'siteReview'>): FindingStep {
+  if (lead.hasFinding) return { primary: 'draft', secondary: null, noFindingText: null, reviewAction: null }
+  switch (lead.siteReview) {
+    case 'queued':
+      return { primary: 'none', secondary: null, noFindingText: siteReviewText('queued'), reviewAction: null }
+    case 'not_reviewed':
+      return { primary: 'review_site', secondary: 'write', noFindingText: NO_FINDING_TEXT, reviewAction: null }
+    case 'nothing_found':
+    case 'unclear':
+      return { primary: 'none', secondary: 'write', noFindingText: siteReviewText(lead.siteReview), reviewAction: 'again' }
+    default:
+      return { primary: 'none', secondary: 'write', noFindingText: NO_FINDING_TEXT, reviewAction: null }
+  }
+}
 
 /**
  * Where a lead's contact lookup stands, as the Accepted leads list and the
@@ -151,10 +184,17 @@ export function acceptedLeadRows(input: {
       calls,
       secondary: null,
       noFindingText: null,
+      reviewAction: null,
     }
-    // The drafting step, by the finding rule: Draft email, or "Write it yourself" beside the no-finding text.
-    const draftStep = (extra: Partial<WorklistRow>): Pick<WorklistRow, 'action' | 'secondary' | 'noFindingText'> & Partial<WorklistRow> =>
-      lead.hasFinding ? { action: 'draft', secondary: null, noFindingText: null, ...extra } : { action: 'none', secondary: 'write', noFindingText: NO_FINDING_TEXT, ...extra }
+    // The drafting step, by the finding rule and the site review (findingStep).
+    const step = findingStep(lead)
+    const draftStep = (extra: Partial<WorklistRow>): Pick<WorklistRow, 'action' | 'secondary' | 'noFindingText' | 'reviewAction'> & Partial<WorklistRow> => ({
+      action: step.primary,
+      secondary: step.secondary,
+      noFindingText: step.noFindingText,
+      reviewAction: step.reviewAction,
+      ...extra,
+    })
     const draft = (statusText: string, extra: Partial<WorklistRow> = {}): WorklistRow => ({
       ...base,
       statusText,
@@ -200,8 +240,10 @@ export function acceptedLeadRows(input: {
       rows.push({
         ...base,
         action: 'log_call',
-        secondary: lead.hasFinding ? 'draft' : 'write',
-        noFindingText: lead.hasFinding ? null : NO_FINDING_TEXT,
+        secondary: lead.hasFinding ? 'draft' : step.secondary,
+        noFindingText: step.noFindingText,
+        // Review this site sits beside Log a call as a text action.
+        reviewAction: step.primary === 'review_site' ? 'review' : step.reviewAction,
         statusText: `No email address is published. Call ${lead.phone}.`,
         address: null,
         addressHint: null,
@@ -212,6 +254,45 @@ export function acceptedLeadRows(input: {
     rows.push(draft(STATUS_TEXT[effective], { checkAgain }))
   }
   return rows
+}
+
+/**
+ * Each accepted lead with its phone, whether it has a specific finding, and
+ * where its site review stands, as the Outreach page and the briefing both
+ * read them. Facts keyed by "subjectType:subjectRef" (loadLeadFacts); site
+ * review states likewise, null when they cannot be read.
+ */
+export function withLeadFacts(
+  leads: readonly Omit<WorklistLeadInput, 'phone' | 'hasFinding' | 'siteReview'>[],
+  facts: ReadonlyMap<string, { phone: string | null; hasFinding: boolean }>,
+  siteReviews: ReadonlyMap<string, SiteReviewState> | null,
+): WorklistLeadInput[] {
+  return leads.map((lead) => {
+    const key = subjectKey(lead)
+    const fact = facts.get(key)
+    return { ...lead, phone: fact?.phone ?? null, hasFinding: fact?.hasFinding ?? false, siteReview: siteReviews?.get(key) ?? null }
+  })
+}
+
+// --- Calls from Needs review.
+
+export const CALL_CONTACT_STATUSES: readonly ContactStatus[] = ['no_page', 'none_found', 'named_only']
+
+/**
+ * The phone to call for a draft that has no recipient, when no email address
+ * is published for the lead (contact status no_page, none_found or
+ * named_only) and its license record has a phone number. null otherwise, and
+ * always null when the call log cannot be read (before migration 0035).
+ */
+export function draftCallPhone(input: {
+  toEmail: string | null
+  contactStatus: ContactStatus | null
+  phone: string | null
+  callsReadable: boolean
+}): string | null {
+  if (!input.callsReadable || input.phone === null) return null
+  if (input.toEmail !== null && input.toEmail.trim().length > 0) return null
+  return input.contactStatus !== null && CALL_CONTACT_STATUSES.includes(input.contactStatus) ? input.phone : null
 }
 
 // --- Closed.

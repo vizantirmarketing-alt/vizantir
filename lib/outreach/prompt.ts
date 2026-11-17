@@ -18,8 +18,16 @@ const PROSPECT_OBSERVATION = `The JSON lists up to three findings about the comp
 
 const BUSINESS_OBSERVATION = `The JSON gives the business's name, its type, its city, and what a website check found. The one observation is what websiteCheck says, stated factually and kindly, and nothing beyond it. Do not say or suggest that you looked at, reviewed or have thoughts on anything else about the business or its pages. If websiteCheck says no website was found, write that you couldn't find a website for the business. Never state as fact that the business has no website, and never claim it lacks one.`
 
+const REVIEWED_BUSINESS_OBSERVATION = `The JSON gives the business's name, its type, its city, and up to three findings about pages of its own website, each with the aspect it bears on. Choose exactly one finding. Do not combine two findings into one claim, and do not mention any of the others or the website check. Stay inside what the chosen finding says. You may add at most one plain clause on why it matters, and only if the finding supports it; never add a consequence it does not support. Name a page exactly the way the finding names it (if it says "contact page", write "contact page", not another page name). Do not name the business's web address.`
+
 const PROSPECT_SUBJECT = `"Your contact page" or "The contact form on your site"`
 const BUSINESS_SUBJECT = `"A website for" followed by the business name, or "Your listing page"`
+
+/** Which observation rule applies: a prospect's findings, a reviewed business's site findings, or the website check alone. */
+function observationRule(context: OutreachContext): string {
+  if (context.leadType === 'prospect') return PROSPECT_OBSERVATION
+  return context.findings.length > 0 ? REVIEWED_BUSINESS_OBSERVATION : BUSINESS_OBSERVATION
+}
 
 export function outreachSystemPrompt(sender: PromptSender, context: OutreachContext): string {
   const banned = BANNED_PHRASES.map(({ phrase }) => `"${phrase}"`).join(', ')
@@ -47,7 +55,7 @@ Body:
 - Plain text only: no markdown, bullets or HTML. Separate paragraphs with one blank line.
 - The first line is exactly "Hello," on its own. Never greet the business by its name, and never use "Hi there", "Dear", "To whom it may concern" or a person's name.
 - ${BODY_MIN_WORDS} to ${BODY_MAX_WORDS} words in total.
-- Make exactly one specific, true observation, taken only from the JSON. ${context.leadType === 'prospect' ? PROSPECT_OBSERVATION : BUSINESS_OBSERVATION}
+- Make exactly one specific, true observation, taken only from the JSON. ${observationRule(context)}
 - Never invent a compliment, a statistic, a number, a mutual connection or any prior contact. Every number you write must appear in the JSON.
 - End with one soft ask: a short call or a reply. Ask for nothing else.
 - Ask once. Make one request for a reply or a call, in one place: the last line. Do not ask earlier in the email, do not repeat the request in other words, and do not add a second question.
@@ -57,7 +65,7 @@ Body:
 
 Subject:
 - Under ${SUBJECT_MAX_CHARS} characters, one line.
-- A plain phrase naming the specific thing the email is about, as a person would write it, for example ${context.leadType === 'prospect' ? PROSPECT_SUBJECT : BUSINESS_SUBJECT}.
+- A plain phrase naming the specific thing the email is about, as a person would write it, for example ${context.leadType === 'prospect' || context.findings.length > 0 ? PROSPECT_SUBJECT : BUSINESS_SUBJECT}.
 - Never use "observation", "quick question", "opportunity", "proposal", "partnership", "introduction", "touching base" or the studio's name.
 
 Never, in the subject or the body:

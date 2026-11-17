@@ -11,6 +11,7 @@ import 'server-only'
  *   fetchProspectsCreatedSince            lib/prospects/load.ts
  *   countNewBusinessesSince               lib/new-businesses/load.ts
  *   countUnreviewedNoWebsite              lib/new-businesses/website-store.ts
+ *   loadOutreachBriefingCounts            lib/outreach/briefing-load.ts
  * plus one select-only count below (countNewInquiriesBefore).
  * No sync function, detector, report generator or sender is called.
  *
@@ -29,6 +30,7 @@ import { fetchLeadDashboardStats, fetchLeads } from '@/lib/intel/leads'
 import { fetchSyncHealth, isSyncRunStale } from '@/lib/intel/sync-health'
 import { countNewBusinessesSince } from '@/lib/new-businesses/load'
 import { countUnreviewedNoWebsite } from '@/lib/new-businesses/website-store'
+import { loadOutreachBriefingCounts } from '@/lib/outreach/briefing-load'
 import { splitRunSummary } from '@/lib/prospects/ingest'
 import {
   fetchProspects,
@@ -62,7 +64,7 @@ async function attempt<T>(load: () => Promise<T | null>): Promise<LoaderResult<T
 
 export const briefingSources: BriefingSources = {
   async load({ windows }) {
-    const [newProspects, topUnreviewed, inquiries, inquiryStats, findings, runs, sources, newBusinesses, newBusinessesNoWebsite] =
+    const [newProspects, topUnreviewed, inquiries, inquiryStats, findings, runs, sources, newBusinesses, newBusinessesNoWebsite, outreach] =
       await Promise.all([
         attempt(() => fetchProspectsCreatedSince(windows.prospectsSince, NEW_PROSPECTS_LIMIT)),
         attempt(async () => {
@@ -142,6 +144,7 @@ export const briefingSources: BriefingSources = {
         }),
         attempt(() => countNewBusinessesSince(windows.prospectsSince)),
         attempt(() => countUnreviewedNoWebsite()),
+        attempt(() => loadOutreachBriefingCounts(new Date())),
       ])
 
     const inputs: RawBriefingInputs = {
@@ -154,6 +157,7 @@ export const briefingSources: BriefingSources = {
       sources,
       newBusinesses,
       newBusinessesNoWebsite,
+      outreach,
     }
     return inputs
   },

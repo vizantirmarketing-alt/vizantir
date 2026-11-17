@@ -13,6 +13,9 @@
  *                 check status in words. The license record decides which
  *                 businesses are listed; it is never part of the context,
  *                 because a license record does not mean a business is new.
+ *                 A business whose own site was reviewed also gets up to
+ *                 three of the stored site-review observations, one per
+ *                 category, as findings in the same shape as a prospect's.
  *   both          the fixed studio description (STUDIO_DESCRIPTION)
  *
  * hasSpecificFinding() decides, in one place, whether a lead has anything
@@ -45,6 +48,7 @@ import {
   type FactorRatings,
 } from '@/lib/prospects/rubric'
 import { NO_FINDING_TEXT, STUDIO_DESCRIPTION, type OutreachSubjectType } from '@/lib/outreach/params'
+import { SITE_REVIEW_CATEGORY_LABELS, type SiteReviewStatus, type StoredObservation } from '@/lib/outreach/site-reviews/categories'
 
 export const MAX_CONTEXT_CLAIMS = 3
 const CLAIM_MAX_CHARS = 400
@@ -78,6 +82,8 @@ export type NewBusinessLead = {
   websiteStatus: WebsiteStatus | null
   /** The website found, or the first matching page the check found. For the owner's view only. */
   websiteEvidenceUrl?: string | null
+  /** The stored site review of the business's own website; null or absent when there is none or it cannot be read. */
+  siteReview?: { status: SiteReviewStatus | null; observations: readonly StoredObservation[] } | null
   reviewStatus: NewBusinessReviewStatus
   // Carried by the loader but never copied into the context:
   address?: string | null
@@ -106,6 +112,8 @@ export type NewBusinessContext = {
   businessType: string
   city: string | null
   websiteCheck: string
+  /** Observations from the review of the business's own site; empty unless it was reviewed. */
+  findings: { factor: string; claim: string }[]
   studioDescription: string
 }
 
@@ -224,19 +232,51 @@ export const FINDING_WEBSITE_STATUSES: readonly WebsiteStatus[] = ['no_website',
 
 export type FindingInput =
   | Pick<ProspectLead, 'type' | 'domain' | 'factorRatings' | 'evidence'>
-  | Pick<NewBusinessLead, 'type' | 'websiteStatus'>
+  | Pick<NewBusinessLead, 'type' | 'websiteStatus' | 'siteReview'>
+
+/** The host of a stored site-review page, for claimIsSafe. */
+function pageHost(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '').toLowerCase()
+  } catch {
+    return ''
+  }
+}
+
+type SelectedObservation = { factor: string; claim: string; item: StoredObservation }
+
+/**
+ * Up to three stored site-review observations, in the order stored, one per
+ * category so they say different things. Only for a business whose website
+ * check found its own website and whose review status is reviewed.
+ */
+function selectObservations(lead: Pick<NewBusinessLead, 'websiteStatus' | 'siteReview'>, limit = MAX_CONTEXT_CLAIMS): SelectedObservation[] {
+  if (lead.websiteStatus !== 'has_website' || lead.siteReview?.status !== 'reviewed') return []
+  const seen = new Set<string>()
+  const out: SelectedObservation[] = []
+  for (const item of lead.siteReview.observations) {
+    if (seen.has(item.category) || !claimIsSafe(item.text, pageHost(item.pageUrl))) continue
+    seen.add(item.category)
+    out.push({ factor: SITE_REVIEW_CATEGORY_LABELS[item.category], claim: clean(item.text, CLAIM_MAX_CHARS), item })
+    if (out.length >= limit) break
+  }
+  return out
+}
 
 /**
  * Whether there is one specific, stored thing to write about:
  *   prospect      at least one stored observation, as the drafting context
  *                 selects them (strongestClaims)
  *   new business  a website check status of no_website, social_only,
- *                 placeholder or free_builder. has_website, unclear and a
+ *                 placeholder or free_builder; or has_website with a site
+ *                 review whose status is reviewed (at least one accepted
+ *                 observation). has_website without one, unclear and a
  *                 business not yet checked have nothing specific known.
  */
 export function hasSpecificFinding(lead: FindingInput): boolean {
   if (lead.type === 'prospect') return strongestClaims(lead.factorRatings, lead.evidence, clean(lead.domain, FIELD_MAX_CHARS), 1).length > 0
-  return lead.websiteStatus !== null && FINDING_WEBSITE_STATUSES.includes(lead.websiteStatus)
+  if (lead.websiteStatus !== null && FINDING_WEBSITE_STATUSES.includes(lead.websiteStatus)) return true
+  return selectObservations(lead, 1).length > 0
 }
 
 export { NO_FINDING_TEXT }
@@ -261,6 +301,7 @@ export function buildOutreachContext(lead: OutreachLead): OutreachContext {
     businessType: categoryShortName(leadingCategory(lead.licenses.length > 0 ? lead.licenses : ['Business'])),
     city: cleanOrNull(lead.city),
     websiteCheck: WEBSITE_CHECK_WORDS[lead.websiteStatus ?? 'unchecked'],
+    findings: selectObservations(lead).map(({ factor, claim }) => ({ factor, claim })),
     studioDescription: STUDIO_DESCRIPTION,
   }
 }
@@ -290,5 +331,7 @@ export function outreachBasis(lead: OutreachLead): BasisItem[] {
   return [
     { label: 'Business type', text: context.businessType, sourceUrl: null },
     { label: 'Website check', text: context.websiteCheck, sourceUrl: lead.websiteEvidenceUrl ?? null },
+    // The site-review observations the draft may use, each with the page it was seen on.
+    ...selectObservations(lead).map(({ factor, claim, item }) => ({ label: factor, text: claim, sourceUrl: item.pageUrl })),
   ]
 }

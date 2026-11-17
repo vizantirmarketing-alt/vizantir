@@ -10,6 +10,7 @@ import { queueDueCampaigns, type CampaignStore, type QueueResult } from '@/lib/b
 import type { ImportResult } from '@/lib/new-businesses/import'
 import type { QueueCheckResult } from '@/lib/new-businesses/website-runs'
 import type { QueueContactResult } from '@/lib/outreach/contacts/runs'
+import type { QueueSiteReviewResult } from '@/lib/outreach/site-reviews/runs'
 import {
   generateScheduledBriefing,
   type GenerateDeps,
@@ -22,6 +23,7 @@ export type BriefingCronResult = {
   websiteChecks?: QueueCheckResult | { error: string }
   briefing: ScheduledBriefingResult | { error: string }
   contactChecks?: QueueContactResult | { error: string }
+  siteReviews?: QueueSiteReviewResult | { error: string }
 }
 
 export async function runBriefingCron(deps: {
@@ -40,6 +42,12 @@ export async function runBriefingCron(deps: {
    * leads remain and no contact run is requested or claimed.
    */
   queueContactChecks?: () => Promise<QueueContactResult>
+  /**
+   * Re-derives stale site-review results and queues one site-review run when
+   * accepted businesses with their own website remain unreviewed and no
+   * site-review run is requested or claimed.
+   */
+  queueSiteReviews?: () => Promise<QueueSiteReviewResult>
 }): Promise<BriefingCronResult> {
   // A campaign failure must not block the briefing, and vice versa.
   let campaigns: BriefingCronResult['campaigns']
@@ -88,11 +96,22 @@ export async function runBriefingCron(deps: {
     }
   }
 
+  // After the contact step. A failure never blocks the others.
+  let siteReviews: BriefingCronResult['siteReviews']
+  if (deps.queueSiteReviews) {
+    try {
+      siteReviews = await deps.queueSiteReviews()
+    } catch {
+      siteReviews = { error: 'Site review queuing failed' }
+    }
+  }
+
   return {
     campaigns,
     ...(newBusinesses === undefined ? {} : { newBusinesses }),
     ...(websiteChecks === undefined ? {} : { websiteChecks }),
     briefing,
     ...(contactChecks === undefined ? {} : { contactChecks }),
+    ...(siteReviews === undefined ? {} : { siteReviews }),
   }
 }

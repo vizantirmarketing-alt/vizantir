@@ -47,6 +47,15 @@ export async function loadDraftContact(
   }
 }
 
+/** A lead's contact status, for the call line on a draft. null when there is none or contacts cannot be read. */
+export async function loadContactStatus(subjectType: OutreachSubjectType, subjectRef: string): Promise<StoredContact['status']> {
+  try {
+    return (await createContactStore().contactsFor(subjectType, [subjectRef]))[0]?.status ?? null
+  } catch {
+    return null
+  }
+}
+
 /** Notes keyed by subject ref. */
 export async function loadContactNotes(subjectType: OutreachSubjectType, subjectRefs: readonly string[]): Promise<Map<string, ContactNote> | null> {
   try {

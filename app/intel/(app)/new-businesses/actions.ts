@@ -20,6 +20,8 @@ import {
 } from '@/lib/new-businesses/params'
 import { reviewAndQueueContact } from '@/lib/outreach/accept'
 import { queueLeadContactCheck } from '@/lib/outreach/contacts/runs'
+import { queueLeadSiteReview } from '@/lib/outreach/site-reviews/runs'
+import { createSiteReviewStore } from '@/lib/outreach/site-reviews/store'
 import { createContactStore } from '@/lib/outreach/contacts/store'
 import { isUuid } from '@/lib/prospects/params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
@@ -130,6 +132,8 @@ export async function updateNewBusinessReview(
         const groupKey = await writer.groupKeyOf(parsed.data.id)
         return queueLeadContactCheck(createContactStore(), { subjectType: 'new_business', leadId: groupKey ?? parsed.data.id }, now)
       },
+      // A business with its own website and no stored review gets its site reviewed; anything else is left alone.
+      () => queueLeadSiteReview(createSiteReviewStore(), { leadId: parsed.data.id }, now, { onlyIfUnreviewed: true }),
     )
     if (!outcome.ok) return outcome
     revalidate()

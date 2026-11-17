@@ -158,7 +158,21 @@ export type RawBriefingInputs = {
   newBusinesses: LoaderResult<number>
   /** Unreviewed businesses whose website check found no website. A count only. */
   newBusinessesNoWebsite?: LoaderResult<number>
+  /** Outreach counts (lib/outreach/briefing-counts.ts). Optional so callers without it still assemble. */
+  outreach?: LoaderResult<BriefingOutreach>
 }
+
+/** Outreach counts for the briefing. Counts only: no names, no addresses, no email text. */
+export type BriefingOutreach = {
+  acceptedWaiting: number
+  needsReview: number
+  approvedNotSent: number
+  toCall: number
+  sentYesterday: number
+}
+
+/** The record id a suggested action uses to point to the Outreach page. */
+export const OUTREACH_RECORD_ID = 'outreach'
 
 /* ---------- Saved content ---------- */
 
@@ -239,6 +253,11 @@ export type BriefingContent = {
    * before this field existed still read.
    */
   newBusinesses?: { count: number; since: string; noWebsite?: number }
+  /**
+   * Outreach counts, built from counts in code (no model text). Optional so
+   * briefings saved before this field existed still read.
+   */
+  outreach?: BriefingOutreach
   /** Sections whose loader failed. Rendered as unavailable, never as empty. */
   unavailable: string[]
   /** True when nothing needs attention. */
@@ -490,6 +509,9 @@ export function assembleBriefingContent(
   const sources = toSourceFreshness(take('sources', inputs.sources, []))
   const unhealthySources = sources.filter((s) => s.state !== 'ok')
   const newBusinessCount = take('newBusinesses', inputs.newBusinesses, 0)
+  const outreach = inputs.outreach === undefined ? undefined : take<BriefingOutreach | undefined>('outreach', inputs.outreach, undefined)
+  // Outreach work waiting on the owner: drafts to review, approved emails to send, leads to call.
+  const outreachWaiting = outreach !== undefined && outreach.needsReview + outreach.approvedNotSent + outreach.toCall > 0
 
   const quiet =
     newProspects.length === 0 &&
@@ -498,6 +520,7 @@ export function assembleBriefingContent(
     runs.every((run) => run.resolved === true) &&
     unhealthySources.length === 0 &&
     newBusinessCount === 0 &&
+    !outreachWaiting &&
     unavailable.length === 0
 
   return {
@@ -532,6 +555,7 @@ export function assembleBriefingContent(
       since: windows.prospectsSince,
       ...(inputs.newBusinessesNoWebsite?.ok ? { noWebsite: inputs.newBusinessesNoWebsite.value } : {}),
     },
+    ...(outreach === undefined ? {} : { outreach }),
     unavailable,
     quiet,
     suggestedActions: null,
@@ -548,6 +572,7 @@ export function contextRecordIds(content: BriefingContent): Set<string> {
   // A resolved failure is never the subject of an action.
   for (const r of content.runs) if (r.resolved !== true) ids.add(r.id)
   for (const s of content.sources) ids.add(s.provider)
+  if (content.outreach !== undefined) ids.add(OUTREACH_RECORD_ID)
   return ids
 }
 
@@ -569,6 +594,9 @@ export function recordLink(content: BriefingContent, recordId: string): Briefing
   }
   if (content.sources.some((s) => s.provider === recordId)) {
     return { href: '/intel', kind: 'Data source' }
+  }
+  if (content.outreach !== undefined && recordId === OUTREACH_RECORD_ID) {
+    return { href: '/intel/outreach', kind: 'Outreach' }
   }
   return null
 }
