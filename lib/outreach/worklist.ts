@@ -5,13 +5,17 @@
  *
  *   Accepted leads  every accepted lead, of both types, with no open draft
  *                   and no sent email, each with exactly one primary action
+ *   Closed          accepted leads a call closed, each with Discard draft
+ *                   for its unsent draft; that draft is not listed in Needs
+ *                   review or Approved (draftsOutsideClosed). Log a call for
+ *                   a lead closed by not interested or wrong number
  *   Sent            one line per business: its latest email, and how many
  *   Setup notice    one line when settings are missing or Google needs
  *                   reconnecting
  */
 
 import { BRIEFING_TIME_ZONE } from '@/lib/briefing/dates'
-import { CALL_OUTCOME_LABELS, type CallSummary } from '@/lib/outreach/calls'
+import { CALL_OUTCOME_LABELS, REOPENABLE_OUTCOMES, type CallSummary } from '@/lib/outreach/calls'
 import type { ContactStatus, LeadSite } from '@/lib/outreach/contacts/rules'
 import { ACTIVE_STATUSES, NO_FINDING_TEXT, emailDomain, normalizeEmail, type OutreachSubjectType } from '@/lib/outreach/params'
 import type { ConnectionView } from '@/lib/outreach/gmail/view'
@@ -281,16 +285,19 @@ export const CALL_CONTACT_STATUSES: readonly ContactStatus[] = ['no_page', 'none
 /**
  * The phone to call for a draft that has no recipient, when no email address
  * is published for the lead (contact status no_page, none_found or
- * named_only) and its license record has a phone number. null otherwise, and
- * always null when the call log cannot be read (before migration 0035).
+ * named_only) and its license record has a phone number. null otherwise,
+ * always null for a closed lead, and always null when the call log cannot be
+ * read (before migration 0035).
  */
 export function draftCallPhone(input: {
   toEmail: string | null
   contactStatus: ContactStatus | null
   phone: string | null
   callsReadable: boolean
+  /** A logged call closed the lead (CallSummary.closedBy): there is no call to log, and it shows under Closed. */
+  closed: boolean
 }): string | null {
-  if (!input.callsReadable || input.phone === null) return null
+  if (!input.callsReadable || input.closed || input.phone === null) return null
   if (input.toEmail !== null && input.toEmail.trim().length > 0) return null
   return input.contactStatus !== null && CALL_CONTACT_STATUSES.includes(input.contactStatus) ? input.phone : null
 }
@@ -306,11 +313,35 @@ export type ClosedRow = {
   reason: string
   /** The latest call. */
   closedAt: string
+  /** The lead's unsent draft, in review or approved; null when it has none. Only Discard is offered for it. */
+  openDraft: { id: string; status: 'draft' | 'approved' } | null
+  /**
+   * Log a call is offered: the lead was closed by "Spoke: not interested" or
+   * "Wrong number", which a later call with another outcome sets aside.
+   * Never for "Asked not to be contacted".
+   */
+  canLogCall: boolean
 }
 
-/** Accepted leads closed by a call, newest first. Empty when the call log cannot be read. */
-export function closedLeadRows(leads: readonly Pick<WorklistLeadInput, 'subjectType' | 'subjectRef' | 'leadId' | 'name'>[], calls: ReadonlyMap<string, CallSummary> | null): ClosedRow[] {
+type OpenDraftInput = Pick<OutreachDraft, 'id' | 'status' | 'subjectType' | 'subjectRef'>
+
+/** Statuses a closed lead's draft leaves Needs review and Approved in. A send in flight or not confirmed stays where it is. */
+const CLOSED_HIDES: readonly OutreachDraft['status'][] = ['draft', 'approved']
+
+/**
+ * Accepted leads closed by a call, newest first, each with its unsent draft
+ * if it has one. Empty when the call log cannot be read.
+ */
+export function closedLeadRows(
+  leads: readonly Pick<WorklistLeadInput, 'subjectType' | 'subjectRef' | 'leadId' | 'name'>[],
+  calls: ReadonlyMap<string, CallSummary> | null,
+  drafts: readonly OpenDraftInput[] = [],
+): ClosedRow[] {
   if (calls === null) return []
+  const open = new Map<string, { id: string; status: 'draft' | 'approved' }>()
+  for (const draft of drafts) {
+    if (draft.status === 'draft' || draft.status === 'approved') open.set(subjectKey(draft), { id: draft.id, status: draft.status })
+  }
   const rows: ClosedRow[] = []
   for (const lead of leads) {
     const summary = calls.get(subjectKey(lead))
@@ -322,9 +353,24 @@ export function closedLeadRows(leads: readonly Pick<WorklistLeadInput, 'subjectT
       name: lead.name,
       reason: CALL_OUTCOME_LABELS[summary.closedBy],
       closedAt: summary.latestAt,
+      openDraft: open.get(subjectKey(lead)) ?? null,
+      canLogCall: REOPENABLE_OUTCOMES.includes(summary.closedBy),
     })
   }
   return rows.sort((a, b) => b.closedAt.localeCompare(a.closedAt))
+}
+
+/**
+ * The drafts Needs review and Approved list: every one except a closed
+ * lead's, which shows under Closed instead (closedLeadRows). The Outreach page
+ * and the briefing both read it.
+ */
+export function draftsOutsideClosed<T extends Pick<OutreachDraft, 'status' | 'subjectType' | 'subjectRef'>>(
+  drafts: readonly T[],
+  closed: readonly Pick<ClosedRow, 'subjectType' | 'subjectRef'>[],
+): T[] {
+  const keys = new Set(closed.map(subjectKey))
+  return drafts.filter((draft) => !(CLOSED_HIDES.includes(draft.status) && keys.has(subjectKey(draft))))
 }
 
 /** "Last call: Left a message, Nov 14 · 2 calls". */

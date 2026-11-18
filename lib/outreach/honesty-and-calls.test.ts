@@ -7,11 +7,11 @@ import { describe, it } from 'node:test'
 import type { CallModel } from '@/lib/briefing/narrative'
 import { WEBSITE_STATUSES } from '@/lib/new-businesses/website-rules'
 
-import { ASKED_NOT_TO_CONTACT_REFUSAL, askedNotToContact, logCall, summarizeCalls, type CallOutcome, type OutreachCall } from './calls'
+import { ASKED_NOT_TO_CONTACT_REFUSAL, callHistoryUnreadable, logCall, readClosedBy, summarizeCalls, type CallOutcome, type OutreachCall } from './calls'
 import { siteForBusiness, siteForProspect } from './contacts/rules'
 import { buildOutreachContext, hasSpecificFinding } from './context'
 import { MANUAL_PROMPT_VERSION, writeDraft, writeManualDraft, type DraftDeps } from './draft'
-import { MemoryCallStore } from './fixtures/memory-call-store'
+import { MemoryCallStore, OPEN_LEAD } from './fixtures/memory-call-store'
 import { MemoryGmailConnectionStore, MemoryOutreachStore } from './fixtures/memory-store'
 import { FIXTURE_SETTINGS, GOOD_BUSINESS_REPLY, GOOD_PROSPECT_REPLY, businessLead, prospectLead } from './fixtures/leads.fixture'
 import { NOW as SEND_NOW, TEST_CONFIG, connectionFor, scriptedFetch } from './fixtures/gmail.fixture'
@@ -36,7 +36,7 @@ function counting(reply: object): { model: CallModel; calls: () => number } {
 }
 
 function deps(store: MemoryOutreachStore, model: CallModel | null, extra: Partial<DraftDeps> = {}): DraftDeps {
-  return { store, callModel: model, modelName: 'test-model', now: () => NOW, ...extra }
+  return { store, callModel: model, modelName: 'test-model', now: () => NOW, calls: new MemoryCallStore(), ...extra }
 }
 
 const businessVoice = () => voiceContextFor(buildOutreachContext(businessLead()), FIXTURE_SETTINGS.studioName)
@@ -171,10 +171,10 @@ describe('Write it yourself', () => {
     const created = await writeManualDraft(deps(store, null), lead, { toEmail: 'info@desertbloom.example', subject: 'Your new shop', body: 'Hello,\n\nShort.' })
     assert.ok(created.ok)
     const check = async () => ['It called the business new, newly opened or recently started, or mentioned a license.']
-    const refused = await approveDraft(store, created.draftId, NOW.toISOString(), { checkRules: check })
+    const refused = await approveDraft(store, created.draftId, NOW.toISOString(), { ...OPEN_LEAD, checkRules: check })
     assert.equal(refused.ok, false)
     if (!refused.ok) assert.match(refused.error, /does not meet the writing rules: It called the business new/)
-    const passing = await approveDraft(store, created.draftId, NOW.toISOString(), { checkRules: async () => [] })
+    const passing = await approveDraft(store, created.draftId, NOW.toISOString(), { ...OPEN_LEAD, checkRules: async () => [] })
     assert.ok(passing.ok)
   })
 })
@@ -202,7 +202,7 @@ describe('asked not to be contacted', () => {
     const written = await writeDraft(deps(earlier, model), lead)
     assert.ok(written.ok)
     await earlier.updateDraft(written.draftId, ['draft'], { toEmail: 'info@desertbloom.example', updatedAt: NOW.toISOString() })
-    const approved = await approveDraft(earlier, written.draftId, NOW.toISOString(), { askedNotToContact: (d) => askedNotToContact(calls, d) })
+    const approved = await approveDraft(earlier, written.draftId, NOW.toISOString(), { closedBy: (d) => readClosedBy(calls, d) })
     assert.equal(approved.ok, false)
     if (!approved.ok) assert.match(approved.error, /asked not to be contacted/)
   })
@@ -255,14 +255,15 @@ describe('asked not to be contacted', () => {
   })
 })
 
-describe('a missing call table', () => {
-  it('blocks nothing and hides the call features, without throwing', async () => {
+describe('a call history that cannot be read', () => {
+  it('refuses drafting, and hides the call features on the page, without throwing', async () => {
     const calls = new MemoryCallStore()
     calls.failing = true
-    assert.equal(await askedNotToContact(calls, { subjectType: 'prospect', subjectRef: 'p-1' }), false)
+    assert.deepEqual(await readClosedBy(calls, { subjectType: 'prospect', subjectRef: 'p-1' }), { readable: false })
     const store = new MemoryOutreachStore(FIXTURE_SETTINGS)
-    const { model } = counting(GOOD_PROSPECT_REPLY)
-    assert.ok((await writeDraft(deps(store, model, { calls }), prospectLead())).ok)
+    const { model, calls: modelCalls } = counting(GOOD_PROSPECT_REPLY)
+    assert.deepEqual(await writeDraft(deps(store, model, { calls }), prospectLead()), { ok: false, reason: 'calls_unreadable', message: callHistoryUnreadable('drafted') })
+    assert.equal(modelCalls(), 0)
 
     const lead = worklistLead({ phone: '702-555-0142' })
     const [row] = acceptedLeadRows({ leads: [lead], states: [], contacts: [contactRow(lead, 'none_found')], suppressions: [], generalRunQueued: false, calls: null })

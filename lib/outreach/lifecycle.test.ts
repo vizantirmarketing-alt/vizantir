@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict'
 import { beforeEach, describe, it } from 'node:test'
 
+import { OPEN_LEAD } from './fixtures/memory-call-store'
 import { MemoryOutreachStore } from './fixtures/memory-store'
 import { FIXTURE_SETTINGS } from './fixtures/leads.fixture'
 import {
@@ -53,7 +54,7 @@ const EDIT = { toEmail: ' Owner@Firm.Example ', subject: 'A better subject', bod
 
 describe('editing and locking', () => {
   it('a draft can be edited; the recipient is normalized and the subject kept to one line', async () => {
-    const result = await editDraft(store, id, { ...EDIT, subject: 'Line one\r\nBcc: evil@attacker.example' }, T2)
+    const result = await editDraft(store, id, { ...EDIT, subject: 'Line one\r\nBcc: evil@attacker.example' }, T2, OPEN_LEAD)
     assert.ok(result.ok)
     if (!result.ok) return
     assert.equal(result.draft.toEmail, 'owner@firm.example')
@@ -63,32 +64,32 @@ describe('editing and locking', () => {
   })
 
   it('an invalid recipient is refused on save', async () => {
-    const result = await editDraft(store, id, { ...EDIT, toEmail: 'owner@firm' }, T2)
+    const result = await editDraft(store, id, { ...EDIT, toEmail: 'owner@firm' }, T2, OPEN_LEAD)
     assert.deepEqual(result, { ok: false, error: 'Enter a valid recipient email.' })
   })
 
   it('approve needs a recipient, records approved_at and locks the text', async () => {
-    assert.deepEqual(await approveDraft(store, id, T2), { ok: false, error: 'Add a valid recipient email before approving.' })
-    await editDraft(store, id, EDIT, T2)
-    const approved = await approveDraft(store, id, T2)
+    assert.deepEqual(await approveDraft(store, id, T2, OPEN_LEAD), { ok: false, error: 'Add a valid recipient email before approving.' })
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    const approved = await approveDraft(store, id, T2, OPEN_LEAD)
     assert.ok(approved.ok && approved.draft.status === 'approved' && approved.draft.approvedAt === T2)
-    const locked = await editDraft(store, id, { ...EDIT, body: 'Changed after approval.' }, T2)
+    const locked = await editDraft(store, id, { ...EDIT, body: 'Changed after approval.' }, T2, OPEN_LEAD)
     assert.equal(locked.ok, false)
     assert.equal((await store.getDraft(id))!.body, 'Hello,\n\nEdited.')
   })
 
   it('edit again returns it to draft and clears approved_at', async () => {
-    await editDraft(store, id, EDIT, T2)
-    await approveDraft(store, id, T2)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    await approveDraft(store, id, T2, OPEN_LEAD)
     const back = await editAgain(store, id, T2)
     assert.ok(back.ok && back.draft.status === 'draft' && back.draft.approvedAt === null)
-    assert.equal((await editDraft(store, id, { ...EDIT, body: 'Now editable.' }, T2)).ok, true)
+    assert.equal((await editDraft(store, id, { ...EDIT, body: 'Now editable.' }, T2, OPEN_LEAD)).ok, true)
   })
 
   it('mark as sent only from approved, recording sent_at', async () => {
     assert.equal((await markSent(store, id, T2)).ok, false)
-    await editDraft(store, id, EDIT, T2)
-    await approveDraft(store, id, T2)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    await approveDraft(store, id, T2, OPEN_LEAD)
     const sent = await markSent(store, id, T2)
     assert.ok(sent.ok && sent.draft.status === 'sent' && sent.draft.sentAt === T2)
     assert.equal(await store.countSentSince(localDayStartIso(new Date(T2))), 1)
@@ -98,15 +99,15 @@ describe('editing and locking', () => {
 
   it('discard from draft or approved; a discarded draft accepts nothing', async () => {
     assert.ok((await discardDraft(store, id, T2)).ok)
-    assert.equal((await editDraft(store, id, EDIT, T2)).ok, false)
-    assert.equal((await approveDraft(store, id, T2)).ok, false)
+    assert.equal((await editDraft(store, id, EDIT, T2, OPEN_LEAD)).ok, false)
+    assert.equal((await approveDraft(store, id, T2, OPEN_LEAD)).ok, false)
     assert.equal((await doNotContact(store, id, T2)).ok, false)
   })
 
   it('a second approve of the same draft is refused (two tabs)', async () => {
-    await editDraft(store, id, EDIT, T2)
-    assert.ok((await approveDraft(store, id, T2)).ok)
-    assert.equal((await approveDraft(store, id, T2)).ok, false)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    assert.ok((await approveDraft(store, id, T2, OPEN_LEAD)).ok)
+    assert.equal((await approveDraft(store, id, T2, OPEN_LEAD)).ok, false)
   })
 })
 
@@ -120,15 +121,15 @@ describe('one active draft per subject', () => {
     await discardDraft(store, id, T2)
     const next = await newDraft()
     assert.ok(next)
-    await editDraft(store, next, EDIT, T2)
-    await approveDraft(store, next, T2)
+    await editDraft(store, next, EDIT, T2, OPEN_LEAD)
+    await approveDraft(store, next, T2, OPEN_LEAD)
     await markSent(store, next, T2)
     assert.ok(await newDraft())
   })
 
   it('edit again cannot create a second active draft', async () => {
-    await editDraft(store, id, EDIT, T2)
-    await approveDraft(store, id, T2)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    await approveDraft(store, id, T2, OPEN_LEAD)
     await markSent(store, id, T2)
     const other = await newDraft()
     assert.ok(other)
@@ -150,21 +151,21 @@ describe('do not contact and the suppression list', () => {
 
   it('approve is refused for a suppressed address', async () => {
     await addSuppressionByHand(store, { email: 'owner@firm.example', wholeDomain: false }, T1)
-    await editDraft(store, id, EDIT, T2)
-    const result = await approveDraft(store, id, T2)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    const result = await approveDraft(store, id, T2, OPEN_LEAD)
     assert.equal(result.ok, false)
     assert.match(result.ok ? '' : result.error, /do-not-contact list/)
   })
 
   it('approve is refused for an address at a suppressed domain', async () => {
     await addSuppressionByHand(store, { email: 'info@firm.example', wholeDomain: true }, T1)
-    await editDraft(store, id, EDIT, T2)
-    assert.equal((await approveDraft(store, id, T2)).ok, false)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    assert.equal((await approveDraft(store, id, T2, OPEN_LEAD)).ok, false)
   })
 
   it('do not contact adds the recipient and discards the draft', async () => {
-    await editDraft(store, id, EDIT, T2)
-    await approveDraft(store, id, T2)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    await approveDraft(store, id, T2, OPEN_LEAD)
     const result = await doNotContact(store, id, T2)
     assert.ok(result.ok && result.draft.status === 'discarded')
     assert.deepEqual(
@@ -174,8 +175,8 @@ describe('do not contact and the suppression list', () => {
   })
 
   it('do not contact on a sent email keeps it recorded as sent', async () => {
-    await editDraft(store, id, EDIT, T2)
-    await approveDraft(store, id, T2)
+    await editDraft(store, id, EDIT, T2, OPEN_LEAD)
+    await approveDraft(store, id, T2, OPEN_LEAD)
     await markSent(store, id, T2)
     const result = await doNotContact(store, id, T2)
     assert.ok(result.ok && result.draft.status === 'sent')

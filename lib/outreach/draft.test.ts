@@ -6,6 +6,7 @@ import type { CallModel } from '@/lib/briefing/narrative'
 
 import { localDayStartIso } from './dates'
 import { writeDraft, type DraftDeps } from './draft'
+import { MemoryCallStore } from './fixtures/memory-call-store'
 import { MemoryOutreachStore } from './fixtures/memory-store'
 import {
   FIRST_REAL_DRAFT,
@@ -35,7 +36,7 @@ function scripted(replies: (string | { fail: string })[]): { model: CallModel; c
 }
 
 function deps(store: MemoryOutreachStore, model: CallModel | null): DraftDeps {
-  return { store, callModel: model, modelName: 'test-model', now: () => NOW }
+  return { store, callModel: model, modelName: 'test-model', now: () => NOW, calls: new MemoryCallStore() }
 }
 
 const GOOD_PROSPECT = JSON.stringify(GOOD_PROSPECT_REPLY)

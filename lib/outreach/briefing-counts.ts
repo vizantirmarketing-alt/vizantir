@@ -8,9 +8,12 @@
  *   approvedNotSent  approved drafts not sent yet
  *   toCall           accepted leads whose next step is Log a call, plus
  *                    leads whose draft in review has no recipient and which
- *                    Needs review offers Log a call for (draftCallPhone),
- *                    unless a logged call has closed the lead
+ *                    Needs review offers Log a call for (draftCallPhone)
  *   sentYesterday    emails marked sent during the previous local day
+ *
+ * A closed lead's unsent draft shows under Closed on the Outreach page, not in
+ * Needs review or Approved (draftsOutsideClosed), so it is in none of these
+ * counts.
  *
  * A lead has at most one open draft (the one-active-draft index) and a lead
  * with an open draft is never an Accepted leads row, so each lead counts in
@@ -21,7 +24,7 @@ import type { CallSummary } from '@/lib/outreach/calls'
 import type { ContactStatus } from '@/lib/outreach/contacts/rules'
 import { localDayStartIso } from '@/lib/outreach/dates'
 import type { OutreachDraft } from '@/lib/outreach/types'
-import { draftCallPhone, type WorklistRow } from '@/lib/outreach/worklist'
+import { draftCallPhone, draftsOutsideClosed, type ClosedRow, type WorklistRow } from '@/lib/outreach/worklist'
 
 export type OutreachBriefingCounts = {
   acceptedWaiting: number
@@ -52,20 +55,16 @@ export type DraftCallFacts = {
 
 type CountedDraft = Pick<OutreachDraft, 'status' | 'subjectType' | 'subjectRef' | 'toEmail'>
 
-/**
- * A draft in review whose next step is a call: Needs review offers Log a call
- * for it (draftCallPhone, the Outreach page's own rule), and no logged call
- * has closed the lead, as Accepted leads leaves closed leads out.
- */
+/** A draft in review whose next step is a call: Needs review offers Log a call for it (draftCallPhone, the Outreach page's own rule). */
 function isDraftToCall(draft: CountedDraft, facts: DraftCallFacts | undefined): boolean {
   if (draft.status !== 'draft' || facts === undefined) return false
   const key = `${draft.subjectType}:${draft.subjectRef}`
-  if (facts.calls?.get(key)?.closedBy) return false
   const phone = draftCallPhone({
     toEmail: draft.toEmail,
     contactStatus: facts.contactStatuses.get(key) ?? null,
     phone: facts.phones.get(key) ?? null,
     callsReadable: facts.calls !== null,
+    closed: Boolean(facts.calls?.get(key)?.closedBy),
   })
   return phone !== null
 }
@@ -77,16 +76,19 @@ export function outreachBriefingCounts(input: {
   now: Date
   /** Absent: no draft is counted as a call. */
   draftCalls?: DraftCallFacts
+  /** The leads under Closed (closedLeadRows). Their unsent drafts are left out, as the Outreach page leaves them out. */
+  closed?: readonly Pick<ClosedRow, 'subjectType' | 'subjectRef'>[]
 }): OutreachBriefingCounts {
   const { start, end } = yesterdayWindow(input.now)
   const startMs = Date.parse(start)
   const endMs = Date.parse(end)
-  const inReview = input.drafts.filter((draft) => draft.status === 'draft')
+  const drafts = draftsOutsideClosed(input.drafts, input.closed ?? [])
+  const inReview = drafts.filter((draft) => draft.status === 'draft')
   const draftsToCall = inReview.filter((draft) => isDraftToCall(draft, input.draftCalls)).length
   return {
     acceptedWaiting: input.rows.length,
     needsReview: inReview.length - draftsToCall,
-    approvedNotSent: input.drafts.filter((draft) => draft.status === 'approved').length,
+    approvedNotSent: drafts.filter((draft) => draft.status === 'approved').length,
     toCall: input.rows.filter((row) => row.action === 'log_call').length + draftsToCall,
     sentYesterday: input.sent.filter((draft) => {
       if (draft.status !== 'sent' || draft.sentAt === null) return false

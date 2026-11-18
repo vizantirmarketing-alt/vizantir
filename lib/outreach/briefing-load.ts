@@ -14,7 +14,7 @@ import { createOutreachStore } from '@/lib/outreach/deps'
 import { loadLeadFacts } from '@/lib/outreach/lead-facts'
 import { outreachBriefingCounts, type DraftCallFacts, type OutreachBriefingCounts } from '@/lib/outreach/briefing-counts'
 import { loadSiteReviewStates } from '@/lib/outreach/site-reviews/load'
-import { acceptedLeadRows, withLeadFacts } from '@/lib/outreach/worklist'
+import { acceptedLeadRows, closedLeadRows, withLeadFacts } from '@/lib/outreach/worklist'
 
 const DRAFTS_LIMIT = 300
 const SENT_LIMIT = 2000
@@ -33,8 +33,9 @@ export async function loadOutreachBriefingCounts(now: Date): Promise<OutreachBri
       loadSiteReviewStates(),
     ])
     if (worklist === null || facts === null) return null
+    const leads = withLeadFacts(worklist.leads, facts, siteReviews)
     const rows = acceptedLeadRows({
-      leads: withLeadFacts(worklist.leads, facts, siteReviews),
+      leads,
       states,
       contacts:
         worklist.contacts?.map((contact) => ({
@@ -54,7 +55,9 @@ export async function loadOutreachBriefingCounts(now: Date): Promise<OutreachBri
       phones: new Map([...facts].map(([key, fact]) => [key, fact.phone])),
       calls,
     }
-    return outreachBriefingCounts({ rows, drafts, sent, now, draftCalls })
+    // Closed leads, as the Outreach page lists them: their unsent drafts are not counted.
+    const closed = closedLeadRows(leads, calls)
+    return outreachBriefingCounts({ rows, drafts, sent, now, draftCalls, closed })
   } catch {
     return null
   }

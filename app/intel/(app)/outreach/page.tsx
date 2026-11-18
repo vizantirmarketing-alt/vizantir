@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { AcceptedLeads } from '@/app/intel/_components/outreach/AcceptedLeads'
+import { ClosedCallAction } from '@/app/intel/_components/outreach/ClosedCallAction'
+import { ClosedDraftDiscard } from '@/app/intel/_components/outreach/ClosedDraftDiscard'
 import { DraftCallAction } from '@/app/intel/_components/outreach/DraftCallAction'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { WebsiteCheckRunChip } from '@/app/intel/_components/ui/StatusChip'
@@ -25,6 +27,7 @@ import {
   acceptedLeadRows,
   closedLeadRows,
   draftCallPhone,
+  draftsOutsideClosed,
   withLeadFacts,
   type ClosedRow,
   type WorklistLeadInput,
@@ -234,6 +237,7 @@ export default async function OutreachPage() {
       contactStatus: contactStatusByKey.get(key) ?? null,
       phone: facts?.get(key)?.phone ?? null,
       callsReadable: calls !== null,
+      closed: Boolean(calls?.get(key)?.closedBy),
     })
   }
 
@@ -257,7 +261,9 @@ export default async function OutreachPage() {
           calls,
         })
       : null
-  const closedRows = leads !== null ? closedLeadRows(leads, calls) : []
+  // A closed lead shows under Closed only: its unsent draft is listed there, not in Needs review or Approved.
+  const closedRows = leads !== null ? closedLeadRows(leads, calls, data.ok ? data.drafts : []) : []
+  const listedDrafts = data.ok ? draftsOutsideClosed(data.drafts, closedRows) : []
   // The same states as the list, over every accepted lead. null when contact addresses cannot be read.
   const counts =
     worklist !== null && contactInputs !== null && latest !== null
@@ -329,7 +335,7 @@ export default async function OutreachPage() {
           </Panel>
 
           {GROUPS.map((group) => {
-            const drafts = data.drafts.filter((draft) => group.statuses.includes(draft.status))
+            const drafts = listedDrafts.filter((draft) => group.statuses.includes(draft.status))
             if (drafts.length === 0 && group.hideWhenEmpty) return null
             return (
               <Panel key={group.title} title={`${group.title} · ${drafts.length}`}>
@@ -359,7 +365,7 @@ export default async function OutreachPage() {
   )
 }
 
-/** Leads a call closed, with the reason. */
+/** Leads a call closed, with the reason, Discard draft for an unsent draft, and Log a call where a later call can reopen it. */
 function ClosedList({ rows }: { rows: ClosedRow[] }) {
   return (
     <ul className="divide-y divide-black/8">
@@ -370,6 +376,8 @@ function ClosedList({ rows }: { rows: ClosedRow[] }) {
               {row.name}
             </Link>
             <p className="intel-secondary text-meta">{OUTREACH_SUBJECT_LABELS[row.subjectType]}</p>
+            {row.openDraft !== null ? <ClosedDraftDiscard draftId={row.openDraft.id} status={row.openDraft.status} /> : null}
+            {row.canLogCall ? <ClosedCallAction lead={{ subjectType: row.subjectType, subjectRef: row.subjectRef, leadId: row.leadId, name: row.name }} /> : null}
           </div>
           <p className="intel-secondary text-meta">
             {row.reason}, {formatShortDate(row.closedAt)}

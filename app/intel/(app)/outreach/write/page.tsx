@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react'
 import { ManualDraftForm } from '@/app/intel/_components/outreach/ManualDraftForm'
 import { Panel } from '@/app/intel/_components/ui/Panel'
 import { requireIntelUser } from '@/lib/auth/allowlist'
-import { ASKED_NOT_TO_CONTACT_REFUSAL, askedNotToContact } from '@/lib/outreach/calls'
+import { closedByCalls, closedLeadRefusal } from '@/lib/outreach/calls'
 import { createCallStore } from '@/lib/outreach/calls-store'
 import { createContactStore } from '@/lib/outreach/contacts/store'
 import { isDraftable, subjectOf } from '@/lib/outreach/context'
@@ -86,8 +86,10 @@ export default async function WriteEmailPage({ searchParams }: PageProps) {
     const active = await store.findActiveDraft(subject.subjectType, subject.subjectRef)
     const settings = active === null ? await store.getSettings() : null
     const missing = missingSettings(settings)
+    // Closed by a call: asked not to be contacted, or a latest call of not interested or wrong number.
+    const closedBy = active === null ? await closedByCalls(createCallStore(), subject) : null
     if (active !== null) loadedPage = { kind: 'active', draftId: active.id }
-    else if (await askedNotToContact(createCallStore(), subject)) loadedPage = { kind: 'refused', text: ASKED_NOT_TO_CONTACT_REFUSAL }
+    else if (closedBy !== null) loadedPage = { kind: 'refused', text: closedLeadRefusal(closedBy) }
     else if (settings === null || missing.length > 0) loadedPage = { kind: 'refused', text: missingSettingsMessage(missing), settingsLink: true }
     else loadedPage = { kind: 'ready', footer: buildFooter(settings), toEmail: await prefillRecipient(store, createContactStore(), subject) }
   } catch {

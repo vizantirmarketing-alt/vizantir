@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
 import { PhoneLink } from '@/app/intel/_components/outreach/AcceptedLeads'
+import { ClosedDraftDiscard } from '@/app/intel/_components/outreach/ClosedDraftDiscard'
 import { DraftCallAction } from '@/app/intel/_components/outreach/DraftCallAction'
-import { callsReadableFor } from '@/lib/outreach/calls-store'
+import { closedByCalls, closedLeadRefusal } from '@/lib/outreach/calls'
+import { callsReadableFor, createCallStore } from '@/lib/outreach/calls-store'
 import { draftCallPhone } from '@/lib/outreach/worklist'
 import { OutreachDraftEditor } from '@/app/intel/_components/outreach/OutreachDraftEditor'
 import { loadLeadPhone } from '@/lib/outreach/lead-facts'
@@ -114,16 +116,17 @@ export default async function OutreachDraftPage({ params }: PageProps) {
     )
   }
   if (draft === null) notFound()
-  const [review, contact, sentToBusiness, phone, contactStatus, callsReadable] = await Promise.all([
+  const [review, contact, sentToBusiness, phone, contactStatus, callsReadable, closedBy] = await Promise.all([
     reviewFor(draft, settings?.studioName ?? ''),
     draft.status === 'discarded' ? Promise.resolve(null) : loadDraftContact(draft.subjectType, draft.subjectRef),
     sentFor(draft),
     loadLeadPhone(draft.subjectType, draft.subjectRef, draft.leadId),
     loadContactStatus(draft.subjectType, draft.subjectRef),
     draft.status === 'draft' ? callsReadableFor(draft) : Promise.resolve(false),
+    draft.status === 'draft' || draft.status === 'approved' ? closedByCalls(createCallStore(), draft) : Promise.resolve(null),
   ])
   // A draft that needs review and has no recipient keeps Log a call when no address is published.
-  const callPhone = draft.status === 'draft' ? draftCallPhone({ toEmail: draft.toEmail, contactStatus, phone, callsReadable }) : null
+  const callPhone = draft.status === 'draft' ? draftCallPhone({ toEmail: draft.toEmail, contactStatus, phone, callsReadable, closed: closedBy !== null }) : null
   // Every other email sent to this business, newest first.
   const otherSent = sentToBusiness.filter((row) => row.id !== draft.id)
   const alreadyEmailedOn =
@@ -171,6 +174,29 @@ export default async function OutreachDraftPage({ params }: PageProps) {
       <WrittenFromPanel items={review?.basis ?? null} />
       {review !== null && review.warnings.length > 0 && draft.status !== 'discarded' ? <DraftWarnings warnings={review.warnings} /> : null}
 
+      {closedBy !== null && (draft.status === 'draft' || draft.status === 'approved') ? (
+        // A closed lead's unsent draft: read only, with Discard draft as the one action.
+        <Panel title="Email">
+          <div className="flex min-w-0 flex-col gap-3">
+            <p className="intel-body text-body" role="status">
+              {closedLeadRefusal(closedBy)}
+            </p>
+            <div className="min-w-0">
+              <p className="intel-secondary text-meta">To</p>
+              <p className="mt-1 intel-body text-foreground [overflow-wrap:anywhere]">{draft.toEmail ?? 'No recipient'}</p>
+            </div>
+            <div className="min-w-0">
+              <p className="intel-secondary text-meta">Subject</p>
+              <p className="mt-1 intel-body text-foreground [overflow-wrap:anywhere]">{draft.subject}</p>
+            </div>
+            <div className="min-w-0">
+              <p className="intel-secondary text-meta">Message</p>
+              <p className="mt-1 whitespace-pre-wrap intel-body text-foreground [overflow-wrap:anywhere]">{draft.body}</p>
+            </div>
+            <ClosedDraftDiscard draftId={draft.id} status={draft.status} />
+          </div>
+        </Panel>
+      ) : (
       <Panel title="Email">
         <OutreachDraftEditor
           key={draft.updatedAt}
@@ -183,6 +209,7 @@ export default async function OutreachDraftPage({ params }: PageProps) {
           alreadyEmailedOn={alreadyEmailedOn}
         />
       </Panel>
+      )}
 
       {otherSent.length > 0 ? (
         <Panel title={`Other emails to this business · ${otherSent.length}`}>

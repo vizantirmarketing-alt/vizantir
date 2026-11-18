@@ -11,6 +11,7 @@ import { siteForBusiness } from './contacts/rules'
 import { buildOutreachContext, hasSpecificFinding, outreachBasis, type NewBusinessLead } from './context'
 import { writeDraft, type DraftDeps } from './draft'
 import { FIXTURE_SETTINGS, businessLead } from './fixtures/leads.fixture'
+import { MemoryCallStore } from './fixtures/memory-call-store'
 import { MemoryOutreachStore } from './fixtures/memory-store'
 import { NO_FINDING_TEXT } from './params'
 import { outreachSystemPrompt } from './prompt'
@@ -57,7 +58,7 @@ function counting(reply: object): { model: CallModel; calls: () => number } {
 }
 
 function deps(store: MemoryOutreachStore, model: CallModel | null): DraftDeps {
-  return { store, callModel: model, modelName: 'test-model', now: () => NOW }
+  return { store, callModel: model, modelName: 'test-model', now: () => NOW, calls: new MemoryCallStore() }
 }
 
 const GOOD_REVIEWED_REPLY = {
@@ -224,7 +225,7 @@ describe('worklist: site review states', () => {
 })
 
 describe('Needs review: a draft with no recipient keeps the call', () => {
-  const base = { toEmail: null, contactStatus: 'none_found' as const, phone: '702-555-0142', callsReadable: true }
+  const base = { toEmail: null, contactStatus: 'none_found' as const, phone: '702-555-0142', callsReadable: true, closed: false }
 
   it('shows the phone for no_page, none_found and named_only', () => {
     for (const contactStatus of ['no_page', 'none_found', 'named_only'] as const) {

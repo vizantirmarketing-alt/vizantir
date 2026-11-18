@@ -17,6 +17,7 @@
  * refused.
  */
 
+import { callHistoryUnreadable, closedLeadRefusal, type ClosedRead } from '@/lib/outreach/calls'
 import { singleLine } from '@/lib/outreach/mailto'
 import {
   OUTREACH_BODY_MAX,
@@ -52,12 +53,21 @@ export function isSuppressed(email: string, entries: readonly Pick<Suppression, 
 
 export type DraftEdit = { toEmail: string; subject: string; body: string }
 
-export async function editDraft(store: OutreachStore, id: string, edit: DraftEdit, nowIso: string): Promise<LifecycleResult> {
+export async function editDraft(
+  store: OutreachStore,
+  id: string,
+  edit: DraftEdit,
+  nowIso: string,
+  guards: Pick<ApproveGuards, 'closedBy'>,
+): Promise<LifecycleResult> {
   const current = await load(store, id)
   if ('error' in current) return { ok: false, error: current.error }
   if (current.status !== 'draft') {
     return { ok: false, error: 'Approved emails are locked. Choose Edit again to change the text.' }
   }
+  const closed = await guards.closedBy(current)
+  if (!closed.readable) return { ok: false, error: callHistoryUnreadable('saved') }
+  if (closed.closedBy !== null) return { ok: false, error: closedLeadRefusal(closed.closedBy) }
   const toEmail = normalizeEmail(edit.toEmail.replace(/[\r\n]+/g, ''))
   if (toEmail.length > 0 && !isValidEmail(toEmail)) return { ok: false, error: 'Enter a valid recipient email.' }
   const subject = singleLine(edit.subject)
@@ -70,8 +80,12 @@ export async function editDraft(store: OutreachStore, id: string, edit: DraftEdi
 }
 
 export type ApproveGuards = {
-  /** True when the lead asked not to be contacted (the call log). */
-  askedNotToContact?: (draft: OutreachDraft) => Promise<boolean>
+  /**
+   * The lead's call history (readClosedBy): closed covers "Asked not to be
+   * contacted" at any point, and a latest call of "Spoke: not interested" or
+   * "Wrong number". Not readable refuses. Required, so no caller skips it.
+   */
+  closedBy: (draft: OutreachDraft) => Promise<ClosedRead>
   /**
    * The hard voice rules a hand-written draft breaks, in plain words; null
    * when the lead cannot be loaded. Model drafts passed them when written.
@@ -79,13 +93,13 @@ export type ApproveGuards = {
   checkRules?: (draft: OutreachDraft) => Promise<string[] | null>
 }
 
-export async function approveDraft(store: OutreachStore, id: string, nowIso: string, guards: ApproveGuards = {}): Promise<LifecycleResult> {
+export async function approveDraft(store: OutreachStore, id: string, nowIso: string, guards: ApproveGuards): Promise<LifecycleResult> {
   const current = await load(store, id)
   if ('error' in current) return { ok: false, error: current.error }
   if (current.status !== 'draft') return { ok: false, error: 'Only a draft that needs review can be approved.' }
-  if (guards.askedNotToContact !== undefined && (await guards.askedNotToContact(current))) {
-    return { ok: false, error: 'This business asked not to be contacted. No email can be drafted, approved or sent for it.' }
-  }
+  const closed = await guards.closedBy(current)
+  if (!closed.readable) return { ok: false, error: callHistoryUnreadable('approved') }
+  if (closed.closedBy !== null) return { ok: false, error: closedLeadRefusal(closed.closedBy) }
   if (current.promptVersion === 'manual' && guards.checkRules !== undefined) {
     const reasons = await guards.checkRules(current)
     if (reasons === null) return { ok: false, error: 'This lead can no longer be loaded, so the email cannot be checked against the writing rules.' }

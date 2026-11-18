@@ -4,7 +4,8 @@
  * injected (lib/outreach/deps.ts in production, fakes in tests).
  *
  * Order of checks, each refusing with a plain message before any model call:
- *   1. the lead is accepted, has not asked not to be contacted, and has a
+ *   1. the lead is accepted, is not closed by a call (asked not to be
+ *      contacted, or a latest call of not interested or wrong number), and has a
  *      specific finding (hasSpecificFinding); a lead without one is never
  *      sent to the model, and the owner can write the email by hand instead
  *      (writeManualDraft)
@@ -22,7 +23,7 @@
  * without the owner's click.
  */
 
-import { ASKED_NOT_TO_CONTACT_REFUSAL, askedNotToContact, type CallStore } from '@/lib/outreach/calls'
+import { ASKED_NOT_TO_CONTACT_REFUSAL, callHistoryUnreadable, closedLeadRefusal, readClosedBy, type CallStore } from '@/lib/outreach/calls'
 import { NO_FINDING_TEXT, buildOutreachContext, hasSpecificFinding, isDraftable, subjectOf, type OutreachLead } from '@/lib/outreach/context'
 import { singleLine } from '@/lib/outreach/mailto'
 import { localDayStartIso } from '@/lib/outreach/dates'
@@ -45,8 +46,8 @@ export type DraftDeps = {
   now(): Date
   /** The found contact addresses. Absent or failing: To starts empty. */
   contacts?: Pick<ContactStore, 'getContact'>
-  /** The call log. Absent or failing (before migration 0035): no lead is blocked by it. */
-  calls?: Pick<CallStore, 'callsFor'>
+  /** The call log. Required: a log that cannot be read refuses drafting. */
+  calls: Pick<CallStore, 'callsFor'>
 }
 
 /** Recorded as both the model and the prompt version of a draft the owner wrote by hand. */
@@ -80,6 +81,10 @@ export async function prefillRecipient(
 export type WriteDraftRefusal =
   | 'not_accepted'
   | 'asked_not_to_contact'
+  /** Closed by a latest call of "Spoke: not interested" or "Wrong number". */
+  | 'closed'
+  /** The call history could not be read, so the lead could not be checked. */
+  | 'calls_unreadable'
   | 'no_finding'
   | 'draft_exists'
   | 'invalid'
@@ -95,7 +100,8 @@ export type WriteDraftResult =
   | { ok: true; draftId: string; attempts: 1 | 2 }
   | { ok: false; reason: WriteDraftRefusal; message: string }
 
-const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid'>, string> = {
+const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid' | 'closed'>, string> = {
+  calls_unreadable: callHistoryUnreadable('drafted'),
   not_accepted: 'Accept this lead before drafting an email.',
   asked_not_to_contact: ASKED_NOT_TO_CONTACT_REFUSAL,
   no_finding: NO_FINDING_TEXT,
@@ -107,7 +113,16 @@ const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules
   conflict: 'Another draft for this lead was saved at the same time. Open it from Outreach.',
 }
 
-function refuse(reason: Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid'>): WriteDraftResult {
+/** A lead closed by a call: asked not to be contacted keeps its own refusal; the other closing outcomes refuse as approving and sending do. */
+async function closedRefusal(calls: DraftDeps['calls'], subject: { subjectType: OutreachLead['type']; subjectRef: string }): Promise<WriteDraftResult | null> {
+  const read = await readClosedBy(calls, subject)
+  if (!read.readable) return refuse('calls_unreadable')
+  if (read.closedBy === null) return null
+  if (read.closedBy === 'asked_not_to_contact') return refuse('asked_not_to_contact')
+  return { ok: false, reason: 'closed', message: closedLeadRefusal(read.closedBy) }
+}
+
+function refuse(reason: Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid' | 'closed'>): WriteDraftResult {
   return { ok: false, reason, message: MESSAGES[reason] }
 }
 
@@ -134,7 +149,8 @@ async function attempt(
 
 export async function writeDraft(deps: DraftDeps, lead: OutreachLead): Promise<WriteDraftResult> {
   if (!isDraftable(lead)) return refuse('not_accepted')
-  if (await askedNotToContact(deps.calls, subjectOf(lead))) return refuse('asked_not_to_contact')
+  const closed = await closedRefusal(deps.calls, subjectOf(lead))
+  if (closed !== null) return closed
   // Nothing specific to say: the model is never called, whatever the page sent.
   if (!hasSpecificFinding(lead)) return refuse('no_finding')
 
@@ -217,7 +233,8 @@ export async function writeManualDraft(
 ): Promise<WriteDraftResult> {
   if (!isDraftable(lead)) return refuse('not_accepted')
   const { subjectType, subjectRef } = subjectOf(lead)
-  if (await askedNotToContact(deps.calls, { subjectType, subjectRef })) return refuse('asked_not_to_contact')
+  const closed = await closedRefusal(deps.calls, { subjectType, subjectRef })
+  if (closed !== null) return closed
 
   const settings = await deps.store.getSettings()
   const missing = missingSettings(settings)

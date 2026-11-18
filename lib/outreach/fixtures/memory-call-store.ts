@@ -1,9 +1,12 @@
 /**
  * TEST FIXTURE. In-memory CallStore used by tests only; never import from
- * application code. Set failing to act as if migration 0035 were not applied.
+ * application code. Set failing to act as if the call history cannot be read.
  */
 
-import type { CallStore, CallSubject, OutreachCall } from '@/lib/outreach/calls'
+import type { CallStore, CallSubject, ClosedRead, OutreachCall } from '@/lib/outreach/calls'
+
+/** The approve and edit guard for a lead whose call history was read and is open. */
+export const OPEN_LEAD = { closedBy: async (): Promise<ClosedRead> => ({ readable: true, closedBy: null }) }
 
 export class MemoryCallStore implements CallStore {
   calls: OutreachCall[] = []

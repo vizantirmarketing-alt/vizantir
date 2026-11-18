@@ -10,7 +10,7 @@ import { MAX_WAITING_SITE_REVIEW_RUNS, queueLeadSiteReview } from '@/lib/outreac
 import { createSiteReviewStore } from '@/lib/outreach/site-reviews/store'
 import { createDraftDeps, createOutreachStore } from '@/lib/outreach/deps'
 import { writeDraft, writeManualDraft } from '@/lib/outreach/draft'
-import { askedNotToContact, callInputSchema, logCall } from '@/lib/outreach/calls'
+import { callInputSchema, logCall, readClosedBy } from '@/lib/outreach/calls'
 import { createCallStore } from '@/lib/outreach/calls-store'
 import { disconnect } from '@/lib/outreach/gmail/connect'
 import { checkDraftRules, createGmailConnectionStore, createSendDeps, readGmailConfig } from '@/lib/outreach/gmail/deps'
@@ -193,7 +193,8 @@ export async function saveOutreachDraft(id: string, edit: { toEmail: string; sub
     await requireIntelUser()
     return { ok: false, error: parsed.error.issues[0]?.message ?? 'Check the draft.' }
   }
-  return lifecycle(id, (now) => editDraft(createOutreachStore(), id, parsed.data, now))
+  const calls = createCallStore()
+  return lifecycle(id, (now) => editDraft(createOutreachStore(), id, parsed.data, now, { closedBy: (draft) => readClosedBy(calls, draft) }))
 }
 
 export async function approveOutreachDraft(id: string): Promise<OutreachActionResult> {
@@ -201,7 +202,7 @@ export async function approveOutreachDraft(id: string): Promise<OutreachActionRe
     const store = createOutreachStore()
     const calls = createCallStore()
     return approveDraft(store, id, now, {
-      askedNotToContact: (draft) => askedNotToContact(calls, draft),
+      closedBy: (draft) => readClosedBy(calls, draft),
       // Hand-written drafts meet the same hard writing rules before they are approved.
       checkRules: async (draft) => checkDraftRules(draft, (await store.getSettings())?.studioName ?? ''),
     })

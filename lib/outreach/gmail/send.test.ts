@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict'
 import { beforeEach, describe, it } from 'node:test'
 
+import { MemoryCallStore } from '../fixtures/memory-call-store'
 import { MemoryGmailConnectionStore, MemoryOutreachStore } from '../fixtures/memory-store'
 import { FIXTURE_SETTINGS } from '../fixtures/leads.fixture'
 import { decodeMultipart } from '../fixtures/mime.fixture'
@@ -44,7 +45,7 @@ async function newDraft(overrides: { toEmail?: string | null; subjectRef?: strin
 }
 
 function deps(fetchFn: SendDeps['fetch'], overrides: Partial<SendDeps> = {}): SendDeps {
-  return { store, connections, config: TEST_CONFIG, fetch: fetchFn, now: () => NOW, checkRules: async () => [], ...overrides }
+  return { store, connections, config: TEST_CONFIG, fetch: fetchFn, now: () => NOW, checkRules: async () => [], calls: new MemoryCallStore(), ...overrides }
 }
 
 const sendCalls = (calls: { url: string }[]) => calls.filter((call) => call.url === GMAIL_SEND_URL).length

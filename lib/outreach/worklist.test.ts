@@ -12,6 +12,7 @@ import { siteForBusiness, siteForProspect } from './contacts/rules'
 import { MAX_WAITING_CONTACT_RUNS, queueLeadContactCheck, type ContactLead } from './contacts/runs'
 import { writeDraft } from './draft'
 import { MemoryContactStore } from './fixtures/memory-contact-store'
+import { MemoryCallStore } from './fixtures/memory-call-store'
 import { MemoryOutreachStore } from './fixtures/memory-store'
 import { FIXTURE_SETTINGS, GOOD_PROSPECT_REPLY, prospectLead } from './fixtures/leads.fixture'
 import { OUTREACH_SETTINGS_PATH, RESULT_COOKIE_PATH, RESULT_PARAM, settingsResultUrl } from './gmail/flash'
@@ -275,7 +276,7 @@ describe('the opt-out line', () => {
 
   it('ends the footer of a newly written draft', async () => {
     const store = new MemoryOutreachStore(FIXTURE_SETTINGS)
-    const result = await writeDraft({ store, callModel: model, modelName: 'test-model', now: () => NOW }, prospectLead())
+    const result = await writeDraft({ store, callModel: model, modelName: 'test-model', now: () => NOW, calls: new MemoryCallStore() }, prospectLead())
     assert.ok(result.ok)
     assert.ok(store.drafts[0]!.footer.endsWith("\n\nIf you'd rather not hear from me again, just reply and let me know. I won't write again."))
   })

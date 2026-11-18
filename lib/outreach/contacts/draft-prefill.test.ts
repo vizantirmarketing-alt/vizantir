@@ -6,6 +6,7 @@ import { describe, it } from 'node:test'
 import type { CallModel } from '@/lib/briefing/narrative'
 
 import { writeDraft, type DraftDeps } from '../draft'
+import { MemoryCallStore, OPEN_LEAD } from '../fixtures/memory-call-store'
 import { MemoryContactStore } from '../fixtures/memory-contact-store'
 import { MemoryOutreachStore } from '../fixtures/memory-store'
 import { FIXTURE_SETTINGS, GOOD_PROSPECT_REPLY, prospectLead } from '../fixtures/leads.fixture'
@@ -33,7 +34,7 @@ async function contactsWith(email: string): Promise<MemoryContactStore> {
 }
 
 function deps(store: MemoryOutreachStore, contacts?: MemoryContactStore): DraftDeps {
-  return { store, callModel: model, modelName: 'test-model', now: () => NOW, ...(contacts ? { contacts } : {}) }
+  return { store, callModel: model, modelName: 'test-model', now: () => NOW, calls: new MemoryCallStore(), ...(contacts ? { contacts } : {}) }
 }
 
 describe('drafting with a found contact address', () => {
@@ -85,7 +86,7 @@ describe('drafting with a found contact address', () => {
     const before = JSON.stringify(contacts.contacts)
     const result = await writeDraft(deps(store, contacts), LEAD)
     assert.ok(result.ok)
-    const edited = await editDraft(store, result.draftId, { toEmail: 'owner.choice@another.example', subject: 'Your contact page', body: GOOD_PROSPECT_REPLY.body }, NOW.toISOString())
+    const edited = await editDraft(store, result.draftId, { toEmail: 'owner.choice@another.example', subject: 'Your contact page', body: GOOD_PROSPECT_REPLY.body }, NOW.toISOString(), OPEN_LEAD)
     assert.ok(edited.ok)
     assert.equal(store.drafts[0]!.toEmail, 'owner.choice@another.example')
     assert.equal(JSON.stringify(contacts.contacts), before)
