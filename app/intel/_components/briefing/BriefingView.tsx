@@ -12,6 +12,7 @@ import {
 } from '@/lib/briefing/context'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { outreachPanelLines } from '@/lib/briefing/outreach-panel'
+import { deliveryIssueView, inquirySummaryLine, legacyDeliveryIssueLine, olderDeliveryIssueLine } from '@/lib/briefing/inquiry-view'
 import type { BriefingRecord } from '@/lib/briefing/generate'
 import { summaryUnavailableMessage } from '@/lib/briefing/messages'
 import { LEAD_STATUS_LABELS, type LeadStatus } from '@/lib/intel/lead-params'
@@ -135,6 +136,39 @@ function NewProspectsSection({ content }: { content: BriefingContent }) {
   )
 }
 
+/**
+ * Notification delivery issues, each tied to its inquiry. Every figure comes
+ * from the stored content, never from the narrative.
+ */
+function DeliveryIssues({ inquiries, unavailable }: { inquiries: BriefingContent['inquiries']; unavailable: ReadonlySet<string> }) {
+  const view = deliveryIssueView(inquiries, unavailable)
+  if (view.kind === 'none') return null
+  if (view.kind === 'unavailable') {
+    return <p className="mt-2 intel-secondary text-warning-severe">Notification delivery could not be checked when this briefing was generated.</p>
+  }
+  if (view.kind === 'legacy') return <p className="mt-2 intel-secondary text-meta">{legacyDeliveryIssueLine(view.count)}</p>
+  return (
+    <div className="mt-2">
+      {view.recent.length > 0 ? (
+        <>
+          <p className="intel-secondary font-medium text-warning-severe">Notification not delivered</p>
+          <ul className="mt-1 divide-y divide-black/8 intel-body">
+            {view.recent.map((issue) => (
+              <li key={issue.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
+                <RecordAnchor href={`/intel/leads/${issue.id}`}>{issue.company ?? 'No company given'}</RecordAnchor>
+                <span className="text-meta">
+                  Submitted {formatShortDate(issue.submittedAt)} · {issue.deliveryStatus}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+      {view.olderCount > 0 ? <p className="mt-1 intel-secondary text-meta">{olderDeliveryIssueLine(view.olderCount)}</p> : null}
+    </div>
+  )
+}
+
 export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
   const content: BriefingContent = briefing.content
   const unavailable = new Set(content.unavailable)
@@ -211,18 +245,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
           <Unavailable />
         ) : (
           <>
-            <p className="intel-body text-body">
-              {content.inquiries.recentTotal} new{' '}
-              {content.inquiries.recentTotal === 1 ? 'inquiry' : 'inquiries'} in the last{' '}
-              {INQUIRY_RECENT_DAYS} days
-              {content.inquiries.recent.length < content.inquiries.recentTotal
-                ? `, newest ${content.inquiries.recent.length} shown`
-                : ''}
-              {content.inquiries.deliveryIssues !== null && content.inquiries.deliveryIssues > 0
-                ? ` · ${content.inquiries.deliveryIssues} with notification delivery issues`
-                : ''}
-              .
-            </p>
+            <p className="intel-body text-body">{inquirySummaryLine(content.inquiries)}</p>
             {content.inquiries.recent.length > 0 ? (
               <ul className="mt-2 divide-y divide-black/8 intel-body">
                 {content.inquiries.recent.map((i) => (
@@ -236,6 +259,7 @@ export function BriefingView({ briefing }: { briefing: BriefingRecord }) {
                 ))}
               </ul>
             ) : null}
+            <DeliveryIssues inquiries={content.inquiries} unavailable={unavailable} />
             {content.inquiries.olderCount > 0 ? (
               <p className="mt-2 intel-secondary text-meta">
                 {content.inquiries.olderCount} older new{' '}

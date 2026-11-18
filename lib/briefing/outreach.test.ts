@@ -100,7 +100,7 @@ describe('narrative inquiries', () => {
 
   it('2 recent and 10 older are given as 2 new and a backlog of 10', () => {
     const inquiries = { newCount: 12, deliveryIssues: 0, recentTotal: 2, recent: [], olderCount: 10 }
-    assert.deepEqual(narrativeInquiries(inquiries), { recentNew: 2, olderBacklog: 10, deliveryIssues: 0, recent: [] })
+    assert.deepEqual(narrativeInquiries(inquiries), { recentNew: 2, olderBacklog: 10, deliveryIssues: [], recent: [] })
   })
 
   it('tells the model to report only recent inquiries as new and older ones only as a backlog count', () => {

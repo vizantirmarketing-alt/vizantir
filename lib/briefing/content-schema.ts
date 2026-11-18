@@ -55,6 +55,11 @@ export const briefingContentSchema = z.object({
   inquiries: z.object({
     newCount: z.number().nullable(),
     deliveryIssues: z.number().nullable(),
+    // Added with the delivery-issue fix: optional, so older stored briefings still read.
+    recentDeliveryIssues: z
+      .array(z.object({ id: z.string(), company: z.string().nullable(), submittedAt: z.string(), deliveryStatus: z.string() }))
+      .optional(),
+    olderDeliveryIssueCount: z.number().optional(),
     recentTotal: z.number(),
     recent: z.array(
       z.object({

@@ -8,6 +8,10 @@
  *   - new prospects: added in the prospect window, ordered by priority
  *   - per prospect: one performance line and one highlight evidence item
  *   - inquiries: at most 5 from the last 30 days; older ones are only a count
+ *   - delivery issues: new inquiries whose notification was not delivered,
+ *     split into recent and older by the same window as the inquiries
+ *     (isRecentInquiry); recent ones are listed by inquiry, older ones are
+ *     only a count and are never sent to the model
  *   - runs: finished in the run window; a failed run is dropped when a later
  *     run for the same market and industry saved at least one prospect,
  *     whatever that later run's final state
@@ -22,6 +26,7 @@
  */
 
 import { localAgeDays, localDateString } from '@/lib/briefing/dates'
+import { NOTIFY_STATUSES, type NotifyStatus } from '@/lib/intel/lead-params'
 import {
   PERFORMANCE_FACTOR,
   formatPerformanceSummary,
@@ -112,7 +117,38 @@ export type RawInquiry = {
 
 export type RawInquiryStats = {
   newCount: number | null
+  /** All-time, any status, from the Leads dashboard stats. Not used in new briefings: see RawDeliveryIssue. */
   deliveryIssues: number | null
+}
+
+/** Notification statuses that mean the owner was not told about an inquiry: every status except sent. */
+export const DELIVERY_ISSUE_STATUSES: readonly NotifyStatus[] = NOTIFY_STATUSES.filter((status) => status !== 'sent')
+
+export const DELIVERY_STATUS_LABELS: Record<NotifyStatus, string> = {
+  sent: 'Sent',
+  failed: 'Failed',
+  not_configured: 'Not configured',
+}
+
+/**
+ * A new inquiry whose notification was not delivered, as the delivery-issue
+ * loader returns it. Same population as the inquiries the briefing reports
+ * on (status new), any age; assembleBriefingContent splits it by window.
+ */
+export type RawDeliveryIssue = {
+  id: string
+  company: string | null
+  created_at: string
+  notify_status: NotifyStatus
+}
+
+/**
+ * Whether an inquiry falls in the briefing's recent window. The one
+ * definition used for the recent inquiry list and the delivery-issue split.
+ */
+export function isRecentInquiry(createdAt: string, windows: Pick<BriefingWindows, 'inquiriesSince'>): boolean {
+  const t = Date.parse(createdAt)
+  return !Number.isNaN(t) && t >= Date.parse(windows.inquiriesSince)
 }
 
 export type RawFinding = {
@@ -151,6 +187,8 @@ export type RawBriefingInputs = {
   /** rows: status new, newest first. olderCount: status new created before the inquiry window. */
   inquiries: LoaderResult<{ rows: RawInquiry[]; total: number; olderCount: number }>
   inquiryStats: LoaderResult<RawInquiryStats>
+  /** New inquiries with a notification delivery issue, any age. Optional so callers without it still assemble. */
+  deliveryIssues?: LoaderResult<RawDeliveryIssue[]>
   findings: LoaderResult<{ items: RawFinding[]; total: number }>
   runs: LoaderResult<RawRun[]>
   sources: LoaderResult<RawSource[]>
@@ -216,7 +254,20 @@ export type BriefingContent = {
   }[]
   inquiries: {
     newCount: number | null
+    /**
+     * New briefings: how many recent new inquiries have a delivery issue
+     * (recentDeliveryIssues.length), or null when that could not be loaded.
+     * Briefings saved before the fix hold the all-time count here.
+     */
     deliveryIssues: number | null
+    /**
+     * Recent new inquiries whose notification was not delivered, newest
+     * first, each tied to its inquiry. Optional so older stored briefings
+     * still read; absent there and when the loader failed.
+     */
+    recentDeliveryIssues?: BriefingDeliveryIssue[]
+    /** Older new inquiries with a delivery issue. A count only, never sent to the model. */
+    olderDeliveryIssueCount?: number
     /** New inquiries from the last 30 days. */
     recentTotal: number
     /** At most INQUIRIES_SHOWN, newest first, from the last 30 days only. */
@@ -264,6 +315,14 @@ export type BriefingContent = {
   quiet: boolean
   /** Validated model suggestions, or null when there is no narrative. */
   suggestedActions: SuggestedAction[] | null
+}
+
+export type BriefingDeliveryIssue = {
+  id: string
+  /** The inquiry's company, the name the briefing uses for an inquiry; null when none was given. */
+  company: string | null
+  submittedAt: string
+  deliveryStatus: string
 }
 
 export type SuggestedAction = {
@@ -470,13 +529,9 @@ export function assembleBriefingContent(
 
   const inquiryData = take('inquiries', inputs.inquiries, { rows: [], total: 0, olderCount: 0 })
   const stats = take('inquiryStats', inputs.inquiryStats, { newCount: null, deliveryIssues: null })
-  const inquiryCutoff = Date.parse(windows.inquiriesSince)
   // Data minimisation: explicit field picks only. Never spread a lead row.
   const recent = inquiryData.rows
-    .filter((row) => {
-      const t = Date.parse(row.created_at)
-      return !Number.isNaN(t) && t >= inquiryCutoff
-    })
+    .filter((row) => isRecentInquiry(row.created_at, windows))
     .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))
     .slice(0, INQUIRIES_SHOWN)
     .map((row) => ({
@@ -487,6 +542,23 @@ export function assembleBriefingContent(
     }))
   const olderCount = Math.max(0, inquiryData.olderCount)
   const recentTotal = Math.max(recent.length, inquiryData.total - olderCount)
+
+  // Delivery issues, split by the same window as the inquiries. Each recent one is tied to its inquiry.
+  const issueRows = inputs.deliveryIssues === undefined ? null : take('deliveryIssues', inputs.deliveryIssues, null as RawDeliveryIssue[] | null)
+  const issues = (issueRows ?? []).filter((row) => DELIVERY_ISSUE_STATUSES.includes(row.notify_status))
+  const recentDeliveryIssues: BriefingDeliveryIssue[] | undefined =
+    issueRows === null
+      ? undefined
+      : issues
+          .filter((row) => isRecentInquiry(row.created_at, windows))
+          .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))
+          .map((row) => ({
+            id: row.id,
+            company: row.company,
+            submittedAt: row.created_at,
+            deliveryStatus: DELIVERY_STATUS_LABELS[row.notify_status],
+          }))
+  const olderDeliveryIssueCount = issueRows === null || recentDeliveryIssues === undefined ? undefined : issues.length - recentDeliveryIssues.length
 
   const findings = take('findings', inputs.findings, { items: [], total: 0 })
   const allRuns = take('runs', inputs.runs, [])
@@ -533,7 +605,9 @@ export function assembleBriefingContent(
     topUnreviewed,
     inquiries: {
       newCount: stats.newCount,
-      deliveryIssues: stats.deliveryIssues,
+      // Scoped to the recent window and tied to inquiries; never the all-time dashboard count.
+      deliveryIssues: recentDeliveryIssues === undefined ? null : recentDeliveryIssues.length,
+      ...(recentDeliveryIssues === undefined ? {} : { recentDeliveryIssues, olderDeliveryIssueCount }),
       recentTotal,
       recent,
       olderCount,
@@ -568,6 +642,7 @@ export function contextRecordIds(content: BriefingContent): Set<string> {
   for (const p of content.newProspects) ids.add(p.id)
   for (const p of content.topUnreviewed) ids.add(p.id)
   for (const i of content.inquiries.recent) ids.add(i.id)
+  for (const i of content.inquiries.recentDeliveryIssues ?? []) ids.add(i.id)
   for (const f of content.findings.items) ids.add(f.findingKey)
   // A resolved failure is never the subject of an action.
   for (const r of content.runs) if (r.resolved !== true) ids.add(r.id)
@@ -583,7 +658,7 @@ export function recordLink(content: BriefingContent, recordId: string): Briefing
   if (content.newProspects.some((p) => p.id === recordId) || content.topUnreviewed.some((p) => p.id === recordId)) {
     return { href: `/intel/prospects/${recordId}`, kind: 'Prospect' }
   }
-  if (content.inquiries.recent.some((i) => i.id === recordId)) {
+  if (content.inquiries.recent.some((i) => i.id === recordId) || (content.inquiries.recentDeliveryIssues ?? []).some((i) => i.id === recordId)) {
     return { href: `/intel/leads/${recordId}`, kind: 'Inquiry' }
   }
   if (content.findings.items.some((f) => f.findingKey === recordId)) {

@@ -12,7 +12,9 @@ import 'server-only'
  *   countNewBusinessesSince               lib/new-businesses/load.ts
  *   countUnreviewedNoWebsite              lib/new-businesses/website-store.ts
  *   loadOutreachBriefingCounts            lib/outreach/briefing-load.ts
- * plus one select-only count below (countNewInquiriesBefore).
+ * plus one select-only count below (countNewInquiriesBefore) and one
+ * select-only read of new inquiries with a delivery issue
+ * (fetchNewInquiryDeliveryIssues), which returns no personal fields.
  * No sync function, detector, report generator or sender is called.
  *
  * Each section is loaded independently and reports its own failure, so one
@@ -20,10 +22,13 @@ import 'server-only'
  */
 
 import {
+  DELIVERY_ISSUE_STATUSES,
   NEW_PROSPECTS_LIMIT,
   type LoaderResult,
   type RawBriefingInputs,
+  type RawDeliveryIssue,
 } from '@/lib/briefing/context'
+import { isNotifyStatus } from '@/lib/intel/lead-params'
 import type { BriefingSources } from '@/lib/briefing/generate'
 import { fetchDecisionFeed } from '@/lib/intel/decisions/feed'
 import { fetchLeadDashboardStats, fetchLeads } from '@/lib/intel/leads'
@@ -53,6 +58,37 @@ async function countNewInquiriesBefore(cutoffIso: string): Promise<number | null
   return error ? null : count ?? 0
 }
 
+/** Plenty for any realistic backlog; the briefing lists recent ones and counts the rest. */
+const DELIVERY_ISSUES_LIMIT = 500
+
+/**
+ * New inquiries whose notification was not delivered, any age, newest first:
+ * the same population as the inquiries the briefing reports on (status new).
+ * Select-only. Reads id, company, created_at and notify_status only: no
+ * name, email, phone or message. The briefing splits them by its window.
+ */
+async function fetchNewInquiryDeliveryIssues(): Promise<RawDeliveryIssue[] | null> {
+  const { data, error } = await createSupabaseServiceRole()
+    .from('contact_submissions')
+    .select('id, company, created_at, notify_status')
+    .eq('status', 'new')
+    .in('notify_status', [...DELIVERY_ISSUE_STATUSES])
+    .order('created_at', { ascending: false })
+    .limit(DELIVERY_ISSUES_LIMIT)
+  if (error || !Array.isArray(data)) return null
+  const rows: RawDeliveryIssue[] = []
+  for (const row of data as unknown[]) {
+    if (typeof row !== 'object' || row === null) continue
+    const id = Reflect.get(row, 'id')
+    const company = Reflect.get(row, 'company')
+    const createdAt = Reflect.get(row, 'created_at')
+    const status = Reflect.get(row, 'notify_status')
+    if (typeof id !== 'string' || typeof createdAt !== 'string' || !isNotifyStatus(status)) continue
+    rows.push({ id, company: typeof company === 'string' && company.trim().length > 0 ? company : null, created_at: createdAt, notify_status: status })
+  }
+  return rows
+}
+
 async function attempt<T>(load: () => Promise<T | null>): Promise<LoaderResult<T>> {
   try {
     const value = await load()
@@ -64,7 +100,7 @@ async function attempt<T>(load: () => Promise<T | null>): Promise<LoaderResult<T
 
 export const briefingSources: BriefingSources = {
   async load({ windows }) {
-    const [newProspects, topUnreviewed, inquiries, inquiryStats, findings, runs, sources, newBusinesses, newBusinessesNoWebsite, outreach] =
+    const [newProspects, topUnreviewed, inquiries, inquiryStats, findings, runs, sources, newBusinesses, newBusinessesNoWebsite, outreach, deliveryIssues] =
       await Promise.all([
         attempt(() => fetchProspectsCreatedSince(windows.prospectsSince, NEW_PROSPECTS_LIMIT)),
         attempt(async () => {
@@ -145,6 +181,7 @@ export const briefingSources: BriefingSources = {
         attempt(() => countNewBusinessesSince(windows.prospectsSince)),
         attempt(() => countUnreviewedNoWebsite()),
         attempt(() => loadOutreachBriefingCounts(new Date())),
+        attempt(() => fetchNewInquiryDeliveryIssues()),
       ])
 
     const inputs: RawBriefingInputs = {
@@ -152,6 +189,7 @@ export const briefingSources: BriefingSources = {
       topUnreviewed,
       inquiries,
       inquiryStats,
+      deliveryIssues,
       findings,
       runs,
       sources,

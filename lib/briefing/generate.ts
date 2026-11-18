@@ -109,7 +109,8 @@ export async function generateBriefing(
   let narrative: string | null = null
   let error: string | null = null
 
-  if (content.unavailable.length === ALL_SECTIONS.length) {
+  // Every core section failed. Optional sections (delivery issues, outreach) may fail too, so compare by membership, not by count.
+  if (ALL_SECTIONS.every((section) => content.unavailable.includes(section))) {
     status = 'failed'
     error = 'all_sources_unavailable'
   } else if (content.quiet) {

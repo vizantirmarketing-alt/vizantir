@@ -18,6 +18,7 @@
 
 import { z } from 'zod'
 
+import { localDateString } from '@/lib/briefing/dates'
 import {
   contextRecordIds,
   type BriefingContent,
@@ -47,23 +48,40 @@ Rules:
 - actions: zero to three items the owner can act on today, such as reviewing a prospect, replying to an inquiry, or fixing a failed source. Each recordId must be copied exactly from an id, findingKey or provider in the JSON. Each text is one short imperative sentence.
 - inquiries.recentNew is the number of new inquiries from the last 30 days. Only these are new: report them as new inquiries.
 - inquiries.olderBacklog counts unanswered inquiries older than 30 days. They are not new: mention them only as a backlog count and never add them to the new ones. Never suggest an action about older inquiries, and never refer to anything that is not in the JSON.
+- When inquiries.recentNew and inquiries.olderBacklog are both 0, there are no inquiries: say nothing about inquiries.
+- inquiries.deliveryIssues lists every recent inquiry whose notification email was not delivered, each with its id, the date it was submitted, its company and its delivery status. Never state or imply that a specific inquiry had a delivery problem unless it appears on that list, and attribute each problem only to the inquiry it is listed against. When the list is empty, say nothing about delivery problems at all.
 - outreach, when present, holds counts only: acceptedWaiting (accepted leads with no email yet), needsReview (drafts to review), approvedNotSent (approved emails not sent yet), toCall (leads to call) and sentYesterday (emails sent yesterday). You may mention them. To point the owner to Outreach, use the recordId "outreach".
 - Do not invent records, numbers, names or URLs.
 - Only runs in the JSON may be discussed. A failure that has since been resolved is left out on purpose: never describe a resolved failure as a current problem and never propose fixing it.
 - If "quiet" is true, say plainly that nothing new needs attention and return no actions.`
 
 /** The inquiries as the model sees them: new ones from the last 30 days, and the older backlog, as separate counts. */
+export type NarrativeDeliveryIssue = { id: string; submittedOn: string; company: string; deliveryStatus: string }
+
+/**
+ * The inquiries as the model sees them: new ones from the last 30 days and
+ * the older backlog as separate counts, and the recent inquiries with a
+ * delivery issue as an explicit list, each tied to its inquiry. No bare
+ * delivery-issue number is sent, so the model cannot attach one to the
+ * wrong inquiry. Older delivery issues are never sent. When the list could
+ * not be loaded it is empty, so the model says nothing about delivery.
+ */
 export function narrativeInquiries(inquiries: BriefingContent['inquiries']): {
   recentNew: number
   olderBacklog: number
-  deliveryIssues: number | null
   recent: BriefingContent['inquiries']['recent']
+  deliveryIssues: NarrativeDeliveryIssue[]
 } {
   return {
     recentNew: inquiries.recentTotal,
     olderBacklog: inquiries.olderCount,
-    deliveryIssues: inquiries.deliveryIssues,
     recent: inquiries.recent,
+    deliveryIssues: (inquiries.recentDeliveryIssues ?? []).map((issue) => ({
+      id: issue.id,
+      submittedOn: localDateString(new Date(issue.submittedAt)),
+      company: issue.company ?? 'No company given',
+      deliveryStatus: issue.deliveryStatus,
+    })),
   }
 }
 
