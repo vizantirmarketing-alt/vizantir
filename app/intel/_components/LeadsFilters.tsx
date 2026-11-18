@@ -11,6 +11,7 @@ import {
   LEAD_CHANNEL_LABELS,
   LEAD_STATUSES,
   LEAD_STATUS_LABELS,
+  LEADS_DEFAULT_STATUS_LABEL,
   leadsFiltersActive,
   leadsListHref,
   parseLeadsListParams,
@@ -76,7 +77,7 @@ export function LeadsFilters({ params }: LeadsFiltersProps) {
             className="w-full"
             onChange={(event) => onControlChange(event.currentTarget.form)}
           >
-            <option value="all">All</option>
+            <option value="all">{LEADS_DEFAULT_STATUS_LABEL}</option>
             {LEAD_STATUSES.map((status) => (
               <option key={status} value={status}>
                 {LEAD_STATUS_LABELS[status]}

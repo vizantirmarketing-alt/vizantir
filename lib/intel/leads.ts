@@ -7,6 +7,7 @@ import {
   centsToDollarInput,
   isLeadStatus,
   isNotifyStatus,
+  leadStatusFilter,
   leadsFiltersActive,
   type LeadListRow,
   type LeadStatus,
@@ -16,6 +17,9 @@ import {
 import { enumerateDates, spanEndingOn, utcToday } from '@/lib/intel/search-params'
 
 export type { LeadListRow }
+
+/** The service-role client. Read functions take one so tests can pass a fake. */
+export type LeadsDb = ReturnType<typeof createSupabaseServiceRole>
 
 export type LeadDetail = {
   id: string
@@ -437,19 +441,25 @@ function sanitizeSearchTerm(raw: string): string {
 /**
  * Shared status / channel / q / sort application for the list page and CSV export.
  */
-async function queryFilteredLeads(
+function filteredLeadsQuery(
+  supabase: LeadsDb,
   columns: string,
   params: LeadsListParams,
-  range: { from: number; to: number },
+  options?: { head?: boolean },
 ) {
-  const supabase = createSupabaseServiceRole()
   let query = supabase
     .from('contact_submissions')
-    .select(columns, { count: 'exact' })
+    .select(
+      columns,
+      options?.head === true ? { count: 'exact', head: true } : { count: 'exact' },
+    )
 
-  if (params.status !== 'all') {
-    query = query.eq('status', params.status)
-  }
+  // "all" is the default view and leaves spam out; a chosen status matches exactly.
+  const statusFilter = leadStatusFilter(params.status)
+  query =
+    statusFilter.op === 'eq'
+      ? query.eq('status', statusFilter.status)
+      : query.neq('status', statusFilter.status)
 
   if (params.channel !== 'all') {
     query = query.eq('initial_channel', params.channel)
@@ -463,6 +473,15 @@ async function queryFilteredLeads(
   }
 
   return query
+}
+
+async function queryFilteredLeads(
+  supabase: LeadsDb,
+  columns: string,
+  params: LeadsListParams,
+  range: { from: number; to: number },
+) {
+  return filteredLeadsQuery(supabase, columns, params)
     .order('created_at', { ascending: params.sort === 'oldest' })
     .order('id', { ascending: params.sort === 'oldest' })
     .range(range.from, range.to)
@@ -470,6 +489,7 @@ async function queryFilteredLeads(
 
 export async function fetchLeads(
   params: LeadsListParams,
+  db?: LeadsDb,
 ): Promise<FetchLeadsResult> {
   const filtersActive = leadsFiltersActive(params)
 
@@ -477,6 +497,7 @@ export async function fetchLeads(
     const from = (params.page - 1) * LEADS_PAGE_SIZE
     const to = from + LEADS_PAGE_SIZE - 1
     const { data, error, count } = await queryFilteredLeads(
+      db ?? createSupabaseServiceRole(),
       LIST_COLUMNS,
       params,
       { from, to },
@@ -517,6 +538,7 @@ export async function fetchLeadsExport(
 ): Promise<FetchLeadsExportResult> {
   try {
     const { data, error, count } = await queryFilteredLeads(
+      createSupabaseServiceRole(),
       EXPORT_COLUMNS,
       params,
       { from: 0, to: LEADS_EXPORT_ROW_CAP - 1 },
@@ -643,7 +665,41 @@ export async function fetchLeadDailySeriesInLastDays(
   }
 }
 
-export async function fetchLeadDashboardStats(): Promise<LeadDashboardStats> {
+/**
+ * Spam matching the view's channel and search, counted whatever status is
+ * chosen. The Leads page shows it as the hidden count under the default list.
+ * Null when the count could not be read.
+ */
+export async function fetchSpamCount(
+  params: Pick<LeadsListParams, 'channel' | 'q'>,
+  db?: LeadsDb,
+): Promise<number | null> {
+  try {
+    const { error, count } = await filteredLeadsQuery(
+      db ?? createSupabaseServiceRole(),
+      'id',
+      { channel: params.channel, q: params.q, status: 'spam', sort: 'newest', page: 1 },
+      { head: true },
+    )
+    if (error) {
+      console.error('Intel leads spam count failed')
+      return null
+    }
+    return readCount(count) ?? 0
+  } catch {
+    console.error('Intel leads spam count failed')
+    return null
+  }
+}
+
+/**
+ * Leads page cards. Total leaves spam out. New, active pipeline and delivery
+ * issues are counted as they always were; the briefing reads newCount and
+ * deliveryIssues from here.
+ */
+export async function fetchLeadDashboardStats(
+  db?: LeadsDb,
+): Promise<LeadDashboardStats> {
   const empty: LeadDashboardStats = {
     total: null,
     newCount: null,
@@ -652,13 +708,14 @@ export async function fetchLeadDashboardStats(): Promise<LeadDashboardStats> {
   }
 
   try {
-    const supabase = createSupabaseServiceRole()
+    const supabase = db ?? createSupabaseServiceRole()
 
     const [totalResult, newResult, activeResult, deliveryResult] =
       await Promise.all([
         supabase
           .from('contact_submissions')
-          .select('id', { count: 'exact', head: true }),
+          .select('id', { count: 'exact', head: true })
+          .neq('status', 'spam'),
         supabase
           .from('contact_submissions')
           .select('id', { count: 'exact', head: true })

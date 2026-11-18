@@ -40,6 +40,54 @@ export function isClosedLeadStatus(status: LeadStatus): boolean {
   return CLOSED_STATUSES.has(status)
 }
 
+/**
+ * The list's default view ("all" in the URL) leaves spam out; choosing
+ * Status = Spam shows it. One rule for the list, the export and the hidden count.
+ */
+export const LEADS_DEFAULT_HIDDEN_STATUS = 'spam' satisfies LeadStatus
+
+export const LEADS_DEFAULT_STATUS_LABEL = 'All except spam'
+
+export type LeadStatusFilter =
+  | { op: 'eq'; status: LeadStatus }
+  | { op: 'neq'; status: LeadStatus }
+
+export function leadStatusFilter(status: LeadStatus | 'all'): LeadStatusFilter {
+  return status === 'all'
+    ? { op: 'neq', status: LEADS_DEFAULT_HIDDEN_STATUS }
+    : { op: 'eq', status }
+}
+
+/** The quiet line under the default list, or null when no spam is hidden. */
+export function hiddenSpamLine(count: number | null): string | null {
+  if (count === null || count <= 0) {
+    return null
+  }
+  return `${new Intl.NumberFormat('en-US').format(count)} spam hidden`
+}
+
+export function deleteAllSpamPrompt(count: number): string {
+  const formatted = new Intl.NumberFormat('en-US').format(count)
+  return count === 1
+    ? 'Delete 1 spam inquiry? This deletion is permanent.'
+    : `Delete all ${formatted} spam inquiries? This deletion is permanent.`
+}
+
+/**
+ * Spam that the contact form flagged at submission has no status change in
+ * its history: every manual change writes a history row. No reason is stored
+ * for the automatic flag, so none is shown.
+ */
+export function autoSpamNote(
+  status: LeadStatus,
+  historyCount: number,
+): string | null {
+  if (status !== 'spam' || historyCount > 0) {
+    return null
+  }
+  return 'Marked as spam automatically when it was submitted, so no notification email was sent. No reason was stored for this.'
+}
+
 export const LEAD_CHANNELS = [
   'campaign',
   'direct',

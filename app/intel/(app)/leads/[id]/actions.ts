@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { requireIntelUser } from '@/lib/auth/allowlist'
+import { deleteSpamLeads } from '@/lib/intel/lead-delete'
 import { LEAD_STATUSES, isLeadId } from '@/lib/intel/lead-params'
 import { createSupabaseServiceRole } from '@/lib/supabase/service'
 
@@ -61,14 +62,6 @@ function readStatus(value: unknown): string | null {
   }
   const status = Reflect.get(value, 'status')
   return typeof status === 'string' && status.length > 0 ? status : null
-}
-
-function readDeletedId(value: unknown): string | null {
-  if (typeof value !== 'object' || value === null) {
-    return null
-  }
-  const id = Reflect.get(value, 'id')
-  return typeof id === 'string' && id.length > 0 ? id : null
 }
 
 export async function updateLeadStatus(
@@ -249,20 +242,14 @@ export async function deleteLead(leadId: string): Promise<LeadMutationResult> {
       return { ok: false, error: 'Only spam inquiries can be deleted.' }
     }
 
-    const { data: deleted, error: deleteError } = await supabase
-      .from('contact_submissions')
-      .delete()
-      .eq('id', idParsed.data)
-      .eq('status', 'spam')
-      .select('id')
-      .maybeSingle()
+    const deleted = await deleteSpamLeads(supabase, { id: idParsed.data })
 
-    if (deleteError) {
+    if (!deleted.ok) {
       console.error('Intel lead delete failed')
       return { ok: false, error: GENERIC_ERROR }
     }
 
-    if (readDeletedId(deleted) === null) {
+    if (!deleted.deletedIds.includes(idParsed.data)) {
       revalidateLead(idParsed.data)
       return { ok: false, error: 'Only spam inquiries can be deleted.' }
     }
@@ -271,6 +258,33 @@ export async function deleteLead(leadId: string): Promise<LeadMutationResult> {
     return { ok: true }
   } catch {
     console.error('Intel lead delete failed')
+    return { ok: false, error: GENERIC_ERROR }
+  }
+}
+
+export type DeleteAllSpamResult =
+  | { ok: true; deleted: number }
+  | { ok: false; error: string }
+
+/**
+ * Deletes every inquiry whose status is spam when the query runs. Any other
+ * status is excluded by the delete query itself.
+ */
+export async function deleteAllSpam(): Promise<DeleteAllSpamResult> {
+  await requireIntelUser()
+
+  try {
+    const result = await deleteSpamLeads(createSupabaseServiceRole(), {
+      all: true,
+    })
+    if (!result.ok) {
+      console.error('Intel spam delete failed')
+      return { ok: false, error: GENERIC_ERROR }
+    }
+    revalidatePath('/intel/leads')
+    return { ok: true, deleted: result.deletedIds.length }
+  } catch {
+    console.error('Intel spam delete failed')
     return { ok: false, error: GENERIC_ERROR }
   }
 }

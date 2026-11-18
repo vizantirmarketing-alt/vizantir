@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 
+import { DeleteAllSpamControl } from '@/app/intel/_components/DeleteAllSpamControl'
 import { LeadsFilters } from '@/app/intel/_components/LeadsFilters'
 import {
+  HiddenSpamNote,
   LeadsEmptyState,
   LeadsHeader,
   LeadsList,
@@ -17,7 +19,7 @@ import {
   type LeadsListParams,
   type LeadsSearchParams,
 } from '@/lib/intel/lead-params'
-import { fetchLeadDashboardStats, fetchLeads } from '@/lib/intel/leads'
+import { fetchLeadDashboardStats, fetchLeads, fetchSpamCount } from '@/lib/intel/leads'
 
 export const metadata: Metadata = {
   title: 'Leads',
@@ -43,10 +45,23 @@ export default async function IntelLeadsPage({ searchParams }: LeadsPageProps) {
   await requireIntelUser()
 
   const params = parseLeadsListParams(await searchParams)
-  const [result, stats] = await Promise.all([
+  const spamView = params.status === 'spam'
+  const [result, stats, spamCount] = await Promise.all([
     fetchLeads(params),
     fetchLeadDashboardStats(),
+    // Default view: spam matching the view's filters, shown as the hidden count.
+    // Spam view: every spam row, the count "Delete all spam" states.
+    params.status === 'all'
+      ? fetchSpamCount(params)
+      : spamView
+        ? fetchSpamCount({ channel: 'all', q: '' })
+        : Promise.resolve(null),
   ])
+  const hiddenSpam = params.status === 'all' ? spamCount : null
+  const deleteAll =
+    spamView && spamCount !== null && spamCount > 0 ? (
+      <DeleteAllSpamControl count={spamCount} />
+    ) : null
 
   if (!result.ok) {
     return (
@@ -68,8 +83,13 @@ export default async function IntelLeadsPage({ searchParams }: LeadsPageProps) {
         <Panel>
           <LeadsEmptyState
             title="No inquiries yet"
-            body="Contact form submissions will appear here as they arrive."
+            body={
+              hiddenSpam !== null && hiddenSpam > 0
+                ? 'Only spam has arrived so far. Contact form submissions will appear here as they arrive.'
+                : 'Contact form submissions will appear here as they arrive.'
+            }
           />
+          <HiddenSpamNote count={hiddenSpam} params={params} />
         </Panel>
       </div>
     )
@@ -87,11 +107,13 @@ export default async function IntelLeadsPage({ searchParams }: LeadsPageProps) {
           <LeadsFilters params={params} />
         </Panel>
         <Panel title="Inquiries">
+          {deleteAll ? <div className="mb-3">{deleteAll}</div> : null}
           <LeadsEmptyState
             title="No matching inquiries"
             body="Nothing matches the current filters."
             action={{ href: '/intel/leads', label: 'Clear filters' }}
           />
+          <HiddenSpamNote count={hiddenSpam} params={params} />
         </Panel>
       </div>
     )
@@ -108,6 +130,7 @@ export default async function IntelLeadsPage({ searchParams }: LeadsPageProps) {
         <LeadsFilters params={params} />
       </Panel>
       <Panel title="Inquiries">
+        {deleteAll ? <div className="mb-3">{deleteAll}</div> : null}
         <LeadsList rows={result.rows} nowMs={result.nowMs} listParams={params} />
         <LeadsPagination
           params={params}
@@ -115,6 +138,7 @@ export default async function IntelLeadsPage({ searchParams }: LeadsPageProps) {
           pageCount={result.pageCount}
           total={result.total}
         />
+        <HiddenSpamNote count={hiddenSpam} params={params} />
       </Panel>
     </div>
   )

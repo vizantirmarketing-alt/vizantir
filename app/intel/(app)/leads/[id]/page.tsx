@@ -13,6 +13,7 @@ import {
   formatChannelLabel,
   formatFullTimestamp,
   formatStatusLabel,
+  autoSpamNote,
   isLeadId,
   leadsListHref,
   parseLeadsListParams,
@@ -103,7 +104,7 @@ export default async function IntelLeadDetailPage({
             notes={lead.notes}
           />
         </Panel>
-        <HistorySection history={history} />
+        <HistorySection history={history} autoNote={autoSpamNote(lead.status, history.length)} />
       </div>
     </div>
   )
@@ -282,10 +283,18 @@ function DeliverySection({ lead }: { lead: LeadDetail }) {
   )
 }
 
-function HistorySection({ history }: { history: LeadStatusHistoryRow[] }) {
+function HistorySection({
+  history,
+  autoNote,
+}: {
+  history: LeadStatusHistoryRow[]
+  autoNote: string | null
+}) {
   return (
     <Panel title="History">
-      {history.length === 0 ? (
+      {autoNote !== null ? (
+        <p className="intel-body leading-relaxed text-body">{autoNote}</p>
+      ) : history.length === 0 ? (
         <p className="intel-body leading-relaxed text-body">
           No status changes have been recorded.
         </p>

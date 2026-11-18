@@ -4,6 +4,7 @@ import { CircleDot, Inbox, Layers, TriangleAlert } from 'lucide-react'
 import {
   formatChannelLabel,
   formatSubmittedAt,
+  hiddenSpamLine,
   leadDetailHref,
   leadsListHref,
   type LeadListRow,
@@ -240,6 +241,30 @@ export function LeadsEmptyState({ title, body, action }: EmptyStateProps) {
         </Link>
       ) : null}
     </div>
+  )
+}
+
+/** One quiet line under the default list, linking to the spam view. Nothing at zero. */
+export function HiddenSpamNote({
+  count,
+  params,
+}: {
+  count: number | null
+  params: LeadsListParams
+}) {
+  const line = hiddenSpamLine(count)
+  if (line === null) {
+    return null
+  }
+  return (
+    <p className="mt-3 intel-secondary text-meta">
+      <Link
+        href={leadsListHref({ ...params, status: 'spam', page: 1 })}
+        className="transition-colors hover:text-foreground"
+      >
+        {line}
+      </Link>
+    </p>
   )
 }
 
