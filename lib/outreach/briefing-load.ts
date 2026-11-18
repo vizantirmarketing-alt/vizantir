@@ -12,7 +12,7 @@ import { loadCallSummaries } from '@/lib/outreach/calls-store'
 import { loadWorklistContacts } from '@/lib/outreach/contacts/load'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { loadLeadFacts } from '@/lib/outreach/lead-facts'
-import { outreachBriefingCounts, type OutreachBriefingCounts } from '@/lib/outreach/briefing-counts'
+import { outreachBriefingCounts, type DraftCallFacts, type OutreachBriefingCounts } from '@/lib/outreach/briefing-counts'
 import { loadSiteReviewStates } from '@/lib/outreach/site-reviews/load'
 import { acceptedLeadRows, withLeadFacts } from '@/lib/outreach/worklist'
 
@@ -48,7 +48,13 @@ export async function loadOutreachBriefingCounts(now: Date): Promise<OutreachBri
       generalRunQueued: worklist.generalRunQueued,
       calls,
     })
-    return outreachBriefingCounts({ rows, drafts, sent, now })
+    // What Needs review reads for a draft's Log a call, as the Outreach page reads it.
+    const draftCalls: DraftCallFacts = {
+      contactStatuses: new Map((worklist.contacts ?? []).map((contact) => [`${contact.subjectType}:${contact.subjectRef}`, contact.status])),
+      phones: new Map([...facts].map(([key, fact]) => [key, fact.phone])),
+      calls,
+    }
+    return outreachBriefingCounts({ rows, drafts, sent, now, draftCalls })
   } catch {
     return null
   }
