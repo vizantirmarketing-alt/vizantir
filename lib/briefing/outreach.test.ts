@@ -92,7 +92,7 @@ describe('narrative inquiries', () => {
   it('sends recent and older inquiries as two separate numbers, and never the all-ages total', () => {
     const content = assemble(fixtureInputs())
     const sent = JSON.parse(buildUserMessage(content)).inquiries
-    assert.deepEqual(Object.keys(sent).sort(), ['deliveryIssues', 'olderBacklog', 'recent', 'recentNew'])
+    assert.deepEqual(Object.keys(sent).sort(), ['deliveryIssues', 'listedCount', 'olderBacklog', 'recent', 'recentNew'])
     assert.equal(sent.recentNew, content.inquiries.recentTotal)
     assert.equal(sent.olderBacklog, content.inquiries.olderCount)
     assert.equal('newCount' in sent, false)
@@ -100,11 +100,11 @@ describe('narrative inquiries', () => {
 
   it('2 recent and 10 older are given as 2 new and a backlog of 10', () => {
     const inquiries = { newCount: 12, deliveryIssues: 0, recentTotal: 2, recent: [], olderCount: 10 }
-    assert.deepEqual(narrativeInquiries(inquiries), { recentNew: 2, olderBacklog: 10, deliveryIssues: [], recent: [] })
+    assert.deepEqual(narrativeInquiries(inquiries), { recentNew: 2, olderBacklog: 10, listedCount: 0, deliveryIssues: [], recent: [] })
   })
 
   it('tells the model to report only recent inquiries as new and older ones only as a backlog count', () => {
-    assert.match(BRIEFING_SYSTEM_PROMPT, /inquiries\.recentNew is the number of new inquiries from the last 30 days/)
+    assert.match(BRIEFING_SYSTEM_PROMPT, /inquiries\.recentNew is the true total of new inquiries from the last 30 days/)
     assert.match(BRIEFING_SYSTEM_PROMPT, /mention them only as a backlog count and never add them to the new ones/)
   })
 })

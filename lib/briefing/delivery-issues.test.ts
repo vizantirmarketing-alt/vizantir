@@ -108,7 +108,7 @@ describe('delivery issues: empty states', () => {
     assert.equal(content.inquiries.olderCount, 0)
     assert.equal(inquirySummaryLine(content.inquiries), 'No new inquiries in the last 30 days.')
     assert.deepEqual(deliveryIssueView(content.inquiries, new Set(content.unavailable)), { kind: 'none' })
-    assert.deepEqual(narrativeInquiries(content.inquiries), { recentNew: 0, olderBacklog: 0, recent: [], deliveryIssues: [] })
+    assert.deepEqual(narrativeInquiries(content.inquiries), { recentNew: 0, olderBacklog: 0, listedCount: 0, recent: [], deliveryIssues: [] })
     assert.match(BRIEFING_SYSTEM_PROMPT, /there are no inquiries: say nothing about inquiries/)
 
     // The whole day: a quiet briefing, saved without a model call, that reads back.

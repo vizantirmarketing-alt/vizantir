@@ -100,18 +100,24 @@ async function attempt<T>(load: () => Promise<T | null>): Promise<LoaderResult<T
 
 export const briefingSources: BriefingSources = {
   async load({ windows }) {
-    const [newProspects, topUnreviewed, inquiries, inquiryStats, findings, runs, sources, newBusinesses, newBusinessesNoWebsite, outreach, deliveryIssues] =
+    // One unreviewed-prospect list read gives both the top rows and the true total.
+    const unreviewedList = fetchProspects({
+      review: 'unreviewed',
+      industry: null,
+      market: null,
+      sort: 'priority',
+      page: 1,
+    })
+    const [newProspects, topUnreviewed, unreviewedTotal, inquiries, inquiryStats, findings, runs, sources, newBusinesses, newBusinessesNoWebsite, outreach, deliveryIssues] =
       await Promise.all([
         attempt(() => fetchProspectsCreatedSince(windows.prospectsSince, NEW_PROSPECTS_LIMIT)),
         attempt(async () => {
-          const result = await fetchProspects({
-            review: 'unreviewed',
-            industry: null,
-            market: null,
-            sort: 'priority',
-            page: 1,
-          })
+          const result = await unreviewedList
           return result.ok ? result.rows : null
+        }),
+        attempt(async () => {
+          const result = await unreviewedList
+          return result.ok ? result.total : null
         }),
         attempt(async () => {
           const [result, olderCount] = await Promise.all([
@@ -187,6 +193,7 @@ export const briefingSources: BriefingSources = {
     const inputs: RawBriefingInputs = {
       newProspects,
       topUnreviewed,
+      unreviewedTotal,
       inquiries,
       inquiryStats,
       deliveryIssues,

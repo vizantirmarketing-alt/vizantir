@@ -36,6 +36,15 @@ export const briefingContentSchema = z.object({
       opportunityScore: z.number().nullable(),
       confidence: z.string(),
       performance: z.string().nullable(),
+      // Added with performance ratings: optional, so older stored briefings still read.
+      performanceRatings: z
+        .object({
+          mobileScore: z.number(),
+          mobileScoreRating: z.enum(['good', 'needs improvement', 'poor']),
+          lcpSeconds: z.number(),
+          lcpRating: z.enum(['good', 'needs improvement', 'poor']),
+        })
+        .optional(),
       highlight: z
         .object({ factorKey: z.string(), claim: z.string(), sourceUrl: z.string() })
         .nullable(),
@@ -52,6 +61,8 @@ export const briefingContentSchema = z.object({
       opportunityScore: z.number().nullable(),
     }),
   ),
+  // Added with list totals: optional, so older stored briefings still read.
+  topUnreviewedTotal: z.number().optional(),
   inquiries: z.object({
     newCount: z.number().nullable(),
     deliveryIssues: z.number().nullable(),

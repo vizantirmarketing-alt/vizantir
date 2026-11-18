@@ -26,6 +26,7 @@
  */
 
 import { localAgeDays, localDateString } from '@/lib/briefing/dates'
+import { performanceRatings, type PerformanceRatings } from '@/lib/briefing/performance-rating'
 import { NOTIFY_STATUSES, type NotifyStatus } from '@/lib/intel/lead-params'
 import {
   PERFORMANCE_FACTOR,
@@ -184,6 +185,8 @@ export type LoaderResult<T> = { ok: true; value: T } | { ok: false }
 export type RawBriefingInputs = {
   newProspects: LoaderResult<{ rows: RawNewProspect[]; total: number }>
   topUnreviewed: LoaderResult<RawUnreviewedProspect[]>
+  /** Every unreviewed prospect, counted by the same list query. Optional so callers without it still assemble. */
+  unreviewedTotal?: LoaderResult<number>
   /** rows: status new, newest first. olderCount: status new created before the inquiry window. */
   inquiries: LoaderResult<{ rows: RawInquiry[]; total: number; olderCount: number }>
   inquiryStats: LoaderResult<RawInquiryStats>
@@ -232,6 +235,12 @@ export type BriefingProspect = {
   confidence: string
   /** e.g. "Mobile performance 33/100, LCP 16.2 s", or null when not measured. */
   performance: string | null
+  /**
+   * The same measurement with a rating per metric, computed in code
+   * (performance-rating.ts). Absent when not measured, and in briefings saved
+   * before ratings existed.
+   */
+  performanceRatings?: PerformanceRatings
   /** The single most useful non-performance evidence item. */
   highlight: { factorKey: string; claim: string; sourceUrl: string } | null
 }
@@ -252,6 +261,12 @@ export type BriefingContent = {
     fitScore: number | null
     opportunityScore: number | null
   }[]
+  /**
+   * Every unreviewed prospect, including any also listed as new; topUnreviewed
+   * holds at most NEW_PROSPECTS_SHOWN of them. Absent when it could not be
+   * loaded, and in briefings saved before it existed.
+   */
+  topUnreviewedTotal?: number
   inquiries: {
     newCount: number | null
     /**
@@ -347,16 +362,25 @@ function byPriority<T extends { priority: number | null; name: string }>(a: T, b
   return a.name.localeCompare(b.name)
 }
 
-/** Performance line from the prospect's measurement evidence, if measured. */
-export function performanceLine(evidence: readonly RawEvidence[]): string | null {
+function measurement(evidence: readonly RawEvidence[]): { performanceScore: number; lcpMs: number } | null {
   for (const item of evidence) {
     if (item.factorKey !== PERFORMANCE_FACTOR || item.kind !== 'measurement') continue
     const parsed = parseMeasurementClaim(item.claim)
-    if (parsed !== null) {
-      return formatPerformanceSummary(parsed)
-    }
+    if (parsed !== null) return parsed
   }
   return null
+}
+
+/** Performance line from the prospect's measurement evidence, if measured. */
+export function performanceLine(evidence: readonly RawEvidence[]): string | null {
+  const parsed = measurement(evidence)
+  return parsed === null ? null : formatPerformanceSummary(parsed)
+}
+
+/** The same measurement as performanceLine, rated per metric, if measured. */
+export function performanceRatingsFor(evidence: readonly RawEvidence[]): PerformanceRatings | null {
+  const parsed = measurement(evidence)
+  return parsed === null ? null : performanceRatings(parsed)
 }
 
 /**
@@ -496,6 +520,7 @@ export function assembleBriefingContent(
     .slice(0, NEW_PROSPECTS_LIMIT)
     .map((p) => {
       const highlight = pickHighlight(p.factorRatings, p.evidence)
+      const ratings = performanceRatingsFor(p.evidence)
       return {
         id: p.id,
         name: p.name,
@@ -505,6 +530,7 @@ export function assembleBriefingContent(
         opportunityScore: p.opportunityScore,
         confidence: p.confidence,
         performance: performanceLine(p.evidence),
+        ...(ratings === null ? {} : { performanceRatings: ratings }),
         highlight:
           highlight === null
             ? null
@@ -603,6 +629,9 @@ export function assembleBriefingContent(
     newProspects,
     newProspectsTotal: Math.max(added.total, newProspects.length),
     topUnreviewed,
+    ...(inputs.topUnreviewed.ok && inputs.unreviewedTotal?.ok === true
+      ? { topUnreviewedTotal: Math.max(inputs.unreviewedTotal.value, topUnreviewed.length) }
+      : {}),
     inquiries: {
       newCount: stats.newCount,
       // Scoped to the recent window and tied to inquiries; never the all-time dashboard count.
