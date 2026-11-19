@@ -39,6 +39,8 @@ export type LeadDetail = {
   notify_status: NotifyStatus | null
   notified_at: string | null
   notify_error: string | null
+  /** The contact form's stored suspect reasons, comma separated, or null. */
+  suspect_reason: string | null
   status: LeadStatus
   estimated_value_cents: number | null
   notes: string | null
@@ -117,6 +119,7 @@ const DETAIL_COLUMNS = [
   'notify_status',
   'notified_at',
   'notify_error',
+  'suspect_reason',
   'status',
   'estimated_value_cents',
   'notes',
@@ -313,6 +316,7 @@ function toLeadDetail(value: unknown): LeadDetail | null {
     notify_status: asNotifyStatus(readField(value, 'notify_status')),
     notified_at: asIsoTimestamp(readField(value, 'notified_at')),
     notify_error: asOptionalText(readField(value, 'notify_error')),
+    suspect_reason: asOptionalText(readField(value, 'suspect_reason')),
     status,
     estimated_value_cents: estimatedValueCents,
     notes: asOptionalText(readField(value, 'notes')),

@@ -104,7 +104,7 @@ export default async function IntelLeadDetailPage({
             notes={lead.notes}
           />
         </Panel>
-        <HistorySection history={history} autoNote={autoSpamNote(lead.status, history.length)} />
+        <HistorySection history={history} autoNote={autoSpamNote(lead.status, history.length, lead.suspect_reason)} />
       </div>
     </div>
   )

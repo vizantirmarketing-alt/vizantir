@@ -222,63 +222,96 @@ async function recordNotifyOutcome(
   }
 }
 
-export async function submitContactForm(row: ContactSubmissionRow): Promise<void> {
-  const supabase = createSupabaseServiceRole();
+/** The contact_submissions row for a submission. */
+export function contactSubmissionRecord(row: ContactSubmissionRow): Record<string, unknown> {
+  return {
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    company: row.company,
+    service: row.service,
+    budget: row.budget,
+    message: row.message,
+    ...(row.status === 'spam' ? { status: 'spam' } : {}),
+    ip_hash: row.ipHash,
+    landing_page: emptyToNull(row.landingPage),
+    referrer:
+      emptyToNull(row.referrer) ?? emptyToNull(row.enrichment.httpReferrer),
+    utm_source: emptyToNull(row.utmSource),
+    utm_medium: emptyToNull(row.utmMedium),
+    utm_campaign: emptyToNull(row.utmCampaign),
+    initial_channel: emptyToNull(row.initialChannel),
+    ip: row.enrichment.ip,
+    country: row.enrichment.country,
+    region: row.enrichment.region,
+    city: row.enrichment.city,
+    timezone: row.enrichment.timezone,
+    browser: row.enrichment.browser,
+    browser_version: row.enrichment.browserVersion,
+    os: row.enrichment.os,
+    os_version: row.enrichment.osVersion,
+    device_type: row.enrichment.deviceType,
+    user_agent: row.enrichment.userAgent,
+    accept_language: row.enrichment.acceptLanguage,
+    mx_valid: row.enrichment.mxValid,
+    vpn: row.enrichment.vpn,
+    proxy: row.enrichment.proxy,
+    tor: row.enrichment.tor,
+    is_datacenter: row.enrichment.isDatacenter,
+    fraud_score: row.enrichment.fraudScore,
+    is_suspect: row.enrichment.isSuspect,
+    suspect_reason: row.enrichment.suspectReason,
+    submit_duration_ms: row.enrichment.submitDurationMs,
+  };
+}
 
-  const { data, error } = await supabase
-    .from('contact_submissions')
-    .insert({
-      name: row.name,
-      email: row.email,
-      phone: row.phone,
-      company: row.company,
-      service: row.service,
-      budget: row.budget,
-      message: row.message,
-      ...(row.status === 'spam' ? { status: 'spam' } : {}),
-      ip_hash: row.ipHash,
-      landing_page: emptyToNull(row.landingPage),
-      referrer:
-        emptyToNull(row.referrer) ?? emptyToNull(row.enrichment.httpReferrer),
-      utm_source: emptyToNull(row.utmSource),
-      utm_medium: emptyToNull(row.utmMedium),
-      utm_campaign: emptyToNull(row.utmCampaign),
-      initial_channel: emptyToNull(row.initialChannel),
-      ip: row.enrichment.ip,
-      country: row.enrichment.country,
-      region: row.enrichment.region,
-      city: row.enrichment.city,
-      timezone: row.enrichment.timezone,
-      browser: row.enrichment.browser,
-      browser_version: row.enrichment.browserVersion,
-      os: row.enrichment.os,
-      os_version: row.enrichment.osVersion,
-      device_type: row.enrichment.deviceType,
-      user_agent: row.enrichment.userAgent,
-      accept_language: row.enrichment.acceptLanguage,
-      mx_valid: row.enrichment.mxValid,
-      vpn: row.enrichment.vpn,
-      proxy: row.enrichment.proxy,
-      tor: row.enrichment.tor,
-      is_datacenter: row.enrichment.isDatacenter,
-      fraud_score: row.enrichment.fraudScore,
-      is_suspect: row.enrichment.isSuspect,
-      suspect_reason: row.enrichment.suspectReason,
-      submit_duration_ms: row.enrichment.submitDurationMs,
-    })
-    .select('id')
-    .single();
+export type ContactSubmissionDeps = {
+  /** Inserts the row and returns its id; throws when the insert fails. */
+  insert: (record: Record<string, unknown>) => Promise<string | null>;
+  /** Sends the notification email and records its outcome. */
+  notify: (row: ContactSubmissionRow, submissionId: string | null) => Promise<void>;
+};
 
-  if (error) {
-    console.error('contact_submissions insert failed:', error);
-    throw new Error('Database insert failed');
-  }
-
+/**
+ * Stores every submission. Spam, whether scored as spam or caught by the
+ * honeypot, is stored with status spam and sends no notification email.
+ */
+export async function saveContactSubmission(
+  row: ContactSubmissionRow,
+  deps: ContactSubmissionDeps
+): Promise<void> {
+  const submissionId = await deps.insert(contactSubmissionRecord(row));
   if (row.status === 'spam') {
     return;
   }
+  await deps.notify(row, submissionId);
+}
 
-  const submissionId = readInsertedId(data);
+export async function submitContactForm(row: ContactSubmissionRow): Promise<void> {
+  const supabase = createSupabaseServiceRole();
+  await saveContactSubmission(row, {
+    insert: async (record) => {
+      const { data, error } = await supabase
+        .from('contact_submissions')
+        .insert(record)
+        .select('id')
+        .single();
+      if (error) {
+        console.error('contact_submissions insert failed:', error);
+        throw new Error('Database insert failed');
+      }
+      return readInsertedId(data);
+    },
+    notify: (notifyRow, submissionId) =>
+      notifyContactSubmission(supabase, notifyRow, submissionId),
+  });
+}
+
+async function notifyContactSubmission(
+  supabase: ReturnType<typeof createSupabaseServiceRole>,
+  row: ContactSubmissionRow,
+  submissionId: string | null
+): Promise<void> {
   const submittedAtIso = new Date().toISOString();
   const to = process.env.CONTACT_NOTIFICATION_EMAIL;
   const from = process.env.RESEND_FROM_EMAIL;

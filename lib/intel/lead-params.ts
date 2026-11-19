@@ -74,16 +74,48 @@ export function deleteAllSpamPrompt(count: number): string {
 }
 
 /**
+ * The suspect reason the contact form stores when its hidden honeypot field
+ * was filled (lib/forms/contact-handler.ts). Reasons are stored comma separated.
+ */
+export const HONEYPOT_SUSPECT_REASON = 'honeypot'
+
+/** The reason stored when the address is from a disposable email service. */
+export const DISPOSABLE_EMAIL_SUSPECT_REASON = 'disposable_email'
+
+function hasSuspectReason(suspectReason: string | null, reason: string): boolean {
+  if (suspectReason === null) {
+    return false
+  }
+  return suspectReason.split(',').some((stored) => stored.trim() === reason)
+}
+
+export function caughtByHoneypot(suspectReason: string | null): boolean {
+  return hasSuspectReason(suspectReason, HONEYPOT_SUSPECT_REASON)
+}
+
+export function caughtAsDisposableEmail(suspectReason: string | null): boolean {
+  return hasSuspectReason(suspectReason, DISPOSABLE_EMAIL_SUSPECT_REASON)
+}
+
+/**
  * Spam that the contact form flagged at submission has no status change in
- * its history: every manual change writes a history row. No reason is stored
- * for the automatic flag, so none is shown.
+ * its history: every manual change writes a history row. A honeypot catch and
+ * a disposable email address are named; for any other automatic flag no
+ * reason is stored, so none is shown.
  */
 export function autoSpamNote(
   status: LeadStatus,
   historyCount: number,
+  suspectReason: string | null = null,
 ): string | null {
   if (status !== 'spam' || historyCount > 0) {
     return null
+  }
+  if (caughtByHoneypot(suspectReason)) {
+    return 'Marked as spam automatically when it was submitted, because it filled in the hidden form field that people never see. No notification email was sent.'
+  }
+  if (caughtAsDisposableEmail(suspectReason)) {
+    return 'Marked as spam automatically when it was submitted, because its email address is from a disposable email service. No notification email was sent.'
   }
   return 'Marked as spam automatically when it was submitted, so no notification email was sent. No reason was stored for this.'
 }
