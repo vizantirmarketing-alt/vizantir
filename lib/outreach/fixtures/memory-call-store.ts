@@ -8,6 +8,16 @@ import type { CallStore, CallSubject, ClosedRead, OutreachCall } from '@/lib/out
 /** The approve and edit guard for a lead whose call history was read and is open. */
 export const OPEN_LEAD = { closedBy: async (): Promise<ClosedRead> => ({ readable: true, closedBy: null }) }
 
+/**
+ * A rule check that passes, for tests about something other than the writing
+ * rules (their fixture texts are not full emails). Tests of the rules
+ * themselves use the real check (casual-call.test.ts, rules-check.test.ts).
+ */
+export const PASSES_RULES = { checkRules: async (): Promise<string[] | null> => [] }
+
+/** OPEN_LEAD with PASSES_RULES. */
+export const OPEN_CLEAN_LEAD = { ...OPEN_LEAD, ...PASSES_RULES }
+
 export class MemoryCallStore implements CallStore {
   calls: OutreachCall[] = []
   failing = false

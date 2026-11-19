@@ -30,6 +30,7 @@ import {
   type SuppressionReason,
 } from '@/lib/outreach/params'
 import type { OutreachDraft, OutreachStore, Suppression } from '@/lib/outreach/types'
+import { findingAfterSave, writingRulesRefusal, type RuleCheck, type RulesFinding } from '@/lib/outreach/rules-check'
 
 export type LifecycleResult = { ok: true; draft: OutreachDraft } | { ok: false; error: string }
 
@@ -53,13 +54,21 @@ export function isSuppressed(email: string, entries: readonly Pick<Suppression, 
 
 export type DraftEdit = { toEmail: string; subject: string; body: string }
 
+/** A saved edit, with what the hard rules found in the saved text. */
+export type EditResult = { ok: true; draft: OutreachDraft; rules: RulesFinding } | { ok: false; error: string }
+
+/**
+ * Saves an edit to a draft in review. The hard voice rules never refuse a
+ * save: after it goes through, the saved text is checked and the problems
+ * come back with it. Approve and send still refuse until they are fixed.
+ */
 export async function editDraft(
   store: OutreachStore,
   id: string,
   edit: DraftEdit,
   nowIso: string,
-  guards: Pick<ApproveGuards, 'closedBy'>,
-): Promise<LifecycleResult> {
+  guards: ApproveGuards,
+): Promise<EditResult> {
   const current = await load(store, id)
   if ('error' in current) return { ok: false, error: current.error }
   if (current.status !== 'draft') {
@@ -76,7 +85,9 @@ export async function editDraft(
   const body = edit.body.replace(/\r\n?/g, '\n').trim()
   if (body.length === 0) return { ok: false, error: 'Add a message.' }
   if (body.length > OUTREACH_BODY_MAX) return { ok: false, error: `Keep the message under ${OUTREACH_BODY_MAX} characters.` }
-  return done(await store.updateDraft(id, ['draft'], { toEmail: toEmail || null, subject, body, updatedAt: nowIso }))
+  const saved = await store.updateDraft(id, ['draft'], { toEmail: toEmail || null, subject, body, updatedAt: nowIso })
+  if (saved === null) return { ok: false, error: CHANGED }
+  return { ok: true, draft: saved, rules: await findingAfterSave(guards.checkRules, saved) }
 }
 
 export type ApproveGuards = {
@@ -87,10 +98,10 @@ export type ApproveGuards = {
    */
   closedBy: (draft: OutreachDraft) => Promise<ClosedRead>
   /**
-   * The hard voice rules a hand-written draft breaks, in plain words; null
-   * when the lead cannot be loaded. Model drafts passed them when written.
+   * The hard voice rules, checked against every draft whatever wrote it
+   * (rules-check.ts). Required, so no caller skips it.
    */
-  checkRules?: (draft: OutreachDraft) => Promise<string[] | null>
+  checkRules: RuleCheck
 }
 
 export async function approveDraft(store: OutreachStore, id: string, nowIso: string, guards: ApproveGuards): Promise<LifecycleResult> {
@@ -100,11 +111,8 @@ export async function approveDraft(store: OutreachStore, id: string, nowIso: str
   const closed = await guards.closedBy(current)
   if (!closed.readable) return { ok: false, error: callHistoryUnreadable('approved') }
   if (closed.closedBy !== null) return { ok: false, error: closedLeadRefusal(closed.closedBy) }
-  if (current.promptVersion === 'manual' && guards.checkRules !== undefined) {
-    const reasons = await guards.checkRules(current)
-    if (reasons === null) return { ok: false, error: 'This lead can no longer be loaded, so the email cannot be checked against the writing rules.' }
-    if (reasons.length > 0) return { ok: false, error: `This email does not meet the writing rules: ${reasons.join(' ')} Edit it before approving.` }
-  }
+  const broken = await writingRulesRefusal(guards.checkRules, current, 'approved')
+  if (broken !== null) return { ok: false, error: broken }
   const to = current.toEmail === null ? '' : normalizeEmail(current.toEmail)
   if (!isValidEmail(to)) return { ok: false, error: 'Add a valid recipient email before approving.' }
   const matches = await store.findSuppressions(to, emailDomain(to))

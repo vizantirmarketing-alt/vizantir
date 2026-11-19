@@ -34,6 +34,7 @@ import type { OutreachStore } from '@/lib/outreach/types'
 import type { ContactStore } from '@/lib/outreach/contacts/runs'
 import { isSuppressed } from '@/lib/outreach/lifecycle'
 import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX, emailDomain, isValidEmail, normalizeEmail } from '@/lib/outreach/params'
+import { findingAfterSave, type RulesFinding } from '@/lib/outreach/rules-check'
 import { checkVoice, refusalReasons, voiceContextFor, type VoiceViolation } from '@/lib/outreach/voice'
 import type { CallModel } from '@/lib/briefing/narrative'
 
@@ -96,9 +97,9 @@ export type WriteDraftRefusal =
   | 'rules_not_met'
   | 'conflict'
 
-export type WriteDraftResult =
-  | { ok: true; draftId: string; attempts: 1 | 2 }
-  | { ok: false; reason: WriteDraftRefusal; message: string }
+type WriteDraftRefused = { ok: false; reason: WriteDraftRefusal; message: string }
+
+export type WriteDraftResult = { ok: true; draftId: string; attempts: 1 | 2 } | WriteDraftRefused
 
 const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid' | 'closed'>, string> = {
   calls_unreadable: callHistoryUnreadable('drafted'),
@@ -114,7 +115,7 @@ const MESSAGES: Record<Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules
 }
 
 /** A lead closed by a call: asked not to be contacted keeps its own refusal; the other closing outcomes refuse as approving and sending do. */
-async function closedRefusal(calls: DraftDeps['calls'], subject: { subjectType: OutreachLead['type']; subjectRef: string }): Promise<WriteDraftResult | null> {
+async function closedRefusal(calls: DraftDeps['calls'], subject: { subjectType: OutreachLead['type']; subjectRef: string }): Promise<WriteDraftRefused | null> {
   const read = await readClosedBy(calls, subject)
   if (!read.readable) return refuse('calls_unreadable')
   if (read.closedBy === null) return null
@@ -122,7 +123,7 @@ async function closedRefusal(calls: DraftDeps['calls'], subject: { subjectType: 
   return { ok: false, reason: 'closed', message: closedLeadRefusal(read.closedBy) }
 }
 
-function refuse(reason: Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid' | 'closed'>): WriteDraftResult {
+function refuse(reason: Exclude<WriteDraftRefusal, 'settings_incomplete' | 'rules_not_met' | 'invalid' | 'closed'>): WriteDraftRefused {
   return { ok: false, reason, message: MESSAGES[reason] }
 }
 
@@ -218,19 +219,24 @@ export async function writeDraft(deps: DraftDeps, lead: OutreachLead): Promise<W
 
 export type ManualDraftInput = { toEmail: string; subject: string; body: string }
 
+/** A saved hand-written draft, with what the hard rules found in it, as for a saved edit. */
+export type ManualDraftResult = { ok: true; draftId: string; attempts: 1; rules: RulesFinding } | WriteDraftRefused
+
 /**
  * "Write it yourself": a draft the owner writes by hand, with no model call.
  * The owner fills in the subject and the message on the compose page; the row
  * is created on the first save, because a stored draft always has a subject
  * and a body. To starts as for a written draft, the footer is the normal one,
  * and the model and prompt version are recorded as "manual". The hard voice
- * rules are checked when it is approved and when it is sent.
+ * rules never refuse the save: after it goes through, the saved text is
+ * checked against the lead and the problems come back with it, as for a
+ * saved edit. Approve and send refuse until they are fixed.
  */
 export async function writeManualDraft(
   deps: Pick<DraftDeps, 'store' | 'now' | 'calls'>,
   lead: OutreachLead,
   input: ManualDraftInput,
-): Promise<WriteDraftResult> {
+): Promise<ManualDraftResult> {
   if (!isDraftable(lead)) return refuse('not_accepted')
   const { subjectType, subjectRef } = subjectOf(lead)
   const closed = await closedRefusal(deps.calls, { subjectType, subjectRef })
@@ -270,5 +276,11 @@ export async function writeManualDraft(
     deps.now().toISOString(),
   )
   if (!saved.ok) return refuse('conflict')
-  return { ok: true, draftId: saved.id, attempts: 1 }
+  // The lead is already loaded: the same hard rules checkDraftRules applies, without loading it again.
+  const voiceContext = voiceContextFor(buildOutreachContext(lead), settings.studioName)
+  const rules = await findingAfterSave(
+    async (text) => refusalReasons(checkVoice({ subject: text.subject, body: text.body }, voiceContext)),
+    { subjectType, subjectRef, leadId: lead.id, subject, body },
+  )
+  return { ok: true, draftId: saved.id, attempts: 1, rules }
 }

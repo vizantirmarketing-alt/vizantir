@@ -26,6 +26,7 @@ import {
   editDraft,
   markSent,
   removeSuppression,
+  type ApproveGuards,
   type LifecycleResult,
 } from '@/lib/outreach/lifecycle'
 import {
@@ -37,9 +38,12 @@ import {
 } from '@/lib/outreach/params'
 import { settingsInputSchema } from '@/lib/outreach/settings'
 import type { OutreachDraft } from '@/lib/outreach/types'
+import type { RulesFinding } from '@/lib/outreach/rules-check'
 import { isUuid } from '@/lib/prospects/params'
 
 export type OutreachActionResult = { ok: true } | { ok: false; error: string }
+/** A saved edit, with what the hard writing rules found in the saved text. */
+export type SaveDraftActionResult = { ok: true; rules: RulesFinding } | { ok: false; error: string }
 export type WriteDraftActionResult = { ok: true; draftId: string } | { ok: false; error: string }
 
 const GENERIC_ERROR = 'Unable to save. Try again shortly.'
@@ -187,25 +191,40 @@ const editSchema = z.object({
   body: z.string().max(OUTREACH_BODY_MAX + 10, `Keep the message under ${OUTREACH_BODY_MAX} characters.`),
 })
 
-export async function saveOutreachDraft(id: string, edit: { toEmail: string; subject: string; body: string }): Promise<OutreachActionResult> {
+/**
+ * Saves an edit. The hard writing rules never refuse the save; what they find
+ * in the saved text comes back with it, for the notice on the draft page.
+ */
+export async function saveOutreachDraft(id: string, edit: { toEmail: string; subject: string; body: string }): Promise<SaveDraftActionResult> {
+  await requireIntelUser()
   const parsed = editSchema.safeParse(edit)
-  if (!parsed.success) {
-    await requireIntelUser()
-    return { ok: false, error: parsed.error.issues[0]?.message ?? 'Check the draft.' }
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Check the draft.' }
+  if (!isUuid(id)) return { ok: false, error: 'Draft not found.' }
+  try {
+    const store = createOutreachStore()
+    const result = await editDraft(store, id, parsed.data, new Date().toISOString(), draftGuards(store, createCallStore()))
+    if (!result.ok) return { ok: false, error: result.error }
+    revalidateDraft(result.draft)
+    return { ok: true, rules: result.rules }
+  } catch {
+    console.error('Outreach draft update failed')
+    return { ok: false, error: GENERIC_ERROR }
   }
-  const calls = createCallStore()
-  return lifecycle(id, (now) => editDraft(createOutreachStore(), id, parsed.data, now, { closedBy: (draft) => readClosedBy(calls, draft) }))
+}
+
+/** The call history and the hard writing rules: the call history refuses a save or an approval; the rules refuse an approval and are reported after a save. */
+function draftGuards(store: ReturnType<typeof createOutreachStore>, calls: ReturnType<typeof createCallStore>): ApproveGuards {
+  return {
+    closedBy: (draft) => readClosedBy(calls, draft),
+    checkRules: async (draft) => checkDraftRules(draft, (await store.getSettings())?.studioName ?? ''),
+  }
 }
 
 export async function approveOutreachDraft(id: string): Promise<OutreachActionResult> {
   return lifecycle(id, async (now) => {
     const store = createOutreachStore()
     const calls = createCallStore()
-    return approveDraft(store, id, now, {
-      closedBy: (draft) => readClosedBy(calls, draft),
-      // Hand-written drafts meet the same hard writing rules before they are approved.
-      checkRules: async (draft) => checkDraftRules(draft, (await store.getSettings())?.studioName ?? ''),
-    })
+    return approveDraft(store, id, now, draftGuards(store, calls))
   })
 }
 
@@ -215,7 +234,10 @@ const manualSchema = z.object({
   body: z.string().max(OUTREACH_BODY_MAX + 10, `Keep the message under ${OUTREACH_BODY_MAX} characters.`),
 })
 
-/** Saves an email the owner wrote by hand as a new draft. No model call. */
+/**
+ * Saves an email the owner wrote by hand as a new draft. No model call. The
+ * hard writing rules never refuse it; the draft page shows what they find.
+ */
 export async function createManualDraft(
   subjectType: OutreachSubjectType,
   leadId: string,

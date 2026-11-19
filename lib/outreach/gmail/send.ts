@@ -7,9 +7,9 @@
  * Checks, in order, each refusing in plain words before anything changes:
  *   1. the connection exists, Google still accepts it, and the connected
  *      account may still send as the reply-to address in settings now
- *   2. the draft is sendable: approved, not confirmed, or a draft that passes
- *      the hard voice rules (a hand-written draft is checked again even when
- *      approved); the lead's call history is readable and the lead is not
+ *   2. the draft is sendable: approved, not confirmed, or a draft; its text
+ *      passes the hard voice rules (rules-check.ts, every draft whatever its
+ *      status or what wrote it); the lead's call history is readable and the lead is not
  *      closed by a call (readClosedBy); and when the
  *      business already has a sent email, the owner confirmed sending
  *      another (options.anotherEmail)
@@ -33,6 +33,7 @@ import { refreshAccessToken, type FetchFn } from '@/lib/outreach/gmail/oauth'
 import { localDayStartIso } from '@/lib/outreach/dates'
 import { isStaleSending, isSuppressed } from '@/lib/outreach/lifecycle'
 import { messageText } from '@/lib/outreach/mailto'
+import { writingRulesRefusal, type DraftText } from '@/lib/outreach/rules-check'
 import { OUTREACH_DAILY_SEND_LIMIT, SENDABLE_STATUSES, emailDomain, isValidEmail, normalizeEmail } from '@/lib/outreach/params'
 import { missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
 import { formatShortDate } from '@/lib/prospects/params'
@@ -48,7 +49,7 @@ export type SendDeps = {
    * The hard voice rules a draft's text breaks, in plain words; empty when it
    * passes. null when the lead can no longer be loaded to check against.
    */
-  checkRules: (draft: OutreachDraft, studioName: string) => Promise<string[] | null>
+  checkRules: (draft: DraftText, studioName: string) => Promise<string[] | null>
   /** The call log. Required: a log that cannot be read refuses the send. */
   calls: Pick<CallStore, 'callsFor'>
 }
@@ -131,13 +132,9 @@ export async function approveAndSend(deps: SendDeps, draftId: string, options: S
     )
   }
 
-  if (draft.status === 'draft' || draft.promptVersion === 'manual') {
-    const reasons = await deps.checkRules(draft, settings.studioName)
-    if (reasons === null) {
-      return refuse('This lead can no longer be loaded, so the draft cannot be checked against the writing rules. Approve it first, then send.')
-    }
-    if (reasons.length > 0) return refuse(`This draft does not meet the writing rules: ${reasons.join(' ')} Edit it before sending.`)
-  }
+  // Every draft, whatever its status or what wrote it, before Google is contacted.
+  const broken = await writingRulesRefusal((text) => deps.checkRules(text, settings.studioName), draft, 'sent')
+  if (broken !== null) return refuse(broken)
 
   // 3. The recipient.
   const to = draft.toEmail === null ? '' : normalizeEmail(draft.toEmail)

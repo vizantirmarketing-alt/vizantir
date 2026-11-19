@@ -10,6 +10,7 @@ import type { ContactNote } from '@/lib/outreach/contacts/view'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { buildMailto, messageText } from '@/lib/outreach/mailto'
 import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX, SENT_VIA_LABELS } from '@/lib/outreach/params'
+import type { RulesFinding, RulesNotice } from '@/lib/outreach/rules-check'
 import type { OutreachDraft } from '@/lib/outreach/types'
 import { foundAddressLabel } from '@/lib/outreach/worklist'
 
@@ -159,6 +160,8 @@ export function OutreachDraftEditor({
   contactNote = null,
   foundEmail = null,
   alreadyEmailedOn = null,
+  rulesNotice = null,
+  onSaved,
 }: {
   draft: OutreachDraft
   replyToEmail: string | null
@@ -170,6 +173,10 @@ export function OutreachDraftEditor({
   foundEmail?: string | null
   /** The date of this business's latest sent email, when it has one and this draft is not sent. */
   alreadyEmailedOn?: string | null
+  /** What the hard writing rules found, after a save or in the stored text of a draft in review. */
+  rulesNotice?: RulesNotice | null
+  /** Told what the rules found after Save, and null when another action starts. */
+  onSaved?: (rules: RulesFinding | null) => void
 }) {
   const router = useRouter()
   const [toEmail, setToEmail] = useState(draft.toEmail ?? '')
@@ -200,6 +207,7 @@ export function OutreachDraftEditor({
   function run(action: () => Promise<OutreachActionResult>, done?: string) {
     setError(null)
     setStatus(null)
+    onSaved?.(null)
     startTransition(async () => {
       const result = await action()
       if (!result.ok) {
@@ -212,6 +220,15 @@ export function OutreachDraftEditor({
   }
 
   const save = () => saveOutreachDraft(draft.id, { toEmail, subject, body })
+
+  /** Save: the notice says "Saved." and lists anything the writing rules found. */
+  function saveOnly() {
+    run(async () => {
+      const result = await save()
+      if (result.ok) onSaved?.(result.rules)
+      return result
+    }, onSaved === undefined ? 'Saved.' : undefined)
+  }
 
   function send(anotherEmail: boolean) {
     run(async () => {
@@ -354,13 +371,13 @@ export function OutreachDraftEditor({
                 type="button"
                 size="sm"
                 disabled={pending || !dirty}
-                onClick={() => run(save, 'Saved.')}
+                onClick={saveOnly}
                 className="bg-cobalt-primary intel-secondary text-white hover:bg-[#1E85FF]"
               >
                 {pending ? 'Saving…' : 'Save'}
               </Button>
             ) : (
-              <TextAction disabled={pending || !dirty} onClick={() => run(save, 'Saved.')}>
+              <TextAction disabled={pending || !dirty} onClick={saveOnly}>
                 Save
               </TextAction>
             )}
@@ -489,6 +506,22 @@ export function OutreachDraftEditor({
       ) : null}
       {draft.status === 'approved' && replyToEmail && sending === null ? (
         <p className="intel-secondary text-meta">Send it from {replyToEmail}, so replies come back to that mailbox.</p>
+      ) : null}
+      {rulesNotice !== null ? (
+        <div className="space-y-1.5" role="status">
+          <p className={`intel-body ${rulesNotice.problems.length > 0 || rulesNotice.lead !== 'Saved.' ? 'text-warning-severe' : 'text-body'}`}>
+            {rulesNotice.lead}
+          </p>
+          {rulesNotice.problems.length > 0 ? (
+            <ul className="list-disc space-y-1.5 pl-5">
+              {rulesNotice.problems.map((problem) => (
+                <li key={problem} className="intel-body leading-relaxed text-body">
+                  {problem}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
       ) : null}
       {status !== null ? (
         <p className="intel-body text-body" role="status">

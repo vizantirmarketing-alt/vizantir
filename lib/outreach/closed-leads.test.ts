@@ -8,7 +8,7 @@ import { describe, it } from 'node:test'
 
 import { outreachBriefingCounts, type DraftCallFacts } from './briefing-counts'
 import { ASKED_NOT_TO_CONTACT_REFUSAL, callHistoryUnreadable, closedByCalls, closedLeadRefusal, logCall, readClosedBy, summarizeCalls, type CallOutcome, type CallSummary, type OutreachCall } from './calls'
-import { MemoryCallStore } from './fixtures/memory-call-store'
+import { MemoryCallStore, PASSES_RULES } from './fixtures/memory-call-store'
 import { MemoryGmailConnectionStore, MemoryOutreachStore } from './fixtures/memory-store'
 import { FIXTURE_SETTINGS } from './fixtures/leads.fixture'
 import { NOW as SEND_NOW, TEST_CONFIG, connectionFor, scriptedFetch } from './fixtures/gmail.fixture'
@@ -126,7 +126,7 @@ describe('approve and send are refused on the server for a closed lead', () => {
       const calls = new MemoryCallStore()
       calls.calls.push(call(outcome))
       const { store, id } = await storeWithDraft('draft')
-      const result = await approveDraft(store, id, NOW, { closedBy: (d) => readClosedBy(calls, d) })
+      const result = await approveDraft(store, id, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES })
       assert.deepEqual(result, { ok: false, error: closedLeadRefusal(outcome) })
       assert.equal((await store.getDraft(id))!.status, 'draft')
     })
@@ -155,7 +155,7 @@ describe('approve and send are refused on the server for a closed lead', () => {
     const calls = new MemoryCallStore()
     calls.calls.push(call('spoke_not_interested', '2026-11-14T18:00:00.000Z'), call('left_message'))
     const { store, id } = await storeWithDraft('draft')
-    assert.ok((await approveDraft(store, id, NOW, { closedBy: (d) => readClosedBy(calls, d) })).ok)
+    assert.ok((await approveDraft(store, id, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES })).ok)
     const failing = new MemoryCallStore()
     failing.failing = true
     assert.equal(await closedByCalls(failing, SUBJECT), null)
@@ -202,7 +202,7 @@ describe('saving an edit and creating a new draft are refused for a closed lead'
       calls.calls.push(call(outcome))
       const { store, id } = await storeWithDraft('draft')
       const before = (await store.getDraft(id))!
-      const result = await editDraft(store, id, { toEmail: '', subject: 'Changed', body: 'Changed.' }, NOW, { closedBy: (d) => readClosedBy(calls, d) })
+      const result = await editDraft(store, id, { toEmail: '', subject: 'Changed', body: 'Changed.' }, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES })
       assert.deepEqual(result, { ok: false, error: closedLeadRefusal(outcome) }, outcome)
       assert.equal((await store.getDraft(id))!.subject, before.subject)
     }
@@ -210,7 +210,7 @@ describe('saving an edit and creating a new draft are refused for a closed lead'
     const calls = new MemoryCallStore()
     calls.calls.push(call('wrong_number', '2026-11-14T18:00:00.000Z'), call('no_answer'))
     const { store, id } = await storeWithDraft('draft')
-    assert.ok((await editDraft(store, id, { toEmail: '', subject: 'Changed', body: 'Changed.' }, NOW, { closedBy: (d) => readClosedBy(calls, d) })).ok)
+    assert.ok((await editDraft(store, id, { toEmail: '', subject: 'Changed', body: 'Changed.' }, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES })).ok)
   })
 
   it('a new draft, by the model or by hand', async () => {
@@ -317,7 +317,7 @@ describe('Log a call under Closed', () => {
       assert.equal(read.closed[0]!.reason, 'Asked not to be contacted')
       assert.equal(await closedByCalls(calls, SUBJECT), 'asked_not_to_contact')
       const { store, id } = await storeWithDraft('draft')
-      assert.deepEqual(await approveDraft(store, id, NOW, { closedBy: (d) => readClosedBy(calls, d) }), { ok: false, error: ASKED_NOT_TO_CONTACT_REFUSAL })
+      assert.deepEqual(await approveDraft(store, id, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES }), { ok: false, error: ASKED_NOT_TO_CONTACT_REFUSAL })
     }
   })
 })
@@ -342,7 +342,7 @@ describe('a call history that cannot be read', () => {
   it('refuses approving and sending', async () => {
     const calls = failing()
     const forApprove = await storeWithDraft('draft')
-    assert.deepEqual(await approveDraft(forApprove.store, forApprove.id, NOW, { closedBy: (d) => readClosedBy(calls, d) }), { ok: false, error: callHistoryUnreadable('approved') })
+    assert.deepEqual(await approveDraft(forApprove.store, forApprove.id, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES }), { ok: false, error: callHistoryUnreadable('approved') })
     assert.equal((await forApprove.store.getDraft(forApprove.id))!.status, 'draft')
 
     for (const status of ['draft', 'approved'] as const) {
@@ -372,7 +372,7 @@ describe('a call history that cannot be read', () => {
 
     const saved = await storeWithDraft('draft')
     const before = (await saved.store.getDraft(saved.id))!
-    assert.deepEqual(await editDraft(saved.store, saved.id, { toEmail: '', subject: 'Changed', body: 'Changed.' }, NOW, { closedBy: (d) => readClosedBy(calls, d) }), {
+    assert.deepEqual(await editDraft(saved.store, saved.id, { toEmail: '', subject: 'Changed', body: 'Changed.' }, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES }), {
       ok: false,
       error: callHistoryUnreadable('saved'),
     })
@@ -403,7 +403,7 @@ describe('a call history that cannot be read', () => {
     const calls = new MemoryCallStore()
     calls.calls.push(call('left_message'))
     const forApprove = await storeWithDraft('draft')
-    assert.ok((await approveDraft(forApprove.store, forApprove.id, NOW, { closedBy: (d) => readClosedBy(calls, d) })).ok)
+    assert.ok((await approveDraft(forApprove.store, forApprove.id, NOW, { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES })).ok)
 
     const { store, id } = await storeWithDraft('approved')
     const { fetch, calls: requests } = scriptedFetch({

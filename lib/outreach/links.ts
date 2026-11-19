@@ -16,3 +16,11 @@ export function leadHref(draft: Pick<OutreachDraft, 'subjectType' | 'leadId'>): 
 export function writeItYourselfHref(lead: Pick<OutreachDraft, 'subjectType' | 'leadId'>): string {
   return `/intel/outreach/write?type=${encodeURIComponent(lead.subjectType)}&lead=${encodeURIComponent(lead.leadId)}`
 }
+
+/** Marks the draft page as opened by a save, so its notice starts with "Saved." */
+export const SAVED_PARAM = 'saved'
+
+/** The draft page after the first save of a hand-written draft. */
+export function savedDraftHref(draftId: string): string {
+  return `/intel/outreach/${encodeURIComponent(draftId)}?${SAVED_PARAM}=1`
+}

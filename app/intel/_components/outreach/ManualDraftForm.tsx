@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
+import { savedDraftHref } from '@/lib/outreach/links'
 import { OUTREACH_BODY_MAX, OUTREACH_SUBJECT_MAX, type OutreachSubjectType } from '@/lib/outreach/params'
 
 import { createManualDraft } from '@/app/intel/(app)/outreach/actions'
@@ -39,7 +40,7 @@ export function ManualDraftForm({
         setError(null)
         startTransition(async () => {
           const result = await createManualDraft(subjectType, leadId, { toEmail, subject, body })
-          if (result.ok) router.push(`/intel/outreach/${result.draftId}`)
+          if (result.ok) router.push(savedDraftHref(result.draftId))
           else setError(result.error)
         })
       }}

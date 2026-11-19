@@ -9,7 +9,7 @@ import { DraftCallAction } from '@/app/intel/_components/outreach/DraftCallActio
 import { closedByCalls, closedLeadRefusal } from '@/lib/outreach/calls'
 import { callsReadableFor, createCallStore } from '@/lib/outreach/calls-store'
 import { draftCallPhone } from '@/lib/outreach/worklist'
-import { OutreachDraftEditor } from '@/app/intel/_components/outreach/OutreachDraftEditor'
+import { DraftEditorArea } from '@/app/intel/_components/outreach/DraftEditorArea'
 import { loadLeadPhone } from '@/lib/outreach/lead-facts'
 import { DraftWarnings } from '@/app/intel/_components/outreach/DraftWarnings'
 import { WrittenFromPanel } from '@/app/intel/_components/outreach/WrittenFromPanel'
@@ -25,10 +25,11 @@ import { connectionView } from '@/lib/outreach/gmail/view'
 import { loadContactStatus, loadDraftContact } from '@/lib/outreach/contacts/load'
 import { isStaleSending } from '@/lib/outreach/lifecycle'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
-import { leadHref } from '@/lib/outreach/links'
+import { SAVED_PARAM, leadHref } from '@/lib/outreach/links'
 import { OUTREACH_DAILY_SEND_LIMIT, OUTREACH_SUBJECT_LABELS, normalizeEmail } from '@/lib/outreach/params'
 import type { GmailConnection, OutreachDraft, OutreachSettings } from '@/lib/outreach/types'
-import { voiceWarnings, voiceContextFor } from '@/lib/outreach/voice'
+import { writingRulesFinding, type RulesFinding } from '@/lib/outreach/rules-check'
+import { checkVoice, refusalReasons, voiceWarnings, voiceContextFor } from '@/lib/outreach/voice'
 import { formatShortDate, isUuid } from '@/lib/prospects/params'
 
 export const dynamic = 'force-dynamic'
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-type PageProps = { params: Promise<{ id: string }> }
+type PageProps = { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }
 
 function BackLink() {
   return (
@@ -59,14 +60,21 @@ function BackLink() {
 
 /**
  * From the lead as it is now: the basis, by the same selection the drafting
- * uses, and the warnings for this draft's text against it. Nothing is stored.
- * null when the lead cannot be loaded.
+ * uses, the warnings for this draft's text against it, and what the hard
+ * rules find in it (the same check approve and send run, against the lead
+ * already loaded here, so no extra query). Nothing is stored. null when the
+ * lead cannot be loaded.
  */
-async function reviewFor(draft: OutreachDraft, studioName: string): Promise<{ basis: BasisItem[]; warnings: string[] } | null> {
+async function reviewFor(draft: OutreachDraft, studioName: string): Promise<{ basis: BasisItem[]; warnings: string[]; rules: RulesFinding } | null> {
   const loaded = draft.subjectType === 'prospect' ? await loadProspectLead(draft.leadId) : await loadBusinessLead(draft.leadId)
   if (!loaded.ok) return null
   const context = voiceContextFor(buildOutreachContext(loaded.lead), studioName)
-  return { basis: outreachBasis(loaded.lead), warnings: voiceWarnings({ subject: draft.subject, body: draft.body }, context) }
+  const text = { subject: draft.subject, body: draft.body }
+  return {
+    basis: outreachBasis(loaded.lead),
+    warnings: voiceWarnings(text, context),
+    rules: await writingRulesFinding(async () => refusalReasons(checkVoice(text, context)), draft),
+  }
 }
 
 /** The business's sent emails. A failed read shows none, and the send itself checks again on the server. */
@@ -85,9 +93,11 @@ function history(draft: OutreachDraft): string {
   return parts.join(' · ')
 }
 
-export default async function OutreachDraftPage({ params }: PageProps) {
+export default async function OutreachDraftPage({ params, searchParams }: PageProps) {
   await requireIntelUser()
   const { id } = await params
+  // Set by the first save of a hand-written draft, which opens this page.
+  const justSaved = (await searchParams)[SAVED_PARAM] === '1'
   if (!isUuid(id)) notFound()
 
   let draft: OutreachDraft | null
@@ -198,8 +208,10 @@ export default async function OutreachDraftPage({ params }: PageProps) {
         </Panel>
       ) : (
       <Panel title="Email">
-        <OutreachDraftEditor
-          key={draft.updatedAt}
+        <DraftEditorArea
+          key={draft.id}
+          justSaved={justSaved}
+          rules={draft.status !== 'draft' ? null : (review?.rules ?? { checked: false })}
           draft={draft}
           replyToEmail={settings?.replyToEmail || null}
           sending={sending}

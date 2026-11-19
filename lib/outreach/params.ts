@@ -75,7 +75,7 @@ export const SENT_PER_DAY_NOTE = 20
 export const MAILTO_MAX_LENGTH = 1800
 
 /** Changing the prompt or a voice rule changes what a draft means: bump this. */
-export const OUTREACH_PROMPT_VERSION = 'outreach-v6'
+export const OUTREACH_PROMPT_VERSION = 'outreach-v7'
 
 /**
  * How every draft describes the studio, word for word, after its name from

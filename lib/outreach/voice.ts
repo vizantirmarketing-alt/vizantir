@@ -34,6 +34,30 @@ export const BANNED_PHRASES: readonly { phrase: string; pattern: RegExp }[] = [
   { phrase: 'not just', pattern: /\bnot just\b/i },
 ]
 
+// One filler word inside a casual call phrase ("a quick call", "a short phone
+// call"): any word except one that starts a new clause, so "jump on a chance
+// to call" is not read as "jump on a call".
+const FILLER = String.raw`(?:(?!(?:to|and|or|but|if|then|for|with|so)\b)[a-z0-9-]+\s+)`
+
+/**
+ * Casual call phrasings, refused as a hard rule. Each is a whole phrase with
+ * its plain inflections; the words alone ("call", "quick", "base") are fine.
+ */
+export const CASUAL_CALL_PHRASES: readonly { phrase: string; pattern: RegExp }[] = [
+  { phrase: 'hop on a call', pattern: new RegExp(String.raw`\bhop(?:s|ped|ping)?\s+on\s+(?:a|an)\s+${FILLER}{0,2}call\b`, 'i') },
+  { phrase: 'jump on a call', pattern: new RegExp(String.raw`\bjump(?:s|ed|ing)?\s+on\s+(?:a|an)\s+${FILLER}{0,2}call\b`, 'i') },
+  { phrase: 'quick chat', pattern: new RegExp(String.raw`\bquick\s+${FILLER}?chat\b`, 'i') },
+  { phrase: 'pick your brain', pattern: new RegExp(String.raw`\bpick(?:s|ed|ing)?\s+your\s+${FILLER}?brains?\b`, 'i') },
+  { phrase: 'touch base', pattern: /\btouch(?:es|ed|ing)?\s+base\b/i },
+  { phrase: 'circle back', pattern: /\bcircl(?:e|es|ed|ing)\s+(?:right\s+)?back\b/i },
+]
+
+/** The casual call phrases a text uses, each once, in list order. */
+export function casualCallPhrases(text: string): string[] {
+  const flat = plain(text)
+  return CASUAL_CALL_PHRASES.filter(({ pattern }) => pattern.test(flat)).map(({ phrase }) => phrase)
+}
+
 export type VoiceRule =
   | 'subject_length'
   | 'subject_single_line'
@@ -65,9 +89,15 @@ export type VoiceRule =
   | 'studio_wording'
   | 'ask_once'
   | 'new_business'
+  | 'casual_call'
   | 'reply_format'
 
-export type VoiceViolation = { rule: VoiceRule; message: string }
+export type VoiceViolation = {
+  rule: VoiceRule
+  message: string
+  /** The exact phrases found, for a rule whose refusal names them. */
+  phrases?: string[]
+}
 
 /**
  * Checks decided by a pattern that can match acceptable text: word overlap,
@@ -117,15 +147,23 @@ export const REFUSAL_REASONS: Record<HardRule, string> = {
   contractions: "It read stiffly: no contractions, or 'I would be glad' and the like.",
   subject_wording: 'The subject used a banned word or the studio name.',
   new_business: 'It called the business new, newly opened or recently started, or mentioned a license. Nothing known says how long it has been running.',
+  casual_call: 'It used a casual call phrase. Reword the invitation plainly, such as offering to talk it through by phone or inviting a reply by email.',
   reply_format: 'The reply was not in the expected form.',
+}
+
+/** The casual call refusal, naming each phrase found. */
+export function casualCallRefusal(phrases: readonly string[]): string {
+  const quoted = phrases.map((phrase) => `"${phrase}"`)
+  const named = quoted.length === 1 ? `the casual phrase ${quoted[0]}` : `the casual phrases ${quoted.slice(0, -1).join(', ')} and ${quoted[quoted.length - 1]}`
+  return `It used ${named}. Reword the invitation plainly, such as offering to talk it through by phone or inviting a reply by email.`
 }
 
 /** The refused rules in plain words, each once, in check order. */
 export function refusalReasons(violations: readonly VoiceViolation[]): string[] {
   const out: string[] = []
-  for (const { rule } of violations) {
+  for (const { rule, phrases } of violations) {
     if (WARNING_RULES.has(rule)) continue
-    const reason = REFUSAL_REASONS[rule as HardRule]
+    const reason = rule === 'casual_call' && phrases !== undefined && phrases.length > 0 ? casualCallRefusal(phrases) : REFUSAL_REASONS[rule as HardRule]
     if (!out.includes(reason)) out.push(reason)
   }
   return out
@@ -544,6 +582,15 @@ function allChecks(draft: { subject: string; body: string }, context: VoiceConte
       'new_business',
       'Never describe the business as new, newly opened, newly licensed, recently started or just getting started, and never mention a license. Nothing known says how long it has been running.',
     )
+  }
+
+  const casual = casualCallPhrases(both)
+  if (casual.length > 0) {
+    out.push({
+      rule: 'casual_call',
+      message: `Do not write ${casual.map((phrase) => `"${phrase}"`).join(' or ')}. Never use casual call phrasings such as "hop on a call", "jump on a call", "quick chat", "pick your brain", "touch base" or "circle back". Make the closing invitation plain and specific, in your own direct voice, for example offering to talk it through by phone or inviting a reply by email.`,
+      phrases: casual,
+    })
   }
 
   if (context.findings.length > 1 && findingsUsed(body, context.findings, context.knownNames).length > 1) {

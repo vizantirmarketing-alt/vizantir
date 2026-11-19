@@ -11,7 +11,7 @@ import { ASKED_NOT_TO_CONTACT_REFUSAL, callHistoryUnreadable, logCall, readClose
 import { siteForBusiness, siteForProspect } from './contacts/rules'
 import { buildOutreachContext, hasSpecificFinding } from './context'
 import { MANUAL_PROMPT_VERSION, writeDraft, writeManualDraft, type DraftDeps } from './draft'
-import { MemoryCallStore, OPEN_LEAD } from './fixtures/memory-call-store'
+import { MemoryCallStore, OPEN_LEAD, PASSES_RULES } from './fixtures/memory-call-store'
 import { MemoryGmailConnectionStore, MemoryOutreachStore } from './fixtures/memory-store'
 import { FIXTURE_SETTINGS, GOOD_BUSINESS_REPLY, GOOD_PROSPECT_REPLY, businessLead, prospectLead } from './fixtures/leads.fixture'
 import { NOW as SEND_NOW, TEST_CONFIG, connectionFor, scriptedFetch } from './fixtures/gmail.fixture'
@@ -128,7 +128,7 @@ describe('the finding rule', () => {
     const { model, calls } = counting(GOOD_BUSINESS_REPLY)
     assert.ok((await writeDraft(deps(store, model), businessLead())).ok)
     assert.equal(calls(), 1)
-    assert.equal(store.drafts[0]!.promptVersion, 'outreach-v6')
+    assert.equal(store.drafts[0]!.promptVersion, 'outreach-v7')
   })
 })
 
@@ -202,7 +202,7 @@ describe('asked not to be contacted', () => {
     const written = await writeDraft(deps(earlier, model), lead)
     assert.ok(written.ok)
     await earlier.updateDraft(written.draftId, ['draft'], { toEmail: 'info@desertbloom.example', updatedAt: NOW.toISOString() })
-    const approved = await approveDraft(earlier, written.draftId, NOW.toISOString(), { closedBy: (d) => readClosedBy(calls, d) })
+    const approved = await approveDraft(earlier, written.draftId, NOW.toISOString(), { closedBy: (d) => readClosedBy(calls, d), ...PASSES_RULES })
     assert.equal(approved.ok, false)
     if (!approved.ok) assert.match(approved.error, /asked not to be contacted/)
   })

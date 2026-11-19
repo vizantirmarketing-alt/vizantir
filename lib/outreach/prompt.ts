@@ -58,6 +58,7 @@ Body:
 - Make exactly one specific, true observation, taken only from the JSON. ${observationRule(context)}
 - Never invent a compliment, a statistic, a number, a mutual connection or any prior contact. Every number you write must appear in the JSON.
 - End with one soft ask: a short call or a reply. Ask for nothing else.
+- Word the ask plainly and specifically, in your own direct voice, for this email: for example, offer to talk it through by phone, or invite a reply by email. Never use casual call phrasings: "hop on a call", "hop on a quick call", "jump on a call", "quick chat", "pick your brain", "touch base", "circle back" or anything like them.
 - Ask once. Make one request for a reply or a call, in one place: the last line. Do not ask earlier in the email, do not repeat the request in other words, and do not add a second question.
 - No pricing, packages, quotes, offers or attachments. No links, web addresses or email addresses, except ${STUDIO_SITE_HOST}. You may mention ${STUDIO_SITE_HOST} once, inside a sentence. Never put it on a line of its own.
 - Never mention AI, automation, tools, software, scraping, research or how this message was written.

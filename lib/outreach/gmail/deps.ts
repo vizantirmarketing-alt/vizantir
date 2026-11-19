@@ -13,7 +13,7 @@ import type { ConnectDeps } from '@/lib/outreach/gmail/connect'
 import type { SendDeps } from '@/lib/outreach/gmail/send'
 import { loadBusinessLead, loadProspectLead } from '@/lib/outreach/leads'
 import { createGmailConnectionStore, createOutreachStore } from '@/lib/outreach/store'
-import type { OutreachDraft } from '@/lib/outreach/types'
+import type { DraftText } from '@/lib/outreach/rules-check'
 import { checkVoice, refusalReasons, voiceContextFor } from '@/lib/outreach/voice'
 
 /** null when any of the three variables is missing or malformed. */
@@ -25,8 +25,8 @@ export function readGmailConfig(): GmailConfig | null {
   })
 }
 
-/** The hard voice rules against the lead as it is now, as drafting checks them. */
-export async function checkDraftRules(draft: OutreachDraft, studioName: string): Promise<string[] | null> {
+/** The hard voice rules against the lead as it is now, as drafting checks them. Used at save, approve and send. */
+export async function checkDraftRules(draft: DraftText, studioName: string): Promise<string[] | null> {
   const loaded = draft.subjectType === 'prospect' ? await loadProspectLead(draft.leadId) : await loadBusinessLead(draft.leadId)
   if (!loaded.ok) return null
   const context = voiceContextFor(buildOutreachContext(loaded.lead), studioName)
