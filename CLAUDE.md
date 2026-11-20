@@ -178,3 +178,61 @@ maintenance link to `/services/website-care`. Cost and pricing link to
 `/services/web-development`. Design, hospitality, law, and real estate link
 to `/services/web-design`. Strategy and SEO link to
 `/services/website-strategy`. Anything else links to `/services`.
+
+## AI business assistant (/intel)
+
+A private assistant inside the Vizantir dashboard at `/intel`, for internal
+use only. Every page under `app/intel/(app)/` sits behind `requireIntelUser()`
+(`lib/auth/allowlist.ts`). It is separate from the public `/api/chat`.
+
+### Phases
+
+- Phase 1, Prospect Research: live. `/intel/prospects`, `lib/prospects/`.
+- Phase 2, scheduled research and daily briefing: live. `/intel/briefing`,
+  `lib/briefing/`, run by the daily `/api/cron/briefing` (`vercel.json`).
+- Phase 3, command center at `/intel/ai`: not started. Scope is in
+  `docs/intel/PLAN.md` section 8.
+
+"Phase 2" in `docs/SEARCH_INTELLIGENCE_ARCHITECTURE.md` refers to the Search
+Intelligence scan plan, a different project. Do not confuse it with the phases
+here.
+
+### Added scope, built and live
+
+- New Businesses: Clark County new business lists, ranked, with website checks. `lib/new-businesses/`.
+- Outreach drafting: one model call per draft (retried once), or written by hand. `lib/outreach/` (`draft.ts`, `prompt.ts`, `voice.ts`).
+- Outreach direct sending through the owner's connected Google mailbox. `lib/outreach/gmail/`.
+- Contact address lookup for accepted leads. `lib/outreach/contacts/`.
+- Site reviews of accepted businesses' own websites. `lib/outreach/site-reviews/`.
+- Call logging. `lib/outreach/calls.ts`, `lib/outreach/calls-store.ts`.
+- Closed leads: a call outcome closes a lead to email. `lib/outreach/calls.ts` (`readClosedBy`).
+- Leads spam handling: caught spam kept out of the list and totals. `lib/intel/leads.ts`, `lib/intel/lead-params.ts`.
+- Contact form hardening: honeypot, rate limits, disposable email check. `lib/forms/`.
+
+### How research runs
+
+The dashboard and the daily briefing cron queue work as runs in the database.
+An external scheduled runner claims them and follows `docs/research-runner.md`
+exactly, through `pnpm prospect:runner`. The runner only reports ratings and
+observations; the server decides every status and score.
+
+### Standing rules
+
+- Intel measurement logic is read-only: use its existing functions, never change them.
+- Nothing is sent, published, purchased or deployed without the owner's approval.
+- Every draft is checked against the hard writing rules through one shared
+  check (`lib/outreach/rules-check.ts`). Approve and send refuse a draft that
+  breaks one. Saving goes through and reports the problems on the draft page.
+- Drafting, saving, approving and sending refuse when a lead is closed or its
+  call history cannot be read. "Mark as sent" only records the status.
+- No AI attribution in commits, documentation or application content.
+- Never call Vizantir an agency. No em-dashes in user-facing copy. Nothing below
+  14px in Intel (type utilities in `app/globals.css`).
+- Migrations are applied by hand in the Supabase SQL editor. Since `0027`, each
+  ends with a real SELECT that verifies what applied; earlier files do not.
+- Tests use `node:test` through tsx: `NODE_OPTIONS=--conditions=react-server pnpm exec tsx --test <files>`.
+
+### Not started, outside the phases
+
+- New Businesses beyond Clark County (the only source is `clark_county`).
+- A client-facing, multi-account version.

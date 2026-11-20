@@ -1,12 +1,12 @@
 # Vizantir Intelligence — plan of record
 
-Internal operator dashboard at `/intel`. Written 2026-08-18 from the repository. Updated 2026-08-25 from production and the database. Claims that could not be confirmed in source are marked **unverified**.
+Internal operator dashboard at `/intel`. Written 2026-08-18 from the repository. Updated 2026-08-25 from production and the database. Live surfaces list updated 2026-11-19 from the repository. Claims that could not be confirmed in source are marked **unverified**.
 
 ---
 
 ## 1. System state
 
-Live surfaces (auth required except login): Overview (28-day stat strip + sync health + AI platforms + activity feed + decision feed), Search, Leads (+ detail + CSV export), Reports (Care review queue + per-report preview). Public client report at `/r/[token]` (no auth). Instrumented public site; GSC + GA4 + Clarity ingest; daily detectors; monthly client reports. Shared dashboard primitives live in `app/intel/_components/ui/`.
+Live surfaces (auth required except login), in navigation order: Overview (28-day stat strip + sync health + AI platforms + activity feed + decision feed), Briefing (daily briefing), Clients (+ per-client dashboard), Search, Leads (+ detail + CSV export), Prospect Research (+ prospect detail), New Businesses, Outreach (+ draft page, hand-written compose page, settings), Reports (Care review queue + per-report preview). Public client report at `/r/[token]` (no auth). Instrumented public site; GSC + GA4 + Clarity ingest; daily detectors; monthly client reports. Shared dashboard primitives live in `app/intel/_components/ui/`.
 
 ### Instrumentation
 
@@ -334,6 +334,37 @@ The intel dashboard remains single-tenant (one allowlist, one GSC site, one Clar
 5. **Client reporting follow-through.** Remove the `debug=true` scaffolding on the PDF route. Set up `mail.vizantir.com` with its own DKIM before sending to real clients. Cosmetic: zero deltas render as a second “0” rather than a dash; the new/returning block shows users over sessions without labelling which is which. Onboard Evolve Dance Center as client two.
 
 Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_submit` and `consultation_click` as GA4 key events if not already (console **unverified**); GA4 event audit, then a GA4 surface once the property has a meaningful window.
+
+---
+
+## 8. Phase 3 scope: the command center
+
+Recorded 2026-11-19. Not built: there is no `/intel/ai` route in the repo yet.
+
+**Where it lives.** A private page at `/intel/ai`, behind `requireIntelUser()` (`lib/auth/allowlist.ts`) like every other Intel page. It is separate from the public `/api/chat` route.
+
+**What it is.** A small catalog of validated commands, not open-ended tool use. The initial supported requests:
+
+- find a given number of prospects in a named market and industry
+- research one existing prospect further
+- explain a prospect's score from recorded evidence
+- compare a short set of prospects
+- summarize the latest daily briefing
+- review inbound inquiries and identify follow-up priorities
+- summarize selected Intel findings without modifying them
+
+**What a command may do.** Each command does exactly one of two things:
+
+1. Create a bounded research request through the existing runner contract (`docs/research-runner.md`). The server sets the bounds; the runner reports observations and the server decides every score and status, as it does today.
+2. Read existing data.
+
+**What it never does.** It never gives the model arbitrary network, database, deployment, email or filesystem access.
+
+**Long work.** Anything long runs outside the request (through the runner queues) and the page shows its progress.
+
+**Approval rules.** Approval rules cannot be bypassed by typed instructions or by content from a researched website. Text from either is data, never an instruction.
+
+**Already built.** Outreach drafting and direct sending, which the original plan deferred until after Phase 3, are already built and live (`/intel/outreach`, `lib/outreach/`). They are not part of this scope.
 
 ---
 
