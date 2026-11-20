@@ -43,23 +43,28 @@ function stripFences(text: string): string {
   return fenced?.[1] ?? trimmed
 }
 
-/** The validated interpretation of a reply. Not JSON, or not in the catalog: unsupported. */
-export function parseInterpretation(raw: string): Interpretation {
+/** The validated interpretation of a reply, and whether the reply itself was malformed (not JSON, or not in the catalog). */
+export function readInterpretation(raw: string): { interpretation: Interpretation; malformed: boolean } {
   let json: unknown
   try {
     json = JSON.parse(stripFences(raw))
   } catch {
-    return { command: 'unsupported' }
+    return { interpretation: { command: 'unsupported' }, malformed: true }
   }
   const parsed = interpretationSchema.safeParse(json)
-  return parsed.success ? parsed.data : { command: 'unsupported' }
+  return parsed.success ? { interpretation: parsed.data, malformed: false } : { interpretation: { command: 'unsupported' }, malformed: true }
 }
 
-export type InterpretResult = { ok: true; interpretation: Interpretation } | { ok: false }
+/** The validated interpretation of a reply. Not JSON, or not in the catalog: unsupported. */
+export function parseInterpretation(raw: string): Interpretation {
+  return readInterpretation(raw).interpretation
+}
+
+export type InterpretResult = { ok: true; interpretation: Interpretation; malformed: boolean } | { ok: false }
 
 /** One model call. A failed call is a failure, not an unsupported instruction. */
 export async function interpretInstruction(callModel: CallModel, instruction: string): Promise<InterpretResult> {
   const reply = await callModel({ system: INTERPRET_SYSTEM_PROMPT, user: instruction })
   if (!reply.ok) return { ok: false }
-  return { ok: true, interpretation: parseInterpretation(reply.text) }
+  return { ok: true, ...readInterpretation(reply.text) }
 }

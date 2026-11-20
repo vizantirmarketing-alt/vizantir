@@ -6,12 +6,14 @@ import 'server-only'
  *   prospectDetail     fetchProspectDetail                 lib/prospects/load.ts
  *   openInquiries      fetchLeads, one status at a time    lib/intel/leads.ts
  *   findings           fetchDecisionFeed                   lib/intel/decisions/feed.ts
- * plus one select-only prospect search by name or domain below
- * (searchProspects), which reads id, name, domain, market and industry only.
+ * plus two select-only reads below: a prospect search by name or domain
+ * (searchProspects), which reads id, name, domain, market and industry only,
+ * and the budget of the listed inquiries (inquiryBudgets), which reads id and
+ * budget only, since the leads list does not carry budget.
  * Nothing here inserts, updates, deletes, calls an RPC or fetches a URL.
  */
 
-import type { AssistantSources, InquiryStatusRead } from '@/lib/assistant/context'
+import type { AssistantSources, InquiryRow, InquiryStatusRead } from '@/lib/assistant/context'
 import { OPEN_INQUIRY_STATUSES } from '@/lib/assistant/context'
 import type { ProspectCandidate } from '@/lib/assistant/resolve'
 import { createBriefingStore } from '@/lib/briefing/store'
@@ -53,6 +55,20 @@ async function searchProspects(term: string, limit: number): Promise<ProspectCan
   return [...merged.values()].slice(0, limit)
 }
 
+/** Budget by inquiry id for the given inquiries: one select of id and budget. Null when the read fails. */
+async function inquiryBudgets(ids: readonly string[]): Promise<Map<string, string | null> | null> {
+  if (ids.length === 0) return new Map()
+  const { data, error } = await createSupabaseServiceRole().from('contact_submissions').select('id, budget').in('id', [...ids])
+  if (error) return null
+  const budgets = new Map<string, string | null>()
+  for (const row of data ?? []) {
+    const id = Reflect.get(row, 'id')
+    const budget = Reflect.get(row, 'budget')
+    if (typeof id === 'string') budgets.set(id, typeof budget === 'string' ? budget : null)
+  }
+  return budgets
+}
+
 export const assistantSources: AssistantSources = {
   async latestBriefing() {
     try {
@@ -76,12 +92,26 @@ export const assistantSources: AssistantSources = {
   },
   async openInquiries() {
     const reads = await Promise.all(
-      OPEN_INQUIRY_STATUSES.map(async (status): Promise<InquiryStatusRead | null> => {
+      OPEN_INQUIRY_STATUSES.map(async (status) => {
         const result = await fetchLeads({ status, channel: 'all', q: '', sort: 'newest', page: 1 })
         return result.ok ? { status, total: result.total, rows: result.rows } : null
       }),
     )
-    return reads.some((read) => read === null) ? null : (reads as InquiryStatusRead[])
+    if (reads.some((read) => read === null)) return null
+    const complete = reads.filter((read) => read !== null)
+    let budgets: Map<string, string | null> | null
+    try {
+      budgets = await inquiryBudgets(complete.flatMap((read) => read.rows.map((row) => row.id)))
+    } catch {
+      budgets = null
+    }
+    if (budgets === null) return null
+    return complete.map(
+      (read): InquiryStatusRead => ({
+        ...read,
+        rows: read.rows.map((row): InquiryRow => ({ ...row, budget: budgets.get(row.id) ?? null })),
+      }),
+    )
   },
   async findings() {
     const feed = await fetchDecisionFeed()

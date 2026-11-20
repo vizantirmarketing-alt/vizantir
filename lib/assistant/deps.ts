@@ -3,10 +3,11 @@ import 'server-only'
 /**
  * Production wiring for the command center: requireIntelUser, the contact
  * form's rate limit helper under its own key, the briefing's model client (no
- * tools) and the read-only sources.
+ * tools), the read-only sources and one log line per failure (reason code
+ * and command only).
  */
 
-import { assistantRateLimit, type AssistantDeps } from '@/lib/assistant/run'
+import { assistantRateLimit, formatAssistantLog, type AssistantDeps } from '@/lib/assistant/run'
 import { assistantSources } from '@/lib/assistant/sources'
 import { requireIntelUser } from '@/lib/auth/allowlist'
 import { createBriefingModel } from '@/lib/briefing/model'
@@ -19,5 +20,6 @@ export function createAssistantDeps(): AssistantDeps {
     callModel: createBriefingModel(),
     sources: assistantSources,
     now: () => new Date(),
+    log: (entry) => console.warn(formatAssistantLog(entry)),
   }
 }

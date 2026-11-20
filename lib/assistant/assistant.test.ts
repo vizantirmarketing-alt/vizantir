@@ -13,12 +13,13 @@ import type { LeadListRow } from '@/lib/intel/lead-params'
 import type { ProspectDetail, ProspectEvidenceRow } from '@/lib/prospects/load'
 import type { FactorRatings } from '@/lib/prospects/rubric'
 
-import { ANSWER_MAX_WORDS, ANSWER_SYSTEM_PROMPT } from './answer'
+import { ANSWER_LENGTHS, ANSWER_MAX_WORDS, ANSWER_SYSTEM_PROMPT, escapeRawControls, validateAnswer, writesLink } from './answer'
 import { ASSISTANT_MAX_PER_HOUR, ASSISTANT_RATE_LIMIT_KEY, INSTRUCTION_MAX, UNSUPPORTED_MESSAGE } from './catalog'
-import { CONTEXT_MAX_CHARS, OUTSIDE_TEXT_NOTE, type AssistantSources, type InquiryStatusRead, type StoredBriefingRead } from './context'
+import { CONTEXT_MAX_CHARS, FINDINGS_NOTE, OUTSIDE_TEXT_NOTE, laTime, localizeInstants, type AssistantSources, type InquiryRow, type InquiryStatusRead, type StoredBriefingRead } from './context'
 import { parseInterpretation } from './interpret'
 import { searchTerm, type ProspectCandidate } from './resolve'
 import {
+  ANSWER_REFUSED,
   INVALID_REQUEST,
   LOAD_FAILED,
   MODEL_FAILED,
@@ -29,11 +30,14 @@ import {
   TOO_LARGE,
   assistantRateLimit,
   chooseMessage,
+  formatAssistantLog,
   handleAssistantRequest,
   noMatchMessage,
   type AssistantDeps,
+  type AssistantLog,
   type AssistantReply,
 } from './run'
+import { formatLocalTimestamp } from '@/lib/briefing/dates'
 
 const HALCYON = '0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a'
 const BLOOM_LAW = '0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b'
@@ -97,10 +101,13 @@ const PROSPECTS: Record<string, { prospect: ProspectDetail; evidence: ProspectEv
   [BLOOM_TACOS]: { prospect: prospect(BLOOM_TACOS, 'Desert Bloom Tacos', 'desertbloomtacos.example'), evidence: [] },
 }
 
-function leadRow(id: string, status: LeadListRow['status'], company: string | null, createdAt: string): LeadListRow {
+const SERVICE = 'Website Redesign'
+const BUDGET = '$5,000 to $10,000'
+
+function leadRow(id: string, status: LeadListRow['status'], company: string | null, createdAt: string): InquiryRow {
   // Personal fields on the row, as the leads loader may carry them: none may reach the model.
   return Object.assign(
-    { id, name: FIXTURE_PERSONAL.name, company, service: 'Private service detail', status, initial_channel: 'organic', notify_status: 'sent' as const, created_at: createdAt },
+    { id, name: FIXTURE_PERSONAL.name, company, service: SERVICE, budget: BUDGET, status, initial_channel: 'organic', notify_status: 'sent' as const, created_at: createdAt },
     { email: FIXTURE_PERSONAL.email, phone: FIXTURE_PERSONAL.phone, message: FIXTURE_PERSONAL.message },
   )
 }
@@ -139,11 +146,13 @@ function finding(key: string, title: string): DecisionFeedItem {
   } as DecisionFeedItem
 }
 
+const OUTREACH = { acceptedWaiting: 3, needsReview: 2, approvedNotSent: 1, toCall: 1, sentYesterday: 4 }
+
 const BRIEFING: StoredBriefingRead = {
   briefingDate: '2026-11-10',
   generatedAt: FIXTURE_NOW.toISOString(),
   status: 'complete',
-  content: assembleBriefingContent(fixtureInputs(), { now: FIXTURE_NOW, windows: FIXTURE_WINDOWS }),
+  content: { ...assembleBriefingContent(fixtureInputs(), { now: FIXTURE_NOW, windows: FIXTURE_WINDOWS }), outreach: OUTREACH },
 }
 
 type Counts = { briefing: number; detail: number; search: number; inquiries: number; findings: number }
@@ -195,6 +204,7 @@ function deps(replies: (object | string | null)[], overrides: Partial<AssistantD
   const model = scripted(replies)
   const { sources, counts } = memorySources(sourceOverrides)
   const allowed: string[] = []
+  const logs: AssistantLog[] = []
   const d: AssistantDeps = {
     authorize: async () => ({ id: 'user-1' }),
     allow: async (userId) => {
@@ -204,9 +214,10 @@ function deps(replies: (object | string | null)[], overrides: Partial<AssistantD
     callModel: model.callModel,
     sources,
     now: () => FIXTURE_NOW,
+    log: (entry) => logs.push(entry),
     ...overrides,
   }
-  return { deps: d, calls: model.calls, counts, allowed }
+  return { deps: d, calls: model.calls, counts, allowed, logs }
 }
 
 const ANSWER = { answer: 'A plain answer from the loaded data.' }
@@ -227,9 +238,9 @@ describe('the five read-only commands, end to end', () => {
     assert.equal(reply.answer, ANSWER.answer)
     assert.deepEqual(reply.links, [{ label: 'Briefing for Tuesday, November 10, 2026', href: '/intel/briefing?date=2026-11-10' }])
     assert.equal(t.calls.length, 2)
-    const briefing = data(t.calls[1]!).briefing as { content: { newProspects: { total: number; listedCount: number } } }
-    assert.equal(typeof briefing.content.newProspects.total, 'number')
-    assert.equal(typeof briefing.content.newProspects.listedCount, 'number')
+    const briefing = data(t.calls[1]!).briefing as { newProspects: { total: number; listedCount: number } }
+    assert.equal(typeof briefing.newProspects.total, 'number')
+    assert.equal(typeof briefing.newProspects.listedCount, 'number')
     for (const value of Object.values(FIXTURE_PERSONAL)) assert.equal(t.calls[1]!.user.includes(value), false, value)
   })
 
@@ -257,15 +268,15 @@ describe('the five read-only commands, end to end', () => {
     assert.equal((data(t.calls[1]!).prospects as unknown[]).length, 2)
   })
 
-  it('review_inquiries lists open inquiries by id, status, company and age only, with true totals, never spam', async () => {
+  it('review_inquiries lists open inquiries by id, status, company, service, budget and age only, with true totals, never spam', async () => {
     const t = deps([{ command: 'review_inquiries', params: {} }, ANSWER])
     const reply = answered(await handleAssistantRequest(t.deps, ask('Which inquiries should I follow up first?')))
     const inquiries = data(t.calls[1]!).inquiries as { total: number; listedCount: number; listed: Record<string, unknown>[] }
     assert.equal(inquiries.total, 4)
     assert.equal(inquiries.listedCount, 3)
-    for (const row of inquiries.listed) assert.deepEqual(Object.keys(row).sort(), ['ageDays', 'company', 'id', 'status'])
+    for (const row of inquiries.listed) assert.deepEqual(Object.keys(row).sort(), ['budget', 'company', 'daysSinceReceived', 'id', 'service', 'status'])
     assert.equal(t.calls[1]!.user.includes('Spam Co'), false)
-    for (const value of [...Object.values(FIXTURE_PERSONAL), 'Private service detail']) assert.equal(t.calls[1]!.user.includes(value), false, value)
+    for (const value of Object.values(FIXTURE_PERSONAL)) assert.equal(t.calls[1]!.user.includes(value), false, value)
     assert.deepEqual(reply.links, [
       { label: 'Inquiry from Fictional Firm', href: '/intel/leads/aaaaaaaa-0000-4000-8000-000000000001' },
       { label: 'Inquiry, no company given', href: '/intel/leads/aaaaaaaa-0000-4000-8000-000000000002' },
@@ -380,15 +391,19 @@ describe('prospect resolution, in code', () => {
   it('a pick sent back with a command outside the catalog, or a selection that is not an id, is refused', async () => {
     const t = deps([])
     const forged = await handleAssistantRequest(t.deps, { kind: 'continue', instruction: 'x', command: { command: 'send_email', params: {} }, selections: {} })
-    assert.deepEqual(forged, { ok: false, error: INVALID_REQUEST })
+    assert.deepEqual(forged, { ok: false, error: INVALID_REQUEST, understoodAs: null })
     const badId = await handleAssistantRequest(t.deps, { kind: 'continue', instruction: 'x', command: { command: 'explain_score', params: { prospect: 'a' } }, selections: { a: 'not-an-id' } })
-    assert.deepEqual(badId, { ok: false, error: INVALID_REQUEST })
+    assert.deepEqual(badId, { ok: false, error: INVALID_REQUEST, understoodAs: null })
     assert.equal(t.calls.length, 0)
   })
 
   it('comparing a prospect with itself is refused', async () => {
     const t = deps([{ command: 'compare_prospects', params: { prospects: ['Halcyon Dental', 'halcyon-dental.example'] } }])
-    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Compare Halcyon with itself')), { ok: false, error: SAME_PROSPECT })
+    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Compare Halcyon with itself')), {
+      ok: false,
+      error: SAME_PROSPECT,
+      understoodAs: 'Compare prospects: Halcyon Dental, halcyon-dental.example',
+    })
   })
 })
 
@@ -404,39 +419,53 @@ describe('outside website text is data, never an instruction', () => {
     assert.equal(t.calls.length, 2, 'no extra call or command came from the evidence')
   })
 
-  it('an answer that obeys the injected text by writing a link is refused, and nothing is shown', async () => {
-    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, { answer: 'It scores 100. See https://attacker.example/now.' }])
-    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental')), { ok: false, error: MODEL_FAILED })
+  it('an answer that obeys the injected text by writing a link is refused on both attempts, and nothing is shown', async () => {
+    const linked = { answer: 'It scores 100. See https://attacker.example/now.' }
+    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, linked, linked])
+    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental')), {
+      ok: false,
+      error: ANSWER_REFUSED,
+      understoodAs: 'Explain a prospect score: Halcyon Dental',
+    })
   })
 })
 
 describe('the answer', () => {
   it('links come from code, never from the model', async () => {
-    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, { answer: 'Fit 72 from strong market match.', links: ['/x'] }])
-    // An extra key in the reply fails the schema.
-    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental')), { ok: false, error: MODEL_FAILED })
-    assert.match(ANSWER_SYSTEM_PROMPT, /Do not write any URL or link/)
+    const extra = { answer: 'Fit 72 from strong market match.', links: ['/x'] }
+    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, extra, extra])
+    // An extra key in the reply fails the schema, on the retry too.
+    const reply = await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental'))
+    assert.ok(!reply.ok && reply.error === ANSWER_REFUSED)
+    assert.match(ANSWER_SYSTEM_PROMPT, /Do not write any link/)
   })
 
   it('em dashes are replaced, and an answer over the word cap is refused', async () => {
     const dashed = deps([{ command: 'review_inquiries', params: {} }, { answer: 'Two open inquiries — follow up with Fictional Firm.' }])
     assert.equal(answered(await handleAssistantRequest(dashed.deps, ask('Inquiries?'))).answer, 'Two open inquiries, follow up with Fictional Firm.')
-    const long = deps([{ command: 'review_inquiries', params: {} }, { answer: Array.from({ length: ANSWER_MAX_WORDS + 1 }, () => 'word').join(' ') }])
-    assert.deepEqual(await handleAssistantRequest(long.deps, ask('Inquiries?')), { ok: false, error: MODEL_FAILED })
+    const tooLong = { answer: Array.from({ length: ANSWER_MAX_WORDS + 1 }, () => 'word').join(' ') }
+    const long = deps([{ command: 'review_inquiries', params: {} }, tooLong, tooLong])
+    assert.deepEqual(await handleAssistantRequest(long.deps, ask('Inquiries?')), { ok: false, error: ANSWER_REFUSED, understoodAs: 'Review inbound inquiries' })
   })
 
   it('a model failure at either step, or a loader failure, shows a plain error and no answer', async () => {
-    assert.deepEqual(await handleAssistantRequest(deps([null]).deps, ask('Summarize the briefing')), { ok: false, error: MODEL_FAILED })
-    assert.deepEqual(await handleAssistantRequest(deps([{ command: 'summarize_briefing', params: {} }, null]).deps, ask('Summarize the briefing')), { ok: false, error: MODEL_FAILED })
+    assert.deepEqual(await handleAssistantRequest(deps([null]).deps, ask('Summarize the briefing')), { ok: false, error: MODEL_FAILED, understoodAs: null })
+    const answerFailed = deps([{ command: 'summarize_briefing', params: {} }, null])
+    assert.deepEqual(await handleAssistantRequest(answerFailed.deps, ask('Summarize the briefing')), {
+      ok: false,
+      error: MODEL_FAILED,
+      understoodAs: 'Summarize the latest briefing',
+    })
+    assert.equal(answerFailed.calls.length, 2, 'a failed call is not retried here; the model client already retries once')
     const broken = deps([{ command: 'review_inquiries', params: {} }, ANSWER], {}, { openInquiries: async () => null })
-    assert.deepEqual(await handleAssistantRequest(broken.deps, ask('Inquiries?')), { ok: false, error: LOAD_FAILED })
+    assert.deepEqual(await handleAssistantRequest(broken.deps, ask('Inquiries?')), { ok: false, error: LOAD_FAILED, understoodAs: 'Review inbound inquiries' })
     assert.equal(broken.calls.length, 1, 'no answering call after a loader failure')
   })
 
   it('a context over the size cap is not answered', async () => {
     const content = { ...BRIEFING.content, findings: { ...BRIEFING.content.findings, items: [{ ...BRIEFING.content.findings.items[0]!, title: 't'.repeat(CONTEXT_MAX_CHARS) }] } }
     const t = deps([{ command: 'summarize_briefing', params: {} }, ANSWER], {}, { latestBriefing: async () => ({ ok: true, briefing: { ...BRIEFING, content } }) })
-    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Summarize the briefing')), { ok: false, error: TOO_LARGE })
+    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Summarize the briefing')), { ok: false, error: TOO_LARGE, understoodAs: 'Summarize the latest briefing' })
     assert.equal(t.calls.length, 1)
   })
 })
@@ -456,14 +485,14 @@ describe('access and limits', () => {
 
   it('an instruction over the length cap is refused without using the hourly allowance', async () => {
     const t = deps([])
-    assert.deepEqual(await handleAssistantRequest(t.deps, ask('x'.repeat(INSTRUCTION_MAX + 1))), { ok: false, error: INVALID_REQUEST })
-    assert.deepEqual(await handleAssistantRequest(t.deps, ask('   ')), { ok: false, error: INVALID_REQUEST })
+    assert.deepEqual(await handleAssistantRequest(t.deps, ask('x'.repeat(INSTRUCTION_MAX + 1))), { ok: false, error: INVALID_REQUEST, understoodAs: null })
+    assert.deepEqual(await handleAssistantRequest(t.deps, ask('   ')), { ok: false, error: INVALID_REQUEST, understoodAs: null })
     assert.deepEqual(t.allowed, [])
   })
 
   it('over the hourly cap, nothing reaches the model', async () => {
     const t = deps([{ command: 'summarize_briefing', params: {} }], { allow: async () => false })
-    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Summarize the briefing')), { ok: false, error: RATE_LIMITED })
+    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Summarize the briefing')), { ok: false, error: RATE_LIMITED, understoodAs: null })
     assert.equal(t.calls.length, 0)
   })
 
@@ -488,5 +517,233 @@ describe('access and limits', () => {
       throw new Error('RATE_LIMIT_SALT not set')
     })
     assert.equal(await failing('user-1'), false)
+  })
+})
+
+const words = (n: number) => Array.from({ length: n }, (_, i) => `word${i}`).join(' ')
+
+describe('regression: explaining a real prospect score failed every time', () => {
+  // On production, "Explain the score for Gladstein Group" interpreted, resolved
+  // and loaded correctly, but every answer ran 274 to 288 words against a
+  // 250-word cap and was refused. Some replies also broke paragraphs with raw
+  // line breaks inside the JSON string, which JSON.parse rejects.
+  it('an explanation of the length real ones run (288 words) is answered', async () => {
+    assert.ok(ANSWER_LENGTHS.explain_score.max >= 288 && ANSWER_LENGTHS.compare_prospects.max >= 288)
+    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, { answer: words(288) }])
+    answered(await handleAssistantRequest(t.deps, ask('Explain the score for Halcyon Dental')))
+    assert.equal(t.calls.length, 2, 'accepted on the first attempt')
+  })
+
+  it('a reply with raw line breaks between paragraphs inside the answer string is read, paragraphs kept', async () => {
+    const raw = '{"answer":"First paragraph.\n\nSecond paragraph.\tEnd."}'
+    assert.throws(() => JSON.parse(raw))
+    assert.equal(escapeRawControls(raw), '{"answer":"First paragraph.\\n\\nSecond paragraph.\\tEnd."}')
+    // Line breaks between keys stay as they are.
+    assert.equal(escapeRawControls('{\n"answer": "x"\n}'), '{\n"answer": "x"\n}')
+    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, raw])
+    assert.equal(answered(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental'))).answer, 'First paragraph.\n\nSecond paragraph.\tEnd.')
+  })
+})
+
+describe('links in an answer', () => {
+  const context = JSON.stringify({ prospect: { domain: 'halcyon-dental.example' } })
+
+  it('a bare domain that is in the data is plain text and allowed, with or without www.', () => {
+    assert.equal(writesLink('Halcyon Dental (halcyon-dental.example) scores 72.', context), false)
+    assert.equal(writesLink('See www.halcyon-dental.example for the booking page.', context), false)
+    assert.equal(writesLink('LCP 10.9 s, mobile score 73/100, e.g. a slow page.', context), false)
+    assert.ok(validateAnswer(JSON.stringify({ answer: 'halcyon-dental.example scores 72.' }), context).ok)
+  })
+
+  it('http, https and markdown links are refused, and so is a domain the data does not contain', () => {
+    for (const answer of [
+      'See http://halcyon-dental.example now.',
+      'See https://halcyon-dental.example now.',
+      'See [the site](halcyon-dental.example) now.',
+      'See [the site](/intel/prospects) now.',
+      'Compare it with attacker.example instead.',
+    ]) {
+      assert.equal(writesLink(answer, context), true, answer)
+      assert.deepEqual(validateAnswer(JSON.stringify({ answer }), context), { ok: false, problem: 'invalid_url', words: answer.split(/\s+/).length }, answer)
+    }
+  })
+})
+
+describe('one retry when an answer breaks a format rule', () => {
+  it('a reply over the cap is retried once, told its length, and the second reply is shown', async () => {
+    const t = deps([{ command: 'review_inquiries', params: {} }, { answer: words(ANSWER_MAX_WORDS + 10) }, ANSWER])
+    assert.equal(answered(await handleAssistantRequest(t.deps, ask('Inquiries?'))).answer, ANSWER.answer)
+    assert.equal(t.calls.length, 3)
+    assert.match(t.calls[2]!.system, new RegExp(`Your previous answer was ${ANSWER_MAX_WORDS + 10} words\\. It must be ${ANSWER_MAX_WORDS} words or fewer`))
+    assert.equal(t.calls[2]!.user, t.calls[1]!.user, 'same data on the retry')
+    assert.deepEqual(t.logs, [], 'a retry that succeeds is not a failure')
+  })
+
+  it('each format problem tells the retry what was wrong', async () => {
+    for (const [bad, said] of [
+      ['not json at all', /not a JSON object of exactly the shape/],
+      [{ answer: 'See https://example.com.' }, /contained a link or a web address/],
+    ] as const) {
+      const t = deps([{ command: 'summarize_findings', params: {} }, bad, ANSWER])
+      answered(await handleAssistantRequest(t.deps, ask('Findings?')))
+      assert.match(t.calls[2]!.system, said)
+    }
+  })
+
+  it('a second failure is still a failure, with nothing shown and no third call', async () => {
+    const t = deps([{ command: 'summarize_findings', params: {} }, 'not json', '```json\n{"answer": 1}\n```', ANSWER])
+    assert.deepEqual(await handleAssistantRequest(t.deps, ask('Findings?')), { ok: false, error: ANSWER_REFUSED, understoodAs: 'Summarize open findings' })
+    assert.equal(t.calls.length, 3)
+  })
+})
+
+describe('failure logging', () => {
+  const SECRET_INSTRUCTION = 'Explain Halcyon Dental zq-instruction-marker'
+  const SECRET_ANSWER = 'zq-answer-marker'
+  const explain = { command: 'explain_score', params: { prospect: 'Halcyon Dental' } }
+  const findings = { command: 'summarize_findings', params: {} }
+  const cases: { reason: string; command: string; build: () => ReturnType<typeof deps>; instruction?: string }[] = [
+    { reason: 'invalid_request', command: 'none', build: () => deps([]), instruction: 'x'.repeat(INSTRUCTION_MAX + 1) },
+    { reason: 'rate_limited', command: 'none', build: () => deps([], { allow: async () => false }) },
+    { reason: 'not_configured', command: 'none', build: () => deps([], { callModel: null }) },
+    { reason: 'model_error', command: 'none', build: () => deps([null]) },
+    { reason: 'interpret_invalid', command: 'unsupported', build: () => deps([`not json ${SECRET_ANSWER}`]) },
+    { reason: 'resolve_error', command: 'explain_score', build: () => deps([explain], {}, { searchProspects: async () => null }) },
+    { reason: 'same_prospect', command: 'compare_prospects', build: () => deps([{ command: 'compare_prospects', params: { prospects: ['Halcyon Dental', 'halcyon-dental.example'] } }]) },
+    { reason: 'prospect_not_found', command: 'explain_score', build: () => deps([explain], {}, { prospectDetail: async () => ({ ok: false, reason: 'not_found' }) }) },
+    { reason: 'load_error', command: 'summarize_findings', build: () => deps([findings], {}, { findings: async () => null }) },
+    {
+      reason: 'context_too_large',
+      command: 'summarize_findings',
+      build: () => deps([{ command: 'summarize_findings', params: { limit: 20 } }], {}, { findings: async () => Array.from({ length: 20 }, (_, i) => finding(`f-${i}`, 't'.repeat(CONTEXT_MAX_CHARS / 10))) }),
+    },
+    { reason: 'answer_invalid_shape', command: 'summarize_findings', build: () => deps([findings, SECRET_ANSWER, SECRET_ANSWER]) },
+    { reason: 'answer_too_long', command: 'summarize_findings', build: () => deps([findings, { answer: `${SECRET_ANSWER} ${words(300)}` }, { answer: `${SECRET_ANSWER} ${words(300)}` }]) },
+    { reason: 'answer_invalid_url', command: 'summarize_findings', build: () => deps([findings, { answer: `${SECRET_ANSWER} https://x.example` }, { answer: `${SECRET_ANSWER} https://x.example` }]) },
+    { reason: 'model_error', command: 'summarize_findings', build: () => deps([findings, null]) },
+    {
+      reason: 'unexpected_error',
+      command: 'summarize_findings',
+      build: () =>
+        deps([findings], {}, {
+          findings: async () => {
+            throw new Error(SECRET_ANSWER)
+          },
+        }),
+    },
+  ]
+
+  for (const c of cases) {
+    it(`${c.reason} (${c.command}) logs one line with its reason code and no instruction or answer text`, async () => {
+      const t = c.build()
+      await handleAssistantRequest(t.deps, ask(c.instruction ?? SECRET_INSTRUCTION))
+      assert.equal(t.logs.length, 1, JSON.stringify(t.logs))
+      assert.equal(t.logs[0]!.reason, c.reason)
+      assert.equal(t.logs[0]!.command, c.command)
+      const line = formatAssistantLog(t.logs[0]!)
+      assert.match(line, new RegExp(`^\\[assistant\\] reason=${c.reason} command=${c.command}`))
+      for (const text of [JSON.stringify(t.logs), line]) {
+        for (const secret of ['zq-instruction-marker', SECRET_ANSWER, 'Halcyon', 'xxxxxxxxxx']) assert.equal(text.includes(secret), false, `${secret} in ${text}`)
+      }
+    })
+  }
+
+  it('the owner sees a plain message: "try again shortly" for a temporary problem, the rules message for a refused answer, never a code', async () => {
+    for (const c of cases) {
+      const t = c.build()
+      const reply = await handleAssistantRequest(t.deps, ask(c.instruction ?? SECRET_INSTRUCTION))
+      if (reply.ok) continue
+      assert.equal(/[a-z]+_[a-z]+/.test(reply.error), false, reply.error)
+      if (c.reason.startsWith('answer_')) assert.equal(reply.error, ANSWER_REFUSED)
+      if (['model_error', 'load_error', 'resolve_error', 'unexpected_error'].includes(c.reason)) assert.match(reply.error, /Try again shortly\.$/)
+    }
+    assert.match(ANSWER_REFUSED, /could not produce an answer that met its rules/)
+  })
+})
+
+describe('"Understood as" when the answer then fails', () => {
+  it('a failed answer still carries how the instruction was understood; a failed interpretation carries none', async () => {
+    const failedAnswer = await handleAssistantRequest(deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, null]).deps, ask('Explain Halcyon Dental'))
+    assert.deepEqual(failedAnswer, { ok: false, error: MODEL_FAILED, understoodAs: 'Explain a prospect score: Halcyon Dental' })
+    const failedLoad = await handleAssistantRequest(deps([{ command: 'summarize_findings', params: { limit: 3 } }], {}, { findings: async () => null }).deps, ask('Findings?'))
+    assert.deepEqual(failedLoad, { ok: false, error: LOAD_FAILED, understoodAs: 'Summarize open findings, up to 3' })
+    const failedInterpretation = await handleAssistantRequest(deps([null]).deps, ask('Explain Halcyon Dental'))
+    assert.equal(!failedInterpretation.ok && failedInterpretation.understoodAs, null)
+  })
+})
+
+describe('labelled data', () => {
+  const ISO = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/
+
+  it('dates and times are Los Angeles time with the zone stated, and no UTC timestamp reaches the model in any command', async () => {
+    const generatedAt = laTime(FIXTURE_NOW.toISOString())
+    assert.equal(generatedAt, `${formatLocalTimestamp(FIXTURE_NOW.toISOString())} (Los Angeles time)`)
+    assert.equal(generatedAt, 'Nov 10, 2026, 8:00 AM PST (Los Angeles time)')
+    assert.deepEqual(localizeInstants({ a: ['2026-07-01T14:00:00.000Z'], b: '2026-07-01', c: 'text' }), {
+      a: ['Jul 1, 2026, 7:00 AM PDT (Los Angeles time)'],
+      b: '2026-07-01',
+      c: 'text',
+    })
+
+    const t = deps([{ command: 'summarize_briefing', params: {} }, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Summarize the latest briefing')))
+    const briefing = data(t.calls[1]!).briefing as Record<string, unknown>
+    assert.equal(briefing.generatedAt, generatedAt)
+    assert.equal(briefing.briefingDate, 'Tuesday, November 10, 2026')
+    assert.match(ANSWER_SYSTEM_PROMPT, /Dates and times are already written out in America\/Los_Angeles time\. Repeat them exactly as given/)
+
+    for (const interpretation of [
+      { command: 'summarize_briefing', params: {} },
+      { command: 'explain_score', params: { prospect: 'Halcyon Dental' } },
+      { command: 'compare_prospects', params: { prospects: ['Halcyon Dental', 'Desert Bloom Law'] } },
+      { command: 'review_inquiries', params: {} },
+      { command: 'summarize_findings', params: {} },
+    ]) {
+      const run = deps([interpretation, ANSWER])
+      answered(await handleAssistantRequest(run.deps, ask('Go')))
+      assert.equal(ISO.test(run.calls[1]!.user), false, `${interpretation.command}: ${ISO.exec(run.calls[1]!.user)?.[0]}`)
+      assert.equal(/\bUTC\b/.test(run.calls[1]!.user), false, interpretation.command)
+    }
+  })
+
+  it('outreach counts carry explicit names and one-line meanings; nothing is called scheduled', async () => {
+    const t = deps([{ command: 'summarize_briefing', params: {} }, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Summarize the latest briefing')))
+    const outreach = (data(t.calls[1]!).briefing as { outreach: Record<string, { count: number; meaning: string }> }).outreach
+    assert.deepEqual(
+      Object.fromEntries(Object.entries(outreach).filter(([key]) => key !== 'note').map(([key, value]) => [key, value.count])),
+      { draftsNeedingReview: 2, approvedEmailsNotSent: 1, leadsToCall: 1, acceptedLeadsWaitingForEmail: 3, emailsSentYesterday: 4 },
+    )
+    for (const [key, value] of Object.entries(outreach)) if (key !== 'note') assert.ok(value.meaning.length > 0, key)
+    assert.match(outreach.leadsToCall!.meaning, /^Accepted leads with no email address, reachable by phone\. Nothing is scheduled/)
+    assert.match(outreach.draftsNeedingReview!.meaning, /drafts waiting for the owner to review/)
+    assert.match(ANSWER_SYSTEM_PROMPT, /Use the names given for each number and value\. Do not rename a count, merge two counts, or add qualifiers that are not in the data, for example "scheduled", "urgent", "overdue"/)
+  })
+
+  it('finding attributes are labelled by their true names: category, confidence and status', async () => {
+    const t = deps([{ command: 'summarize_findings', params: {} }, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Findings?')))
+    const items = (data(t.calls[1]!).findings as { meaning: string; listed: Record<string, unknown>[] })
+    assert.ok(items.meaning.includes(FINDINGS_NOTE))
+    assert.deepEqual([items.listed[0]!.category, items.listed[0]!.confidence, items.listed[0]!.status], ['Opportunity', 'High confidence', 'New'])
+
+    // The briefing's stored findings, as the owner saw them ("opportunity, medium, new").
+    const medium = { ...BRIEFING.content, findings: { openCount: 1, items: [{ findingKey: 'k', title: 'Buried demand', category: 'opportunity', confidence: 'medium', status: 'new' }] } }
+    const b = deps([{ command: 'summarize_briefing', params: {} }, ANSWER], {}, { latestBriefing: async () => ({ ok: true, briefing: { ...BRIEFING, content: medium } }) })
+    answered(await handleAssistantRequest(b.deps, ask('Summarize the latest briefing')))
+    const listed = (data(b.calls[1]!).briefing as { findings: { listed: Record<string, unknown>[] } }).findings.listed
+    assert.deepEqual(listed[0], { findingKey: 'k', title: 'Buried demand', category: 'Opportunity', confidence: 'Medium confidence', status: 'New' })
+  })
+
+  it('inquiries carry service and budget, and never name, email, phone or message', async () => {
+    const t = deps([{ command: 'review_inquiries', params: {} }, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Which inquiries should I follow up first?')))
+    const listed = (data(t.calls[1]!).inquiries as { listed: Record<string, unknown>[] }).listed
+    for (const row of listed) {
+      assert.equal(row.service, SERVICE)
+      assert.equal(row.budget, BUDGET)
+      for (const key of ['name', 'email', 'phone', 'message']) assert.equal(key in row, false, key)
+    }
+    for (const value of Object.values(FIXTURE_PERSONAL)) assert.equal(t.calls[1]!.user.includes(value), false, value)
   })
 })

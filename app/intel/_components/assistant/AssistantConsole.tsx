@@ -29,7 +29,7 @@ function EntryView({ entry, pending, onChoose }: { entry: Entry; pending: boolea
     <Panel>
       <div className="flex min-w-0 flex-col gap-2">
         <p className="intel-body font-medium text-foreground [overflow-wrap:anywhere]">{entry.asked}</p>
-        {reply.ok && reply.understoodAs !== null ? (
+        {reply.understoodAs !== null ? (
           <p className="intel-secondary text-meta [overflow-wrap:anywhere]">Understood as: {reply.understoodAs}</p>
         ) : null}
 
@@ -95,7 +95,7 @@ export function AssistantConsole() {
       try {
         reply = await askAssistant(request)
       } catch {
-        reply = { ok: false, error: UNREACHABLE }
+        reply = { ok: false, error: UNREACHABLE, understoodAs: null }
       }
       setEntries((current) => [{ id: nextId.current++, asked, reply, chosen: null }, ...current])
     })
