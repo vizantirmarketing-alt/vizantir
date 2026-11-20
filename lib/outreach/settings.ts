@@ -3,6 +3,14 @@
  *
  * The footer is built here, from the settings, and appended by code. The
  * model never writes it and the owner cannot edit it on a draft.
+ *
+ * Which footer an email carries (draftFooter): a draft that needs review
+ * always shows and sends the footer built from the settings and the code as
+ * they are now, and any footer stored on its row is ignored. Approving
+ * freezes it: the current footer is written to the row with the rest of the
+ * text, so the approved email is exactly what is sent. Edit again returns it
+ * to a draft, which follows the current settings again. Sent emails keep the
+ * footer they were sent with.
  */
 
 import { z } from 'zod'
@@ -69,4 +77,26 @@ export const settingsInputSchema = z.strictObject({
 /** Sender name, studio name, postal address, then the opt-out line. */
 export function buildFooter(settings: OutreachSettings): string {
   return [settings.senderName.trim(), settings.studioName.trim(), settings.postalAddress.trim(), '', OPT_OUT_LINE].join('\n')
+}
+
+/** The settings the footer is built from are all filled in. */
+function footerReady(settings: OutreachSettings | null): settings is OutreachSettings {
+  return settings !== null && [settings.senderName, settings.studioName, settings.postalAddress].every((value) => value.trim().length > 0)
+}
+
+/**
+ * The footer a draft shows and sends. A draft that needs review: the one
+ * built now, when its settings are filled in (otherwise the stored one, and
+ * sending refuses incomplete settings anyway). Any other status: the stored
+ * one, frozen at approval or as it was sent.
+ */
+export function draftFooter(draft: { status: string; footer: string }, settings: OutreachSettings | null): string {
+  if (draft.status !== 'draft' || !footerReady(settings)) return draft.footer
+  return buildFooter(settings)
+}
+
+/** An approved email whose frozen footer differs from the one the settings and the code would build now. */
+export function footerOutdated(draft: { status: string; footer: string }, settings: OutreachSettings | null): boolean {
+  if (draft.status !== 'approved' || !footerReady(settings)) return false
+  return draft.footer !== buildFooter(settings)
 }

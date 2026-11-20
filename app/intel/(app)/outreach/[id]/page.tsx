@@ -21,6 +21,7 @@ import { buildOutreachContext, outreachBasis, type BasisItem } from '@/lib/outre
 import { localDayStartIso } from '@/lib/outreach/dates'
 import { createOutreachStore } from '@/lib/outreach/deps'
 import { createGmailConnectionStore, readGmailConfig } from '@/lib/outreach/gmail/deps'
+import { draftFooter, footerOutdated } from '@/lib/outreach/settings'
 import { connectionView } from '@/lib/outreach/gmail/view'
 import { loadContactStatus, loadDraftContact } from '@/lib/outreach/contacts/load'
 import { isStaleSending } from '@/lib/outreach/lifecycle'
@@ -212,7 +213,9 @@ export default async function OutreachDraftPage({ params, searchParams }: PagePr
           key={draft.id}
           justSaved={justSaved}
           rules={draft.status !== 'draft' ? null : (review?.rules ?? { checked: false })}
-          draft={draft}
+          // A draft that needs review shows the footer built from the settings now, as it would be sent; any other status, the stored one.
+          draft={{ ...draft, footer: draftFooter(draft, settings) }}
+          footerOutdated={footerOutdated(draft, settings)}
           replyToEmail={settings?.replyToEmail || null}
           sending={sending}
           staleSending={staleSending}

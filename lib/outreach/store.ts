@@ -147,6 +147,7 @@ function patchColumns(patch: DraftPatch): Record<string, string | null> {
   if (patch.toEmail !== undefined) columns.to_email = patch.toEmail
   if (patch.subject !== undefined) columns.subject = patch.subject
   if (patch.body !== undefined) columns.body = patch.body
+  if (patch.footer !== undefined) columns.footer = patch.footer
   if (patch.status !== undefined) columns.status = patch.status
   if (patch.approvedAt !== undefined) columns.approved_at = patch.approvedAt
   if (patch.sentAt !== undefined) columns.sent_at = patch.sentAt

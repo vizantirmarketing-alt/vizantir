@@ -30,6 +30,7 @@ import {
   type SuppressionReason,
 } from '@/lib/outreach/params'
 import type { OutreachDraft, OutreachStore, Suppression } from '@/lib/outreach/types'
+import { draftFooter } from '@/lib/outreach/settings'
 import { findingAfterSave, writingRulesRefusal, type RuleCheck, type RulesFinding } from '@/lib/outreach/rules-check'
 
 export type LifecycleResult = { ok: true; draft: OutreachDraft } | { ok: false; error: string }
@@ -119,9 +120,12 @@ export async function approveDraft(store: OutreachStore, id: string, nowIso: str
   if (isSuppressed(to, matches)) {
     return { ok: false, error: 'This address is on the do-not-contact list, by address or by domain. It cannot be approved.' }
   }
-  return done(await store.updateDraft(id, ['draft'], { status: 'approved', approvedAt: nowIso, updatedAt: nowIso }))
+  // The footer is frozen with the rest of the text: the one built from the settings now, so the approved email is exactly what is sent.
+  const footer = draftFooter(current, await store.getSettings())
+  return done(await store.updateDraft(id, ['draft'], { status: 'approved', approvedAt: nowIso, footer, updatedAt: nowIso }))
 }
 
+/** Back to a draft that needs review, which shows and sends the current footer again (draftFooter). */
 export async function editAgain(store: OutreachStore, id: string, nowIso: string): Promise<LifecycleResult> {
   return done(await store.updateDraft(id, ['approved'], { status: 'draft', approvedAt: null, updatedAt: nowIso }))
 }

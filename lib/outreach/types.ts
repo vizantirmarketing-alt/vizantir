@@ -49,7 +49,7 @@ export type NewDraft = Omit<
 export type DraftPatch = Partial<
   Pick<
     OutreachDraft,
-    'toEmail' | 'subject' | 'body' | 'status' | 'approvedAt' | 'sentAt' | 'sentVia' | 'gmailMessageId' | 'gmailThreadId' | 'sendError'
+    'toEmail' | 'subject' | 'body' | 'footer' | 'status' | 'approvedAt' | 'sentAt' | 'sentVia' | 'gmailMessageId' | 'gmailThreadId' | 'sendError'
   >
 > & {
   updatedAt: string

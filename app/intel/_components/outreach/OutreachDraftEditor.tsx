@@ -41,12 +41,21 @@ function ReadField({ label, children }: { label: string; children: ReactNode }) 
   )
 }
 
-/** The footer every email ends with. Built from the settings when the draft was written; not editable. */
-function Footer({ footer }: { footer: string }) {
+/**
+ * The footer every email ends with; not editable. A draft that needs review
+ * shows the one built from the settings now; an approved or sent email, the
+ * one fixed at approval (draftFooter).
+ */
+function Footer({ footer, outdated = false }: { footer: string; outdated?: boolean }) {
   return (
     <div className="min-w-0 rounded-lg border border-dashed border-black/15 px-3 py-2.5">
       <p className="intel-secondary text-meta">Footer, added to every email and not editable</p>
       <p className="mt-1 whitespace-pre-wrap intel-body text-body [overflow-wrap:anywhere]">{footer}</p>
+      {outdated ? (
+        <p className="mt-2 intel-secondary text-meta">
+          This footer was fixed when the email was approved and differs from your current settings. Choose Edit again to refresh it.
+        </p>
+      ) : null}
     </div>
   )
 }
@@ -162,6 +171,7 @@ export function OutreachDraftEditor({
   alreadyEmailedOn = null,
   rulesNotice = null,
   onSaved,
+  footerOutdated = false,
 }: {
   draft: OutreachDraft
   replyToEmail: string | null
@@ -177,6 +187,8 @@ export function OutreachDraftEditor({
   rulesNotice?: RulesNotice | null
   /** Told what the rules found after Save, and null when another action starts. */
   onSaved?: (rules: RulesFinding | null) => void
+  /** An approved email whose footer, fixed at approval, differs from the one the settings would build now. */
+  footerOutdated?: boolean
 }) {
   const router = useRouter()
   const [toEmail, setToEmail] = useState(draft.toEmail ?? '')
@@ -320,7 +332,7 @@ export function OutreachDraftEditor({
           <ReadField label="Message">
             <p className="whitespace-pre-wrap leading-relaxed">{draft.body}</p>
           </ReadField>
-          <Footer footer={draft.footer} />
+          <Footer footer={draft.footer} outdated={footerOutdated} />
         </div>
       )}
 

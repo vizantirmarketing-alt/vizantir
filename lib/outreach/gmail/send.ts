@@ -18,7 +18,9 @@
  *   5. fewer than OUTREACH_DAILY_SEND_LIMIT Gmail sends today
  * Then the draft is claimed with a conditional update to 'sending', so a
  * second click finds nothing to claim, and exactly the locked subject and body
- * plus the footer are sent, From the sender name and the reply-to address. Nothing is written again by a model here.
+ * plus the footer are sent (a draft that needs review: the footer built from
+ * the settings now, frozen on the row by the claim; an approved one: the
+ * footer frozen at approval), From the sender name and the reply-to address. Nothing is written again by a model here.
  */
 
 import { callHistoryUnreadable, closedLeadRefusal, readClosedBy, type CallStore } from '@/lib/outreach/calls'
@@ -35,7 +37,7 @@ import { isStaleSending, isSuppressed } from '@/lib/outreach/lifecycle'
 import { messageText } from '@/lib/outreach/mailto'
 import { writingRulesRefusal, type DraftText } from '@/lib/outreach/rules-check'
 import { OUTREACH_DAILY_SEND_LIMIT, SENDABLE_STATUSES, emailDomain, isValidEmail, normalizeEmail } from '@/lib/outreach/params'
-import { missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
+import { draftFooter, missingSettings, missingSettingsMessage } from '@/lib/outreach/settings'
 import { formatShortDate } from '@/lib/prospects/params'
 import type { GmailConnection, GmailConnectionStore, OutreachDraft, OutreachStore } from '@/lib/outreach/types'
 
@@ -154,6 +156,9 @@ export async function approveAndSend(deps: SendDeps, draftId: string, options: S
     )
   }
 
+  // A draft that needs review sends the footer built now; an approved one, the footer frozen at approval.
+  const footer = draftFooter(draft, settings)
+
   // The message, built before anything changes so a bad header refuses cleanly.
   const message = buildRawMessage({
     fromName: settings.senderName,
@@ -162,7 +167,7 @@ export async function approveAndSend(deps: SendDeps, draftId: string, options: S
     to,
     replyTo: sendAs,
     subject: draft.subject,
-    text: messageText(draft.body, draft.footer),
+    text: messageText(draft.body, footer),
   })
   if (!message.ok) return refuse(message.error)
 
@@ -173,6 +178,8 @@ export async function approveAndSend(deps: SendDeps, draftId: string, options: S
   const claimed = await deps.store.updateDraft(draft.id, [draft.status], {
     status: 'sending',
     approvedAt: draft.approvedAt ?? nowIso,
+    // Approved and sent in one click: the footer sent is frozen on the row with the rest.
+    ...(draft.status === 'draft' ? { footer } : {}),
     sendError: null,
     updatedAt: nowIso,
   })
