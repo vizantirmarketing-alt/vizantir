@@ -20,12 +20,15 @@ import { parseInterpretation } from './interpret'
 import { searchTerm, type ProspectCandidate } from './resolve'
 import {
   ANSWER_REFUSED,
+  CONFIRMATION_INVALID,
   INVALID_REQUEST,
   LOAD_FAILED,
   MODEL_FAILED,
   NOT_AVAILABLE,
+  NOT_SET_UP,
   NO_BRIEFING,
   RATE_LIMITED,
+  RESEARCH_CHECK_FAILED,
   SAME_PROSPECT,
   TOO_LARGE,
   assistantRateLimit,
@@ -38,6 +41,19 @@ import {
   type AssistantReply,
 } from './run'
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
+import { createHmac } from 'node:crypto'
+import { abandonedReasonLine } from '@/lib/prospects/claim'
+import {
+  PICKUP_NOTE,
+  RESEARCH_REQUESTS_PER_DAY,
+  confirmationPayload,
+  describeRun,
+  listResearchRequests,
+  type ConfirmationSigner,
+  type FindRequest,
+  type ResearchQueue,
+  type ResearchRunRecord,
+} from './research'
 
 const HALCYON = '0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a'
 const BLOOM_LAW = '0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b'
@@ -200,24 +216,70 @@ function scripted(replies: (object | string | null)[]): { callModel: CallModel; 
   return { callModel, calls }
 }
 
+/** A memory research queue: stored runs, with every insert recorded. */
+function memoryResearch(initial: ResearchRunRecord[] = []) {
+  const runs: (ResearchRunRecord & { source: string; requestedBy: string | null })[] = initial.map((run) => ({ ...run, source: 'assistant', requestedBy: 'owner@example.com' }))
+  const inserts: { request: FindRequest; requestedBy: string }[] = []
+  let failReads = false
+  const queue: ResearchQueue = {
+    async countRequestedSince(requestedBy, sinceIso) {
+      if (failReads) return null
+      return runs.filter((run) => run.source === 'assistant' && run.requestedBy === requestedBy && run.requestedAt >= sinceIso).length
+    },
+    async openRuns() {
+      return failReads ? null : runs.filter((run) => run.state === 'requested' || run.state === 'claimed')
+    },
+    async queueRun(request, requestedBy) {
+      inserts.push({ request, requestedBy })
+      const id = `00000000-0000-4000-8000-${String(runs.length + 1).padStart(12, '0')}`
+      runs.push({
+        id,
+        state: 'requested',
+        config: { market: request.market, industry: request.industry, targetCount: request.targetCount, exclusions: [] },
+        counts: { saved: 0, rejected: 0 },
+        errorSummary: null,
+        requestedAt: FIXTURE_NOW.toISOString(),
+        claimedAt: null,
+        finishedAt: null,
+        source: 'assistant',
+        requestedBy,
+      })
+      return { id }
+    },
+    async listAssistantRuns(limit) {
+      return [...runs].filter((run) => run.source === 'assistant').sort((a, b) => b.requestedAt.localeCompare(a.requestedAt)).slice(0, limit)
+    },
+  }
+  return { queue, runs, inserts, failReads: () => (failReads = true) }
+}
+
+/** A test signer: an HMAC under a fixed key, as research-store.ts signs in production. */
+const SIGNER: ConfirmationSigner = {
+  sign: (payload) => createHmac('sha256', 'test-key').update(payload).digest('base64url'),
+  verify: (payload, signature) => createHmac('sha256', 'test-key').update(payload).digest('base64url') === signature,
+}
+
 function deps(replies: (object | string | null)[], overrides: Partial<AssistantDeps> = {}, sourceOverrides: Partial<AssistantSources> = {}) {
   const model = scripted(replies)
   const { sources, counts } = memorySources(sourceOverrides)
+  const research = memoryResearch()
   const allowed: string[] = []
   const logs: AssistantLog[] = []
   const d: AssistantDeps = {
-    authorize: async () => ({ id: 'user-1' }),
+    authorize: async () => ({ id: 'user-1', email: 'owner@example.com' }),
     allow: async (userId) => {
       allowed.push(userId)
       return true
     },
     callModel: model.callModel,
     sources,
+    research: research.queue,
+    signer: SIGNER,
     now: () => FIXTURE_NOW,
     log: (entry) => logs.push(entry),
     ...overrides,
   }
-  return { deps: d, calls: model.calls, counts, allowed, logs }
+  return { deps: d, calls: model.calls, counts, allowed, logs, research }
 }
 
 const ANSWER = { answer: 'A plain answer from the loaded data.' }
@@ -302,22 +364,18 @@ describe('the five read-only commands, end to end', () => {
   })
 })
 
-describe('commands recognized but not run in this slice', () => {
-  for (const [interpretation, key] of [
-    [{ command: 'find_prospects', params: { market: 'Henderson', industry: 'Dentists', count: 10 } }, 'find_prospects'],
-    [{ command: 'research_prospect', params: { prospect: 'Halcyon Dental' } }, 'research_prospect'],
-  ] as const) {
-    it(`${key} replies that it is not available yet, naming Prospect Research, and loads, resolves or queues nothing`, async () => {
-      const t = deps([interpretation])
-      const reply = await handleAssistantRequest(t.deps, ask('Do it'))
-      assert.ok(reply.ok && reply.kind === 'reply')
-      assert.equal(reply.message, NOT_AVAILABLE[key])
-      assert.match(reply.message, /^Starting new research from this page is not available yet\./)
-      assert.deepEqual(reply.links, [{ label: 'Prospect Research', href: '/intel/prospects' }])
-      assert.equal(t.calls.length, 1)
-      assert.deepEqual(t.counts, { briefing: 0, detail: 0, search: 0, inquiries: 0, findings: 0 })
-    })
-  }
+describe('research_prospect: recognized, not run (the runner contract cannot re-research an existing prospect)', () => {
+  it('replies that it is not available yet, says why, names Prospect Research, and loads, resolves or queues nothing', async () => {
+    const t = deps([{ command: 'research_prospect', params: { prospect: 'Halcyon Dental' } }])
+    const reply = await handleAssistantRequest(t.deps, ask('Research Halcyon Dental again'))
+    assert.ok(reply.ok && reply.kind === 'reply')
+    assert.equal(reply.message, NOT_AVAILABLE.research_prospect)
+    assert.match(reply.message, /^Researching an existing prospect again is not available yet: the research runner skips businesses that are already saved/)
+    assert.deepEqual(reply.links, [{ label: 'Prospect Research', href: '/intel/prospects' }])
+    assert.equal(t.calls.length, 1)
+    assert.deepEqual(t.counts, { briefing: 0, detail: 0, search: 0, inquiries: 0, findings: 0 })
+    assert.deepEqual(t.research.inserts, [])
+  })
 })
 
 describe('unsupported and malformed interpretations', () => {
@@ -745,5 +803,203 @@ describe('labelled data', () => {
       for (const key of ['name', 'email', 'phone', 'message']) assert.equal(key in row, false, key)
     }
     for (const value of Object.values(FIXTURE_PERSONAL)) assert.equal(t.calls[1]!.user.includes(value), false, value)
+  })
+})
+
+describe('find_prospects: confirm before anything is queued', () => {
+  const FIND = { command: 'find_prospects', params: { market: ' Henderson ', industry: 'Dentists', count: 10 } }
+  const REQUEST: FindRequest = { market: 'Henderson', industry: 'Dentists', targetCount: 10 }
+
+  async function confirmation(t: ReturnType<typeof deps>) {
+    const reply = await handleAssistantRequest(t.deps, ask('Find 10 dentists in Henderson'))
+    assert.ok(reply.ok && reply.kind === 'confirm', JSON.stringify(reply))
+    return reply
+  }
+
+  it('interpretation alone queues nothing: it shows exactly what would be queued, and when it would run', async () => {
+    const t = deps([FIND])
+    const reply = await confirmation(t)
+    assert.equal(reply.understoodAs, 'Find new prospects: 10 Dentists in Henderson')
+    assert.equal(
+      reply.message,
+      `This will queue one research run to find 10 companies in the Dentists industry in Henderson. ${PICKUP_NOTE} Nothing is queued until you confirm.`,
+    )
+    assert.match(PICKUP_NOTE, /next scheduled research pass, or sooner if the research runner is started by hand\. It does not start immediately\./)
+    assert.deepEqual(reply.confirmation.command, { command: 'find_prospects', params: { market: 'Henderson', industry: 'Dentists', count: 10 } })
+    assert.deepEqual(t.research.inserts, [])
+    assert.equal(t.calls.length, 1)
+  })
+
+  it('confirming queues exactly one run with the validated parameters, from the click alone, with no model call', async () => {
+    const t = deps([FIND])
+    const shown = await confirmation(t)
+    const queued = await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown.confirmation })
+    assert.ok(queued.ok && queued.kind === 'queued', JSON.stringify(queued))
+    assert.match(queued.message, /^Queued one research run to find 10 companies in the Dentists industry in Henderson\./)
+    assert.deepEqual(t.research.inserts, [{ request: REQUEST, requestedBy: 'owner@example.com' }])
+    assert.equal(t.calls.length, 1, 'the confirm makes no model call and re-interprets nothing')
+    assert.equal(t.allowed.length, 2, 'the confirm counts against the hourly cap like any request')
+  })
+
+  it('a one-off request creates no recurring campaign: the run is a plain requested run with no campaign id', async () => {
+    const t = deps([FIND])
+    const shown = await confirmation(t)
+    await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown.confirmation })
+    assert.equal(t.research.runs.length, 1)
+    const [run] = t.research.runs
+    assert.equal(run!.state, 'requested')
+    assert.deepEqual(Object.keys(run!.config!).sort(), ['exclusions', 'industry', 'market', 'targetCount'])
+    assert.equal('campaignId' in run!.config!, false)
+    // The research queue has no campaign operation at all: queueRun is its only write.
+    assert.deepEqual(Object.keys(t.research.queue).sort(), ['countRequestedSince', 'listAssistantRuns', 'openRuns', 'queueRun'])
+  })
+
+  it('a tampered confirmation is refused and queues nothing: changed count, changed or invalid industry, extra fields, another command, expired, another user', async () => {
+    const t = deps([FIND])
+    const shown = await confirmation(t)
+    const c = shown.confirmation
+    const tampered: [string, unknown, string][] = [
+      ['changed count', { kind: 'confirm', ...c, command: { ...c.command, params: { ...c.command.params, count: 12 } } }, CONFIRMATION_INVALID],
+      ['changed industry', { kind: 'confirm', ...c, command: { ...c.command, params: { ...c.command.params, industry: 'Casinos' } } }, CONFIRMATION_INVALID],
+      ['industry over the length cap', { kind: 'confirm', ...c, command: { ...c.command, params: { ...c.command.params, industry: 'x'.repeat(121) } } }, INVALID_REQUEST],
+      ['count over the per-run maximum', { kind: 'confirm', ...c, command: { ...c.command, params: { ...c.command.params, count: 500 } } }, INVALID_REQUEST],
+      ['extra parameter', { kind: 'confirm', ...c, command: { ...c.command, params: { ...c.command.params, exclusions: ['a.example'] } } }, INVALID_REQUEST],
+      ['extra field', { kind: 'confirm', ...c, runNow: true }, INVALID_REQUEST],
+      ['another command', { kind: 'confirm', ...c, command: { command: 'research_prospect', params: { prospect: 'Halcyon Dental' } } }, INVALID_REQUEST],
+      ['forged token', { kind: 'confirm', ...c, token: 'forged' }, CONFIRMATION_INVALID],
+      ['expired', { kind: 'confirm', ...c, issuedAt: new Date(FIXTURE_NOW.getTime() - 31 * 60_000).toISOString() }, CONFIRMATION_INVALID],
+    ]
+    for (const [name, request, error] of tampered) {
+      const reply = await handleAssistantRequest(t.deps, request)
+      assert.ok(!reply.ok && reply.error === error, `${name}: ${JSON.stringify(reply)}`)
+    }
+    const other = deps([], { authorize: async () => ({ id: 'user-2', email: 'owner@example.com' }) })
+    const otherReply = await handleAssistantRequest(other.deps, { kind: 'confirm', ...c })
+    assert.ok(!otherReply.ok && otherReply.error === CONFIRMATION_INVALID, 'a confirmation is bound to the user it was shown to')
+    assert.deepEqual([t.research.inserts, other.research.inserts], [[], []])
+    // The signature covers the exact parameters.
+    assert.notEqual(SIGNER.sign(confirmationPayload('user-1', REQUEST, c.issuedAt)), SIGNER.sign(confirmationPayload('user-1', { ...REQUEST, targetCount: 11 }, c.issuedAt)))
+  })
+
+  it('at most three requests per user per Los Angeles day; yesterday does not count', async () => {
+    const t = deps([1, 2, 3, 4, 5].map((n) => ({ command: 'find_prospects', params: { market: 'Henderson', industry: `Industry ${n}`, count: 5 } })))
+    // Three from yesterday evening, Los Angeles time (07:59 UTC on Nov 10 is Nov 9 local).
+    for (let i = 0; i < 3; i++) {
+      t.research.runs.push({ id: `y${i}`, state: 'completed', config: { market: 'Reno', industry: `Old ${i}`, targetCount: 5, exclusions: [] }, counts: { saved: 1, rejected: 0 }, errorSummary: null, requestedAt: '2026-11-10T07:59:00.000Z', claimedAt: null, finishedAt: null, source: 'assistant', requestedBy: 'owner@example.com' })
+    }
+    const shown = []
+    for (let i = 0; i < 4; i++) shown.push(await confirmation(t))
+    for (let i = 0; i < 3; i++) {
+      const queued = await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown[i]!.confirmation })
+      assert.ok(queued.ok && queued.kind === 'queued', JSON.stringify(queued))
+    }
+    const fourth = await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown[3]!.confirmation })
+    assert.ok(fourth.ok && fourth.kind === 'reply' && fourth.message.startsWith(`You have made ${RESEARCH_REQUESTS_PER_DAY} research requests from this page today`), JSON.stringify(fourth))
+    assert.equal(t.research.inserts.length, 3)
+    // A new instruction is refused before a confirmation is even shown.
+    const fifth = await handleAssistantRequest(t.deps, ask('Find 5 more'))
+    assert.ok(fifth.ok && fifth.kind === 'reply' && /daily limit/.test(fifth.message))
+    assert.ok(t.logs.some((entry) => entry.reason === 'research_daily_limit'))
+  })
+
+  it('a duplicate of a queued or in-progress run is refused and says so, whatever its source or letter case', async () => {
+    for (const [state, wording] of [['requested', 'is already queued'], ['claimed', 'is being researched now']] as const) {
+      const t = deps([FIND])
+      t.research.runs.push({ id: 'open-1', state, config: { market: 'henderson', industry: 'DENTISTS', targetCount: 10, exclusions: [] }, counts: { saved: 0, rejected: 0 }, errorSummary: null, requestedAt: '2026-11-01T00:00:00.000Z', claimedAt: null, finishedAt: null, source: 'dashboard', requestedBy: 'someone' })
+      const reply = await handleAssistantRequest(t.deps, ask('Find 10 dentists in Henderson'))
+      assert.ok(reply.ok && reply.kind === 'reply', JSON.stringify(reply))
+      assert.equal(reply.message, `An identical request, 10 companies in the Dentists industry in Henderson, ${wording}. Nothing new was queued.`)
+      assert.deepEqual(t.research.inserts, [])
+    }
+    // Confirming the same confirmation twice queues once.
+    const t = deps([FIND])
+    const shown = await confirmation(t)
+    await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown.confirmation })
+    const again = await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown.confirmation })
+    assert.ok(again.ok && again.kind === 'reply' && /is already queued/.test(again.message))
+    assert.equal(t.research.inserts.length, 1)
+  })
+
+  it('an unauthenticated confirm is refused before anything is counted, read or queued', async () => {
+    const t = deps([FIND])
+    const shown = await confirmation(t)
+    const signedOut = deps([], {
+      authorize: async () => {
+        throw new Error('NEXT_REDIRECT /intel/login')
+      },
+    })
+    await assert.rejects(handleAssistantRequest(signedOut.deps, { kind: 'confirm', ...shown.confirmation }), /NEXT_REDIRECT/)
+    assert.deepEqual(signedOut.allowed, [])
+    assert.deepEqual(signedOut.research.inserts, [])
+  })
+
+  it('with no signer configured, nothing is offered or accepted; a failed limit read queues nothing', async () => {
+    const unsigned = deps([FIND], { signer: null })
+    const reply = await handleAssistantRequest(unsigned.deps, ask('Find 10 dentists in Henderson'))
+    assert.ok(!reply.ok && reply.error === NOT_SET_UP)
+    const t = deps([FIND])
+    const shown = await confirmation(t)
+    t.research.failReads()
+    const failed = await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown.confirmation })
+    assert.ok(!failed.ok && failed.error === RESEARCH_CHECK_FAILED && failed.understoodAs === shown.understoodAs)
+    assert.deepEqual(t.research.inserts, [])
+  })
+})
+
+describe('the Research requests panel', () => {
+  const base: ResearchRunRecord = {
+    id: 'run-1',
+    state: 'requested',
+    config: { market: 'Henderson', industry: 'Dentists', targetCount: 10, exclusions: [] },
+    counts: { saved: 0, rejected: 0 },
+    errorSummary: null,
+    requestedAt: '2026-11-10T17:30:00.000Z',
+    claimedAt: null,
+    finishedAt: null,
+  }
+
+  it('maps each run state to its plain wording, with Los Angeles times and a link', () => {
+    const queued = describeRun(base)
+    assert.equal(queued.asked, 'Find 10 companies in the Dentists industry in Henderson')
+    assert.equal(queued.requestedAt, 'Nov 10, 2026, 9:30 AM PST')
+    assert.deepEqual([queued.stateLabel, queued.detail], ['Queued', 'Waiting for the next scheduled research pass, or for the research runner to be started by hand.'])
+    assert.deepEqual(queued.link, { label: 'Recent runs on Prospect Research', href: '/intel/prospects' })
+
+    assert.deepEqual([describeRun({ ...base, state: 'claimed' }).stateLabel, describeRun({ ...base, state: 'claimed' }).detail], ['Being researched', 'The research runner has picked it up.'])
+
+    const finished = describeRun({ ...base, state: 'completed', counts: { saved: 4, rejected: 2 } })
+    assert.deepEqual([finished.stateLabel, finished.detail], ['Finished', 'Finished with 4 of 10 saved.'])
+    assert.deepEqual(finished.link, { label: 'Prospects in this market and industry', href: '/intel/prospects?market=Henderson&industry=Dentists' })
+
+    const partial = describeRun({ ...base, state: 'partial', counts: { saved: 2, rejected: 0 }, errorSummary: 'Runner: Two sites blocked the reader — skipped.' })
+    assert.deepEqual([partial.stateLabel, partial.detail], ['Finished with problems', 'Finished with 2 of 10 saved. Recorded problem: Two sites blocked the reader, skipped.'])
+
+    const failed = describeRun({ ...base, state: 'failed', errorSummary: abandonedReasonLine('2026-11-10T17:45:00.000Z') })
+    assert.deepEqual(
+      [failed.stateLabel, failed.detail],
+      ['Failed', 'Failed: Run abandoned: claimed at Nov 10, 2026, 9:45 AM PST and not finished within 2 hours. Marked failed when the next run was claimed.'],
+    )
+    assert.equal(describeRun({ ...base, state: 'failed' }).detail, 'Failed. No reason was recorded.')
+    assert.equal(describeRun({ ...base, state: 'cancelled' }).stateLabel, 'Cancelled')
+    assert.equal(describeRun({ ...base, state: 'completed', counts: { saved: 0, rejected: 3 } }).link.href, '/intel/prospects', 'nothing saved: no results link')
+    for (const state of ['requested', 'claimed', 'completed', 'partial', 'failed', 'cancelled'] as const) {
+      assert.equal(/[—–]/.test(JSON.stringify(describeRun({ ...base, state, errorSummary: 'Runner: a — b' }))), false, state)
+    }
+  })
+
+  it('reads from the stored runs, so a queued request is still listed after a reload', async () => {
+    const t = deps([{ command: 'find_prospects', params: { market: 'Henderson', industry: 'Dentists', count: 10 } }])
+    const shown = await handleAssistantRequest(t.deps, ask('Find 10 dentists in Henderson'))
+    assert.ok(shown.ok && shown.kind === 'confirm')
+    await handleAssistantRequest(t.deps, { kind: 'confirm', ...shown.confirmation })
+    // A reload builds the panel from the stored runs alone.
+    const panel = await listResearchRequests(t.research.queue)
+    assert.ok(panel.ok)
+    assert.deepEqual(panel.requests.map((request) => [request.asked, request.stateLabel]), [['Find 10 companies in the Dentists industry in Henderson', 'Queued']])
+    // A run the runner has since finished reads as finished on the next refresh.
+    t.research.runs[0]!.state = 'completed'
+    t.research.runs[0]!.counts = { saved: 7, rejected: 1 }
+    const refreshed = await listResearchRequests(t.research.queue)
+    assert.ok(refreshed.ok && refreshed.requests[0]!.detail === 'Finished with 7 of 10 saved.')
   })
 })

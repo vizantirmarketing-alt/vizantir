@@ -1,13 +1,16 @@
 /**
  * The command center's one entry point: an instruction in, a reply out.
- * Pure; every dependency is injected (deps.ts in production). Read-only: the
- * only write anywhere on this path is the rate limit helper's own row.
+ * Pure; every dependency is injected (deps.ts in production). The only writes
+ * on this path are the rate limit helper's own row and, after the owner
+ * confirms a research request, one queued prospect run.
  *
  *   0. authorize (requireIntelUser in production; signed out never gets past it)
  *   1. validate the request (length and shape), then the hourly cap
  *   2. interpret: one model call to one catalog command, or unsupported
- *   3. find_prospects and research_prospect: a plain "not available yet"
- *      reply, with nothing loaded, resolved or queued
+ *   3. find_prospects: a confirmation showing exactly what would be queued,
+ *      with nothing queued (research.ts); the owner's click comes back as a
+ *      separate "confirm" request, validated again, and only that queues one
+ *      run. research_prospect: a plain "not available yet" reply
  *   4. resolve prospect references in code; none says so, several are choices
  *   5. load the command's data through read-only sources, bounded
  *   6. answer: a second model call from that data only
@@ -47,6 +50,18 @@ import {
 } from '@/lib/assistant/context'
 import { interpretInstruction } from '@/lib/assistant/interpret'
 import { resolveProspect, type ProspectCandidate } from '@/lib/assistant/resolve'
+import {
+  checkResearchLimits,
+  confirmMessage,
+  confirmationFresh,
+  confirmationPayload,
+  findRequest,
+  queuedMessage,
+  type ConfirmationSigner,
+  type FindCommand,
+  type FindRequest,
+  type ResearchQueue,
+} from '@/lib/assistant/research'
 
 /**
  * Stable reason codes for every failure path, logged server-side only. The
@@ -66,6 +81,11 @@ export const FAILURE_REASONS = [
   'answer_invalid_shape',
   'answer_too_long',
   'answer_invalid_url',
+  'research_check_error',
+  'research_daily_limit',
+  'research_duplicate',
+  'confirmation_invalid',
+  'queue_error',
   'unexpected_error',
 ] as const satisfies readonly (string | AnswerFailure)[]
 export type FailureReason = (typeof FAILURE_REASONS)[number]
@@ -83,12 +103,16 @@ export function formatAssistantLog(entry: AssistantLog): string {
 
 export type AssistantDeps = {
   /** Returns the signed-in Intel user, or throws (requireIntelUser redirects to the login page). */
-  authorize: () => Promise<{ id: string }>
+  authorize: () => Promise<{ id: string; email: string }>
   /** One instruction against the hourly cap: true when allowed. */
   allow: (userId: string) => Promise<boolean>
   /** Null when the model is not configured. */
   callModel: CallModel | null
   sources: AssistantSources
+  /** Research requests: limits, duplicates, the one queue write and the progress panel. */
+  research: ResearchQueue
+  /** Signs and checks confirmations. Null when not configured: no confirmation is issued or accepted. */
+  signer: ConfirmationSigner | null
   now: () => Date
   /** One server-side line per failure. */
   log: (entry: AssistantLog) => void
@@ -101,7 +125,20 @@ export type AssistantReply =
   | { ok: true; kind: 'answer'; command: CommandName; understoodAs: string; answer: string; links: RecordLink[] }
   | { ok: true; kind: 'reply'; command: CommandName | 'unsupported'; understoodAs: string | null; message: string; links: RecordLink[] }
   | { ok: true; kind: 'choose'; command: CommandName; understoodAs: string; message: string; ref: string; candidates: ProspectCandidate[]; pending: PendingCommand }
+  | {
+      ok: true
+      kind: 'confirm'
+      command: 'find_prospects'
+      understoodAs: string
+      message: string
+      /** Sent back unchanged by the owner's click. The server validates all of it again. */
+      confirmation: Confirmation
+    }
+  | { ok: true; kind: 'queued'; command: 'find_prospects'; understoodAs: string; message: string; runId: string; links: RecordLink[] }
   | { ok: false; error: string; understoodAs: string | null }
+
+/** What a confirm click sends back: the validated command, when it was shown, and the server's signature over both. */
+export type Confirmation = { command: FindCommand; issuedAt: string; token: string }
 
 const instruction = z.string().trim().min(1).max(INSTRUCTION_MAX)
 const requestSchema = z.discriminatedUnion('kind', [
@@ -112,6 +149,7 @@ const requestSchema = z.discriminatedUnion('kind', [
     command: z.unknown(),
     selections: z.record(z.string().max(500), z.string().refine(isUuid)).refine((value) => Object.keys(value).length <= COMPARE_MAX),
   }),
+  z.strictObject({ kind: z.literal('confirm'), command: z.unknown(), issuedAt: z.string().max(40), token: z.string().min(1).max(200) }),
 ])
 export type AssistantRequest = z.input<typeof requestSchema>
 
@@ -128,10 +166,13 @@ export const NO_BRIEFING = 'There is no stored briefing yet. One is written each
 export const SAME_PROSPECT = 'Those name the same prospect. Name at least two different prospects to compare.'
 export const RESOLVE_FAILED = 'Prospects could not be looked up just now, so nothing was answered. Try again shortly.'
 
-export const NOT_AVAILABLE: Record<'find_prospects' | 'research_prospect', string> = {
-  find_prospects: 'Starting new research from this page is not available yet. To find new prospects, queue a research run on Prospect Research.',
-  research_prospect: 'Starting new research from this page is not available yet. To research a prospect further, open it on Prospect Research.',
+export const NOT_AVAILABLE: Record<'research_prospect', string> = {
+  research_prospect:
+    'Researching an existing prospect again is not available yet: the research runner skips businesses that are already saved as prospects. Open it on Prospect Research to see its evidence or measure its performance.',
 }
+export const RESEARCH_CHECK_FAILED = 'The research limits could not be checked just now, so nothing was queued. Try again shortly.'
+export const CONFIRMATION_INVALID = 'That confirmation is no longer valid, so nothing was queued. Ask again to get a new confirmation.'
+export const QUEUE_FAILED = 'The research request could not be queued just now, so nothing was queued. Try again shortly.'
 
 export function noMatchMessage(ref: string): string {
   return `No prospect matches "${ref}". Check the name or domain, or look it up on Prospect Research.`
@@ -176,6 +217,16 @@ export function messageFor(reason: FailureReason): string {
     case 'answer_too_long':
     case 'answer_invalid_url':
       return ANSWER_REFUSED
+    case 'research_check_error':
+      return RESEARCH_CHECK_FAILED
+    case 'confirmation_invalid':
+      return CONFIRMATION_INVALID
+    case 'queue_error':
+      return QUEUE_FAILED
+    case 'research_daily_limit':
+    case 'research_duplicate':
+      // Refusals are replies with their own message; this is never shown.
+      return QUEUE_FAILED
     case 'load_error':
     case 'unexpected_error':
       return LOAD_FAILED
@@ -205,6 +256,15 @@ export async function handleAssistantRequest(deps: AssistantDeps, raw: unknown):
   const request = requestSchema.safeParse(raw)
   if (!request.success) return fail('invalid_request')
   if (!(await deps.allow(user.id))) return fail('rate_limited')
+  if (request.data.kind === 'confirm') {
+    commandName = 'find_prospects'
+    try {
+      return await confirmResearch(deps, user, request.data, fail, (value) => (label = value))
+    } catch {
+      return fail('unexpected_error')
+    }
+  }
+
   const callModel = deps.callModel
   if (callModel === null) return fail('not_configured')
 
@@ -230,8 +290,27 @@ export async function handleAssistantRequest(deps: AssistantDeps, raw: unknown):
     commandName = command.command
     label = understoodAs(command)
 
-    if (command.command === 'find_prospects' || command.command === 'research_prospect') {
-      return { ok: true, kind: 'reply', command: command.command, understoodAs: label, message: NOT_AVAILABLE[command.command], links: [PROSPECT_RESEARCH_LINK] }
+    if (command.command === 'research_prospect') {
+      return { ok: true, kind: 'reply', command: command.command, understoodAs: label, message: NOT_AVAILABLE.research_prospect, links: [PROSPECT_RESEARCH_LINK] }
+    }
+    if (command.command === 'find_prospects') {
+      // Nothing is queued here: the owner sees exactly what would be, and confirms or cancels.
+      const findCommand: FindCommand = command
+      const research = findRequest(findCommand)
+      if (research === null) return fail('invalid_request')
+      const limits = await checkResearchLimits(deps.research, user.email, research, deps.now())
+      if (!limits.ok) return limitRefusal(deps, limits, label)
+      if (deps.signer === null) return fail('not_configured')
+      const issuedAt = deps.now().toISOString()
+      const confirmed: FindCommand = canonicalFind(research)
+      return {
+        ok: true,
+        kind: 'confirm',
+        command: 'find_prospects',
+        understoodAs: label,
+        message: confirmMessage(research),
+        confirmation: { command: confirmed, issuedAt, token: deps.signer.sign(confirmationPayload(user.id, research, issuedAt)) },
+      }
     }
 
     // Prospect references, in code. A pick from the page stands for its reference.
@@ -293,5 +372,63 @@ export async function handleAssistantRequest(deps: AssistantDeps, raw: unknown):
     return { ok: true, kind: 'answer', command: command.command, understoodAs: label, answer: answer.answer, links: loaded.links }
   } catch {
     return fail('unexpected_error')
+  }
+}
+
+/** The command as it is shown and signed: the parameters after the run request rules. */
+function canonicalFind(request: FindRequest): FindCommand {
+  return { command: 'find_prospects', params: { market: request.market, industry: request.industry, count: request.targetCount } }
+}
+
+function limitRefusal(
+  deps: AssistantDeps,
+  limits: Exclude<Awaited<ReturnType<typeof checkResearchLimits>>, { ok: true }>,
+  label: string,
+): AssistantReply {
+  if (limits.kind === 'error') {
+    deps.log({ reason: 'research_check_error', command: 'find_prospects' })
+    return { ok: false, error: RESEARCH_CHECK_FAILED, understoodAs: label }
+  }
+  deps.log({ reason: limits.kind === 'daily_limit' ? 'research_daily_limit' : 'research_duplicate', command: 'find_prospects' })
+  return { ok: true, kind: 'reply', command: 'find_prospects', understoodAs: label, message: limits.message, links: [PROSPECT_RESEARCH_LINK] }
+}
+
+/**
+ * The owner's confirm click. Never re-interprets text: the command is
+ * validated again against the catalog and the run request rules, its
+ * signature and age are checked, then the daily limit and duplicates, and
+ * only then is one run queued.
+ */
+async function confirmResearch(
+  deps: AssistantDeps,
+  user: { id: string; email: string },
+  data: { command: unknown; issuedAt: string; token: string },
+  fail: (reason: FailureReason) => AssistantReply,
+  setLabel: (label: string) => void,
+): Promise<AssistantReply> {
+  const parsed = commandSchema.safeParse(data.command)
+  if (!parsed.success || parsed.data.command !== 'find_prospects') return fail('invalid_request')
+  const command: FindCommand = parsed.data
+  const research = findRequest(command)
+  if (research === null) return fail('invalid_request')
+  const label = understoodAs(command)
+  setLabel(label)
+  if (deps.signer === null) return fail('not_configured')
+  const now = deps.now()
+  if (!confirmationFresh(data.issuedAt, now) || !deps.signer.verify(confirmationPayload(user.id, research, data.issuedAt), data.token)) {
+    return fail('confirmation_invalid')
+  }
+  const limits = await checkResearchLimits(deps.research, user.email, research, now)
+  if (!limits.ok) return limitRefusal(deps, limits, label)
+  const queued = await deps.research.queueRun(research, user.email)
+  if (queued === null) return fail('queue_error')
+  return {
+    ok: true,
+    kind: 'queued',
+    command: 'find_prospects',
+    understoodAs: label,
+    message: queuedMessage(research),
+    runId: queued.id,
+    links: [{ label: 'Recent runs on Prospect Research', href: '/intel/prospects' }],
   }
 }
