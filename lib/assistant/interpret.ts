@@ -30,7 +30,7 @@ Commands:
 - review_inquiries: review open inbound inquiries (contact form leads) and say which to follow up first.
 - summarize_findings: summarize open Intel findings. limit is optional, 1 to ${FINDINGS_LIMIT_MAX}; leave it out unless the owner gives a number.
 - find_prospects: queue research to find a number of new prospects (1 to ${RUN_TARGET_COUNT_MAX}) in a named market and industry. All three are required.
-- research_prospect: research one existing prospect further.
+- research_prospect: queue research of one existing prospect again.
 
 Rules:
 - prospect and prospects hold the owner's own words for each prospect, a business name or a domain, copied as written. Never invent an id, a name or a domain.

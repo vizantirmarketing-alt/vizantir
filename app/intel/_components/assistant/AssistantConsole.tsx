@@ -283,9 +283,8 @@ export function AssistantConsole({ initialRequests }: { initialRequests: Researc
               ))}
             </ul>
             <p className="intel-secondary text-meta">
-              It reads what the dashboard already stores. The one thing it can do beyond reading is queue a prospect research run, and only after
-              you confirm it. It does nothing else. Researching an existing prospect again is not available here yet; use Prospect Research for
-              that.
+              It reads what the dashboard already stores. The one thing it can do beyond reading is queue a prospect research run, to find new
+              prospects or to research a saved prospect again, and only after you confirm it. It does nothing else.
             </p>
           </div>
         </Panel>

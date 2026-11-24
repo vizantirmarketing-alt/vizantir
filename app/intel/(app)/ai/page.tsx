@@ -25,8 +25,8 @@ export default async function IntelAssistantPage() {
       <div>
         <h1 className="intel-title text-foreground">Assistant</h1>
         <p className="mt-1 intel-secondary text-meta">
-          Answers from data the dashboard already stores. The one thing it can change is to queue a prospect research run, and only after you
-          confirm it. It does nothing else, and the conversation is not saved.
+          Answers from data the dashboard already stores. The one thing it can change is to queue a prospect research run, to find new prospects
+          or to research a saved one again, and only after you confirm it. It does nothing else, and the conversation is not saved.
         </p>
       </div>
       <AssistantConsole initialRequests={requests} />

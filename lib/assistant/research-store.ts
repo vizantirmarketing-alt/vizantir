@@ -3,9 +3,11 @@ import 'server-only'
 /**
  * Production research queue and confirmation signer for the Assistant page.
  *
- * Writes: one insert into prospect_runs per confirmed request (queueRun), of
- * the same shape the Prospect Research form inserts, with source
- * "assistant". Nothing else is written; every other function here selects.
+ * Writes: one insert into prospect_runs per confirmed request, with source
+ * "assistant": queueRun, of the same shape the Prospect Research form
+ * inserts, or queueTargetedRun, the same with targetCount 1 and the target
+ * domain from the stored prospect. Nothing else is written; every other
+ * function here selects.
  *
  * The signer keys an HMAC with the existing RATE_LIMIT_SALT (which the
  * assistant's hourly cap already requires), under its own prefix so the two
@@ -100,6 +102,38 @@ export function createResearchQueue(): ResearchQueue {
         if (error) return null
         const row = z.object({ id: z.string() }).safeParse(data)
         return row.success ? { id: row.data.id } : null
+      } catch {
+        return null
+      }
+    },
+    async queueTargetedRun(request, requestedBy) {
+      try {
+        const { data, error } = await createSupabaseServiceRole()
+          .from('prospect_runs')
+          .insert({
+            state: 'requested',
+            config: { market: request.market, industry: request.industry, targetCount: 1, exclusions: [], targetDomain: request.domain },
+            requested_by: requestedBy,
+            source: ASSISTANT_RUN_SOURCE,
+          })
+          .select('id')
+          .single()
+        if (error) return null
+        const row = z.object({ id: z.string() }).safeParse(data)
+        return row.success ? { id: row.data.id } : null
+      } catch {
+        return null
+      }
+    },
+    async prospectsByDomain(domains) {
+      try {
+        const { data, error } = await createSupabaseServiceRole()
+          .from('prospects')
+          .select('id, canonical_name, domain')
+          .in('domain', [...domains])
+        if (error) return null
+        const rows = z.array(z.object({ id: z.string(), canonical_name: z.string(), domain: z.string() })).safeParse(data ?? [])
+        return rows.success ? new Map(rows.data.map((row) => [row.domain, { id: row.id, name: row.canonical_name }])) : null
       } catch {
         return null
       }

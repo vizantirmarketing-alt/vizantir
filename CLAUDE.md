@@ -190,8 +190,12 @@ use only. Every page under `app/intel/(app)/` sits behind `requireIntelUser()`
 - Phase 1, Prospect Research: live. `/intel/prospects`, `lib/prospects/`.
 - Phase 2, scheduled research and daily briefing: live. `/intel/briefing`,
   `lib/briefing/`, run by the daily `/api/cron/briefing` (`vercel.json`).
-- Phase 3, command center at `/intel/ai`: not started. Scope is in
-  `docs/intel/PLAN.md` section 8.
+- Phase 3, command center at `/intel/ai`: live. `lib/assistant/`. All seven
+  commands run: five read-only answers (briefing summary, score explanation,
+  prospect comparison, inquiry review, findings summary) and two that queue a
+  research run after the owner confirms (find new prospects, research a saved
+  prospect again, a targeted run). Not built: starting the runner on demand,
+  saved conversation history. Scope is in `docs/intel/PLAN.md` section 8.
 
 "Phase 2" in `docs/SEARCH_INTELLIGENCE_ARCHITECTURE.md` refers to the Search
 Intelligence scan plan, a different project. Do not confuse it with the phases

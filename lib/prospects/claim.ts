@@ -9,6 +9,11 @@
  *   2. Known domains are listed before the run is claimed, so a failure to
  *      list them never leaves a run claimed with no response.
  *   3. The oldest requested run is claimed.
+ *
+ * A targeted run (run.config.targetDomain set) also gets a top-level
+ * targetDomain, and that one domain is left out of knownDomains so the
+ * runner may research it again. Every other saved domain is still listed.
+ * An ordinary run's response is exactly as before.
  */
 
 import { SYSTEM_LINE_PREFIX, type RunConfig } from '@/lib/prospects/ingest'
@@ -61,6 +66,8 @@ export type ClaimResponse =
         factors: { key: string; score: string; label: string; description: string }[]
       }
       knownDomains: string[]
+      /** Targeted runs only: the one saved domain to research again. */
+      targetDomain?: string
     }
 
 export async function buildClaimResponse(
@@ -74,6 +81,8 @@ export async function buildClaimResponse(
     return { run: null }
   }
 
+  const targetDomain = run.config.targetDomain
+  const listed = [...new Set(knownDomains)].sort()
   return {
     run,
     rubric: {
@@ -86,6 +95,7 @@ export async function buildClaimResponse(
         description: FACTOR_DEFINITIONS[key].description,
       })),
     },
-    knownDomains: [...new Set(knownDomains)].sort(),
+    knownDomains: targetDomain === undefined ? listed : listed.filter((domain) => domain !== targetDomain),
+    ...(targetDomain === undefined ? {} : { targetDomain }),
   }
 }

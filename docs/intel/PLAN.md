@@ -339,7 +339,7 @@ Still open from the 2026-08-18 list, not re-prioritized above: mark `lead_form_s
 
 ## 8. Phase 3 scope: the command center
 
-Recorded 2026-11-19. Not built: there is no `/intel/ai` route in the repo yet.
+Recorded 2026-11-19. Status 2026-11-23: live at `/intel/ai` (`lib/assistant/`). All seven requests below run. The five read-only ones answer from stored data. Finding prospects and researching one existing prospect again each queue one research run, and only after the owner confirms; researching again is a targeted run (`targetDomain` in the run config, see `docs/research-runner.md`). Not built: starting the runner on demand (it runs at its next scheduled pass) and saved conversation history.
 
 **Where it lives.** A private page at `/intel/ai`, behind `requireIntelUser()` (`lib/auth/allowlist.ts`) like every other Intel page. It is separate from the public `/api/chat` route.
 

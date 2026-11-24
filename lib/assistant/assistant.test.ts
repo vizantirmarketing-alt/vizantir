@@ -24,11 +24,11 @@ import {
   INVALID_REQUEST,
   LOAD_FAILED,
   MODEL_FAILED,
-  NOT_AVAILABLE,
   NOT_SET_UP,
   NO_BRIEFING,
   RATE_LIMITED,
   RESEARCH_CHECK_FAILED,
+  TARGET_UNUSABLE,
   SAME_PROSPECT,
   TOO_LARGE,
   assistantRateLimit,
@@ -54,6 +54,7 @@ import {
   type FindRequest,
   type ResearchQueue,
   type ResearchRunRecord,
+  type TargetRequest,
 } from './research'
 
 const HALCYON = '0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a'
@@ -221,6 +222,7 @@ function scripted(replies: (object | string | null)[]): { callModel: CallModel; 
 function memoryResearch(initial: ResearchRunRecord[] = []) {
   const runs: (ResearchRunRecord & { source: string; requestedBy: string | null })[] = initial.map((run) => ({ ...run, source: 'assistant', requestedBy: 'owner@example.com' }))
   const inserts: { request: FindRequest; requestedBy: string }[] = []
+  const targetedInserts: { request: TargetRequest; requestedBy: string }[] = []
   let failReads = false
   const queue: ResearchQueue = {
     async countRequestedSince(requestedBy, sinceIso) {
@@ -247,11 +249,31 @@ function memoryResearch(initial: ResearchRunRecord[] = []) {
       })
       return { id }
     },
+    async queueTargetedRun(request, requestedBy) {
+      targetedInserts.push({ request, requestedBy })
+      const id = `00000000-0000-4000-8000-${String(runs.length + 1).padStart(12, '0')}`
+      runs.push({
+        id,
+        state: 'requested',
+        config: { market: request.market, industry: request.industry, targetCount: 1, exclusions: [], targetDomain: request.domain },
+        counts: { saved: 0, rejected: 0 },
+        errorSummary: null,
+        requestedAt: FIXTURE_NOW.toISOString(),
+        claimedAt: null,
+        finishedAt: null,
+        source: 'assistant',
+        requestedBy,
+      })
+      return { id }
+    },
     async listAssistantRuns(limit) {
       return [...runs].filter((run) => run.source === 'assistant').sort((a, b) => b.requestedAt.localeCompare(a.requestedAt)).slice(0, limit)
     },
+    async prospectsByDomain(domains) {
+      return new Map(Object.values(PROSPECTS).filter(({ prospect: p }) => domains.includes(p.domain)).map(({ prospect: p }) => [p.domain, { id: p.id, name: p.name }]))
+    },
   }
-  return { queue, runs, inserts, failReads: () => (failReads = true) }
+  return { queue, runs, inserts, targetedInserts, failReads: () => (failReads = true) }
 }
 
 /** A test signer: an HMAC under a fixed key, as research-store.ts signs in production. */
@@ -362,20 +384,6 @@ describe('the five read-only commands, end to end', () => {
     assert.ok(reply.ok && reply.kind === 'reply')
     assert.equal(reply.message, NO_BRIEFING)
     assert.equal(t.calls.length, 1)
-  })
-})
-
-describe('research_prospect: recognized, not run (the runner contract cannot re-research an existing prospect)', () => {
-  it('replies that it is not available yet, says why, names Prospect Research, and loads, resolves or queues nothing', async () => {
-    const t = deps([{ command: 'research_prospect', params: { prospect: 'Halcyon Dental' } }])
-    const reply = await handleAssistantRequest(t.deps, ask('Research Halcyon Dental again'))
-    assert.ok(reply.ok && reply.kind === 'reply')
-    assert.equal(reply.message, NOT_AVAILABLE.research_prospect)
-    assert.match(reply.message, /^Researching an existing prospect again is not available yet: the research runner skips businesses that are already saved/)
-    assert.deepEqual(reply.links, [{ label: 'Prospect Research', href: '/intel/prospects' }])
-    assert.equal(t.calls.length, 1)
-    assert.deepEqual(t.counts, { briefing: 0, detail: 0, search: 0, inquiries: 0, findings: 0 })
-    assert.deepEqual(t.research.inserts, [])
   })
 })
 
@@ -851,8 +859,9 @@ describe('find_prospects: confirm before anything is queued', () => {
     assert.equal(run!.state, 'requested')
     assert.deepEqual(Object.keys(run!.config!).sort(), ['exclusions', 'industry', 'market', 'targetCount'])
     assert.equal('campaignId' in run!.config!, false)
-    // The research queue has no campaign operation at all: queueRun is its only write.
-    assert.deepEqual(Object.keys(t.research.queue).sort(), ['countRequestedSince', 'listAssistantRuns', 'openRuns', 'queueRun'])
+    assert.deepEqual(t.research.targetedInserts, [])
+    // The research queue has no campaign operation at all: its only writes queue one run.
+    assert.deepEqual(Object.keys(t.research.queue).sort(), ['countRequestedSince', 'listAssistantRuns', 'openRuns', 'prospectsByDomain', 'queueRun', 'queueTargetedRun'])
   })
 
   it('a tampered confirmation is refused and queues nothing: changed count, changed or invalid industry, extra fields, another command, expired, another user', async () => {
@@ -1143,5 +1152,160 @@ describe('scores and comparisons are counted and compared in code', () => {
     const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, ANSWER])
     answered(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental')))
     assert.equal((data(t.calls[1]!).prospect as { recordedScores: { priorityScore: number } }).recordedScores.priorityScore, 69)
+  })
+})
+
+describe('research_prospect: a targeted run, confirmed before anything is queued', () => {
+  const RESEARCH = { command: 'research_prospect', params: { prospect: 'Halcyon Dental' } }
+  const TARGET: TargetRequest = { prospectId: HALCYON, name: 'Halcyon Dental', domain: 'halcyon-dental.example', market: 'Las Vegas', industry: 'Law' }
+
+  async function shown(t: ReturnType<typeof deps>, instruction = 'Research Halcyon Dental again') {
+    const reply = await handleAssistantRequest(t.deps, ask(instruction))
+    assert.ok(reply.ok && reply.kind === 'confirm' && reply.command === 'research_prospect', JSON.stringify(reply))
+    return reply
+  }
+
+  it('resolves the prospect in code and shows exactly what will be queued, queuing nothing', async () => {
+    const t = deps([RESEARCH])
+    const reply = await shown(t)
+    assert.equal(reply.understoodAs, 'Research a prospect further: Halcyon Dental')
+    assert.equal(
+      reply.message,
+      `This will queue one research run to research Halcyon Dental (halcyon-dental.example) again. Its ratings and scores are replaced with what the new research finds and new evidence is added; earlier evidence, your review status and your note are kept. ${PICKUP_NOTE} Nothing is queued until you confirm.`,
+    )
+    assert.ok('prospectId' in reply.confirmation && reply.confirmation.prospectId === HALCYON)
+    assert.deepEqual([t.research.inserts, t.research.targetedInserts], [[], []])
+    assert.equal(t.calls.length, 1)
+  })
+
+  it('several matches are choices; the pick then gets the same confirmation', async () => {
+    const t = deps([{ command: 'research_prospect', params: { prospect: 'Desert Bloom' } }])
+    const choose = await handleAssistantRequest(t.deps, ask('Research Desert Bloom again'))
+    assert.ok(choose.ok && choose.kind === 'choose')
+    const picked = await handleAssistantRequest(t.deps, { kind: 'continue', instruction: choose.pending.instruction, command: choose.pending.command, selections: { 'Desert Bloom': BLOOM_LAW } })
+    assert.ok(picked.ok && picked.kind === 'confirm' && /Desert Bloom Law \(desertbloomlaw\.example\)/.test(picked.message), JSON.stringify(picked))
+    assert.equal(t.calls.length, 1, 'no second interpretation')
+  })
+
+  it('confirming queues exactly one targeted run, with the domain from the stored record and no model call', async () => {
+    const t = deps([RESEARCH])
+    const reply = await shown(t)
+    const queued = await handleAssistantRequest(t.deps, { kind: 'confirm', ...reply.confirmation })
+    assert.ok(queued.ok && queued.kind === 'queued' && queued.command === 'research_prospect', JSON.stringify(queued))
+    assert.match(queued.message, /^Queued one research run to research Halcyon Dental \(halcyon-dental\.example\) again\./)
+    assert.deepEqual(queued.links, [{ label: 'Halcyon Dental', href: `/intel/prospects/${HALCYON}` }])
+    assert.deepEqual(t.research.targetedInserts, [{ request: TARGET, requestedBy: 'owner@example.com' }])
+    assert.deepEqual(t.research.runs[0]!.config, { market: 'Las Vegas', industry: 'Law', targetCount: 1, exclusions: [], targetDomain: 'halcyon-dental.example' })
+    assert.deepEqual(t.research.inserts, [])
+    assert.equal(t.calls.length, 1)
+  })
+
+  it('a tampered confirmation is refused and queues nothing', async () => {
+    const t = deps([RESEARCH])
+    const reply = await shown(t)
+    assert.ok('prospectId' in reply.confirmation)
+    const c = reply.confirmation
+    const tampered: [string, unknown, string][] = [
+      ['another prospect id', { kind: 'confirm', ...c, prospectId: BLOOM_LAW }, CONFIRMATION_INVALID],
+      ['no prospect id', { kind: 'confirm', command: c.command, issuedAt: c.issuedAt, token: c.token }, INVALID_REQUEST],
+      ['prospect id that is not an id', { kind: 'confirm', ...c, prospectId: 'halcyon-dental.example' }, INVALID_REQUEST],
+      ['a domain sent along', { kind: 'confirm', ...c, domain: 'attacker.example' }, INVALID_REQUEST],
+      ['extra parameter', { kind: 'confirm', ...c, command: { ...c.command, params: { ...c.command.params, domain: 'attacker.example' } } }, INVALID_REQUEST],
+      ['find command with a prospect id', { kind: 'confirm', ...c, command: { command: 'find_prospects', params: { market: 'Las Vegas', industry: 'Law', count: 1 } } }, INVALID_REQUEST],
+      ['forged token', { kind: 'confirm', ...c, token: 'forged' }, CONFIRMATION_INVALID],
+      ['expired', { kind: 'confirm', ...c, issuedAt: new Date(FIXTURE_NOW.getTime() - 31 * 60_000).toISOString() }, CONFIRMATION_INVALID],
+    ]
+    for (const [name, request, error] of tampered) {
+      const result = await handleAssistantRequest(t.deps, request)
+      assert.ok(!result.ok && result.error === error, `${name}: ${JSON.stringify(result)}`)
+    }
+    // The stored domain changed after the confirmation was shown: the signature no longer matches.
+    const moved = deps([], {}, {
+      prospectDetail: async (id) => (id === HALCYON ? { ok: true, prospect: { ...PROSPECTS[HALCYON]!.prospect, domain: 'halcyon-moved.example' }, evidence: [] } : { ok: false, reason: 'not_found' }),
+    })
+    const movedReply = await handleAssistantRequest(moved.deps, { kind: 'confirm', ...c })
+    assert.ok(!movedReply.ok && movedReply.error === CONFIRMATION_INVALID)
+    assert.deepEqual([t.research.targetedInserts, moved.research.targetedInserts], [[], []])
+  })
+
+  it('shares the daily limit of three with find_prospects', async () => {
+    const t = deps([
+      { command: 'find_prospects', params: { market: 'Henderson', industry: 'Dentists', count: 5 } },
+      { command: 'find_prospects', params: { market: 'Henderson', industry: 'Plumbers', count: 5 } },
+      RESEARCH,
+      { command: 'research_prospect', params: { prospect: 'Desert Bloom Law' } },
+    ])
+    for (const instruction of ['Find 5 dentists', 'Find 5 plumbers', 'Research Halcyon Dental again']) {
+      const reply = await handleAssistantRequest(t.deps, ask(instruction))
+      assert.ok(reply.ok && reply.kind === 'confirm', JSON.stringify(reply))
+      const queued = await handleAssistantRequest(t.deps, { kind: 'confirm', ...reply.confirmation })
+      assert.ok(queued.ok && queued.kind === 'queued', JSON.stringify(queued))
+    }
+    const fourth = await handleAssistantRequest(t.deps, ask('Research Desert Bloom Law again'))
+    assert.ok(fourth.ok && fourth.kind === 'reply' && /daily limit/.test(fourth.message), JSON.stringify(fourth))
+    assert.deepEqual([t.research.inserts.length, t.research.targetedInserts.length], [2, 1])
+  })
+
+  it('refuses when a targeted run for the same domain is queued or in progress, and says so; a find run in the same market is no duplicate', async () => {
+    for (const [state, wording] of [['requested', 'is already queued'], ['claimed', 'is being researched now']] as const) {
+      const t = deps([RESEARCH])
+      t.research.runs.push({ id: 'open', state, config: { market: 'Las Vegas', industry: 'Law', targetCount: 1, exclusions: [], targetDomain: 'halcyon-dental.example' }, counts: { saved: 0, rejected: 0 }, errorSummary: null, requestedAt: '2026-11-01T00:00:00.000Z', claimedAt: null, finishedAt: null, source: 'assistant', requestedBy: 'someone' })
+      const reply = await handleAssistantRequest(t.deps, ask('Research Halcyon Dental again'))
+      assert.ok(reply.ok && reply.kind === 'reply', JSON.stringify(reply))
+      assert.equal(reply.message, `A research run for Halcyon Dental (halcyon-dental.example) ${wording}. Nothing new was queued.`)
+    }
+    const t = deps([RESEARCH, { command: 'find_prospects', params: { market: 'Las Vegas', industry: 'Law', count: 1 } }])
+    t.research.runs.push({ id: 'find', state: 'requested', config: { market: 'Las Vegas', industry: 'Law', targetCount: 1, exclusions: [] }, counts: { saved: 0, rejected: 0 }, errorSummary: null, requestedAt: '2026-11-01T00:00:00.000Z', claimedAt: null, finishedAt: null, source: 'dashboard', requestedBy: 'someone' })
+    await shown(t)
+    // And a targeted run is no duplicate of a find request for one company in that market.
+    t.research.runs[0]!.config = { market: 'Las Vegas', industry: 'Law', targetCount: 1, exclusions: [], targetDomain: 'halcyon-dental.example' }
+    const find = await handleAssistantRequest(t.deps, ask('Find 1 law firm in Las Vegas'))
+    assert.ok(find.ok && find.kind === 'confirm', JSON.stringify(find))
+  })
+
+  it('a prospect whose record has no market or industry is refused plainly', async () => {
+    const t = deps([RESEARCH], {}, {
+      prospectDetail: async () => ({ ok: true, prospect: { ...PROSPECTS[HALCYON]!.prospect, market: null }, evidence: [] }),
+    })
+    const reply = await handleAssistantRequest(t.deps, ask('Research Halcyon Dental again'))
+    assert.ok(!reply.ok && reply.error === TARGET_UNUSABLE)
+    assert.deepEqual(t.research.targetedInserts, [])
+  })
+
+  it('the panel words each targeted state plainly and links to the prospect', async () => {
+    const run: ResearchRunRecord = {
+      id: 'r-1',
+      state: 'requested',
+      config: { market: 'Las Vegas', industry: 'Law', targetCount: 1, exclusions: [], targetDomain: 'halcyon-dental.example' },
+      counts: { saved: 0, rejected: 0 },
+      errorSummary: null,
+      requestedAt: '2026-11-10T17:30:00.000Z',
+      claimedAt: null,
+      finishedAt: null,
+    }
+    const names = new Map([['halcyon-dental.example', { id: HALCYON, name: 'Halcyon Dental' }]])
+    const view = (overrides: Partial<ResearchRunRecord>) => describeRun({ ...run, ...overrides }, names)
+    const queued = view({})
+    assert.deepEqual([queued.asked, queued.stateLabel, queued.requestedAt], ['Research Halcyon Dental again', 'Queued', 'Nov 10, 2026, 9:30 AM PST'])
+    assert.deepEqual(queued.link, { label: 'Halcyon Dental', href: `/intel/prospects/${HALCYON}` })
+    assert.equal(view({ state: 'claimed' }).stateLabel, 'Being researched')
+    assert.deepEqual([view({ state: 'completed', counts: { saved: 1, rejected: 0 } }).stateLabel, view({ state: 'completed', counts: { saved: 1, rejected: 0 } }).detail], ['Finished and updated', 'Finished. The prospect was updated from the new research.'])
+    const nothing = view({ state: 'completed', counts: { saved: 0, rejected: 0 }, errorSummary: 'Note: Skipped halcyon-dental.example: HTTP 403' })
+    assert.deepEqual([nothing.stateLabel, nothing.detail], ['Finished with nothing saved', 'Finished with nothing saved: Skipped halcyon-dental.example: HTTP 403'])
+    const rejected = view({ state: 'partial', counts: { saved: 0, rejected: 1 }, errorSummary: '1 record rejected: halcyon-dental.example (missing_evidence:market_industry_match)' })
+    assert.deepEqual([rejected.stateLabel, rejected.detail], ['Finished with nothing saved', 'Finished with nothing saved: 1 record rejected: halcyon-dental.example (missing_evidence:market_industry_match)'])
+    assert.equal(view({ state: 'completed' }).detail, 'Finished with nothing saved. No reason was recorded.')
+    assert.deepEqual([view({ state: 'failed', errorSummary: 'Runner: Proxy did not attach credentials' }).stateLabel, view({ state: 'failed', errorSummary: 'Runner: Proxy did not attach credentials' }).detail], ['Failed', 'Failed: Proxy did not attach credentials'])
+    assert.equal(view({ state: 'cancelled' }).stateLabel, 'Cancelled')
+    // Without a saved name it still reads, by domain.
+    assert.equal(describeRun(run).asked, 'Research halcyon-dental.example again')
+
+    // From the stored runs, named through the read-only lookup, after a reload.
+    const t = deps([RESEARCH])
+    const reply = await shown(t)
+    await handleAssistantRequest(t.deps, { kind: 'confirm', ...reply.confirmation })
+    const panel = await listResearchRequests(t.research.queue)
+    assert.ok(panel.ok)
+    assert.deepEqual(panel.requests.map((request) => [request.asked, request.stateLabel, request.link.href]), [['Research Halcyon Dental again', 'Queued', `/intel/prospects/${HALCYON}`]])
   })
 })

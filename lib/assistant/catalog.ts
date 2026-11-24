@@ -3,9 +3,9 @@
  * only things an instruction can become. Pure; safe for client components.
  *
  * Each command reads data the application already stores, except
- * find_prospects, which queues one research run after the owner confirms it
- * (research.ts), and research_prospect, which is recognized but not run: the
- * research runner contract cannot research an existing prospect again. Prospect references are the owner's words (a name or a domain); code
+ * find_prospects and research_prospect, which each queue one research run
+ * after the owner confirms it (research.ts): an ordinary run, or a targeted
+ * run that researches one saved prospect again. Prospect references are the owner's words (a name or a domain); code
  * resolves them against the database and never trusts an id from the model.
  */
 
@@ -25,7 +25,7 @@ export const COMMANDS = [
 export type CommandName = (typeof COMMANDS)[number]
 
 /** Commands recognized but not run from this page yet. */
-export const NOT_AVAILABLE_COMMANDS: readonly CommandName[] = ['research_prospect']
+export const NOT_AVAILABLE_COMMANDS: readonly CommandName[] = []
 
 /** Longest instruction accepted, in characters. */
 export const INSTRUCTION_MAX = 500
@@ -103,7 +103,8 @@ export const EXAMPLES: readonly { text: string; prefill: string }[] = [
   { text: 'Which inquiries should I follow up first?', prefill: 'Which inquiries should I follow up first?' },
   { text: 'Summarize the open findings', prefill: 'Summarize the open findings' },
   { text: 'Find new prospects: a number, an industry and a market (you confirm before anything is queued)', prefill: 'Find 10 ' },
+  { text: 'Research a saved prospect again, by name or domain (you confirm before anything is queued)', prefill: 'Research again: ' },
 ]
 
 export const UNSUPPORTED_MESSAGE =
-  'This page answers from data the dashboard already stores. It can summarize the latest briefing, explain a prospect score, compare two to five prospects, review open inbound inquiries, and summarize open findings. It can also queue research to find new prospects, given a number, an industry and a market, after you confirm. Researching an existing prospect again is not available here yet: use Prospect Research.'
+  'This page answers from data the dashboard already stores. It can summarize the latest briefing, explain a prospect score, compare two to five prospects, review open inbound inquiries, and summarize open findings. It can also queue research, after you confirm: to find new prospects, given a number, an industry and a market, or to research one saved prospect again.'

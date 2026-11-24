@@ -76,9 +76,20 @@ export const storedRunConfigSchema = z.object({
   industry: z.string(),
   targetCount: z.number().int(),
   exclusions: z.array(z.string()).default([]),
+  // Targeted runs only (research one saved prospect again). Must already be a
+  // normalized domain; anything else makes the config unreadable (fail closed).
+  targetDomain: z
+    .string()
+    .refine((value) => normalizeDomain(value) === value)
+    .optional(),
 })
 
 export function readRunConfig(value: unknown): RunConfig | null {
   const parsed = storedRunConfigSchema.safeParse(value)
-  return parsed.success ? parsed.data : null
+  if (!parsed.success) {
+    return null
+  }
+  const { targetDomain, ...ordinary } = parsed.data
+  // An ordinary run's config has exactly the fields it always had.
+  return targetDomain === undefined ? ordinary : { ...ordinary, targetDomain }
 }

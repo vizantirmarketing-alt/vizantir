@@ -31,6 +31,11 @@ export type RunConfig = {
   industry: string
   targetCount: number
   exclusions: string[]
+  /**
+   * A targeted run (research one saved prospect again): the only normalized
+   * domain the run may save. Absent on every ordinary run.
+   */
+  targetDomain?: string
 }
 
 export type RecordOutcome = {
@@ -104,6 +109,7 @@ export const REJECT_REASONS = {
   missingEvidence: 'missing_evidence',
   serverRatedFactor: 'server_rated_factor',
   needsTwoSources: 'needs_two_sources',
+  notTargetDomain: 'not_target_domain',
 } as const
 
 const ERROR_SUMMARY_MAX = 2000
@@ -192,6 +198,14 @@ export function prepareProspect(
         key: rejectedKeyFor(input.domain),
         reasons: [REJECT_REASONS.invalidDomain],
       },
+    }
+  }
+
+  // A targeted run saves only its target domain; nothing a page says can widen that.
+  if (config.targetDomain !== undefined && domain !== config.targetDomain) {
+    return {
+      ok: false,
+      rejected: { key: domain, reasons: [REJECT_REASONS.notTargetDomain] },
     }
   }
 

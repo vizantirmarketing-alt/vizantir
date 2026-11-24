@@ -10,8 +10,10 @@
  *   3. find_prospects: a confirmation showing exactly what would be queued,
  *      with nothing queued (research.ts); the owner's click comes back as a
  *      separate "confirm" request, validated again, and only that queues one
- *      run. research_prospect: a plain "not available yet" reply
- *   4. resolve prospect references in code; none says so, several are choices
+ *      run
+ *   4. resolve prospect references in code; none says so, several are choices.
+ *      research_prospect then gets the same confirmation, for a targeted run
+ *      whose domain comes from the stored prospect record
  *   5. load the command's data through read-only sources, bounded
  *   6. answer: a second model call from that data only
  * Any model or loader failure returns a plain error and no answer. Every
@@ -22,6 +24,7 @@
 import { z } from 'zod'
 
 import type { CallModel } from '@/lib/briefing/narrative'
+import { normalizeDomain } from '@/lib/prospects/domain'
 import { isUuid } from '@/lib/prospects/params'
 
 import { writeAnswer, type AnswerFailure } from '@/lib/assistant/answer'
@@ -57,10 +60,14 @@ import {
   confirmationPayload,
   findRequest,
   queuedMessage,
+  targetConfirmMessage,
+  targetQueuedMessage,
   type ConfirmationSigner,
   type FindCommand,
   type FindRequest,
+  type ResearchCommand,
   type ResearchQueue,
+  type TargetRequest,
 } from '@/lib/assistant/research'
 
 /**
@@ -87,6 +94,7 @@ export const FAILURE_REASONS = [
   'research_duplicate',
   'confirmation_invalid',
   'queue_error',
+  'target_unusable',
   'unexpected_error',
 ] as const satisfies readonly (string | AnswerFailure)[]
 export type FailureReason = (typeof FAILURE_REASONS)[number]
@@ -129,17 +137,21 @@ export type AssistantReply =
   | {
       ok: true
       kind: 'confirm'
-      command: 'find_prospects'
+      command: 'find_prospects' | 'research_prospect'
       understoodAs: string
       message: string
       /** Sent back unchanged by the owner's click. The server validates all of it again. */
       confirmation: Confirmation
     }
-  | { ok: true; kind: 'queued'; command: 'find_prospects'; understoodAs: string; message: string; runId: string; links: RecordLink[] }
+  | { ok: true; kind: 'queued'; command: 'find_prospects' | 'research_prospect'; understoodAs: string; message: string; runId: string; links: RecordLink[] }
   | { ok: false; error: string; understoodAs: string | null }
 
-/** What a confirm click sends back: the validated command, when it was shown, and the server's signature over both. */
-export type Confirmation = { command: FindCommand; issuedAt: string; token: string }
+/**
+ * What a confirm click sends back: the validated command, when it was shown,
+ * and the server's signature over both. A targeted request also carries the
+ * prospect id; the server re-reads that prospect's stored domain on confirm.
+ */
+export type Confirmation = { command: FindCommand; issuedAt: string; token: string } | { command: ResearchCommand; prospectId: string; issuedAt: string; token: string }
 
 const instruction = z.string().trim().min(1).max(INSTRUCTION_MAX)
 const requestSchema = z.discriminatedUnion('kind', [
@@ -150,7 +162,13 @@ const requestSchema = z.discriminatedUnion('kind', [
     command: z.unknown(),
     selections: z.record(z.string().max(500), z.string().refine(isUuid)).refine((value) => Object.keys(value).length <= COMPARE_MAX),
   }),
-  z.strictObject({ kind: z.literal('confirm'), command: z.unknown(), issuedAt: z.string().max(40), token: z.string().min(1).max(200) }),
+  z.strictObject({
+    kind: z.literal('confirm'),
+    command: z.unknown(),
+    prospectId: z.string().refine(isUuid).optional(),
+    issuedAt: z.string().max(40),
+    token: z.string().min(1).max(200),
+  }),
 ])
 export type AssistantRequest = z.input<typeof requestSchema>
 
@@ -167,10 +185,8 @@ export const NO_BRIEFING = 'There is no stored briefing yet. One is written each
 export const SAME_PROSPECT = 'Those name the same prospect. Name at least two different prospects to compare.'
 export const RESOLVE_FAILED = 'Prospects could not be looked up just now, so nothing was answered. Try again shortly.'
 
-export const NOT_AVAILABLE: Record<'research_prospect', string> = {
-  research_prospect:
-    'Researching an existing prospect again is not available yet: the research runner skips businesses that are already saved as prospects. Open it on Prospect Research to see its evidence or measure its performance.',
-}
+export const TARGET_UNUSABLE =
+  "This prospect's saved record has no valid domain, market or industry, so it cannot be researched again from here. Nothing was queued. Use Prospect Research."
 export const RESEARCH_CHECK_FAILED = 'The research limits could not be checked just now, so nothing was queued. Try again shortly.'
 export const CONFIRMATION_INVALID = 'That confirmation is no longer valid, so nothing was queued. Ask again to get a new confirmation.'
 export const QUEUE_FAILED = 'The research request could not be queued just now, so nothing was queued. Try again shortly.'
@@ -225,6 +241,8 @@ export function messageFor(reason: FailureReason): string {
       return CONFIRMATION_INVALID
     case 'queue_error':
       return QUEUE_FAILED
+    case 'target_unusable':
+      return TARGET_UNUSABLE
     case 'research_daily_limit':
     case 'research_duplicate':
       // Refusals are replies with their own message; this is never shown.
@@ -241,6 +259,7 @@ export function messageFor(reason: FailureReason): string {
 function prospectRefs(command: Command): string[] {
   if (command.command === 'explain_score') return [command.params.prospect]
   if (command.command === 'compare_prospects') return command.params.prospects
+  if (command.command === 'research_prospect') return [command.params.prospect]
   return []
 }
 
@@ -259,9 +278,11 @@ export async function handleAssistantRequest(deps: AssistantDeps, raw: unknown):
   if (!request.success) return fail('invalid_request')
   if (!(await deps.allow(user.id))) return fail('rate_limited')
   if (request.data.kind === 'confirm') {
-    commandName = 'find_prospects'
     try {
-      return await confirmResearch(deps, user, request.data, fail, (value) => (label = value))
+      return await confirmResearch(deps, user, request.data, fail, (name, value) => {
+        commandName = name
+        label = value
+      })
     } catch {
       return fail('unexpected_error')
     }
@@ -292,9 +313,6 @@ export async function handleAssistantRequest(deps: AssistantDeps, raw: unknown):
     commandName = command.command
     label = understoodAs(command)
 
-    if (command.command === 'research_prospect') {
-      return { ok: true, kind: 'reply', command: command.command, understoodAs: label, message: NOT_AVAILABLE.research_prospect, links: [PROSPECT_RESEARCH_LINK] }
-    }
     if (command.command === 'find_prospects') {
       // Nothing is queued here: the owner sees exactly what would be, and confirms or cancels.
       const findCommand: FindCommand = command
@@ -341,6 +359,29 @@ export async function handleAssistantRequest(deps: AssistantDeps, raw: unknown):
       ids.push(resolution.prospect.id)
     }
 
+    if (command.command === 'research_prospect') {
+      // The target domain comes from the stored record, never from typed text or model output.
+      const target = await loadTarget(deps.sources, ids[0]!)
+      if (!target.ok) return fail(target.reason)
+      const limits = await checkResearchLimits(deps.research, user.email, target.target, deps.now())
+      if (!limits.ok) return limitRefusal(deps, limits, label, 'research_prospect')
+      if (deps.signer === null) return fail('not_configured')
+      const issuedAt = deps.now().toISOString()
+      return {
+        ok: true,
+        kind: 'confirm',
+        command: 'research_prospect',
+        understoodAs: label,
+        message: targetConfirmMessage(target.target),
+        confirmation: {
+          command,
+          prospectId: target.target.prospectId,
+          issuedAt,
+          token: deps.signer.sign(confirmationPayload(user.id, target.target, issuedAt)),
+        },
+      }
+    }
+
     let loaded: Loaded
     switch (command.command) {
       case 'summarize_briefing':
@@ -382,54 +423,100 @@ function canonicalFind(request: FindRequest): FindCommand {
   return { command: 'find_prospects', params: { market: request.market, industry: request.industry, count: request.targetCount } }
 }
 
+/**
+ * A saved prospect as a research target, read from its stored record. Refused
+ * when the record is gone or has no valid domain, market or industry.
+ */
+async function loadTarget(
+  sources: AssistantSources,
+  prospectId: string,
+): Promise<{ ok: true; target: TargetRequest } | { ok: false; reason: 'prospect_not_found' | 'load_error' | 'target_unusable' }> {
+  const read = await sources.prospectDetail(prospectId)
+  if (!read.ok) return { ok: false, reason: read.reason === 'not_found' ? 'prospect_not_found' : 'load_error' }
+  const { prospect } = read
+  const market = prospect.market?.trim() ?? ''
+  const industry = prospect.industry?.trim() ?? ''
+  if (normalizeDomain(prospect.domain) !== prospect.domain || market.length === 0 || industry.length === 0) return { ok: false, reason: 'target_unusable' }
+  return { ok: true, target: { prospectId: prospect.id, name: prospect.name, domain: prospect.domain, market, industry } }
+}
+
 function limitRefusal(
   deps: AssistantDeps,
   limits: Exclude<Awaited<ReturnType<typeof checkResearchLimits>>, { ok: true }>,
   label: string,
+  command: 'find_prospects' | 'research_prospect' = 'find_prospects',
 ): AssistantReply {
   if (limits.kind === 'error') {
-    deps.log({ reason: 'research_check_error', command: 'find_prospects' })
+    deps.log({ reason: 'research_check_error', command })
     return { ok: false, error: RESEARCH_CHECK_FAILED, understoodAs: label }
   }
-  deps.log({ reason: limits.kind === 'daily_limit' ? 'research_daily_limit' : 'research_duplicate', command: 'find_prospects' })
-  return { ok: true, kind: 'reply', command: 'find_prospects', understoodAs: label, message: limits.message, links: [PROSPECT_RESEARCH_LINK] }
+  deps.log({ reason: limits.kind === 'daily_limit' ? 'research_daily_limit' : 'research_duplicate', command })
+  return { ok: true, kind: 'reply', command, understoodAs: label, message: limits.message, links: [PROSPECT_RESEARCH_LINK] }
 }
 
 /**
  * The owner's confirm click. Never re-interprets text: the command is
- * validated again against the catalog and the run request rules, its
- * signature and age are checked, then the daily limit and duplicates, and
- * only then is one run queued.
+ * validated again against the catalog (and, for find_prospects, the run
+ * request rules); for research_prospect the prospect is read again by id and
+ * its stored domain is what is checked and queued. Then the signature and its
+ * age, the daily limit and duplicates; only then is one run queued.
  */
 async function confirmResearch(
   deps: AssistantDeps,
   user: { id: string; email: string },
-  data: { command: unknown; issuedAt: string; token: string },
+  data: { command: unknown; prospectId?: string; issuedAt: string; token: string },
   fail: (reason: FailureReason) => AssistantReply,
-  setLabel: (label: string) => void,
+  setCommand: (name: CommandName, label: string) => void,
 ): Promise<AssistantReply> {
   const parsed = commandSchema.safeParse(data.command)
-  if (!parsed.success || parsed.data.command !== 'find_prospects') return fail('invalid_request')
-  const command: FindCommand = parsed.data
-  const research = findRequest(command)
-  if (research === null) return fail('invalid_request')
+  if (!parsed.success) return fail('invalid_request')
+  const command = parsed.data
+  if (command.command !== 'find_prospects' && command.command !== 'research_prospect') return fail('invalid_request')
+  // A find confirmation carries no prospect; a targeted one must.
+  if ((command.command === 'find_prospects') !== (data.prospectId === undefined)) return fail('invalid_request')
   const label = understoodAs(command)
-  setLabel(label)
+  setCommand(command.command, label)
+
+  let request: FindRequest | TargetRequest
+  if (command.command === 'find_prospects') {
+    const research = findRequest(command)
+    if (research === null) return fail('invalid_request')
+    request = research
+  } else {
+    const target = await loadTarget(deps.sources, data.prospectId!)
+    if (!target.ok) return fail(target.reason)
+    request = target.target
+  }
+
   if (deps.signer === null) return fail('not_configured')
   const now = deps.now()
-  if (!confirmationFresh(data.issuedAt, now) || !deps.signer.verify(confirmationPayload(user.id, research, data.issuedAt), data.token)) {
+  if (!confirmationFresh(data.issuedAt, now) || !deps.signer.verify(confirmationPayload(user.id, request, data.issuedAt), data.token)) {
     return fail('confirmation_invalid')
   }
-  const limits = await checkResearchLimits(deps.research, user.email, research, now)
-  if (!limits.ok) return limitRefusal(deps, limits, label)
-  const queued = await deps.research.queueRun(research, user.email)
+  const limits = await checkResearchLimits(deps.research, user.email, request, now)
+  if (!limits.ok) return limitRefusal(deps, limits, label, command.command)
+
+  if ('domain' in request) {
+    const queued = await deps.research.queueTargetedRun(request, user.email)
+    if (queued === null) return fail('queue_error')
+    return {
+      ok: true,
+      kind: 'queued',
+      command: 'research_prospect',
+      understoodAs: label,
+      message: targetQueuedMessage(request),
+      runId: queued.id,
+      links: [{ label: request.name, href: `/intel/prospects/${encodeURIComponent(request.prospectId)}` }],
+    }
+  }
+  const queued = await deps.research.queueRun(request, user.email)
   if (queued === null) return fail('queue_error')
   return {
     ok: true,
     kind: 'queued',
     command: 'find_prospects',
     understoodAs: label,
-    message: queuedMessage(research),
+    message: queuedMessage(request),
     runId: queued.id,
     links: [{ label: 'Recent runs on Prospect Research', href: '/intel/prospects' }],
   }
