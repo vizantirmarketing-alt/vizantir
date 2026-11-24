@@ -27,7 +27,7 @@ import type { DecisionFeedItem } from '@/lib/intel/decisions/feed'
 import { LEAD_STATUS_LABELS, type LeadListRow, type LeadStatus } from '@/lib/intel/lead-params'
 import type { ProspectDetail, ProspectEvidenceRow } from '@/lib/prospects/load'
 import { PERFORMANCE_FACTOR } from '@/lib/prospects/measure'
-import { EVIDENCE_KIND_LABELS, PROSPECT_REVIEW_LABELS, PROSPECT_RUN_STATE_LABELS, priorityScore } from '@/lib/prospects/params'
+import { EVIDENCE_KIND_LABELS, PROSPECT_REVIEW_LABELS, PROSPECT_RUN_STATE_LABELS } from '@/lib/prospects/params'
 import {
   CONFIDENCE_LABELS,
   FACTOR_DEFINITIONS,
@@ -40,6 +40,7 @@ import {
   type ScoreBreakdown,
 } from '@/lib/prospects/rubric'
 
+import { buildComparison, claimFactsFor, comparedLabels, displayedPriority, ratingCounts, ratingCountsLine, type ClaimFacts, type ComparedProspect } from '@/lib/assistant/comparison'
 import type { ProspectSearch } from '@/lib/assistant/resolve'
 
 /** Largest context sent to the answering call, in characters of JSON. Over it, nothing is answered. */
@@ -84,7 +85,8 @@ export type AssistantSources = {
   findings: () => Promise<DecisionFeedItem[] | null>
 }
 
-export type Loaded = { ok: true; data: Record<string, unknown>; links: RecordLink[] } | { ok: false; reason: 'failed' | 'not_found' | 'too_large' | 'empty' }
+/** claims: what the absolute-claim check needs (explain_score and compare_prospects only). */
+export type Loaded = { ok: true; data: Record<string, unknown>; links: RecordLink[]; claims?: ClaimFacts } | { ok: false; reason: 'failed' | 'not_found' | 'too_large' | 'empty' }
 
 type Listed<T> = { total: number; listedCount: number; listed: T[] }
 
@@ -187,9 +189,16 @@ function researchConfidence(value: string) {
 const RUBRIC_NOTE =
   'maxPoints is the most a factor can add to its score; pointsEarned is what its recorded rating gives (Strong full points, Weak half, None and Unknown nothing). scoreUnderCurrentRubric is null when more than half of a score\'s weight is rated Unknown.'
 
-function breakdown(score: ScoreBreakdown) {
+function breakdown(score: ScoreBreakdown, kind: 'fit' | 'opportunity') {
+  const tally = ratingCounts(score)
   return {
     scoreUnderCurrentRubric: score.score,
+    ratingCounts: {
+      note: 'Counted in code: how many of these factors received each rating. State these counts exactly; do not recount.',
+      factorCount: tally.factorCount,
+      ...tally.counts,
+      summary: ratingCountsLine(tally, kind),
+    },
     ratedMaxPoints: score.knownWeight,
     totalMaxPoints: score.totalWeight,
     factors: score.factors.map((factor) => ({
@@ -225,14 +234,14 @@ function prospectData(read: Extract<ProspectDetailRead, { ok: true }>, evidenceM
     reviewStatus: { value: PROSPECT_REVIEW_LABELS[prospect.reviewStatus], meaning: "The owner's decision on this prospect: Unreviewed, Accepted, Rejected or Archived." },
     lastResearchedAt: laTime(prospect.lastResearchedAt),
     recordedScores: {
-      note: 'Stored scores out of 100. priorityScore is 60% of fitScore plus 40% of opportunityScore.',
+      note: 'Stored scores out of 100. priorityScore is 60% of fitScore plus 40% of opportunityScore, rounded to a whole number as the dashboard shows it.',
       fitScore: prospect.fitScore,
       opportunityScore: prospect.opportunityScore,
-      priorityScore: priorityScore(prospect.fitScore, prospect.opportunityScore),
+      priorityScore: displayedPriority(prospect.fitScore, prospect.opportunityScore),
       researchConfidence: researchConfidence(prospect.confidence),
       scoredWithRubric: prospect.rubricVersion,
     },
-    rubric: { currentVersion: RUBRIC_VERSION, note: RUBRIC_NOTE, fit: breakdown(scores.fit), opportunity: breakdown(scores.opportunity) },
+    rubric: { currentVersion: RUBRIC_VERSION, note: RUBRIC_NOTE, fit: breakdown(scores.fit, 'fit'), opportunity: breakdown(scores.opportunity, 'opportunity') },
     performance: performanceRatingsFor(evidence) ?? null,
     outsideWebsiteEvidence: {
       note: OUTSIDE_TEXT_NOTE,
@@ -369,10 +378,16 @@ export function briefingData(stored: StoredBriefingRead) {
 
 /* ---------- Loaders ---------- */
 
-function sized(data: Record<string, unknown>, links: RecordLink[]): Loaded {
+function sized(data: Record<string, unknown>, links: RecordLink[], claims?: ClaimFacts): Loaded {
   const localized = localizeInstants(data) as Record<string, unknown>
   if (JSON.stringify(localized).length > CONTEXT_MAX_CHARS) return { ok: false, reason: 'too_large' }
-  return { ok: true, data: localized, links: links.slice(0, LINKS_MAX) }
+  return { ok: true, data: localized, links: links.slice(0, LINKS_MAX), ...(claims === undefined ? {} : { claims }) }
+}
+
+/** A prospect as the comparison and the claim check see it: recorded scores and the current rubric's factor points. */
+function compared(read: Extract<ProspectDetailRead, { ok: true }>, label: string): ComparedProspect {
+  const scores = scoreProspect(read.prospect.factorRatings)
+  return { label, fitScore: read.prospect.fitScore, opportunityScore: read.prospect.opportunityScore, fit: scores.fit, opportunity: scores.opportunity }
 }
 
 export async function loadBriefing(sources: AssistantSources): Promise<Loaded> {
@@ -388,7 +403,7 @@ export async function loadBriefing(sources: AssistantSources): Promise<Loaded> {
 export async function loadExplain(sources: AssistantSources, prospectId: string): Promise<Loaded> {
   const read = await sources.prospectDetail(prospectId)
   if (!read.ok) return { ok: false, reason: read.reason === 'not_found' ? 'not_found' : 'failed' }
-  return sized({ note: TIME_ZONE_NOTE, prospect: prospectData(read, EXPLAIN_EVIDENCE_MAX) }, [prospectLink(read.prospect)])
+  return sized({ note: TIME_ZONE_NOTE, prospect: prospectData(read, EXPLAIN_EVIDENCE_MAX) }, [prospectLink(read.prospect)], claimFactsFor([compared(read, read.prospect.name)], false))
 }
 
 export async function loadCompare(sources: AssistantSources, prospectIds: readonly string[]): Promise<Loaded> {
@@ -398,9 +413,16 @@ export async function loadCompare(sources: AssistantSources, prospectIds: readon
     if (!read.ok) return { ok: false, reason: read.reason === 'not_found' ? 'not_found' : 'failed' }
     prospects.push(read)
   }
+  const labels = comparedLabels(prospects.map((read) => read.prospect))
+  const comparedProspects = prospects.map((read, index) => compared(read, labels[index]!))
   return sized(
-    { note: TIME_ZONE_NOTE, prospects: prospects.map((read) => prospectData(read, COMPARE_EVIDENCE_MAX)) },
+    {
+      note: TIME_ZONE_NOTE,
+      prospects: prospects.map((read, index) => ({ comparedAs: labels[index], ...prospectData(read, COMPARE_EVIDENCE_MAX) })),
+      comparison: buildComparison(comparedProspects),
+    },
     prospects.map((read) => prospectLink(read.prospect)),
+    claimFactsFor(comparedProspects, true),
   )
 }
 

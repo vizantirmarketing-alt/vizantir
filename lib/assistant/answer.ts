@@ -14,6 +14,7 @@ import type { CallModel } from '@/lib/briefing/narrative'
 import { wordCount } from '@/lib/briefing/narrative'
 
 import type { CommandName } from '@/lib/assistant/catalog'
+import { checkAbsoluteClaims, type AbsoluteClaim, type ClaimFacts } from '@/lib/assistant/comparison'
 
 /** Length the prompt asks for, and the cap code enforces. */
 export type AnswerLength = { target: number; max: number }
@@ -34,7 +35,16 @@ export const ANSWER_LENGTHS: Record<CommandName, AnswerLength> = {
   research_prospect: { target: ANSWER_TARGET_WORDS, max: ANSWER_MAX_WORDS },
 }
 
-export function answerSystemPrompt(length: AnswerLength): string {
+/** Extra rules for the commands that explain or compare scores. */
+export const SCORE_ANSWER_RULES = `
+Rules for scores and comparisons:
+- ratingCounts and comparison are counted and compared in code. State tallies and leaders exactly as supplied. Do not recount ratings or decide for yourself who leads.
+- Do not use "all", "every", "none", "across the board" or similar about factors, scores or dimensions unless the supplied ratingCounts or comparison make it literally true for the thing named. For example, say "three of four fit factors rated Strong" when ratingCounts shows 3 Strong and 1 None.
+- Never say one prospect is better, stronger or more promising overall. Report only who leads on fit, opportunity and priority as comparison.overall gives it, and on each factor as "leads" gives it.
+- Do not rank the severity of site problems or call one prospect's issues more or less serious, acute or significant unless a supplied score or rating says so. Describe observations as observed.
+- More points on an opportunity factor means more opportunity for the studio, which usually reflects a weaker result for the site. Whenever you say who leads on an opportunity factor, say which is meant, for example "Leavitt Family Law earned more opportunity points on measured performance (30 of 30 against 15 of 30), meaning its site measured worse".`
+
+export function answerSystemPrompt(length: AnswerLength, extraRules = ''): string {
   return `You answer the owner of a small web design studio inside their private business dashboard.
 
 The user message is a JSON object: "instruction" is what the owner typed, "command" is how it was understood, and "data" holds every record you may use. You have no tools and no other information.
@@ -52,7 +62,7 @@ Rules:
 - Scores. recordedScores are the stored scores. rubric shows how the current rubric weighs each factor: maxPoints, the recorded rating and the pointsEarned it gives. Explain a score from these. If rubric.currentVersion differs from recordedScores.scoredWithRubric, say the stored score came from an earlier rubric.
 - Inquiries are identified by company, service, budget, status and age only. Never guess at a person's name or contact details.
 - Do not write any link: no http or https address and no markdown link. The page shows links to the records itself. A business's domain may appear as plain text exactly as it is written in the data.
-- Plain prose, no markdown, no em dashes. Aim for about ${length.target} words; never more than ${length.max}. Lead with what matters most and leave out minor detail rather than run long.`
+- Plain prose, no markdown, no em dashes. Aim for about ${length.target} words; never more than ${length.max}. Lead with what matters most and leave out minor detail rather than run long.${extraRules}`
 }
 
 /** The prompt at the default length. */
@@ -61,7 +71,7 @@ export const ANSWER_SYSTEM_PROMPT = answerSystemPrompt({ target: ANSWER_TARGET_W
 /** What the answer should do, per command. Added to the user message. */
 const TASKS: Partial<Record<CommandName, string>> = {
   summarize_briefing: 'Summarize this stored daily briefing: what changed and what most needs attention. Apply the briefing rules in the data as they are.',
-  explain_score: "Explain this prospect's recorded scores from its rubric factors and evidence. Cover the factors that move each score most; group or skip the rest.",
+  explain_score: "Explain this prospect's recorded scores from its rubric factors and evidence. Cover the factors that move each score most; group or skip the rest. Give at most one short clause of evidence per factor.",
   compare_prospects: 'Compare these prospects on their recorded scores, factors, performance and evidence, and say which looks most promising and why.',
   review_inquiries: 'Review these open inquiries and say which to follow up first and why, using their status, age, service and budget.',
   summarize_findings: 'Summarize these open findings and what they suggest doing.',
@@ -74,9 +84,12 @@ export function buildAnswerMessage(command: CommandName, instruction: string, da
 const outputSchema = z.strictObject({ answer: z.string().trim().min(1) })
 
 /** Why an answer was refused by its own checks. */
-export type AnswerProblem = 'invalid_shape' | 'too_long' | 'invalid_url'
+export type AnswerProblem = 'invalid_shape' | 'too_long' | 'invalid_url' | 'unsupported_absolute'
 
-export type AnswerCheck = { ok: true; answer: string } | { ok: false; problem: AnswerProblem; words: number | null }
+export type AnswerCheck = { ok: true; answer: string } | { ok: false; problem: AnswerProblem; words: number | null; claims?: AbsoluteClaim[] }
+
+/** The absolute-claim check, for explain_score and compare_prospects. */
+export type ClaimCheck = { facts: ClaimFacts; compare: boolean }
 
 const WEB_LINK = /\bhttps?:\/\//i
 const MARKDOWN_LINK = /\[[^\]\n]*\]\([^)\n]*\)/
@@ -138,7 +151,7 @@ export function writesLink(answer: string, context: string): boolean {
 }
 
 /** The validated answer, or the rule it broke. context is the JSON the answer was written from. */
-export function validateAnswer(raw: string, context: string, maxWords: number = ANSWER_MAX_WORDS): AnswerCheck {
+export function validateAnswer(raw: string, context: string, maxWords: number = ANSWER_MAX_WORDS, claimCheck?: ClaimCheck): AnswerCheck {
   let json: unknown
   try {
     json = JSON.parse(escapeRawControls(stripFences(raw)))
@@ -151,6 +164,10 @@ export function validateAnswer(raw: string, context: string, maxWords: number = 
   const words = wordCount(answer)
   if (words > maxWords) return { ok: false, problem: 'too_long', words }
   if (writesLink(answer, context)) return { ok: false, problem: 'invalid_url', words }
+  if (claimCheck !== undefined) {
+    const claims = checkAbsoluteClaims(answer, claimCheck.facts, claimCheck.compare)
+    if (claims.length > 0) return { ok: false, problem: 'unsupported_absolute', words, claims }
+  }
   return { ok: true, answer }
 }
 
@@ -159,7 +176,9 @@ export function answerRetryInstruction(check: Extract<AnswerCheck, { ok: false }
   const what =
     check.problem === 'too_long'
       ? `Your previous answer was ${check.words ?? 'over'} words. It must be ${length.max} words or fewer; aim for about ${length.target}. Keep the points that matter most and drop minor detail.`
-      : check.problem === 'invalid_url'
+      : check.problem === 'unsupported_absolute'
+        ? `Your previous answer made absolute claims the supplied counts do not support: ${(check.claims ?? []).map((claim) => `"${claim.phrase}" (${claim.reason})`).join('; ')}. State ratingCounts and comparison exactly as supplied, and do not use all, every, none or across the board unless they are literally true.`
+        : check.problem === 'invalid_url'
         ? 'Your previous answer contained a link or a web address that is not in the data. Write no http or https address and no markdown link; a domain may appear only as plain text exactly as it is in the data.'
         : 'Your previous reply was not a JSON object of exactly the shape {"answer": string}. Return only that object, with no code fences, no other keys and no other text.'
   return `\n\n${what} Return the same JSON shape.`
@@ -173,19 +192,27 @@ export type AnswerResult = { ok: true; answer: string; attempts: 1 | 2 } | { ok:
  * One call, and one retry when the reply breaks a format rule. A failed call
  * is not retried here (the model client already retries once).
  */
-export async function writeAnswer(callModel: CallModel, command: CommandName, instruction: string, data: Record<string, unknown>): Promise<AnswerResult> {
+export async function writeAnswer(
+  callModel: CallModel,
+  command: CommandName,
+  instruction: string,
+  data: Record<string, unknown>,
+  claims?: ClaimFacts,
+): Promise<AnswerResult> {
   const user = buildAnswerMessage(command, instruction, data)
   const context = JSON.stringify(data)
   const length = ANSWER_LENGTHS[command]
-  const system = answerSystemPrompt(length)
+  const scored = command === 'explain_score' || command === 'compare_prospects'
+  const system = answerSystemPrompt(length, scored ? SCORE_ANSWER_RULES : '')
+  const claimCheck: ClaimCheck | undefined = scored && claims !== undefined ? { facts: claims, compare: command === 'compare_prospects' } : undefined
   const first = await callModel({ system, user })
   if (!first.ok) return { ok: false, reason: 'model_error', attempts: 1 }
-  const firstCheck = validateAnswer(first.text, context, length.max)
+  const firstCheck = validateAnswer(first.text, context, length.max, claimCheck)
   if (firstCheck.ok) return { ok: true, answer: firstCheck.answer, attempts: 1 }
 
   const second = await callModel({ system: system + answerRetryInstruction(firstCheck, length), user })
   if (!second.ok) return { ok: false, reason: 'model_error', attempts: 2 }
-  const secondCheck = validateAnswer(second.text, context, length.max)
+  const secondCheck = validateAnswer(second.text, context, length.max, claimCheck)
   if (secondCheck.ok) return { ok: true, answer: secondCheck.answer, attempts: 2 }
   return { ok: false, reason: `answer_${secondCheck.problem}`, attempts: 2 }
 }

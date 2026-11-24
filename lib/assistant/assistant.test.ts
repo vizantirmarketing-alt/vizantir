@@ -11,7 +11,7 @@ import type { CallModel } from '@/lib/briefing/narrative'
 import type { DecisionFeedItem } from '@/lib/intel/decisions/feed'
 import type { LeadListRow } from '@/lib/intel/lead-params'
 import type { ProspectDetail, ProspectEvidenceRow } from '@/lib/prospects/load'
-import type { FactorRatings } from '@/lib/prospects/rubric'
+import { scoreProspect, type FactorRatings } from '@/lib/prospects/rubric'
 
 import { ANSWER_LENGTHS, ANSWER_MAX_WORDS, ANSWER_SYSTEM_PROMPT, escapeRawControls, validateAnswer, writesLink } from './answer'
 import { ASSISTANT_MAX_PER_HOUR, ASSISTANT_RATE_LIMIT_KEY, INSTRUCTION_MAX, UNSUPPORTED_MESSAGE } from './catalog'
@@ -43,6 +43,7 @@ import {
 import { formatLocalTimestamp } from '@/lib/briefing/dates'
 import { createHmac } from 'node:crypto'
 import { abandonedReasonLine } from '@/lib/prospects/claim'
+import { buildComparison, checkAbsoluteClaims, claimFactsFor, displayedPriority, leader, ratingCounts, ratingCountsLine, type ComparedProspect } from './comparison'
 import {
   PICKUP_NOTE,
   RESEARCH_REQUESTS_PER_DAY,
@@ -1001,5 +1002,146 @@ describe('the Research requests panel', () => {
     t.research.runs[0]!.counts = { saved: 7, rejected: 1 }
     const refreshed = await listResearchRequests(t.research.queue)
     assert.ok(refreshed.ok && refreshed.requests[0]!.detail === 'Finished with 7 of 10 saved.')
+  })
+})
+
+describe('scores and comparisons are counted and compared in code', () => {
+  // Shaped like the production case: Smith & Shapiro three Strong and one None on fit,
+  // the other prospect ahead on measured performance.
+  const SMITH: FactorRatings = {
+    market_industry_match: 'strong',
+    business_complexity: 'strong',
+    custom_web_relevance: 'strong',
+    growth_signals: 'none',
+    navigation_conversion_friction: 'strong',
+    performance_technical_issues: 'weak',
+    content_information_architecture: 'strong',
+    integration_cms_opportunity: 'strong',
+  }
+  const LEAVITT: FactorRatings = {
+    market_industry_match: 'strong',
+    business_complexity: 'weak',
+    custom_web_relevance: 'strong',
+    growth_signals: 'weak',
+    navigation_conversion_friction: 'weak',
+    performance_technical_issues: 'strong',
+    content_information_architecture: 'strong',
+    integration_cms_opportunity: 'weak',
+  }
+  const ALL_STRONG_FIT: FactorRatings = { ...SMITH, growth_signals: 'strong' }
+  const prospectOf = (label: string, ratings: FactorRatings, fitScore: number, opportunityScore: number): ComparedProspect => ({ label, fitScore, opportunityScore, ...scoreProspect(ratings) })
+  const smith = prospectOf('Smith & Shapiro', SMITH, 85, 85)
+  const leavitt = prospectOf('Leavitt Family Law Group', LEAVITT, 78, 75)
+
+  it('tallies each prospect\'s ratings per score: three Strong and one None', () => {
+    assert.deepEqual(ratingCounts(smith.fit), { factorCount: 4, counts: { Strong: 3, Weak: 0, None: 1, Unknown: 0 } })
+    assert.deepEqual(ratingCounts(smith.opportunity), { factorCount: 4, counts: { Strong: 3, Weak: 1, None: 0, Unknown: 0 } })
+    assert.equal(ratingCountsLine(ratingCounts(smith.fit), 'fit'), '3 Strong, 0 Weak, 1 None, 0 Unknown, of 4 fit factors')
+  })
+
+  it('the explain_score context carries the tallies with labels', async () => {
+    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental')))
+    const fit = (data(t.calls[1]!).prospect as { rubric: { fit: { ratingCounts: Record<string, unknown> } } }).rubric.fit.ratingCounts
+    // Halcyon's fit: Strong, Weak, Strong, Unknown.
+    assert.deepEqual([fit.factorCount, fit.Strong, fit.Weak, fit.None, fit.Unknown], [4, 2, 1, 0, 1])
+    assert.equal(fit.summary, '2 Strong, 1 Weak, 0 None, 1 Unknown, of 4 fit factors')
+    assert.match(t.calls[1]!.system, /State tallies and leaders exactly as supplied\. Do not recount/)
+  })
+
+  it('names the leader on every factor, including ties, with what opportunity points mean', () => {
+    const comparison = buildComparison([smith, leavitt])
+    assert.deepEqual(
+      comparison.fitFactors.factors.map((f) => [f.factor, f.pointsEarned, f.leads]),
+      [
+        ['Market and industry match', { 'Smith & Shapiro': 30, 'Leavitt Family Law Group': 30 }, 'Tied'],
+        [smith.fit.factors[1]!.label, { 'Smith & Shapiro': 30, 'Leavitt Family Law Group': 15 }, 'Smith & Shapiro'],
+        [smith.fit.factors[2]!.label, { 'Smith & Shapiro': 25, 'Leavitt Family Law Group': 25 }, 'Tied'],
+        [smith.fit.factors[3]!.label, { 'Smith & Shapiro': 0, 'Leavitt Family Law Group': 7.5 }, 'Leavitt Family Law Group'],
+      ],
+    )
+    const performance = comparison.opportunityFactors.factors[1]!
+    assert.deepEqual([performance.pointsEarned, performance.leads], [{ 'Smith & Shapiro': 15, 'Leavitt Family Law Group': 30 }, 'Leavitt Family Law Group'])
+    assert.match(comparison.opportunityFactors.meaning, /more opportunity for the studio, which usually means a weaker result for the site/)
+    assert.equal(leader([{ label: 'A', value: 5 }, { label: 'B', value: 5 }, { label: 'C', value: 1 }]), 'Tied between A and B')
+  })
+
+  it('the overall line lists who leads on fit, opportunity and priority, and nothing more', () => {
+    assert.equal(
+      buildComparison([smith, leavitt]).overall,
+      'Smith & Shapiro leads on fit (85 to 78). Smith & Shapiro leads on opportunity (85 to 75). Smith & Shapiro leads on priority (85 to 77).',
+    )
+    const split = buildComparison([prospectOf('A', SMITH, 80, 60), prospectOf('B', LEAVITT, 70, 75)])
+    assert.equal(split.overall, 'A leads on fit (80 to 70). B leads on opportunity (60 to 75). Tied on priority (72 to 72).')
+    assert.match(buildComparison([smith, leavitt]).note, /No prospect is ahead overall beyond these three scores/)
+  })
+
+  it('the compare context carries the comparison block', async () => {
+    const t = deps([{ command: 'compare_prospects', params: { prospects: ['Halcyon Dental', 'Desert Bloom Law'] } }, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Compare Halcyon Dental and Desert Bloom Law')))
+    const comparison = data(t.calls[1]!).comparison as { overall: string; fitFactors: { factors: { leads: string }[] } }
+    assert.equal(comparison.overall, 'Tied on fit (72 to 72). Tied on opportunity (64 to 64). Tied on priority (69 to 69).')
+    assert.ok(comparison.fitFactors.factors.every((f) => f.leads === 'Tied'))
+  })
+
+  it('the absolute-word check refuses "all four" when one fit factor is None, and accepts it when all four are Strong', () => {
+    const claim = 'Smith & Shapiro earned Strong on all four fit factors, with only project or growth signals rated None.'
+    const refused = checkAbsoluteClaims(claim, claimFactsFor([smith, leavitt], true), true)
+    assert.deepEqual(refused, [{ phrase: 'all four fit factors', reason: 'Smith & Shapiro has 3 of 4 factors rated Strong' }])
+    const allStrong = prospectOf('Smith & Shapiro', ALL_STRONG_FIT, 100, 85)
+    assert.deepEqual(checkAbsoluteClaims('Smith & Shapiro earned Strong on all four fit factors.', claimFactsFor([allStrong, leavitt], true), true), [])
+    // "none of", and a rating pair joined by "or".
+    assert.equal(checkAbsoluteClaims('None of its fit factors were rated None.', claimFactsFor([smith], false), false).length, 1)
+    assert.deepEqual(checkAbsoluteClaims('All four opportunity factors were rated Strong or Weak.', claimFactsFor([smith], false), false), [])
+  })
+
+  it('"every dimension" and "across the board" need one prospect to lead on every factor and all three scores', () => {
+    const facts = claimFactsFor([smith, leavitt], true)
+    assert.deepEqual(checkAbsoluteClaims('Smith & Shapiro is the more promising prospect by every measured dimension.', facts, true), [
+      { phrase: 'every measured dimension', reason: 'no prospect leads on every factor and on fit, opportunity and priority' },
+    ])
+    assert.equal(checkAbsoluteClaims('Smith & Shapiro is ahead across the board.', facts, true).length, 1)
+    // "all three dimensions" means the three scores, which Smith & Shapiro does lead on.
+    assert.deepEqual(checkAbsoluteClaims('Smith & Shapiro is the higher-scoring prospect on all three dimensions.', facts, true), [])
+    const split = claimFactsFor([prospectOf('A', SMITH, 80, 60), prospectOf('B', LEAVITT, 70, 75)], true)
+    assert.equal(checkAbsoluteClaims('A is ahead on all three dimensions.', split, true).length, 1)
+    const dominant = prospectOf('A', { ...ALL_STRONG_FIT, performance_technical_issues: 'strong' }, 100, 100)
+    const weaker = prospectOf('B', { ...LEAVITT, market_industry_match: 'weak', custom_web_relevance: 'weak', performance_technical_issues: 'weak', content_information_architecture: 'weak' }, 40, 40)
+    assert.deepEqual(checkAbsoluteClaims('A leads across the board.', claimFactsFor([dominant, weaker], true), true), [])
+  })
+
+  it('a clean comparative answer passes, and so do ordinary uses of "all"', () => {
+    const clean = [
+      'Smith & Shapiro leads on all three scores: fit 85 to 78, opportunity 85 to 75, and priority 85 to 77.',
+      'Three of four fit factors are rated Strong for Smith & Shapiro, and project or growth signals is rated None.',
+      'Leavitt Family Law Group earned more opportunity points on measured performance (30 of 30 against 15 of 30), meaning its site measured worse.',
+      'Market and industry match earned all 30 points, and both were scored under prospect-rubric-v2.',
+    ].join(' ')
+    assert.deepEqual(checkAbsoluteClaims(clean, claimFactsFor([smith, leavitt], true), true), [])
+  })
+
+  it('an unsupported absolute claim gets one retry with the reason, then fails', async () => {
+    // Halcyon's fit: Strong, Weak, Strong, Unknown.
+    const bad = { answer: 'Halcyon Dental is rated Strong on all four fit factors.' }
+    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, bad, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental')))
+    assert.match(t.calls[2]!.system, /made absolute claims the supplied counts do not support: "all four fit factors" \(Halcyon Dental has 2 of 4 factors rated Strong\)/)
+    const twice = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, bad, bad])
+    const reply = await handleAssistantRequest(twice.deps, ask('Explain Halcyon Dental'))
+    assert.ok(!reply.ok && reply.error === ANSWER_REFUSED)
+    assert.equal(twice.logs[0]!.reason, 'answer_unsupported_absolute')
+    // Other commands are not checked.
+    const findings = deps([{ command: 'summarize_findings', params: {} }, { answer: 'All four fit factors look fine.' }])
+    answered(await handleAssistantRequest(findings.deps, ask('Findings?')))
+  })
+
+  it('priority is the whole number the Briefing page shows', async () => {
+    assert.equal(displayedPriority(72, 64), 69, '68.8 shows as 69')
+    assert.equal(displayedPriority(85, 64), 77, '76.6 shows as 77')
+    assert.equal(displayedPriority(null, 64), null)
+    for (const p of BRIEFING.content.newProspects) assert.equal(displayedPriority(p.fitScore, p.opportunityScore), p.priority, p.name)
+    const t = deps([{ command: 'explain_score', params: { prospect: 'Halcyon Dental' } }, ANSWER])
+    answered(await handleAssistantRequest(t.deps, ask('Explain Halcyon Dental')))
+    assert.equal((data(t.calls[1]!).prospect as { recordedScores: { priorityScore: number } }).recordedScores.priorityScore, 69)
   })
 })

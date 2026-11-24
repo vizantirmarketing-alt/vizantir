@@ -81,6 +81,7 @@ export const FAILURE_REASONS = [
   'answer_invalid_shape',
   'answer_too_long',
   'answer_invalid_url',
+  'answer_unsupported_absolute',
   'research_check_error',
   'research_daily_limit',
   'research_duplicate',
@@ -216,6 +217,7 @@ export function messageFor(reason: FailureReason): string {
     case 'answer_invalid_shape':
     case 'answer_too_long':
     case 'answer_invalid_url':
+    case 'answer_unsupported_absolute':
       return ANSWER_REFUSED
     case 'research_check_error':
       return RESEARCH_CHECK_FAILED
@@ -367,7 +369,7 @@ export async function handleAssistantRequest(deps: AssistantDeps, raw: unknown):
       return fail(loaded.reason === 'not_found' ? 'prospect_not_found' : loaded.reason === 'too_large' ? 'context_too_large' : 'load_error')
     }
 
-    const answer = await writeAnswer(callModel, command.command, request.data.instruction, loaded.data)
+    const answer = await writeAnswer(callModel, command.command, request.data.instruction, loaded.data, loaded.claims)
     if (!answer.ok) return fail(answer.reason, { stage: 'answer', attempts: answer.attempts })
     return { ok: true, kind: 'answer', command: command.command, understoodAs: label, answer: answer.answer, links: loaded.links }
   } catch {
