@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useState, type ReactNode } from 'react'
+import { useId, useLayoutEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, PanelLeft, X } from 'lucide-react'
@@ -110,6 +110,33 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
   const menuId = useId()
   const sidebarId = useId()
 
+  // While the phone menu is open the page behind it does not scroll. Below lg
+  // only: if the window widens past lg with the menu open, the lock lifts.
+  // Scroll anchoring is off meanwhile: opening takes the header out of the page
+  // flow, and the browser would otherwise follow the content up 73px and lose
+  // the reader's place (and on closing, push it 73px down). A layout effect, so
+  // both apply before that layout.
+  useLayoutEffect(() => {
+    if (!mobileOpen) return
+    const root = document.documentElement
+    const previous = { overflow: root.style.overflow, anchor: root.style.overflowAnchor }
+    root.style.overflowAnchor = 'none'
+    const desktop = window.matchMedia('(min-width: 64rem)')
+    const apply = () => {
+      root.style.overflow = desktop.matches ? previous.overflow : 'hidden'
+    }
+    apply()
+    desktop.addEventListener('change', apply)
+    return () => {
+      desktop.removeEventListener('change', apply)
+      root.style.overflow = previous.overflow
+      // Lay out the closed menu (header back in the flow) first, so anchoring,
+      // once back on, has no shift to follow.
+      void root.offsetHeight
+      root.style.overflowAnchor = previous.anchor
+    }
+  }, [mobileOpen])
+
   function toggleSidebar() {
     const next = !collapsed
     setCollapsed(next)
@@ -179,46 +206,60 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
         </aside>
 
         <div className="flex min-h-svh min-w-0 flex-col">
-          <header className="flex shrink-0 items-center justify-between border-b border-black/8 px-6 py-4 lg:hidden">
-            <p className="intel-eyebrow text-cobalt-text">
-              Intel
-            </p>
-            <button
-              type="button"
-              className="inline-flex size-10 items-center justify-center text-foreground"
-              aria-expanded={mobileOpen}
-              aria-controls={menuId}
-              aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
-              onClick={() => setMobileOpen((open) => !open)}
-            >
-              {mobileOpen ? (
-                <X className="size-5" aria-hidden />
-              ) : (
-                <Menu className="size-5" aria-hidden />
-              )}
-            </button>
-          </header>
+          {/*
+            Phone and tablet header and menu (below lg). Open, the two become one
+            fixed layer over the page: top-0 and bottom-0 follow the visible
+            viewport on iOS as the browser bars show and hide, which no vh unit
+            does exactly. The header row stays put; below it the whole menu
+            (every link, then the account block) scrolls as one column, so
+            nothing is pinned over the links.
+          */}
+          <div
+            className={cn(
+              'shrink-0 lg:hidden',
+              mobileOpen && 'fixed inset-0 z-40 flex flex-col bg-background',
+            )}
+          >
+            <header className="flex shrink-0 items-center justify-between border-b border-black/8 px-6 py-4">
+              <p className="intel-eyebrow text-cobalt-text">
+                Intel
+              </p>
+              <button
+                type="button"
+                className="inline-flex size-10 items-center justify-center text-foreground"
+                aria-expanded={mobileOpen}
+                aria-controls={menuId}
+                aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
+                onClick={() => setMobileOpen((open) => !open)}
+              >
+                {mobileOpen ? (
+                  <X className="size-5" aria-hidden />
+                ) : (
+                  <Menu className="size-5" aria-hidden />
+                )}
+              </button>
+            </header>
 
-          {mobileOpen ? (
-            <nav
-              id={menuId}
-              aria-label="Intel"
-              className="flex max-h-[calc(100svh-4.5rem)] flex-col border-b border-black/8 px-6 py-8 lg:hidden"
-            >
-              <div className="min-h-0 flex-1 overflow-y-auto">
+            {mobileOpen ? (
+              <nav
+                id={menuId}
+                aria-label="Intel"
+                // Bottom padding clears the browser toolbar and home indicator.
+                className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))]"
+              >
                 <NavLinks
                   pathname={pathname}
                   onNavigate={() => setMobileOpen(false)}
                 />
-              </div>
-              <div className="mt-8 shrink-0 space-y-3 border-t border-black/8 pt-8">
-                <p className="intel-secondary text-meta [overflow-wrap:anywhere]">
-                <EmailText email={email} />
-              </p>
-                <SignOutForm />
-              </div>
-            </nav>
-          ) : null}
+                <div className="mt-8 space-y-3 border-t border-black/8 pt-8">
+                  <p className="intel-secondary text-meta [overflow-wrap:anywhere]">
+                    <EmailText email={email} />
+                  </p>
+                  <SignOutForm />
+                </div>
+              </nav>
+            ) : null}
+          </div>
 
           {/*
             Content width is set here, once, for every Intel page (Reports

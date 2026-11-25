@@ -255,7 +255,9 @@ export function AssistantConsole({ initialRequests }: { initialRequests: Researc
           />
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
             <p className="intel-secondary text-meta">
-              {instruction.length} of {INSTRUCTION_MAX} characters. Enter asks; Shift and Enter adds a line.
+              {instruction.length} of {INSTRUCTION_MAX} characters.
+              {/* Only with a hardware keyboard and a fine pointer; touch keyboards have no Shift and Enter. CSS only, so server and client render the same markup. */}
+              <span className="hidden [@media(hover:hover)_and_(pointer:fine)]:inline"> Enter asks; Shift and Enter adds a line.</span>
             </p>
             <Button type="submit" size="sm" disabled={pending || instruction.trim().length === 0} className={primaryButtonClassName}>
               {pending ? 'Working…' : 'Ask'}
