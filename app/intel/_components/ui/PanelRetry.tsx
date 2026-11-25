@@ -20,7 +20,7 @@ export function PanelRetry({ label = 'Retry' }: PanelRetryProps) {
           router.refresh()
         })
       }}
-      className="intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF] disabled:opacity-50"
+      className="intel-body text-cobalt-text transition-colors hover:text-[#1E85FF] disabled:cursor-not-allowed disabled:text-meta"
     >
       {pending ? 'Retrying…' : label}
     </button>

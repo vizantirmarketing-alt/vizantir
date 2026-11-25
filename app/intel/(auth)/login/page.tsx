@@ -20,9 +20,9 @@ export default async function IntelLoginPage({ searchParams }: IntelLoginPagePro
       : Array.isArray(errorParam) && errorParam.length > 0
 
   return (
-    <div className="flex min-h-screen items-center bg-background">
+    <div className="intel-scope flex min-h-screen items-center bg-background">
       <div className="mx-auto w-full max-w-md px-6 py-24">
-        <p className="intel-eyebrow text-cobalt-primary">
+        <p className="intel-eyebrow text-cobalt-text">
           Intel
         </p>
         <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground">

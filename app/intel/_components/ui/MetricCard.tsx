@@ -24,8 +24,8 @@ type MetricCardProps = {
 type DeltaTone = 'positive' | 'warning' | 'neutral'
 
 const ICON_CHIP: Record<MetricAccent, string> = {
-  cobalt: 'bg-cobalt-soft text-cobalt-primary',
-  'cobalt-tint': 'bg-cobalt-muted-subtle text-cobalt-primary',
+  cobalt: 'bg-cobalt-soft text-cobalt-text',
+  'cobalt-tint': 'bg-cobalt-muted-subtle text-cobalt-text',
   warning: 'bg-warning-soft text-warning',
 }
 

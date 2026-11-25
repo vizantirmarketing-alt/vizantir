@@ -193,7 +193,7 @@ export function NewBusinessFilters({
       {newBusinessesFiltersActive(params) ? (
         <Link
           href="/intel/new-businesses"
-          className="mt-3 inline-block intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="mt-3 inline-block intel-body text-cobalt-text transition-colors hover:text-[#1E85FF]"
         >
           Clear filters
         </Link>

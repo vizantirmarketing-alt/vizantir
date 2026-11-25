@@ -124,7 +124,7 @@ export function ProspectsPagination({
         {page > 1 ? (
           <Link
             href={prospectsListHref({ ...params, page: page - 1 })}
-            className="text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+            className="text-cobalt-text transition-colors hover:text-[#1E85FF]"
           >
             Previous
           </Link>
@@ -132,7 +132,7 @@ export function ProspectsPagination({
         {page < pageCount ? (
           <Link
             href={prospectsListHref({ ...params, page: page + 1 })}
-            className="text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+            className="text-cobalt-text transition-colors hover:text-[#1E85FF]"
           >
             Next
           </Link>
@@ -158,7 +158,7 @@ export function ProspectsEmptyState({
       {action ? (
         <Link
           href={action.href}
-          className="mt-4 inline-block intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="mt-4 inline-block intel-body text-cobalt-text transition-colors hover:text-[#1E85FF]"
         >
           {action.label}
         </Link>

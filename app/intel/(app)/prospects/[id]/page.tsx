@@ -347,7 +347,7 @@ function EvidenceSection({
               href={item.sourceUrl}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="mt-1 inline-block max-w-full truncate align-bottom intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+              className="mt-1 inline-block max-w-full truncate align-bottom intel-body text-cobalt-text transition-colors hover:text-[#1E85FF]"
             >
               {item.sourceUrl}
             </a>

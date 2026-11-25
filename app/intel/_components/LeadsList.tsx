@@ -235,7 +235,7 @@ export function LeadsEmptyState({ title, body, action }: EmptyStateProps) {
       {action ? (
         <Link
           href={action.href}
-          className="mt-4 inline-block intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="mt-4 inline-block intel-body text-cobalt-text transition-colors hover:text-[#1E85FF]"
         >
           {action.label}
         </Link>

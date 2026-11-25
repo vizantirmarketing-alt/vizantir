@@ -107,7 +107,7 @@ function ActivityRow({
       {item.href ? (
         <Link
           href={item.href}
-          className="shrink-0 intel-secondary text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+          className="shrink-0 intel-secondary text-cobalt-text transition-colors hover:text-[#1E85FF]"
         >
           View
         </Link>
@@ -128,7 +128,7 @@ function chipClass(category: ActivityCategory, tone: ActivityTone): string {
     category === 'finding' ||
     category === 'crawler'
   ) {
-    return 'bg-cobalt-soft text-cobalt-primary'
+    return 'bg-cobalt-soft text-cobalt-text'
   }
   return 'bg-black/[0.05] text-meta'
 }

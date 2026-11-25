@@ -19,10 +19,13 @@ const ACCENT_BORDER: Record<PanelAccent, string> = {
   neutral: 'border-l-[3px] border-l-black/20',
 }
 
+// Panel headings clear 7:1. Cobalt (5.1:1) and positive (6.5:1) titles fall
+// short on white, so those panels keep their accent in the left border and set
+// the title in body text; warning-severe titles are 9.1:1 and stay red.
 const ACCENT_TITLE: Record<PanelAccent, string> = {
   'warning-severe': 'text-warning-severe',
-  cobalt: 'text-cobalt-primary',
-  positive: 'text-positive',
+  cobalt: 'text-body',
+  positive: 'text-body',
   neutral: 'text-meta',
 }
 

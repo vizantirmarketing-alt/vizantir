@@ -20,7 +20,7 @@ import { FACTOR_DEFINITIONS, isProspectFactor } from '@/lib/prospects/rubric'
 import { formatScore, formatShortDate } from '@/lib/prospects/params'
 
 const linkClass = 'text-foreground transition-colors hover:text-cobalt-primary'
-const actionLinkClass = 'intel-body text-cobalt-primary transition-colors hover:text-[#1E85FF]'
+const actionLinkClass = 'intel-body text-cobalt-text transition-colors hover:text-[#1E85FF]'
 
 function RecordAnchor({ href, children }: { href: string; children: ReactNode }) {
   return (
@@ -89,7 +89,7 @@ function ProspectItem({ prospect }: { prospect: BriefingProspect }) {
             href={prospect.highlight.sourceUrl}
             target="_blank"
             rel="noopener noreferrer nofollow"
-            className="text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+            className="text-cobalt-text transition-colors hover:text-[#1E85FF]"
           >
             source
           </a>

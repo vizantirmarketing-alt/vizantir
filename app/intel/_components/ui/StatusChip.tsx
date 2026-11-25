@@ -105,7 +105,7 @@ export function ConfidenceChip({
       className={cn(
         'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         confidence === 'high' &&
-          'border border-cobalt-primary text-cobalt-primary',
+          'border border-cobalt-primary text-cobalt-text',
         confidence === 'medium' && 'border border-black/15 text-meta',
         confidence === 'exploratory' &&
           'border border-dashed border-black/20 text-meta',
@@ -170,7 +170,7 @@ export function ProspectConfidenceChip({
       className={cn(
         'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 intel-label',
         confidence === 'high' &&
-          'border border-cobalt-primary text-cobalt-primary',
+          'border border-cobalt-primary text-cobalt-text',
         confidence === 'medium' && 'border border-black/15 text-meta',
         confidence === 'low' && 'border border-dashed border-black/20 text-meta',
       )}

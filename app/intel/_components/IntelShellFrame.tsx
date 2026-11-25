@@ -86,8 +86,9 @@ function NavLinks({
               onClick={onNavigate}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                // 14px: "Prospect Research" must fit the 128px link width at every size.
-                'block rounded-md px-3 py-2 intel-secondary tracking-wide transition-colors',
+                // intel-nav: 18px and at least 44px tall in the menu below lg; 14px in the
+                // lg+ sidebar, where "Prospect Research" must fit the 128px link width.
+                'flex min-h-11 items-center rounded-md px-3 py-2 intel-nav tracking-wide transition-colors lg:block lg:min-h-0',
                 active
                   ? 'bg-cobalt-soft text-foreground'
                   : 'text-meta hover:text-foreground',
@@ -117,7 +118,8 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
 
   return (
     // tabular-nums: every count, value, date and time in Intel lines up.
-    <div className="min-h-svh bg-background tabular-nums">
+    // intel-scope: Intel's darker text tokens and solid disabled states (app/globals.css).
+    <div className="intel-scope min-h-svh bg-background tabular-nums">
       {/*
         Desktop sidebar toggle. Fixed at the same spot whether the sidebar is
         open or closed, so toggling twice needs no pointer movement. Below lg
@@ -155,7 +157,7 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
           )}
         >
           <div className="flex h-full w-[13.5rem] flex-col px-8 py-12">
-            <p className="shrink-0 intel-eyebrow text-cobalt-primary">
+            <p className="shrink-0 intel-eyebrow text-cobalt-text">
               Intel
             </p>
             <p className="mt-3 shrink-0 intel-secondary text-meta">Vizantir</p>
@@ -178,7 +180,7 @@ export function IntelShellFrame({ email, initialSidebar, children }: IntelShellF
 
         <div className="flex min-h-svh min-w-0 flex-col">
           <header className="flex shrink-0 items-center justify-between border-b border-black/8 px-6 py-4 lg:hidden">
-            <p className="intel-eyebrow text-cobalt-primary">
+            <p className="intel-eyebrow text-cobalt-text">
               Intel
             </p>
             <button

@@ -236,13 +236,13 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
         <summary
           className={cn(
             'flex h-12 cursor-pointer list-none items-center gap-2.5 overflow-hidden [&::-webkit-details-marker]:hidden',
-            triaged && 'opacity-55',
           )}
         >
           <h3
             className={cn(
               'min-w-0 flex-1 truncate intel-body font-medium',
-              triaged ? 'text-body' : 'text-foreground',
+              // Triaged rows read as secondary through a solid colour, not opacity.
+              triaged ? 'text-meta' : 'text-foreground',
             )}
           >
             {item.title}
@@ -258,7 +258,7 @@ function DecisionItem({ item }: { item: DecisionFeedItem }) {
               {fact}
             </span>
           ) : null}
-          <span className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-md bg-cobalt-soft text-cobalt-primary">
+          <span className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-md bg-cobalt-soft text-cobalt-text">
             <ChevronDown
               className="size-3.5 transition-transform group-open:rotate-180"
               aria-hidden
@@ -311,7 +311,7 @@ function CompletionRecord({
   return (
     <div className="rounded-lg bg-positive-soft px-3 py-2.5">
       {completedAt ? (
-        <p className="intel-secondary font-medium text-positive">
+        <p className="intel-secondary font-medium text-body">
           Completed{' '}
           <time dateTime={completedAt}>{formatCompletedAt(completedAt)}</time>
         </p>
@@ -342,7 +342,7 @@ function RelatedUrl({ href }: { href: string }) {
     <p className="intel-body">
       <a
         href={href}
-        className="text-cobalt-primary transition-colors hover:text-[#1E85FF]"
+        className="text-cobalt-text transition-colors hover:text-[#1E85FF]"
       >
         {label}
       </a>

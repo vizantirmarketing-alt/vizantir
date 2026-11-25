@@ -224,12 +224,12 @@ export default async function NewBusinessesPage({ searchParams }: PageProps) {
                   </span>
                   <div className="flex gap-4">
                     {params.page > 1 ? (
-                      <Link href={newBusinessesListHref({ ...params, page: params.page - 1 })} className="text-cobalt-primary transition-colors hover:text-[#1E85FF]">
+                      <Link href={newBusinessesListHref({ ...params, page: params.page - 1 })} className="text-cobalt-text transition-colors hover:text-[#1E85FF]">
                         Previous
                       </Link>
                     ) : null}
                     {params.page < list.pageCount ? (
-                      <Link href={newBusinessesListHref({ ...params, page: params.page + 1 })} className="text-cobalt-primary transition-colors hover:text-[#1E85FF]">
+                      <Link href={newBusinessesListHref({ ...params, page: params.page + 1 })} className="text-cobalt-text transition-colors hover:text-[#1E85FF]">
                         Next
                       </Link>
                     ) : null}

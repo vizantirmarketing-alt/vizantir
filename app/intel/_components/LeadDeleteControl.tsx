@@ -168,7 +168,7 @@ export function LeadDeleteControl({
             ? `Delete ${name}`
             : `Delete ${name}, ${companyText}`
         }
-        className="inline-flex size-6 items-center justify-center rounded-md text-warning-severe transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt-focus disabled:opacity-50"
+        className="inline-flex size-6 items-center justify-center rounded-md text-warning-severe transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobalt-focus disabled:cursor-not-allowed disabled:text-meta disabled:hover:bg-transparent"
       >
         <Trash2 className="size-3.5" aria-hidden />
       </button>

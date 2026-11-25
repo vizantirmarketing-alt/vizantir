@@ -14,7 +14,7 @@ import {
 } from '@/app/intel/reports/actions'
 
 const fieldClassName =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
+  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 intel-body text-foreground transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-cobalt-focus'
 
 type ReportReviewControlsProps = {
   reportId: string
@@ -165,14 +165,14 @@ export function ReportReviewControls({
 
   return (
     <form onSubmit={onSave} aria-busy={pending} className="mt-5 space-y-4">
-      <p className="text-sm leading-relaxed text-body">
+      <p className="intel-body leading-relaxed text-body">
         Care reports stay pending until you add a narrative and send.
       </p>
 
       <div>
         <label
           htmlFor="report-analysis"
-          className="mb-2 block text-sm font-medium text-body"
+          className="mb-2 block intel-label text-body"
         >
           Analysis
         </label>
@@ -206,7 +206,7 @@ export function ReportReviewControls({
       <div>
         <label
           htmlFor="report-work-completed"
-          className="mb-2 block text-sm font-medium text-body"
+          className="mb-2 block intel-label text-body"
         >
           Work completed
         </label>
@@ -227,13 +227,13 @@ export function ReportReviewControls({
       </div>
 
       <div className="space-y-4">
-        <p className="text-sm leading-relaxed text-body">
+        <p className="intel-body leading-relaxed text-body">
           Numbers from outside Google Analytics. Leave a field blank to leave it
           out of the report.
         </p>
         {METRIC_GROUPS.map((group) => (
           <fieldset key={group} className="space-y-2" disabled={pending}>
-            <legend className="mb-1 text-sm font-medium text-body">
+            <legend className="mb-1 intel-label text-body">
               {group}
             </legend>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -242,7 +242,7 @@ export function ReportReviewControls({
                   <div key={field.key}>
                     <label
                       htmlFor={`report-metric-${field.key}`}
-                      className="mb-1 block text-xs text-meta"
+                      className="mb-1 block intel-secondary text-meta"
                     >
                       {field.label}
                     </label>
@@ -292,22 +292,22 @@ export function ReportReviewControls({
           {sendPending ? 'Sending…' : 'Send report'}
         </Button>
         {saved && saveError === null ? (
-          <p className="text-sm text-positive">Saved</p>
+          <p className="intel-secondary text-positive">Saved</p>
         ) : null}
       </div>
 
       {saveError ? (
-        <p className="text-sm text-warning-severe" role="alert">
+        <p className="intel-body text-warning-severe" role="alert">
           {saveError}
         </p>
       ) : null}
       {sendError ? (
-        <p className="text-sm text-warning-severe" role="alert">
+        <p className="intel-body text-warning-severe" role="alert">
           {sendError}
         </p>
       ) : null}
       {generateError ? (
-        <p className="text-sm text-warning-severe" role="alert">
+        <p className="intel-body text-warning-severe" role="alert">
           {generateError}
         </p>
       ) : null}

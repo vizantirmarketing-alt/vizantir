@@ -116,12 +116,13 @@ function PreviewChrome({
 }) {
   return (
     <div>
-      <div className="print:hidden border-b border-black/8 px-5 py-4 sm:px-8">
+      {/* intel-scope: the review controls are Intel; the report document below keeps its own typography. */}
+      <div className="intel-scope print:hidden border-b border-black/8 px-5 py-4 sm:px-8">
         <div className="mx-auto w-full max-w-[40rem]">
           <div className="flex items-baseline justify-between gap-4">
             <Link
               href="/intel/reports"
-              className="inline-flex items-baseline gap-1 text-sm text-foreground transition-colors hover:text-foreground"
+              className="inline-flex items-baseline gap-1 intel-body text-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="size-[1em]" aria-hidden />
               Reports
@@ -130,7 +131,7 @@ function PreviewChrome({
               <Link
                 href={downloadHref}
                 prefetch={false}
-                className="text-sm text-meta transition-colors hover:text-foreground"
+                className="intel-secondary text-meta transition-colors hover:text-foreground"
               >
                 Download PDF
               </Link>

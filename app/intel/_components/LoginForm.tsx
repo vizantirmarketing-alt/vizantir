@@ -52,7 +52,7 @@ export function LoginForm({ initialError = false }: LoginFormProps) {
       <Button
         type="submit"
         disabled={status === 'submitting'}
-        className="h-11 w-full bg-cobalt-primary px-6 text-white hover:bg-[#1E85FF]"
+        className="h-11 w-full bg-cobalt-primary px-6 intel-label text-white hover:bg-[#1E85FF]"
       >
         {status === 'submitting' ? 'Continuing…' : 'Continue with Google'}
       </Button>
